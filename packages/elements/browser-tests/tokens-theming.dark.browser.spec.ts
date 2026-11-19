@@ -62,13 +62,13 @@ describe('onmars system dark and forced light schemes', () => {
   it('S2 follows the system dark color scheme automatically', () => {
     injectStylesheet(onmarsCss);
 
-    expectTokenColor('--ki-surface-s0', '#0a0a0a');
+    expectTokenColor('--ki-surface-base', '#1b1916');
   });
 
   it('S4 lets a document force light over a dark system preference', () => {
     injectStylesheet(onmarsCss);
     document.documentElement.setAttribute('data-ki-color-scheme', 'light');
 
-    expectTokenColor('--ki-surface-s0', '#ffffff');
+    expectTokenColor('--ki-surface-base', '#f9f7f4');
   });
 });

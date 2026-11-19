@@ -16,8 +16,15 @@ A token-styled action button with native button semantics.
 
 ### Variants
 
-Five emphasis levels, `secondary` by default. Use `primary` for the single
-main action of a view.
+Onmars uses four visual roles. `secondary` is the default.
+
+| Variant | Role |
+| --- | --- |
+| `primary` | Filled button for the main action |
+| `secondary` | Outlined surface for supporting actions |
+| `tertiary` | Shares the outlined role with `secondary` |
+| `quaternary` | Neutral text for quiet actions |
+| `ghost` | Accent text for actions that need a little more emphasis |
 
 <Demo
   code={`<ki-button variant="primary">Primary</ki-button>

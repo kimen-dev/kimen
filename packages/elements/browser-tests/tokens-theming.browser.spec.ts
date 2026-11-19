@@ -119,7 +119,8 @@ describe('S1 onmars light default tokens', () => {
   it('S1 resolves the onmars brand and base surface without configuration', () => {
     injectStylesheet(onmarsCss);
 
-    expectTokenColor('--ki-color-brand-500', '#845abe');
+    expectTokenColor('--ki-color-brand-500', '#bc4c26');
+    expectTokenColor('--ki-surface-base', '#f9f7f4');
     expectTokenColor('--ki-surface-s0', '#ffffff');
   });
 
@@ -135,7 +136,7 @@ describe('S3 onmars forced dark scheme', () => {
     injectStylesheet(onmarsCss);
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
 
-    expectTokenColor('--ki-surface-s0', '#0a0a0a');
+    expectTokenColor('--ki-surface-base', '#1b1916');
   });
 });
 
@@ -171,7 +172,7 @@ describe('material3 theme and fallback', () => {
     injectStylesheet(onmarsCss);
     document.documentElement.setAttribute('data-ki-theme', 'acme');
 
-    expectTokenColor('--ki-color-brand-500', '#845abe');
+    expectTokenColor('--ki-color-brand-500', '#bc4c26');
   });
 });
 

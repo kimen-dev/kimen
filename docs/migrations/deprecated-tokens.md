@@ -40,7 +40,7 @@ reaches the removal version while still shipping the token.
 
 Replace each deprecated name with its replacement wherever you set or read
 it. The renames are mechanical: a search and replace over the *Deprecated
-tokens* table is enough. The tokens deprecated in 0.1.0 follow five rules,
+tokens* table is enough. The table below groups the tokens deprecated in 0.1.0,
 where `{variant}` is `primary`, `secondary`, `tertiary`, `quaternary` or
 `ghost`:
 
@@ -52,6 +52,7 @@ where `{variant}` is `primary`, `secondary`, `tertiary`, `quaternary` or
 | `--ki-input-min-target` | `--ki-input-height` | The field's minimum block size is its height. |
 | `--ki-select-hover-bg` | `--ki-surface-hover-overlay-inverse` | On hover the trigger keeps its resting fill under the inverse hover overlay. |
 | `--ki-select-listbox-elevation` | `--ki-select-listbox-shadow` | The listbox shadow replaced the hand-composed elevation. |
+| `--ki-motion-easing-spring` | `--ki-motion-easing-emphasized-out` | Onmars now eases out without overshoot. Both names resolve to the theme's same curve until removal. |
 
 Setting a deprecated token changes nothing on screen today, because no
 component reads it. That is why it is going: the replacement is the property
@@ -60,6 +61,7 @@ that actually restyles the component.
 ## For contributors
 
 A deprecation is declared once, on the token's base definition in
+`packages/tokens/tokens/semantic.tokens.json` or
 `packages/tokens/tokens/component/*.tokens.json`, next to its `$description`:
 
 ```json

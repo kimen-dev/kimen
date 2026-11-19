@@ -78,8 +78,9 @@ for (const overridePath of material3ComponentOverrides) {
   }
 }
 
-const ONMARS_FOUNDATION = ['tokens/primitive.tokens.json', 'tokens/themes/onmars.tokens.json'];
-const ONMARS_SEMANTIC = ['tokens/semantic.tokens.json'];
+const FOUNDATION = ['tokens/primitive.tokens.json', 'tokens/themes/onmars.tokens.json'];
+const SEMANTIC = ['tokens/semantic.tokens.json'];
+const ONMARS_OVERRIDES = ['tokens/themes/onmars-v2.tokens.json'];
 // The material3 layer only overrides tokens the base layers already define
 // (theme over onmars theme, semantic over semantic, component over component).
 const MATERIAL3_OVERRIDES = [
@@ -90,13 +91,13 @@ const MATERIAL3_OVERRIDES = [
 
 // Every composition is layer-ordered, while file discovery within the
 // component layer is deterministic: all bases first, then theme overrides.
-const LAYERS = [...ONMARS_FOUNDATION, ...ONMARS_SEMANTIC, ...componentBaseLayers];
+const LAYERS = [...FOUNDATION, ...SEMANTIC, ...componentBaseLayers];
 
 // Layer overrides are declared through Style Dictionary's include/source
 // split: overriding an `include` token from `source` is silent by design,
 // while two `source` files colliding still emits a "Token collisions
 // detected" warning. Each layer stays collision-checked as `source` in
-// exactly one composition (base layers in lightConfig, material3 overrides in
+// exactly one composition (base layers in sharedConfig, material3 overrides in
 // material3LightConfig, each dark-mode file as the sole source of its own
 // config), so intentional overrides are quiet and a genuine duplicate —
 // e.g. two component files defining the same token — still warns.
@@ -107,14 +108,20 @@ const LAYERS = [...ONMARS_FOUNDATION, ...ONMARS_SEMANTIC, ...componentBaseLayers
 // all four dictionaries at once (./build.mjs).
 const cssPlatform = { transformGroup: KIMEN_CSS_GROUP, prefix: '' };
 
-export const lightConfig = {
+export const sharedConfig = {
   source: LAYERS,
   hooks: kimenCssHooks,
   platforms: { css: cssPlatform },
 };
 
-export const darkConfig = {
+export const lightConfig = {
+  ...sharedConfig,
   include: LAYERS,
+  source: ONMARS_OVERRIDES,
+};
+
+export const darkConfig = {
+  include: [...LAYERS, ...ONMARS_OVERRIDES],
   source: ['tokens/modes/dark.tokens.json'],
   hooks: kimenCssHooks,
   platforms: { css: cssPlatform },
@@ -151,8 +158,11 @@ export const MODE_SOURCES = Object.freeze({
 });
 
 export function withMode(config, mode) {
-  const sources = MODE_SOURCES[mode];
+  let sources = MODE_SOURCES[mode];
   if (sources === undefined) throw new Error(`unknown mode ${JSON.stringify(mode)}`);
+  if (config === darkConfig && mode === 'contrast-more') {
+    sources = [...sources, 'tokens/modes/onmars.contrast-more.dark.tokens.json'];
+  }
   return {
     ...config,
     include: [...(config.include ?? []), ...config.source, ...sources.slice(0, -1)],

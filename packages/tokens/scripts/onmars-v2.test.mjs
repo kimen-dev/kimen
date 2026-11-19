@@ -24,6 +24,7 @@ const published = [
   'card-border-width',
   'card-elevation',
   'dialog-radius',
+  'elevation-e4',
   'tooltip-fg',
   'tooltip-bg',
   'tooltip-padding-block',
@@ -31,10 +32,8 @@ const published = [
   'duration-moderate',
   'duration-slow',
   'motion-easing-spring',
+  'motion-easing-emphasized-out',
 ];
-if (base.includes('--ki-motion-easing-emphasized-out:')) {
-  published.push('motion-easing-emphasized-out');
-}
 const sheets = buildPublicStylesheetSurface({
   packageExports: {
     './css': { target: './dist/css/tokens.css' },
@@ -67,6 +66,17 @@ test('S1 onmars resolves its paper, charcoal, ink, tints, accent and type stacks
     'surface-info-tint': '#13283a',
     'text-high-em': '#edebe7',
     'focus-ring-color': '#c5735a',
+  });
+});
+
+test('S2 the Calma elevation paints only the shadow layers for the active scheme', () => {
+  assertValues('./css', 'light', {
+    'elevation-e4':
+      '0 4px 12px 0 rgba(24,22,19,0.07),0 20px 44px 0 rgba(24,22,19,0.12),0 18px 40px 0 transparent',
+  });
+  assertValues('./css', 'dark', {
+    'elevation-e4':
+      '0 4px 12px 0 rgba(0,0,0,0.45),0 20px 44px 0 transparent,0 18px 40px 0 rgba(0,0,0,0.55)',
   });
 });
 
@@ -103,4 +113,17 @@ test('S3 renamed onmars easing and spring compatibility resolve to the same curv
     sheets['./css/material3'].contexts.dark[name('motion-easing-emphasized-out')],
     sheets['./css/material3'].contexts.dark[name('motion-easing-spring')],
   );
+});
+
+test('S4 Material 3 keeps its page, font, corner and motion values in every context', () => {
+  const theme = './css/material3';
+  for (const context of Object.keys(sheets[theme].contexts)) {
+    const dark = context.endsWith('dark');
+    assertValues(theme, context, {
+      'surface-base': dark ? '#141218' : '#fef7ff',
+      'typography-family-body': 'Roboto,system-ui,sans-serif',
+      'dialog-radius': '28px',
+      'motion-easing-spring': 'cubic-bezier(0.34,1.56,0.64,1)',
+    });
+  }
 });

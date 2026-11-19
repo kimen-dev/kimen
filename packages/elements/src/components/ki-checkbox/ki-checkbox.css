@@ -283,7 +283,7 @@ input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
   .mark {
     transition:
       opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
-      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-spring);
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-emphasized-out);
   }
 
   :host(:not([checked], [indeterminate])) .mark {

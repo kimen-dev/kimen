@@ -9,6 +9,8 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { alphaOf } from './contracts';
+import { fillsOf } from './modes';
 import { moveToNewParent } from './reconnect';
 
 type KiTooltipElement = HTMLElement & {
@@ -420,7 +422,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(host.outerHTML).toContain('<button aria-description="Send immediately">Send</button>');
   });
 
-  it('S1 renders the MarsUI glass card geometry, bevel, and typography', async () => {
+  it('S1 renders the onmars inverse card geometry and typography', async () => {
     const { host, trigger } = await mount({
       style: { marginBlockStart: '160px', marginInlineStart: '160px' },
     });
@@ -431,33 +433,30 @@ describe('ki-tooltip pointer path in a real browser', () => {
     const tooltip = requireTooltip(host);
     const style = getComputedStyle(tooltip);
 
-    // Tooltip master 12089:7621 card: radius 16, padding 12 all sides, max 288,
-    // title UI/Para/medium 13/20 weight 600.
-    expect(style.borderRadius).toBe('16px');
-    expect(style.paddingTop).toBe('12px');
-    expect(style.paddingRight).toBe('12px');
-    expect(style.paddingBottom).toBe('12px');
-    expect(style.paddingLeft).toBe('12px');
+    expect(style.borderRadius).toBe('8px');
+    expect(style.paddingTop).toBe('6px');
+    expect(style.paddingRight).toBe('10px');
+    expect(style.paddingBottom).toBe('6px');
+    expect(style.paddingLeft).toBe('10px');
     expect(style.maxWidth).toBe('288px');
-    expect(style.fontSize).toBe('13px');
+    expect(style.fontSize).toBe('12px');
     expect(style.lineHeight).toBe('20px');
     expect(style.fontWeight).toBe('600');
 
-    // Glass card paint: gradient over a transparent color fallback plus the
-    // Blur/24 (CSS 12px) backdrop filter.
-    expect(style.backgroundImage).toContain('linear-gradient(');
+    expect(fillsOf(tooltip)).toEqual(Array(2).fill({ a: 1, r: 46, g: 43, b: 38 }));
+    expect(style.color).toBe('rgb(249, 247, 244)');
     expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    expect(style.getPropertyValue('backdrop-filter')).toBe('blur(12px)');
+    expect(style.getPropertyValue('backdrop-filter')).toBe('blur(0px)');
 
-    // Bevel hairline on all sides while no caret ships.
+    // The hairline keeps its geometry and paints a transparent edge.
     expect(style.borderTopWidth).toBe('1px');
     expect(style.borderTopStyle).toBe('solid');
     expect(style.borderBottomWidth).toBe('1px');
+    expect(alphaOf(style.borderTopColor)).toBe(0);
+    expect(alphaOf(style.borderBottomColor)).toBe(0);
 
-    // e4 wrap elevation (deepest layer 0 32 32 -16) plus the secondary_default
-    // inner highlight (inset layer).
-    expect(style.boxShadow).toContain('0px 32px 32px -16px');
-    expect(style.boxShadow).toContain('inset');
+    expect(style.boxShadow).toContain('0px 12px 28px');
+    expect(style.boxShadow).not.toContain('inset');
 
     // Caret-depth offset: 8px trigger-to-card distance (top placement).
     const triggerRect = trigger.getBoundingClientRect();

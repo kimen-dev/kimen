@@ -8,6 +8,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
+import { hasVisibleShadow } from './contracts';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { moveToNewParent } from './reconnect';
 
@@ -709,7 +710,7 @@ describe('ki-select in a real browser', () => {
     // elevation. Poll: box-shadow is motion-gated (120ms transition).
     await expect
       .poll(() => getComputedStyle(trigger(el)).boxShadow)
-      .toContain('rgba(240, 81, 73, 0.2)');
+      .toContain('rgba(239, 78, 105, 0.2)');
 
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -808,7 +809,7 @@ describe('ki-select in a real browser', () => {
     expect(valueBox && indicatorBox ? valueBox.left > indicatorBox.left : false).toBe(true);
   });
 
-  it('S17 paints the MarsUI Dropdown trigger geometry, typography, and rest elevation', async () => {
+  it('S17 paints the dropdown trigger geometry, typography, and flat surface', async () => {
     const el = await mountSelect();
     const triggerEl = trigger(el);
     const cs = getComputedStyle(triggerEl);
@@ -826,11 +827,8 @@ describe('ki-select in a real browser', () => {
     expect(cs.fontWeight).toBe('600');
     expect(cs.lineHeight).toBe('24px');
 
-    // Rest fill white (light) + Component_effect/secondary_default:
-    // drop 0/2/1.5/-0.5 Elevation/shadow plus inner White/3 0/2/3.
     expect(cs.backgroundColor).toBe('rgb(255, 255, 255)');
-    expect(cs.boxShadow).not.toBe('none');
-    expect(cs.boxShadow).toContain('inset');
+    expect(hasVisibleShadow(cs.boxShadow)).toBe(false);
 
     // Input_label row: UI/Para/medium 13/20/600 with 2px (Space/xxs) inset.
     const label = el.shadowRoot?.querySelector('[part="label"]');

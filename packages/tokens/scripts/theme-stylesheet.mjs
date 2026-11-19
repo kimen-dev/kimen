@@ -77,6 +77,13 @@ const REFERENCE = /^var\((--[a-z0-9-]+)\)$/u;
  * the same sources.
  */
 export function compositionDeclarations(dictionary) {
+  // Calma's private literals keep the DTCG layers closed. Emit their values
+  // at the referring token instead of publishing a second set of CSS names.
+  const inline = new Set(
+    dictionary.allTokens
+      .filter(({ path }) => path[1] === 'foundation' && path[2] === 'onmars-v2')
+      .map(({ name }) => `--${name}`),
+  );
   const formatProperty = createPropertyFormatter({
     outputReferences: true,
     dictionary,
@@ -87,6 +94,7 @@ export function compositionDeclarations(dictionary) {
   const declarations = new Map();
   for (const token of dictionary.allTokens) {
     const name = `--${token.name}`;
+    if (inline.has(name)) continue;
     const line = formatProperty(token);
     const prefix = `${name}: `;
     if (!line.startsWith(prefix) || !line.endsWith(';') || line.includes('\n')) {
@@ -95,8 +103,11 @@ export function compositionDeclarations(dictionary) {
     if (declarations.has(name)) {
       throw new Error(`${name} is produced by more than one token`);
     }
+    const expression = line.slice(prefix.length, -1);
+    const reference = REFERENCE.exec(expression);
     declarations.set(name, {
-      expression: line.slice(prefix.length, -1),
+      expression:
+        reference !== null && inline.has(reference[1]) ? String(token.$value) : expression,
       resolved: String(token.$value),
       inherited: token.$extensions?.['dev.kimen']?.inherit === 'document',
     });

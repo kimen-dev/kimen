@@ -160,6 +160,8 @@ describe('ki-card in a real browser', () => {
         <button slot="footer" type="button">Download</button>
       </ki-card>
     `);
+    await parkPointer();
+    await settleMotion();
     const media = regionPart(el, 'media').getBoundingClientRect();
     const header = regionPart(el, 'header').getBoundingClientRect();
     const body = regionPart(el, 'body').getBoundingClientRect();
@@ -170,10 +172,9 @@ describe('ki-card in a real browser', () => {
     expect(header.top).toBeLessThanOrEqual(body.top);
     expect(body.top).toBeLessThanOrEqual(footer.top);
     expect(computed.backgroundColor).not.toMatch(/, 0\)$/u);
-    // MarsUI light cards sit on the s0 surface in the SAME white
-    // (Surface/special/light-s0_dark-s1): distinctness comes from the
-    // resting elevation, not a background delta.
-    expect(computed.boxShadow).not.toBe('none');
+    expect(computed.borderTopWidth).toBe('1px');
+    expect(computed.borderRadius).toBe('14px');
+    expect(computed.boxShadow).toBe('none');
   });
 
   it('S2 renders a body-only card with no reserved space for absent regions', async () => {
@@ -186,13 +187,14 @@ describe('ki-card in a real browser', () => {
     expect(regionPart(el, 'media').getBoundingClientRect().height).toBe(0);
     expect(regionPart(el, 'header').getBoundingClientRect().height).toBe(0);
     expect(regionPart(el, 'footer').getBoundingClientRect().height).toBe(0);
-    // The card is the body region plus the SURFACE block padding (MarsUI:
-    // one space/3xl padding on the wrap, none stacked on the regions).
+    // The body is the only region contributing to the card's block size.
     expect(Math.round(card.height)).toBe(
       Math.round(
         body.height +
           Number.parseFloat(cardStyles.paddingBlockStart) +
-          Number.parseFloat(cardStyles.paddingBlockEnd),
+          Number.parseFloat(cardStyles.paddingBlockEnd) +
+          Number.parseFloat(cardStyles.borderBlockStartWidth) +
+          Number.parseFloat(cardStyles.borderBlockEndWidth),
       ),
     );
   });
@@ -646,7 +648,7 @@ describe('ki-card in a real browser', () => {
     );
   });
 
-  it('lifts the resting e1 elevation to e2 while hovered (MarsUI resting levels)', async () => {
+  it('lifts the flat resting surface to e2 while hovered', async () => {
     cleanup();
     const el = await mount('<ki-card>Storage is almost full</ki-card>');
     // Pointer position persists across spec files in this page: park it on a
@@ -658,7 +660,7 @@ describe('ki-card in a real browser', () => {
     await nextFrame();
     await settleMotion();
     const resting = getComputedStyle(cardPart(el)).boxShadow;
-    expect(resting).not.toBe('none');
+    expect(resting).toBe('none');
 
     await userEvent.hover(el);
     await nextFrame();

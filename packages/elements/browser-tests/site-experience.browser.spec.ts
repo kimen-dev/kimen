@@ -6,7 +6,7 @@ import axe from 'axe-core';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
-/* eslint-disable @nx/enforce-module-boundaries -- this integration contract intentionally consumes the hand-written site outside the elements project */
+ 
 import interWoff2Url from '../../../site/assets/fonts/InterVariable.woff2?url';
 import jetBrainsMonoWoff2Url from '../../../site/assets/fonts/JetBrainsMonoVariable.woff2?url';
 import landingCss from '../../../site/landing.css?raw';
@@ -25,7 +25,7 @@ import { initializePlayground } from '../../../site/playground/playground.js';
 // that installPageMarkup never runs. It still owes the same axe and overflow
 // guarantees as the other two.
 import privacyHtml from '../../../site/privacy/index.html?raw';
-/* eslint-enable @nx/enforce-module-boundaries */
+ 
 import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
@@ -666,6 +666,13 @@ describe('Kimen public site experience in a real browser', () => {
     await page.viewport(1440, 1000);
     await mountPage('landing');
 
+    // The approved geometry uses the vendored Inter. Keep that fixture
+    // independent of the system fallbacks while Calma's fonts are packaged.
+    document
+      .getElementById(PAGE_STYLE_ID)
+      ?.append(':root { --ki-font-family-body: Inter; --ki-font-family-display: Inter; }');
+    await settleInitialLayout();
+
     const main = requireElement<HTMLElement>('#main', HTMLElement);
     const hero = requireElement<HTMLElement>('.hero', HTMLElement);
     const title = requireElement<HTMLElement>('#hero-title', HTMLElement);
@@ -719,7 +726,7 @@ describe('Kimen public site experience in a real browser', () => {
 
     expect(orbitCards).toHaveLength(6);
     const expectedOrbitGeometry = [
-      [206, 309, 149, 50],
+      [202, 309, 153, 50],
       [212, 381, 143, 56],
       [160, 459, 195, 52],
       [1124, 273, 141, 58],
@@ -736,10 +743,10 @@ describe('Kimen public site experience in a real browser', () => {
       // runner-installed fonts must never change the card metrics.
       expectGeometryWithin(card, expected, 3);
     });
-    expect(getComputedStyle(rtlSwitch).backgroundColor).toBe('rgb(132, 90, 190)');
+    expect(getComputedStyle(rtlSwitch).backgroundColor).toBe('rgb(237, 235, 231)');
     expect(budget.textContent.replace(/\s+/gu, ' ').trim()).toBe('SIZE BUDGET 3.8 / 10 KB');
     expect(axeCard.textContent.replace(/\s+/gu, ' ').trim()).toBe('0 axe violations');
-    expect(getComputedStyle(axeMark).backgroundColor).toBe('rgb(132, 90, 190)');
+    expect(getComputedStyle(axeMark).backgroundColor).toBe('rgb(237, 235, 231)');
     expect(axeMark.getBoundingClientRect().width).toBeCloseTo(20, 0);
     expect(axeMark.getBoundingClientRect().height).toBeCloseTo(20, 0);
     expect(getComputedStyle(pipelineLine).backgroundImage).toContain('repeating-linear-gradient');

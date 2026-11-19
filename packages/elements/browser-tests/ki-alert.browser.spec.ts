@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-alert.js';
 import { expectAccessible } from './axe';
+import { hasVisibleShadow } from './contracts';
 import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiAlertElement = HTMLElement & {
@@ -724,7 +725,7 @@ describe('ki-alert in a real browser', () => {
     expect(getComputedStyle(message).lineHeight).toBe('20px');
   });
 
-  it('S6 raises the dismiss control as the MarsUI circular secondary chip', async () => {
+  it('S6 renders a flat circular dismiss control', async () => {
     cleanup();
     const el = await mount('Backup completed', { dismissible: true });
     const button = dismissButton(el);
@@ -736,7 +737,7 @@ describe('ki-alert in a real browser', () => {
     await motionSettled(el);
     const computed = getComputedStyle(button);
 
-    // A circle with a hairline bevel, on a fill of its own that lifts it off
+    // A circle with a hairline border on a fill that distinguishes it from
     // the alert surface. Square to layout precision: at a fractional position
     // on the page the box the engine reports is a float away from 24 x 24.
     const box = button.getBoundingClientRect();
@@ -745,12 +746,9 @@ describe('ki-alert in a real browser', () => {
     expect(Number.parseFloat(computed.borderTopWidth)).toBeGreaterThan(0);
     expect(computed.backgroundColor).not.toBe(getComputedStyle(part(el, 'alert')).backgroundColor);
 
-    // Component_effect/secondary_default: drop shadow + inner highlight.
-    expect(computed.boxShadow).not.toBe('none');
-    expect(computed.boxShadow).toContain('inset');
+    expect(hasVisibleShadow(computed.boxShadow)).toBe(false);
 
-    // The glass backdrop blur rides the effect token.
-    expect(computed.backdropFilter).toContain('blur(');
+    expect(computed.backdropFilter).toBe('blur(0px)');
   });
 
   it('S15 keeps the message leading and dismiss control trailing under RTL', async () => {
@@ -783,7 +781,7 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
     expect(shell.borderTopLeftRadius).toBe('28px');
     expect(card.paddingBlockStart).toBe('12px');
     expect(card.paddingInlineStart).toBe('12px');
-    expect(card.borderTopLeftRadius).toBe('16px');
+    expect(card.borderTopLeftRadius).toBe('12px');
     // e5, read off its deepest layer.
     expect(card.boxShadow).toContain('0px 56px 56px -28px');
   });

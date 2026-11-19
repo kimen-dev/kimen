@@ -40,7 +40,7 @@ its own: `@kimen/tokens/css` must be loaded too.
 ### The page contract
 
 Tokens are custom properties: loading them paints nothing. `@kimen/tokens/css/base`
-paints the page from them — background from `--ki-surface-s0`, text from
+paints the page from them — background from `--ki-surface-base`, text from
 `--ki-text-high-em`, body family from `--ki-typography-family-body`. It
 publishes no tokens of its own — it only consumes them, so it never widens the
 token surface — and it declares no colour scheme: the token stylesheet owns
@@ -216,7 +216,7 @@ never transcribed by hand.
 - **Motion** — durations from `--ki-motion-duration-instant` and
   `--ki-motion-duration-fast` through the `short`/`medium`/`long` ramps
   (`--ki-motion-duration-short-1`…`long-4`), easing curves
-  (`--ki-motion-easing-standard`, `-emphasized`, `-spring` and their
+  (`--ki-motion-easing-standard`, `-emphasized`, `-emphasized-out` and their
   accelerate/decelerate variants), and micro-motion offsets
   (`--ki-motion-distance-xs/sm/md`).
 - **Glass** — translucent surfaces built from gradient pairs plus a backdrop
@@ -228,6 +228,15 @@ never transcribed by hand.
   plus effect shadows (`--ki-effect-*`) for component-specific depth.
 - **Bevels** — edge tokens such as `--ki-button-tertiary-rest-border-bottom`
   that give controls their machined bottom edge.
+
+## Onmars color and type
+
+Calma uses paper ivory in light mode, warm charcoal in dark mode, ink for
+primary surfaces and terracotta for links and focus. Crimson marks errors.
+Surfaces are flat and opaque, with hairline borders and soft shadows.
+
+The UI and body stack starts with Instrument Sans. The display and serif
+stacks start with Newsreader. Load these faces in your app to use them.
 
 ## Material 3 theme fonts
 

@@ -300,8 +300,8 @@ describe('ki-status', () => {
     expect(getComputedStyle(dot).backgroundColor, 'material3 must restyle the fill').not.toBe(
       onmarsColor,
     );
-    // material3 draws the dot at its own badge-dot size, larger than onmars.
-    expect(dot.getBoundingClientRect().width).toBeGreaterThan(onmarsSize);
+    expect(onmarsSize).toBe(8);
+    expect(dot.getBoundingClientRect().width).toBe(6);
 
     await expectAccessible(document.body);
   });
@@ -327,7 +327,7 @@ describe('ki-status', () => {
     expect(properties).not.toContain('width');
     expect(properties).not.toContain('inline-size');
     for (const duration of computed.transitionDuration.split(',')) {
-      expect(Number.parseFloat(duration)).toBeCloseTo(0.12, 2);
+      expect(Number.parseFloat(duration)).toBeCloseTo(0.15, 2);
     }
     await browserCommands.emulateReducedMotion(null);
   });

@@ -12,6 +12,7 @@ import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { fillsOf } from './modes';
 import { moveToNewParent } from './reconnect';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
@@ -1014,25 +1015,21 @@ describe('ki-dialog in a real browser', () => {
     expect(backdrop.backgroundColor).not.toMatch(/, 0\)$/u);
   });
 
-  it('S1 renders the MarsUI glass modal surface, typography, and centering', async () => {
+  it('S1 renders the onmars modal surface, typography, and centering', async () => {
     cleanup();
     const el = await mountDialog();
     await openDialog(el);
     const dialog = internalDialog(el);
     const styles = getComputedStyle(dialog);
 
-    // Glass surface: bg-start -> bg-end gradient painted over a transparent
-    // color fallback, with the Blur/24 (CSS 12px) backdrop filter.
-    expect(styles.backgroundImage).toContain('linear-gradient(');
+    expect(fillsOf(dialog)).toEqual(Array(2).fill({ a: 1, r: 255, g: 255, b: 255 }));
     expect(styles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    expect(styles.getPropertyValue('backdrop-filter')).toBe('blur(12px)');
+    expect(styles.getPropertyValue('backdrop-filter')).toBe('blur(0px)');
 
-    // Compact Modal master geometry: radius 20, hairline border, e4 elevation
-    // (its deepest layer is 0 32 32 -16).
-    expect(styles.borderRadius).toBe('20px');
+    expect(styles.borderRadius).toBe('18px');
     expect(styles.borderTopWidth).toBe('1px');
     expect(styles.borderTopStyle).toBe('solid');
-    expect(styles.boxShadow).toContain('0px 32px 32px -16px');
+    expect(styles.boxShadow).toContain('0px 20px 44px');
 
     // Centered composition: heading title_2 18/24 weight 700, body body_1
     // 13/20 weight 500, both center-aligned.

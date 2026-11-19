@@ -8,26 +8,26 @@ Feature: Tokens and theming with onmars as the default theme
   Scenario: onmars light is the default appearance without configuration
     Given a document that loads the Kimen tokens stylesheet
     When the document renders with no theme or scheme declaration
-    Then the brand token resolves to the onmars purple "#845abe"
-    And the base surface token resolves to white "#ffffff"
+    Then the brand token resolves to the onmars terracotta "#bc4c26"
+    And the base surface token resolves to paper ivory "#f9f7f4"
 
   # S2
   Scenario: dark appearance follows the system preference automatically
     Given a document that loads the Kimen tokens stylesheet
     When the document renders under a dark system color scheme
-    Then the base surface token resolves to the onmars dark surface "#0a0a0a"
+    Then the base surface token resolves to the onmars charcoal "#1b1916"
 
   # S3
   Scenario: a document can force dark over a light system preference
     Given a document whose root declares the color scheme "dark"
     When the document renders under a light system color scheme
-    Then the base surface token resolves to the onmars dark surface "#0a0a0a"
+    Then the base surface token resolves to the onmars charcoal "#1b1916"
 
   # S4
   Scenario: a document can force light over a dark system preference
     Given a document whose root declares the color scheme "light"
     When the document renders under a dark system color scheme
-    Then the base surface token resolves to white "#ffffff"
+    Then the base surface token resolves to paper ivory "#f9f7f4"
 
   # S5
   Scenario: declaring the material3 theme restyles the document
@@ -46,7 +46,7 @@ Feature: Tokens and theming with onmars as the default theme
   Scenario: an unknown theme declaration falls back to onmars
     Given a document that loads the Kimen tokens stylesheet
     When the document root declares the unknown theme "acme"
-    Then the brand token resolves to the onmars purple "#845abe"
+    Then the brand token resolves to the onmars terracotta "#bc4c26"
 
   # S8
   Scenario: a subtree can declare the material3 theme inside an onmars document

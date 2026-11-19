@@ -62,3 +62,11 @@ Feature: Onmars v2 theme values
   retain their dark fills. Verify the expected polarity and each pair's contrast.
 - Agent's choice, pending founder confirmation. Use the 80% inverse ink for the
   onmars more-contrast select placeholder so it meets 7:1 on the focused fill.
+- Agent's choice, pending founder confirmation. Use semantic roles for the
+  inverse tooltip colors and flat card. The component dimensions use the
+  existing radius, space and border scale aliases named in the issue.
+- Agent's choice, pending founder confirmation. Keep the current caption-2
+  scale so the tooltip's requested alias resolves to 12px. The older design
+  bundle uses 13px from the separate type-scale proposal.
+- Agent's choice, pending founder confirmation. The opt-in page stylesheet
+  reads the page surface role, so the canvas uses paper in onmars light.

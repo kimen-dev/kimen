@@ -679,9 +679,8 @@ function sweepToneInks(theme, scheme, declarations) {
 // The tone family.
 //
 // A component that comes in tones — a badge, an alert, a button — is ONE
-// surface in several colours. Within a scheme its tones share a polarity: light
-// ink on a dark fill, or dark ink on a light one. A tone on the other side is
-// not a colour choice, it is a pair still resolved in the other scheme. The
+// surface in several colours. Within a scheme its tones normally share a
+// polarity: light ink on a dark fill, or dark ink on a light one. The
 // material3 dark badge kept light info and warning chips (15.6:1 and 18.3:1
 // against the page) beside dark neutral, success and danger ones; each pair
 // cleared 4.5:1 on its own, so the text sweep had nothing to say.
@@ -690,6 +689,9 @@ function sweepToneInks(theme, scheme, declarations) {
 // only in the tone segment are siblings. The tone vocabulary is the one thing
 // listed — it states what a tone IS, the `tone` prop's own values.
 const TONE_SEGMENTS = new Set(['neutral', 'success', 'danger', 'info', 'warning']);
+const ONMARS_DARK_PRIMARY_SPLITS = ['rest', 'hover', 'active'].map(
+  (state) => `--ki-button-primary-*-${state}-bg`,
+);
 
 export function toneFamilies(declarations) {
   const families = new Map();
@@ -733,6 +735,11 @@ export function splitToneFamilies(declarations) {
 
 function sweepToneFamilies(theme, scheme, declarations) {
   const failures = [];
+  // Calma intentionally uses an inverse neutral primary and keeps both
+  // chromatic tones dark. Require that exact pairing in every dark mode.
+  const requiredSplits = new Set(
+    theme.split('+', 1)[0] === 'onmars' && scheme === 'dark' ? ONMARS_DARK_PRIMARY_SPLITS : [],
+  );
 
   // The canary: ki-badge always comes in tones, so a zero-length derivation
   // means the naming convention drifted.
@@ -743,8 +750,24 @@ function sweepToneFamilies(theme, scheme, declarations) {
   }
 
   for (const family of splitToneFamilies(declarations)) {
+    if (
+      requiredSplits.has(family.stem) &&
+      family.lightFill.length === 1 &&
+      family.lightFill.includes('neutral') &&
+      family.darkFill.length === 2 &&
+      family.darkFill.includes('success') &&
+      family.darkFill.includes('danger')
+    ) {
+      requiredSplits.delete(family.stem);
+      continue;
+    }
     failures.push(
       `${theme}/${scheme} ${family.stem}: ${family.lightFill.join(', ')} paint dark ink on a light fill where ${family.darkFill.join(', ')} paint light ink on a dark one — a tone resolved in the other colour scheme`,
+    );
+  }
+  for (const stem of requiredSplits) {
+    failures.push(
+      `${theme}/${scheme} ${stem}: the onmars primary neutral must have a light fill while success and danger have dark fills`,
     );
   }
 

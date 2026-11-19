@@ -40,6 +40,7 @@ import {
   lightConfig,
   material3DarkConfig,
   material3LightConfig,
+  sharedConfig,
   withDensity,
   withMode,
 } from './style-dictionary.config.mjs';
@@ -51,13 +52,12 @@ async function composition(config) {
   return compositionDeclarations(dictionary);
 }
 
-// Deprecations (spec 041) are declared on base definitions, so the default
-// light composition carries all of them. An incomplete deprecation, a
+// Deprecations (spec 041) are declared on shared base definitions. An incomplete deprecation, a
 // replacement that is not a live published token, or a deprecated token the
 // package still ships at its removal version fails the build.
 const { version } = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8'));
 const deprecations = collectDeprecations(
-  (await new StyleDictionary(lightConfig).getPlatformTokens('css')).allTokens,
+  (await new StyleDictionary(sharedConfig).getPlatformTokens('css')).allTokens,
 );
 assertNoDeprecationDue(deprecations, version);
 
@@ -169,7 +169,7 @@ console.log(
 // This sheet publishes NO tokens: it only consumes them. That is what keeps it
 // outside the public token surface (scripts/lib/css-token-surface.mjs).
 const pageContractCss = `:root {
-  background-color: var(--ki-surface-s0);
+  background-color: var(--ki-surface-base);
   color: var(--ki-text-high-em);
   font-family: var(--ki-typography-family-body);
 }

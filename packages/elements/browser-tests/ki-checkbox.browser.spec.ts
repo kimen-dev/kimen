@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-checkbox.js';
 import { expectAccessible, parkPointer } from './axe';
-import { paintContrast } from './contracts';
+import { hasVisibleShadow, paintContrast } from './contracts';
 import { moveToNewParent } from './reconnect';
 
 type KiCheckboxElement = HTMLElement & {
@@ -519,26 +519,23 @@ describe('ki-checkbox in a real browser', () => {
     expect(getComputedStyle(controlOf(darkUnchecked)).backgroundColor).not.toBe(lightUncheckedBg);
   });
 
-  it('S7 unchecked control carries the MarsUI glass surface and solid states drop it', async () => {
+  it('S7 draws a flat control and switches to a solid fill when checked', async () => {
     cleanup();
     const el = await mount('Email notifications');
     await waitForStyles();
     const control = controlOf(el);
 
-    // Component_effect/primary_default rides every state (drop + inner glow).
     const restShadow = getComputedStyle(control).boxShadow;
-    expect(restShadow).not.toBe('none');
-    expect(restShadow).toContain('inset');
+    expect(hasVisibleShadow(restShadow)).toBe(false);
 
     // Unchecked rest: vertical Surface/Special gradient.
     expect(getComputedStyle(control).backgroundImage).toContain('linear-gradient');
 
-    // Checked: solid Surface/primary_med_em — the gradient is gone, the
-    // effect stack stays.
+    // Checked: solid Surface/primary_med_em.
     el.checked = true;
     await waitForStyles();
     expect(getComputedStyle(control).backgroundImage).toBe('none');
-    expect(getComputedStyle(control).boxShadow).not.toBe('none');
+    expect(hasVisibleShadow(getComputedStyle(control).boxShadow)).toBe(false);
   });
 
   it('S8 indeterminate dash is the centered 8x2 rounded mark of the master', async () => {
