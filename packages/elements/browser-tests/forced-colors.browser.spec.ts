@@ -403,6 +403,51 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     await expect.poll(ring).not.toBe('none');
   });
 
+  // A native disabled control turns GrayText under a forced palette; these
+  // paint their own control, so they have to say it themselves, or a disabled
+  // one is the same CanvasText drawing as an enabled one.
+  it('ki-checkbox paints a disabled box, mark and label in GrayText', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount('<ki-checkbox disabled checked>Accept the terms</ki-checkbox>');
+    const control = await partOf(fixture, 'ki-checkbox', '[part="control"]');
+    const label = await partOf(fixture, 'ki-checkbox', '[part="label"]');
+    const gray = systemColor('GrayText').ink;
+
+    expect(edgeOf(control), 'the disabled box edge').toBe(gray);
+    expect(parseColor(getComputedStyle(control).color).ink, 'the disabled mark').toBe(gray);
+    expect(parseColor(getComputedStyle(label).color).ink, 'the disabled label').toBe(gray);
+  });
+
+  it('ki-radio paints a disabled ring, dot and label in GrayText', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-radio-group label="Plan" value="basic">' +
+        '<ki-radio value="basic" disabled>Basic</ki-radio>' +
+        '</ki-radio-group>',
+    );
+    const control = await partOf(fixture, 'ki-radio', '[part="control"]');
+    const label = await partOf(fixture, 'ki-radio', '[part="label"]');
+    const gray = systemColor('GrayText').ink;
+
+    await expect.poll(() => getComputedStyle(control, '::before').opacity).toBe('1');
+    expect(edgeOf(control), 'the disabled ring').toBe(gray);
+    expect(fillOf(control, '::before'), 'the disabled dot').toBe(gray);
+    expect(parseColor(getComputedStyle(label).color).ink, 'the disabled label').toBe(gray);
+  });
+
+  it('ki-switch paints a disabled track, thumb and label in GrayText', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount('<ki-switch disabled checked>Notifications</ki-switch>');
+    const track = await partOf(fixture, 'ki-switch', '[part="track"]');
+    const thumb = await partOf(fixture, 'ki-switch', '[part="thumb"]');
+    const label = await partOf(fixture, 'ki-switch', '[part="label"]');
+    const gray = systemColor('GrayText').ink;
+
+    expect(edgeOf(track), 'the disabled track edge').toBe(gray);
+    expect(fillOf(thumb), 'the disabled thumb').toBe(gray);
+    expect(parseColor(getComputedStyle(label).color).ink, 'the disabled label').toBe(gray);
+  });
+
   it('ki-dialog is an opaque surface with an edge', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
@@ -423,6 +468,23 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
 
     expect(isOpaqueCanvas(surface), 'the page shows through the tooltip').toBe(true);
     expect(edgeOf(surface), 'the tooltip has no edge against the page').not.toBeNull();
+  });
+
+  it('ki-tooltip paints the arrow it points with', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-tooltip label="Explains the save action"><button type="button">Save</button></ki-tooltip>',
+    );
+    const surface = await partOf(fixture, 'ki-tooltip', '[part="tooltip"]');
+    const arrow = surface.firstElementChild;
+    if (arrow === null) {
+      throw new Error('ki-tooltip drew no arrow');
+    }
+
+    expect(
+      fillOf(arrow),
+      'the arrow is Canvas on Canvas: the tooltip points nowhere',
+    ).not.toBeNull();
   });
 
   it('ki-divider paints its rule', async (test) => {

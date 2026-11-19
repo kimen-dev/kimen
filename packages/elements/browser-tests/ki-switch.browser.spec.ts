@@ -497,6 +497,33 @@ describe('ki-switch in a real browser', () => {
     expect(shadow).toContain('0px 2px 3px -1.5px');
   });
 
+  // Toggle master, md (10023:1368): a 48x28 control (Space/14xl x Space/9xl)
+  // whose Base well, 46x28 with Radius/small-component/md, holds the 40x22
+  // track 3px in; the Pointer is 22x18 with Radius/small-component/xs.
+  it('S7 draws the pointer as the master rounded rectangle, not a pill', async () => {
+    const el = await mount();
+
+    expect(getComputedStyle(thumbPart(el)).borderTopLeftRadius).toBe('6px');
+  });
+
+  it('S7 seats the track in the master Base well: 46x28, radius 10, 3px around the track', async () => {
+    const el = await mount();
+    const well = getComputedStyle(trackPart(el), '::before');
+
+    expect(well.width).toBe('46px');
+    expect(well.height).toBe('28px');
+    expect(well.borderTopLeftRadius).toBe('10px');
+    expect(well.backgroundImage).toContain('linear-gradient(');
+  });
+
+  it('S7 sets the label 12px past the 48px control: 16px from the track (Toggle-label 10101:3996)', async () => {
+    const el = await mount();
+    const track = trackPart(el).getBoundingClientRect();
+    const label = labelPart(el).getBoundingClientRect();
+
+    expect(label.left - track.right).toBeCloseTo(16, 0);
+  });
+
   it('S8 places the checked thumb at the inline-end inset via transform travel', async () => {
     const el = await mount('checked');
     const trackRect = trackPart(el).getBoundingClientRect();
