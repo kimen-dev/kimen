@@ -1,5 +1,6 @@
 :host {
   display: inline-flex;
+  font-family: var(--ki-typography-family-body);
   max-inline-size: 100%;
   vertical-align: middle;
 }

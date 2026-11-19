@@ -2464,6 +2464,10 @@
             {
               "name": "--ki-button-group-toolbar-gap",
               "description": "Gap between toolbar actions."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
             }
           ]
         }

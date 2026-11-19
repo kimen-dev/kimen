@@ -154,6 +154,14 @@
         "replacement": null,
         "required": false,
         "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
       }
     },
     "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",

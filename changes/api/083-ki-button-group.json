@@ -25,6 +25,7 @@
     "/packages/@kimen~1elements/components/ki-button-group/cssProperties/--ki-button-group-radius": "b8758c16010341a43f7f2ac05d869996fe6b3b45c0c557e41279be2cf8a54e62",
     "/packages/@kimen~1elements/components/ki-button-group/cssProperties/--ki-button-group-seam-overlap": "53377e6001f0dff2932ae877651ede3575e93a1cfca9ad4ec20e21c0a3891cc6",
     "/packages/@kimen~1elements/components/ki-button-group/cssProperties/--ki-button-group-toolbar-gap": "1903c769fdfaa81b85767f500fa58ab14bef153518ec2e28e506591f998104cb",
+    "/packages/@kimen~1elements/components/ki-button-group/cssProperties/--ki-typography-family-body": "9dc2a246d0c50e3774e07844f740e07aef585630b2df7c0d5bc0535a06954ae8",
     "/packages/@kimen~1elements/components/ki-button-group/description": "15bda0756f6c16e746b51c2762e2a2bc8965d9910b91e84e6a3c7816fe325a10",
     "/packages/@kimen~1elements/components/ki-button-group/parts/group": "bc61441ad31f42962c1fe66d636d1aacbc13cb8cd8edbd35e88c0fdf57e7f6e5",
     "/packages/@kimen~1elements/components/ki-button-group/properties/attached": "18159ed774a93721339d0e332e11f843392ec7fa8b551b7b1326b1c2a25c53c2",
@@ -557,7 +558,7 @@
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Add ButtonGroup and optional icon toggle and disclosure state. Carry forward the protected-baseline major classification for the generated loader Components and JSX namespaces.",
+  "reason": "Add ButtonGroup, its typography token, and optional icon toggle and disclosure state. Carry forward the protected-baseline major classification for the generated loader Components and JSX namespaces.",
   "release": "major",
   "schemaVersion": 2
 }

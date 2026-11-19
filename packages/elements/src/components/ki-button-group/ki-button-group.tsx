@@ -31,7 +31,13 @@ function getButton(item: HTMLElement): HTMLElement | undefined {
 
 function isShown(element: HTMLElement): boolean {
   const style = getComputedStyle(element);
-  return !element.hidden && style.display !== 'none' && style.visibility === 'visible';
+  // A trigger can have no computed values until its tooltip renders its slot.
+  return (
+    !element.hidden &&
+    style.display !== 'none' &&
+    style.visibility !== 'hidden' &&
+    style.visibility !== 'collapse'
+  );
 }
 
 function isFocusable({ item, button }: Member): boolean {
@@ -65,7 +71,7 @@ export class KiButtonGroup {
   @Element() private readonly host!: HTMLElement;
   private slot: HTMLSlotElement | undefined;
   private members: Member[] = [];
-  private activeButton: HTMLElement | undefined;
+  private lastFocusedButton: HTMLElement | undefined;
   private readonly observer = new MutationObserver(() => {
     this.sync();
   });
@@ -132,7 +138,7 @@ export class KiButtonGroup {
     this.observer.disconnect();
     this.members.forEach(this.release);
     this.members = [];
-    this.activeButton = undefined;
+    this.lastFocusedButton = undefined;
   }
 
   @Watch('attached')
@@ -203,16 +209,19 @@ export class KiButtonGroup {
     overrideButtonAttribute(button, 'tabindex', this);
   };
 
-  private syncTabStops(): void {
+  private syncTabStops(preferredButton = this.lastFocusedButton): void {
     let activeIndex = -1;
     if (this.toolbar) {
-      activeIndex = this.members.findIndex(({ button }) => button === this.activeButton);
+      activeIndex = this.members.findIndex(({ button }) => button === preferredButton);
       const activeMember = this.members[activeIndex];
       if (!activeMember || !isFocusable(activeMember)) {
+        this.lastFocusedButton = undefined;
+        // Re-evaluate the initial stop as members become available, until one receives focus.
         activeIndex = this.members.findIndex(isFocusable);
       }
+    } else {
+      this.lastFocusedButton = undefined;
     }
-    this.activeButton = this.members[activeIndex]?.button;
     // A negative tabindex removes a shadow host and its focus scope from the
     // sequential order. The button hosts still delegate programmatic focus.
     this.members.forEach(({ button }, index) => {
@@ -233,7 +242,7 @@ export class KiButtonGroup {
   private readonly handleFocusIn = (event: FocusEvent): void => {
     const member = this.members[this.eventMember(event)];
     if (this.toolbar && member && isFocusable(member)) {
-      this.activeButton = member.button;
+      this.lastFocusedButton = member.button;
       this.syncTabStops();
     }
   };
@@ -262,8 +271,7 @@ export class KiButtonGroup {
     event.preventDefault();
     const member = this.members[next];
     if (member) {
-      this.activeButton = member.button;
-      this.syncTabStops();
+      this.syncTabStops(member.button);
       member.button.focus();
     }
   };

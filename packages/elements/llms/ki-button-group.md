@@ -125,3 +125,4 @@ None.
 - `--ki-button-group-radius`: Logical outside radius of the toolbar frame.
 - `--ki-button-group-seam-overlap`: Shared-edge overlap between adjacent attached actions.
 - `--ki-button-group-toolbar-gap`: Gap between toolbar actions.
+- `--ki-typography-family-body`: semantic font family for typography family body.

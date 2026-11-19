@@ -65,7 +65,7 @@ function focusedControl(): Element | null {
 async function expectFocus(name: string): Promise<void> {
   const control = page.getByRole('button', { name, exact: true });
   await expect.element(control).toBeVisible();
-  await expect.poll(focusedControl).toBe(control.element());
+  await expect.poll(() => focusedControl() === control.element()).toBe(true);
 }
 
 function gapBetween(first: Element, second: Element): number {
@@ -82,7 +82,7 @@ function history(attributes = '', children = ''): string {
 
 async function mountToolbar(attributes = '', entries = ''): Promise<HTMLElement> {
   const fixture = mount(`
-    <button>Before</button>
+    <button tabindex="0">Before</button>
     <ki-button-group toolbar label="Formatting" ${attributes}>
       ${
         entries ||
@@ -94,7 +94,7 @@ async function mountToolbar(attributes = '', entries = ''): Promise<HTMLElement>
       `
       }
     </ki-button-group>
-    <button>After</button>
+    <button tabindex="0">After</button>
   `);
   await expect.element(page.getByRole('toolbar', { name: 'Formatting' })).toBeVisible();
   await expect.element(page.getByRole('button', { name: 'Bold' })).toBeVisible();
@@ -345,6 +345,25 @@ describe('ki-button-group', () => {
     await expectAccessible(fixture);
   });
 
+  it('makes the first action the initial Tab stop when it becomes available before focus', async () => {
+    const fixture = mount(`
+      <button tabindex="0">Before</button>
+      <ki-button-group toolbar label="Formatting">
+        <ki-tooltip label="Bold" hidden>
+          <ki-icon-button label="Bold">${chevron}</ki-icon-button>
+        </ki-tooltip>
+        <ki-icon-button label="Link">${chevron}</ki-icon-button>
+      </ki-button-group>
+    `);
+    const link = requireElement(fixture, 'ki-icon-button[label="Link"]');
+    await expect.poll(() => link.tabIndex).toBe(0);
+
+    requireElement(fixture, 'ki-tooltip').hidden = false;
+
+    await expect.poll(() => link.tabIndex).toBe(-1);
+    await enterToolbar(fixture);
+  });
+
   it('S11 paints a framed toolbar and takes the authored divider colour', async () => {
     const fixture = await mountToolbar(
       'style="--ki-button-group-bg: rgb(235, 236, 240); --ki-button-group-divider: rgb(47, 51, 61)"',
@@ -370,8 +389,6 @@ describe('ki-button-group', () => {
   });
 
   it('moves toolbar focus and shows an icon label without motion when reduced motion is requested', async () => {
-    await browserCommands.emulateReducedMotion('reduce');
-    await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
     const fixture = await mountToolbar(
       '',
       `
@@ -380,16 +397,27 @@ describe('ki-button-group', () => {
     `,
     );
 
+    // WebKit updates media queries in shadow roots that exist when the preference changes.
+    await browserCommands.emulateReducedMotion('reduce');
+    await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+
     await enterToolbar(fixture);
     await userEvent.keyboard('{ArrowRight}');
     await expectFocus('Link');
 
     const tooltip = page.getByRole('tooltip', { name: 'Link' });
     await expect.element(tooltip).toBeVisible();
-    const bubble = getComputedStyle(tooltip.element());
-    expect(bubble.transitionDuration).toBe('0s');
-    expect(bubble.animationName).toBe('none');
-    expect(getComputedStyle(controlOf(fixture, 'ki-icon-button')).transitionDuration).toBe('0s');
+    const icon = controlOf(fixture, 'ki-icon-button');
+    await expect
+      .poll(() => {
+        const bubble = getComputedStyle(tooltip.element());
+        return [
+          bubble.transitionDuration,
+          bubble.animationName,
+          getComputedStyle(icon).transitionDuration,
+        ];
+      })
+      .toEqual(['0s', 'none', '0s']);
   });
 
   it('keeps a visible frame and keyboard focus under forced colours', async (context) => {

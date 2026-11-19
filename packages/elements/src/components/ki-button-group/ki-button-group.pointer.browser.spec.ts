@@ -2,10 +2,10 @@
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { commands, page } from 'vitest/browser';
-import { defineCustomElement as defineKiButtonGroup } from '../dist/components/ki-button-group.js';
-import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
-import { defineCustomElement as defineKiIconButton } from '../dist/components/ki-icon-button.js';
-import { parkPointer } from './axe';
+import { defineCustomElement as defineKiButtonGroup } from '../../../dist/components/ki-button-group.js';
+import { defineCustomElement as defineKiButton } from '../../../dist/components/ki-button.js';
+import { defineCustomElement as defineKiIconButton } from '../../../dist/components/ki-icon-button.js';
+import { parkPointer } from '../../../browser-tests/axe';
 
 const browserCommands = commands as unknown as {
   emulateHoverCapability: (capability: 'hover' | 'none' | null) => Promise<boolean>;
