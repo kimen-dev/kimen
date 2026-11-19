@@ -33,9 +33,10 @@ number through the enclosing form.
   a step grid. An adjustment from empty starts at zero clamped to the bounds.
 - **Agent's choice, pending founder confirmation.** Page Up and Page Down
   move ten steps, like Shift with the arrows. Home and End go to their
-  respective bound when present and retain caret behavior otherwise. Enabled
-  steppers are named native buttons and stay in tab order. The labels and
-  feedback messages can be localized through props.
+  respective bound when present and retain caret behavior otherwise. Steppers are
+  named native buttons. The spinbutton is the single Tab stop and provides
+  the same actions with its keyboard shortcuts. The labels and feedback
+  messages can be localized through props.
 - **Agent's choice, pending founder confirmation.** The closest language
   declaration sets the locale, with the runtime locale as fallback. Focus uses
   an ungrouped, unrounded numeric edit string. Percentage edits use percentage
@@ -46,7 +47,8 @@ number through the enclosing form.
   change events follow the `ki-input` convention. Each step commits immediately.
   Enter commits before implicit form submission. An empty optional field
   submits an empty string. Reset restores the `value` attribute. The catalog
-  accepts JSON formatting options and declares no slots or agent actions.
+  accepts serialized JSON formatting options and exposes `change` for
+  declarative action bindings. It declares no slots.
 - **Agent's choice, pending founder confirmation.** Use the reference's two
   flanking steppers and trailing unit with the shipped medium field metrics.
   The current docs pipeline discovers `docs/site.mdx` and builds the NumberInput

@@ -13,4 +13,5 @@
 | `input`, `change` | Native edit and composed commit notifications. The live `value` property provides the number. |
 | Parts | `label`, `field`, `input`, `unit`, `decrease`, `increase`, `help`, `error`, `status`. |
 
-The field has no slots. The catalog exposes props and declares no agent actions.
+The field has no slots. The catalog exposes props and the `change` event for
+declarative action bindings.

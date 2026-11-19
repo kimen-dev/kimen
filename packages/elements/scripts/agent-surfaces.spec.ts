@@ -681,6 +681,19 @@ describe('agent surfaces', () => {
     ).toEqual(['ki-button.variant: @minimum 9 is above @maximum 5']);
   });
 
+  it('types a serialized attribute separately from its object property', async () => {
+    const docs = normalizeDocs(await readFixture('path-a-docs.json')) as DocsFixture;
+    const prop = docs.components[0]?.props?.[0];
+    if (prop === undefined) throw new Error('fixture must declare a prop');
+    prop.type = 'Intl.NumberFormatOptions | undefined';
+    prop.docsTags = [{ name: 'attributeType', text: 'string' }];
+
+    expect(validateDocs(docs)).toEqual([]);
+    const declaration = buildManifest(docs).modules[0].declarations[0];
+    expect(declaration.attributes[0]).toHaveProperty('type.text', 'string');
+    expect(declaration.members[0]).toHaveProperty('type.text', prop.type);
+  });
+
   it('S1 buildManifest carries the url format a string prop declares with @format', async () => {
     const docs = normalizeDocs(await readFixture('path-a-docs.json')) as DocsFixture;
     const component = docs.components[0];
