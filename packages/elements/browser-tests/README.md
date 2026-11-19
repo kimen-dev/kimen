@@ -26,9 +26,12 @@ laid out and the visual-regression layer.
 
 ## Visual regression (`*.visual[.dark].browser.spec.ts`)
 
-One deterministic "state gallery" PNG per component x theme, captured with
-`expect(...).toMatchScreenshot()` inside the ordinary Chromium gate
-(`scripts/gates/gates-browser.sh chromium`, part of `gates-suite.sh`):
+One deterministic "state gallery" PNG per component x theme x engine,
+captured with `expect(...).toMatchScreenshot()` inside the browser gate
+(`scripts/gates/gates-browser.sh <engine>`). Pull requests run it on
+Chromium, as part of `gates-suite.sh`; the release workflow runs it on
+Chromium, Firefox and WebKit, and each engine compares against its own
+baselines:
 
 - Matrix: 25 components x (onmars light + onmars dark) + material3 light
   = 75 captures. Hover and animated states are out of v1.
@@ -76,19 +79,22 @@ Bootstrap flow (one founder pass):
    specs skip noisily on CI because no linux baseline exists yet.
 2. The founder dispatches the `visual-baselines` workflow on `main`
    (Actions -> visual-baselines -> "Run workflow"). It regenerates every
-   linux PNG with `vitest run --update=all` and uploads
-   `__screenshots__/` as the `visual-baselines-linux` artifact.
+   linux PNG with `vitest run --update=all`, one job per engine, and
+   uploads them as `visual-baselines-linux-<engine>` artifacts.
 3. In ONE follow-up PR: commit the reviewed linux PNGs **and flip
    `visual/ARMED` to `true`**. From that merge on, the gate is armed.
 
 ## Baselines: linux-only, CI-generated
 
-Screenshot file names embed the platform
-(`<name>-chromium-linux.png` / `-chromium-darwin.png`), so:
+Screenshot file names embed the engine and the platform
+(`<name>-<engine>-linux.png` / `<name>-<engine>-darwin.png`, where the
+engine is `chromium`, `firefox` or `webkit`), so:
 
-- **Versioned arbiters**: only the `*-chromium-linux.png` files under
-  `__screenshots__/` are committed. They are generated exclusively on CI
-  (ubuntu-latest, the pinned Playwright Chromium) — never locally.
+- **Versioned arbiters**: only the `*-linux.png` files under
+  `__screenshots__/` are committed, one set per engine. They are generated
+  exclusively on CI (ubuntu-latest, the pinned Playwright engines) — never
+  locally. While the gate is armed, `scripts/tests/visual-gate.test.mjs`
+  requires the full set for every engine the release matrix checks.
 - **Local darwin baselines**: gitignored, a personal safety net. Create or
   refresh them with an explicit update run (see below); once the gate is
   armed, a plain local run also auto-creates missing darwin baselines
@@ -106,10 +112,14 @@ Baseline updates are a founder decision, never automatic:
 1. Push the branch with the intentional visual change.
 2. Run the `visual-baselines` workflow (Actions -> visual-baselines ->
    "Run workflow" on that branch). It regenerates the linux PNGs with
-   `vitest run --update=all` and uploads `__screenshots__/` as the
-   `visual-baselines-linux` artifact.
-3. Download the artifact, review every changed PNG against the intent of
-   the change, and commit the reviewed files into the branch.
+   `vitest run --update=all`, one job per engine, uploads each engine's
+   PNGs as the `visual-baselines-linux-<engine>` artifact, and then runs
+   the visual specs again against what it just wrote: a job that fails
+   that second pass has found a capture its engine does not render the same
+   way twice, and those PNGs must not be committed.
+3. Download the artifacts, review every changed PNG against the intent of
+   the change, and commit the reviewed files into the branch. A visual
+   change usually moves all three engines' captures of that gallery.
 4. If a gallery was renamed or removed, delete its stale PNG in the same
    commit (regeneration never deletes).
 
@@ -127,7 +137,7 @@ Note the `=`: vitest declares `--update [type]`, so a bare
 ## Residual gaming risk (honest limits)
 
 The linux baselines are ordinary committed PNGs: nothing in the toolchain
-can prove a `*-chromium-linux.png` was produced by the CI workflow rather
+can prove a `*-linux.png` was produced by the CI workflow rather
 than generated elsewhere (e.g. a linux container) and committed by hand. A
 malicious or careless PR could therefore "re-baseline" a visual regression
 without ever dispatching `visual-baselines`. Mitigations, not proofs:
@@ -144,7 +154,7 @@ without ever dispatching `visual-baselines`. Mitigations, not proofs:
 # Full browser gate (functional + visual):
 bash scripts/gates/gates-browser.sh chromium
 
-# Visual specs only:
+# Visual specs only (KIMEN_BROWSER_ENGINE=firefox or webkit for another engine):
 bash scripts/gates/cache-env.sh -- \
   pnpm --filter @kimen/elements exec vitest run \
   --config vitest.browser.config.ts .visual.

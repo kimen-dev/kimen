@@ -20,6 +20,10 @@ const screenshotsDirectory = join(browserTestsDirectory, '__screenshots__');
 const baselinesWorkflowPath = join(repositoryRoot, '.github/workflows/visual-baselines.yml');
 
 const VISUAL_SPEC = /^ki-[a-z-]+\.visual(?:\.dark)?\.browser\.spec\.ts$/u;
+// The release matrix runs the whole browser suite, visual specs included, on
+// all three engines, and a capture compares only against the baseline of its
+// own engine: every engine needs its own committed set.
+const ENGINES = Object.freeze(['chromium', 'firefox', 'webkit']);
 const DISARMED_NOTICE = 'visual gate DISARMED — bootstrap pending, see README';
 
 function parseArmedMarker(content) {
@@ -35,7 +39,7 @@ function parseArmedMarker(content) {
 // Mirrors the harness matrix: light specs capture onmars + material3, dark
 // specs capture onmars only, and toMatchScreenshot names baselines
 // `<name>-<browser>-<platform>.png`.
-function expectedLinuxBaselines(specFileName) {
+function expectedLinuxBaselines(specFileName, engine = 'chromium') {
   const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
   const captures = dark
@@ -45,15 +49,17 @@ function expectedLinuxBaselines(specFileName) {
         ['material3', 'light'],
       ];
   return captures.map(
-    ([theme, scheme]) => `${component}-${theme}-${scheme}-gallery-chromium-linux.png`,
+    ([theme, scheme]) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
   );
 }
 
-function missingLinuxBaselines(specFileNames, existingBaselinesBySpec) {
-  return specFileNames.flatMap((spec) =>
-    expectedLinuxBaselines(spec)
-      .filter((baseline) => !(existingBaselinesBySpec.get(spec)?.has(baseline) ?? false))
-      .map((baseline) => `${spec}/${baseline}`),
+function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines = ENGINES) {
+  return engines.flatMap((engine) =>
+    specFileNames.flatMap((spec) =>
+      expectedLinuxBaselines(spec, engine)
+        .filter((baseline) => !(existingBaselinesBySpec.get(spec)?.has(baseline) ?? false))
+        .map((baseline) => `${spec}/${baseline}`),
+    ),
   );
 }
 
@@ -66,7 +72,7 @@ async function committedLinuxBaselines(specFileNames) {
   const existing = new Map();
   for (const spec of specFileNames) {
     const files = await readdir(join(screenshotsDirectory, spec)).catch(() => []);
-    existing.set(spec, new Set(files.filter((file) => file.endsWith('-chromium-linux.png'))));
+    existing.set(spec, new Set(files.filter((file) => file.endsWith('-linux.png'))));
   }
   return existing;
 }
@@ -87,6 +93,10 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
   ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
+    'ki-button-onmars-light-gallery-webkit-linux.png',
+    'ki-button-material3-light-gallery-webkit-linux.png',
+  ]);
 });
 
 test('a deleted linux baseline is detected by the armed audit', () => {
@@ -95,13 +105,45 @@ test('a deleted linux baseline is detected by the armed audit', () => {
     [specs[0], new Set(expectedLinuxBaselines(specs[0]))],
     [specs[1], new Set(expectedLinuxBaselines(specs[1]))],
   ]);
-  assert.deepEqual(missingLinuxBaselines(specs, complete), []);
+  assert.deepEqual(missingLinuxBaselines(specs, complete, ['chromium']), []);
 
   const gutted = new Map(complete);
   gutted.set(specs[1], new Set());
-  assert.deepEqual(missingLinuxBaselines(specs, gutted), [
+  assert.deepEqual(missingLinuxBaselines(specs, gutted, ['chromium']), [
     'ki-button.visual.dark.browser.spec.ts/ki-button-onmars-dark-gallery-chromium-linux.png',
   ]);
+});
+
+test('a baseline set complete for one engine is still incomplete for the others', () => {
+  const spec = 'ki-button.visual.dark.browser.spec.ts';
+  const chromiumOnly = new Map([[spec, new Set(expectedLinuxBaselines(spec))]]);
+
+  assert.deepEqual(missingLinuxBaselines([spec], chromiumOnly), [
+    `${spec}/ki-button-onmars-dark-gallery-firefox-linux.png`,
+    `${spec}/ki-button-onmars-dark-gallery-webkit-linux.png`,
+  ]);
+});
+
+// The engines the release matrix checks and the engines the baselines
+// workflow regenerates are one list: an engine in the first and not in the
+// second has nothing to compare its captures against.
+test('the baselines workflow regenerates every engine the release matrix checks', async () => {
+  const [baselines, release] = await Promise.all([
+    readFile(baselinesWorkflowPath, 'utf8'),
+    readFile(join(repositoryRoot, '.github/workflows/release.yml'), 'utf8'),
+  ]);
+  const matrixEngines = (workflow) =>
+    /^ {8}engine: \[([^\]]+)\]$/mu
+      .exec(workflow)?.[1]
+      .split(',')
+      .map((engine) => engine.trim());
+
+  assert.deepEqual(matrixEngines(release), [...ENGINES]);
+  assert.deepEqual(matrixEngines(baselines), [...ENGINES]);
+  // Each job captures with its own engine and uploads under its own name.
+  assert.match(baselines, /^ {10}KIMEN_BROWSER_ENGINE: \$\{\{ matrix\.engine \}\}$/mu);
+  assert.match(baselines, /playwright install --with-deps "\$\{\{ matrix\.engine \}\}"/u);
+  assert.match(baselines, /name: visual-baselines-linux-\$\{\{ matrix\.engine \}\}/u);
 });
 
 test('an armed visual gate keeps every committed linux baseline', async () => {
