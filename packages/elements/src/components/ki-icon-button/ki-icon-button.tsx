@@ -1,4 +1,5 @@
 import { Component, Element, h, Prop, Watch } from '@stencil/core';
+import { DialogInvokerState, invokeDialog, type KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -82,6 +83,23 @@ export class KiIconButton {
   @Prop({ reflect: true }) label!: string;
 
   /**
+   * ID of a ki-dialog in the same document or shadow tree as this button.
+   * Set it together with `command` to connect a dialog declaratively.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) commandfor?: string;
+
+  /**
+   * Dialog action to run for `commandfor`. Use `show-modal` to open,
+   * `close` for direct dismissal, or `request-close` for guarded dismissal.
+   * Choose a command for local dialog control and omit it for other actions.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) command?: KiDialogCommand;
+
+  /**
    * Prevents activation, removes the icon button from keyboard reach, and
    * exposes the unavailable state through the internal native button. Wins
    * over `loading` when both are set.
@@ -125,6 +143,7 @@ export class KiIconButton {
 
   private button: HTMLButtonElement | undefined;
   private descriptionObserver?: MutationObserver;
+  private readonly dialogInvoker = new DialogInvokerState();
 
   connectedCallback(): void {
     // Armed on every connection, not once on load: disconnectedCallback
@@ -141,6 +160,7 @@ export class KiIconButton {
     // A description written while the button was out of the document. On the
     // first connection there is no inner button yet: componentDidLoad syncs.
     this.syncForwardedDescription();
+    this.syncDialogInvoker();
   }
 
   componentWillLoad(): void {
@@ -161,8 +181,17 @@ export class KiIconButton {
     this.syncForwardedDescription();
   }
 
+  componentDidRender(): void {
+    this.syncDialogInvoker();
+  }
+
   disconnectedCallback(): void {
     this.descriptionObserver?.disconnect();
+    this.dialogInvoker.disconnect();
+  }
+
+  private syncDialogInvoker(): void {
+    this.dialogInvoker.sync(this.host, this.button, this.commandfor, this.command);
   }
 
   // Assistive tech announces the DELEGATED inner button, not this focus-
@@ -196,7 +225,10 @@ export class KiIconButton {
     if (this.disabled || this.effectiveLoading) {
       event.preventDefault();
       event.stopImmediatePropagation();
+      return;
     }
+
+    invokeDialog(this.host, this.commandfor, this.command, event);
   };
 
   render() {
@@ -214,6 +246,8 @@ export class KiIconButton {
         }}
         part="button"
         type="button"
+        {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
+        {...(this.command === undefined ? {} : { command: this.command })}
         tabIndex={this.disabled ? -1 : 0}
         disabled={this.disabled}
         aria-disabled={loading ? 'true' : undefined}

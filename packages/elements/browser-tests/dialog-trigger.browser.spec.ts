@@ -1,6 +1,6 @@
 // @spec:078-dialog-trigger
 import tokensCss from '@kimen/tokens/css?raw';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineButton } from '../dist/components/ki-button.js';
 import { defineCustomElement as defineDialog } from '../dist/components/ki-dialog.js';
@@ -29,6 +29,7 @@ beforeAll(() => {
 
 let forcedColors = false;
 afterEach(async () => {
+  vi.unstubAllGlobals();
   document.body.querySelector('main')?.remove();
   await parkPointer();
   if (forcedColors) {
@@ -81,15 +82,21 @@ async function openWithPointer(): Promise<void> {
 }
 
 describe('dialog invoker commands', () => {
-  it('S1 opens the linked dialog by pointer and forwards the command attributes', async () => {
-    const fixture = await mount(trigger + dialog);
-    const button = buttonPart(fixture);
-    expect(button.getAttribute('commandfor')).toBe('delete');
-    expect(button.getAttribute('command')).toBe('show-modal');
+  it.each(['browser', 'fallback'])(
+    'S1 opens by pointer with the %s command event',
+    async (implementation) => {
+      if (implementation === 'fallback') {
+        vi.stubGlobal('CommandEvent', undefined);
+      }
+      const fixture = await mount(trigger + dialog);
+      const button = buttonPart(fixture);
+      expect(button.getAttribute('commandfor')).toBe('delete');
+      expect(button.getAttribute('command')).toBe('show-modal');
 
-    await openWithPointer();
-    expect(dialogPart(fixture).matches(':modal')).toBe(true);
-  });
+      await openWithPointer();
+      expect(dialogPart(fixture).matches(':modal')).toBe(true);
+    },
+  );
 
   it('S2 opens from a focused icon button with Enter', async () => {
     const fixture = await mount(`

@@ -1,5 +1,10 @@
-import { Component, Element, Event, h, Method, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, h, Listen, Method, Prop, State, Watch } from '@stencil/core';
 import { booleanFromAttributePresence } from '../../utils/boolean-presence';
+import {
+  type DialogCommandEvent,
+  hasDialogAncestor,
+  isDialogCommand,
+} from '../../utils/dialog-invoker';
 import { focusThroughShadow } from '../../utils/shadow-focus';
 import { isOutsideRect } from './ki-dialog.backdrop';
 import {
@@ -9,11 +14,11 @@ import {
 } from './ki-dialog.focus';
 
 /** Close reason reported by `ki-close`. */
-export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';
+export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop' | 'command';
 
 /** Event payload for the post-close `ki-close` notification. */
 export interface KiDialogCloseDetail {
-  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */
+  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. */
   reason: KiDialogCloseReason;
 }
 
@@ -26,15 +31,15 @@ interface EventEmitter<T> {
  *
  * @whenToUse destructive confirmations, blocking choices, and brief
  * critical input that must be resolved before returning to the page. Always
- * provide a `heading`, place actions in the `footer` slot, wire each footer
- * action to `close()`, and in destructive confirmations put `autofocus` on
+ * provide a `heading`, place actions in the `footer` slot, wire each
+ * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
  * the least destructive action.
  * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
  * supplementary hints (`ki-tooltip`), long forms or multi-step flows
  * (navigate or use a future full-screen variant), menus, or pickers.
  *
  * @slot - Dialog body content.
- * @slot footer - Dialog actions; applications wire every action to `close()`.
+ * @slot footer - Dialog actions. Dismiss using an invoker command or `close()`.
  * @part dialog - Internal native dialog surface.
  * @part heading - Visible h2 title, rendered only when `heading` is non-empty.
  * @part body - Scrollable body region.
@@ -84,7 +89,7 @@ export class KiDialog {
   /**
    * Post-close notification for every close path. Footer actions report
    * `method` when they call `close()`, Escape reports `escape`, and opt-in
-   * backdrop dismissal reports `backdrop`.
+   * backdrop dismissal reports `backdrop`. Invoker dismissals report `command`.
    * When to use: update application state after the dialog is already closed
    * and focus has returned through the native mechanism.
    * When NOT to use: do not expect this event to veto closing; it is not
@@ -101,6 +106,7 @@ export class KiDialog {
   private backdropArmed = false;
   private openObserver?: MutationObserver;
   private pendingReason: KiDialogCloseReason = 'method';
+  private commandInvoker: HTMLElement | undefined;
 
   @Watch('open')
   protected handleOpenChange(): void {
@@ -177,21 +183,72 @@ export class KiDialog {
   /**
    * Closes the dialog and reports `method`. No-op when already closed.
    * Equivalent to removing the host `open` attribute. Footer actions never
-   * close automatically; wire them to this method.
+   * close automatically; wire them to this method or an invoker command.
    * When to use: resolve footer actions, programmatic dismissals, and
    * application-controlled cancellation. When NOT to use: do not use for
    * Escape or backdrop bookkeeping; those paths set their own close reasons.
    */
   @Method()
   close(): Promise<void> {
-    if (!this.open && !this.dialog?.open) {
-      return Promise.resolve();
+    this.closeWithReason('method');
+    return Promise.resolve();
+  }
+
+  @Listen('command')
+  protected handleCommand(event: DialogCommandEvent): void {
+    const { command, source } = event;
+    if (event.target !== this.host || event.defaultPrevented || !isDialogCommand(command)) {
+      return;
     }
 
-    this.pendingReason = 'method';
+    if (command === 'close') {
+      this.closeWithReason('command');
+      return;
+    }
+
+    if (command === 'request-close') {
+      this.requestCommandClose();
+      return;
+    }
+
+    if (
+      this.open ||
+      hasDialogAncestor(this.host, false) ||
+      (source instanceof HTMLElement && hasDialogAncestor(source, true))
+    ) {
+      return;
+    }
+    this.commandInvoker = source instanceof HTMLElement ? source : undefined;
+    void this.show();
+  }
+
+  private closeWithReason(reason: KiDialogCloseReason): void {
+    if (!this.open && !this.dialog?.open) {
+      return;
+    }
+
+    this.pendingReason = reason;
     this.open = false;
     this.host.removeAttribute('open');
-    return Promise.resolve();
+  }
+
+  private requestCommandClose(): void {
+    const dialog = this.dialog as (HTMLDialogElement & { requestClose?: () => void }) | undefined;
+    if (!dialog?.open) {
+      return;
+    }
+
+    this.pendingReason = 'command';
+    if (typeof dialog.requestClose === 'function') {
+      dialog.requestClose();
+    } else if (dialog.dispatchEvent(new globalThis.Event('cancel', { cancelable: true }))) {
+      dialog.close();
+    }
+
+    // The native close event is queued only if the request was accepted.
+    if (dialog.hasAttribute('open')) {
+      this.pendingReason = 'method';
+    }
   }
 
   private readonly setDialogRef = (dialog?: HTMLDialogElement): void => {
@@ -203,11 +260,15 @@ export class KiDialog {
   };
 
   private readonly handleCancel = (): void => {
-    this.pendingReason = 'escape';
+    if (this.pendingReason !== 'command') {
+      this.pendingReason = 'escape';
+    }
   };
 
   private readonly handleNativeClose = (): void => {
     const reason = this.pendingReason;
+    const invoker = this.commandInvoker;
+    this.commandInvoker = undefined;
     this.pendingReason = 'method';
     this.backdropArmed = false;
 
@@ -217,7 +278,11 @@ export class KiDialog {
     this.host.removeAttribute('open');
 
     setTimeout(() => {
-      this.moveHostFallbackFocusToBody();
+      if (invoker?.isConnected && !this.open) {
+        focusThroughShadow(invoker);
+      } else {
+        this.moveHostFallbackFocusToBody();
+      }
       this.kiClose.emit({ reason });
     }, 0);
   };

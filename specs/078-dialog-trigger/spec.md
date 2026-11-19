@@ -23,7 +23,9 @@ Each interpretation is an agent's choice, pending founder confirmation.
 - A recognized command paired with `commandfor` takes precedence over the button's form action. A disabled or loading invoker stays inactive. The three supported commands target the first matching `ki-dialog` ID in the invoker's own tree under standard ID lookup.
 - Command opening refuses nested dialogs and triggers inside an already open dialog. Commands can still close the active dialog from its footer. The opener publishes the target dialog's live expanded state and regains focus.
 - A guarded surface uses the neutral node ID for `commandfor`. Rendering assigns a DOM ID unique to the rendered surface and limits the relationship to a dialog in that surface. A command can coexist with an explicitly declared surface action. A command click does not activate an ancestor action.
-- A2UI Modal accepts Button and Text entry points. The translated dialog derives its heading from the entry point text when available and uses a fallback accessible name when the text is empty. The adapter provides a visible Close command.
+- Streaming references stay within one validated chunk. Live surface references can link roots in the validated batch result.
+- The public API gate classifies the widened exported close-reason union as major. The declaration uses that classification.
+- A2UI Modal accepts Button and Text entry points. The translated dialog derives its heading from the entry point text when available and uses English fallback labels when it cannot resolve usable text. The adapter provides a visible Close command and degrades unsupported entry-point components.
 
 ## Gherkin
 

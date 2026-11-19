@@ -135,7 +135,14 @@ describe('guarded dialog commands', () => {
         ops: [
           { node: trigger, op: 'insert' },
           { node: dialog, op: 'insert' },
-          { node: { ...dialog, id: 'other-preview' }, op: 'insert' },
+          {
+            node: {
+              component: 'ki-dialog',
+              id: 'other-preview',
+              props: { heading: 'Other preview' },
+            },
+            op: 'insert',
+          },
         ],
       }).ok,
     ).toBe(true);

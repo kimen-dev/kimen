@@ -470,6 +470,64 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         .map((group) => node('ki-list-item', {}, group)),
     ),
   ],
+  Modal: (it) => {
+    const triggerId = it.literal('trigger');
+    const contentId = it.literal('content');
+    if (!triggerId || !contentId) {
+      throw it.malformed(
+        triggerId ? 'content' : 'trigger',
+        'Modal requires trigger and content component ids',
+      );
+    }
+    const { actionNodes, components, nodes } = it.context;
+    const triggerType = components.get(triggerId)?.component;
+    if (triggerType === undefined || !components.has(contentId)) {
+      // Progressive updates can deliver either reference in a later message.
+      return [];
+    }
+    if (triggerType !== 'Button' && triggerType !== 'Text') {
+      throw new Degrade('unsupported-variant', `Modal trigger: ${triggerType}`);
+    }
+
+    const [trigger] = it.child('trigger');
+    if (typeof trigger === 'object' && trigger.component !== 'ki-button') {
+      return [trigger];
+    }
+    const button = typeof trigger === 'object' ? trigger : undefined;
+    const label = typeof trigger === 'string' ? [trigger] : (button?.slots?.[''] ?? []);
+    const text = label
+      .filter((piece): piece is string => typeof piece === 'string')
+      .join('')
+      .trim();
+    // The visit number is unique even when a ChildList repeats the A2UI id.
+    const id = `a2ui-modal-${String(nodes)}`;
+    const opener = {
+      ...button,
+      ...node(
+        'ki-button',
+        { ...button?.props, command: 'show-modal', commandfor: id, type: 'button' },
+        text === '' && label.every((piece) => typeof piece === 'string') ? ['Open dialog'] : label,
+      ),
+    };
+    const binding = button === undefined ? undefined : actionNodes.get(button);
+    if (binding !== undefined) {
+      actionNodes.set(opener, binding);
+    }
+    return [
+      opener,
+      {
+        component: 'ki-dialog',
+        id,
+        props: { heading: text || 'Dialog' },
+        slots: {
+          '': it.child('content'),
+          footer: [
+            node('ki-button', { command: 'close', commandfor: id, type: 'button' }, ['Close']),
+          ],
+        },
+      },
+    ];
+  },
   Row: (it) => it.children('children'),
   Tabs: (it) => {
     const tabs = it.body['tabs'];

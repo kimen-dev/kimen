@@ -1,5 +1,6 @@
 import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
+import { DialogInvokerState, invokeDialog, type KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -73,6 +74,7 @@ export class KiButton {
    * Native form action type: `submit` submits the owning form (running
    * constraint validation and contributing `name`/`value` to the form data),
    * `reset` restores field defaults, `button` never touches the form.
+   * A configured dialog command takes precedence over the form action.
    * Cancel a submission from the form's `submit` event (`preventDefault()`);
    * unlike a native button, `preventDefault()` on the `click` event does not
    * cancel it. During submission `event.submitter` is a transient native
@@ -94,6 +96,23 @@ export class KiButton {
    * When NOT to use: omit when the default empty submitter value is intended.
    */
   @Prop({ reflect: true }) value?: string;
+
+  /**
+   * ID of a ki-dialog in the same document or shadow tree as this button.
+   * Set it together with `command` to connect a dialog declaratively.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) commandfor?: string;
+
+  /**
+   * Dialog action to run for `commandfor`. Use `show-modal` to open,
+   * `close` for direct dismissal, or `request-close` for guarded dismissal.
+   * Choose a command for local dialog control and omit it for other actions.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) command?: KiDialogCommand;
 
   /**
    * Prevents activation, removes the button from keyboard reach, and exposes
@@ -141,6 +160,7 @@ export class KiButton {
   @State() private formDisabled = false;
   private button: HTMLButtonElement | undefined;
   private descriptionObserver?: MutationObserver;
+  private readonly dialogInvoker = new DialogInvokerState();
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -166,6 +186,7 @@ export class KiButton {
     // A description written while the button was out of the document. On the
     // first connection there is no inner button yet: componentDidLoad syncs.
     this.syncForwardedDescription();
+    this.syncDialogInvoker();
   }
 
   componentWillLoad(): void {
@@ -186,8 +207,17 @@ export class KiButton {
     this.syncForwardedDescription();
   }
 
+  componentDidRender(): void {
+    this.syncDialogInvoker();
+  }
+
   disconnectedCallback(): void {
     this.descriptionObserver?.disconnect();
+    this.dialogInvoker.disconnect();
+  }
+
+  private syncDialogInvoker(): void {
+    this.dialogInvoker.sync(this.host, this.button, this.commandfor, this.command);
   }
 
   // Assistive tech announces the DELEGATED inner button, not this focus-
@@ -216,7 +246,9 @@ export class KiButton {
       return;
     }
 
-    this.activateFormAction();
+    if (!invokeDialog(this.host, this.commandfor, this.command, event)) {
+      this.activateFormAction();
+    }
   };
 
   formDisabledCallback(disabled: boolean): void {
@@ -271,6 +303,8 @@ export class KiButton {
         }}
         part="button"
         type="button"
+        {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
+        {...(this.command === undefined ? {} : { command: this.command })}
         tabIndex={this.effectiveDisabled ? -1 : 0}
         disabled={this.effectiveDisabled}
         aria-disabled={loading ? 'true' : undefined}

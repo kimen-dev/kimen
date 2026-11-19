@@ -10,4 +10,4 @@ Validate neutral command references against the complete guarded surface before 
 - Arts. II–III require the contract, regression tests and the fast quality gates.
 - Arts. IV–VI preserve native modal behavior, keyboard use and token styling.
 - Art. VIII requires the same-surface guard and an adapter-local protocol mapping.
-- Art. IX requires a minor API declaration for the additive surface.
+- Art. IX requires an API declaration for the new attributes and widened close-reason union.

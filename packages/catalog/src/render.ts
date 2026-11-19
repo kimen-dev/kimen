@@ -12,6 +12,13 @@
  * layer (Art. I, one source of truth). It is client-side (touches `document`);
  * SSR/DSD is a deferred bet.
  */
+import {
+  allocateDialogId,
+  type DialogIdFor,
+  isDialogCommand,
+  isDialogInvoker,
+  writeDialogId,
+} from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
@@ -320,13 +327,23 @@ export function attachText(
 }
 
 /** Writes one validated prop as an attribute: booleans by presence. */
-export function writeProp(element: Element, name: string, value: Scalar | undefined): void {
-  if (value === undefined || value === false) {
+export function writeProp(
+  element: Element,
+  name: string,
+  value: Scalar | undefined,
+  idFor: DialogIdFor,
+): void {
+  let attributeValue = value;
+  // Resolve neutral IDs only for catalog dialog invokers.
+  if (name === 'commandfor' && isDialogInvoker(element.localName)) {
+    attributeValue = typeof value === 'string' ? idFor(value) : undefined;
+  }
+  if (attributeValue === undefined || attributeValue === false) {
     element.removeAttribute(name);
-  } else if (value === true) {
+  } else if (attributeValue === true) {
     element.setAttribute(name, '');
   } else {
-    element.setAttribute(name, String(value));
+    element.setAttribute(name, String(attributeValue));
   }
 }
 
@@ -350,12 +367,13 @@ export function writeProps(
   element: Element,
   component: string,
   props: Readonly<Record<string, Scalar>>,
+  idFor: DialogIdFor,
 ): void {
   if (writeNativeLayout(element, component, props)) {
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, name, value);
+    writeProp(element, name, value, idFor);
   }
 }
 
@@ -389,21 +407,38 @@ export function wireActivation(
   element: Element,
   entry: CatalogEntry | undefined,
   currentProps: () => Readonly<Record<string, Scalar>>,
-  dispatch: (data: Readonly<Record<string, Scalar>>) => void,
+  dispatch: ((data: Readonly<Record<string, Scalar>>) => void) | undefined,
 ): void {
+  const invoker = isDialogInvoker(element.localName);
+  const invokesDialog = (props: Readonly<Record<string, Scalar>>): boolean =>
+    invoker && typeof props['commandfor'] === 'string' && isDialogCommand(props['command']);
+  if (dispatch === undefined) {
+    if (invoker) {
+      element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event) => {
+        if (invokesDialog(currentProps())) {
+          claim(event);
+        }
+      });
+    }
+    return;
+  }
   // The guard admitted at most one declared event (S19).
   const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
   if (activation === DEFAULT_ACTIVATION_EVENT) {
     // A click-activated node (S4) dispatches the spec's data payload and
     // suppresses the native default (a submit button's form submission)
-    // and the bubbling, so no other callback or code path runs.
+    // and the bubbling, so no other callback runs. A validated local
+    // dialog command remains available alongside its own declared action.
     element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
       if (!claim(event)) {
         return;
       }
-      event.preventDefault();
+      const props = currentProps();
+      if (!invokesDialog(props)) {
+        event.preventDefault();
+      }
       event.stopPropagation();
-      dispatch({ ...currentProps() });
+      dispatch({ ...props });
     });
     pinButtonType(element, entry, currentProps());
     return;
@@ -438,21 +473,23 @@ function buildNode(
   doc: Document,
   onAction: ((event: ActionEvent) => void) | undefined,
   entries: Readonly<Record<string, CatalogEntry>>,
+  idFor: DialogIdFor,
 ): Element {
   const element = createNodeElement(doc, node.component);
   const props = node.props ?? {};
-  writeProps(element, node.component, props);
-  if (node.action !== undefined && onAction !== undefined) {
-    const action = node.action;
-    wireActivation(
-      element,
-      ownEntry(entries, node.component),
-      () => props,
-      (data) => {
-        onAction({ action, data, path });
-      },
-    );
-  }
+  writeProps(element, node.component, props, idFor);
+  writeDialogId(element, node.id, idFor);
+  const action = node.action;
+  wireActivation(
+    element,
+    ownEntry(entries, node.component),
+    () => props,
+    action !== undefined && onAction !== undefined
+      ? (data) => {
+          onAction({ action, data, path });
+        }
+      : undefined,
+  );
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
       if (typeof child === 'string') {
@@ -464,6 +501,7 @@ function buildNode(
           doc,
           onAction,
           entries,
+          idFor,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -479,6 +517,15 @@ function ownerDocument(surface: Element): Document {
   // An element always carries its owner document (the client-side surface
   // the host mounts; SSR/DSD is a deferred bet).
   return surface.ownerDocument;
+}
+
+function scopedDialogIds(surface: Element): DialogIdFor {
+  const ids = new Map<string, string>();
+  return (nodeId) => {
+    const id = ids.get(nodeId) ?? allocateDialogId(surface);
+    ids.set(nodeId, id);
+    return id;
+  };
 }
 
 interface PreparedSpec {
@@ -632,7 +679,14 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
   }
   const doc = ownerDocument(options.surface);
   options.surface.replaceChildren(
-    buildNode(prepared.spec.root, 'root', doc, options.onAction, catalog.components),
+    buildNode(
+      prepared.spec.root,
+      'root',
+      doc,
+      options.onAction,
+      catalog.components,
+      scopedDialogIds(options.surface),
+    ),
   );
   return { diagnostics: [], ok: true };
 }
@@ -747,7 +801,14 @@ export function createStreamingRenderer(
       const chunkPath = `stream[${String(attachedChunks)}]`;
       attachedChunks += 1;
       options.surface.appendChild(
-        buildNode(report.spec.root, chunkPath, doc, options.onAction, catalog.components),
+        buildNode(
+          report.spec.root,
+          chunkPath,
+          doc,
+          options.onAction,
+          catalog.components,
+          scopedDialogIds(options.surface),
+        ),
       );
       return { diagnostics: [], ok: true };
     },

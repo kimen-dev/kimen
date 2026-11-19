@@ -270,11 +270,15 @@ the two ever drift. Five classes, five behaviors:
 
 | Class | Behavior |
 | --- | --- |
-| `mapped` (Card, Button, TextField, List, Tabs, …) | Renders as its neutral `ki-*` counterpart(s) |
+| `mapped` (Card, Button, TextField, List, Tabs, Modal, …) | Renders as its neutral `ki-*` counterpart(s) |
 | `inline` (Text) | No element of its own; its resolved string becomes inert text in the parent slot |
 | `layout` (Row, Column) | No element of its own; its children join the parent slot in order |
-| `unmapped` (Image, Icon, Modal, Slider, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
+| `unmapped` (Image, Icon, Slider, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
 | `forbidden` (`html`, `RawHtml`, `script`, `iframe`) | The **whole message** is rejected (`forbidden-type`) — across every updated component, reachable from the root or not |
+
+A `Modal` with a supported `trigger` and `content` renders a `ki-button` and
+`ki-dialog` linked within the surface. The markup handles opening and closing
+in both dialects.
 
 The asymmetry between the last two is deliberate: an attacker gains nothing by
 preferring a forbidden type over an unmapped one, because the soft path never
