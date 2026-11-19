@@ -92,9 +92,9 @@ This table is the **A2UI 0.9.1** matrix (spec 029); the 1.0 matrix is under
 [A2UI 1.0](#a2ui-10) below.
 
 `mapped` types render as the listed `ki-*` components. `inline` types carry no
-element of their own: their resolved string becomes inert text in the parent
-slot. `layout` types render no element: their children join the parent slot
-in order. `unmapped` types degrade per node to a fixed fallback that carries no
+element of their own. Their resolved string becomes inert text in the parent
+slot. A direct Text child of Row or Column gets a neutral stack to occupy its
+own layout item. `unmapped` types degrade per node to a fixed fallback that carries no
 agent-supplied content (scenarios S4/S11); a type outside the basic catalog
 degrades the same way. `forbidden` types reject the whole message on security
 grounds (scenario S7). A property the basic catalog does not declare for the
@@ -103,8 +103,8 @@ type rejects the message (`unknown-property`, scenario S9).
 | A2UI type     | Coverage  | Catalog counterpart           |
 | ------------- | --------- | ----------------------------- |
 | Text          | inline    | —                             |
-| Row           | layout    | —                             |
-| Column        | layout    | —                             |
+| Row           | mapped    | ki-stack                      |
+| Column        | mapped    | ki-stack                      |
 | List          | mapped    | ki-list, ki-list-item         |
 | Card          | mapped    | ki-card                       |
 | Tabs          | mapped    | ki-tabs, ki-tab, ki-tab-panel |
@@ -125,11 +125,10 @@ type rejects the message (`unknown-property`, scenario S9).
 | script        | forbidden | —                             |
 | iframe        | forbidden | —                             |
 
-When the component `root` translates to anything other than one catalog node
-(a `Column` or `Row` root with several children, or a `Text` root), the
-adapter wraps it in `ki-card`: the guarded renderer renders a single root
-node and the catalog has no neutral layout element yet. This holds for both
-versions.
+Row maps to `ki-stack direction="row"` and Column uses the default column
+stack. Both retain their children in order at every depth. An inline or
+empty root still uses the `ki-card` fallback to satisfy the guarded renderer's
+single root requirement.
 
 ## Client functions
 
@@ -174,8 +173,11 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
 
 - `Text.variant` (h1 to h5, caption): the text renders without heading or
   caption semantics.
-- `Row`/`Column` `justify` and `align`, and `weight` on any component: not
-  rendered; the order of children is kept.
+- Row and Column map `justify` values `start`, `center`, `end` and
+  `spaceBetween` (as `between`). They map `align` values `start`, `center`,
+  `end`, `stretch` and `baseline`. Other values keep the stack defaults.
+- A2UI `weight` has no representation in the guarded catalog's child slots.
+  Authors using HTML can opt a direct stack child into growth with `data-grow`.
 - `List.direction` and `align`: not rendered; each child becomes a
   `ki-list-item`.
 - `Button.variant`: `primary` becomes `variant="primary"`, `borderless`
@@ -212,8 +214,8 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | A2UI type     | Coverage  | Catalog counterpart           |
 | ------------- | --------- | ----------------------------- |
 | Text          | inline    | —                             |
-| Row           | layout    | —                             |
-| Column        | layout    | —                             |
+| Row           | mapped    | ki-stack                      |
+| Column        | mapped    | ki-stack                      |
 | List          | mapped    | ki-list, ki-list-item         |
 | Card          | mapped    | ki-card                       |
 | Tabs          | mapped    | ki-tabs, ki-tab, ki-tab-panel |

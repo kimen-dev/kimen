@@ -2019,6 +2019,284 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-grid/ki-grid.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-grid",
+      "docs": "A passive responsive grid for content items.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "lay out items on responsive tracks with consistent token spacing."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for page shells, painted grouping (use ki-card), or a data grid."
+        },
+        {
+          "name": "slot",
+          "text": "- The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit."
+        },
+        {
+          "name": "part",
+          "text": "grid - The grid layout containing the slotted content."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode."
+        }
+      ],
+      "usage": {
+        "examples": "# Grid examples\n\nAn automatic grid fills its available space with tracks at least as wide as\n`min-column` where room allows. Here the summary takes two tracks when\npossible.\n\n```html\n<ki-grid min-column=\"8rem\" gap=\"xl\">\n  <ki-card data-span=\"2\">Overview</ki-card>\n  <ki-card>Orders</ki-card>\n  <ki-card>Inventory</ki-card>\n  <ki-card>Customers</ki-card>\n</ki-grid>\n```\n\nFor a fixed count, set `columns`. The grid switches to one column when its\nown available inline size drops below 30rem.\n\n```html\n<ki-grid columns=\"3\" gap=\"sm\">\n  <ki-card>Orders</ki-card>\n  <ki-card>Inventory</ki-card>\n  <ki-card>Customers</ki-card>\n</ki-grid>\n```\n"
+      },
+      "props": [
+        {
+          "name": "columns",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "columns",
+          "reflectToAttr": false,
+          "docs": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "gap",
+          "type": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\"",
+          "complexType": {
+            "original": "KiLayoutGap",
+            "resolved": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\"",
+            "references": {
+              "KiLayoutGap": {
+                "location": "import",
+                "path": "../../utils/layout-gap",
+                "id": "src/utils/layout-gap.ts::KiLayoutGap",
+                "referenceLocation": "KiLayoutGap"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "gap",
+          "reflectToAttr": false,
+          "docs": "Kimen spacing step, xl by default. Unsupported values keep the default gap.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'xl'"
+            }
+          ],
+          "default": "'xl'",
+          "values": [
+            {
+              "value": "10xl",
+              "type": "string"
+            },
+            {
+              "value": "11xl",
+              "type": "string"
+            },
+            {
+              "value": "12xl",
+              "type": "string"
+            },
+            {
+              "value": "13xl",
+              "type": "string"
+            },
+            {
+              "value": "14xl",
+              "type": "string"
+            },
+            {
+              "value": "15xl",
+              "type": "string"
+            },
+            {
+              "value": "16xl",
+              "type": "string"
+            },
+            {
+              "value": "17xl",
+              "type": "string"
+            },
+            {
+              "value": "18xl",
+              "type": "string"
+            },
+            {
+              "value": "19xl",
+              "type": "string"
+            },
+            {
+              "value": "20xl",
+              "type": "string"
+            },
+            {
+              "value": "21xl",
+              "type": "string"
+            },
+            {
+              "value": "22xl",
+              "type": "string"
+            },
+            {
+              "value": "23xl",
+              "type": "string"
+            },
+            {
+              "value": "24xl",
+              "type": "string"
+            },
+            {
+              "value": "25xl",
+              "type": "string"
+            },
+            {
+              "value": "26xl",
+              "type": "string"
+            },
+            {
+              "value": "2xl",
+              "type": "string"
+            },
+            {
+              "value": "3xl",
+              "type": "string"
+            },
+            {
+              "value": "4xl",
+              "type": "string"
+            },
+            {
+              "value": "5xl",
+              "type": "string"
+            },
+            {
+              "value": "6xl",
+              "type": "string"
+            },
+            {
+              "value": "7xl",
+              "type": "string"
+            },
+            {
+              "value": "8xl",
+              "type": "string"
+            },
+            {
+              "value": "9xl",
+              "type": "string"
+            },
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            },
+            {
+              "value": "xxs",
+              "type": "string"
+            },
+            {
+              "value": "zero",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minColumn",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min-column",
+          "reflectToAttr": false,
+          "docs": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'15rem'"
+            }
+          ],
+          "default": "'15rem'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit."
+        }
+      ],
+      "parts": [
+        {
+          "name": "grid",
+          "docs": "The grid layout containing the slotted content."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-icon/ki-icon.tsx",
       "encapsulation": "shadow",
       "tag": "ki-icon",
@@ -4891,6 +5169,389 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-stack/ki-stack.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-stack",
+      "docs": "A passive flex layout for content on one axis.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for page shells, painted grouping (use ki-card), or tabular data."
+        },
+        {
+          "name": "slot",
+          "text": "- The content in reading order. A direct child with data-grow takes a share of free space."
+        },
+        {
+          "name": "part",
+          "text": "stack - The flex layout containing the slotted content."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step."
+        }
+      ],
+      "usage": {
+        "examples": "# Stack examples\n\nA vertical sequence uses the default direction and the medium spacing step.\n\n```html\n<ki-stack>\n  <h2>Account</h2>\n  <p>Review the settings for your workspace.</p>\n  <ki-button variant=\"secondary\">Edit settings</ki-button>\n</ki-stack>\n```\n\nA toolbar keeps its source order with a horizontal axis, wrapping and a\ngrowing label. Place `data-grow` on a direct child to give it a share of the\navailable free space.\n\n```html\n<ki-stack direction=\"row\" gap=\"sm\" justify=\"between\" align=\"center\" wrap>\n  <strong data-grow>Order summary</strong>\n  <ki-button variant=\"secondary\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save</ki-button>\n</ki-stack>\n```\n"
+      },
+      "props": [
+        {
+          "name": "align",
+          "type": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\"",
+          "complexType": {
+            "original": "KiStackAlign",
+            "resolved": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\"",
+            "references": {
+              "KiStackAlign": {
+                "location": "local",
+                "path": "src/components/ki-stack/ki-stack.tsx",
+                "id": "src/components/ki-stack/ki-stack.tsx::KiStackAlign"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "align",
+          "reflectToAttr": true,
+          "docs": "Cross-axis alignment, stretch by default.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'stretch'"
+            }
+          ],
+          "default": "'stretch'",
+          "values": [
+            {
+              "value": "baseline",
+              "type": "string"
+            },
+            {
+              "value": "center",
+              "type": "string"
+            },
+            {
+              "value": "end",
+              "type": "string"
+            },
+            {
+              "value": "start",
+              "type": "string"
+            },
+            {
+              "value": "stretch",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "direction",
+          "type": "\"column\" | \"row\"",
+          "complexType": {
+            "original": "KiStackDirection",
+            "resolved": "\"column\" | \"row\"",
+            "references": {
+              "KiStackDirection": {
+                "location": "local",
+                "path": "src/components/ki-stack/ki-stack.tsx",
+                "id": "src/components/ki-stack/ki-stack.tsx::KiStackDirection"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "direction",
+          "reflectToAttr": true,
+          "docs": "Main axis, column by default.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'column'"
+            }
+          ],
+          "default": "'column'",
+          "values": [
+            {
+              "value": "column",
+              "type": "string"
+            },
+            {
+              "value": "row",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "gap",
+          "type": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\"",
+          "complexType": {
+            "original": "KiLayoutGap",
+            "resolved": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\"",
+            "references": {
+              "KiLayoutGap": {
+                "location": "import",
+                "path": "../../utils/layout-gap",
+                "id": "src/utils/layout-gap.ts::KiLayoutGap",
+                "referenceLocation": "KiLayoutGap"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "gap",
+          "reflectToAttr": false,
+          "docs": "Kimen spacing step, md by default. Unsupported values keep the default gap.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "10xl",
+              "type": "string"
+            },
+            {
+              "value": "11xl",
+              "type": "string"
+            },
+            {
+              "value": "12xl",
+              "type": "string"
+            },
+            {
+              "value": "13xl",
+              "type": "string"
+            },
+            {
+              "value": "14xl",
+              "type": "string"
+            },
+            {
+              "value": "15xl",
+              "type": "string"
+            },
+            {
+              "value": "16xl",
+              "type": "string"
+            },
+            {
+              "value": "17xl",
+              "type": "string"
+            },
+            {
+              "value": "18xl",
+              "type": "string"
+            },
+            {
+              "value": "19xl",
+              "type": "string"
+            },
+            {
+              "value": "20xl",
+              "type": "string"
+            },
+            {
+              "value": "21xl",
+              "type": "string"
+            },
+            {
+              "value": "22xl",
+              "type": "string"
+            },
+            {
+              "value": "23xl",
+              "type": "string"
+            },
+            {
+              "value": "24xl",
+              "type": "string"
+            },
+            {
+              "value": "25xl",
+              "type": "string"
+            },
+            {
+              "value": "26xl",
+              "type": "string"
+            },
+            {
+              "value": "2xl",
+              "type": "string"
+            },
+            {
+              "value": "3xl",
+              "type": "string"
+            },
+            {
+              "value": "4xl",
+              "type": "string"
+            },
+            {
+              "value": "5xl",
+              "type": "string"
+            },
+            {
+              "value": "6xl",
+              "type": "string"
+            },
+            {
+              "value": "7xl",
+              "type": "string"
+            },
+            {
+              "value": "8xl",
+              "type": "string"
+            },
+            {
+              "value": "9xl",
+              "type": "string"
+            },
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            },
+            {
+              "value": "xxs",
+              "type": "string"
+            },
+            {
+              "value": "zero",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "justify",
+          "type": "\"between\" | \"center\" | \"end\" | \"start\"",
+          "complexType": {
+            "original": "KiStackJustify",
+            "resolved": "\"between\" | \"center\" | \"end\" | \"start\"",
+            "references": {
+              "KiStackJustify": {
+                "location": "local",
+                "path": "src/components/ki-stack/ki-stack.tsx",
+                "id": "src/components/ki-stack/ki-stack.tsx::KiStackJustify"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "justify",
+          "reflectToAttr": true,
+          "docs": "Main-axis distribution, start by default. Use between to distribute spare space.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'start'"
+            }
+          ],
+          "default": "'start'",
+          "values": [
+            {
+              "value": "between",
+              "type": "string"
+            },
+            {
+              "value": "center",
+              "type": "string"
+            },
+            {
+              "value": "end",
+              "type": "string"
+            },
+            {
+              "value": "start",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "wrap",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "wrap",
+          "reflectToAttr": true,
+          "docs": "Allow items to continue on a new line. Defaults to false.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The content in reading order. A direct child with data-grow takes a share of free space."
+        }
+      ],
+      "parts": [
+        {
+          "name": "stack",
+          "docs": "The flex layout containing the slotted content."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-status/ki-status.tsx",
       "encapsulation": "shadow",
       "tag": "ki-status",
@@ -7086,6 +7747,26 @@
       "declaration": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-select/ki-select.tsx"
+    },
+    "src/components/ki-stack/ki-stack.tsx::KiStackDirection": {
+      "declaration": "export type KiStackDirection = 'column' | 'row';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
+    },
+    "src/utils/layout-gap.ts::KiLayoutGap": {
+      "declaration": "\"xxs\" | \"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\" | \"zero\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\"",
+      "docstring": "",
+      "path": "src/utils/layout-gap.ts"
+    },
+    "src/components/ki-stack/ki-stack.tsx::KiStackAlign": {
+      "declaration": "export type KiStackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
+    },
+    "src/components/ki-stack/ki-stack.tsx::KiStackJustify": {
+      "declaration": "export type KiStackJustify = 'start' | 'center' | 'end' | 'between';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
     },
     "src/components/ki-status/ki-status.tsx::KiStatusTone": {
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",

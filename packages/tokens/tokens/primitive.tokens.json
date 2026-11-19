@@ -867,6 +867,16 @@
           "$value": "48rem",
           "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
         }
+      },
+      "layout": {
+        "grid-min": {
+          "$value": "15rem",
+          "$description": "Default minimum size of an automatic grid track."
+        },
+        "grid-fixed-breakpoint": {
+          "$value": "30rem",
+          "$description": "Inline size at which a fixed grid can distribute multiple tracks."
+        }
       }
     },
     "border": {

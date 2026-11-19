@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 350 semantic
-and 1191 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 384 semantic
+and 1194 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -143,6 +143,45 @@ every component at once.
 | `--ki-inverse-white-alpha-88` | `rgba(0, 0, 0, 0.88)` | semantic color for inverse white alpha 88. |
 | `--ki-inverse-white-alpha-9` | `rgba(0, 0, 0, 0.08)` | semantic color for inverse white alpha 9. |
 | `--ki-inverse-white-alpha-solid` | `#000000` | semantic color for inverse white alpha solid. |
+
+### `ki.layout`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
+| `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
+| `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-13xl` | `2.75rem` | The 13xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-14xl` | `3rem` | The 14xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-15xl` | `3.25rem` | The 15xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-16xl` | `3.5rem` | The 16xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-17xl` | `3.75rem` | The 17xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-18xl` | `4rem` | The 18xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-19xl` | `4.5rem` | The 19xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-20xl` | `5rem` | The 20xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-21xl` | `5.5rem` | The 21xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-22xl` | `6rem` | The 22xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-23xl` | `6.5rem` | The 23xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-24xl` | `7.5rem` | The 24xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-25xl` | `9rem` | The 25xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-26xl` | `10rem` | The 26xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-2xl` | `0.875rem` | The 2xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-3xl` | `1rem` | The 3xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-4xl` | `1.125rem` | The 4xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-5xl` | `1.25rem` | The 5xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-6xl` | `1.375rem` | The 6xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-7xl` | `1.5rem` | The 7xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-8xl` | `1.625rem` | The 8xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-9xl` | `1.75rem` | The 9xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-lg` | `0.625rem` | The lg spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-md` | `0.5rem` | The md spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-sm` | `0.375rem` | The sm spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-xl` | `0.75rem` | The xl spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-xs` | `0.25rem` | The xs spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-xxs` | `0.125rem` | The xxs spacing step for a stack or grid gap. |
+| `--ki-layout-spacing-zero` | `0rem` | The zero spacing step for a stack or grid gap. |
 
 ### `ki.motion`
 
@@ -1192,6 +1231,14 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-xs-padding-inline` | `0.375rem` | dimension used by the input component for xs padding inline (Input-cell 8016:286 xs binds Space/sm, 6px). |
 | `--ki-input-xs-radius` | `6px` | dimension used by the input component for xs radius (Input-cell 8016:286 xs binds Radius/small-component/xs). |
 | `--ki-input-xs-text-padding-inline` | `0.125rem` | dimension used by the input component for the xs inline padding of the native control (Input-cell 8016:286 xs Text_wrap binds Space/xxs, 2px; medium uses the gap token). |
+
+### `ki-layout`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-grid-gap` | `0.75rem` | Default gap between grid tracks. |
+| `--ki-grid-min` | `15rem` | Default minimum size of an automatic grid track. |
+| `--ki-stack-gap` | `0.5rem` | Default gap of a stack. |
 
 ### `ki-list`
 

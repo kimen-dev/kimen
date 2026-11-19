@@ -13,6 +13,7 @@ import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./com
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+import { KiLayoutGap } from "./utils/layout-gap";
 import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
@@ -21,6 +22,7 @@ import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 import { KiSelectSize } from "./components/ki-select/ki-select";
+import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
@@ -37,6 +39,7 @@ export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./com
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+export { KiLayoutGap } from "./utils/layout-gap";
 export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
@@ -45,6 +48,7 @@ export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 export { KiSelectSize } from "./components/ki-select/ki-select";
+export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
@@ -367,6 +371,30 @@ export namespace Components {
           * @default 'horizontal'
          */
         "orientation": KiDividerOrientation;
+    }
+    /**
+     * A passive responsive grid for content items.
+     * @whenToUse lay out items on responsive tracks with consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
+     * @cssprop --ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     * @cssprop --ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode.
+     */
+    interface KiGrid {
+        /**
+          * Positive whole track count. Below 30rem of available inline size the fixed grid uses one column. Omit columns for automatic tracks.
+          * @minimum 1
+         */
+        "columns"?: number;
+        /**
+          * Kimen spacing step, xl by default. Unsupported values keep the default gap.
+          * @default 'xl'
+         */
+        "gap": KiLayoutGap;
+        /**
+          * Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.
+          * @default '15rem'
+         */
+        "minColumn": string;
     }
     /**
      * A static Lucide glyph selected by name from the application's per-icon imports.
@@ -869,6 +897,40 @@ export namespace Components {
           * @default 'ring'
          */
         "variant": 'ring' | 'dots';
+    }
+    /**
+     * A passive flex layout for content on one axis.
+     * @whenToUse arrange content in a vertical sequence or a horizontal row with
+     * consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or tabular data.
+     * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     */
+    interface KiStack {
+        /**
+          * Cross-axis alignment, stretch by default.
+          * @default 'stretch'
+         */
+        "align": KiStackAlign;
+        /**
+          * Main axis, column by default.
+          * @default 'column'
+         */
+        "direction": KiStackDirection;
+        /**
+          * Kimen spacing step, md by default. Unsupported values keep the default gap.
+          * @default 'md'
+         */
+        "gap": KiLayoutGap;
+        /**
+          * Main-axis distribution, start by default. Use between to distribute spare space.
+          * @default 'start'
+         */
+        "justify": KiStackJustify;
+        /**
+          * Allow items to continue on a new line. Defaults to false.
+          * @default false
+         */
+        "wrap": boolean;
     }
     /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
@@ -1444,6 +1506,19 @@ declare global {
         new (): HTMLKiDividerElement;
     };
     /**
+     * A passive responsive grid for content items.
+     * @whenToUse lay out items on responsive tracks with consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
+     * @cssprop --ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     * @cssprop --ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode.
+     */
+    interface HTMLKiGridElement extends Components.KiGrid, HTMLStencilElement {
+    }
+    var HTMLKiGridElement: {
+        prototype: HTMLKiGridElement;
+        new (): HTMLKiGridElement;
+    };
+    /**
      * A static Lucide glyph selected by name from the application's per-icon imports.
      * @whenToUse show a named glyph next to text, or give a standalone meaningful
      * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
@@ -1707,6 +1782,19 @@ declare global {
         new (): HTMLKiSpinnerElement;
     };
     /**
+     * A passive flex layout for content on one axis.
+     * @whenToUse arrange content in a vertical sequence or a horizontal row with
+     * consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or tabular data.
+     * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     */
+    interface HTMLKiStackElement extends Components.KiStack, HTMLStencilElement {
+    }
+    var HTMLKiStackElement: {
+        prototype: HTMLKiStackElement;
+        new (): HTMLKiStackElement;
+    };
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -1937,6 +2025,7 @@ declare global {
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
+        "ki-grid": HTMLKiGridElement;
         "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
         "ki-indicator": HTMLKiIndicatorElement;
@@ -1951,6 +2040,7 @@ declare global {
         "ki-scroller": HTMLKiScrollerElement;
         "ki-select": HTMLKiSelectElement;
         "ki-spinner": HTMLKiSpinnerElement;
+        "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
@@ -2287,6 +2377,30 @@ declare namespace LocalJSX {
           * @default 'horizontal'
          */
         "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * A passive responsive grid for content items.
+     * @whenToUse lay out items on responsive tracks with consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
+     * @cssprop --ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     * @cssprop --ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode.
+     */
+    interface KiGrid {
+        /**
+          * Positive whole track count. Below 30rem of available inline size the fixed grid uses one column. Omit columns for automatic tracks.
+          * @minimum 1
+         */
+        "columns"?: number;
+        /**
+          * Kimen spacing step, xl by default. Unsupported values keep the default gap.
+          * @default 'xl'
+         */
+        "gap"?: KiLayoutGap;
+        /**
+          * Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.
+          * @default '15rem'
+         */
+        "minColumn"?: string;
     }
     /**
      * A static Lucide glyph selected by name from the application's per-icon imports.
@@ -2803,6 +2917,40 @@ declare namespace LocalJSX {
         "variant"?: 'ring' | 'dots';
     }
     /**
+     * A passive flex layout for content on one axis.
+     * @whenToUse arrange content in a vertical sequence or a horizontal row with
+     * consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or tabular data.
+     * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     */
+    interface KiStack {
+        /**
+          * Cross-axis alignment, stretch by default.
+          * @default 'stretch'
+         */
+        "align"?: KiStackAlign;
+        /**
+          * Main axis, column by default.
+          * @default 'column'
+         */
+        "direction"?: KiStackDirection;
+        /**
+          * Kimen spacing step, md by default. Unsupported values keep the default gap.
+          * @default 'md'
+         */
+        "gap"?: KiLayoutGap;
+        /**
+          * Main-axis distribution, start by default. Use between to distribute spare space.
+          * @default 'start'
+         */
+        "justify"?: KiStackJustify;
+        /**
+          * Allow items to continue on a new line. Defaults to false.
+          * @default false
+         */
+        "wrap"?: boolean;
+    }
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -3231,6 +3379,11 @@ declare namespace LocalJSX {
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
     }
+    interface KiGridAttributes {
+        "columns": number;
+        "minColumn": string;
+        "gap": KiLayoutGap;
+    }
     interface KiIconAttributes {
         "name": string;
         "size": KiIconSize;
@@ -3320,6 +3473,13 @@ declare namespace LocalJSX {
         "size": 'sm' | 'md' | 'lg';
         "showLabel": boolean;
     }
+    interface KiStackAttributes {
+        "direction": KiStackDirection;
+        "gap": KiLayoutGap;
+        "align": KiStackAlign;
+        "justify": KiStackJustify;
+        "wrap": boolean;
+    }
     interface KiStatusAttributes {
         "tone": KiStatusTone;
         "ring": boolean;
@@ -3393,6 +3553,7 @@ declare namespace LocalJSX {
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
         "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
@@ -3407,6 +3568,7 @@ declare namespace LocalJSX {
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
+        "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
@@ -3547,6 +3709,14 @@ declare module "@stencil/core" {
              * (prefer white space).
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
+            /**
+             * A passive responsive grid for content items.
+             * @whenToUse lay out items on responsive tracks with consistent token spacing.
+             * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
+             * @cssprop --ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+             * @cssprop --ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode.
+             */
+            "ki-grid": LocalJSX.IntrinsicElements["ki-grid"] & JSXBase.HTMLAttributes<HTMLKiGridElement>;
             /**
              * A static Lucide glyph selected by name from the application's per-icon imports.
              * @whenToUse show a named glyph next to text, or give a standalone meaningful
@@ -3740,6 +3910,14 @@ declare module "@stencil/core" {
              * a task. Use ki-alert for persistent notices.
              */
             "ki-spinner": LocalJSX.IntrinsicElements["ki-spinner"] & JSXBase.HTMLAttributes<HTMLKiSpinnerElement>;
+            /**
+             * A passive flex layout for content on one axis.
+             * @whenToUse arrange content in a vertical sequence or a horizontal row with
+             * consistent token spacing.
+             * @whenNotToUse for page shells, painted grouping (use ki-card), or tabular data.
+             * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+             */
+            "ki-stack": LocalJSX.IntrinsicElements["ki-stack"] & JSXBase.HTMLAttributes<HTMLKiStackElement>;
             /**
              * A tiny, non-interactive status dot that marks the state of a nearby item.
              * @whenToUse mark a state with minimal footprint adjacent to (or overlaid

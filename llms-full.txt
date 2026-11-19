@@ -1189,6 +1189,64 @@ CSS custom properties:
 - `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
+### ki-grid
+
+A passive responsive grid for content items.
+
+When to use: lay out items on responsive tracks with consistent token spacing.
+When NOT to use: for page shells, painted grouping (use ki-card), or a data grid.
+
+Examples:
+
+# Grid examples
+
+An automatic grid fills its available space with tracks at least as wide as
+`min-column` where room allows. Here the summary takes two tracks when
+possible.
+
+```html
+<ki-grid min-column="8rem" gap="xl">
+  <ki-card data-span="2">Overview</ki-card>
+  <ki-card>Orders</ki-card>
+  <ki-card>Inventory</ki-card>
+  <ki-card>Customers</ki-card>
+</ki-grid>
+```
+
+For a fixed count, set `columns`. The grid switches to one column when its
+own available inline size drops below 30rem.
+
+```html
+<ki-grid columns="3" gap="sm">
+  <ki-card>Orders</ki-card>
+  <ki-card>Inventory</ki-card>
+  <ki-card>Customers</ki-card>
+</ki-grid>
+```
+
+Attributes:
+- `columns` (number | undefined, minimum 1): Positive whole track count. Below 30rem of available inline size the fixed grid uses one column. Omit columns for automatic tracks.
+- `gap` ("10xl" | "11xl" | "12xl" | "13xl" | "14xl" | "15xl" | "16xl" | "17xl" | "18xl" | "19xl" | "20xl" | "21xl" | "22xl" | "23xl" | "24xl" | "25xl" | "26xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl" | "9xl" | "lg" | "md" | "sm" | "xl" | "xs" | "xxs" | "zero", default 'xl'): Kimen spacing step, xl by default. Unsupported values keep the default gap.
+- `min-column` (string, default '15rem'): Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.
+
+Slots:
+- (default): The content in reading order. A direct child with data-span="2" spans two tracks when they fit.
+
+Parts:
+- `grid`: The grid layout containing the slotted content.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-grid-gap`: Default gap between grid tracks.
+- `--ki-grid-min`: Default minimum size of an automatic grid track.
+- `--ki-layout-grid-fixed-breakpoint`: Minimum available inline size for a fixed grid to use multiple tracks.
+- `--ki-layout-grid-min`: Default minimum inline size of an automatic grid track.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-icon
 
 A static Lucide glyph selected by name from the application's per-icon imports.
@@ -2686,6 +2744,62 @@ CSS custom properties:
 - `--ki-spinner-track`: Ink of the ring track.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
+### ki-stack
+
+A passive flex layout for content on one axis.
+
+When to use: arrange content in a vertical sequence or a horizontal row with
+consistent token spacing.
+When NOT to use: for page shells, painted grouping (use ki-card), or tabular data.
+
+Examples:
+
+# Stack examples
+
+A vertical sequence uses the default direction and the medium spacing step.
+
+```html
+<ki-stack>
+  <h2>Account</h2>
+  <p>Review the settings for your workspace.</p>
+  <ki-button variant="secondary">Edit settings</ki-button>
+</ki-stack>
+```
+
+A toolbar keeps its source order with a horizontal axis, wrapping and a
+growing label. Place `data-grow` on a direct child to give it a share of the
+available free space.
+
+```html
+<ki-stack direction="row" gap="sm" justify="between" align="center" wrap>
+  <strong data-grow>Order summary</strong>
+  <ki-button variant="secondary">Cancel</ki-button>
+  <ki-button variant="primary">Save</ki-button>
+</ki-stack>
+```
+
+Attributes:
+- `align` ("baseline" | "center" | "end" | "start" | "stretch", default 'stretch'): Cross-axis alignment, stretch by default.
+- `direction` ("column" | "row", default 'column'): Main axis, column by default.
+- `gap` ("10xl" | "11xl" | "12xl" | "13xl" | "14xl" | "15xl" | "16xl" | "17xl" | "18xl" | "19xl" | "20xl" | "21xl" | "22xl" | "23xl" | "24xl" | "25xl" | "26xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl" | "9xl" | "lg" | "md" | "sm" | "xl" | "xs" | "xxs" | "zero", default 'md'): Kimen spacing step, md by default. Unsupported values keep the default gap.
+- `justify` ("between" | "center" | "end" | "start", default 'start'): Main-axis distribution, start by default. Use between to distribute spare space.
+- `wrap` (boolean, default false): Allow items to continue on a new line. Defaults to false.
+
+Slots:
+- (default): The content in reading order. A direct child with data-grow takes a share of free space.
+
+Parts:
+- `stack`: The flex layout containing the slotted content.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
+- `--ki-stack-gap`: Default gap of a stack.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-status
 
 A tiny, non-interactive status dot that marks the state of a nearby item.
@@ -3757,7 +3871,7 @@ When NOT to use: The agent can emit neutral Kimen UI specs directly (use @kimen/
 Entry points:
 - `createA2uiAdapter(options) => A2uiAdapter`: Creates the translation boundary: adapter.apply(message) turns A2UI 1.0 and v0.9.1 messages (createSurface, updateComponents, updateDataModel, deleteSurface) into neutral UI specs rendered only through the guarded renderer, resolving the surface data model inside the adapter. Each message is validated against the version its envelope declares, and a surface accepts only the version that created it. User interactions return through options.onAction as A2UI action events in the surface's version, rejected messages through options.onError as VALIDATION_FAILED errors; unmapped basic-catalog types degrade to a fixed fallback reported through options.onDegradation, and every A2UI 1.0 callRendererFunction is refused through options.onFunctionResponse.
 - `SUPPORTED_A2UI_VERSIONS`: The exact A2UI envelope versions this adapter accepts: 1.0 (preferred) plus v0.9.1 and v0.9 (one payload-compatible family), each pinned to an upstream commit in A2UI_PROTOCOLS and versioned with the adapter in COMPAT.md.
-- `A2UI_COVERAGE`: Machine-readable coverage table declaring how each A2UI 0.9.1 basic-catalog component type is handled: mapped to catalog components, rendered inline, flattened as layout, degraded as unmapped, or forbidden. A2UI_V1_COVERAGE is the A2UI 1.0 counterpart.
+- `A2UI_COVERAGE`: Machine-readable coverage table declaring how each A2UI 0.9.1 basic-catalog component type is handled: mapped to catalog components, rendered inline, degraded as unmapped, or forbidden. A2UI_V1_COVERAGE is the A2UI 1.0 counterpart.
 - `A2UI_RENDERER_CAPABILITIES`: The renderer capabilities a host transport attaches for each supported A2UI version, preferred version (1.0) first: the metadata key (a2uiRendererCapabilities or a2uiClientCapabilities) and its value naming the basic catalog of that version.
 
 ### @kimen/adapter-mcp-apps

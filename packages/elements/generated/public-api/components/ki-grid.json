@@ -1,0 +1,153 @@
+{
+  "component": {
+    "attributes": {
+      "columns": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "gap": {
+        "default": "'xl'",
+        "deprecatedSince": null,
+        "description": "Kimen spacing step, xl by default. Unsupported values keep the default gap.",
+        "replacement": null,
+        "required": false,
+        "type": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+      },
+      "min-column": {
+        "default": "'15rem'",
+        "deprecatedSince": null,
+        "description": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-grid-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default gap between grid tracks.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-grid-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default minimum size of an automatic grid track.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-grid-fixed-breakpoint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum available inline size for a fixed grid to use multiple tracks.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-grid-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default minimum inline size of an automatic grid track.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A passive responsive grid for content items.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "grid": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The grid layout containing the slotted content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "columns": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "gap": {
+        "default": "'xl'",
+        "deprecatedSince": null,
+        "description": "Kimen spacing step, xl by default. Unsupported values keep the default gap.",
+        "replacement": null,
+        "required": false,
+        "type": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+      },
+      "minColumn": {
+        "default": "'15rem'",
+        "deprecatedSince": null,
+        "description": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-grid.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-grid.d.ts",
+    "symbols": {
+      "KiGrid": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiGrid extends Components.KiGrid, HTMLElement {\n}\nexport const KiGrid: {\n    prototype: KiGrid;\n    new (): KiGrid;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-grid.js"
+  }
+}

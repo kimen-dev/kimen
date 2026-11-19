@@ -15,6 +15,7 @@ import { defineCustomElement as defineKiCard } from '@kimen/elements/components/
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
+import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
 import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
 import { defineCustomElement as defineKiIndicator } from '@kimen/elements/components/ki-indicator.js';
@@ -29,6 +30,7 @@ import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/compo
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
 import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
+import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
 import { defineCustomElement as defineKiTab } from '@kimen/elements/components/ki-tab.js';
@@ -266,6 +268,29 @@ export class KiDivider {
 
 
 export declare interface KiDivider extends Components.KiDivider {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiGrid,
+  inputs: ['columns', 'gap', 'minColumn']
+})
+@Component({
+  selector: 'ki-grid',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['columns', 'gap', 'minColumn'],
+})
+export class KiGrid {
+  protected el: HTMLKiGridElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiGrid extends Components.KiGrid {}
 
 
 @ProxyCmp({
@@ -587,6 +612,29 @@ export class KiSpinner {
 
 
 export declare interface KiSpinner extends Components.KiSpinner {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiStack,
+  inputs: ['align', 'direction', 'gap', 'justify', 'wrap']
+})
+@Component({
+  selector: 'ki-stack',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['align', 'direction', 'gap', 'justify', 'wrap'],
+})
+export class KiStack {
+  protected el: HTMLKiStackElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiStack extends Components.KiStack {}
 
 
 @ProxyCmp({

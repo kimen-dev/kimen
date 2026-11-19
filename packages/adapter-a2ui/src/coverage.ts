@@ -166,8 +166,8 @@ const CHECKS = 'checks';
  */
 export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
   Text: { kind: 'inline', properties: ['text', 'variant'] },
-  Row: { kind: 'layout', properties: ['children', 'justify', 'align'] },
-  Column: { kind: 'layout', properties: ['children', 'justify', 'align'] },
+  Row: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
+  Column: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   List: {
     catalog: ['ki-list', 'ki-list-item'],
     kind: 'mapped',
@@ -245,10 +245,8 @@ export const FALLBACK_CATALOG_TAG = 'ki-badge';
 export const FALLBACK_TONE = 'warning';
 
 /**
- * The container used when the A2UI root does not translate to exactly one
- * catalog node (a `Column` or `Row` root with several children, or a `Text`
- * root): the guarded renderer renders one root node, and the catalog has no
- * neutral layout element yet (COMPAT.md, pending core work).
+ * The fallback container for an inline or empty A2UI root. The guarded
+ * renderer accepts one root catalog node.
  */
 export const ROOT_CONTAINER_TAG = 'ki-card';
 
@@ -323,8 +321,8 @@ const V1_CHECKS = '@checks';
  */
 export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
   Text: { kind: 'inline', properties: ['text', 'variant'] },
-  Row: { kind: 'layout', properties: ['children', 'justify', 'align'] },
-  Column: { kind: 'layout', properties: ['children', 'justify', 'align'] },
+  Row: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
+  Column: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   List: {
     catalog: ['ki-list', 'ki-list-item'],
     kind: 'mapped',
