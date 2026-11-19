@@ -392,6 +392,11 @@
       }
     },
     "effect": {
+      "video-hover-opacity": {
+        "$type": "number",
+        "$value": 0,
+        "$description": "Material 3 keeps the filled video play control flat on hover. The opacity applies only to the added hover layer."
+      },
       "component": {
         "backdrop-blur": {
           "$type": "dimension",

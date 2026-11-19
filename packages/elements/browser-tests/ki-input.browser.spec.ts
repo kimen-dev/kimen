@@ -4,9 +4,12 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-input.js';
+import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
+import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
+import { defineCustomElement as defineKiTextarea } from '../dist/components/ki-textarea.js';
 import { expectAccessible, parkPointer } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 
@@ -123,6 +126,54 @@ function requireField(el: KiInputElement): HTMLElement {
     throw new Error('ki-input did not render a field enclosure');
   }
   return field;
+}
+
+const columnLayouts = {
+  block: 'display: block',
+  flex: 'display: flex; flex-direction: column',
+  grid: 'display: grid; grid-template-columns: 1fr',
+};
+
+function narrowColumn(layout: keyof typeof columnLayouts): HTMLElement {
+  const column = document.createElement('div');
+  column.style.cssText = `inline-size: 160px; ${columnLayouts[layout]}`;
+  document.body.append(column);
+  return column;
+}
+
+function expectFieldInColumn(field: Element, column: HTMLElement): void {
+  const fieldRect = field.getBoundingClientRect();
+  const columnRect = column.getBoundingClientRect();
+  expect(fieldRect.width).toBeGreaterThan(0);
+  expect(fieldRect.left).toBeGreaterThanOrEqual(columnRect.left);
+  expect(fieldRect.right).toBeLessThanOrEqual(columnRect.right);
+}
+
+function preferredFieldWidth(input: HTMLInputElement, field: HTMLElement): number {
+  // Measure the native default width with this theme's font on this engine.
+  const reference = document.createElement('input');
+  const inputStyle = getComputedStyle(input);
+  Object.assign(reference.style, {
+    fontFamily: inputStyle.fontFamily,
+    fontSize: inputStyle.fontSize,
+    fontWeight: inputStyle.fontWeight,
+    paddingInline: inputStyle.paddingInline,
+    border: '0',
+    position: 'absolute',
+    visibility: 'hidden',
+  });
+  document.body.append(reference);
+  const inputWidth = reference.getBoundingClientRect().width;
+  reference.remove();
+
+  const fieldStyle = getComputedStyle(field);
+  return (
+    inputWidth +
+    Number.parseFloat(fieldStyle.paddingInlineStart) +
+    Number.parseFloat(fieldStyle.paddingInlineEnd) +
+    Number.parseFloat(fieldStyle.borderInlineStartWidth) +
+    Number.parseFloat(fieldStyle.borderInlineEndWidth)
+  );
 }
 
 function submitButton(): HTMLButtonElement {
@@ -749,5 +800,73 @@ describe('ki-input in a real browser', () => {
     const startRect = start.getBoundingClientRect();
     const endRect = end.getBoundingClientRect();
     expect(startRect.left, 'start leads under RTL').toBeGreaterThan(endRect.left);
+  });
+});
+
+describe('narrow form columns (#348)', () => {
+  beforeAll(() => {
+    defineKiOption();
+    defineKiSelect();
+    defineKiTextarea();
+    ensureTokens();
+    ensureMaterial3Tokens();
+  });
+
+  describe.each(['onmars', 'material3'])('%s', (theme) => {
+    beforeEach(() => {
+      cleanup();
+      document.documentElement.setAttribute('data-ki-theme', theme);
+    });
+    afterEach(cleanup);
+
+    const layouts = ['grid', 'flex', 'block'] as const;
+
+    describe.each(layouts)('%s column', (layout) => {
+      it.each([
+        {
+          control: 'ki-input without an end adornment',
+          html: '<ki-input label="Start time" value="09:30"></ki-input>',
+          part: 'field',
+        },
+        {
+          control: 'ki-input with an end adornment',
+          html: `<ki-input label="Start time" value="09:30">
+            <span slot="end" aria-hidden="true">AM</span>
+          </ki-input>`,
+          part: 'field',
+        },
+        {
+          control: 'ki-textarea',
+          html: '<ki-textarea label="Notes" value="Bring a pen"></ki-textarea>',
+          part: 'field',
+        },
+        {
+          control: 'ki-select',
+          html: '<ki-select label="Day" value="mon"><ki-option value="mon">Monday</ki-option></ki-select>',
+          part: 'trigger',
+        },
+      ])('keeps $control inside 160 px', async ({ html, part }) => {
+        const column = narrowColumn(layout);
+        column.innerHTML = html;
+        const findField = () =>
+          column.firstElementChild?.shadowRoot?.querySelector(`[part="${part}"]`);
+
+        await expect.poll(findField).toBeInstanceOf(HTMLElement);
+        const field = findField();
+        if (!field) {
+          throw new Error(`Missing rendered ${part} part`);
+        }
+        expectFieldInColumn(field, column);
+      });
+    });
+
+    it('keeps the preferred width of an unconstrained ki-input', async () => {
+      const el = await mount({ label: 'Start time', value: '09:30' });
+      const field = requireField(el);
+      const preferredWidth = preferredFieldWidth(requireInput(el), field);
+
+      expect(el.getBoundingClientRect().width).toBeCloseTo(preferredWidth);
+      expect(field.getBoundingClientRect().width).toBeCloseTo(preferredWidth);
+    });
   });
 });

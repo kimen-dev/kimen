@@ -1,12 +1,12 @@
 {
   "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
   "baselineVersion": "0.0.0",
-  "candidateSha256": "e21b8933bcda5039be06b7f14ccf9ffc741b1114d57927b39252dce4fae0ef1a",
+  "candidateSha256": "805f013f9a6162d508cadbde8a1eed5da3d2eb674cd80c276234daa64574e20f",
   "packages": [
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Adds the optional @kimen/tokens stylesheet exports ./css/onmars-fonts.css and ./css/material3-fonts.css (issue #346, spec 064-theme-fonts). The stylesheets declare font faces outside the effective token surface. Cumulative since baseline 0.0.0 and superseding 317-321-loading-hint-touch, including its declared changes and the declarations it supersedes. The cumulative release remains MAJOR.",
+  "reason": "Adds the optional @kimen/tokens stylesheet exports ./css/onmars-fonts.css and ./css/material3-fonts.css (issue #346, spec 064-theme-fonts). The stylesheets declare font faces outside the effective token surface. Cumulative since baseline 0.0.0 and superseding 317-321-loading-hint-touch, including its declared changes and the declarations it supersedes. The cumulative release remains MAJOR. It supersedes 349-composed-shadows and carries forward its declared changes.",
   "release": "major",
   "schemaVersion": 1
 }

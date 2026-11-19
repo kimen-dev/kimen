@@ -90,7 +90,7 @@ function sortedObject(entries) {
   return Object.fromEntries([...entries].sort(([left], [right]) => left.localeCompare(right)));
 }
 
-function stripComments(source, label) {
+export function stripComments(source, label) {
   let result = '';
   let quote = null;
   let escaped = false;
@@ -173,7 +173,7 @@ function matchingBrace(source, opening, label) {
   throw new Error(`${label} contains an unclosed CSS block`);
 }
 
-function splitTopLevel(source, delimiter, label) {
+export function splitTopLevel(source, delimiter, label) {
   const result = [];
   let start = 0;
   let quote = null;

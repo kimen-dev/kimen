@@ -150,3 +150,29 @@ Feature: Switch
     Given a user who prefers reduced motion and a switch that is off
     When the user toggles the switch
     Then the switch is on without a travel animation
+
+  # S23
+  Scenario Outline: A theme sets the glyph color for each switch state
+    Given a switch that is <state>
+    When the page applies the theme's <token> color
+    Then the thumb shows its <glyph> in that color
+
+    Examples:
+      | state        | token                       | glyph |
+      | on           | --ki-switch-glyph-checked   | check |
+      | off          | --ki-switch-glyph-unchecked | dash  |
+      | disabled on  | --ki-switch-glyph-disabled  | check |
+      | disabled off | --ki-switch-glyph-disabled  | dash  |
+
+  # S24
+  Scenario Outline: A theme hides an individual state glyph with a transparent color
+    Given a theme that colors the on, off and disabled switch glyphs
+    When the theme sets <token> to transparent
+    Then the <state> switch shows no glyph
+    And the other states still show their glyphs
+
+    Examples:
+      | state    | token                       |
+      | on       | --ki-switch-glyph-checked   |
+      | off      | --ki-switch-glyph-unchecked |
+      | disabled | --ki-switch-glyph-disabled  |

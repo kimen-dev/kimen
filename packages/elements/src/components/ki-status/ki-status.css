@@ -6,10 +6,8 @@
  * neutral base fill applies — fallback by CSS construction, zero
  * validation code (FR-007, badge/divider precedent).
  *
- * The ring (FR-002) is a box-shadow spread layer stacked over the theme's
- * dot effects (switch focus-ring precedent): it paints OUTSIDE the dot's
- * box — the dot keeps its token size, exactly like the 4x4 Figma symbol
- * whose 2px Outline stroke overflows the frame — and never shifts layout. */
+ * The ring (FR-002) is a spread shadow outside the dot's box. The dot keeps
+ * its token size and its own shadow can be disabled independently. */
 
 :host {
   display: inline-flex;
@@ -22,12 +20,14 @@
 }
 
 [part="dot"] {
+  --_ki-status-shadow: var(--ki-status-shadow, 0 0 transparent);
+
   display: block;
   inline-size: var(--ki-status-size);
   block-size: var(--ki-status-size);
   border-radius: var(--ki-status-radius);
   background: var(--ki-status-neutral-color);
-  box-shadow: var(--ki-status-shadow);
+  box-shadow: var(--_ki-status-shadow);
 }
 
 :host([tone="success"]) [part="dot"] {
@@ -46,10 +46,20 @@
   background: var(--ki-status-warning-color);
 }
 
+/* Keep both layers on the dot's paint box to preserve the rounding at
+ * this size. A zero-duration additive effect appends the dot shadow after
+ * the ring. Each value parses independently and none adds zero layers. */
 :host([ring]) [part="dot"] {
-  box-shadow:
-    0 0 0 var(--ki-status-ring-width) var(--ki-status-ring-color),
-    var(--ki-status-shadow);
+  box-shadow: 0 0 0 var(--ki-status-ring-width) var(--ki-status-ring-color);
+  animation: ki-status-dot-shadow both;
+  animation-composition: add;
+}
+
+@keyframes ki-status-dot-shadow {
+  from,
+  to {
+    box-shadow: var(--_ki-status-shadow);
+  }
 }
 
 /* Micro-motion (Art. V): paint-only crossfade when tone/ring flip at

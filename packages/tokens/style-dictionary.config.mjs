@@ -25,11 +25,18 @@ import { transformGroups, transforms } from 'style-dictionary/enums';
 const KIMEN_CSS_GROUP = 'kimen/css';
 const KIMEN_COLOR_CSS = 'kimen/color/css';
 const KIMEN_TIME_SECONDS = 'kimen/time/seconds';
+const KIMEN_SHADOW_CSS = 'kimen/shadow/css';
 const predefined = StyleDictionary.hooks.transforms;
 const colorCss = predefined[transforms.colorCss];
 const colorRgb = predefined[transforms.colorRgb];
 const colorHex = predefined[transforms.colorHex];
 const timeSeconds = predefined[transforms.timeSeconds];
+const shadowCss = predefined[transforms.shadowCssShorthand];
+
+// The CSS keyword is only valid as a complete box-shadow. Keep disabled
+// shadows usable as one layer in a list, including in composite token values.
+const normalizeShadowLayer = (layer) =>
+  typeof layer === 'string' && layer.trim().toLowerCase() === 'none' ? '0 0 #0000' : layer;
 
 const kimenCssHooks = {
   transforms: {
@@ -47,11 +54,23 @@ const kimenCssHooks = {
       ...timeSeconds,
       filter: (token, options) => (options.usesDtcg ? token.$type : token.type) === 'time',
     },
+    [KIMEN_SHADOW_CSS]: {
+      ...shadowCss,
+      transform: (token, platform, options) => {
+        const key = options.usesDtcg ? '$value' : 'value';
+        const value = token[key];
+        const normalized = Array.isArray(value)
+          ? value.map(normalizeShadowLayer)
+          : normalizeShadowLayer(value);
+        return shadowCss.transform({ ...token, [key]: normalized }, platform, options);
+      },
+    },
   },
   transformGroups: {
     [KIMEN_CSS_GROUP]: StyleDictionary.hooks.transformGroups[transformGroups.css].map((name) => {
       if (name === transforms.colorCss) return KIMEN_COLOR_CSS;
       if (name === transforms.timeSeconds) return KIMEN_TIME_SECONDS;
+      if (name === transforms.shadowCssShorthand) return KIMEN_SHADOW_CSS;
       return name;
     }),
   },

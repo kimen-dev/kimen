@@ -60,7 +60,7 @@ mark instead of invented content:
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-switch |
 |---|---|---|---|
 | On/off state | `Toggle` set (node 10023:1125): the `Type` axis carries `switch_OFF` and `switch_ON`; at `md` the track is 40×22 r8, `#dddfe4` off and `#845abe` on, with the thumb travelling 14 px. The onmars token vocabulary covers the same states | Selected / unselected: a track with a handle that travels on selection | `checked` boolean attribute; both visual states resolve from component tokens |
-| Thumb icons | No thumb-icon artifact in the read `md` anatomy of node 10023:1125 (plain 22×18 r6 white-gradient thumb with a (0, 2) blur 3 spread −1.5 shadow); the remaining sizes and variants are unread — pending the design extraction | Optional icons inside the handle for the on and off states | Out of v1 scope (Art. VII); a future additive surface (slots or theme tokens), never an attribute now |
+| Thumb icons | No thumb-icon artifact in the read `md` anatomy of node 10023:1125 (plain 22×18 r6 white-gradient thumb with a (0, 2) blur 3 spread −1.5 shadow); the remaining sizes and variants are unread — pending the design extraction | Optional icons inside the handle for the on and off states | Theme tokens set the color and visibility of the check and dash ink (#345) |
 | Size | **Refuted premise (2026-07-25)** — node 10023:1125 ships a `Size` axis (`sm`, `md`, `lg`, `mobile`) and `Toggle_label` (node 10101:3995) a `Size` axis (`sm`, `md`). MarsUI does scale the control; only the `md` metrics have been read | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | No `size` attribute in v1 (charter: `size` only where the design sources scale the control) — **decision left in place but resting on a refuted premise**, since MarsUI now meets that charter condition; re-derivation is the founder's call. All metrics are per-theme component tokens |
 | Interaction states | The `Type` axis on node 10023:1125 carries `switch_ON_focused`, `switch_OFF_disabled` and `switch_ON_disabled`; the per-variant inks are unread (design extraction pending). The button state matrix (default/hover/focus/disabled, 002) remains the closest extracted state precedent | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
 | Label | `Toggle_label` set (node 10101:3995): `Direction` (`left`, `right`) × `Size` (`sm`, `md`) — MarsUI ships a labelled composition, and its `Direction` axis is a label-position axis the v1 abstraction does not carry; its geometry and typography are unread. The onmars text-emphasis token vocabulary (001) covers label styling | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | Default slot carries the label and is the accessible-name source (charter slot convention) |
@@ -340,6 +340,32 @@ Feature: Switch
     Given a user who prefers reduced motion and a switch that is off
     When the user toggles the switch
     Then the switch is on without a travel animation
+
+  # S23
+  Scenario Outline: A theme sets the glyph color for each switch state
+    Given a switch that is <state>
+    When the page applies the theme's <token> color
+    Then the thumb shows its <glyph> in that color
+
+    Examples:
+      | state        | token                       | glyph |
+      | on           | --ki-switch-glyph-checked   | check |
+      | off          | --ki-switch-glyph-unchecked | dash  |
+      | disabled on  | --ki-switch-glyph-disabled  | check |
+      | disabled off | --ki-switch-glyph-disabled  | dash  |
+
+  # S24
+  Scenario Outline: A theme hides an individual state glyph with a transparent color
+    Given a theme that colors the on, off and disabled switch glyphs
+    When the theme sets <token> to transparent
+    Then the <state> switch shows no glyph
+    And the other states still show their glyphs
+
+    Examples:
+      | state    | token                       |
+      | on       | --ki-switch-glyph-checked   |
+      | off      | --ki-switch-glyph-unchecked |
+      | disabled | --ki-switch-glyph-disabled  |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -350,7 +376,7 @@ Feature: Switch
 | Keyboard path | S5, S6, S20 | |
 | Assistive-tech outcome | S7, S8, S9 | |
 | Form participation | S10, S11, S12, S13, S18, S21 | |
-| Theming | S14, S15, S16, S19 | |
+| Theming | S14, S15, S16, S19, S23, S24 | |
 
 ## Requirements *(mandatory)*
 
@@ -493,8 +519,19 @@ Feature: Switch
   immutable afterwards (FR-005, S12, S21). Native-checkbox parity (US2,
   SC-006) is therefore scoped to the specified observable outcomes, not to
   `defaultChecked` attribute semantics.
-- M3's optional thumb icons are out of v1 scope; if adopted later they enter
-  as additive slots or theme-token glyphs, never as a breaking change.
+- **#345 glyph visibility (agent's choice, pending founder confirmation)**.
+  A transparent color is the no-paint value for each glyph color token. It
+  lets a theme hide one state and show another with the same three tokens.
+  Both themes default to a visible check when on, no glyph when enabled and
+  off, and a muted check or dash when disabled.
+- **#345 forced colors (agent's choice, pending founder confirmation)**.
+  The user's forced palette keeps the existing glyph visibility and uses
+  system colors for the marks it shows.
+- **#345 glyph contrast (agent's choice, pending founder confirmation)**.
+  The 3:1 check applies to visible glyphs on enabled controls in rest, hover,
+  and pressed states across the two themes, two schemes and three token modes.
+  Disabled controls use the sweep's inactive-control exemption. Their
+  existing muted colors are retained to preserve the visual defaults.
 - ki-switch exposes no enum attributes, so the mandatory unknown-value
   fallback scenario (002 S11 pattern) is adapted to boolean-attribute
   robustness (S4): any `checked` value counts as presence and rendering

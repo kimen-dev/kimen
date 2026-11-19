@@ -44,8 +44,13 @@ const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
  * density, touch-size field text), when the document measured 608 693 raw,
  * 141 120 gzip, 115 435 brotli: 2 693 bytes over the old raw line, with gzip
  * and brotli still inside theirs, so only raw moves, to about 5% above.
+ * Gzip re-based for issue #349 (composed shadows) on top of #345 and #347,
+ * when CI measured 142 140 gzip (a local macOS build of the same document
+ * measures 611 265 raw, 141 560 gzip, 115 734 brotli): 140 bytes over the old gzip line,
+ * with raw and brotli still inside theirs, so only gzip moves, to about 5%
+ * above the CI figure.
  */
-const SIZE_BUDGET = { brotli: 116_500, gzip: 142_000, raw: 639_000 } as const;
+const SIZE_BUDGET = { brotli: 116_500, gzip: 149_000, raw: 639_000 } as const;
 
 /**
  * XML namespace names the DOM requires verbatim (`createElementNS`): they are

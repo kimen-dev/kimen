@@ -299,6 +299,25 @@ values differ in anything else fails the build.
 The approved public contract for this feature is documented in the
 [theming contract](https://github.com/kimen-dev/kimen/blob/main/specs/001-tokens-theming/contracts/theming-contract.md).
 
+### Turning off shadows
+
+In token source files, any `$type: "shadow"` token can have a `$value` of
+`"none"`. The build emits `0 0 #0000`, a transparent layer that is valid in
+a comma-separated `box-shadow` list.
+
+In a hand-written CSS theme, a token can be `none` when it supplies a whole
+`box-shadow` declaration. This includes the four component effect tokens
+`--ki-effect-component-primary-default-shadow`,
+`--ki-effect-component-primary-hover-shadow`,
+`--ki-effect-component-secondary-default-shadow`, and
+`--ki-effect-component-secondary-hover-shadow`. For a token you use as one
+layer in a comma-separated list, set its disabled value to `0 0 #0000`.
+Kimen's remaining lists use `--ki-dialog-shadow`, `--ki-focus-primary`, and
+`--ki-switch-focus-ring-shadow`.
+
+`--ki-effect-video-hover-opacity` sets the opacity of the added video hover
+shadow independently of the resting shadow. Material 3 sets it to zero.
+
 ## Deprecated tokens
 
 A token that no component paints is deprecated before it is removed: it keeps
