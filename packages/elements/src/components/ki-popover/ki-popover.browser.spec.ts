@@ -40,7 +40,7 @@ async function mount(content = 'Open incidents', attributes = '') {
   fixture.innerHTML = `
     <ki-button id="filters" type="button" variant="secondary">Filters</ki-button>
     <ki-popover data-testid="test-popover" for="filters" label="Incident filters" ${attributes}>${content}</ki-popover>
-    <button type="button">Next</button>
+    <button type="button" tabindex="0">Next</button>
   `;
   const popover = required(fixture, 'ki-popover') as HTMLElement & { open: boolean };
   const trigger = page.getByRole('button', { name: 'Filters' });
@@ -68,6 +68,13 @@ function surface() {
   return part('surface');
 }
 
+async function expectTriggerFocused(button: Element): Promise<void> {
+  const root = button.getRootNode();
+  if (!(root instanceof ShadowRoot)) throw new Error('The trigger is not the native shadow button');
+  // The document reports ki-button while focus is delegated to its native button.
+  await expect.poll(() => root.activeElement === button).toBe(true);
+}
+
 it('S1 opens beside its trigger, expands it, and reports one open', async () => {
   const { popover, trigger } = await mount();
   const opened = vi.fn();
@@ -78,9 +85,13 @@ it('S1 opens beside its trigger, expands it, and reports one open', async () => 
   await expect.element(dialog()).toBeVisible();
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');
   expect(popover.open).toBe(true);
-  expect(surface().getBoundingClientRect().top).toBeGreaterThan(
-    required(fixture, '#filters').getBoundingClientRect().bottom,
-  );
+  const panel = surface();
+  const anchor = required(fixture, '#filters');
+  const gap = Number.parseFloat(getComputedStyle(panel).scrollMarginBlockStart);
+  expect(gap).toBeGreaterThan(0);
+  await expect
+    .poll(() => panel.getBoundingClientRect().top - anchor.getBoundingClientRect().bottom)
+    .toBeCloseTo(gap, 0);
   expect(opened).toHaveBeenCalledTimes(1);
 });
 
@@ -93,7 +104,7 @@ it('S2 dismisses natively on an outside click', async () => {
 
   await next.click();
 
-  await expect.element(dialog()).not.toBeVisible();
+  await expect.element(surface()).not.toBeVisible();
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
   expect(popover.open).toBe(false);
   expect(closed).toHaveBeenCalledTimes(1);
@@ -115,8 +126,9 @@ it('S4 Escape restores trigger focus even after application-driven opening', asy
 
   await userEvent.keyboard('{Escape}');
 
-  await expect.element(dialog()).not.toBeVisible();
-  await expect.element(trigger).toHaveFocus();
+  await expect.element(surface()).not.toBeVisible();
+  await expectTriggerFocused(trigger.element());
+  await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
 });
 
 it('S5 Tab reaches the next control on the page', async () => {
@@ -137,6 +149,9 @@ it('S6 exposes the named non-modal dialog and passes axe', async () => {
   await expect.element(dialog()).not.toHaveAttribute('aria-modal', 'true');
   await expect.element(trigger).toHaveAttribute('aria-haspopup', 'dialog');
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');
+  const host = required(fixture, '#filters');
+  expect(host.hasAttribute('aria-expanded')).toBe(false);
+  expect(host.hasAttribute('aria-haspopup')).toBe(false);
   await expectAccessible(fixture);
 });
 
@@ -149,7 +164,7 @@ it('S7 updates a persistent status region and retains keyboard focus', async () 
   await userEvent.keyboard(' ');
 
   await expect.element(status).toHaveTextContent('Logs are kept for 30 days.');
-  await expect.element(trigger).toHaveFocus();
+  await expectTriggerFocused(trigger.element());
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');
 });
 
@@ -194,10 +209,10 @@ it('S10 aligns at RTL inline-start and keeps a visible border without motion', a
     await trigger.click();
 
     await expect.element(dialog()).toBeVisible();
-    expect(surface().getBoundingClientRect().right).toBeCloseTo(
-      required(fixture, '#filters').getBoundingClientRect().right,
-      0,
-    );
+    const anchor = required(fixture, '#filters');
+    await expect
+      .poll(() => surface().getBoundingClientRect().right - anchor.getBoundingClientRect().right)
+      .toBeCloseTo(0, 0);
     const paint = getComputedStyle(surface());
     expect(Number.parseFloat(paint.borderInlineStartWidth)).toBeGreaterThan(0);
     expect(paint.borderInlineStartColor).not.toBe(paint.backgroundColor);
@@ -221,7 +236,7 @@ it('S11 reflects application-driven open and close with one event per transition
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');
   expect(opened).toHaveBeenCalledTimes(1);
   popover.open = false;
-  await expect.element(dialog()).not.toBeVisible();
+  await expect.element(surface()).not.toBeVisible();
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
   expect(closed).toHaveBeenCalledTimes(1);
 });
@@ -253,7 +268,7 @@ it('S13 a second pointer activation closes the same popover', async () => {
 
   await trigger.click();
 
-  await expect.element(dialog()).not.toBeVisible();
+  await expect.element(surface()).not.toBeVisible();
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
   expect(closed).toHaveBeenCalledTimes(1);
 });

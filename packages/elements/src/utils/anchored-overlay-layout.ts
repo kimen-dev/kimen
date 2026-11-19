@@ -1,12 +1,12 @@
-import { type OverlayPositioner, showOverlayPopover } from './anchored-overlay';
+import type { OverlayPositioner } from './anchored-overlay';
 import { type OverlayPlacement, resolveOverlayPosition } from './anchored-overlay-position';
 
 type AnchorName = `--${string}`;
 
 interface OverlayPositionOptions {
   placement: OverlayPlacement;
-  /** Resolved gap in CSS pixels. */
-  offset?: number;
+  /** Gap in CSS pixels, optionally resolved once the popup is visible. */
+  offset?: number | ((popup: HTMLElement) => number);
   /** Optional CSS anchor-name supplied by the component. */
   anchorName?: AnchorName;
   /** The native popover invoker when CSS uses the implicit anchor. */
@@ -19,11 +19,7 @@ interface OverlayPositionOptions {
  * Measure the CSS anchor box in the top layer. Firefox can omit an ancestor's
  * transform from this box. An unavailable or out-of-scope anchor gives no box.
  */
-export function measureCssAnchor(
-  popup: HTMLElement,
-  name?: AnchorName,
-  source?: HTMLElement,
-): DOMRect | null {
+export function measureCssAnchor(popup: HTMLElement, name: AnchorName): DOMRect | null {
   if (
     typeof CSS === 'undefined' ||
     !CSS.supports('top', 'anchor(top)') ||
@@ -41,7 +37,7 @@ export function measureCssAnchor(
   probe.setAttribute('aria-hidden', 'true');
   probe.style.cssText = [
     'position:fixed',
-    `position-anchor:${name ?? 'auto'}`,
+    `position-anchor:${name}`,
     'inset:auto',
     'left:anchor(left)',
     'top:anchor(top)',
@@ -58,7 +54,7 @@ export function measureCssAnchor(
 
   popup.parentNode.appendChild(probe);
   try {
-    showOverlayPopover(probe, source);
+    probe.showPopover();
     const rect = probe.getBoundingClientRect();
     probe.hidePopover();
     return rect.width > 0 && rect.height > 0 ? rect : null;
@@ -78,7 +74,7 @@ function movePopup(
   const popupRect = popup.getBoundingClientRect();
   const { x, y, effectivePlacement } = resolveOverlayPosition({
     placement: options.placement,
-    offset: options.offset ?? 0,
+    offset: typeof options.offset === 'function' ? options.offset(popup) : (options.offset ?? 0),
     dir,
     triggerRect,
     popupRect,
@@ -86,12 +82,16 @@ function movePopup(
   });
   const name = options.anchorName;
   const source = options.source;
-  const cssAnchor = name || source ? measureCssAnchor(popup, name, source) : null;
+  const cssAnchor = name ? measureCssAnchor(popup, name) : source?.getBoundingClientRect();
   if (cssAnchor) {
     const prefix = name ? `${name} ` : '';
     popup.style.left = `calc(anchor(${prefix}left) + ${String(x - cssAnchor.left)}px)`;
     popup.style.top = `calc(anchor(${prefix}top) + ${String(y - cssAnchor.top)}px)`;
-  } else {
+  }
+  // An invoker can be outside the popup's CSS anchor scope. Test the actual
+  // positioned box so an unresolved implicit anchor cannot leave auto insets.
+  const rect = source ? popup.getBoundingClientRect() : undefined;
+  if (!cssAnchor || (rect && (Math.abs(rect.left - x) > 0.5 || Math.abs(rect.top - y) > 0.5))) {
     popup.style.left = `${String(x)}px`;
     popup.style.top = `${String(y)}px`;
   }

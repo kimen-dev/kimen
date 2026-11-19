@@ -73,7 +73,7 @@ export class KiPopover {
 
   private overlay = new AnchoredOverlay();
   private popup: HTMLDivElement | undefined;
-  private trigger: TriggerState | undefined;
+  private trigger: HTMLElement | undefined;
   private control: TriggerState | undefined;
   private readonly treeObserver = new MutationObserver(() => {
     this.bindTrigger();
@@ -153,7 +153,7 @@ export class KiPopover {
 
   private bindTrigger(): void {
     const anchor = this.for ? resolveOverlayAnchor(this.host, this.for) : null;
-    if ((anchor ?? undefined) === this.trigger?.element) {
+    if ((anchor ?? undefined) === this.trigger) {
       return;
     }
     if (this.shown) {
@@ -163,7 +163,7 @@ export class KiPopover {
     if (!(anchor instanceof HTMLElement) || anchor === this.host || this.host.contains(anchor)) {
       return;
     }
-    this.trigger = captureTrigger(anchor);
+    this.trigger = anchor;
     this.triggerListeners = new AbortController();
     const options = { signal: this.triggerListeners.signal };
     anchor.addEventListener('click', this.handleActivation, options);
@@ -177,7 +177,7 @@ export class KiPopover {
     this.observeControl(anchor);
     if (anchor.localName.includes('-') && !customElements.get(anchor.localName)) {
       void customElements.whenDefined(anchor.localName).then(() => {
-        if (this.trigger?.element === anchor) {
+        if (this.trigger === anchor) {
           this.observeControl(anchor);
         }
       });
@@ -198,8 +198,12 @@ export class KiPopover {
   }
 
   private bindControl = (): void => {
-    const trigger = this.trigger?.element;
-    const target = trigger ? shadowFocusTarget(trigger) : null;
+    const trigger = this.trigger;
+    // ARIA belongs to the button exposed to assistive technology. Kimen's
+    // focus-delegating host has no button role of its own.
+    const target = trigger?.matches('button, input[type="button"], [role="button"]')
+      ? trigger
+      : trigger && shadowFocusTarget(trigger);
     if ((target ?? undefined) !== this.control?.element) {
       if (this.control) {
         restoreTrigger(this.control);
@@ -212,9 +216,6 @@ export class KiPopover {
   private unbindTrigger(): void {
     this.controlObserver?.disconnect();
     this.triggerListeners?.abort();
-    if (this.trigger) {
-      restoreTrigger(this.trigger);
-    }
     if (this.control) {
       restoreTrigger(this.control);
     }
@@ -224,16 +225,15 @@ export class KiPopover {
   }
 
   private updateTrigger(): void {
-    for (const state of [this.trigger, this.control]) {
-      if (state) {
-        state.element.ariaExpanded = String(this.shown);
-        state.element.ariaHasPopup = this.isToggletip ? state.hasPopup : 'dialog';
-      }
+    const state = this.control;
+    if (state) {
+      state.element.ariaExpanded = String(this.shown);
+      state.element.ariaHasPopup = this.isToggletip ? state.hasPopup : 'dialog';
     }
   }
 
   private handleActivation = (event: MouseEvent): void => {
-    const trigger = this.control?.element ?? this.trigger?.element;
+    const trigger = this.control?.element ?? this.trigger;
     // Some engines dismiss on pointerup before delivering a click to an
     // external trigger. That click still means close if the press began open.
     const dismiss = this.shown || (event.detail > 0 && this.pressedWhileOpen);
@@ -245,18 +245,17 @@ export class KiPopover {
   };
 
   private show(): void {
-    const trigger = this.trigger?.element;
+    const trigger = this.trigger;
     const popup = this.popup;
     if (!trigger || !popup) {
       return;
     }
     const source = this.control?.element ?? trigger;
-    const gap = Number.parseFloat(getComputedStyle(popup).scrollMarginBlockStart);
     this.overlay.show(popup, trigger, {
       source,
       position: anchoredOverlayPosition({
         placement: normalizePopoverPlacement(this.placement),
-        offset: Number.isFinite(gap) ? gap : 0,
+        offset: (panel) => Number.parseFloat(getComputedStyle(panel).scrollMarginBlockStart) || 0,
         source,
         onPosition: (placement, inlineCenter, blockCenter) => {
           let side = placement.split('-')[0] ?? 'bottom';
@@ -310,8 +309,8 @@ export class KiPopover {
     } else {
       this.stopDismissTracking();
       this.overlay.hide();
-      if (restore && this.trigger?.element.isConnected) {
-        focusThroughShadow(this.trigger.element);
+      if (restore && this.trigger?.isConnected) {
+        focusThroughShadow(this.trigger);
       }
       this.kiClose.emit();
     }

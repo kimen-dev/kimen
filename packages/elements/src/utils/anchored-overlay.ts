@@ -38,14 +38,10 @@ export function resolveOverlayAnchor(host: Element, anchor: Element | string): E
 }
 
 /** Stencil's DOM declarations predate the Popover API's source option. */
-export function showOverlayPopover(popup: HTMLElement, source?: HTMLElement): void {
-  if (source) {
-    (popup as HTMLElement & { showPopover(options: { source: HTMLElement }): void }).showPopover({
-      source,
-    });
-  } else {
-    popup.showPopover();
-  }
+function showOverlayPopover(popup: HTMLElement, source: HTMLElement): void {
+  (popup as HTMLElement & { showPopover(options: { source: HTMLElement }): void }).showPopover({
+    source,
+  });
 }
 
 /** Mirror component state into a connected manual popover. */

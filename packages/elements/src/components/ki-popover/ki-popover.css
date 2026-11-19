@@ -11,8 +11,10 @@
   --_ki-popover-border: var(--ki-popover-border-width) solid var(--ki-popover-border);
 
   position: fixed;
+  position-anchor: auto;
   inset: auto;
   margin: 0;
+  padding: 0;
 
   /* Keep the token as a computed CSS length for the overlay layout. */
   scroll-margin-block: var(--ki-popover-gap);

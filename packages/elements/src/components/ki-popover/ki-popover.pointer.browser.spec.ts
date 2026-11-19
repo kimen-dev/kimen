@@ -33,7 +33,7 @@ it('S10 keeps normal density under a coarse pointer and follows the inherited de
   fixture.id = 'popover-pointer-fixture';
   fixture.innerHTML = `<style>${tokensCss}</style>
     <button id="touch-filters" type="button">Filters</button>
-    <ki-popover for="touch-filters" label="Filters" open><span id="incidents">Open incidents</span></ki-popover>`;
+    <ki-popover for="touch-filters" label="Filters" open><div id="incidents">Open incidents</div></ki-popover>`;
   document.body.append(fixture);
   await expect.element(page.getByRole('dialog', { name: 'Filters' })).toBeVisible();
   const surface = fixture
@@ -47,9 +47,11 @@ it('S10 keeps normal density under a coarse pointer and follows the inherited de
     surface.getBoundingClientRect().left -
     Number.parseFloat(getComputedStyle(surface).borderInlineStartWidth);
 
-  expect(padding()).toBe(12);
+  const standardPadding =
+    Number.parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.75;
+  expect(padding()).toBeCloseTo(standardPadding, 1);
   fixture.setAttribute('data-ki-density', 'touch');
-  expect(padding()).toBe(12);
+  await expect.poll(padding).toBeCloseTo(standardPadding, 1);
   fixture.setAttribute('data-ki-density', 'compact');
-  expect(padding()).toBe(9);
+  await expect.poll(padding).toBeCloseTo(standardPadding * 0.75, 1);
 });

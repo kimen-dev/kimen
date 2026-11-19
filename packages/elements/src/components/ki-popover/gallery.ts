@@ -22,7 +22,6 @@ export default {
       Logs are kept for 30 days. Exports are retained separately.
     </ki-popover>
   `,
-  width: 420,
   minHeight: 275,
   prepare: async (wrapper) => {
     const filters = wrapper.querySelector<HTMLElement & { open: boolean }>(
