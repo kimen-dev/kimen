@@ -1,0 +1,286 @@
+{
+  "component": {
+    "attributes": {
+      "dot": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show a dot independently of the count, including when the value is zero.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "for": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "max": {
+        "default": "99",
+        "deprecatedSince": null,
+        "description": "Largest count displayed in full. Higher values display the cap with a\nplus sign. Fractional caps round down; invalid caps use 99.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "tone": {
+        "default": "'danger'",
+        "deprecatedSince": null,
+        "description": "Semantic palette of the pill or dot. An unknown tone uses danger.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\""
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Count of unread or pending items. Finite values are rounded down.\nValues below one and non-finite values hide the count.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-counter-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Danger notification indicator fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the notification indicator fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-dot-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width and height of the presence dot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Danger notification count text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font family for the count.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font size for the count.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font weight for the count.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-neutral-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Neutral notification indicator fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-neutral-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Neutral notification count text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Horizontal padding of a count pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-primary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Primary notification indicator fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Primary notification count text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Radius of the painted pill or dot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-ring": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface-colored ring that separates the indicator from the trigger.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the separating ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum width and height of a count pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-success-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Success notification indicator fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-counter-success-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Success notification count text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A decorative count or dot over a trigger or avatar.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Painted pill or dot, including the surrounding ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "dot": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show a dot independently of the count, including when the value is zero.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "for": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "max": {
+        "default": "99",
+        "deprecatedSince": null,
+        "description": "Largest count displayed in full. Higher values display the cap with a\nplus sign. Fractional caps round down; invalid caps use 99.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "tone": {
+        "default": "'danger'",
+        "deprecatedSince": null,
+        "description": "Semantic palette of the pill or dot. An unknown tone uses danger.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\""
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Count of unread or pending items. Finite values are rounded down.\nValues below one and non-finite values hide the count.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-counter.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-counter.d.ts",
+    "symbols": {
+      "KiCounter": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiCounter extends Components.KiCounter, HTMLElement {\n}\nexport const KiCounter: {\n    prototype: KiCounter;\n    new (): KiCounter;\n};"
+      },
+      "KiCounterTone": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-counter.js"
+  }
+}

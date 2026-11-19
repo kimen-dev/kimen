@@ -599,6 +599,7 @@
   --ki-font-letter-spacing-sm:-0.03em;
   --ki-font-letter-spacing-md:-0.05em;
   --ki-font-letter-spacing-lg:-0.07em;
+  --ki-surface-image-none:none;
   --ki-surface-image-dialog:none;
   --ki-surface-image-listbox:none;
   --ki-surface-image-tooltip-arrow-start:initial;
@@ -829,6 +830,7 @@
   --ki-elevation-none:0 0 #0000;
   --ki-effect-component-backdrop-blur:var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-effect-component-backdrop-filter */
   --ki-effect-component-backdrop-filter:none;
+  --ki-effect-component-flat-backdrop-filter:none;
   --ki-effect-component-listbox-backdrop-filter:none;
   --ki-effect-component-primary-default-shadow:0 0 rgba(0,0,0,0);
   --ki-effect-component-primary-hover-shadow:0 0 rgba(0,0,0,0);
@@ -899,6 +901,11 @@
   --ki-typography-letter-spacing-lg:-0.02em;
   --ki-spacing-inline:var(--ki-space-md);
   --ki-spacing-block:var(--ki-space-xl);
+  --ki-notification-marker-count-size:var(--ki-space-4xl);
+  --ki-notification-marker-dot-size:var(--ki-space-lg);
+  --ki-notification-marker-ring-width:var(--ki-space-xxs);
+  --ki-notification-marker-padding-inline:var(--ki-space-xs);
+  --ki-notification-marker-radius:var(--ki-radius-round);
   --ki-corner-control:var(--ki-radius-md);
   --ki-motion-duration-fast:var(--ki-duration-fast);
   --ki-motion-duration-short-1:var(--ki-duration-fast);
@@ -1411,6 +1418,25 @@
   --ki-checkbox-sm-label-line-height:var(--ki-typography-line-height-para);
   --ki-checkbox-lg-control-size:var(--ki-space-7xl);
   --ki-checkbox-lg-min-target:var(--ki-space-9xl);
+  --ki-counter-size:var(--ki-notification-marker-count-size);
+  --ki-counter-dot-size:var(--ki-notification-marker-dot-size);
+  --ki-counter-bg:var(--ki-surface-danger-high-em);
+  --ki-counter-fg:var(--ki-text-primary-on-danger);
+  --ki-counter-bg-image:var(--ki-surface-image-none);
+  --ki-counter-backdrop-filter:var(--ki-effect-component-flat-backdrop-filter);
+  --ki-counter-ring:var(--ki-surface-s0);
+  --ki-counter-ring-width:var(--ki-notification-marker-ring-width);
+  --ki-counter-radius:var(--ki-notification-marker-radius);
+  --ki-counter-padding-inline:var(--ki-notification-marker-padding-inline);
+  --ki-counter-font-family:var(--ki-typography-family-body);
+  --ki-counter-font-size:var(--ki-typography-size-overline);
+  --ki-counter-font-weight:var(--ki-typography-weight-body-semibold);
+  --ki-counter-primary-bg:var(--ki-surface-primary-med-em);
+  --ki-counter-primary-fg:var(--ki-text-primary-on-primary);
+  --ki-counter-success-bg:var(--ki-text-success-high-em);
+  --ki-counter-success-fg:var(--ki-surface-s0);
+  --ki-counter-neutral-bg:var(--ki-surface-inverse-white);
+  --ki-counter-neutral-fg:var(--ki-text-inverse-black);
   --ki-dialog-radius:var(--ki-radius-component-3xl);
   --ki-dialog-padding:var(--ki-space-7xl);
   --ki-dialog-gap:var(--ki-space-xl);

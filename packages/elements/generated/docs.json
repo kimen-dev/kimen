@@ -314,7 +314,11 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), for presence/verification adornments overlaid on the corner\n(a future overlay concern shared with the nav badge), or unlabeled when no\nadjacent text names the identity."
+          "text": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), or unlabeled when no adjacent text names the identity.\nUse the counter slot for a decorative presence dot."
+        },
+        {
+          "name": "slot",
+          "text": "counter - Decorative ki-counter in the block-end inline-end corner.\nInclude its meaning in the avatar label."
         },
         {
           "name": "part",
@@ -495,7 +499,12 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
+      "slots": [
+        {
+          "name": "counter",
+          "docs": "Decorative ki-counter in the block-end inline-end corner.\nInclude its meaning in the avatar label."
+        }
+      ],
       "parts": [
         {
           "name": "avatar",
@@ -676,7 +685,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (a future, separate concern)."
+          "text": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (use ki-counter)."
         },
         {
           "name": "slot",
@@ -1711,6 +1720,214 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-counter/ki-counter.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-counter",
+      "docs": "A decorative count or dot over a trigger or avatar.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics."
+        },
+        {
+          "name": "part",
+          "text": "indicator - Painted pill or dot, including the surrounding ring."
+        }
+      ],
+      "usage": {
+        "examples": "# Notification count and presence\n\nProvide the actual count or presence in the host's label. The visible counter\nis decorative, so a label can expose the full count even if the pill says\n`99+`.\n\n```html\n<ki-icon-button variant=\"secondary\" label=\"Notifications, 3 unread\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\">\n    <path d=\"M6 17h12l-2-3V9a4 4 0 0 0-8 0v5l-2 3Zm4 3h4\" stroke-width=\"2\" />\n  </svg>\n  <ki-counter slot=\"counter\" value=\"3\"></ki-counter>\n</ki-icon-button>\n\n<ki-avatar initials=\"AG\" label=\"Ana García, online\">\n  <ki-counter slot=\"counter\" tone=\"success\" dot></ki-counter>\n</ki-avatar>\n```\n\nThe `for` attribute attaches the indicator to a trigger ID in the same\ndocument or shadow root. Set the trigger's accessible name directly.\n\n```html\n<a id=\"inbox-link\" href=\"/inbox\" aria-label=\"Inbox, 120 unread\">Inbox</a>\n<ki-counter for=\"inbox-link\" value=\"120\" max=\"99\"></ki-counter>\n<p id=\"inbox-updates\" role=\"status\"></p>\n```\n\nFor an important count update, update the trigger name and the counter, then\nwrite one localized announcement to the pre-existing status region.\n"
+      },
+      "props": [
+        {
+          "name": "dot",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "dot",
+          "reflectToAttr": true,
+          "docs": "Show a dot independently of the count, including when the value is zero.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "for",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "for",
+          "reflectToAttr": true,
+          "docs": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": false,
+          "docs": "Largest count displayed in full. Higher values display the cap with a\nplus sign. Fractional caps round down; invalid caps use 99.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "99"
+            }
+          ],
+          "default": "99",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\"",
+          "complexType": {
+            "original": "KiCounterTone",
+            "resolved": "\"danger\" | \"neutral\" | \"primary\" | \"success\"",
+            "references": {
+              "KiCounterTone": {
+                "location": "local",
+                "path": "src/components/ki-counter/ki-counter.tsx",
+                "id": "src/components/ki-counter/ki-counter.tsx::KiCounterTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Semantic palette of the pill or dot. An unknown tone uses danger.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'danger'"
+            }
+          ],
+          "default": "'danger'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Count of unread or pending items. Finite values are rounded down.\nValues below one and non-finite values hide the count.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "indicator",
+          "docs": "Painted pill or dot, including the surrounding ring."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
       "encapsulation": "shadow",
       "tag": "ki-dialog",
@@ -2037,6 +2254,10 @@
           "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
         },
         {
+          "name": "slot",
+          "text": "counter - Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
+        },
+        {
           "name": "part",
           "text": "button - Internal native button."
         },
@@ -2324,6 +2545,10 @@
         {
           "name": "",
           "docs": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+        },
+        {
+          "name": "counter",
+          "docs": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
         }
       ],
       "parts": [
@@ -6145,6 +6370,11 @@
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
       "docstring": "",
       "path": "src/components/ki-checkbox/ki-checkbox.tsx"
+    },
+    "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
+      "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
+      "docstring": "",
+      "path": "src/components/ki-counter/ki-counter.tsx"
     },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
       "declaration": "export interface KiDialogCloseDetail {\n  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */\n  reason: KiDialogCloseReason;\n}",

@@ -14,9 +14,8 @@ stack with overflow.
 
 as a clickable control (compose the avatar inside an
 interactive host such as ki-button), for logos or arbitrary illustrations
-(plain `img`), for presence/verification adornments overlaid on the corner
-(a future overlay concern shared with the nav badge), or unlabeled when no
-adjacent text names the identity.
+(plain `img`), or unlabeled when no adjacent text names the identity.
+Use the counter slot for a decorative presence dot.
 
 ## Examples
 
@@ -51,7 +50,7 @@ Beside a visible name the avatar is decorative — omit `label` so assistive tec
 
 ## Slots
 
-None.
+- `counter`: Decorative ki-counter in the block-end inline-end corner. Include its meaning in the avatar label.
 
 ## Parts
 

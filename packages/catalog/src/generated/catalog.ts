@@ -224,9 +224,11 @@ export const catalogData = {
           "format": "url"
         }
       },
-      "slots": {},
+      "slots": {
+        "counter": "Decorative ki-counter in the block-end inline-end corner.\nInclude its meaning in the avatar label."
+      },
       "tag": "ki-avatar",
-      "whenNotToUse": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), for presence/verification adornments overlaid on the corner\n(a future overlay concern shared with the nav badge), or unlabeled when no\nadjacent text names the identity.",
+      "whenNotToUse": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), or unlabeled when no adjacent text names the identity.\nUse the counter slot for a decorative presence dot.",
       "whenToUse": "a compact identity visual for a person or entity — a comment\nauthor, a contact list item, a project member. Set `label` whenever the\navatar is the only carrier of the identity (no adjacent visible name);\ncompose several into `ki-avatar-group` for a compact \"who is involved\"\nstack with overflow."
     },
     "ki-avatar-group": {
@@ -289,7 +291,7 @@ export const catalogData = {
         "": "The label: short status text, the sole carrier of meaning."
       },
       "tag": "ki-badge",
-      "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (a future, separate concern).",
+      "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (use ki-counter).",
       "whenToUse": "annotate an entity with short status text (a state, a\ncategory) whose meaning is carried by the label itself; the tone color\nonly reinforces the text, it never replaces it."
     },
     "ki-button": {
@@ -453,6 +455,45 @@ export const catalogData = {
       "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked.",
       "whenToUse": "selecting one or more independent options that a form submits\nlater, including a \"select all\" parent that presents partial selection with\n`indeterminate`. Always provide a visible label in the default slot."
     },
+    "ki-counter": {
+      "description": "A decorative count or dot over a trigger or avatar.",
+      "events": {},
+      "props": {
+        "dot": {
+          "type": "boolean",
+          "description": "Show a dot independently of the count, including when the value is zero.",
+          "default": false
+        },
+        "for": {
+          "type": "string",
+          "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property."
+        },
+        "max": {
+          "type": "number",
+          "description": "Largest count displayed in full. Higher values display the cap with a\nplus sign. Fractional caps round down; invalid caps use 99.",
+          "default": 99
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral",
+            "primary",
+            "success"
+          ],
+          "description": "Semantic palette of the pill or dot. An unknown tone uses danger.",
+          "default": "danger"
+        },
+        "value": {
+          "type": "number",
+          "description": "Count of unread or pending items. Finite values are rounded down.\nValues below one and non-finite values hide the count."
+        }
+      },
+      "slots": {},
+      "tag": "ki-counter",
+      "whenNotToUse": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics.",
+      "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
+    },
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
       "events": {
@@ -564,7 +605,8 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+        "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
       },
       "tag": "ki-icon-button",
       "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
