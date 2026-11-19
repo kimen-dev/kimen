@@ -8,5 +8,20 @@
   "catalog": true,
   "budgetGroup": {
     "members": ["ki-stepper", "ki-step"]
+  },
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 13013,
+      "gzip": 3634,
+      "brotli": 2838
+    },
+    "mcpServer": {
+      "raw": 22797,
+      "gzip": 5622,
+      "brotli": 3300
+    },
+    "tokenStylesheets": {
+      "onmars": 118
+    }
   }
 }
