@@ -11,6 +11,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { visualThemes } from '../../packages/elements/browser-tests/visual/matrix.ts';
 import { discoverComponents } from '../lib/component-inventory.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -39,20 +40,13 @@ function parseArmedMarker(content) {
   return value === 'true';
 }
 
-// Mirrors the harness matrix: light specs capture onmars + material3, dark
-// specs capture onmars only, and toMatchScreenshot names baselines
-// `<name>-<browser>-<platform>.png`.
+// Shares the theme matrix with the harness. toMatchScreenshot names
+// baselines `<name>-<browser>-<platform>.png`.
 function expectedLinuxBaselines(specFileName, engine = 'chromium') {
-  const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
+  const scheme = specFileName.endsWith('.visual.dark.browser.spec.ts') ? 'dark' : 'light';
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
-  const captures = dark
-    ? [['onmars', 'dark']]
-    : [
-        ['onmars', 'light'],
-        ['material3', 'light'],
-      ];
-  return captures.map(
-    ([theme, scheme]) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
+  return visualThemes(component, scheme).map(
+    (theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
   );
 }
 
@@ -101,6 +95,10 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-image.visual.dark.browser.spec.ts'), [
+    'ki-image-onmars-dark-gallery-chromium-linux.png',
+    'ki-image-material3-dark-gallery-chromium-linux.png',
   ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',

@@ -33,8 +33,10 @@ Chromium, as part of `gates-suite.sh`; the release workflow runs it on
 Chromium, Firefox and WebKit, and each engine compares against its own
 baselines:
 
-- Matrix: onmars light, onmars dark and material3 light for each component
-  on each browser engine. Hover and animated states are out of v1.
+- Each engine captures onmars light, onmars dark and material3 light for
+  every component. Image also has a material3 dark capture. The harness and
+  baseline audit share the matrix in `visual/matrix.ts`. Galleries cover
+  static states.
 - Shared harness: `visual/harness.ts` (tokens injection, vendored font
   fixtures + `document.fonts.ready`, reduced-motion emulation, gallery
   mounting). Each component owns a `src/components/ki-<name>/gallery.ts`
