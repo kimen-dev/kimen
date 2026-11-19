@@ -285,6 +285,11 @@ Feature: Video
     And a rendered video labeled "Play the product tour" showing its poster facade
     When the user activates the play control
     Then the facade is dismissed without transitional motion
+  # S13
+  Scenario: A theme can hide just the hover shadow
+    Given a video with a visible play-container shadow and a theme with video hover-shadow opacity set to zero
+    When the user hovers the play control
+    Then the play container keeps its resting shadow with no additional shadow
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -424,6 +429,11 @@ Feature: Video
   durations of the affected parts are 0).
 
 ## Assumptions
+
+- Issue #349 (agent's choice, pending founder confirmation). The video hover
+  effect gets its own opacity token. onmars keeps the existing hover effect
+  and Material 3 keeps its flat hover. The shared primary hover shadow still
+  controls the effect wherever the theme enables it.
 
 - Slotted native `<video>` (rather than `src`/`poster` attributes and an
   internal media element) is the chosen architecture: it keeps sources,
