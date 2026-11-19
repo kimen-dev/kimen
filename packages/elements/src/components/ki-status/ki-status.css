@@ -51,7 +51,7 @@
  * the ring. Each value parses independently and none adds zero layers. */
 :host([ring]) [part="dot"] {
   box-shadow: 0 0 0 var(--ki-status-ring-width) var(--ki-status-ring-color);
-  animation: ki-status-dot-shadow 0s both;
+  animation: ki-status-dot-shadow both;
   animation-composition: add;
 }
 
