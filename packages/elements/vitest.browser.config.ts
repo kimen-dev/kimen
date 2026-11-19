@@ -29,9 +29,8 @@ if (!supportedBrowsers.some((browser) => browser === configuredBrowser)) {
 const browser = configuredBrowser as SupportedBrowser;
 const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts';
 // Specs that change the page's input device through CDP touch emulation. They
-// share one isolated setup, never the ordinary light one: the pointer
-// capability audit, the touch text size of fields (spec 048) and of sized
-// fields (spec 050).
+// share one isolated setup. Exclude them from the ordinary light project
+// because disabling touch does not reliably restore its hover capability.
 const inputDeviceSpecs = [
   pointerCapabilitySpec,
   'browser-tests/touch-field-text.browser.spec.ts',
