@@ -6,7 +6,7 @@ import axe from 'axe-core';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
- 
+/* eslint-disable @nx/enforce-module-boundaries -- this integration contract intentionally consumes the hand-written site outside the elements project */
 import interWoff2Url from '../../../site/assets/fonts/InterVariable.woff2?url';
 import jetBrainsMonoWoff2Url from '../../../site/assets/fonts/JetBrainsMonoVariable.woff2?url';
 import landingCss from '../../../site/landing.css?raw';
@@ -25,7 +25,7 @@ import { initializePlayground } from '../../../site/playground/playground.js';
 // that installPageMarkup never runs. It still owes the same axe and overflow
 // guarantees as the other two.
 import privacyHtml from '../../../site/privacy/index.html?raw';
- 
+/* eslint-enable @nx/enforce-module-boundaries */
 import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
