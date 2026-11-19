@@ -1,24 +1,27 @@
-import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import type { Page } from 'playwright';
 
 import type { ThemeFontMeasurement } from '../browser-tests/theme-fonts.browser.spec';
 
 const origin = 'http://kimen-fonts.test';
-const tokenSheet = import.meta.resolve('@kimen/tokens/css');
-const packageRoot = new URL('../../', tokenSheet);
+const resolveExport = createRequire(import.meta.url).resolve;
+const tokenSheet = '@kimen/tokens/css';
+const packageRoot = new URL('../../', pathToFileURL(resolveExport(tokenSheet)));
 
-function publicPath(url: string) {
-  return '/' + url.slice(packageRoot.href.length);
+function publicPath(specifier: string) {
+  const url = pathToFileURL(resolveExport(specifier));
+  return '/' + url.href.slice(packageRoot.href.length);
 }
 
 function fontPage(theme: 'onmars' | 'material3', withFonts: boolean) {
   const themeSheet =
     theme === 'material3'
-      ? `<link rel="stylesheet" href="${publicPath(import.meta.resolve('@kimen/tokens/css/material3'))}">`
+      ? `<link rel="stylesheet" href="${publicPath('@kimen/tokens/css/material3')}">`
       : '';
   const fontSheet = withFonts
-    ? `<link rel="stylesheet" href="${publicPath(import.meta.resolve('@kimen/tokens/css/onmars-fonts.css'))}">`
+    ? `<link rel="stylesheet" href="${publicPath('@kimen/tokens/css/onmars-fonts.css')}">`
     : '';
   // Preview the #341 family values with the adjusted aliases. This is a
   // consumer override; the published onmars defaults still use Inter.
