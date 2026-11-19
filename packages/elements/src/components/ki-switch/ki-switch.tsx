@@ -6,6 +6,8 @@ import {
 import { FieldMessage, fieldDescribedBy, fieldInvalid, fieldText } from '../../utils/field-message';
 import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
 
+export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';
+
 /**
  * A token-styled switch for immediate on/off settings.
  *
@@ -55,6 +57,20 @@ export class KiSwitch {
    * @default false
    */
   @Prop({ mutable: true, reflect: true }) checked = false;
+
+  /**
+   * Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in
+   * onmars (`xl` is the design's mobile size), with its thumb. `sm` also takes
+   * the smaller label (13/20, 8px away). An unrecognized value matches no
+   * style rule and keeps the medium metrics.
+   * When to use: match the size of the text and controls around it.
+   * When NOT to use: do not pick a smaller size to fit a dense region or a
+   * larger one for touch; declare `data-ki-density` on the region instead,
+   * which composes with every size.
+   *
+   * @default 'md'
+   */
+  @Prop({ reflect: true }) size: KiSwitchSize = 'md';
 
   /**
    * Prevents toggling, removes the switch from keyboard reach, excludes it

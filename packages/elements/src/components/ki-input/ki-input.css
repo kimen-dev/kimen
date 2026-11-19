@@ -11,9 +11,78 @@
   --_ki-label-hint-fg: var(--ki-input-label-hint-fg);
   --_ki-label-hint-gap: var(--ki-input-label-hint-gap);
 
+  /* The size ramp (spec 050): medium is the unsized token family. */
+  --_ki-input-height: var(--ki-input-height);
+  --_ki-input-padding-inline: var(--ki-input-padding-inline);
+  --_ki-input-text-padding-inline: var(--ki-input-gap);
+  --_ki-input-radius: var(--ki-input-radius);
+  --_ki-input-font-size: var(--ki-input-font-size);
+  --_ki-input-line-height: var(--ki-input-line-height);
+  --_ki-input-icon-size: var(--ki-input-icon-size);
+  --_ki-input-label-font-size: var(--ki-input-label-font-size);
+  --_ki-input-label-line-height: var(--ki-input-label-line-height);
+
   display: inline-block;
   color: var(--_ki-input-fg);
   font-family: var(--ki-typography-family-body);
+}
+
+/* Spec 050: each size swaps the metric set; an unknown value matches no rule
+   and keeps medium. */
+:host([size="xs"]) {
+  --_ki-input-height: var(--ki-input-xs-height);
+  --_ki-input-padding-inline: var(--ki-input-xs-padding-inline);
+  --_ki-input-text-padding-inline: var(--ki-input-xs-text-padding-inline);
+  --_ki-input-radius: var(--ki-input-xs-radius);
+  --_ki-input-font-size: var(--ki-input-xs-font-size);
+  --_ki-input-line-height: var(--ki-input-xs-line-height);
+  --_ki-input-icon-size: var(--ki-input-xs-icon-size);
+  --_ki-input-label-font-size: var(--ki-input-xs-label-font-size);
+  --_ki-input-label-line-height: var(--ki-input-xs-label-line-height);
+}
+
+:host([size="sm"]) {
+  --_ki-input-height: var(--ki-input-sm-height);
+  --_ki-input-padding-inline: var(--ki-input-sm-padding-inline);
+  --_ki-input-text-padding-inline: var(--ki-input-sm-text-padding-inline);
+  --_ki-input-radius: var(--ki-input-sm-radius);
+  --_ki-input-font-size: var(--ki-input-sm-font-size);
+  --_ki-input-line-height: var(--ki-input-sm-line-height);
+  --_ki-input-icon-size: var(--ki-input-sm-icon-size);
+  --_ki-input-label-font-size: var(--ki-input-sm-label-font-size);
+  --_ki-input-label-line-height: var(--ki-input-sm-label-line-height);
+}
+
+:host([size="lg"]) {
+  --_ki-input-height: var(--ki-input-lg-height);
+  --_ki-input-padding-inline: var(--ki-input-lg-padding-inline);
+  --_ki-input-text-padding-inline: var(--ki-input-lg-text-padding-inline);
+  --_ki-input-radius: var(--ki-input-lg-radius);
+  --_ki-input-font-size: var(--ki-input-lg-font-size);
+  --_ki-input-line-height: var(--ki-input-lg-line-height);
+  --_ki-input-icon-size: var(--ki-input-lg-icon-size);
+  --_ki-input-label-font-size: var(--ki-input-lg-label-font-size);
+  --_ki-input-label-line-height: var(--ki-input-lg-label-line-height);
+
+  /* The help and error lines take the lg step with the label (spec 050 D4). */
+  --_ki-field-message-font-size: var(--ki-typography-size-body-2);
+  --_ki-field-message-line-height: var(--ki-typography-line-height-body-2);
+}
+
+:host([size="xl"]) {
+  --_ki-input-height: var(--ki-input-xl-height);
+  --_ki-input-padding-inline: var(--ki-input-xl-padding-inline);
+  --_ki-input-text-padding-inline: var(--ki-input-xl-text-padding-inline);
+  --_ki-input-radius: var(--ki-input-xl-radius);
+  --_ki-input-font-size: var(--ki-input-xl-font-size);
+  --_ki-input-line-height: var(--ki-input-xl-line-height);
+  --_ki-input-icon-size: var(--ki-input-xl-icon-size);
+  --_ki-input-label-font-size: var(--ki-input-xl-label-font-size);
+  --_ki-input-label-line-height: var(--ki-input-xl-label-line-height);
+
+  /* The help and error lines take the lg step with the label (spec 050 D4). */
+  --_ki-field-message-font-size: var(--ki-typography-size-body-2);
+  --_ki-field-message-line-height: var(--ki-typography-line-height-body-2);
 }
 
 /* The HTML hidden attribute outranks the host's own display. */
@@ -81,9 +150,9 @@
 [part="label"] {
   padding-inline: var(--ki-input-label-padding-inline);
   color: var(--_ki-input-label-fg);
-  font-size: var(--ki-input-label-font-size);
+  font-size: var(--_ki-input-label-font-size);
   font-weight: var(--ki-input-label-font-weight);
-  line-height: var(--ki-input-label-line-height);
+  line-height: var(--_ki-input-label-line-height);
 }
 
 [part="field"] {
@@ -99,9 +168,9 @@
      min-block-size (token-wave handoff) so the field can grow, never clip. */
   min-block-size: max(
     var(--ki-density-target-min),
-    calc(var(--ki-input-height) + var(--ki-density-control-offset))
+    calc(var(--_ki-input-height) + var(--ki-density-control-offset))
   );
-  padding-inline: var(--ki-input-padding-inline);
+  padding-inline: var(--_ki-input-padding-inline);
   background-color: var(--_ki-input-bg);
   border-block-start-width: var(--ki-input-border-block-start-width);
   border-block-end-width: var(--ki-input-border-block-end-width);
@@ -109,7 +178,7 @@
   border-inline-end-width: var(--ki-input-border-inline-end-width);
   border-color: var(--_ki-input-border);
   border-style: solid;
-  border-radius: var(--ki-input-radius);
+  border-radius: var(--_ki-input-radius);
 }
 
 /* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
@@ -137,15 +206,25 @@
   min-inline-size: 0;
   flex: 1 1 auto;
   padding-block: 0;
-  padding-inline: var(--ki-input-gap);
+  padding-inline: var(--_ki-input-text-padding-inline);
   color: var(--_ki-input-fg);
   background-color: transparent;
   border: 0;
   outline: 0;
   font: inherit;
-  font-size: var(--ki-input-font-size);
+  font-size: var(--_ki-input-font-size);
   font-weight: var(--ki-input-font-weight);
-  line-height: var(--ki-input-line-height);
+  line-height: var(--_ki-input-line-height);
+}
+
+/* At xs, and at sm in a compact region, the field box sits on the 24px target
+   minimum with its borders included (spec 050 D5). The native control then
+   spans the border rows as well, so the pointer target it is stays 24px tall
+   (WCAG 2.5.8); the control paints nothing, so nothing visible moves. */
+:host([size="xs"]) [part="input"],
+:host([size="sm"]) [part="input"] {
+  margin-block: calc(-1 * var(--ki-input-border-block-start-width))
+    calc(-1 * var(--ki-input-border-block-end-width));
 }
 
 [part="input"]::placeholder {
@@ -156,10 +235,11 @@
    least 16px, the size under which Safari on iOS zooms the page into the
    focused field and leaves it zoomed. Only the native control (and so its
    placeholder): the label, the help and error lines, the adornments and the
-   field height keep their size. */
+   field height keep their size. A size whose own text is larger keeps it
+   (spec 050 D5): the touch size is a floor, never a shrink. */
 @media (pointer: coarse) {
   [part="input"] {
-    font-size: var(--ki-input-font-size-touch);
+    font-size: max(var(--_ki-input-font-size), var(--ki-input-font-size-touch));
   }
 }
 
@@ -170,15 +250,15 @@
 slot::slotted(*) {
   flex: 0 0 auto;
   color: var(--_ki-input-label-fg);
-  font-size: var(--ki-input-font-size);
-  line-height: var(--ki-input-line-height);
+  font-size: var(--_ki-input-font-size);
+  line-height: var(--_ki-input-line-height);
 }
 
 /* Icon-shaped adornments get the 18px icon box (MarsUI Left_md/Right_md). */
 slot::slotted(svg),
 slot::slotted(img) {
-  inline-size: var(--ki-input-icon-size);
-  block-size: var(--ki-input-icon-size);
+  inline-size: var(--_ki-input-icon-size);
+  block-size: var(--_ki-input-icon-size);
 }
 
 /* Micro-motion (MarsUI soft-surface language): fill/border crossfade on

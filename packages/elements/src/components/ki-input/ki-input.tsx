@@ -9,6 +9,8 @@ import {
 import { LabelHint } from '../../utils/label-hint';
 import { normalizeKiInputType } from './ki-input.form';
 
+export type KiInputSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
 
 /**
@@ -70,6 +72,20 @@ export class KiInput {
    * @default 'text'
    */
   @Prop({ reflect: true }) type: KiInputType = 'text';
+
+  /**
+   * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is
+   * 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and
+   * icon box; the label and help text follow in three steps. An unrecognized
+   * value matches no style rule and keeps the medium metrics.
+   * When to use: match the size of the buttons and fields around it.
+   * When NOT to use: do not pick a smaller size to fit a dense region or a
+   * larger one for touch; declare `data-ki-density` on the region instead,
+   * which composes with every size.
+   *
+   * @default 'md'
+   */
+  @Prop({ reflect: true }) size: KiInputSize = 'md';
 
   /**
    * Visible label rendered next to the entry area and used as the accessible

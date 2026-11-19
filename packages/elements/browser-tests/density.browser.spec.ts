@@ -63,15 +63,31 @@ const SIZES = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const INTERACTIVE_COMPONENTS = [
   ...SIZES.map((size) => `<ki-button size="${size}">Save</ki-button>`),
   ...SIZES.map((size) => `<ki-icon-button size="${size}" label="Close"></ki-icon-button>`),
-  '<ki-input label="Email"></ki-input>',
-  '<ki-textarea label="Notes"></ki-textarea>',
-  '<ki-select label="Country"><ki-option value="es">Spain</ki-option></ki-select>',
-  '<ki-checkbox>Accept</ki-checkbox>',
-  '<ki-switch>Alerts</ki-switch>',
-  '<ki-radio-group label="Plan"><ki-radio value="basic">Basic</ki-radio></ki-radio-group>',
-  '<ki-tabs label="Sections"><ki-tab>One</ki-tab><ki-tab>Two</ki-tab>' +
-    '<ki-tab-panel>A</ki-tab-panel><ki-tab-panel>B</ki-tab-panel></ki-tabs>',
-  '<ki-list><ki-list-item href="#a">Invoice</ki-list-item></ki-list>',
+  // The size axes of spec 050.
+  ...SIZES.map((size) => `<ki-input label="Email" size="${size}"></ki-input>`),
+  ...SIZES.map((size) => `<ki-textarea label="Notes" size="${size}"></ki-textarea>`),
+  ...SIZES.map(
+    (size) =>
+      `<ki-select label="Country" size="${size}"><ki-option value="es">Spain</ki-option></ki-select>`,
+  ),
+  ...(['sm', 'md', 'lg'] as const).map(
+    (size) => `<ki-checkbox size="${size}">Accept</ki-checkbox>`,
+  ),
+  ...(['sm', 'md', 'lg', 'xl'] as const).map(
+    (size) => `<ki-switch size="${size}">Alerts</ki-switch>`,
+  ),
+  ...(['sm', 'md'] as const).map(
+    (size) =>
+      `<ki-radio-group label="Plan" size="${size}"><ki-radio value="basic">Basic</ki-radio></ki-radio-group>`,
+  ),
+  ...SIZES.map(
+    (size) =>
+      `<ki-tabs label="Sections" size="${size}"><ki-tab>One</ki-tab><ki-tab>Two</ki-tab>` +
+      '<ki-tab-panel>A</ki-tab-panel><ki-tab-panel>B</ki-tab-panel></ki-tabs>',
+  ),
+  ...(['sm', 'md', 'lg', 'xl'] as const).map(
+    (size) => `<ki-list><ki-list-item href="#a" size="${size}">Invoice</ki-list-item></ki-list>`,
+  ),
 ];
 const INTERACTIVE_GALLERY = INTERACTIVE_COMPONENTS.join('');
 

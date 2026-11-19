@@ -104,7 +104,12 @@ removes 8px from every size, floored at 24px, and touch adds 4px with the
 (045 A1-D3), so sizes under 44px after the step are lifted to 44px: xs, sm
 and md fields all measure 44px in touch. Sizes may coincide; they never
 invert. Checkbox, radio and switch keep their painted size in every density;
-in touch their target extends to 44 × 44 CSS px as A1-D3 already does.
+in touch their target extends to 44 × 44 CSS px as A1-D3 already does. Two
+consequences settled at implementation: an xs field box (and an sm one in
+compact) is 24px with its borders included, so the native control spans the
+border rows and its pointer target stays 24px tall; and a checkbox's labelled
+row is never shorter than its minimum target, as a radio's already is, so an
+sm checkbox row is 24px although its label line is 20px.
 Under a coarse primary pointer a field's text is the larger of its size's
 text and `--ki-input-font-size-touch` / `--ki-textarea-font-size-touch`
 (spec 048), so an xl field keeps its 18px.
@@ -121,9 +126,12 @@ axis. material3 keeps its medium overrides, and the other sizes take the
 shared ramp, as `ki-button`'s sizes already do there; like `ki-button`'s,
 material3 keeps its own shape at every size (field radius `component-xs`,
 badge radius round). Sizes coincide where material3's medium is larger than
-the ramp (a material3 field is 48px at md and at lg) and never invert. One
-exception: the M3 switch (52 × 32 track) is larger than the shared lg
-switch, so in material3 every switch size renders the M3 switch.
+the ramp (a material3 field is 48px at md and at lg) and never invert. Two
+exceptions, the components M3 specifies at a single size: the M3 switch
+(52 × 32 track) is larger than the shared lg switch, and the shared sm tab
+would stand taller than the M3 tab, so in material3 every switch size renders
+the M3 switch and every strip size renders the M3 tab (contiguous, as M3
+tabs are).
 
 **D9 — Token names** *(settled at implementation)*. Medium keeps the unsized
 names it ships today (`--ki-input-height`, `--ki-switch-track-width`, …);
@@ -359,7 +367,7 @@ Feature: Size axes for fields, tabs, list rows and choice controls
     Given an onmars page with a ki-checkbox "Accept" and a ki-switch "Alerts" in the size "sm" inside a region
     When the region declares the density "touch"
     Then the checkbox box still measures 18px and the switch track 32 by 18 pixels
-    And a pointer anywhere in the 44 by 44 square centred on each control reaches it
+    And a pointer anywhere in the 44 by 44 square centred on each control's target reaches it
 
   # S16
   Scenario: On a touch screen a small field's text is at least 16 pixels and a large field keeps its own

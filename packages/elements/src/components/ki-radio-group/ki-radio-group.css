@@ -15,6 +15,20 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* Spec 050: the group's size sets every radio it holds. A rule from this
+ * shadow tree on a slotted radio outranks the radio's own :host defaults
+ * (the ki-avatar-group pattern), so the options stay uniform. The group's own
+ * label, help and error keep their size. An unknown value matches no rule
+ * and keeps medium. */
+:host([size="sm"]) ::slotted(ki-radio) {
+  --_ki-radio-control-size: var(--ki-radio-sm-control-size);
+  --_ki-radio-dot-size: var(--ki-radio-sm-dot-size);
+  --_ki-radio-min-target: var(--ki-radio-sm-min-target);
+  --_ki-radio-gap: var(--ki-radio-sm-gap);
+  --_ki-radio-label-font-size: var(--ki-radio-sm-label-font-size);
+  --_ki-radio-label-line-height: var(--ki-radio-sm-label-line-height);
+}
+
 /* Written by this component onto its own host whenever the group is
    effectively disabled — by the `disabled` prop OR by an ancestor
    <fieldset disabled>, which reflects nothing. Without it the group label

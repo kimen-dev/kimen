@@ -9,6 +9,8 @@ import {
 import { LabelHint } from '../../utils/label-hint';
 import { normalizeKiTextareaRows } from './ki-textarea.form';
 
+export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 /**
  * A token-styled multiline text field with native form semantics.
  *
@@ -104,6 +106,20 @@ export class KiTextarea {
    * @default 2
    */
   @Prop({ reflect: true }) rows = 2;
+
+  /**
+   * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding,
+   * radius and text; the label and help text follow in three steps. The
+   * height stays `rows` lines. An unrecognized value matches no style rule
+   * and keeps the medium metrics.
+   * When to use: match the size of the fields around it.
+   * When NOT to use: do not pick a smaller size to fit a dense region or a
+   * larger one for touch; declare `data-ki-density` on the region instead,
+   * which composes with every size.
+   *
+   * @default 'md'
+   */
+  @Prop({ reflect: true }) size: KiTextareaSize = 'md';
 
   /**
    * Requires a non-empty value before form submission.
