@@ -19,6 +19,10 @@ test('catalog build target pins manifest inputs, generated outputs and the eleme
     'the elements manifest must be a build input',
   );
   assert.ok(
+    build.inputs.includes('{workspaceRoot}/packages/elements/src/components/*/component.json'),
+    'catalog opt-ins must invalidate the build cache',
+  );
+  assert.ok(
     build.inputs.includes('!{projectRoot}/src/generated/**'),
     'the generated artifact must not invalidate its own build',
   );

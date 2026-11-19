@@ -7,10 +7,11 @@
 // loads: the token stylesheets and the page contract. Nothing here knows a
 // component's internals or its token names — it measures what the browser
 // computed, so the suite survives a redesign and a token refactor unchanged.
-import axe from 'axe-core';
+
 import pageContractCss from '@kimen/tokens/css/base?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import onmarsCss from '@kimen/tokens/css?raw';
+import axe from 'axe-core';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { commands, page } from 'vitest/browser';
 
@@ -23,8 +24,8 @@ import {
   fingerprintDifferences,
   textMeasurements,
 } from './contracts';
-import { visualGalleries } from './visual/galleries';
 import type { VisualComponent } from './visual/galleries';
+import { fixtureFor } from './visual/galleries';
 
 type Scheme = 'dark' | 'light';
 type Theme = 'material3' | 'onmars';
@@ -91,7 +92,7 @@ async function waitForShadowRender(wrapper: HTMLElement): Promise<void> {
 /** One component's state gallery on a consumer page, popups opened. */
 async function mountGallery(component: VisualComponent, fluid = false): Promise<HTMLElement> {
   document.body.replaceChildren();
-  const gallery = visualGalleries[component];
+  const gallery = fixtureFor(component).gallery;
   const wrapper = document.createElement('section');
   wrapper.setAttribute('aria-label', component);
   wrapper.style.cssText = [
@@ -104,6 +105,9 @@ async function mountGallery(component: VisualComponent, fluid = false): Promise<
     ...(gallery.minHeight === undefined ? [] : [`min-block-size:${String(gallery.minHeight)}px`]),
   ].join(';');
   wrapper.innerHTML = gallery.html;
+  if (wrapper.querySelector(component) === null) {
+    throw new Error(`${component}/gallery.ts must mount <${component}> for the shared checks`);
+  }
   document.body.append(wrapper);
   await waitForShadowRender(wrapper);
   await gallery.prepare?.(wrapper);

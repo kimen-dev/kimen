@@ -7,10 +7,10 @@ laid out and the visual-regression layer.
 
 ## What lives where
 
-- `ki-<name>.browser.spec.ts`: every behavior of one component, asserted
-  through its public API on the built custom elements. This is the only place
-  a component renders in a test; pure helpers have node `*.spec.ts` files
-  beside their source.
+- `ki-<name>.browser.spec.ts` checks one component's behavior through its
+  public API on the built custom elements. New component specs live under
+  `src/components/ki-<name>/`. Existing specs here also run. Pure helpers
+  have Node `*.spec.ts` files beside their source.
 - `ki-<name>.motion.browser.spec.ts`: behavior under reduced motion (its own
   browser instance, which emulates the preference).
 - `contracts.browser.spec.ts`, `hidden-attribute.browser.spec.ts`,
@@ -33,13 +33,17 @@ Chromium, as part of `gates-suite.sh`; the release workflow runs it on
 Chromium, Firefox and WebKit, and each engine compares against its own
 baselines:
 
-- Matrix: 25 components x (onmars light + onmars dark) + material3 light
-  = 75 captures. Hover and animated states are out of v1.
+- Matrix: onmars light, onmars dark and material3 light for each component
+  on each browser engine. Hover and animated states are out of v1.
 - Shared harness: `visual/harness.ts` (tokens injection, vendored font
   fixtures + `document.fonts.ready`, reduced-motion emulation, gallery
-  mounting). Galleries live in `visual/galleries.ts`. The harness loads
-  Instrument Sans and Newsreader from `packages/tokens/fonts/` for onmars
-  and Roboto from `visual/fonts/` for Material 3 to pin text metrics.
+  mounting). Each component owns a `src/components/ki-<name>/gallery.ts`
+  exporting a `VisualGallery` as its default export. Shared browser checks
+  mount that gallery, so it must contain the component's own tag. New visual
+  specs live alongside the gallery and call `runVisualSuite` for light and
+  dark. All PNGs land in `browser-tests/__screenshots__/`. The harness
+  loads Instrument Sans and Newsreader from `packages/tokens/fonts/` for
+  onmars and Roboto from `visual/fonts/` for Material 3 to pin text metrics.
   Licenses and SHA-256 pins are in the repository `NOTICE`.
 - Tolerance: strict comparator defaults — 0 mismatched pixels, per-pixel
   threshold 0.1, antialiasing ignored. The 0.1 threshold means a very fine

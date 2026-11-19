@@ -1,6 +1,6 @@
 import { afterEach, beforeAll, expect, it } from 'vitest';
 import { defineCustomElement as defineKiDialog } from '../dist/components/ki-dialog.js';
-import { visualGalleries } from './visual/galleries';
+import { fixtureFor } from './visual/galleries';
 import { mountGallery } from './visual/harness';
 
 beforeAll(defineKiDialog);
@@ -15,7 +15,7 @@ it.each([
   { theme: 'onmars', body: ['Instrument Sans', '400 700'], heading: ['Newsreader', '200 800'] },
   { theme: 'material3', body: ['Roboto', '100 900'], heading: ['Roboto', '100 900'] },
 ] as const)('mounts the $theme dialog gallery with its fixture faces loaded', async (families) => {
-  const gallery = await mountGallery(visualGalleries['ki-dialog'], families.theme);
+  const gallery = await mountGallery(fixtureFor('ki-dialog').gallery, families.theme);
   const loadedWeights = new Map(
     [...document.fonts]
       .filter((face) => face.status === 'loaded')

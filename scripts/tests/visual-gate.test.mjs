@@ -11,15 +11,18 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { discoverComponents } from '../lib/component-inventory.mjs';
+
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const browserTestsDirectory = join(repositoryRoot, 'packages/elements/browser-tests');
+const componentsDirectory = join(repositoryRoot, 'packages/elements/src/components');
 const armedMarkerPath = join(browserTestsDirectory, 'visual/ARMED');
 const harnessPath = join(browserTestsDirectory, 'visual/harness.ts');
 const readmePath = join(browserTestsDirectory, 'README.md');
 const screenshotsDirectory = join(browserTestsDirectory, '__screenshots__');
 const baselinesWorkflowPath = join(repositoryRoot, '.github/workflows/visual-baselines.yml');
 
-const VISUAL_SPEC = /^ki-[a-z-]+\.visual(?:\.dark)?\.browser\.spec\.ts$/u;
+const VISUAL_SPEC = /^ki-[a-z0-9-]+\.visual(?:\.dark)?\.browser\.spec\.ts$/u;
 // The release matrix runs the whole browser suite, visual specs included, on
 // all three engines, and a capture compares only against the baseline of its
 // own engine: every engine needs its own committed set.
@@ -64,8 +67,14 @@ function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines =
 }
 
 async function visualSpecFiles() {
-  const entries = await readdir(browserTestsDirectory);
-  return entries.filter((entry) => VISUAL_SPEC.test(entry)).toSorted();
+  const entries = await Promise.all([
+    readdir(browserTestsDirectory, { withFileTypes: true }),
+    readdir(componentsDirectory, { recursive: true, withFileTypes: true }),
+  ]);
+  const specs = entries.flat().filter((entry) => entry.isFile() && VISUAL_SPEC.test(entry.name));
+  const names = specs.map(({ name }) => name);
+  assert.equal(new Set(names).size, names.length, 'visual spec filenames must be unique');
+  return names.toSorted();
 }
 
 async function committedLinuxBaselines(specFileNames) {
@@ -162,6 +171,20 @@ test('an armed visual gate keeps every committed linux baseline', async () => {
     [],
     `visual gate is ARMED but linux baselines are missing (silent disarm?):\n${missing.join('\n')}`,
   );
+});
+
+test('every discovered component has a light and dark visual spec', async () => {
+  const [components, specFiles] = await Promise.all([
+    discoverComponents({ workspaceRoot: repositoryRoot }),
+    visualSpecFiles(),
+  ]);
+  const specs = new Set(specFiles);
+  const missing = components.flatMap(({ tag }) =>
+    [`${tag}.visual.browser.spec.ts`, `${tag}.visual.dark.browser.spec.ts`].filter(
+      (spec) => !specs.has(spec),
+    ),
+  );
+  assert.deepEqual(missing, [], `missing visual specs:\n${missing.join('\n')}`);
 });
 
 test('a disarmed visual gate is a documented bootstrap, not a silent hole', async () => {

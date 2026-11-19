@@ -4,7 +4,7 @@
 // filesystem paths. Fixture-repo harness per generated-sync.test.mjs (018).
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
@@ -46,10 +46,17 @@ test('S9 a hand-edited committed catalog artifact fails the catalog sync gate', 
 
 test('S10 catalog regeneration from checkouts at different paths is byte-identical', async (t) => {
   const outputs = [];
+  const componentsRoot = 'packages/elements/src/components';
+  const entries = await readdir(join(repoRoot, componentsRoot), { withFileTypes: true });
+  const metadata = entries
+    .filter((entry) => entry.isDirectory())
+    .map(({ name }) => join(componentsRoot, name, 'component.json'));
   for (const flavor of ['first', 'second']) {
     const checkout = await mkdtemp(join(tmpdir(), `kimen-catalog-checkout-${flavor}-`));
     t.after(() => rm(checkout, { force: true, recursive: true }));
     for (const path of [
+      ...metadata,
+      'packages/elements/scripts/component-metadata.mjs',
       'packages/elements/generated/custom-elements.json',
       'packages/elements/package.json',
       'packages/catalog/scripts/generate-catalog.mjs',

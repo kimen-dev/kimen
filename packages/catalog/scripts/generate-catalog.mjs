@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Catalog generation (spec 027, Art. I): the committed Custom Elements
-// Manifest is the single derivation source — no second analysis pass over
-// component source. The output is a generated, committed TypeScript module
-// (src/generated/catalog.ts) holding one entry per published custom element;
+// Manifest supplies component contracts. Component manifests explicitly
+// select the custom elements exposed to agents. The output is a generated, committed TypeScript module
+// (src/generated/catalog.ts) holding one entry per opted-in custom element;
 // the catalog-sync gate fails any drift between the committed artifact and a
 // fresh regeneration (tokens-sync / surfaces-sync precedent).
 //
@@ -141,7 +141,10 @@ const sortedRecord = (entries) =>
  * (missing guidance, unparseable type) — a build failure, never a warning
  * (FR-003; the agent-surfaces Art. I bar).
  */
-export function buildCatalog(manifest, { elementsVersion, primitives = NATIVE_PRIMITIVES }) {
+export function buildCatalog(
+  manifest,
+  { elementsVersion, catalogTags = new Set(), primitives = NATIVE_PRIMITIVES },
+) {
   const violations = [];
   const components = new Map();
   for (const module of manifest.modules ?? []) {
@@ -150,6 +153,11 @@ export function buildCatalog(manifest, { elementsVersion, primitives = NATIVE_PR
         continue;
       }
       const tag = declaration.tagName;
+      if (!catalogTags.has(tag)) continue;
+      if (components.has(tag)) {
+        violations.push(`${tag}: duplicate custom element declaration`);
+        continue;
+      }
       for (const field of ['description', 'whenToUse', 'whenNotToUse']) {
         if (isBlank(declaration[field])) {
           violations.push(`${tag}: missing ${field} in the manifest`);
@@ -216,8 +224,8 @@ export function buildCatalog(manifest, { elementsVersion, primitives = NATIVE_PR
       });
     }
   }
-  if (components.size === 0) {
-    violations.push('manifest yielded no custom elements');
+  for (const tag of catalogTags) {
+    if (!components.has(tag)) violations.push(`${tag}: catalog opt-in has no manifest declaration`);
   }
   // The native primitives (spec 037) join the manifest's elements from their
   // one definition; a manifest element of the same tag is impossible (custom
@@ -244,8 +252,8 @@ export function buildCatalog(manifest, { elementsVersion, primitives = NATIVE_PR
   };
   return [
     '// GENERATED FILE (spec 027, Art. I) — never edit by hand.',
-    '// Source: packages/elements/generated/custom-elements.json via',
-    '// packages/catalog/scripts/generate-catalog.mjs; the catalog-sync gate',
+    '// Sources: packages/elements/generated/custom-elements.json and component.json opt-ins.',
+    '// Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate',
     '// fails any drift between this artifact and a fresh regeneration.',
     `export const catalogData = ${JSON.stringify(catalog, null, 2)} as const;`,
     '',
@@ -267,7 +275,14 @@ if (
   const elementsVersion = JSON.parse(
     readFileSync(join(repoRoot, 'packages/elements/package.json'), 'utf8'),
   ).version;
-  const output = buildCatalog(manifest, { elementsVersion });
+  const { readComponentMetadataByTag } = await import(
+    pathToFileURL(join(repoRoot, 'packages/elements/scripts/component-metadata.mjs')).href
+  );
+  const metadata = readComponentMetadataByTag(join(repoRoot, 'packages/elements/src/components'));
+  const catalogTags = new Set(
+    [...metadata].filter(([, entry]) => entry.catalog === true).map(([tag]) => tag),
+  );
+  const output = buildCatalog(manifest, { elementsVersion, catalogTags });
   mkdirSync(join(repoRoot, 'packages/catalog/src/generated'), { recursive: true });
   writeFileSync(join(repoRoot, 'packages/catalog/src/generated/catalog.ts'), output, 'utf8');
   process.stdout.write(

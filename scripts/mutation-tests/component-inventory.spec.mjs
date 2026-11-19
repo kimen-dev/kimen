@@ -10,7 +10,7 @@ import {
   discoverComponentInventory,
   discoverComponents,
   FROZEN_LEGACY_ROOT,
-  readBudgetGroups,
+  resolveBudgetGroups,
   resolveComponentSubpaths,
   validateLegacyRootContract,
   validatePackageExportContract,
@@ -36,6 +36,11 @@ const createFixture = async () => {
   return root;
 };
 
+const fixtureMetadata = {
+  barePage: { keyboardPressed: false },
+  pointer: { hoverWitness: false },
+};
+
 const writeComponent = async (
   root,
   {
@@ -45,11 +50,16 @@ const writeComponent = async (
     decorated = true,
     source = true,
     browserSpec = true,
+    gallery = true,
+    metadata = fixtureMetadata,
     sourceText,
   },
 ) => {
   const componentDirectory = join(root, 'packages/elements/src/components', directory);
   await mkdir(componentDirectory, { recursive: true });
+
+  if (gallery) await writeFile(join(componentDirectory, 'gallery.ts'), '// gallery\n');
+  await writeFile(join(componentDirectory, 'component.json'), JSON.stringify(metadata));
 
   if (source) {
     await writeFile(
@@ -75,6 +85,7 @@ const fixtureComponents = [
     className: 'KiAlpha',
     sourceModule: 'packages/elements/src/components/ki-alpha/ki-alpha.tsx',
     browserSpec: 'packages/elements/browser-tests/ki-alpha.browser.spec.ts',
+    metadata: fixtureMetadata,
     distModule: './dist/components/ki-alpha.js',
     publicSubpath: './ki-alpha',
   },
@@ -83,6 +94,7 @@ const fixtureComponents = [
     className: 'KiZeta',
     sourceModule: 'packages/elements/src/components/ki-zeta/ki-zeta.tsx',
     browserSpec: 'packages/elements/browser-tests/ki-zeta.browser.spec.ts',
+    metadata: fixtureMetadata,
     distModule: './dist/components/ki-zeta.js',
     publicSubpath: './ki-zeta',
   },
@@ -334,7 +346,6 @@ describe('component inventory mutation boundary', () => {
     // Fase N wave 1 adds ki-divider, ki-status, ki-icon-button and the
     // ki-avatar + ki-avatar-group companion pair (specs 019-022); wave 2
     // adds ki-scroller, ki-indicator, ki-video and ki-qr (specs 023-026).
-    expect(components).toHaveLength(29);
     expect(
       resolveComponentSubpaths(packageJson.exports, components).map((entry) => entry.publicSubpath),
     ).toEqual(components.map((entry) => entry.publicSubpath));
@@ -348,15 +359,12 @@ describe('component inventory mutation boundary', () => {
         "export type KiAlphaSize = 'md';\n@Component({ tag: 'ki-alpha' })\nexport class KiAlpha {}",
     });
     const tokenDirectory = join(root, 'packages/tokens/tokens/component');
-    const groupsPath = join(root, 'packages/elements/size-limit/groups.json');
     await mkdir(tokenDirectory, { recursive: true });
-    await mkdir(dirname(groupsPath), { recursive: true });
     await writeFile(
       join(tokenDirectory, 'alpha.tokens.json'),
       JSON.stringify({ ki: { alpha: { color: { $value: '{ki.text.base}' } } } }),
       'utf8',
     );
-    await writeFile(groupsPath, JSON.stringify({ schemaVersion: 1, groups: [] }), 'utf8');
 
     const inventory = await discoverComponentInventory({ workspaceRoot: root });
 
@@ -402,24 +410,19 @@ describe('component inventory mutation boundary', () => {
     ).toThrow(/unsafe component wildcard/i);
   });
 
-  it('@spec:018 S12 rejects duplicate composite membership', async () => {
-    const root = await createFixture();
-    const groupsPath = join(root, 'packages/elements/size-limit/groups.json');
-    await mkdir(dirname(groupsPath), { recursive: true });
-    await writeFile(
-      groupsPath,
-      JSON.stringify({
-        schemaVersion: 1,
-        groups: [
-          { id: 'ki-first', members: ['ki-alpha', 'ki-beta'] },
-          { id: 'ki-second', members: ['ki-alpha', 'ki-gamma'] },
-        ],
-      }),
-      'utf8',
-    );
-
-    await expect(readBudgetGroups({ workspaceRoot: root })).rejects.toThrow(
-      /more than one budget group.*ki-alpha/i,
-    );
+  it('@spec:018 S12 rejects duplicate composite membership', () => {
+    expect(() =>
+      resolveBudgetGroups([
+        { tag: 'ki-alpha', metadata: {} },
+        {
+          tag: 'ki-beta',
+          metadata: { budgetGroup: { members: ['ki-beta', 'ki-alpha'] } },
+        },
+        {
+          tag: 'ki-gamma',
+          metadata: { budgetGroup: { members: ['ki-gamma', 'ki-alpha'] } },
+        },
+      ]),
+    ).toThrow(/more than one budget group.*ki-alpha/i);
   });
 });

@@ -5,18 +5,11 @@ import { pathToFileURL } from 'node:url';
 
 import {
   discoverComponentInventory,
-  readBudgetGroups,
+  resolveBudgetGroups,
   resolveComponentSubpaths,
   validateLegacyRootContract,
   validatePackageExportContract,
 } from '../lib/component-inventory.mjs';
-
-const REQUIRED_COMPOSITES = Object.freeze([
-  { id: 'ki-avatar-group', members: ['ki-avatar-group', 'ki-avatar'] },
-  { id: 'ki-radio-group', members: ['ki-radio-group', 'ki-radio'] },
-  { id: 'ki-select', members: ['ki-select', 'ki-option'] },
-  { id: 'ki-tabs', members: ['ki-tabs', 'ki-tab', 'ki-tab-panel'] },
-]);
 
 export async function checkComponentInventory({
   workspaceRoot,
@@ -25,7 +18,6 @@ export async function checkComponentInventory({
   validateExports = validatePackageExportContract,
   resolveSubpaths = resolveComponentSubpaths,
   validateRoot = validateLegacyRootContract,
-  readGroups = readBudgetGroups,
 }) {
   const root = resolve(workspaceRoot);
   const inventory = await discoverInventory({ workspaceRoot: root });
@@ -37,13 +29,7 @@ export async function checkComponentInventory({
   const rootContract = validateRoot(
     await readText(resolve(root, 'packages/elements/src/index.ts'), 'utf8'),
   );
-  const groups = await readGroups({ workspaceRoot: root });
-
-  if (JSON.stringify(groups) !== JSON.stringify(REQUIRED_COMPOSITES)) {
-    throw new Error(
-      'Composite budget exceptions must be exactly ki-avatar-group, ki-radio-group, ki-select, and ki-tabs',
-    );
-  }
+  const groups = resolveBudgetGroups(inventory);
   if (directSubpaths.length !== inventory.length) {
     throw new Error('Direct package subpaths do not cover the source-derived inventory');
   }

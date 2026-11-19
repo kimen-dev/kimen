@@ -4,7 +4,11 @@ import type { StorybookConfig } from '@stencil/storybook-plugin';
 // the component directory is the single source of truth for its surface);
 // long-form docs pages (introduction, theming) live in docs/ as MDX.
 const config: StorybookConfig = {
-  stories: ['../docs/**/*.mdx', '../src/**/*.stories.@(ts|tsx)'],
+  stories: [
+    '../docs/**/*.mdx',
+    '../src/components/ki-*/docs/storybook.mdx',
+    '../src/**/*.stories.@(ts|tsx)',
+  ],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   core: {
     disableTelemetry: true,

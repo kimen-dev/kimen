@@ -17,15 +17,16 @@
 // merge before the bootstrap dispatch of visual-baselines.yml produces the
 // first linux baselines. See ../README.md for the full bootstrap and
 // regeneration flow.
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { commands, page } from 'vitest/browser';
 
 import material3Css from '@kimen/tokens/css/material3?raw';
 import onmarsFontsCss from '@kimen/tokens/css/onmars-fonts.css?inline';
 import onmarsCss from '@kimen/tokens/css?raw';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { commands, page } from 'vitest/browser';
+import { defineAllComponents } from '../all-components';
 import robotoWoff2Url from './fonts/RobotoVariable.woff2?url';
-import { visualGalleries } from './galleries';
 import type { VisualComponent, VisualGallery } from './galleries';
+import { fixtureFor } from './galleries';
 
 type Scheme = 'dark' | 'light';
 type Theme = 'material3' | 'onmars';
@@ -33,9 +34,11 @@ type Theme = 'material3' | 'onmars';
 type Gallery = VisualGallery & { inlinePadding?: number };
 
 type VisualSuiteOptions = {
-  define: readonly (() => void)[];
   scheme: Scheme;
-} & ({ component: VisualComponent } | { name: string; gallery: Gallery });
+} & (
+  | { component: VisualComponent; define?: readonly (() => void)[] }
+  | { name: string; gallery: Gallery; define: readonly (() => void)[] }
+);
 
 const browserCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
@@ -200,15 +203,19 @@ export async function mountGallery(gallery: Gallery, theme: Theme): Promise<HTML
 export function runVisualSuite(options: VisualSuiteOptions): void {
   const { define, scheme } = options;
   const name = 'name' in options ? options.name : options.component;
-  const gallery = 'gallery' in options ? options.gallery : visualGalleries[options.component];
+  const gallery = 'gallery' in options ? options.gallery : fixtureFor(options.component).gallery;
   // The approved matrix: onmars light + dark for every component, material3
   // light only (alternate-theme contract at marginal cost).
   const themes: readonly Theme[] = scheme === 'light' ? ['onmars', 'material3'] : ['onmars'];
 
   describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {
-      for (const defineElement of define) {
-        defineElement();
+      if (define === undefined) {
+        defineAllComponents();
+      } else {
+        for (const defineElement of define) {
+          defineElement();
+        }
       }
       await browserCommands.emulateColorScheme(scheme);
       await browserCommands.emulateReducedMotion('reduce');

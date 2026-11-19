@@ -20,7 +20,12 @@ async function createWorkspace(t) {
   return root;
 }
 
-async function writeFixtureComponent(root, tag, { material3 = false } = {}) {
+const fixtureMetadata = {
+  barePage: { keyboardPressed: false },
+  pointer: { hoverWitness: false },
+};
+
+async function writeFixtureComponent(root, tag, { material3 = false, budgetGroup } = {}) {
   const className = tag
     .split('-')
     .map((segment) => `${segment[0].toUpperCase()}${segment.slice(1)}`)
@@ -38,6 +43,12 @@ async function writeFixtureComponent(root, tag, { material3 = false } = {}) {
     'utf8',
   );
   await writeFile(browser, '// browser\n', 'utf8');
+  await writeFile(join(dirname(source), 'gallery.ts'), 'export default {};\n', 'utf8');
+  await writeFile(
+    join(dirname(source), 'component.json'),
+    JSON.stringify({ ...fixtureMetadata, budgetGroup }),
+    'utf8',
+  );
   const tokenDocument = `${JSON.stringify({ ki: { [slug]: { color: { $value: '{ki.text.base}' } } } })}\n`;
   await writeFile(token, tokenDocument, 'utf8');
   if (material3) {
@@ -49,17 +60,11 @@ async function writeFixtureComponent(root, tag, { material3 = false } = {}) {
   }
 }
 
-async function writeGroups(root, groups) {
-  const path = join(root, 'packages/elements/size-limit/groups.json');
-  await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, `${JSON.stringify({ schemaVersion: 1, groups }, null, 2)}\n`, 'utf8');
-}
-
 test('derives direct module exports, tests, token sources, and budget membership from source', async (t) => {
   const root = await createWorkspace(t);
-  await writeFixtureComponent(root, 'ki-alpha', { material3: true });
+  const budgetGroup = { members: ['ki-alpha', 'ki-beta'] };
+  await writeFixtureComponent(root, 'ki-alpha', { material3: true, budgetGroup });
   await writeFixtureComponent(root, 'ki-beta');
-  await writeGroups(root, [{ id: 'ki-alpha-beta', members: ['ki-alpha', 'ki-beta'] }]);
 
   const inventory = await discoverComponentInventory({ workspaceRoot: root });
 
@@ -69,6 +74,7 @@ test('derives direct module exports, tests, token sources, and budget membership
       className: 'KiAlpha',
       sourceModule: 'packages/elements/src/components/ki-alpha/ki-alpha.tsx',
       browserSpec: 'packages/elements/browser-tests/ki-alpha.browser.spec.ts',
+      metadata: { ...fixtureMetadata, budgetGroup },
       distModule: './dist/components/ki-alpha.js',
       publicSubpath: './ki-alpha',
       moduleExports: { values: ['KiAlpha'], types: ['KiAlphaSize'] },
@@ -76,18 +82,19 @@ test('derives direct module exports, tests, token sources, and budget membership
         'packages/tokens/tokens/component/alpha.tokens.json',
         'packages/tokens/tokens/component/alpha.material3.tokens.json',
       ],
-      budgetGroup: 'ki-alpha-beta',
+      budgetGroup: 'ki-alpha',
     },
     {
       tag: 'ki-beta',
       className: 'KiBeta',
       sourceModule: 'packages/elements/src/components/ki-beta/ki-beta.tsx',
       browserSpec: 'packages/elements/browser-tests/ki-beta.browser.spec.ts',
+      metadata: fixtureMetadata,
       distModule: './dist/components/ki-beta.js',
       publicSubpath: './ki-beta',
       moduleExports: { values: ['KiBeta'], types: ['KiBetaSize'] },
       tokenSources: ['packages/tokens/tokens/component/beta.tokens.json'],
-      budgetGroup: 'ki-alpha-beta',
+      budgetGroup: 'ki-alpha',
     },
   ]);
 });
@@ -97,7 +104,6 @@ test('complete inventory fails on missing token source, unknown group member, or
     const root = await createWorkspace(subtest);
     await writeFixtureComponent(root, 'ki-alpha');
     await rm(join(root, 'packages/tokens/tokens/component/alpha.tokens.json'));
-    await writeGroups(root, []);
     await assert.rejects(
       discoverComponentInventory({ workspaceRoot: root }),
       /token source.*ki-alpha/iu,
@@ -106,8 +112,9 @@ test('complete inventory fails on missing token source, unknown group member, or
 
   await t.test('unknown member', async (subtest) => {
     const root = await createWorkspace(subtest);
-    await writeFixtureComponent(root, 'ki-alpha');
-    await writeGroups(root, [{ id: 'ki-unknown', members: ['ki-alpha', 'ki-missing'] }]);
+    await writeFixtureComponent(root, 'ki-alpha', {
+      budgetGroup: { members: ['ki-alpha', 'ki-missing'] },
+    });
     await assert.rejects(
       discoverComponentInventory({ workspaceRoot: root }),
       /unknown.*ki-missing/iu,
@@ -116,14 +123,15 @@ test('complete inventory fails on missing token source, unknown group member, or
 
   await t.test('duplicate membership', async (subtest) => {
     const root = await createWorkspace(subtest);
-    await writeFixtureComponent(root, 'ki-alpha');
-    await writeGroups(root, [
-      { id: 'ki-first', members: ['ki-alpha', 'ki-beta'] },
-      { id: 'ki-second', members: ['ki-alpha', 'ki-gamma'] },
-    ]);
+    await writeFixtureComponent(root, 'ki-alpha', {
+      budgetGroup: { members: ['ki-alpha', 'ki-beta'] },
+    });
+    await writeFixtureComponent(root, 'ki-beta', {
+      budgetGroup: { members: ['ki-beta', 'ki-alpha'] },
+    });
     await assert.rejects(
       discoverComponentInventory({ workspaceRoot: root }),
-      /more than one.*ki-alpha/iu,
+      /more than one.*ki-beta/iu,
     );
   });
 });

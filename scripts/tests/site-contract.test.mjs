@@ -1,10 +1,14 @@
 // @spec:031-site-experience#S1
 // @spec:031-site-experience#S5
+// @spec:068-component-discovery
 import assert from 'node:assert/strict';
-import { readdir, readFile } from 'node:fs/promises';
-import { extname, join, relative } from 'node:path';
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, extname, join, relative } from 'node:path';
 import test from 'node:test';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+import { componentSidebarItems } from '../../site/docs/component-docs.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const siteRoot = join(repositoryRoot, 'site');
@@ -190,6 +194,26 @@ test('the documentation keeps Starlight, canonical navigation and focusable API 
   assert.match(api, /class=['"]cem-table['"][\s\S]+role=['"]region['"]/u);
   assert.match(api, /aria-labelledby=\{`\$\{tag\}-properties`\}/u);
   assert.match(api, /tabindex=['"]0['"]/u);
+});
+
+test('S1 keeps the component sidebar in sync with legacy and colocated pages', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'kimen-component-docs-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const add = async (path) => {
+    const destination = join(root, path);
+    await mkdir(dirname(destination), { recursive: true });
+    await writeFile(destination, '---\ntitle: Fixture\n---\n');
+  };
+  await add('site/docs/src/content/docs/components/zeta.md');
+  await add('site/docs/src/content/docs/components/_hidden.mdx');
+  await add('packages/elements/src/components/ki-alpha/docs/site.mdx');
+  await add('packages/elements/src/components/ki-alpha/docs/storybook.mdx');
+
+  const workspace = pathToFileURL(root);
+  assert.deepEqual(componentSidebarItems(workspace), ['components/alpha', 'components/zeta']);
+
+  await add('site/docs/src/content/docs/components/alpha.mdx');
+  assert.throws(() => componentSidebarItems(workspace), /Duplicate component documentation/u);
 });
 
 test('the Pages assembler publishes canonical generated assets and the playground route', async () => {

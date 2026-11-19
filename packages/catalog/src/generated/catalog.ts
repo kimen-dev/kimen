@@ -1,6 +1,6 @@
 // GENERATED FILE (spec 027, Art. I) — never edit by hand.
-// Source: packages/elements/generated/custom-elements.json via
-// packages/catalog/scripts/generate-catalog.mjs; the catalog-sync gate
+// Sources: packages/elements/generated/custom-elements.json and component.json opt-ins.
+// Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
   "catalogSchemaVersion": "1.4.0",
