@@ -10,6 +10,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { alphaOf, hasVisibleShadow } from './contracts';
 import { disableComponentEffectShadows } from './flat-effects';
 import { moveToNewParent } from './reconnect';
 import { resolvedShadowToken } from './resolved-token';
@@ -409,12 +410,12 @@ describe('ki-tooltip pointer path in a real browser', () => {
     const tooltip = requireTooltip(host);
     const paint = (): string[] => {
       const style = getComputedStyle(tooltip);
-      return [style.backgroundImage, style.color, style.borderTopLeftRadius];
+      return [style.backgroundColor, style.backgroundImage, style.color, style.borderTopLeftRadius];
     };
     const onmars = paint();
     const markup = host.outerHTML;
 
-    // Material 3 replaces the gradient with its solid inverse bubble fill.
+    // Both themes paint a solid fill after #343. Material 3 uses its own inverse colors.
     document.documentElement.setAttribute('data-ki-theme', 'material3');
 
     await expect.poll(paint).not.toEqual(onmars);
@@ -422,7 +423,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(host.outerHTML).toContain('<button aria-description="Send immediately">Send</button>');
   });
 
-  it('S1 S3 renders the MarsUI glass card geometry, bevel, and typography', async () => {
+  it('S1 S3 renders the solid onmars inverse card geometry and typography', async () => {
     const { host, trigger } = await mount({
       style: { marginBlockStart: '160px', marginInlineStart: '160px' },
     });
@@ -433,34 +434,37 @@ describe('ki-tooltip pointer path in a real browser', () => {
     const tooltip = requireTooltip(host);
     const style = getComputedStyle(tooltip);
 
-    // Tooltip master 12089:7621 card: radius 16, padding 12 all sides, max 288,
-    // title UI/Para/medium 13/20 weight 600.
-    expect(style.borderRadius).toBe('16px');
-    expect(style.paddingTop).toBe('12px');
-    expect(style.paddingRight).toBe('12px');
-    expect(style.paddingBottom).toBe('12px');
-    expect(style.paddingLeft).toBe('12px');
+    expect(style.borderRadius).toBe('8px');
+    expect(style.paddingTop).toBe('6px');
+    expect(style.paddingRight).toBe('10px');
+    expect(style.paddingBottom).toBe('6px');
+    expect(style.paddingLeft).toBe('10px');
     expect(style.maxWidth).toBe('288px');
-    expect(style.fontSize).toBe('13px');
+    expect(style.fontSize).toBe('12px');
     expect(style.lineHeight).toBe('20px');
     expect(style.fontWeight).toBe('600');
 
-    // Glass card paint: gradient over a transparent color fallback plus the
-    // Blur/24 (CSS 12px) backdrop filter.
-    expect(style.backgroundImage).toContain('linear-gradient(');
-    expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    expect(style.getPropertyValue('backdrop-filter')).toBe('blur(12px)');
+    // #343 supplies the solid fill and #342 removes the zero-radius filter.
+    expect(style.backgroundColor).toBe('rgb(46, 43, 38)');
+    expect(style.backgroundImage).toBe('none');
+    expect(style.color).toBe('rgb(249, 247, 244)');
+    expect(style.backdropFilter).toBe('none');
 
-    // Bevel hairline on all sides while no caret ships.
+    // The hairline keeps its geometry and paints a transparent edge.
     expect(style.borderTopWidth).toBe('1px');
     expect(style.borderTopStyle).toBe('solid');
     expect(style.borderBottomWidth).toBe('1px');
+    expect(alphaOf(style.borderTopColor)).toBe(0);
+    expect(alphaOf(style.borderBottomColor)).toBe(0);
 
-    // The bubble and its inner highlight use separate theme shadows.
+    // Calma paints the bubble elevation and keeps the separate highlight transparent.
     expect(style.boxShadow).toBe(resolvedShadowToken(tooltip, '--ki-tooltip-shadow'));
-    expect(getComputedStyle(tooltip, '::before').boxShadow).toBe(
+    expect(hasVisibleShadow(style.boxShadow)).toBe(true);
+    const highlight = getComputedStyle(tooltip, '::before').boxShadow;
+    expect(highlight).toBe(
       resolvedShadowToken(tooltip, '--ki-effect-component-secondary-default-shadow'),
     );
+    expect(hasVisibleShadow(highlight)).toBe(false);
 
     // Caret-depth offset: 8px trigger-to-card distance (top placement).
     const triggerRect = trigger.getBoundingClientRect();
@@ -478,9 +482,9 @@ describe('ki-tooltip pointer path in a real browser', () => {
     await hoverTrigger(host, trigger);
 
     const tooltip = requireTooltip(host);
-    expect(getComputedStyle(tooltip).boxShadow).toBe(
-      resolvedShadowToken(tooltip, '--ki-tooltip-shadow'),
-    );
+    const bubbleShadow = getComputedStyle(tooltip).boxShadow;
+    expect(bubbleShadow).toBe(resolvedShadowToken(tooltip, '--ki-tooltip-shadow'));
+    expect(hasVisibleShadow(bubbleShadow)).toBe(true);
   });
 
   it('S11 start placement renders on the right side under RTL', async () => {

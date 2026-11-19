@@ -39,6 +39,15 @@ component:
 An unknown `data-ki-theme` value simply matches no selector: the document
 stays on the default theme.
 
+### Onmars v2 (Calma)
+
+Paper ivory and warm charcoal set the light and dark canvases. Ink anchors the
+primary fill, terracotta marks links, focus and selection, and crimson
+signals errors. Cards and controls use flat surfaces with hairline edges.
+
+The UI and body stack starts with Instrument Sans. The display and serif
+stacks start with Newsreader. Each stack includes system fallbacks.
+
 ## Color scheme
 
 Both themes follow the OS by default and can be forced either way, on the
@@ -69,7 +78,7 @@ declaration wins and the tokens follow it. It has to be CSS: a
 ### The page contract
 
 Tokens are custom properties: loading them paints nothing. The opt-in page
-contract paints the page from them — background from `--ki-surface-s0`,
+contract paints the page from them — background from `--ki-surface-base`,
 text from `--ki-text-high-em`, and the body family:
 
 ```html
@@ -189,6 +198,9 @@ touch values on the page root in your own stylesheet:
 
 Leave room between small touch controls: an extended target reserves no
 space, so two controls closer than 44px centre to centre share the overlap.
+The target is centred on what the control paints, so it also reaches past
+the control's leading edge (up to 13px for an 18px checkbox) and can lie over
+content right before it; an ancestor that clips its overflow cuts it.
 
 ## Surfaces
 

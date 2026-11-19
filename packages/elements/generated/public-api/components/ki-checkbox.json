@@ -587,18 +587,18 @@
         "required": false,
         "type": null
       },
-      "--ki-motion-easing-out": {
+      "--ki-motion-easing-emphasized-out": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Decelerating interaction transition easing curve.",
+        "description": "Expressive exit curve for selected controls. Onmars eases out without overshoot.",
         "replacement": null,
         "required": false,
         "type": null
       },
-      "--ki-motion-easing-spring": {
+      "--ki-motion-easing-out": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language).",
+        "description": "Decelerating interaction transition easing curve.",
         "replacement": null,
         "required": false,
         "type": null

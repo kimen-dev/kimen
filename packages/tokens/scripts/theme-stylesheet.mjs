@@ -77,6 +77,13 @@ const REFERENCE = /^var\((--[a-z0-9-]+)\)$/u;
  * the same sources.
  */
 export function compositionDeclarations(dictionary) {
+  // Calma's private literals keep the DTCG layers closed. Emit their values
+  // at the referring token instead of publishing a second set of CSS names.
+  const inline = new Set(
+    dictionary.allTokens
+      .filter(({ path }) => path[1] === 'foundation' && path[2] === 'onmars-v2')
+      .map(({ name }) => `--${name}`),
+  );
   const formatProperty = createPropertyFormatter({
     // A typed shadow can normalize an alias to an untyped `none`. Emitting
     // that var() would undo the transform. Keep the usual aliases elsewhere.
@@ -92,6 +99,7 @@ export function compositionDeclarations(dictionary) {
   const declarations = new Map();
   for (const token of dictionary.allTokens) {
     const name = `--${token.name}`;
+    if (inline.has(name)) continue;
     const line = formatProperty(token);
     const prefix = `${name}: `;
     if (!line.startsWith(prefix) || !line.endsWith(';') || line.includes('\n')) {
@@ -100,8 +108,11 @@ export function compositionDeclarations(dictionary) {
     if (declarations.has(name)) {
       throw new Error(`${name} is produced by more than one token`);
     }
+    const expression = line.slice(prefix.length, -1);
+    const reference = REFERENCE.exec(expression);
     declarations.set(name, {
-      expression: line.slice(prefix.length, -1),
+      expression:
+        reference !== null && inline.has(reference[1]) ? String(token.$value) : expression,
       resolved: String(token.$value),
       inherited: token.$extensions?.['dev.kimen']?.inherit === 'document',
     });
@@ -403,4 +414,40 @@ export function renderThemeStylesheet(theme, declarations, { deprecations, modes
   ]
     .filter((block) => block !== '')
     .join('\n');
+}
+
+// CSS custom property values retain whitespace during minification. Compact
+// the generated values and substitute fixed private foundations while keeping
+// their declarations and every reference to a public token.
+export function compactTokenStylesheet(css, { declarations, modes, inline, foundationsLast }) {
+  const reassigned = new Set(modes.flatMap(({ declarations }) => [...declarations.keys()]));
+  const literals = new Map(
+    [...declarations].filter(
+      ([name, value]) =>
+        inline(name) && !reassigned.has(name) && !/\b(?:var|light-dark)\(/u.test(value),
+    ),
+  );
+  const compactValue = (value) =>
+    value.replaceAll(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|, +/gu, (part) =>
+      part.startsWith(',') ? ',' : part,
+    );
+  const compacted = css.replaceAll(
+    /^( +)(--ki-[\w-]+): ([^\r\n;]+);/gmu,
+    (_, indent, name, value) => {
+      const inlined = value.replaceAll(
+        /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|var\((--ki-[\w-]+)\)/gu,
+        (part, reference) => literals.get(reference) ?? part,
+      );
+      return `${indent}${name}:${compactValue(inlined)};`;
+    },
+  );
+  if (!foundationsLast) return compacted;
+
+  // Keeping the opt-in theme's restored private values together compresses
+  // better. Declaration order within each rule does not affect the cascade.
+  return compacted.replaceAll(/(?:^ +--ki-[^\r\n]+\n)+/gmu, (block) => {
+    const lines = block.trimEnd().split('\n');
+    const isFoundation = (line) => line.trimStart().startsWith('--ki-foundation-');
+    return `${[...lines.filter((line) => !isFoundation(line)), ...lines.filter(isFoundation)].join('\n')}\n`;
+  });
 }

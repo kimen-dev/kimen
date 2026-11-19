@@ -499,7 +499,7 @@ Feature: Alert
     Given an onmars page with an info alert "Backup completed"
     When the page renders
     Then the alert's shell has 12px of padding and 28px corners around its card
-    And the card has 12px of padding, 16px corners and the level-5 elevation
+    And the card has 12px of padding, 12px corners and the level-5 elevation
 
   # S21
   Scenario: A slotted icon heads the card in a round 32px frame

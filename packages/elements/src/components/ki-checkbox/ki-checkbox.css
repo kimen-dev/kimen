@@ -171,24 +171,30 @@ label {
 }
 
 input {
+  --_ki-checkbox-target: max(
+    var(--_ki-checkbox-control-size),
+    var(--_ki-checkbox-min-target),
+    var(--ki-density-target-min)
+  );
+
   position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 0;
+
+  /* Centred on the painted box on both axes (spec 045 A1-D3, issue 427).
+     The box rides the label's first line, so the target is centred on that
+     line, not on the whole row: the row can be taller (an sm or lg row floors
+     at its min target, a wrapped label adds lines). On the inline axis the
+     target starts half the difference before the box, so in a tight layout
+     it may reach over the content before it (A1's documented edge case).
+     Logical, so it holds in both writing directions. */
+  inset-block-start: calc(var(--_ki-checkbox-label-line-height) / 2);
+  inset-inline-start: calc((var(--_ki-checkbox-control-size) - var(--_ki-checkbox-target)) / 2);
   z-index: 1;
   box-sizing: border-box;
 
   /* The pointer target: never under the region's target minimum (spec 045
      A1-D3), which extends it without moving or growing the painted box. */
-  inline-size: max(
-    var(--_ki-checkbox-control-size),
-    var(--_ki-checkbox-min-target),
-    var(--ki-density-target-min)
-  );
-  block-size: max(
-    var(--_ki-checkbox-control-size),
-    var(--_ki-checkbox-min-target),
-    var(--ki-density-target-min)
-  );
+  inline-size: var(--_ki-checkbox-target);
+  block-size: var(--_ki-checkbox-target);
   margin: 0;
   opacity: 0;
   transform: translateY(-50%);
@@ -310,7 +316,7 @@ input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
   .mark {
     transition:
       opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
-      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-spring);
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-emphasized-out);
   }
 
   :host(:not([checked], [indeterminate])) .mark {
