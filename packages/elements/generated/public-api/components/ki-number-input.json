@@ -1,0 +1,761 @@
+{
+  "component": {
+    "attributes": {
+      "decrease-label": {
+        "default": "'Decrease {label}'",
+        "deprecatedSince": null,
+        "description": "Stepper's accessible name. The field label replaces {label}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents editing and excludes the control from form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "error-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Validation hint to show when the entry fails a constraint.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "format": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Context or instructions displayed beneath the field when it has no visible error.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "increase-label": {
+        "default": "'Increase {label}'",
+        "deprecatedSince": null,
+        "description": "Stepper's accessible name. The field label replaces {label}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "invalid-number-message": {
+        "default": "'Enter a number.'",
+        "deprecatedSince": null,
+        "description": "Default validation message for text that cannot be read as a number.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible accessible name. Supply a meaningful label in the page language.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum permitted numeric value. Omit for an unbounded maximum.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "maximum-message": {
+        "default": "'Value adjusted to the maximum of {value}.'",
+        "deprecatedSince": null,
+        "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum permitted numeric value. Omit for an unbounded minimum.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "minimum-message": {
+        "default": "'Value adjusted to the minimum of {value}.'",
+        "deprecatedSince": null,
+        "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key for the plain numeric value.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the user must enter a number before submitting the form.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "step": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "steppers": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Shows named decrease and increase buttons inside the field.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "unit": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible suffix such as seconds or seats, included in the accessible description.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-border-block-end-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field border width at block end.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-border-block-start-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field border width at block start.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-border-inline-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field border width at either inline edge.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting NumberInput field fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional theme image layered over the field fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting NumberInput field boundary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field fill when disabled.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Boundary when the entire field is disabled.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Numeric entry ink when disabled.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the numeric entry.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-focus-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field fill while focused.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-focus-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Numeric entry ink while focused.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-field-invalid-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field boundary when a validation message is visible.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font size of the numeric entry and its suffix.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-font-size-touch": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum input font size under a coarse pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium field height before applying regional density.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field label font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-label-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field label font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-label-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the label, field and supporting messages.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the field label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the numeric entry and its suffix.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline padding for the plain field and unit suffix.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Field corners.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-stepper-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting stepper button fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-stepper-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stepper icon ink when disabled.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-stepper-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting stepper icon ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-stepper-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stepper fill when hovered.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-stepper-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stepper icon ink when hovered.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-stepper-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Editor inline padding between the steppers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-unit-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Backing of the unit suffix within the field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-number-input-unit-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Unit suffix ink. Medium emphasis in the standard contrast setting.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
+    "events": {
+      "change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.",
+        "replacement": null,
+        "required": false,
+        "type": "Event"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "decrease": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Button that subtracts one step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Polite validation feedback associated with the spinbutton.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "field": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Enclosure around the editor, unit and stepper buttons.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Help message associated with the spinbutton.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "increase": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Button that adds one step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native text editor carrying the spinbutton role.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible name of the spinbutton.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "status": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Polite feedback explaining a value adjustment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "unit": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible unit referenced by the spinbutton's description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "decreaseLabel": {
+        "default": "'Decrease {label}'",
+        "deprecatedSince": null,
+        "description": "Stepper's accessible name. The field label replaces {label}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents editing and excludes the control from form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "errorText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Validation hint to show when the entry fails a constraint.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "format": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
+        "replacement": null,
+        "required": false,
+        "type": "NumberFormatOptions | undefined"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Context or instructions displayed beneath the field when it has no visible error.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "increaseLabel": {
+        "default": "'Increase {label}'",
+        "deprecatedSince": null,
+        "description": "Stepper's accessible name. The field label replaces {label}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "invalidNumberMessage": {
+        "default": "'Enter a number.'",
+        "deprecatedSince": null,
+        "description": "Default validation message for text that cannot be read as a number.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible accessible name. Supply a meaningful label in the page language.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum permitted numeric value. Omit for an unbounded maximum.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "maximumMessage": {
+        "default": "'Value adjusted to the maximum of {value}.'",
+        "deprecatedSince": null,
+        "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum permitted numeric value. Omit for an unbounded minimum.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "minimumMessage": {
+        "default": "'Value adjusted to the minimum of {value}.'",
+        "deprecatedSince": null,
+        "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key for the plain numeric value.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the user must enter a number before submitting the form.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "step": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "steppers": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Shows named decrease and increase buttons inside the field.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "unit": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible suffix such as seconds or seats, included in the accessible description.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-number-input.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-number-input.d.ts",
+    "symbols": {
+      "KiNumberInput": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiNumberInput extends Components.KiNumberInput, HTMLElement {\n}\nexport const KiNumberInput: {\n    prototype: KiNumberInput;\n    new (): KiNumberInput;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-number-input.js"
+  }
+}

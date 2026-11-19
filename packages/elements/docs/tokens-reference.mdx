@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 384 semantic
-and 1194 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 386 semantic
+and 1226 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -62,6 +62,7 @@ every component at once.
 | `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
 | `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
 | `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
+| `--ki-effect-component-no-backdrop-filter` | `none` | A component surface that leaves the backdrop untouched. |
 | `--ki-effect-component-primary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow. |
 | `--ki-effect-component-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter. |
 | `--ki-effect-component-secondary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter. |
@@ -392,6 +393,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
+| `--ki-surface-image-none` | `none` | A solid component surface with no background image. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
@@ -1290,6 +1292,43 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-list-item-xl-secondary-font-size` | `0.8125rem` | dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para). |
 | `--ki-list-item-xl-secondary-line-height` | `1.25rem` | dimension used by the list component for xl secondary line height (List 10063:2066 xl). |
 | `--ki-list-padding` | `0rem` | dimension used by the list component for padding. |
+
+### `ki-number-input`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-number-input-border-block-end-width` | `1px` | Field border width at block end. |
+| `--ki-number-input-border-block-start-width` | `1px` | Field border width at block start. |
+| `--ki-number-input-border-inline-width` | `1px` | Field border width at either inline edge. |
+| `--ki-number-input-field-backdrop-filter` | `none` | Complete backdrop filter behind the field. |
+| `--ki-number-input-field-bg` | `#ffffff` | Resting NumberInput field fill. |
+| `--ki-number-input-field-bg-image` | `none` | Optional theme image layered over the field fill. |
+| `--ki-number-input-field-border` | `#86827b` | Resting NumberInput field boundary. |
+| `--ki-number-input-field-disabled-bg` | `#f3f0eb` | Field fill when disabled. |
+| `--ki-number-input-field-disabled-border` | `rgba(24, 22, 19, 0.1)` | Boundary when the entire field is disabled. |
+| `--ki-number-input-field-disabled-fg` | `#cbc7bf` | Numeric entry ink when disabled. |
+| `--ki-number-input-field-fg` | `#181613` | Foreground of the numeric entry. |
+| `--ki-number-input-field-focus-bg` | `#ffffff` | Field fill while focused. |
+| `--ki-number-input-field-focus-fg` | `#181613` | Numeric entry ink while focused. |
+| `--ki-number-input-field-invalid-border` | `#ef4e69` | Field boundary when a validation message is visible. |
+| `--ki-number-input-font-size` | `0.8125rem` | Font size of the numeric entry and its suffix. |
+| `--ki-number-input-font-size-touch` | `1rem` | Minimum input font size under a coarse pointer. |
+| `--ki-number-input-height` | `2.5rem` | Medium field height before applying regional density. |
+| `--ki-number-input-label-font-size` | `0.8125rem` | Field label font size. |
+| `--ki-number-input-label-font-weight` | `600` | Field label font weight. |
+| `--ki-number-input-label-gap` | `0.25rem` | Gap between the label, field and supporting messages. |
+| `--ki-number-input-label-line-height` | `1.25rem` | Line height of the field label. |
+| `--ki-number-input-line-height` | `1.5rem` | Line height of the numeric entry and its suffix. |
+| `--ki-number-input-padding-inline` | `0.625rem` | Inline padding for the plain field and unit suffix. |
+| `--ki-number-input-radius` | `10px` | Field corners. |
+| `--ki-number-input-stepper-bg` | `rgba(0, 0, 0, 0)` | Resting stepper button fill. |
+| `--ki-number-input-stepper-disabled-fg` | `#6b665f` | Stepper icon ink when disabled. |
+| `--ki-number-input-stepper-fg` | `#181613` | Resting stepper icon ink. |
+| `--ki-number-input-stepper-hover-bg` | `#f3f0eb` | Stepper fill when hovered. |
+| `--ki-number-input-stepper-hover-fg` | `#181613` | Stepper icon ink when hovered. |
+| `--ki-number-input-stepper-padding-inline` | `0.125rem` | Editor inline padding between the steppers. |
+| `--ki-number-input-unit-bg` | `rgba(0, 0, 0, 0)` | Backing of the unit suffix within the field. |
+| `--ki-number-input-unit-fg` | `#5e5953` | Unit suffix ink. Medium emphasis in the standard contrast setting. |
 
 ### `ki-option`
 

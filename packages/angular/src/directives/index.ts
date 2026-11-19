@@ -18,6 +18,7 @@ export const DIRECTIVES = [
   d.KiInput,
   d.KiList,
   d.KiListItem,
+  d.KiNumberInput,
   d.KiOption,
   d.KiProgress,
   d.KiQr,
