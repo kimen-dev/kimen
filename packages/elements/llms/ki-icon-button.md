@@ -254,18 +254,18 @@ None.
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
-- `--ki-button-toggle-backdrop-filter`: Complete backdrop filter for the toggle button.
-- `--ki-button-toggle-bg-image`: Background image layer for the toggle button.
-- `--ki-button-toggle-border`: Border color of the flat toggle button surface.
-- `--ki-button-toggle-shadow`: Resting shadow of the flat toggle button surface.
+- `--ki-button-toggle-quiet-bg`: Background of unselected ghost and quaternary toggle buttons.
+- `--ki-button-toggle-quiet-fg`: Foreground of unselected ghost toggle buttons.
+- `--ki-button-toggle-unselected-bg`: Background of unselected filled toggle buttons.
+- `--ki-button-toggle-unselected-fg`: Foreground of unselected filled toggle buttons.
 - `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-effect-component-no-backdrop-filter`: An unadorned surface applies no backdrop filter.
+- `--ki-elevation-none`: Flat surfaces carry no resting shadow.
 - `--ki-icon-button-ghost-selected-bg`: Background of the selected ghost icon button toggle.
 - `--ki-icon-button-ghost-selected-fg`: Foreground of the selected ghost icon button toggle.
-- `--ki-icon-button-ghost-unselected-bg`: Background of the unselected ghost icon button toggle.
-- `--ki-icon-button-ghost-unselected-fg`: Foreground of the unselected ghost icon button toggle.
 - `--ki-icon-button-lg-icon-size`: dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px).
 - `--ki-icon-button-lg-size`: dimension used by the icon button component for lg box (48px square).
 - `--ki-icon-button-lg-spinner-size`: dimension used by the icon button component for the lg loading spinner box (24px, the lg icon size; spec 046 D5: the spinner takes the place of the icon).
@@ -279,16 +279,10 @@ None.
 - `--ki-icon-button-outline-selected-fg`: Foreground of the selected outline icon button toggle.
 - `--ki-icon-button-primary-selected-bg`: Background of the selected primary icon button toggle.
 - `--ki-icon-button-primary-selected-fg`: Foreground of the selected primary icon button toggle.
-- `--ki-icon-button-primary-unselected-bg`: Background of the unselected primary icon button toggle.
-- `--ki-icon-button-primary-unselected-fg`: Foreground of the unselected primary icon button toggle.
 - `--ki-icon-button-quaternary-selected-bg`: Background of the selected quaternary icon button toggle.
 - `--ki-icon-button-quaternary-selected-fg`: Foreground of the selected quaternary icon button toggle.
-- `--ki-icon-button-quaternary-unselected-bg`: Background of the unselected quaternary icon button toggle.
-- `--ki-icon-button-quaternary-unselected-fg`: Foreground of the unselected quaternary icon button toggle.
 - `--ki-icon-button-secondary-selected-bg`: Background of the selected secondary icon button toggle.
 - `--ki-icon-button-secondary-selected-fg`: Foreground of the selected secondary icon button toggle.
-- `--ki-icon-button-secondary-unselected-bg`: Background of the unselected secondary icon button toggle.
-- `--ki-icon-button-secondary-unselected-fg`: Foreground of the unselected secondary icon button toggle.
 - `--ki-icon-button-sm-icon-size`: dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px).
 - `--ki-icon-button-sm-size`: dimension used by the icon button component for sm box (32px square).
 - `--ki-icon-button-sm-spinner-size`: dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon).
@@ -302,4 +296,6 @@ None.
 - `--ki-icon-button-xs-spinner-size`: dimension used by the icon button component for the xs loading spinner box (16px, the xs icon size; spec 046 D5: the spinner takes the place of the icon).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-outline-none`: semantic color for outline none.
+- `--ki-surface-image-none`: An unadorned surface has no background image.
 - `--ki-typography-family-body`: semantic font family for typography family body.

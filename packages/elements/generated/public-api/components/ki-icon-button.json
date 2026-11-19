@@ -1187,34 +1187,34 @@
         "required": false,
         "type": null
       },
-      "--ki-button-toggle-backdrop-filter": {
+      "--ki-button-toggle-quiet-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Complete backdrop filter for the toggle button.",
+        "description": "Background of unselected ghost and quaternary toggle buttons.",
         "replacement": null,
         "required": false,
         "type": null
       },
-      "--ki-button-toggle-bg-image": {
+      "--ki-button-toggle-quiet-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Background image layer for the toggle button.",
+        "description": "Foreground of unselected ghost toggle buttons.",
         "replacement": null,
         "required": false,
         "type": null
       },
-      "--ki-button-toggle-border": {
+      "--ki-button-toggle-unselected-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Border color of the flat toggle button surface.",
+        "description": "Background of unselected filled toggle buttons.",
         "replacement": null,
         "required": false,
         "type": null
       },
-      "--ki-button-toggle-shadow": {
+      "--ki-button-toggle-unselected-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Resting shadow of the flat toggle button surface.",
+        "description": "Foreground of unselected filled toggle buttons.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1251,6 +1251,22 @@
         "required": false,
         "type": null
       },
+      "--ki-effect-component-no-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An unadorned surface applies no backdrop filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-elevation-none": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Flat surfaces carry no resting shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-icon-button-ghost-selected-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -1263,22 +1279,6 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Foreground of the selected ghost icon button toggle.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-icon-button-ghost-unselected-bg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Background of the unselected ghost icon button toggle.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-icon-button-ghost-unselected-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Foreground of the unselected ghost icon button toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1387,22 +1387,6 @@
         "required": false,
         "type": null
       },
-      "--ki-icon-button-primary-unselected-bg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Background of the unselected primary icon button toggle.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-icon-button-primary-unselected-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Foreground of the unselected primary icon button toggle.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-icon-button-quaternary-selected-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -1419,22 +1403,6 @@
         "required": false,
         "type": null
       },
-      "--ki-icon-button-quaternary-unselected-bg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Background of the unselected quaternary icon button toggle.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-icon-button-quaternary-unselected-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Foreground of the unselected quaternary icon button toggle.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-icon-button-secondary-selected-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -1447,22 +1415,6 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Foreground of the selected secondary icon button toggle.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-icon-button-secondary-unselected-bg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Background of the unselected secondary icon button toggle.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-icon-button-secondary-unselected-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Foreground of the unselected secondary icon button toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1567,6 +1519,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-outline-none": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for outline none.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-image-none": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An unadorned surface has no background image.",
         "replacement": null,
         "required": false,
         "type": null

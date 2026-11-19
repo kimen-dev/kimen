@@ -1252,8 +1252,6 @@
   --ki-button-primary-active-shadow:var(--ki-effect-component-primary-default-shadow); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-primary-rest-shadow */
   --ki-button-primary-active-overlay:var(--ki-state-layer-pressed);
   --ki-button-primary-disabled-shadow:none;
-  --ki-button-primary-unselected-bg:var(--ki-surface-s2);
-  --ki-button-primary-unselected-fg:var(--ki-text-high-em);
   --ki-button-primary-selected-bg:var(--ki-surface-primary-med-em);
   --ki-button-primary-selected-fg:var(--ki-text-primary-on-primary);
   --ki-button-secondary-neutral-rest-bg:var(--ki-surface-special-secondary-alpha-base);
@@ -1299,8 +1297,6 @@
   --ki-button-secondary-active-shadow:var(--ki-effect-component-secondary-default-shadow); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-secondary-rest-shadow */
   --ki-button-secondary-active-overlay:var(--ki-surface-pressed-overlay-inverse);
   --ki-button-secondary-disabled-shadow:none;
-  --ki-button-secondary-unselected-bg:var(--ki-surface-s2);
-  --ki-button-secondary-unselected-fg:var(--ki-text-high-em);
   --ki-button-secondary-selected-bg:var(--ki-surface-secondary-med-em);
   --ki-button-secondary-selected-fg:var(--ki-text-primary-on-secondary);
   --ki-button-tertiary-neutral-rest-bg:var(--ki-surface-special-secondary-alpha-base);
@@ -1385,8 +1381,6 @@
   --ki-button-quaternary-hover-shadow:none;
   --ki-button-quaternary-active-shadow:none; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-rest-shadow */
   --ki-button-quaternary-disabled-shadow:none;
-  --ki-button-quaternary-unselected-bg:var(--ki-surface-transparent);
-  --ki-button-quaternary-unselected-fg:var(--ki-text-supporting);
   --ki-button-quaternary-selected-bg:var(--ki-surface-primary-high-em);
   --ki-button-quaternary-selected-fg:var(--ki-text-primary-on-primary);
   --ki-button-ghost-neutral-rest-bg:var(--ki-transparent-inverse);
@@ -1429,8 +1423,6 @@
   --ki-button-ghost-hover-shadow:none;
   --ki-button-ghost-active-shadow:none; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-ghost-rest-shadow */
   --ki-button-ghost-disabled-shadow:none;
-  --ki-button-ghost-unselected-bg:var(--ki-surface-transparent);
-  --ki-button-ghost-unselected-fg:var(--ki-text-high-em);
   --ki-button-ghost-selected-bg:var(--ki-text-primary-high-em);
   --ki-button-ghost-selected-fg:var(--ki-text-primary-on-primary);
   --ki-button-border-width:var(--ki-size-border-hairline);
@@ -1441,10 +1433,10 @@
   --ki-button-outline-selected-fg:var(--ki-text-inverse-black);
   --ki-button-toggle-radius:var(--ki-radius-component-md);
   --ki-button-toggle-selected-radius:var(--ki-radius-round);
-  --ki-button-toggle-bg-image:var(--ki-surface-image-none);
-  --ki-button-toggle-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
-  --ki-button-toggle-shadow:var(--ki-elevation-none);
-  --ki-button-toggle-border:var(--ki-outline-none);
+  --ki-button-toggle-unselected-bg:var(--ki-surface-s2);
+  --ki-button-toggle-unselected-fg:var(--ki-text-high-em);
+  --ki-button-toggle-quiet-bg:var(--ki-surface-transparent);
+  --ki-button-toggle-quiet-fg:var(--ki-text-high-em);
   --ki-card-bg:var(--ki-surface-special-light-s0-dark-s1);
   --ki-card-fg:var(--ki-text-high-em);
   --ki-card-border-color:var(--ki-outline-low-em);
@@ -1580,20 +1572,12 @@
   --ki-icon-button-outline-selected-fg:var(--ki-text-inverse-black);
   --ki-icon-button-toggle-radius:var(--ki-radius-round);
   --ki-icon-button-toggle-selected-radius:var(--ki-radius-component-md);
-  --ki-icon-button-primary-unselected-bg:var(--ki-surface-s2);
-  --ki-icon-button-primary-unselected-fg:var(--ki-text-high-em);
   --ki-icon-button-primary-selected-bg:var(--ki-surface-primary-med-em);
   --ki-icon-button-primary-selected-fg:var(--ki-text-primary-on-primary);
-  --ki-icon-button-secondary-unselected-bg:var(--ki-surface-s2);
-  --ki-icon-button-secondary-unselected-fg:var(--ki-text-high-em);
   --ki-icon-button-secondary-selected-bg:var(--ki-surface-secondary-med-em);
   --ki-icon-button-secondary-selected-fg:var(--ki-text-primary-on-secondary);
-  --ki-icon-button-quaternary-unselected-bg:var(--ki-surface-transparent);
-  --ki-icon-button-quaternary-unselected-fg:var(--ki-text-supporting);
   --ki-icon-button-quaternary-selected-bg:var(--ki-surface-primary-high-em);
   --ki-icon-button-quaternary-selected-fg:var(--ki-text-primary-on-primary);
-  --ki-icon-button-ghost-unselected-bg:var(--ki-surface-transparent);
-  --ki-icon-button-ghost-unselected-fg:var(--ki-text-high-em);
   --ki-icon-button-ghost-selected-bg:var(--ki-text-primary-high-em);
   --ki-icon-button-ghost-selected-fg:var(--ki-text-primary-on-primary);
   --ki-icon-size-sm:var(--ki-glyph-size-sm);

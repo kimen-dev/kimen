@@ -1702,14 +1702,6 @@
               "description": "color used by the button component for ghost success rest foreground."
             },
             {
-              "name": "--ki-button-ghost-unselected-bg",
-              "description": "Background of the unselected ghost button toggle."
-            },
-            {
-              "name": "--ki-button-ghost-unselected-fg",
-              "description": "Foreground of the unselected ghost button toggle."
-            },
-            {
               "name": "--ki-button-label-padding-inline",
               "description": "dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance)."
             },
@@ -1926,14 +1918,6 @@
               "description": "color used by the button component for primary success rest foreground."
             },
             {
-              "name": "--ki-button-primary-unselected-bg",
-              "description": "Background of the unselected primary button toggle."
-            },
-            {
-              "name": "--ki-button-primary-unselected-fg",
-              "description": "Foreground of the unselected primary button toggle."
-            },
-            {
               "name": "--ki-button-quaternary-danger-hover-bg",
               "description": "color used by the button component for quaternary danger hover background."
             },
@@ -2036,14 +2020,6 @@
             {
               "name": "--ki-button-quaternary-success-rest-fg",
               "description": "color used by the button component for quaternary success rest foreground."
-            },
-            {
-              "name": "--ki-button-quaternary-unselected-bg",
-              "description": "Background of the unselected quaternary button toggle."
-            },
-            {
-              "name": "--ki-button-quaternary-unselected-fg",
-              "description": "Foreground of the unselected quaternary button toggle."
             },
             {
               "name": "--ki-button-secondary-active-overlay",
@@ -2160,14 +2136,6 @@
             {
               "name": "--ki-button-secondary-success-rest-fg",
               "description": "color used by the button component for secondary success rest foreground."
-            },
-            {
-              "name": "--ki-button-secondary-unselected-bg",
-              "description": "Background of the unselected secondary button toggle."
-            },
-            {
-              "name": "--ki-button-secondary-unselected-fg",
-              "description": "Foreground of the unselected secondary button toggle."
             },
             {
               "name": "--ki-button-sm-font-size",
@@ -2318,16 +2286,12 @@
               "description": "color used by the button component for tertiary success rest foreground."
             },
             {
-              "name": "--ki-button-toggle-backdrop-filter",
-              "description": "Complete backdrop filter for the toggle button."
+              "name": "--ki-button-toggle-quiet-bg",
+              "description": "Background of unselected ghost and quaternary toggle buttons."
             },
             {
-              "name": "--ki-button-toggle-bg-image",
-              "description": "Background image layer for the toggle button."
-            },
-            {
-              "name": "--ki-button-toggle-border",
-              "description": "Border color of the flat toggle button surface."
+              "name": "--ki-button-toggle-quiet-fg",
+              "description": "Foreground of unselected ghost toggle buttons."
             },
             {
               "name": "--ki-button-toggle-radius",
@@ -2338,8 +2302,12 @@
               "description": "Pill shape for a selected text toggle button."
             },
             {
-              "name": "--ki-button-toggle-shadow",
-              "description": "Resting shadow of the flat toggle button surface."
+              "name": "--ki-button-toggle-unselected-bg",
+              "description": "Background of unselected filled toggle buttons."
+            },
+            {
+              "name": "--ki-button-toggle-unselected-fg",
+              "description": "Foreground of unselected filled toggle buttons."
             },
             {
               "name": "--ki-button-xl-font-size",
@@ -2422,12 +2390,28 @@
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
+              "name": "--ki-effect-component-no-backdrop-filter",
+              "description": "An unadorned surface applies no backdrop filter."
+            },
+            {
+              "name": "--ki-elevation-none",
+              "description": "Flat surfaces carry no resting shadow."
+            },
+            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
             },
             {
               "name": "--ki-motion-easing-out",
               "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-outline-none",
+              "description": "semantic color for outline none."
+            },
+            {
+              "name": "--ki-surface-image-none",
+              "description": "An unadorned surface has no background image."
             }
           ]
         }
@@ -4686,20 +4670,20 @@
               "description": "color used by the button component for tertiary success rest foreground."
             },
             {
-              "name": "--ki-button-toggle-backdrop-filter",
-              "description": "Complete backdrop filter for the toggle button."
+              "name": "--ki-button-toggle-quiet-bg",
+              "description": "Background of unselected ghost and quaternary toggle buttons."
             },
             {
-              "name": "--ki-button-toggle-bg-image",
-              "description": "Background image layer for the toggle button."
+              "name": "--ki-button-toggle-quiet-fg",
+              "description": "Foreground of unselected ghost toggle buttons."
             },
             {
-              "name": "--ki-button-toggle-border",
-              "description": "Border color of the flat toggle button surface."
+              "name": "--ki-button-toggle-unselected-bg",
+              "description": "Background of unselected filled toggle buttons."
             },
             {
-              "name": "--ki-button-toggle-shadow",
-              "description": "Resting shadow of the flat toggle button surface."
+              "name": "--ki-button-toggle-unselected-fg",
+              "description": "Foreground of unselected filled toggle buttons."
             },
             {
               "name": "--ki-button-xl-radius",
@@ -4718,20 +4702,20 @@
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
+              "name": "--ki-effect-component-no-backdrop-filter",
+              "description": "An unadorned surface applies no backdrop filter."
+            },
+            {
+              "name": "--ki-elevation-none",
+              "description": "Flat surfaces carry no resting shadow."
+            },
+            {
               "name": "--ki-icon-button-ghost-selected-bg",
               "description": "Background of the selected ghost icon button toggle."
             },
             {
               "name": "--ki-icon-button-ghost-selected-fg",
               "description": "Foreground of the selected ghost icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-ghost-unselected-bg",
-              "description": "Background of the unselected ghost icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-ghost-unselected-fg",
-              "description": "Foreground of the unselected ghost icon button toggle."
             },
             {
               "name": "--ki-icon-button-lg-icon-size",
@@ -4786,14 +4770,6 @@
               "description": "Foreground of the selected primary icon button toggle."
             },
             {
-              "name": "--ki-icon-button-primary-unselected-bg",
-              "description": "Background of the unselected primary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-primary-unselected-fg",
-              "description": "Foreground of the unselected primary icon button toggle."
-            },
-            {
               "name": "--ki-icon-button-quaternary-selected-bg",
               "description": "Background of the selected quaternary icon button toggle."
             },
@@ -4802,28 +4778,12 @@
               "description": "Foreground of the selected quaternary icon button toggle."
             },
             {
-              "name": "--ki-icon-button-quaternary-unselected-bg",
-              "description": "Background of the unselected quaternary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-unselected-fg",
-              "description": "Foreground of the unselected quaternary icon button toggle."
-            },
-            {
               "name": "--ki-icon-button-secondary-selected-bg",
               "description": "Background of the selected secondary icon button toggle."
             },
             {
               "name": "--ki-icon-button-secondary-selected-fg",
               "description": "Foreground of the selected secondary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-secondary-unselected-bg",
-              "description": "Background of the unselected secondary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-secondary-unselected-fg",
-              "description": "Foreground of the unselected secondary icon button toggle."
             },
             {
               "name": "--ki-icon-button-sm-icon-size",
@@ -4876,6 +4836,14 @@
             {
               "name": "--ki-motion-easing-out",
               "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-outline-none",
+              "description": "semantic color for outline none."
+            },
+            {
+              "name": "--ki-surface-image-none",
+              "description": "An unadorned surface has no background image."
             },
             {
               "name": "--ki-typography-family-body",

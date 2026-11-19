@@ -150,8 +150,6 @@ None.
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
-- `--ki-button-ghost-unselected-bg`: Background of the unselected ghost button toggle.
-- `--ki-button-ghost-unselected-fg`: Foreground of the unselected ghost button toggle.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
 - `--ki-button-lg-gap`: dimension used by the button component for lg gap.
@@ -206,8 +204,6 @@ None.
 - `--ki-button-primary-success-rest-bg`: color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).
 - `--ki-button-primary-success-rest-border`: color used by the button component for primary success rest border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-success-rest-fg`: color used by the button component for primary success rest foreground.
-- `--ki-button-primary-unselected-bg`: Background of the unselected primary button toggle.
-- `--ki-button-primary-unselected-fg`: Foreground of the unselected primary button toggle.
 - `--ki-button-quaternary-danger-hover-bg`: color used by the button component for quaternary danger hover background.
 - `--ki-button-quaternary-danger-hover-border`: color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-danger-hover-fg`: color used by the button component for quaternary danger hover foreground.
@@ -234,8 +230,6 @@ None.
 - `--ki-button-quaternary-success-rest-bg`: color used by the button component for quaternary success rest background.
 - `--ki-button-quaternary-success-rest-border`: color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-success-rest-fg`: color used by the button component for quaternary success rest foreground.
-- `--ki-button-quaternary-unselected-bg`: Background of the unselected quaternary button toggle.
-- `--ki-button-quaternary-unselected-fg`: Foreground of the unselected quaternary button toggle.
 - `--ki-button-secondary-active-overlay`: Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-button-secondary-danger-hover-bg`: color used by the button component for secondary danger hover background.
 - `--ki-button-secondary-danger-hover-border`: color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait).
@@ -265,8 +259,6 @@ None.
 - `--ki-button-secondary-success-rest-bg`: color used by the button component for secondary success rest background.
 - `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-rest-fg`: color used by the button component for secondary success rest foreground.
-- `--ki-button-secondary-unselected-bg`: Background of the unselected secondary button toggle.
-- `--ki-button-secondary-unselected-fg`: Foreground of the unselected secondary button toggle.
 - `--ki-button-sm-font-size`: dimension used by the button component for sm font size.
 - `--ki-button-sm-gap`: dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text).
 - `--ki-button-sm-height`: dimension used by the button component for sm height.
@@ -304,12 +296,12 @@ None.
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
-- `--ki-button-toggle-backdrop-filter`: Complete backdrop filter for the toggle button.
-- `--ki-button-toggle-bg-image`: Background image layer for the toggle button.
-- `--ki-button-toggle-border`: Border color of the flat toggle button surface.
+- `--ki-button-toggle-quiet-bg`: Background of unselected ghost and quaternary toggle buttons.
+- `--ki-button-toggle-quiet-fg`: Foreground of unselected ghost toggle buttons.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button.
-- `--ki-button-toggle-shadow`: Resting shadow of the flat toggle button surface.
+- `--ki-button-toggle-unselected-bg`: Background of unselected filled toggle buttons.
+- `--ki-button-toggle-unselected-fg`: Foreground of unselected filled toggle buttons.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).
 - `--ki-button-xl-height`: dimension used by the button component for xl height.
@@ -330,5 +322,9 @@ None.
 - `--ki-button-xs-spinner-size`: dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-effect-component-no-backdrop-filter`: An unadorned surface applies no backdrop filter.
+- `--ki-elevation-none`: Flat surfaces carry no resting shadow.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-outline-none`: semantic color for outline none.
+- `--ki-surface-image-none`: An unadorned surface has no background image.
