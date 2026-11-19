@@ -45,6 +45,9 @@ const CONTRAST_PAIRS = [
 
 export function parseColor(value) {
   const color = value.trim().toLowerCase();
+  if (color === 'transparent') {
+    return { r: 0, g: 0, b: 0, a: 0 };
+  }
   const hex = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/u);
 
   if (hex) {
@@ -908,6 +911,37 @@ function sweepControlBoundaries(theme, scheme, declarations, minRatio = NON_TEXT
   return failures;
 }
 
+function sweepSwitchGlyphs(theme, scheme, declarations) {
+  const failures = [];
+  const resolveColor = (name) => parseColor(resolveCustomProperty(name, declarations));
+  const pages = CONTROL_PAGE_SURFACES.map(resolveColor);
+
+  // WCAG 1.4.11 exempts inactive controls. A transparent glyph paints no mark.
+  for (const state of ['checked', 'unchecked']) {
+    const glyphName = `--ki-switch-glyph-${state}`;
+    const glyph = resolveColor(glyphName);
+    if (glyph.a === 0) continue;
+
+    for (const interaction of ['rest', 'hover', 'active']) {
+      const stem = `--ki-switch-${state}-${interaction}`;
+      const thumbName = `${stem}-thumb`;
+      const thumb = resolveColor(thumbName);
+      const track = resolveColor(`${stem}-track`);
+      const ratio = Math.min(
+        ...pages.map((page) =>
+          contrastRatio(glyph, compositeOver(thumb, compositeOver(track, page))),
+        ),
+      );
+      if (ratio < NON_TEXT_MIN_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${glyphName} on ${thumbName}: ${ratio} (min ${NON_TEXT_MIN_RATIO})`,
+        );
+      }
+    }
+  }
+  return failures;
+}
+
 // The contexts every theme is swept in: the standard appearance, then each
 // mode, identified by the declaration that switches it on (specs 043/044).
 // Every sweep above runs in every context — a mode may strengthen the
@@ -1104,6 +1138,7 @@ function evaluateContext(theme, scheme, declarations) {
   const failures = [];
   const swept = componentPairs(declarations);
   failures.push(...sweepControlBoundaries(theme, scheme, declarations));
+  failures.push(...sweepSwitchGlyphs(theme, scheme, declarations));
   failures.push(...sweepRatioReadouts(theme, scheme, declarations));
   failures.push(...sweepOverlayRamps(theme, scheme, declarations));
   failures.push(...sweepPlaceholders(theme, scheme, declarations));

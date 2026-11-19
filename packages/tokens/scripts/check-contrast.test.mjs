@@ -586,6 +586,31 @@ test('dark onmars requires the inverse neutral primary button in every mode', ()
   }
 });
 
+test('switch glyph contrast sweeps visible checked and unchecked glyphs against each thumb state', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root {
+      --ki-switch-glyph-checked: var(--ki-text-primary-on-primary-light);
+      --ki-switch-checked-active-thumb: var(--ki-text-primary-on-primary-light);
+    }
+    :root:where([data-ki-transparency='reduce']) {
+      --ki-switch-glyph-unchecked: rgba(255, 255, 255, 0.95);
+    }`,
+  ).filter((failure) => failure.includes('--ki-switch-glyph-'));
+
+  assert.deepEqual(
+    failures.filter((failure) => failure.includes('onmars/light')),
+    ['onmars/light --ki-switch-glyph-checked on --ki-switch-checked-active-thumb: 1 (min 3)'],
+  );
+  assert.deepEqual(
+    failures.filter((failure) => failure.includes('--ki-switch-glyph-unchecked')),
+    ['rest', 'hover', 'active'].map(
+      (state) =>
+        `onmars+reduced-transparency/light --ki-switch-glyph-unchecked on --ki-switch-unchecked-${state}-thumb: 1 (min 3)`,
+    ),
+  );
+});
+
 test('more contrast holds neutral text to 7:1 and neutral boundaries to 4.5:1', () => {
   const failures = evaluateCss(
     'onmars',

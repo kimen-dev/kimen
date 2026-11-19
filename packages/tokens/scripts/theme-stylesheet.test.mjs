@@ -68,6 +68,48 @@ test('the shipped CSS compacts fixed foundations while keeping public and mode-d
   assert.match(css, /--ki-foundation-mode:#222222;/u);
 });
 
+test('a disabled shadow emits a transparent list layer and retains aliases', async () => {
+  const dictionary = await new StyleDictionary({
+    ...lightConfig,
+    source: [],
+    tokens: {
+      ki: {
+        flat: { $type: 'shadow', $value: 'none' },
+        'surface-shadow': { $type: 'shadow', $value: '{ki.flat}' },
+        'legacy-flat': { $value: 'none' },
+        'legacy-shadow': { $type: 'shadow', $value: '{ki.legacy-flat}' },
+        'composed-shadow': {
+          $type: 'shadow',
+          $value: ['none', { offsetX: 0, offsetY: '2px', color: '#ffffff' }],
+        },
+        // Not `border`: that group holds the hairline aliases the shipped
+        // config's component tokens reference.
+        'flat-border': { $type: 'border', $value: 'none' },
+      },
+    },
+  }).getPlatformTokens('css');
+
+  const declarations = compositionDeclarations(dictionary);
+
+  assert.equal(declarations.get('--ki-flat').expression, '0 0 #0000');
+  assert.equal(declarations.get('--ki-surface-shadow').expression, 'var(--ki-flat)');
+  assert.equal(declarations.get('--ki-surface-shadow').resolved, '0 0 #0000');
+  assert.equal(declarations.get('--ki-legacy-flat').expression, 'none');
+  assert.equal(declarations.get('--ki-legacy-shadow').expression, '0 0 #0000');
+  assert.equal(declarations.get('--ki-composed-shadow').expression, '0 0 #0000, 0 2px 0 #ffffff');
+  assert.equal(declarations.get('--ki-flat-border').expression, 'none');
+});
+
+test('the flat Material 3 video control emits a transparent shadow layer in both schemes', async () => {
+  const [light, dark] = await Promise.all(
+    [material3LightConfig, material3DarkConfig].map(async (config) =>
+      compositionDeclarations(await new StyleDictionary(config).getPlatformTokens('css')),
+    ),
+  );
+
+  assert.equal(combineSchemes({ light, dark }).get('--ki-video-play-shadow'), '0 0 #0000');
+});
+
 test('a token with the same expression in both schemes is emitted once, unchanged', () => {
   const light = composition({ ...primitives, '--ki-space-md': ['1rem'] });
   const dark = composition({ ...primitives, '--ki-space-md': ['1rem'] });

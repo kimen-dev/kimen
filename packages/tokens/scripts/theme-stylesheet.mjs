@@ -59,7 +59,7 @@
 //     keeps its value until it is removed, and says so where a consumer reads
 //     it. Comments are outside the published value contract, and minifiers
 //     drop them.
-import { createPropertyFormatter } from 'style-dictionary/utils';
+import { createPropertyFormatter, outputReferencesTransformed } from 'style-dictionary/utils';
 
 import { deprecationComment } from './deprecation.mjs';
 
@@ -85,7 +85,12 @@ export function compositionDeclarations(dictionary) {
       .map(({ name }) => `--${name}`),
   );
   const formatProperty = createPropertyFormatter({
-    outputReferences: true,
+    // A typed shadow can normalize an alias to an untyped `none`. Emitting
+    // that var() would undo the transform. Keep the usual aliases elsewhere.
+    outputReferences: (token, options) =>
+      token.$type !== 'shadow' ||
+      typeof token.original.$value !== 'string' ||
+      outputReferencesTransformed(token, options),
     dictionary,
     format: 'css',
     usesDtcg: true,

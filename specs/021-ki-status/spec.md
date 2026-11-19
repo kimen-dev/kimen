@@ -401,6 +401,10 @@ Feature: Status
 
 ## Assumptions
 
+- Issue #349 (agent's choice, pending founder confirmation). The status ring
+  retains its spread-shadow geometry. A zero-duration additive CSS effect
+  keeps the ring and dot shadow independent while matching the existing
+  gallery pixels.
 - ki-status is the component 010-ki-badge deferred: the 010 design analysis
   verified (2026-07-08) that the MarsUI `Status` dot set "maps to the
   M3-style dot concern, not to this pill". This spec claims the standalone

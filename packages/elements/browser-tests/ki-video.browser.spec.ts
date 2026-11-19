@@ -19,6 +19,7 @@ import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { disableComponentEffectShadows } from './flat-effects';
 
 type KiVideoElement = HTMLElement & { label?: string };
 
@@ -279,7 +280,7 @@ describe('ki-video', () => {
     if (!control) {
       throw new Error('ki-video did not render its glass container');
     }
-    const rest = getComputedStyle(control).boxShadow;
+    const rest = getComputedStyle(control, '::before').boxShadow;
     expect(getComputedStyle(control).transform).toBe('none');
 
     await userEvent.hover(playControlOf(el));
@@ -289,7 +290,7 @@ describe('ki-video', () => {
     // box-shadow/transform only, so layout never moves; the transition
     // itself is gated by prefers-reduced-motion (motion tokens).
     await waitUntil(
-      () => getComputedStyle(control).boxShadow !== rest,
+      () => getComputedStyle(control, '::before').boxShadow !== rest,
       'hover did not lift the glass container',
     );
     await waitUntil(
@@ -303,6 +304,49 @@ describe('ki-video', () => {
       'the glass container did not settle back at rest',
     );
     await browserCommands.emulateReducedMotion(null);
+  });
+
+  it('S10 keeps the play-container shadow on hover with component effect shadows disabled (#349)', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the product tour' });
+    disableComponentEffectShadows(el);
+    const control = el.shadowRoot?.querySelector<HTMLElement>('.control');
+    if (!control) {
+      throw new Error('ki-video did not render its glass container');
+    }
+    const restShadow = getComputedStyle(control).boxShadow;
+    // onmars v2 draws no inner highlight, but the container keeps its shadow.
+    expect(restShadow).not.toBe('none');
+
+    await userEvent.hover(playControlOf(el));
+
+    await expect.poll(() => getComputedStyle(control).transform).toMatch(/^matrix\(1\.02/u);
+    expect(getComputedStyle(control).boxShadow).toBe(restShadow);
+    expect(getComputedStyle(control, '::before').boxShadow).toBe('none');
+    await userEvent.unhover(playControlOf(el));
+  });
+
+  it('S13 a theme can hide just the hover shadow', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the product tour' });
+    el.style.setProperty('--ki-effect-video-hover-opacity', '0');
+    const control = el.shadowRoot?.querySelector<HTMLElement>('.control');
+    if (!control) {
+      throw new Error('ki-video did not render its glass container');
+    }
+    const restShadow = getComputedStyle(control).boxShadow;
+    // onmars v2 draws no inner highlight, but the container keeps its shadow.
+    expect(restShadow).not.toBe('none');
+
+    await userEvent.hover(playControlOf(el));
+
+    await expect.poll(() => getComputedStyle(control).transform).toMatch(/^matrix\(1\.02/u);
+    expect(getComputedStyle(control).boxShadow).toBe(restShadow);
+    const hoverLayer = getComputedStyle(control, '::before');
+    expect(hoverLayer.opacity).toBe('0');
+    // The hover layer still takes the effect; the opacity token hides it.
+    expect(hoverLayer.boxShadow).not.toBe('none');
+    await userEvent.unhover(playControlOf(el));
   });
 
   it('S3 the video never plays on its own: nothing starts and nothing sounds after load', async () => {

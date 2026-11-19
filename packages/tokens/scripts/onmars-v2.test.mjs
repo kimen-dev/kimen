@@ -85,7 +85,8 @@ test('S2 onmars resolves the new corner, card and tooltip roles', () => {
   assertValues('./css', 'light', {
     'button-md-radius': '10px',
     'card-border-width': '1px',
-    'card-elevation': 'none',
+    // A typed shadow at none is emitted as a transparent layer (#349).
+    'card-elevation': '0 0 #0000',
     'dialog-radius': '18px',
     'tooltip-fg': '#f9f7f4',
     'tooltip-bg': '#2e2b26',

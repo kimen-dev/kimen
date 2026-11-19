@@ -10,6 +10,7 @@ import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { alphaOf } from './contracts';
+import { disableComponentEffectShadows } from './flat-effects';
 import { fillsOf } from './modes';
 import { moveToNewParent } from './reconnect';
 
@@ -455,13 +456,27 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(alphaOf(style.borderTopColor)).toBe(0);
     expect(alphaOf(style.borderBottomColor)).toBe(0);
 
+    // e3 wrap elevation. onmars v2 sets the secondary effect to a transparent
+    // zero layer, so the highlight layer carries no inset.
     expect(style.boxShadow).toContain('0px 12px 28px');
-    expect(style.boxShadow).not.toContain('inset');
+    expect(getComputedStyle(tooltip, '::before').boxShadow).not.toContain('inset');
 
     // Caret-depth offset: 8px trigger-to-card distance (top placement).
     const triggerRect = trigger.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
     expect(Math.round(triggerRect.top - tooltipRect.bottom)).toBe(8);
+  });
+
+  it('S9 keeps the bubble elevation with component effect shadows disabled (#349)', async () => {
+    const { host, trigger } = await mount({
+      style: { marginBlockStart: '160px', marginInlineStart: '160px' },
+    });
+    disableComponentEffectShadows(host);
+
+    await hoverTrigger(host, trigger);
+
+    // The onmars v2 bubble elevation (e3) survives the disabled effects.
+    expect(getComputedStyle(requireTooltip(host)).boxShadow).toContain('0px 12px 28px');
   });
 
   it('S11 start placement renders on the right side under RTL', async () => {

@@ -9,6 +9,7 @@ import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-status.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { disableComponentEffectShadows } from './flat-effects';
 
 type KiStatusElement = HTMLElement & { tone: string; ring: boolean; label?: string };
 
@@ -218,6 +219,17 @@ describe('ki-status', () => {
     expect(dotOf(el).getBoundingClientRect().width).toBe(
       dotOf(plain).getBoundingClientRect().width,
     );
+  });
+
+  it('S4 keeps the separating ring with the dot and component effect shadows disabled (#349)', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Online', tone: 'success', ring: '' });
+    disableComponentEffectShadows(el);
+    el.style.setProperty('--ki-status-shadow', 'none');
+
+    await motionSettled(el);
+
+    expect(getComputedStyle(dotOf(el)).boxShadow).toMatch(/0px 0px 0px [1-9][\d.]*px/u);
   });
 
   it('S5 adds no keyboard stop between two buttons', async () => {

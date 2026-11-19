@@ -30,12 +30,12 @@
     {
       "name": "onmars tokens stylesheet",
       "path": "dist/css/tokens.css",
-      "limit": "11 KB"
+      "limit": "11.6 KB"
     },
     {
       "name": "material3 tokens stylesheet",
       "path": "dist/css/tokens.material3.css",
-      "limit": "5 KB"
+      "limit": "5.3 KB"
     },
     {
       "name": "page contract stylesheet",
