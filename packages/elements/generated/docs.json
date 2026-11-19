@@ -7927,6 +7927,16 @@
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
     },
+    "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
+      "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-note/ki-note.icons.ts"
+    },
+    "src/components/ki-note/ki-note.tsx::KiNoteSize": {
+      "declaration": "export type KiNoteSize = 'sm' | 'md';",
+      "docstring": "",
+      "path": "src/components/ki-note/ki-note.tsx"
+    },
     "src/components/ki-progress/ki-progress.tsx::KiProgressShape": {
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",
       "docstring": "",
@@ -7996,16 +8006,6 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
-    },
-    "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
-      "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",
-      "docstring": "",
-      "path": "src/components/ki-note/ki-note.icons.ts"
-    },
-    "src/components/ki-note/ki-note.tsx::KiNoteSize": {
-      "declaration": "export type KiNoteSize = 'sm' | 'md';",
-      "docstring": "",
-      "path": "src/components/ki-note/ki-note.tsx"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",
