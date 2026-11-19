@@ -1,9 +1,7 @@
 # Migrate off deprecated tokens
 
-Some published `--ki-*` tokens are painted by no component. They stay in the
-stylesheets with their values, so an override you wrote still applies, but
-they are deprecated and will be removed. Each one names the token that
-replaces it.
+Deprecated `--ki-*` tokens stay in the stylesheets with their values until
+the scheduled removal. Each one names the token that replaces it.
 
 ## Where you see a deprecation
 
@@ -40,8 +38,7 @@ reaches the removal version while still shipping the token.
 
 Replace each deprecated name with its replacement wherever you set or read
 it. The renames are mechanical: a search and replace over the *Deprecated
-tokens* table is enough. The tokens deprecated in 0.1.0 follow five rules,
-where `{variant}` is `primary`, `secondary`, `tertiary`, `quaternary` or
+tokens* table is enough. The original 0.1.0 deprecations follow the rules below, where `{variant}` is `primary`, `secondary`, `tertiary`, `quaternary` or
 `ghost`:
 
 | Deprecated | Use instead | Why |
@@ -53,9 +50,15 @@ where `{variant}` is `primary`, `secondary`, `tertiary`, `quaternary` or
 | `--ki-select-hover-bg` | `--ki-surface-hover-overlay-inverse` | On hover the trigger keeps its resting fill under the inverse hover overlay. |
 | `--ki-select-listbox-elevation` | `--ki-select-listbox-shadow` | The listbox shadow replaced the hand-composed elevation. |
 
-Setting a deprecated token changes nothing on screen today, because no
-component reads it. That is why it is going: the replacement is the property
-that actually restyles the component.
+### Backdrop blur lengths
+
+For `*-backdrop-blur` tokens, change both the name and value. For example,
+replace `--ki-button-backdrop-blur: 8px` with
+`--ki-button-backdrop-filter: blur(8px)`. Use `none` to turn off the effect.
+
+The deprecated lengths still drive the built-in glass defaults during the
+transition. A different complete filter takes precedence, including the
+`none` used by Material 3 and reduced transparency.
 
 ## For contributors
 
@@ -76,5 +79,6 @@ A deprecation is declared once, on the token's base definition in
 The stylesheet comment, the reference row and the snapshot facet are generated
 from it. The build rejects a deprecation without its reason, its schedule or
 a replacement that is a live published token, one declared on a group or in a
-theme overlay, and a component or token that still reads a deprecated token.
-The contract is `specs/041-token-deprecation`.
+theme overlay, and reads of a deprecated token outside the temporary backdrop
+compatibility bridge. The contracts are `specs/041-token-deprecation` and
+`specs/061-backdrop-filter-token`.

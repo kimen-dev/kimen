@@ -145,7 +145,7 @@ it('S4 keeps theme and component-local overrides of the old blur lengths', async
 
 it('S5 turns the filter off in a page that declares reduced transparency', async () => {
   themeDocument('onmars', 'light');
-  root.setAttribute('data-ki-transparency', 'reduced');
+  root.setAttribute('data-ki-transparency', 'reduce');
 
   expectFilters(await mountGlass(), 'none', 'none');
 });

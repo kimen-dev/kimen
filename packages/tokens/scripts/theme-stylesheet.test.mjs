@@ -343,14 +343,14 @@ test('S1 a deprecated declaration keeps its value and is annotated in both style
   assert.equal(base.replace(` ${ANNOTATION}`, ''), renderBaseStylesheet(declarations));
 });
 
-test('S1 the published sources mark the 85 dead component tokens and annotate them', async () => {
+test('S1 the published sources mark and annotate deprecated tokens', async () => {
   const dictionary = await new StyleDictionary({
     ...lightConfig,
     log: { verbosity: 'silent' },
   }).getPlatformTokens('css');
   const deprecations = collectDeprecations(dictionary.allTokens);
 
-  assert.equal(deprecations.size, 85);
+  assert.equal(deprecations.size, 92);
   const { reason, since, removal, replacement } = deprecations.get('--ki-input-focus-border') ?? {};
   assert.match(reason ?? '', /focus ring/u);
   assert.deepEqual(
@@ -366,7 +366,7 @@ test('S1 the published sources mark the 85 dead component tokens and annotate th
     css,
     new RegExp(`^  --ki-input-focus-border: [^;]+; ${ANNOTATION.replaceAll('*', '\\*')}$`, 'mu'),
   );
-  assert.equal(css.match(/\/\* deprecated since /gu)?.length, 85);
+  assert.equal(css.match(/\/\* deprecated since /gu)?.length, 92);
 });
 
 /** One composition's expressions, as build.mjs hands them to the renderer. */

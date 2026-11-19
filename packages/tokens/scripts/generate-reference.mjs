@@ -101,7 +101,7 @@ function renderDeprecatedSection(tokens) {
   return [
     '## Deprecated tokens',
     '',
-    'Still published with their values, painted by no component, and removed in the',
+    'Still published with their values and removed in the',
     'version shown. Replace each with the token beside it (spec 041; see',
     '`docs/migrations/deprecated-tokens.md`).',
     '',

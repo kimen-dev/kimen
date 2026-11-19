@@ -1064,7 +1064,25 @@
         "backdrop-blur": {
           "$type": "dimension",
           "$value": "{ki.blur.24}",
-          "$description": "MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate)."
+          "$description": "MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter.",
+          "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
+          "$extensions": {
+            "dev.kimen.deprecation": {
+              "since": "0.1.0",
+              "removal": "1.0.0",
+              "replacement": "--ki-effect-component-backdrop-filter"
+            }
+          }
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "blur({ki.effect.component.backdrop-blur})",
+          "$description": "Complete backdrop filter for glass components. Use none to turn the effect off."
+        },
+        "listbox-backdrop-filter": {
+          "$type": "other",
+          "$value": "blur({ki.blur.48})",
+          "$description": "Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off."
         },
         "primary": {
           "default": {
@@ -1080,7 +1098,7 @@
                 },
                 "{ki.shadow.inner.primary-default}"
               ],
-              "$description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow."
+              "$description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow."
             }
           },
           "hover": {
@@ -1110,7 +1128,7 @@
                 },
                 "{ki.shadow.inner.primary-hover}"
               ],
-              "$description": "MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+              "$description": "MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter."
             }
           }
         },
@@ -1128,7 +1146,7 @@
                 },
                 "{ki.shadow.inner.secondary-default}"
               ],
-              "$description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+              "$description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter."
             }
           },
           "hover": {
@@ -1158,7 +1176,7 @@
                 },
                 "{ki.shadow.inner.secondary-hover}"
               ],
-              "$description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+              "$description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with --ki-effect-component-backdrop-filter."
             }
           }
         }

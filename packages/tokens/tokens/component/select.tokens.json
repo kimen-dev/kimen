@@ -176,12 +176,25 @@
       "listbox": {
         "bg": {
           "$value": "{ki.surface.special.blur-base-light}",
-          "$description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with backdrop-filter blur(var(--ki-select-listbox-backdrop-blur)))."
+          "$description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter)."
         },
         "backdrop-blur": {
           "$value": "{ki.blur.48}",
           "$type": "dimension",
-          "$description": "backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override)."
+          "$description": "backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override).",
+          "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
+          "$extensions": {
+            "dev.kimen.deprecation": {
+              "since": "0.1.0",
+              "removal": "1.0.0",
+              "replacement": "--ki-select-listbox-backdrop-filter"
+            }
+          }
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.component.listbox-backdrop-filter}",
+          "$description": "Complete backdrop filter behind the select listbox."
         },
         "radius": {
           "$value": "{ki.radius.big-component.xs}",

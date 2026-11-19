@@ -13,15 +13,18 @@ compositor layers with the filter enabled and disabled.
 
 - **D1 — agent's choice, pending founder confirmation.** Keep the select
   listbox's 24px filter through its own semantic effect token. The other glass
-  surfaces use the shared 12px default. A flat theme can set both semantic
-  effects to `none`; a component override can choose its own complete value.
+  surfaces use the shared 12px default. A changed shared effect also reaches
+  the listbox while it uses its default, and a listbox override can choose its
+  own complete value.
 - **D2 — agent's choice, pending founder confirmation.** Expose independent
   tokens for the alert shell and dismiss button, and use the shared button
   surface token for the icon button. Checkbox and radio already render without
   a backdrop filter.
 - **D3 — agent's choice, pending founder confirmation.** Use the spec 041
   deprecation schedule, from 0.1.0 through the next major at 1.0.0. The old
-  lengths still drive the default blur via the token stylesheet.
+  lengths still drive the default glass effect through CSS style queries. A
+  full filter that differs from the built-in glass default takes precedence.
+  This includes the literal `none` in Material 3 and reduced transparency.
 
 ## Scenario Family Coverage
 

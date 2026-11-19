@@ -46,7 +46,6 @@
   --_ki-dialog-bg: var(--ki-dialog-bg);
   --_ki-dialog-bg-start: var(--ki-dialog-bg-start);
   --_ki-dialog-bg-end: var(--ki-dialog-bg-end);
-  --_ki-dialog-backdrop-blur: var(--ki-dialog-backdrop-blur);
   --_ki-dialog-fg: var(--ki-dialog-fg);
   --_ki-dialog-border: var(--ki-dialog-border);
   --_ki-dialog-shadow: var(--ki-dialog-shadow);
@@ -92,7 +91,7 @@
    * surface and the blur to 0, so the same paint stays theme-correct. */
   background: var(--_ki-dialog-bg);
   background: linear-gradient(180deg, var(--_ki-dialog-bg-start), var(--_ki-dialog-bg-end));
-  backdrop-filter: blur(var(--_ki-dialog-backdrop-blur));
+  backdrop-filter: var(--_ki-dialog-backdrop-filter, var(--ki-dialog-backdrop-filter));
   border: var(--_ki-dialog-border);
   border-radius: var(--_ki-dialog-radius);
   box-shadow: var(--_ki-dialog-shadow);
@@ -246,5 +245,12 @@ slot[name="footer"] {
   [part="dialog"] {
     background: Canvas;
     border: thin solid CanvasText;
+  }
+}
+
+/* Compatibility with the deprecated length while the full filter uses its default. */
+@container style(--ki-dialog-backdrop-filter: var(--_ki-backdrop-filter-default)) {
+  [part="dialog"] {
+    --_ki-dialog-backdrop-filter: blur(var(--ki-dialog-backdrop-blur));
   }
 }

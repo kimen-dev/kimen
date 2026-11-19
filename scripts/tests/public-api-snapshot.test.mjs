@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/317-321-loading-hint-touch.json',
+      '../../changes/api/342-backdrop-filter-token.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -590,11 +590,12 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // label hint ink and gap of the five field controls (ten), and the
   // touch-screen text size of ki-input and ki-textarea (two). The touch
   // density is published as its own context. 1223 + 24 = 1247.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1247);
+  // Issue #342 adds ten full-filter tokens: two semantic and eight component.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1257);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1247,
+    1257,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
@@ -627,7 +628,8 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // component leaves nothing reads published, each with deprecatedSince 0.1.0
   // and a replacement, so a later major can remove them.
   const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
-  assert.equal(deprecated.length, 85);
+  // Issue #342 also deprecates seven legacy backdrop blur lengths.
+  assert.equal(deprecated.length, 92);
   assert.ok(
     deprecated.every(
       ({ deprecatedSince, replacement }) => deprecatedSince === '0.1.0' && replacement,
