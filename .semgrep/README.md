@@ -98,7 +98,19 @@ every package it pulls in. Without it, uv takes whatever was published that
 morning. The 1.185.0 lock was generated on 2026-11-19, when that would have
 been a pydantic released the same day.
 
+The cutoff can also move a package back from the previous lock, if that lock
+took a release that was not a week old yet. That is the rule working, not a
+regression. The 1.168.0 lock was resolved without a cutoff, so the 1.185.0 one
+moved four packages to the release before: click-option-group 0.5.10 → 0.5.9
+on every Python, and on Python ≥ 3.11 bracex 3.2.3 → 3.2.2, pydantic-settings
+2.16.3 → 2.16.2 and python-multipart 0.0.34 → 0.0.33. Those newer versions
+came out between 2026-11-13 and 2026-11-16. Semgrep constrains none of them.
+
 Review the lock's diff as a dependency bump: it is the full list of what runs
 in the release job. The OSV scan in `.github/workflows/security.yml` reads this
 file too, so an advisory in any of these packages turns that scan red until it
-is upgraded or ignored with a reason in `osv-scanner.toml`.
+is upgraded or ignored with a reason in `.semgrep/osv-scanner.toml`. The scanner
+applies the config next to each lockfile, so the root `osv-scanner.toml` does
+not cover this one. Renovate leaves this file alone (`renovate.json`): it bumps
+one package at a time and never re-resolves the rest, so the lock moves only by
+regenerating it.

@@ -234,6 +234,44 @@ test('renovate never proposes a major for an override held to one major line', a
   assert.equal(effectiveEnabled(renovate, override('axios', 'major')), true, 'axios');
 });
 
+test('renovate leaves the hash-locked Semgrep lock to its regeneration command', async () => {
+  // .semgrep/requirements.txt is resolved as a whole from `semgrep==X` with uv
+  // and installed with --no-deps (.semgrep/README.md). Renovate bumps one of
+  // its packages at a time and re-resolves nothing else: #314 moved
+  // opentelemetry-api without the opentelemetry-sdk that pins it, which broke
+  // the hash-locked install, and #313 proposed mcp 1.30.0 against the
+  // `mcp==1.29.0` Semgrep declares. Security fixes included, the lock moves
+  // only by regenerating it; an advisory in it surfaces through the OSV scan
+  // and the expiring ignores in .semgrep/osv-scanner.toml.
+  const renovate = await readFile(new URL('renovate.json', repositoryRoot), 'utf8').then(
+    JSON.parse,
+  );
+  const lockEntry = (depName, updateType) => ({
+    depName,
+    packageFile: '.semgrep/requirements.txt',
+    updateType,
+  });
+  for (const depName of ['semgrep', 'mcp', 'opentelemetry-api', 'pyjwt', 'python-multipart']) {
+    for (const updateType of ['patch', 'minor', 'major']) {
+      assert.equal(
+        effectiveEnabled(renovate, lockEntry(depName, updateType)),
+        false,
+        `${depName} ${updateType}`,
+      );
+    }
+  }
+  // Scoped to that one file: the same name anywhere else still gets updates.
+  assert.equal(
+    effectiveEnabled(renovate, {
+      depName: 'mcp',
+      depType: 'dependencies',
+      packageFile: 'package.json',
+      updateType: 'minor',
+    }),
+    true,
+  );
+});
+
 function effectiveRangeStrategy(renovate, dependency) {
   // packageRules apply in order and a later match overrides an earlier one.
   let strategy = renovate.rangeStrategy ?? 'auto';
