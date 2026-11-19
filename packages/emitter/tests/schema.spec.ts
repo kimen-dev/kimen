@@ -1,4 +1,6 @@
 // @spec:033-emitter-kit
+// @spec:002-ki-button
+// @spec:022-ki-icon-button
 // Schema derivation (S1-S5, S10-S12, S15-S19): the catalog-specialized JSON
 // Schema behaves under an independent oracle (ajv, draft 2020-12) exactly
 // as the contract promises, deterministically, with provider lowerings
