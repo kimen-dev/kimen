@@ -1,0 +1,5 @@
+<%= specMarker %>
+import { it } from 'vitest';
+
+// TODO(spec): add a pure-helper unit test if the approved behavior uses one.
+it.todo('S1: replace with a pure behavior assertion when applicable');

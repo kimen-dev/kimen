@@ -1,4 +1,5 @@
 // @spec:018-project-integrity-hardening#S12
+// @spec:068-component-discovery
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
@@ -9,7 +10,7 @@ const componentGenerator = require('./generator.js');
 const tag = 'ki-avatar';
 const feature = '018-project-integrity-hardening';
 const componentRoot = `packages/elements/src/components/${tag}`;
-const browserSpec = `packages/elements/browser-tests/${tag}.browser.spec.ts`;
+const browserSpec = `${componentRoot}/${tag}.browser.spec.ts`;
 const tokenSource = 'packages/tokens/tokens/component/avatar.tokens.json';
 const legacyRoot = [
   "export { KiButton } from './components/ki-button/ki-button.js';",
@@ -71,6 +72,61 @@ test('S12 scaffolds a described component-token source consumed by ki-avatar CSS
   assert.match(avatarTokens, /"\$value":"\{ki\.[^"]+\}"/u);
   assert.match(avatarTokens, /"\$description":"[^"]+"/u);
   assert.match(tree.read(`${componentRoot}/${tag}.css`, 'utf8'), /var\(--ki-avatar-/u);
+});
+
+test('S5 scaffolds the complete component folder and both token themes without editing shared files', async () => {
+  const tree = createTreeWithEmptyWorkspace();
+  for (const path of [
+    'packages/elements/src/index.ts',
+    'packages/elements/browser-tests/all-components.ts',
+    'packages/elements/package.json',
+    'site/docs/src/components/Demo.astro',
+  ]) {
+    tree.write(path, 'existing');
+  }
+  const existing = new Map(tree.listChanges().map(({ path }) => [path, tree.read(path, 'utf8')]));
+
+  await componentGenerator(tree, { name: tag });
+
+  const created = tree
+    .listChanges()
+    .map(({ path }) => path)
+    .filter((path) => !existing.has(path));
+  assert.deepEqual(
+    created.sort(),
+    [
+      ...[
+        `${tag}.browser.spec.ts`,
+        `${tag}.css`,
+        `${tag}.spec.ts`,
+        `${tag}.stories.tsx`,
+        `${tag}.tsx`,
+        `${tag}.visual.browser.spec.ts`,
+        `${tag}.visual.dark.browser.spec.ts`,
+        'component.json',
+        'docs/site.mdx',
+        'docs/storybook.mdx',
+        'gallery.ts',
+        'usage/examples.md',
+      ].map((path) => `${componentRoot}/${path}`),
+      'packages/tokens/tokens/component/avatar.material3.tokens.json',
+      tokenSource,
+    ].sort(),
+  );
+  for (const [path, content] of existing) {
+    assert.equal(tree.read(path, 'utf8'), content);
+  }
+  assert.deepEqual(JSON.parse(tree.read(`${componentRoot}/component.json`, 'utf8')), {
+    barePage: { keyboardPressed: false },
+    pointer: { hoverWitness: false },
+  });
+  const markup = `<${tag} label="Example"></${tag}>`;
+  for (const path of ['gallery.ts', 'docs/site.mdx', 'docs/storybook.mdx', 'usage/examples.md']) {
+    assert.ok(
+      tree.read(`${componentRoot}/${path}`, 'utf8').includes(markup),
+      `${path} has live markup`,
+    );
+  }
 });
 
 test('S12 scaffolds a host stylesheet that hands the hidden attribute back', async () => {

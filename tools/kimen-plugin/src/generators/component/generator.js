@@ -1,10 +1,7 @@
 /**
  * Kimen component generator (constitution Art. X: deterministic scaffolding).
- * A component is born with every gate wired: tokens-only CSS, a real-browser
- * + axe spec, and a component-token source. No simulated-DOM spec is
- * scaffolded: component behavior is asserted in a real browser (Art. III), and
- * pure helpers get their own node `*.spec.ts` when they appear. Direct package
- * subpaths and every generated surface derive from component source.
+ * Component files live together, with separate token sources for both themes.
+ * Gate, docs and package registration derive from those inputs.
  */
 const path = require('node:path');
 const { generateFiles, logger, names } = require('@nx/devkit');
@@ -17,47 +14,40 @@ module.exports = async function componentGenerator(tree, options) {
     throw new Error(`Component tag must match ki-<lowercase> (got "${name}")`);
   }
   const dir = `packages/elements/src/components/${name}`;
-  if (tree.exists(`${dir}/${name}.tsx`)) {
+  if (tree.children(dir).length > 0) {
     throw new Error(`${dir} already exists: components are never overwritten`);
+  }
+  const tokenName = name.slice(3);
+  const tokenDir = 'packages/tokens/tokens/component';
+  for (const suffix of ['tokens.json', 'material3.tokens.json']) {
+    const tokenPath = `${tokenDir}/${tokenName}.${suffix}`;
+    if (tree.exists(tokenPath)) {
+      throw new Error(`${tokenPath} already exists: component tokens are never overwritten`);
+    }
   }
 
   // Traceability marker (Art. II): tests declare the feature they trace with
   // a file-level `// @spec:<feature-dir>` marker (scripts/gates/check-traceability.sh).
   const specMarker = options.spec
     ? `// @spec:${options.spec}`
-    : "// TODO(spec): add '// @spec:<feature-dir>' when the approved feature exists (Art. II).";
+    : '// TODO(spec): add a marker such as @spec:NNN-ki-name for the approved feature (Art. II).';
 
   const substitutions = {
     name,
     className: names(name).className,
-    tokenName: name.slice(3),
+    tokenName,
     specMarker,
     tmpl: '',
   };
   generateFiles(tree, path.join(__dirname, 'files'), dir, substitutions);
-  // Browser specs live OUTSIDE src/: they import dist output, which Stencil
-  // must never try to compile (and a fresh clone has no dist yet).
-  generateFiles(
-    tree,
-    path.join(__dirname, 'files-browser'),
-    'packages/elements/browser-tests',
-    substitutions,
-  );
-  generateFiles(
-    tree,
-    path.join(__dirname, 'files-token'),
-    'packages/tokens/tokens/component',
-    substitutions,
-  );
+  generateFiles(tree, path.join(__dirname, 'files-token'), tokenDir, substitutions);
 
   return () => {
     logger.info(`Component ${name} scaffolded. Next steps:`);
     logger.info(
-      '  1. pnpm exec nx run @kimen/elements:build && pnpm run format  (derives direct exports, budgets and machine surfaces, then formats them)',
+      '  1. Replace TODO(spec) with the approved component contract and its scenario tests.',
     );
-    logger.info(
-      '  2. Replace every TODO(spec) with content from the APPROVED spec (Art. II: no behavior without a spec).',
-    );
-    logger.info('  3. bash scripts/gates/gates-suite.sh');
+    logger.info('  2. Update the component fixtures, stories, docs and both theme token sources.');
+    logger.info('  3. pnpm regen && bash scripts/gates/gates-suite.sh');
   };
 };

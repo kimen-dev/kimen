@@ -61,11 +61,12 @@ function simulatedExecutor({ manifestTag = tag, tarballCount = 1 } = {}) {
   const calls = [];
   const execute = (command, args, { cwd, env }) => {
     calls.push({ command, args, cwd, env });
-    if (args.includes('@kimen/nx-plugin:component')) {
+    if (args[0] === 'component:new') {
       expect(lstatSync(join(cwd, 'node_modules')).isSymbolicLink()).toBe(true);
       putSync(join(cwd, `packages/elements/src/components/${tag}/${tag}.tsx`));
-      putSync(join(cwd, `packages/elements/browser-tests/${tag}.browser.spec.ts`));
+      putSync(join(cwd, `packages/elements/src/components/${tag}/${tag}.browser.spec.ts`));
       putSync(join(cwd, 'packages/tokens/tokens/component/avatar.tokens.json'), '{}\n');
+      putSync(join(cwd, 'packages/tokens/tokens/component/avatar.material3.tokens.json'), '{}\n');
     }
     if (args.includes('@kimen/elements:build')) {
       putSync(

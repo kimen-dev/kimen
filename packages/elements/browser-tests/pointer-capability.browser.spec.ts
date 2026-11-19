@@ -45,39 +45,9 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 
-import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
-import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
-import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
-import { defineCustomElement as defineKiBadge } from '../dist/components/ki-badge.js';
-import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
-import { defineCustomElement as defineKiCard } from '../dist/components/ki-card.js';
-import { defineCustomElement as defineKiCheckbox } from '../dist/components/ki-checkbox.js';
-import { defineCustomElement as defineKiDialog } from '../dist/components/ki-dialog.js';
-import { defineCustomElement as defineKiDivider } from '../dist/components/ki-divider.js';
-import { defineCustomElement as defineKiIconButton } from '../dist/components/ki-icon-button.js';
-import { defineCustomElement as defineKiIndicator } from '../dist/components/ki-indicator.js';
-import { defineCustomElement as defineKiInput } from '../dist/components/ki-input.js';
-import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
-import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
-import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
-import { defineCustomElement as defineKiProgress } from '../dist/components/ki-progress.js';
-import { defineCustomElement as defineKiQr } from '../dist/components/ki-qr.js';
-import { defineCustomElement as defineKiRadio } from '../dist/components/ki-radio.js';
-import { defineCustomElement as defineKiRadioGroup } from '../dist/components/ki-radio-group.js';
-import { defineCustomElement as defineKiScroller } from '../dist/components/ki-scroller.js';
-import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
-import { defineCustomElement as defineKiStatus } from '../dist/components/ki-status.js';
-import { defineCustomElement as defineKiSwitch } from '../dist/components/ki-switch.js';
-import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js';
-import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-tab-panel.js';
-import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
-import { defineCustomElement as defineKiTextarea } from '../dist/components/ki-textarea.js';
-import { defineCustomElement as defineKiToast } from '../dist/components/ki-toast.js';
-import { defineCustomElement as defineKiToaster } from '../dist/components/ki-toaster.js';
-import { defineCustomElement as defineKiTooltip } from '../dist/components/ki-tooltip.js';
-import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
-import { visualGalleries } from './visual/galleries';
+import { componentTags, defineAllComponents } from './all-components';
 import type { VisualComponent } from './visual/galleries';
+import { fixtureFor } from './visual/galleries';
 
 const browserCommands = commands as unknown as {
   emulateHoverCapability: (capability: 'hover' | 'none' | null) => Promise<boolean>;
@@ -123,42 +93,6 @@ const ENGINE = navigator.userAgent;
 // fires. The first version of this line skipped the whole measurement on the
 // engine it was written for, and the assertion below is what said so.
 const CDP_ENGINE = ENGINE.includes('Chrome/');
-
-const defineAll: readonly (() => void)[] = [
-  defineKiAlert,
-  defineKiAvatar,
-  defineKiAvatarGroup,
-  defineKiBadge,
-  defineKiButton,
-  defineKiCard,
-  defineKiCheckbox,
-  defineKiDialog,
-  defineKiDivider,
-  defineKiIconButton,
-  defineKiIndicator,
-  defineKiInput,
-  defineKiList,
-  defineKiListItem,
-  defineKiOption,
-  defineKiProgress,
-  defineKiQr,
-  defineKiRadio,
-  defineKiRadioGroup,
-  defineKiScroller,
-  defineKiSelect,
-  defineKiStatus,
-  defineKiSwitch,
-  defineKiTab,
-  defineKiTabPanel,
-  defineKiTabs,
-  defineKiTextarea,
-  defineKiToast,
-  defineKiToaster,
-  defineKiTooltip,
-  defineKiVideo,
-];
-
-const components = Object.keys(visualGalleries) as VisualComponent[];
 
 async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -221,10 +155,11 @@ async function mount(component: VisualComponent): Promise<HTMLElement> {
   ensureStyles();
   const gallery = document.createElement('div');
   gallery.id = 'pointer-capability-gallery';
-  gallery.innerHTML = visualGalleries[component].html;
+  const fixture = fixtureFor(component).gallery;
+  gallery.innerHTML = fixture.html;
   document.body.append(gallery);
   await waitForShadowRender(gallery);
-  await visualGalleries[component].prepare?.(gallery);
+  await fixture.prepare?.(gallery);
   await nextFrame();
   return gallery;
 }
@@ -526,9 +461,7 @@ async function witnessDelivers(): Promise<boolean> {
 }
 
 beforeAll(() => {
-  for (const define of defineAll) {
-    define();
-  }
+  defineAllComponents();
 });
 
 // This apparatus is loud, and none of it is scoped to this file. The emulation
@@ -550,7 +483,7 @@ afterAll(() => {
 });
 
 describe('hover capability audit', () => {
-  it.each(components)('%s gates every hover rule on a hovering pointer', async (component) => {
+  it.each(componentTags)('%s gates every hover rule on a hovering pointer', async (component) => {
     const gallery = await mount(component);
     const ungated = shadowHosts(gallery)
       .flatMap((host) => hoverRulesOf(host))
@@ -567,7 +500,7 @@ describe('hover capability audit', () => {
   // edit over contiguous blocks, and a block that ends one rule too late takes
   // a rest or disabled style out of every touch device's stylesheet — a defect
   // no hover test would ever see.
-  it.each(components)('%s puts nothing but hover behind the hover query', async (component) => {
+  it.each(componentTags)('%s puts nothing but hover behind the hover query', async (component) => {
     const gallery = await mount(component);
     const stranded = shadowHosts(gallery)
       .flatMap((host) => styleRulesOf(host))
@@ -618,21 +551,25 @@ describe('hover capability measurement', () => {
   // a mouse, hover MUST repaint; where it cannot be one at all, hover must NOT.
   // Only the first of those is a statement about mouse users, so on an engine
   // with no pointer (headless Linux) that half is carried by the audit alone.
-  it.skipIf(!CDP_ENGINE)('leaves hover working for a pointer that has it', async () => {
-    const hovering = await settleHoverCapability('hover');
-    const gallery = await mount('ki-button');
-    const { subjects } = measurementPlan(gallery);
-    const { repainting, unreached } = await repaintingSubjects(gallery, subjects);
-    expect(unreached).toEqual([]);
-    expect(
-      repainting.length > 0,
-      hovering
-        ? 'no ki-button hover repainted for a mouse user: hover is not gated, it is gone'
-        : 'this engine could not be made a mouse, and ki-button repainted on hover anyway: the gate is not holding',
-    ).toBe(hovering);
-  });
+  const hoverWitnesses = componentTags.filter((tag) => fixtureFor(tag).pointer.hoverWitness);
+  it.skipIf(!CDP_ENGINE).each(hoverWitnesses)(
+    '%s leaves hover working for a pointer that has it',
+    async (component) => {
+      const hovering = await settleHoverCapability('hover');
+      const gallery = await mount(component);
+      const { subjects } = measurementPlan(gallery);
+      const { repainting, unreached } = await repaintingSubjects(gallery, subjects);
+      expect(unreached).toEqual([]);
+      expect(
+        repainting.length > 0,
+        hovering
+          ? `no ${component} hover repainted for a mouse user: hover is not gated, it is gone`
+          : `this engine could not be made a mouse, and ${component} repainted on hover anyway: the gate is not holding`,
+      ).toBe(hovering);
+    },
+  );
 
-  it.skipIf(!CDP_ENGINE).each(components)(
+  it.skipIf(!CDP_ENGINE).each(componentTags)(
     '%s paints no hover on a device without one',
     async (component) => {
       try {

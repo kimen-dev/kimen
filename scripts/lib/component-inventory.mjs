@@ -3,7 +3,11 @@ import { join, relative, resolve, sep } from 'node:path';
 
 import ts from 'typescript';
 
-const COMPONENT_TAG = /^ki-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+import {
+  COMPONENT_TAG,
+  readComponentMetadata,
+} from '../../packages/elements/scripts/component-metadata.mjs';
+
 const COMPONENT_WILDCARD = './ki-*';
 const WILDCARD_TARGET = Object.freeze({
   types: './dist/components/ki-*.d.ts',
@@ -119,6 +123,26 @@ const assertRegularFile = async (filePath, label, tag) => {
     }
     throw new Error(`Missing ${label} for ${tag}: ${filePath}`, { cause: error });
   }
+};
+
+const selectBrowserSpec = async (local, legacy, tag) => {
+  const exists = async (path) =>
+    stat(path).then(
+      (details) => {
+        if (!details.isFile()) throw new Error(`Browser spec is not a regular file: ${path}`);
+        return true;
+      },
+      (error) => {
+        if (error.code !== 'ENOENT') throw error;
+        return false;
+      },
+    );
+  const [hasLocal, hasLegacy] = await Promise.all([exists(local), exists(legacy)]);
+  if (hasLocal && hasLegacy) throw new Error(`Duplicate browser specs for ${tag}`);
+  if (!hasLocal && !hasLegacy) {
+    throw new Error(`Missing browser spec for ${tag}: ${local} or ${legacy}`);
+  }
+  return hasLocal ? local : legacy;
 };
 
 const parseSourceFile = (fileName, sourceText, scriptKind) => {
@@ -253,6 +277,7 @@ export async function discoverComponents({ workspaceRoot }) {
     }
     const componentRoot = join(componentsRoot, tag);
     const sourcePath = join(componentRoot, `${tag}.tsx`);
+    const localBrowserSpec = join(componentRoot, `${tag}.browser.spec.ts`);
     const browserSpecPath = join(
       absoluteWorkspaceRoot,
       'packages/elements/browser-tests',
@@ -260,15 +285,17 @@ export async function discoverComponents({ workspaceRoot }) {
     );
 
     await assertRegularFile(sourcePath, 'source module', tag);
-    await assertRegularFile(browserSpecPath, 'browser spec', tag);
-
     const sourceModule = toRepositoryPath(absoluteWorkspaceRoot, sourcePath);
     const className = inspectComponentSource(await readFile(sourcePath, 'utf8'), sourceModule, tag);
+    const browserSpec = await selectBrowserSpec(localBrowserSpec, browserSpecPath, tag);
+    await assertRegularFile(join(componentRoot, 'gallery.ts'), 'gallery', tag);
+    const metadata = readComponentMetadata(componentRoot, tag);
     components.push({
       tag,
       className,
       sourceModule,
-      browserSpec: toRepositoryPath(absoluteWorkspaceRoot, browserSpecPath),
+      browserSpec: toRepositoryPath(absoluteWorkspaceRoot, browserSpec),
+      metadata,
       distModule: `./dist/components/${tag}.js`,
       publicSubpath: `./${tag}`,
     });
@@ -386,45 +413,24 @@ const tokenSourcesFor = async (workspaceRoot, tokenSlug, tag) => {
   return tokenSources;
 };
 
-export async function readBudgetGroups({ workspaceRoot }) {
-  const absoluteWorkspaceRoot = resolve(workspaceRoot);
-  const path = join(absoluteWorkspaceRoot, 'packages/elements/size-limit/groups.json');
-  const document = await readJson(path, 'component budget groups');
-  if (!isPlainRecord(document) || document.schemaVersion !== 1 || !Array.isArray(document.groups)) {
-    throw new Error('Component budget groups must use schemaVersion 1 and a groups array');
-  }
-
-  const ids = new Set();
+export function resolveBudgetGroups(components) {
+  const tags = new Set(components.map(({ tag }) => tag));
   const members = new Set();
-  const groups = document.groups.map((group) => {
-    if (
-      !isPlainRecord(group) ||
-      typeof group.id !== 'string' ||
-      !COMPONENT_TAG.test(group.id) ||
-      !Array.isArray(group.members) ||
-      group.members.length < 2
-    ) {
-      throw new Error('Each component budget group needs a ki-* id and at least two members');
-    }
-    if (ids.has(group.id)) {
-      throw new Error(`Duplicate component budget group: ${group.id}`);
-    }
-    ids.add(group.id);
-    const groupMembers = group.members.map((member) => {
-      if (typeof member !== 'string' || !COMPONENT_TAG.test(member)) {
-        throw new Error(`Invalid component budget member in ${group.id}`);
+  const groups = [];
+  for (const { tag, metadata } of components) {
+    const budgetGroup = metadata?.budgetGroup;
+    if (!budgetGroup) continue;
+    for (const member of budgetGroup.members) {
+      if (!tags.has(member)) {
+        throw new Error(`Budget group ${tag} references unknown component ${member}`);
       }
       if (members.has(member)) {
         throw new Error(`Component belongs to more than one budget group: ${member}`);
       }
       members.add(member);
-      return member;
-    });
-    if (new Set(groupMembers).size !== groupMembers.length) {
-      throw new Error(`Component belongs to more than one budget group: ${group.id}`);
     }
-    return { id: group.id, members: groupMembers };
-  });
+    groups.push({ id: tag, members: budgetGroup.members });
+  }
   return groups.sort((left, right) => compareText(left.id, right.id));
 }
 
@@ -435,18 +441,9 @@ export async function readBudgetGroups({ workspaceRoot }) {
 export async function discoverComponentInventory({ workspaceRoot }) {
   const absoluteWorkspaceRoot = resolve(workspaceRoot);
   const components = await discoverComponents({ workspaceRoot: absoluteWorkspaceRoot });
-  const groups = await readBudgetGroups({ workspaceRoot: absoluteWorkspaceRoot });
-  const knownTags = new Set(components.map(({ tag }) => tag));
-  const budgetByTag = new Map();
-
-  for (const group of groups) {
-    for (const tag of group.members) {
-      if (!knownTags.has(tag)) {
-        throw new Error(`Budget group ${group.id} references unknown component ${tag}`);
-      }
-      budgetByTag.set(tag, group.id);
-    }
-  }
+  const budgetByTag = new Map(
+    resolveBudgetGroups(components).flatMap(({ id, members }) => members.map((tag) => [tag, id])),
+  );
 
   return Promise.all(
     components.map(async (component) => {

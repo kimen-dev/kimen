@@ -1,23 +1,8 @@
 // @spec:038-mcp-server
 // The binary is reproducible and budgeted (spec 038 D8, Constitutional
-// Surface): a fresh build is byte-identical to the shipped file, and the file
-// stays within its size budget — set about 5% above the size measured on
-// 2026-11-16 (2,295,989 bytes raw, 433,018 gzip, 327,929 brotli), most of it
-// the MCP Apps surface document, the SDK and the catalog's validator.
-// Raw and gzip re-based for issues #317-#321 (button loading, field label
-// hint, touch density, touch-size field text, all carried by the surface
-// document and the manifest), when the binary measured 2,421,589 raw, 458,775
-// gzip and 341,942 brotli: 11,589 and 3,775 bytes over the old raw and gzip
-// lines. Both move to about 5% above; brotli is still inside its line.
-// Brotli re-based for issue #316 (size axes of nine components, spec 050),
-// when the binary measured 2,504,793 raw, 466,471 gzip and 347,334 brotli
-// (on top of #349): 2,334 bytes over the old brotli line, which moves to
-// about 5% above; raw and gzip are still inside theirs.
-// Raw re-based for spec 049 (ki-toast and ki-toaster) on top of #316 and
-// #428, with the founder's approval, when the binary measured 2,543,801 raw,
-// 475,961 gzip and 353,013 brotli: 801 bytes over the old raw line, which
-// moves to about 5% above; gzip and brotli are still inside theirs.
-import { spawnSync } from 'node:child_process';
+// Surface): a fresh build is byte-identical to the shipped file and stays
+// within the whole-binary limits for raw, gzip and brotli bytes.
+import { execFileSync, spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { brotliCompressSync, gzipSync } from 'node:zlib';
@@ -26,14 +11,12 @@ import { describe, expect, it } from 'vitest';
 
 import { BUNDLE, PACKAGE } from './harness.js';
 
-// When a limit is exceeded, merge main, run pnpm regen and rebuild the MCP
-// bundle. For expected growth, get founder approval and rebase only the
-// exceeded limit on the merged measurement with about 5% headroom.
-const BUDGET = {
-  brotli: 364_000,
-  gzip: 482_000,
-  raw: 2_671_000,
-};
+const budgetScript = fileURLToPath(
+  new URL('../../../scripts/lib/bundle-size-budget.mjs', import.meta.url),
+);
+const { mcpServer: BUDGET } = JSON.parse(
+  execFileSync(process.execPath, [budgetScript], { encoding: 'utf8' }),
+) as { mcpServer: Record<'raw' | 'gzip' | 'brotli', number> };
 
 describe('Kimen MCP server: the shipped binary (038 S16)', () => {
   it('S16: a fresh build is byte-identical to the shipped binary', () => {

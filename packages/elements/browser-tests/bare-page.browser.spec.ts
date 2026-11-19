@@ -18,39 +18,9 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 
-import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
-import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
-import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
-import { defineCustomElement as defineKiBadge } from '../dist/components/ki-badge.js';
-import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
-import { defineCustomElement as defineKiCard } from '../dist/components/ki-card.js';
-import { defineCustomElement as defineKiCheckbox } from '../dist/components/ki-checkbox.js';
-import { defineCustomElement as defineKiDialog } from '../dist/components/ki-dialog.js';
-import { defineCustomElement as defineKiDivider } from '../dist/components/ki-divider.js';
-import { defineCustomElement as defineKiIconButton } from '../dist/components/ki-icon-button.js';
-import { defineCustomElement as defineKiIndicator } from '../dist/components/ki-indicator.js';
-import { defineCustomElement as defineKiInput } from '../dist/components/ki-input.js';
-import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
-import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
-import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
-import { defineCustomElement as defineKiProgress } from '../dist/components/ki-progress.js';
-import { defineCustomElement as defineKiQr } from '../dist/components/ki-qr.js';
-import { defineCustomElement as defineKiRadio } from '../dist/components/ki-radio.js';
-import { defineCustomElement as defineKiRadioGroup } from '../dist/components/ki-radio-group.js';
-import { defineCustomElement as defineKiScroller } from '../dist/components/ki-scroller.js';
-import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
-import { defineCustomElement as defineKiStatus } from '../dist/components/ki-status.js';
-import { defineCustomElement as defineKiSwitch } from '../dist/components/ki-switch.js';
-import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js';
-import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-tab-panel.js';
-import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
-import { defineCustomElement as defineKiTextarea } from '../dist/components/ki-textarea.js';
-import { defineCustomElement as defineKiToast } from '../dist/components/ki-toast.js';
-import { defineCustomElement as defineKiToaster } from '../dist/components/ki-toaster.js';
-import { defineCustomElement as defineKiTooltip } from '../dist/components/ki-tooltip.js';
-import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
-import { visualGalleries } from './visual/galleries';
+import { componentTags, defineAllComponents } from './all-components';
 import type { VisualComponent } from './visual/galleries';
+import { fixtureFor } from './visual/galleries';
 
 const TEXT_MIN_RATIO = 4.5;
 const browserCommands = commands as unknown as {
@@ -60,42 +30,6 @@ const browserCommands = commands as unknown as {
 
 const TOKENS_STYLE_ID = 'bare-page-tokens';
 const SHADOW_RENDER_DEADLINE_MS = 1500;
-
-const defineAll: readonly (() => void)[] = [
-  defineKiAlert,
-  defineKiAvatar,
-  defineKiAvatarGroup,
-  defineKiBadge,
-  defineKiButton,
-  defineKiCard,
-  defineKiCheckbox,
-  defineKiDialog,
-  defineKiDivider,
-  defineKiIconButton,
-  defineKiIndicator,
-  defineKiInput,
-  defineKiList,
-  defineKiListItem,
-  defineKiOption,
-  defineKiProgress,
-  defineKiQr,
-  defineKiRadio,
-  defineKiRadioGroup,
-  defineKiScroller,
-  defineKiSelect,
-  defineKiStatus,
-  defineKiSwitch,
-  defineKiTab,
-  defineKiTabPanel,
-  defineKiTabs,
-  defineKiTextarea,
-  defineKiToast,
-  defineKiToaster,
-  defineKiTooltip,
-  defineKiVideo,
-];
-
-const components = Object.keys(visualGalleries) as VisualComponent[];
 
 /**
  * The typeface a consumer is entitled to: the one a Kimen page shows once it
@@ -326,7 +260,7 @@ async function mountBare(component: VisualComponent): Promise<HTMLElement> {
     style.textContent = tokensCss;
     document.head.append(style);
   }
-  const gallery = visualGalleries[component];
+  const gallery = fixtureFor(component).gallery;
   const wrapper = document.createElement('div');
   wrapper.innerHTML = gallery.html;
   document.body.append(wrapper);
@@ -337,9 +271,7 @@ async function mountBare(component: VisualComponent): Promise<HTMLElement> {
 }
 
 beforeAll(async () => {
-  for (const define of defineAll) {
-    define();
-  }
+  defineAllComponents();
   await browserCommands.emulateReducedMotion('reduce');
 });
 
@@ -348,25 +280,28 @@ afterAll(async () => {
 });
 
 describe('bare-page typography contract', () => {
-  it.each(components)('%s uses the page-contract typeface on its own host', async (component) => {
-    const wrapper = await mountBare(component);
-    const expected = normalizeFamily(expectedFontFamily());
-    expect(expected, 'the token stylesheet must publish a body family').not.toBe('');
+  it.each(componentTags)(
+    '%s uses the page-contract typeface on its own host',
+    async (component) => {
+      const wrapper = await mountBare(component);
+      const expected = normalizeFamily(expectedFontFamily());
+      expect(expected, 'the token stylesheet must publish a body family').not.toBe('');
 
-    const offenders = shadowHosts(wrapper)
-      .filter((host) => normalizeFamily(getComputedStyle(host).fontFamily) !== expected)
-      .map((host) => `${host.tagName.toLowerCase()}: ${getComputedStyle(host).fontFamily}`);
+      const offenders = shadowHosts(wrapper)
+        .filter((host) => normalizeFamily(getComputedStyle(host).fontFamily) !== expected)
+        .map((host) => `${host.tagName.toLowerCase()}: ${getComputedStyle(host).fontFamily}`);
 
-    expect(
-      [...new Set(offenders)],
-      `${component} inherits the user agent typeface on a bare page; it must declare font-family on :host from a --ki-* token`,
-    ).toEqual([]);
-  });
+      expect(
+        [...new Set(offenders)],
+        `${component} inherits the user agent typeface on a bare page; it must declare font-family on :host from a --ki-* token`,
+      ).toEqual([]);
+    },
+  );
 
   // Slotted and shadow text inherits through the flat tree, so :host covers
   // it — but the user agent stylesheet sets `font` on native form controls
   // and buttons, and that beats inheritance. Those need an explicit reset.
-  it.each(components)(
+  it.each(componentTags)(
     '%s uses the page-contract typeface on its native controls',
     async (component) => {
       const wrapper = await mountBare(component);
@@ -527,7 +462,7 @@ describe.each(['light', 'dark'] as const)('bare-page legibility [%s]', (scheme) 
     await browserCommands.emulateColorScheme(null);
   });
 
-  it.each(components)('%s renders every string legibly', async (component) => {
+  it.each(componentTags)('%s renders every string legibly', async (component) => {
     const wrapper = await mountBare(component);
 
     expect(
@@ -598,7 +533,7 @@ describe('bare-page coherence without the page contract [dark system preference]
     ).toBe(dark);
   });
 
-  it.each(components)('S13 %s renders every string legibly', async (component) => {
+  it.each(componentTags)('S13 %s renders every string legibly', async (component) => {
     const wrapper = await mountBare(component);
 
     expect(
@@ -718,15 +653,9 @@ describe('bare-page state-delta contract', () => {
    * ki-button left background, background-image, box-shadow and colour all
    * byte-identical to the focused resting state.
    */
-  const PRESSABLE = [
-    'ki-button',
-    'ki-icon-button',
-    'ki-checkbox',
-    'ki-radio',
-    'ki-switch',
-  ] as const;
+  const pressable = componentTags.filter((tag) => fixtureFor(tag).barePage.keyboardPressed);
 
-  it.each(PRESSABLE)('%s changes appearance while held with the keyboard', async (component) => {
+  it.each(pressable)('%s changes appearance while held with the keyboard', async (component) => {
     const wrapper = await mountBare(component);
     const host = wrapper.querySelector<HTMLElement>(component);
     expect(host, `${component} must mount`).not.toBeNull();

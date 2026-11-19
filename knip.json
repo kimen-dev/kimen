@@ -45,11 +45,15 @@
         "src/index.ts",
         "src/components/*/*.tsx",
         "!src/components/*/*.stories.tsx",
+        "src/components/ki-*/gallery.ts",
         "*.config.{ts,mjs}",
         "size-limit/**/*.{ts,tsx}"
       ],
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],
       "stencil": false
+    },
+    "site/docs": {
+      "ignoreDependencies": ["@kimen/elements"]
     },
     "packages/kimen": {
       "entry": ["index.mjs"],

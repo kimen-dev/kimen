@@ -51,7 +51,7 @@
         },
         {
           "name": "catalogData",
-          "summary": "The generated catalog document itself: one entry per published ki-* element and per native primitive with typed props, events, slots and when-to-use guidance, plus the elements version it derives from. Its schema version is exported as CATALOG_SCHEMA_VERSION."
+          "summary": "The generated catalog document itself: one entry per opted-in ki-* element and per native primitive with typed props, events, slots and when-to-use guidance, plus the elements version it derives from. Its schema version is exported as CATALOG_SCHEMA_VERSION."
         },
         {
           "name": "NATIVE_PRIMITIVE_TAGS",

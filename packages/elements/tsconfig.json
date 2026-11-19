@@ -17,5 +17,5 @@
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment"
   },
-  "include": ["src", "size-limit"]
+  "include": ["src", "size-limit", "browser-tests/**/*.d.ts"]
 }
