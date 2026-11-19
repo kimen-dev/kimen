@@ -16,10 +16,7 @@ attrs==26.1.0 \
 boltons==21.0.0 \
     --hash=sha256:65e70a79a731a7fe6e98592ecfb5ccf2115873d01dbc576079874629e5c90f13 \
     --hash=sha256:b9bb7b58b2b420bbe11a6025fdef6d3e5edc9f76a42fb467afe7ca212ef9948b
-bracex==3.1 ; python_full_version < '3.11' \
-    --hash=sha256:35c69fc105f08d77c02722e8ae707c656ff298dd4d26c89bcb3c98fca8bc3614 \
-    --hash=sha256:52002b8455658c21f3b6e5eb0f662b57ec9085f42709e58bc86eeab5bc4c37d7
-bracex==3.2.2 ; python_full_version >= '3.11' \
+bracex==3.2.2; python_full_version < '3.11' \
     --hash=sha256:284d59c4656e5a0421ff691402074bd5847049d50410535764a2c522a47095bc \
     --hash=sha256:d18976160b3ba01a57d5c53a5c8c3aa2506efa9e0a3a62467251f82b8f563fde
 certifi==2026.10.23 \
