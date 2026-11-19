@@ -156,14 +156,18 @@ it.each(['{Enter}', '[Space]'])('S5 activates a focused title button with %s onc
 });
 
 it.each([
-  [link, 'link'],
-  ['interactive', 'button'],
+  [link, 'link', /heading "Search index rebuild" \[level=3\]:\s+- link "Search index rebuild"/u],
+  [
+    'interactive',
+    'button',
+    /heading "Search index rebuild" \[level=3\]:\s+- button "Search index rebuild"/u,
+  ],
 ] as const)(
   'S6 exposes the authored heading level and only its title as the %s name',
-  async (attributes, role) => {
+  async (attributes, role, outline) => {
     const card = await mount(attributes, { before: '<h2>Incidents</h2>' });
     const actual = await browserCommands.ariaSnapshot('#subject');
-    expect(actual).toMatch(new RegExp(`heading "${title}" \\[level=3\\]:\\s+- ${role} "${title}"`));
+    expect(actual).toMatch(outline);
     expect(actual).toContain(copy);
     await expect.element(page.getByRole(role, { name: title, exact: true })).toBeVisible();
     const trigger = part(card, 'trigger');
