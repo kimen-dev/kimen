@@ -31,9 +31,10 @@ const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts'
 // Specs that change the page's input device through CDP touch emulation. They
 // share one isolated setup, never the ordinary light one: the pointer
 // capability audit, the touch text size of fields (spec 048) and of sized
-// fields (spec 050).
+// fields (spec 050), plus layout spacing (spec 074).
 const inputDeviceSpecs = [
   pointerCapabilitySpec,
+  'browser-tests/layout-pointer.browser.spec.ts',
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
 ];

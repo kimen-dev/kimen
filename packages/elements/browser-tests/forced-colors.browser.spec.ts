@@ -42,6 +42,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 
 import { defineAllComponents } from './all-components';
+import { parkPointer } from './axe';
 
 const browserCommands = commands as unknown as {
   emulateForcedColors: (forcedColors: 'active' | 'none' | null) => Promise<void>;
@@ -241,6 +242,7 @@ beforeAll(() => {
 // here, not in the test bodies, so a failing assertion cannot leak it.
 afterEach(async () => {
   await browserCommands.emulateForcedColors(null);
+  await parkPointer();
   document.body.replaceChildren();
 });
 
@@ -253,6 +255,24 @@ afterAll(() => {
 describe.for(THEMES)('forced colors under the %s theme', (theme) => {
   beforeAll(() => {
     document.documentElement.setAttribute('data-ki-theme', theme);
+  });
+
+  it('leaves layout surfaces transparent and keeps slotted controls in order', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-stack direction="row"><button type="button">First</button><button type="button">Second</button></ki-stack>' +
+        '<ki-grid columns="1"><button type="button">Third</button><button type="button">Fourth</button></ki-grid>',
+    );
+    const stack = await partOf(fixture, 'ki-stack', '[part="stack"]');
+    const grid = await partOf(fixture, 'ki-grid', '[part="grid"]');
+    const [first, second, third, fourth] = Array.from(fixture.querySelectorAll('button'), (node) =>
+      node.getBoundingClientRect(),
+    );
+
+    expect(fillOf(stack)).toBeNull();
+    expect(fillOf(grid)).toBeNull();
+    expect(second?.left).toBeGreaterThan(first?.left ?? Infinity);
+    expect(fourth?.top).toBeGreaterThan(third?.top ?? Infinity);
   });
 
   it('ki-radio paints the dot of the checked option and none on the others', async (test) => {

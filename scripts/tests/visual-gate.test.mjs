@@ -102,6 +102,9 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
   ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-grid.visual.material3.dark.browser.spec.ts'), [
+    'ki-grid-material3-dark-gallery-chromium-linux.png',
+  ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',
     'ki-button-material3-light-gallery-webkit-linux.png',
