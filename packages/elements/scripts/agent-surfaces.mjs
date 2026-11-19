@@ -175,6 +175,7 @@ export function buildManifest(docs, inputs = {}) {
               default: prop.default,
               description: prop.docs ?? '',
               required: requiredFlag(prop),
+              deprecatedValues: deprecatedValues(prop),
               ...numericBounds(prop),
               format: urlFormat(prop),
             }),
@@ -191,6 +192,7 @@ export function buildManifest(docs, inputs = {}) {
               attribute: prop.attr,
               reflects: Boolean(prop.reflectToAttr),
               required: requiredFlag(prop),
+              deprecatedValues: deprecatedValues(prop),
               ...numericBounds(prop),
               format: urlFormat(prop),
             }),
@@ -807,6 +809,15 @@ function managedSlotsFor(component) {
 // second analysis pass over component source (Art. I).
 function requiredFlag(prop) {
   return prop.required === true ? true : undefined;
+}
+
+// @deprecatedValue keeps the literal in the component contract while the
+// catalog omits it from the enum offered to new authors.
+function deprecatedValues(prop) {
+  const values = (prop.docsTags ?? [])
+    .filter((docsTag) => docsTag.name === 'deprecatedValue')
+    .map((docsTag) => docsTag.text?.trim() ?? '');
+  return values.length === 0 ? undefined : values;
 }
 
 // A number prop declares its inclusive bounds with `@minimum <n>` and

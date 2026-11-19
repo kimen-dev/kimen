@@ -45,11 +45,8 @@
   --_ki-button-border-bottom: var(--ki-button-primary-rest-border-bottom);
 }
 
-/* Tertiary carries the SECONDARY bevel pair (Figma 8003:300: stroke 1px
-   Outline/secondary_button_top with the secondary_button_bottom edge) and
-   keeps the glass backdrop from the :host defaults — it is NOT in the
-   non-glass group below (pixel pass, figma_notes: TERTIARY fill
-   Surface/special/light-s0_dark-s2 + Blur24). */
+/* Tertiary keeps its theme hooks and shares the secondary bevel and glass
+   backdrop by default. */
 :host([variant="tertiary"]) {
   --_ki-button-border-bottom: var(--ki-button-tertiary-rest-border-bottom);
 }
@@ -230,6 +227,7 @@
     --_ki-button-fg: var(--ki-button-tertiary-neutral-hover-fg);
     --_ki-button-border: var(--ki-button-tertiary-neutral-hover-border);
     --_ki-button-shadow: var(--ki-button-tertiary-hover-shadow);
+    --_ki-button-overlay: var(--ki-button-tertiary-hover-overlay);
   }
 
   :host([variant="tertiary"][tone="success"]:hover) {
@@ -288,10 +286,8 @@
     --_ki-button-shadow: var(--ki-button-ghost-hover-shadow);
   }
 
-  /* Variants whose hover swaps the fill instead of compositing an overlay
-     never take the hover overlay set by the generic :host(:hover) base
-     block above. */
-  :host([variant="tertiary"]:hover),
+  /* These variants and tones swap the hover fill, so remove the generic overlay. */
+  :host([variant="tertiary"]:not([tone="neutral"]):hover),
   :host([variant="quaternary"]:hover),
   :host([variant="ghost"]:hover) {
     --_ki-button-overlay-image: initial;

@@ -16,16 +16,21 @@ A token-styled action button with native button semantics.
 
 ### Variants
 
-Five emphasis levels, `secondary` by default. Use `primary` for the single
-main action of a view.
+Use filled `primary` for the main action and outlined `secondary` (the default)
+for supporting actions. Use `quaternary` for neutral text actions and `ghost`
+for accent text actions.
 
 <Demo
   code={`<ki-button variant="primary">Primary</ki-button>
 <ki-button variant="secondary">Secondary</ki-button>
-<ki-button variant="tertiary">Tertiary</ki-button>
 <ki-button variant="quaternary">Quaternary</ki-button>
 <ki-button variant="ghost">Ghost</ki-button>`}
 />
+
+`tertiary` is deprecated. Use `secondary` for new buttons. Existing
+`tertiary` buttons share the `secondary` appearance in onmars and keep
+their legacy appearance in Material 3. Development builds warn when
+the deprecated variant is used.
 
 ### Tones
 

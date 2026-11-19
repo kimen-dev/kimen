@@ -93,7 +93,7 @@ export const IconAndActions: Story = {
         <ki-alert {...args} tone={tone} heading={`${tone} heading`} dismissible>
           {glyph()}
           Something you might like to know.
-          <ki-button slot="actions" type="button" variant="tertiary" size="sm">
+          <ki-button slot="actions" type="button" variant="secondary" size="sm">
             Later
           </ki-button>
           <ki-button slot="actions" type="button" variant="primary" size="sm">

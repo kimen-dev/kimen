@@ -26,7 +26,8 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 The API below is the union of patterns found in both reference designs, so
 that neither theme lacks expressive power (and future themes inherit the same
-guarantee):
+guarantee). The variant column records the original extraction. The #344
+amendment below defines the current hierarchy:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-button |
 |---|---|---|---|
@@ -172,6 +173,10 @@ The button still accepts `tertiary` in existing markup and code. It
 shares the secondary role's tokens by default, with a development-only
 warning recommending `secondary`. Material 3 retains its existing
 tertiary appearance through theme-specific token values.
+
+Agent's choice, pending founder confirmation: keep a dedicated tertiary
+hover overlay token. It uses the secondary wash by default and is
+transparent in Material 3.
 
 Agent's choice, pending founder confirmation: keep `quaternary` in this
 release. Whether to rename it to `text` remains open for the next major.
