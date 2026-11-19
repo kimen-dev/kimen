@@ -135,7 +135,7 @@ Feature: Alert
     When the page renders
     Then the message leads and the dismiss control trails the writing direction
 
-  # Amendment A1 (proposed 2026-11-19): the Alert master anatomy, icon and actions
+  # Amendment A1 (decided 2026-11-19): the Alert master anatomy, icon and actions
   # Family: core behavior
   # S20
   Scenario: The alert holds its content in an elevated card inside a padded shell
@@ -145,30 +145,30 @@ Feature: Alert
     And the card has 12px of padding, 16px corners and the level-5 elevation
 
   # S21
-  Scenario: A slotted icon leads the text in a round 32px frame
+  Scenario: A slotted icon heads the card in a round 32px frame
     Given an onmars page with an alert holding an icon, the heading "Backup completed" and a message
     When the page renders
-    Then the icon sits before the heading in a round 32px frame
-    And the heading starts 12px after the icon
+    Then the icon sits at the top of the card in a round 32px frame, above the heading
+    And the heading starts 12px below the icon
 
   # S22
   Scenario: An alert without an icon reserves no space for one
     Given an onmars page with an alert holding the heading "Backup completed" and no icon
     When the page renders
-    Then the heading starts 12px from the card's leading edge
+    Then the heading starts at the top of the card, 12px from its edge
 
   # S23
-  Scenario: Slotted actions sit in a row below the card
+  Scenario: Slotted actions sit in a row after the message
     Given an onmars page with an alert "Your session expires in one minute" holding the actions "Sign out" and "Stay signed in"
     When the page renders
-    Then "Sign out" and "Stay signed in" are displayed in that order in one row inside the shell
-    And the row sits 12px below the card
+    Then "Sign out" and "Stay signed in" are displayed in that order in one row at the bottom of the card
+    And the row starts 12px below the message
 
   # S24
   Scenario: An alert without actions reserves no space for them
     Given an onmars page with an alert "Profile saved" holding no actions
     When the page renders
-    Then the alert is exactly as tall as its card plus the shell's 12px of padding above and below
+    Then the card ends 12px below the message
 
   # S25
   Scenario: Activating an action leaves the alert in place
@@ -181,8 +181,8 @@ Feature: Alert
   Scenario Outline: Every tone keeps the same anatomy
     Given an onmars page with a <tone> alert holding an icon, the heading "Heads up", a message and the action "Review"
     When the page renders
-    Then the shell, the card, the icon and the actions measure as they do under the neutral tone
-    And the alert's colors resolve from the <tone> tone's tokens
+    Then the shell, the card, the heading, the message and the dismiss control look as they do under the neutral tone
+    And the icon frame and its glyph take the <tone> tone's colors
 
     Examples:
       | tone    |
@@ -190,6 +190,13 @@ Feature: Alert
       | success |
       | warning |
       | danger  |
+
+  # S35
+  Scenario: Without an icon the heading leaves room for the dismiss control
+    Given an onmars page with a dismissible alert holding no icon and a heading long enough to fill its line
+    When the page renders
+    Then the heading wraps before it reaches the dismiss control
+    And no part of the heading sits under the dismiss control
 
   # Family: keyboard path
   # S27
@@ -232,7 +239,7 @@ Feature: Alert
   Scenario: Icon, dismiss control and actions follow a right-to-left document
     Given a right-to-left document with a dismissible alert holding an icon and the actions "Sign out" and "Stay signed in"
     When the page renders
-    Then the icon sits at the right edge of the card and the dismiss control at its left edge
+    Then the icon sits at the top right of the card and the dismiss control in its top left corner
     And "Sign out" is the rightmost action
 
   # S33
