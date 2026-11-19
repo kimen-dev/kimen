@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -14,6 +14,7 @@ export default defineConfig({
         test: {
           name: 'elements-mutation',
           include: ['packages/elements/src/**/*.spec.ts'],
+          exclude: [...configDefaults.exclude, '**/*.browser.spec.ts'],
           environment: 'node',
         },
       },

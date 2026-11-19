@@ -5,6 +5,8 @@ import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { readComponentFormBindings } from '../../packages/elements/scripts/component-metadata.mjs';
+
 import {
   characterizeLegacyRootExports,
   discoverComponents,
@@ -12,6 +14,8 @@ import {
   resolveComponentSubpaths,
   validateLegacyRootContract,
 } from '../lib/component-inventory.mjs';
+
+// @spec:068-component-discovery
 
 const workspaceRoot = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -30,6 +34,11 @@ const createFixture = async (t) => {
   return root;
 };
 
+const fixtureMetadata = {
+  barePage: { keyboardPressed: false },
+  pointer: { hoverWitness: false },
+};
+
 const writeComponent = async (
   root,
   {
@@ -39,10 +48,15 @@ const writeComponent = async (
     decorated = true,
     source = true,
     browserSpec = true,
+    gallery = true,
+    metadata = fixtureMetadata,
   },
 ) => {
   const componentDirectory = join(root, 'packages/elements/src/components', directory);
   await mkdir(componentDirectory, { recursive: true });
+
+  if (gallery) await writeFile(join(componentDirectory, 'gallery.ts'), '// gallery\n');
+  await writeFile(join(componentDirectory, 'component.json'), JSON.stringify(metadata));
 
   if (source) {
     await writeFile(
@@ -68,6 +82,7 @@ const fixtureComponents = [
     className: 'KiAlpha',
     sourceModule: 'packages/elements/src/components/ki-alpha/ki-alpha.tsx',
     browserSpec: 'packages/elements/browser-tests/ki-alpha.browser.spec.ts',
+    metadata: fixtureMetadata,
     distModule: './dist/components/ki-alpha.js',
     publicSubpath: './ki-alpha',
   },
@@ -76,6 +91,7 @@ const fixtureComponents = [
     className: 'KiZeta',
     sourceModule: 'packages/elements/src/components/ki-zeta/ki-zeta.tsx',
     browserSpec: 'packages/elements/browser-tests/ki-zeta.browser.spec.ts',
+    metadata: fixtureMetadata,
     distModule: './dist/components/ki-zeta.js',
     publicSubpath: './ki-zeta',
   },
@@ -87,6 +103,16 @@ test('discovers source-derived component entries in tag order', async (t) => {
   await writeComponent(root, { directory: 'ki-alpha' });
 
   assert.deepEqual(await discoverComponents({ workspaceRoot: root }), fixtureComponents);
+});
+
+test('S2 the inventory rejects a component missing its required gallery', async (t) => {
+  const root = await createFixture(t);
+  await writeComponent(root, { directory: 'ki-alpha', gallery: false });
+
+  await assert.rejects(
+    discoverComponents({ workspaceRoot: root }),
+    /missing gallery for ki-alpha/i,
+  );
 });
 
 test('component discovery fails closed on directory, module, tag, class, decorator, or test drift', async (t) => {
@@ -115,6 +141,11 @@ test('component discovery fails closed on directory, module, tag, class, decorat
       name: 'decorator',
       options: { directory: 'ki-alpha', decorated: false },
       expected: /@Component/i,
+    },
+    {
+      name: 'malformed catalog eligibility',
+      options: { directory: 'ki-alpha', metadata: { ...fixtureMetadata, catalog: 'true' } },
+      expected: /invalid catalog in component manifest/i,
     },
     {
       name: 'browser spec',
@@ -372,21 +403,14 @@ test('real legacy root remains frozen at 20 values and 12 explicitly deprecated 
   assert.equal(grown.values.length, 21);
 });
 
-test('real component inventory and package exports have the same 29 direct subpaths', async () => {
+test('real component inventory and package exports include every direct subpath', async () => {
   const components = await discoverComponents({ workspaceRoot });
   const packageJson = JSON.parse(
     await readFile(join(workspaceRoot, 'packages/elements/package.json'), 'utf8'),
   );
   const directSubpaths = resolveComponentSubpaths(packageJson.exports, components);
 
-  assert.equal(components.length, 29);
-  // Components born after the 018 root freeze ship ONLY via their direct
-  // subpath: the frozen legacy root stays at 20 and is a strict subset of
-  // the inventory (Fase N wave 1 adds ki-divider, ki-icon-button and
-  // ki-status, specs 020-ki-divider, 022-ki-icon-button and 021-ki-status,
-  // plus the ki-avatar + ki-avatar-group companion pair, spec 019-ki-avatar;
-  // Fase N wave 2 adds ki-scroller, ki-indicator, ki-video and ki-qr, specs
-  // 023-026).
+  // Frozen legacy symbols must still resolve to a shipped component.
   const legacyTags = frozenLegacyRoot.values.map(({ from }) => from.split('/').at(-2)).sort();
   const inventoryTags = components.map(({ tag }) => tag);
   assert.deepEqual(
@@ -394,21 +418,20 @@ test('real component inventory and package exports have the same 29 direct subpa
     legacyTags,
   );
   assert.deepEqual(
-    inventoryTags.filter((tag) => !legacyTags.includes(tag)),
-    [
-      'ki-avatar',
-      'ki-avatar-group',
-      'ki-divider',
-      'ki-icon-button',
-      'ki-indicator',
-      'ki-qr',
-      'ki-scroller',
-      'ki-status',
-      'ki-video',
-    ],
-  );
-  assert.deepEqual(
     directSubpaths.map(({ publicSubpath }) => publicSubpath),
     components.map(({ publicSubpath }) => publicSubpath),
   );
+});
+
+test('native form wrapper bindings discover reviewed component manifests', async (t) => {
+  const root = await createFixture(t);
+  await writeComponent(root, { directory: 'ki-plain' });
+  await writeComponent(root, {
+    directory: 'ki-text-field',
+    metadata: { ...fixtureMetadata, formBinding: 'text' },
+  });
+
+  assert.deepEqual(readComponentFormBindings(join(root, 'packages/elements/src/components')), [
+    { tags: ['ki-text-field'], event: 'input', prop: 'value', type: 'text' },
+  ]);
 });

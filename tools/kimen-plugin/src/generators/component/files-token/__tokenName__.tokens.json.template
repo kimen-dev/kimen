@@ -3,7 +3,7 @@
     "<%= tokenName %>": {
       "text-color": {
         "$type": "color",
-        "$value": "{ki.text.base}",
+        "$value": "{ki.text.high-em}",
         "$description": "Text color used by the <%= name %> component."
       }
     }

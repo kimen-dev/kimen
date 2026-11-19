@@ -13,11 +13,10 @@ import { Component, Prop, h } from '@stencil/core';
 })
 export class <%= className %> {
   /**
-   * TODO(spec): every public prop carries JSDoc with description, default and
-   * when-to-use guidance; an undocumented API member is a build failure (Art. I).
-   * @default 'TODO'
+   * Text supplied by the consumer. TODO(spec): replace with approved public API.
+   * @default ''
    */
-  @Prop() label = 'TODO';
+  @Prop() label = '';
 
   render() {
     return <span class="label">{this.label}</span>;

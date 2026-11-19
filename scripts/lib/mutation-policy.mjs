@@ -103,7 +103,8 @@ const classifyKnownPath = (path) => {
   if (
     /(?:^|\/)(?:tests?|__tests__|fixtures|browser-tests|size-limit)(?:\/|$)/.test(path) ||
     /\.(?:spec|test|e2e)(?:\.[^.]+)?\.[cm]?[jt]sx?$/.test(path) ||
-    /\.stories\.[cm]?[jt]sx?$/.test(path)
+    /\.stories\.[cm]?[jt]sx?$/.test(path) ||
+    /^packages\/elements\/src\/components\/ki-[^/]+\/gallery\.ts$/.test(path)
   ) {
     return excluded(
       path,

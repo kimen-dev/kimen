@@ -1,3 +1,4 @@
+// @spec:068-component-discovery
 // @spec:027-runtime-catalog
 // The catalog generator derives every declared prop limit from the manifest
 // and nothing else: a limit the manifest states malformed is a generation
@@ -24,8 +25,10 @@ const manifestWith = (attributes) => ({
   ],
 });
 
+const catalogOptions = { elementsVersion: '0.0.0', catalogTags: new Set(['ki-probe']) };
+
 const propsOf = (attributes) => {
-  const source = buildCatalog(manifestWith(attributes), { elementsVersion: '0.0.0' });
+  const source = buildCatalog(manifestWith(attributes), catalogOptions);
   const json = source.slice(source.indexOf('{'), source.lastIndexOf('}') + 1);
   return JSON.parse(json).components['ki-probe'].props;
 };
@@ -54,10 +57,7 @@ test('S2 deprecated enum metadata must describe an existing non-default value', 
     },
   ]) {
     assert.throws(
-      () =>
-        buildCatalog(manifestWith([{ name: 'variant', ...attribute }]), {
-          elementsVersion: '0.0.0',
-        }),
+      () => buildCatalog(manifestWith([{ name: 'variant', ...attribute }]), catalogOptions),
       /ki-probe\.variant: .*deprecated/u,
     );
   }
@@ -89,7 +89,7 @@ test('S17 a malformed bound fails generation naming the attribute', () => {
     { maximum: 1, minimum: 2, name: 'count', type: { text: 'number' } },
   ]) {
     assert.throws(
-      () => buildCatalog(manifestWith([attribute]), { elementsVersion: '0.0.0' }),
+      () => buildCatalog(manifestWith([attribute]), catalogOptions),
       new RegExp(`ki-probe\\.${attribute.name}: .*bound`, 'u'),
     );
   }
@@ -110,8 +110,25 @@ test('S19 a format the catalog does not know, or one on a non-string attribute, 
     { format: 'url', name: 'count', type: { text: 'number' } },
   ]) {
     assert.throws(
-      () => buildCatalog(manifestWith([attribute]), { elementsVersion: '0.0.0' }),
+      () => buildCatalog(manifestWith([attribute]), catalogOptions),
       new RegExp(`ki-probe\\.${attribute.name}: .*format`, 'u'),
     );
   }
+});
+
+test('S3 catalog generation only exposes components with an explicit opt-in', () => {
+  const manifest = manifestWith([]);
+  const published = buildCatalog(manifest, catalogOptions);
+  const privateOnly = buildCatalog(manifest, { elementsVersion: '0.0.0' });
+
+  assert.match(published, /"ki-probe":/u);
+  assert.doesNotMatch(privateOnly, /"ki-probe":/u);
+  assert.match(privateOnly, /"p":/u);
+});
+
+test('reports an opted-in tag missing from the Custom Elements Manifest', () => {
+  assert.throws(
+    () => buildCatalog({ modules: [] }, catalogOptions),
+    /ki-probe: catalog opt-in has no manifest declaration/u,
+  );
 });

@@ -40,3 +40,26 @@ Feature: Shipped components are registered by discovery
     Then the scaffold writes the component files and both theme token files
     And shared registries require no manual edits
 ```
+
+### Scenario Family Coverage
+
+| Family | Scenarios | N/A justification |
+| --- | --- | --- |
+| Core behavior | S1, S2, S3, S4, S5 | |
+| Keyboard path | | The repository gate leaves keyboard behavior to each component's contract. |
+| Assistive-tech outcome | | The repository gate leaves assistive-tech outcomes to each component's contract. |
+| Form participation | | The repository gate leaves form participation to each component's contract. |
+| Theming | | Component contracts cover rendered appearance under each theme. S5 covers scaffold token files. |
+
+### Component manifest
+
+Each component folder contains a `component.json` and a `gallery.ts`.
+
+| Field | Meaning |
+| --- | --- |
+| `barePage.keyboardPressed` | Required boolean. Selects the keyboard-held appearance check when the gallery exposes a pressable target. |
+| `pointer.hoverWitness` | Required boolean. Selects a gallery for the Chromium pointer capability witness. Every tag participates in the shared pointer audits. |
+| `catalog` | Optional boolean. Set to `true` after reviewing the proposed guarded catalog contract. |
+| `formBinding` | Optional `text`, `boolean` or `select`. Selects the existing native event and property binding for Vue and Angular. |
+| `budgetGroup.members` | Optional list of tags for a composite chunk. The owning component must be one of the members. |
+| `sizeBudget` | Optional measured byte additions to the existing ceilings. See the rebase rule in `scripts/lib/bundle-size-budget.mjs`. |

@@ -57,6 +57,8 @@
           "{projectRoot}/**/*",
           "!{projectRoot}/src/generated/**",
           "{workspaceRoot}/packages/elements/generated/custom-elements.json",
+          "{workspaceRoot}/packages/elements/src/components/*/component.json",
+          "{workspaceRoot}/packages/elements/scripts/component-metadata.mjs",
           "{workspaceRoot}/packages/elements/package.json"
         ],
         "outputs": [

@@ -57,6 +57,11 @@
     }
   },
   "namedInputs": {
+    "componentBudget": [
+      "{workspaceRoot}/scripts/lib/bundle-size-budget.mjs",
+      "{workspaceRoot}/packages/elements/scripts/component-metadata.mjs",
+      "{workspaceRoot}/packages/elements/src/components/*/component.json"
+    ],
     "default": [
       "{projectRoot}/**/*",
       "sharedGlobals"

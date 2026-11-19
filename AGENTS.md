@@ -75,3 +75,12 @@ merges.
   unfamiliar changes; it never creates a required Check Run.
 - Commits: conventional commits; external contributions carry DCO sign-off.
 - Status: pre-v1, factory phase. See `/docs/roadmap.md`.
+
+## Adding a component
+
+1. Write and lint the Gherkin contract. Run `pnpm component:new ki-name --spec NNN-ki-name` to scaffold from it.
+2. Work in `packages/elements/src/components/ki-name/` and the two component token files under `packages/tokens/tokens/component/`. Replace the TODOs and map the real-browser tests to the approved S-IDs. Add pure-logic unit coverage when the component has a helper.
+3. Complete the states in `gallery.ts`, the stories, `docs/site.mdx`, `docs/storybook.mdx` and `usage/examples.md`. The visual suite collects galleries from component folders. The CI visual-baselines workflow produces the Linux references.
+4. Set bare-page and pointer expectations in `component.json`. Direct imports, wrappers and docs discover the tag. Agent catalog inclusion requires a separate reviewed opt-in (Art. VIII).
+5. Keep a component within its individual budget. Add a reviewed marginal `sizeBudget` entry only when its emitted artifacts need more headroom. Declare `budgetGroup.members` for a composite measured together. See `scripts/lib/bundle-size-budget.mjs` for the re-base rule.
+6. Run `pnpm regen`, declare any public API additions with `pnpm api:declare`, and run `bash scripts/gates/gates-suite.sh`.

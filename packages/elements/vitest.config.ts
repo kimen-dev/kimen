@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 const cacheRoot = process.env['KIMEN_WORKTREE_CACHE_ROOT'] ?? process.env['KIMEN_CACHE_ROOT'];
 const cacheDir = cacheRoot ? join(cacheRoot, 'vite/elements-unit') : undefined;
@@ -17,5 +17,6 @@ export default defineConfig({
     name: 'elements-unit',
     environment: 'node',
     include: ['src/**/*.spec.ts'],
+    exclude: [...configDefaults.exclude, '**/*.browser.spec.ts'],
   },
 });

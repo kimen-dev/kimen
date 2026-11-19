@@ -124,7 +124,10 @@ test('@spec:018 S3 each Stryker runner has an independently scoped Vitest config
   assert.deepEqual(unit.test.include, ['src/**/*.spec.ts']);
   assert.equal(unit.test.environment, 'node');
   assert.deepEqual(unit.test.setupFiles ?? [], []);
-  assert.deepEqual(browser.test.include, ['browser-tests/ki-+([a-z-]).browser.spec.ts']);
+  assert.deepEqual(browser.test.include, [
+    'browser-tests/ki-+([a-z-]).browser.spec.ts',
+    'src/components/ki-*/ki-+([a-z0-9-]).browser.spec.ts',
+  ]);
   assert.equal(browser.test.browser.enabled, true);
   assert.ok(browser.test.browser.instances.every((instance) => instance.browser === 'chromium'));
 });

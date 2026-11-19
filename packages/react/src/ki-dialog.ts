@@ -11,7 +11,7 @@ import React from 'react';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import type { Components } from '@kimen/elements/components';
 import { KiDialog as KiDialogElement, defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
-import type { KiDialogCloseDetail, KiDialogCustomEvent } from '@kimen/elements';
+import type { KiDialogCloseDetail, KiDialogCustomEvent } from '@kimen/elements/components';
 import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
 export type KiDialogEvents = {

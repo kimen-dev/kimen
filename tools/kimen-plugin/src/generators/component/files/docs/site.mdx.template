@@ -1,0 +1,19 @@
+---
+title: <%= name %>
+description: Describe the purpose of <%= name %> from the approved contract.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+{/* TODO(spec): document when to use this component and the accessible usage patterns. */}
+
+<Demo code={`<<%= name %> label="Example"></<%= name %>>`} />
+
+## API reference
+
+<CemApi tag="<%= name %>" />
+
+## Workshop
+
+[Open <%= name %> in Storybook](/storybook/?path=/docs/docs-components-<%= name %>--docs)

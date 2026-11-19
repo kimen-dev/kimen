@@ -12,6 +12,7 @@
     "format:check": "biome format .",
     "lint": "eslint .",
     "lint:styles": "stylelint \"packages/**/*.css\" \"site/**/*.css\" --allow-empty-input",
+    "component:new": "nx g @kimen/nx-plugin:component --no-interactive",
     "regen": "bash scripts/dev/regen.sh",
     "typecheck": "tsc -b --pretty false && tsc -p packages/elements --noEmit --pretty false && tsc -p packages/elements/browser-tests --pretty false && tsc -p packages/elements/scripts --pretty false",
     "deadcode": "knip",

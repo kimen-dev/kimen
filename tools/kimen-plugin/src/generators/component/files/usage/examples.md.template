@@ -1,0 +1,7 @@
+# Using <%= name %>
+
+<!-- TODO(spec): document correct usage and common mistakes. -->
+
+```html
+<<%= name %> label="Example"></<%= name %>>
+```

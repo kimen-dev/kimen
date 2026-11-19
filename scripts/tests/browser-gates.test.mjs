@@ -1,5 +1,6 @@
 // @spec:018-project-integrity-hardening#S6
 // @spec:067-merge-friendly-checks
+// @spec:068-component-discovery
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import {
@@ -13,7 +14,7 @@ import {
   writeFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, matchesGlob } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -118,7 +119,7 @@ function inspectVitestConfig(configPath, environment = {}) {
       '--input-type=module',
       '--eval',
       `const config = await (await import(${JSON.stringify(configUrl)})).default;
-process.stdout.write(JSON.stringify({ cacheDir: config.cacheDir, name: config.test?.name }));`,
+process.stdout.write(JSON.stringify({ cacheDir: config.cacheDir, name: config.test?.name, include: config.test?.include, exclude: config.test?.exclude }));`,
     ],
     {
       cwd: repositoryRoot,
@@ -191,14 +192,41 @@ test('S6 browser setups isolate shared input and page-level capability emulation
   assert.deepEqual(pointerCapability.include, inputDeviceSpecs);
 });
 
+test('S1 component-local specs join the appropriate suite without a shared registration edit', () => {
+  const environment = { KIMEN_BROWSER_ENGINE: 'chromium', KIMEN_RUN_VISUALS: '1' };
+  const browser = inspectVitestConfig(browserConfig, environment);
+  const unit = inspectVitestConfig(elementsConfig, environment);
+  const instances = inspectBrowserInstances(environment);
+  const matches = ({ include, exclude }, file) =>
+    include?.some((pattern) => matchesGlob(file, pattern)) &&
+    !exclude?.some((pattern) => matchesGlob(file, pattern));
+  const suitesFor = (filename) => {
+    const file = `src/components/ki-example/ki-example${filename}`;
+    return [unit, ...instances.map((instance) => ({ include: browser.include, ...instance }))]
+      .filter((suite) => matches(suite, file))
+      .map((suite) => suite.name);
+  };
+
+  assert.deepEqual(suitesFor('.browser.spec.ts'), ['chromium-light']);
+  assert.deepEqual(suitesFor('.visual.browser.spec.ts'), ['chromium-light']);
+  assert.deepEqual(suitesFor('.visual.dark.browser.spec.ts'), ['chromium-dark']);
+  assert.deepEqual(suitesFor('.motion.browser.spec.ts'), ['chromium-reduced-motion']);
+  assert.deepEqual(suitesFor('.logic.spec.ts'), ['elements-unit']);
+});
+
 test('S6 local non-Linux visual specs are counted and CI or opt-in preserves them', async () => {
   const configUrl = pathToFileURL(browserConfig).href;
-  const visualSpecNames = (
-    await readdir(join(repositoryRoot, 'packages/elements/browser-tests'), {
-      recursive: true,
-      withFileTypes: true,
-    })
-  ).filter((entry) => entry.isFile() && /\.visual\..*browser\.spec\.tsx?$/u.test(entry.name));
+  const specEntries = await Promise.all(
+    ['browser-tests', 'src/components'].map((directory) =>
+      readdir(join(repositoryRoot, 'packages/elements', directory), {
+        recursive: true,
+        withFileTypes: true,
+      }),
+    ),
+  );
+  const visualSpecNames = specEntries
+    .flat()
+    .filter((entry) => entry.isFile() && /\.visual\..*browser\.spec\.tsx?$/u.test(entry.name));
   assert.ok(visualSpecNames.length > 0);
 
   for (const [platform, ci, override, skipped] of [
@@ -260,19 +288,20 @@ test('S6 Vitest configs isolate writable caches by suite and browser engine', ()
     KIMEN_BROWSER_ENGINE: 'firefox',
   });
 
-  assert.deepEqual(unit, {
+  const cache = ({ cacheDir, name }) => ({ cacheDir, name });
+  assert.deepEqual(cache(unit), {
     cacheDir: join(cacheRoot, 'vite/elements-unit'),
     name: 'elements-unit',
   });
-  assert.deepEqual(node, {
+  assert.deepEqual(cache(node), {
     cacheDir: join(cacheRoot, 'vite/elements-node'),
     name: 'elements-node',
   });
-  assert.deepEqual(chromium, {
+  assert.deepEqual(cache(chromium), {
     cacheDir: join(cacheRoot, 'vite/elements-browser-chromium'),
     name: 'elements-browser-chromium',
   });
-  assert.deepEqual(firefox, {
+  assert.deepEqual(cache(firefox), {
     cacheDir: join(cacheRoot, 'vite/elements-browser-firefox'),
     name: 'elements-browser-firefox',
   });
