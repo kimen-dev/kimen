@@ -7948,6 +7948,10 @@
             {
               "name": "--ki-skeleton-shimmer-image",
               "description": "Image of the moving highlight. Use currentColor to inherit the highlight colour."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
             }
           ]
         }

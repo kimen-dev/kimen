@@ -177,7 +177,9 @@ it('S4 cancels the reveal when the project is ready before 300 ms', async () => 
 });
 
 it('S5 skips the skeleton in both directions of sequential focus', async () => {
-  fixture.innerHTML = '<button>Before</button><ki-skeleton></ki-skeleton><button>After</button>';
+  // WebKit on macOS leaves buttons out of the Tab sequence without a tabindex.
+  fixture.innerHTML =
+    '<button tabindex="0">Before</button><ki-skeleton></ki-skeleton><button tabindex="0">After</button>';
   const host = fixture.querySelector('ki-skeleton');
   if (!host) throw new Error('Expected a skeleton');
   await paintedPart(host);

@@ -112,3 +112,4 @@ None.
 - `--ki-skeleton-shimmer-duration`: Duration of a shimmer sweep.
 - `--ki-skeleton-shimmer-easing`: Easing of the shimmer sweep.
 - `--ki-skeleton-shimmer-image`: Image of the moving highlight. Use currentColor to inherit the highlight colour.
+- `--ki-typography-family-body`: semantic font family for typography family body.
