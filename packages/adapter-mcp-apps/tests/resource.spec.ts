@@ -45,8 +45,8 @@ const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
  * 141 120 gzip, 115 435 brotli: 2 693 bytes over the old raw line, with gzip
  * and brotli still inside theirs, so only raw moves, to about 5% above.
  * Gzip re-based for issue #349 (composed shadows) on top of #345 and #347,
- * when CI measured 142 140 gzip (local macOS builds measure 141 560 raw-equal
- * documents, 611 265 raw, 115 734 brotli): 140 bytes over the old gzip line,
+ * when CI measured 142 140 gzip (a local macOS build of the same document
+ * measures 611 265 raw, 141 560 gzip, 115 734 brotli): 140 bytes over the old gzip line,
  * with raw and brotli still inside theirs, so only gzip moves, to about 5%
  * above the CI figure.
  */
