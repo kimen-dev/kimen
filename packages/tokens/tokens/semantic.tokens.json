@@ -27,6 +27,10 @@
       }
     },
     "placeholder": {
+      "radius": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Corner radius shared by loading text lines and rectangular placeholders."
+      },
       "line-size": {
         "$value": "{ki.foundation.placeholder.line-size}",
         "$description": "Block size reserved by one loading text line."

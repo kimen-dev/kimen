@@ -18,7 +18,7 @@
         "$description": "Peak colour of the animated loading highlight."
       },
       "radius": {
-        "$value": "{ki.radius.component.xs}",
+        "$value": "{ki.placeholder.radius}",
         "$description": "Corner radius of text lines and rectangles."
       },
       "circle-radius": {
