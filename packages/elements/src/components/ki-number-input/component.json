@@ -1,0 +1,6 @@
+{
+  "barePage": { "keyboardPressed": false },
+  "pointer": { "hoverWitness": false },
+  "catalog": true,
+  "formBinding": "select"
+}

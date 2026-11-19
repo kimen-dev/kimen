@@ -70,7 +70,11 @@ export function validateDocs(docs) {
       if (isBlank(prop.docs)) {
         violations.push(`${tag}.${prop.name}: property has no documentation`);
       }
-      violations.push(...boundViolations(tag, prop), ...formatViolations(tag, prop));
+      violations.push(
+        ...boundViolations(tag, prop),
+        ...formatViolations(tag, prop),
+        ...attributeTypeViolations(tag, prop),
+      );
     }
 
     for (const event of component.events ?? []) {
@@ -172,7 +176,7 @@ export function buildManifest(docs, inputs = {}) {
             compactObject({
               name: prop.attr,
               fieldName: prop.name,
-              type: { text: prop.type },
+              type: { text: attributeType(prop) },
               default: prop.default,
               description: prop.docs ?? '',
               required: requiredFlag(prop),
@@ -927,6 +931,26 @@ function formatViolations(tag, prop) {
     : [`${subject}: @format url applies to string props only`];
 }
 
+// An observed attribute may deserialize text to a richer property value.
+// Document the attribute's string type while preserving its property type.
+function attributeTypeTags(prop) {
+  return (prop.docsTags ?? []).filter((tag) => tag.name === 'attributeType');
+}
+
+function attributeType(prop) {
+  return attributeTypeTags(prop).length > 0 ? 'string' : prop.type;
+}
+
+function attributeTypeViolations(tag, prop) {
+  const tags = attributeTypeTags(prop);
+  if (tags.length === 0) return [];
+  const subject = `${tag}.${prop.name}`;
+  if (!prop.attr || tags.length !== 1 || tags[0].text?.trim() !== 'string') {
+    return [`${subject}: expected one @attributeType string on an observed attribute`];
+  }
+  return [];
+}
+
 function getDocsTag(component, name) {
   return component.docsTags?.find((docsTag) => docsTag.name === name)?.text ?? '';
 }
@@ -985,7 +1009,7 @@ function renderList(label, entries) {
 function renderAttribute(prop) {
   const { minimum, maximum } = numericBounds(prop);
   const facts = [
-    prop.type,
+    attributeType(prop),
     ...(requiredFlag(prop) === true ? ['required'] : []),
     ...(prop.default === undefined ? [] : [`default ${prop.default}`]),
     ...(minimum === undefined ? [] : [`minimum ${String(minimum)}`]),

@@ -293,6 +293,14 @@ function liveData(
     const live: unknown = Reflect.get(element, name);
     if (matchesConstraint(live, constraint)) {
       data[name] = live;
+    } else if (
+      name === 'value' &&
+      live === undefined &&
+      constraint.required !== true &&
+      'value' in element
+    ) {
+      // A cleared optional value should not resurrect the initial spec prop.
+      delete data['value'];
     }
   }
   return data;

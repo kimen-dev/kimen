@@ -56,8 +56,8 @@ Feature: Number input edits a quantity and keeps its numeric form value
     Given a German-language form with a percentage field named discount
     And the person has entered 12,5 percent
     When the form submits
-    Then the field displays 12,5 percent with the locale's percent sign
-    And the form data contains discount with value 0.125
+    Then the form data contains discount with value 0.125
+    And the resting field displays 12,5 with the locale's percent sign
 
   # S7
   Scenario: A required empty number blocks form submission

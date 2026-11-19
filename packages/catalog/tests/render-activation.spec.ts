@@ -132,6 +132,24 @@ describe('renderUiSpec — bound actions fire on the declared activation event',
     expect(onAction).not.toHaveBeenCalled();
   });
 
+  it('omits a cleared optional value from a bound action', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    renderUiSpec(
+      {
+        version: 1,
+        actions: ['pick'],
+        root: { component: 'ki-input', action: 'pick', props: { label: 'Name', value: 'Initial' } },
+      },
+      { surface, onAction },
+    );
+    const control = rendered('ki-input');
+    control['value'] = undefined;
+
+    change(control);
+
+    expect(onAction.mock.calls[0]?.[0]?.data).toEqual({ label: 'Name' });
+  });
+
   it('S17 the live payload carries only catalog-declared props of their declared type', () => {
     const onAction = vi.fn<(event: ActionEvent) => void>();
     renderUiSpec(toggleSpec('ki-checkbox'), { surface, onAction });

@@ -104,13 +104,28 @@ it.each([
   expect(host.shadowRoot?.activeElement).toBe(input.element());
 });
 
+it('S3 visits the spinbutton once in the tab sequence', async () => {
+  const before = document.createElement('input');
+  const after = document.createElement('input');
+  fixture.append(before);
+  const host = mount();
+  fixture.append(after);
+  const input = spinbutton();
+  await expect.element(input).toBeVisible();
+  before.focus();
+
+  await userEvent.keyboard('{Tab}');
+  expect(host.shadowRoot?.activeElement).toBe(input.element());
+  await userEvent.keyboard('{Tab}');
+  expect(document.activeElement).toBe(after);
+});
+
 it('S3 keeps Home and End available for editing without bounds', async () => {
-  mount({ label: 'Seats', value: '123' });
+  const host = mount({ label: 'Seats', value: '123' });
   const input = spinbutton();
   await input.click();
-  const editor = input.element();
   const handled: boolean[] = [];
-  editor.addEventListener('keydown', (event) => handled.push(event.defaultPrevented));
+  host.addEventListener('keydown', (event) => handled.push(event.defaultPrevented));
 
   await userEvent.keyboard('{Home}{End}');
 
@@ -135,14 +150,17 @@ it('S4 exposes a named spinbutton, its quantity and description, and passes axe'
 it.each([
   ['-3', '1', 'minimum'],
   ['85', '50', 'maximum'],
-])('S5 clamps %s on blur and announces the %s bound', async (entered, limit, bound) => {
-  mount();
+])('S5 clamps %s to %s on blur and announces the %s bound', async (entered, limit, bound) => {
+  const host = mount();
   const input = spinbutton();
+  const liveValues: (number | undefined)[] = [];
+  host.addEventListener('input', () => liveValues.push(host.value));
   await input.fill(entered);
 
   leave();
 
   await expect.element(input).toHaveValue(limit);
+  expect(liveValues.at(-1)).toBe(Number(limit));
   await expect
     .element(page.getByRole('status'))
     .toHaveTextContent(`Value adjusted to the ${bound} of ${limit}.`);
@@ -156,6 +174,7 @@ it('S6 commits a German percentage with Enter and submits the underlying ratio',
     {
       label: 'Discount',
       name: 'discount',
+      value: '0.25',
       format: '{"style":"percent","maximumFractionDigits":1}',
     },
     container,
@@ -166,9 +185,13 @@ it('S6 commits a German percentage with Enter and submits the underlying ratio',
     event.preventDefault();
     submitted.push(new FormData(container).get('discount'));
   });
+  await expect
+    .element(input)
+    .toHaveValue(new Intl.NumberFormat('de-DE', { style: 'percent' }).format(0.25));
   await input.fill('12,5');
 
   await userEvent.keyboard('{Enter}');
+  leave();
 
   const displayed = new Intl.NumberFormat('de-DE', {
     style: 'percent',

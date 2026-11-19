@@ -53,6 +53,9 @@ number through the enclosing form.
   flanking steppers and trailing unit with the shipped medium field metrics.
   The current docs pipeline discovers `docs/site.mdx` and builds the NumberInput
   route from it.
+- **Agent's choice, pending founder confirmation.** Use the API gate's major
+  classification for the addition to Stencil's existing loader `Components`
+  and `JSX` namespace signatures.
 
 ## Scenario family coverage
 
@@ -125,8 +128,8 @@ Feature: Number input edits a quantity and keeps its numeric form value
     Given a German-language form with a percentage field named discount
     And the person has entered 12,5 percent
     When the form submits
-    Then the field displays 12,5 percent with the locale's percent sign
-    And the form data contains discount with value 0.125
+    Then the form data contains discount with value 0.125
+    And the resting field displays 12,5 with the locale's percent sign
 
   # S7
   Scenario: A required empty number blocks form submission

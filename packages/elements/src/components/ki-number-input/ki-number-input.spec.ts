@@ -33,15 +33,25 @@ it('accepts grouped currency pasted in its configured locale', () => {
 
 it.each(['junk', '0x10', '12 seats', '12.5.4', '2,2', 'Infinity', '1e309', ''])(
   'rejects invalid English numeric input %j',
-  (text) => { expect(createNumberCodec('en-US').parse(text)).toBeUndefined(); },
+  (text) => {
+    expect(createNumberCodec('en-US').parse(text)).toBeUndefined();
+  },
 );
 
 it.each(['{', 'null', '[]', '42', '{"style":"currency"}'])(
   'falls back to the plain display for unusable format %j',
-  (attribute) => { expect(createNumberCodec('en-US', readNumberFormat(attribute)).display(1000.1257)).toBe(
+  (attribute) => {
+    expect(createNumberCodec('en-US', readNumberFormat(attribute)).display(1000.1257)).toBe(
       '1000.1257',
-    ); },
+    );
+  },
 );
+
+it('rejects a duplicated format affix', () => {
+  const codec = createNumberCodec('en-US', { style: 'percent' });
+
+  expect(codec.parse('12%%')).toBeUndefined();
+});
 
 it('parses a JSON options object for callers using HTML', () => {
   expect(readNumberFormat('{"style":"percent"}')).toEqual({ style: 'percent' });
