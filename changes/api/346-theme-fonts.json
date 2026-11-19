@@ -1,0 +1,22 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/tokens": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1tokens/exports/.~1css~1material3-fonts.css": "e89d62e69c37428b4380676c96ccd888a79dd9131a7cd5a6427e714afc77edf4",
+    "/packages/@kimen~1tokens/exports/.~1css~1onmars-fonts.css": "d7757df7e91a0d4e65d2e06000d26a1d85b1f56166c21718ec9874e520efd0e8",
+    "/packages/@kimen~1tokens/modules/.~1css~1material3-fonts.css": "c96b95af7b6d90ab7815eb21a0d271420aa7f324d8b311cf7cf51b2735a94dbc",
+    "/packages/@kimen~1tokens/modules/.~1css~1material3-fonts.css/declaration": "487843cfe3d97e034e525cd616b69e22b7d8bd5e47d400a55020cb6f39aec20d",
+    "/packages/@kimen~1tokens/modules/.~1css~1material3-fonts.css/target": "5a871348b0d2179bbdc47f2fa9aa0be7c8ba1f975594d7785901b6628d998186",
+    "/packages/@kimen~1tokens/modules/.~1css~1onmars-fonts.css": "c96b95af7b6d90ab7815eb21a0d271420aa7f324d8b311cf7cf51b2735a94dbc",
+    "/packages/@kimen~1tokens/modules/.~1css~1onmars-fonts.css/declaration": "487843cfe3d97e034e525cd616b69e22b7d8bd5e47d400a55020cb6f39aec20d",
+    "/packages/@kimen~1tokens/modules/.~1css~1onmars-fonts.css/target": "1f03cf99e2d17fc4cb2071625700b8a30d345ccb8db9ded7896f21bc2c7288c6"
+  },
+  "packages": [
+    "@kimen/tokens"
+  ],
+  "reason": "Adds the optional @kimen/tokens stylesheet exports ./css/onmars-fonts.css and ./css/material3-fonts.css (issue #346, spec 064-theme-fonts). The stylesheets declare font faces outside the effective token surface. Cumulative since baseline 0.0.0 and superseding 344-button-hierarchy. Carries forward its four recommended button roles, legacy tertiary DOM and TypeScript acceptance with a development-only deprecation warning, twelve onmars tertiary defaults backed by secondary references, and the new tertiary hover overlay with a transparent Material 3 override. Material 3 keeps its existing tertiary values, and additive catalog metadata preserves legacy tertiary UI specs. All earlier declared changes are carried forward. The cumulative release remains major.",
+  "release": "major",
+  "schemaVersion": 2
+}

@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
+import { measureThemeFonts } from './scripts/measure-theme-fonts.ts';
+
 // The explicit .ts extension keeps this config importable by plain Node type
 // stripping (scripts/tests/browser-gates.test.mjs loads it without a bundler).
 import { coverageOptions, distSourceCoveragePlugin } from './vitest.coverage.config.ts';
@@ -89,6 +91,10 @@ export default defineConfig({
       provider,
       screenshotFailures: false,
       commands: {
+        measureThemeFonts: defineBrowserCommand(
+          async ({ page }, theme: 'onmars' | 'material3', withFonts: boolean) =>
+            measureThemeFonts(page, theme, withFonts),
+        ),
         // `null` restores the suite BASELINE (light — Playwright's context
         // default every spec was written against), not the host preference:
         // `emulateMedia({ colorScheme: null })` re-exposes the machine's

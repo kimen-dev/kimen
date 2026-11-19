@@ -538,10 +538,15 @@ test('[S10] repository inventories agree with the protected baseline and active 
     );
   }
   const tokenBaseline = before['@kimen/tokens'].tokens;
-  const published = after['@kimen/tokens'].tokens;
+  const tokenPackage = after['@kimen/tokens'];
+  const published = tokenPackage.tokens;
+  for (const subpath of ['./css/onmars-fonts.css', './css/material3-fonts.css']) {
+    assert.equal(tokenPackage.exports[subpath].target, subpath);
+    assert.equal(Object.hasOwn(tokenPackage.stylesheets, subpath), false);
+  }
   const tokenPath = '/packages/@kimen~1tokens/tokens';
   assertInventory(tokenBaseline, published, tokenPath, declaredPaths);
-  for (const values of Object.values(after['@kimen/tokens'].stylesheets['./css'].contexts)) {
+  for (const values of Object.values(tokenPackage.stylesheets['./css'].contexts)) {
     assert.deepEqual(Object.keys(values), Object.keys(published));
   }
 

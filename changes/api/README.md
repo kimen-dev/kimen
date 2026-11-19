@@ -43,8 +43,8 @@ release baseline.
 
 ## Migrate a cumulative declaration
 
-For #420, #424, #425 and the `ki-toast` PR, merge the updated main, keep the PR's
-legacy declaration at the top of this directory, and run `pnpm regen`. In
+Merge the updated main, keep the branch's legacy declaration at the top of
+this directory, and run `pnpm regen`. In
 shared-file conflicts, keep the directory-based `check:api` command and the
 inventory-based tests from main. Migrate the record in place:
 

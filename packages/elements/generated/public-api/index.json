@@ -777,6 +777,16 @@
             "deprecatedSince": null,
             "replacement": null,
             "target": "./dist/css/tokens.material3.css"
+          },
+          "./css/material3-fonts.css": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./css/material3-fonts.css"
+          },
+          "./css/onmars-fonts.css": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./css/onmars-fonts.css"
           }
         },
         "modules": {
@@ -794,6 +804,16 @@
             "declaration": null,
             "symbols": {},
             "target": "./dist/css/tokens.material3.css"
+          },
+          "./css/material3-fonts.css": {
+            "declaration": null,
+            "symbols": {},
+            "target": "./css/material3-fonts.css"
+          },
+          "./css/onmars-fonts.css": {
+            "declaration": null,
+            "symbols": {},
+            "target": "./css/onmars-fonts.css"
           }
         },
         "rootSymbols": {},
@@ -37489,5 +37509,5 @@
       }
     }
   },
-  "surfaceSha256": "76afa703df075eda142b390bf0528b34d369095320611f3ab680bd782a7a7739"
+  "surfaceSha256": "f257051a8d750a2742849555a1b8c4ec547a193c2e6c625290c169e2678e6bda"
 }
