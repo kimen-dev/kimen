@@ -11,6 +11,9 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
+import { KiChipSize } from "./components/ki-chip/ki-chip";
+import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -31,6 +34,9 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
+export { KiChipSize } from "./components/ki-chip/ki-chip";
+export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -304,6 +310,80 @@ export namespace Components {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A compact filter toggle, removable picked value, or contextual action.
+     * @whenToUse apply independent filters, represent values selected in an entry
+     * field, or offer a small contextual action alongside content.
+     * @whenNotToUse static status (ki-badge), primary actions (ki-button), suggested
+     * prompts, or mutually exclusive choices (ki-radio-group).
+     */
+    interface KiChip {
+        /**
+          * Prevents activation, removal and moving the chip.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Gives an input chip a trailing remove button and keyboard deletion.
+          * @default false
+         */
+        "removable": boolean;
+        /**
+          * Localized action prefix in the remove button's accessible name, followed by the chip label.
+          * @default 'Remove'
+         */
+        "removeLabel": string;
+        /**
+          * The pressed state of a filter chip. The user can toggle it in place.
+          * @default false
+         */
+        "selected": boolean;
+        /**
+          * Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.
+          * @default 'md'
+         */
+        "size": KiChipSize;
+        /**
+          * Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.
+         */
+        "type"?: KiChipType;
+        /**
+          * Value sent with removal, contextual activation and reorder events.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
+     * A named collection of filter, input or assist chips, with optional ordering.
+     * @whenToUse label related chips or let people change their reading order.
+     * @whenNotToUse choose exactly one option or submit a form value.
+     */
+    interface KiChipGroup {
+        /**
+          * ID of the entry field in the same document or shadow root for focus after the last chip.
+         */
+        "focusTarget"?: string;
+        /**
+          * Accessible name for the group or list.
+          * @default ''
+         */
+        "label": string;
+        /**
+          * Localized polite message using {label}, {position} and {total}. Position is one-based.
+          * @default '{label} moved to position {position} of {total}.'
+         */
+        "reorderAnnouncement": string;
+        /**
+          * Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.
+          * @default false
+         */
+        "reorderable": boolean;
+        /**
+          * Shared chip kind and collection semantics. Input chips are presented as a list.
+          * @default 'filter'
+         */
+        "type": KiChipType;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -1088,6 +1168,14 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiChipCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiChipElement;
+}
+export interface KiChipGroupCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiChipGroupElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -1240,6 +1328,58 @@ declare global {
     var HTMLKiCheckboxElement: {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
+    };
+    interface HTMLKiChipElementEventMap {
+        "ki-change": {
+    selected: boolean;
+  };
+        "ki-remove": { value: string };
+        "ki-activate": {
+    value: string;
+  };
+    }
+    /**
+     * A compact filter toggle, removable picked value, or contextual action.
+     * @whenToUse apply independent filters, represent values selected in an entry
+     * field, or offer a small contextual action alongside content.
+     * @whenNotToUse static status (ki-badge), primary actions (ki-button), suggested
+     * prompts, or mutually exclusive choices (ki-radio-group).
+     */
+    interface HTMLKiChipElement extends Components.KiChip, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiChipElementEventMap>(type: K, listener: (this: HTMLKiChipElement, ev: KiChipCustomEvent<HTMLKiChipElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiChipElementEventMap>(type: K, listener: (this: HTMLKiChipElement, ev: KiChipCustomEvent<HTMLKiChipElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiChipElement: {
+        prototype: HTMLKiChipElement;
+        new (): HTMLKiChipElement;
+    };
+    interface HTMLKiChipGroupElementEventMap {
+        "ki-reorder": KiChipReorderDetail;
+    }
+    /**
+     * A named collection of filter, input or assist chips, with optional ordering.
+     * @whenToUse label related chips or let people change their reading order.
+     * @whenNotToUse choose exactly one option or submit a form value.
+     */
+    interface HTMLKiChipGroupElement extends Components.KiChipGroup, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiChipGroupElementEventMap>(type: K, listener: (this: HTMLKiChipGroupElement, ev: KiChipGroupCustomEvent<HTMLKiChipGroupElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiChipGroupElementEventMap>(type: K, listener: (this: HTMLKiChipGroupElement, ev: KiChipGroupCustomEvent<HTMLKiChipGroupElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiChipGroupElement: {
+        prototype: HTMLKiChipGroupElement;
+        new (): HTMLKiChipGroupElement;
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
@@ -1696,6 +1836,8 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-chip": HTMLKiChipElement;
+        "ki-chip-group": HTMLKiChipGroupElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-icon-button": HTMLKiIconButtonElement;
@@ -1993,6 +2135,100 @@ declare namespace LocalJSX {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A compact filter toggle, removable picked value, or contextual action.
+     * @whenToUse apply independent filters, represent values selected in an entry
+     * field, or offer a small contextual action alongside content.
+     * @whenNotToUse static status (ki-badge), primary actions (ki-button), suggested
+     * prompts, or mutually exclusive choices (ki-radio-group).
+     */
+    interface KiChip {
+        /**
+          * Prevents activation, removal and moving the chip.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Emitted by an assist chip when its native button is activated.
+         */
+        "onKi-activate"?: (event: KiChipCustomEvent<{
+    value: string;
+  }>) => void;
+        /**
+          * Emitted after a filter chip changes its pressed state.
+         */
+        "onKi-change"?: (event: KiChipCustomEvent<{
+    selected: boolean;
+  }>) => void;
+        /**
+          * Remove request for an input chip. Cancel it to keep application ownership of the chip.
+         */
+        "onKi-remove"?: (event: KiChipCustomEvent<{ value: string }>) => void;
+        /**
+          * Gives an input chip a trailing remove button and keyboard deletion.
+          * @default false
+         */
+        "removable"?: boolean;
+        /**
+          * Localized action prefix in the remove button's accessible name, followed by the chip label.
+          * @default 'Remove'
+         */
+        "removeLabel"?: string;
+        /**
+          * The pressed state of a filter chip. The user can toggle it in place.
+          * @default false
+         */
+        "selected"?: boolean;
+        /**
+          * Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.
+          * @default 'md'
+         */
+        "size"?: KiChipSize;
+        /**
+          * Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.
+         */
+        "type"?: KiChipType;
+        /**
+          * Value sent with removal, contextual activation and reorder events.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
+     * A named collection of filter, input or assist chips, with optional ordering.
+     * @whenToUse label related chips or let people change their reading order.
+     * @whenNotToUse choose exactly one option or submit a form value.
+     */
+    interface KiChipGroup {
+        /**
+          * ID of the entry field in the same document or shadow root for focus after the last chip.
+         */
+        "focusTarget"?: string;
+        /**
+          * Accessible name for the group or list.
+          * @default ''
+         */
+        "label"?: string;
+        /**
+          * Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
+         */
+        "onKi-reorder"?: (event: KiChipGroupCustomEvent<KiChipReorderDetail>) => void;
+        /**
+          * Localized polite message using {label}, {position} and {total}. Position is one-based.
+          * @default '{label} moved to position {position} of {total}.'
+         */
+        "reorderAnnouncement"?: string;
+        /**
+          * Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.
+          * @default false
+         */
+        "reorderable"?: boolean;
+        /**
+          * Shared chip kind and collection semantics. Input chips are presented as a list.
+          * @default 'filter'
+         */
+        "type"?: KiChipType;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -2837,6 +3073,22 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiChipAttributes {
+        "type": KiChipType;
+        "value": string;
+        "selected": boolean;
+        "removable": boolean;
+        "size": KiChipSize;
+        "disabled": boolean;
+        "removeLabel": string;
+    }
+    interface KiChipGroupAttributes {
+        "label": string;
+        "type": KiChipType;
+        "reorderable": boolean;
+        "focusTarget": string;
+        "reorderAnnouncement": string;
+    }
     interface KiDialogAttributes {
         "open": boolean;
         "heading": string;
@@ -2980,6 +3232,8 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
+        "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
@@ -3106,6 +3360,20 @@ declare module "@stencil/core" {
              * to use: do not expect it for programmatic `checked` writes, which are silent.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
+            /**
+             * A compact filter toggle, removable picked value, or contextual action.
+             * @whenToUse apply independent filters, represent values selected in an entry
+             * field, or offer a small contextual action alongside content.
+             * @whenNotToUse static status (ki-badge), primary actions (ki-button), suggested
+             * prompts, or mutually exclusive choices (ki-radio-group).
+             */
+            "ki-chip": LocalJSX.IntrinsicElements["ki-chip"] & JSXBase.HTMLAttributes<HTMLKiChipElement>;
+            /**
+             * A named collection of filter, input or assist chips, with optional ordering.
+             * @whenToUse label related chips or let people change their reading order.
+             * @whenNotToUse choose exactly one option or submit a form value.
+             */
+            "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
             /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief

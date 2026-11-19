@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 330 semantic
-and 1142 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 342 semantic
+and 1180 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -28,6 +28,23 @@ two layers below is the whole re-theming surface.
 
 Meaning, not appearance. This is the layer a brand reassigns to re-theme
 every component at once.
+
+### `ki.control`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-control-compact-pill-backdrop-filter` | `none` | Default compact pill surface leaves the backdrop unfiltered. |
+| `--ki-control-compact-pill-bg-image` | `none` | Default compact pill surface uses a solid color. |
+| `--ki-control-compact-pill-border-width` | `1px` | Default thickness of a compact pill border. |
+| `--ki-control-compact-pill-collection-gap` | `0.5rem` | Gap between adjacent compact pills. |
+| `--ki-control-compact-pill-gap` | `0.375rem` | Gap between content in a compact pill. |
+| `--ki-control-compact-pill-height` | `2rem` | Default height of a compact pill. |
+| `--ki-control-compact-pill-height-sm` | `1.5rem` | Small height of a compact pill. |
+| `--ki-control-compact-pill-icon-size` | `1rem` | Icon size inside a compact pill. |
+| `--ki-control-compact-pill-inset` | `0.75rem` | Default inline padding of a compact pill. |
+| `--ki-control-compact-pill-inset-action` | `0.25rem` | Trailing inset beside a pill action. |
+| `--ki-control-compact-pill-inset-sm` | `0.5rem` | Small inline padding of a compact pill. |
+| `--ki-control-compact-pill-radius` | `1000px` | Fully rounded compact pill shape. |
 
 ### `ki.corner`
 
@@ -968,6 +985,54 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-checkbox-unchecked-rest-bg` | `#ffffff` | color used by the checkbox component for unchecked rest background. |
 | `--ki-checkbox-unchecked-rest-border` | `#86827b` | color used by the checkbox component for unchecked rest border. |
 | `--ki-checkbox-unchecked-rest-fg` | `#181613` | color used by the checkbox component for unchecked rest foreground. |
+
+### `ki-chip`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-chip-assist-icon-fg` | `#ad411c` | Decorative glyph in an assist chip. |
+| `--ki-chip-backdrop-filter` | `none` | Default compact pill surface leaves the backdrop unfiltered. |
+| `--ki-chip-bg` | `rgba(0, 0, 0, 0)` | Resting filter and assist surface. |
+| `--ki-chip-bg-image` | `none` | Default compact pill surface uses a solid color. |
+| `--ki-chip-border` | `#86827b` | Outline of an unselected filter or assist chip. |
+| `--ki-chip-border-width` | `1px` | Default thickness of a compact pill border. |
+| `--ki-chip-disabled-border` | `rgba(24, 22, 19, 0.1)` | Outline of a disabled chip. |
+| `--ki-chip-disabled-ink` | `#cbc7bf` | Label on a disabled chip. |
+| `--ki-chip-fg` | `#181613` | Resting filter and assist label. |
+| `--ki-chip-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family for the visible chip label. |
+| `--ki-chip-font-size` | `0.8125rem` | Default chip label size. |
+| `--ki-chip-font-size-sm` | `0.75rem` | Small chip label size. |
+| `--ki-chip-font-weight` | `600` | Weight for a chip label. |
+| `--ki-chip-gap` | `0.375rem` | Gap between content in a compact pill. |
+| `--ki-chip-height` | `2rem` | Default height of a compact pill. |
+| `--ki-chip-height-sm` | `1.5rem` | Small height of a compact pill. |
+| `--ki-chip-hover-bg` | `#f3f0eb` | Surface under the hovering pointer. |
+| `--ki-chip-hover-fg` | `#181613` | Label over the hover surface. |
+| `--ki-chip-icon-size` | `1rem` | Icon size inside a compact pill. |
+| `--ki-chip-input-bg` | `#f3f0eb` | Surface of a picked value. |
+| `--ki-chip-input-fg` | `#181613` | Label of a picked value. |
+| `--ki-chip-inset` | `0.75rem` | Default inline padding of a compact pill. |
+| `--ki-chip-inset-action` | `0.25rem` | Trailing inset beside a pill action. |
+| `--ki-chip-inset-sm` | `0.5rem` | Small inline padding of a compact pill. |
+| `--ki-chip-line-height` | `1.5rem` | Default line height of the chip label. |
+| `--ki-chip-line-height-sm` | `1rem` | Small line height of the chip label. |
+| `--ki-chip-pressed-bg` | `#ebe7e1` | Surface while the activation is held. |
+| `--ki-chip-pressed-fg` | `#181613` | Label while the activation is held. |
+| `--ki-chip-radius` | `1000px` | Fully rounded compact pill shape. |
+| `--ki-chip-remove-bg` | `#f3f0eb` | Remove button surface inside an input chip. |
+| `--ki-chip-remove-fg` | `#5e5953` | Resting remove glyph. |
+| `--ki-chip-remove-hover-bg` | `#e0dcd4` | Remove button hover surface. |
+| `--ki-chip-remove-hover-fg` | `#181613` | Remove glyph over the hover surface. |
+| `--ki-chip-selected-bg` | `#ffebe5` | Selected filter surface. |
+| `--ki-chip-selected-border` | `#bc4c26` | Accessible boundary of a selected filter. |
+| `--ki-chip-selected-fg` | `#9a3715` | Selected filter label and check. |
+
+### `ki-chip-group`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-chip-group-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family inherited by chip group content. |
+| `--ki-chip-group-gap` | `0.5rem` | Gap between adjacent chips and rows. |
 
 ### `ki-dialog`
 

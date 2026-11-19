@@ -49,6 +49,8 @@ methods, CSS custom properties and examples.
 - [ki-button](https://kimen.dev/llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.
 - [ki-card](https://kimen.dev/llms/ki-card.md): group related media, heading, supporting text and actions into one scannable surface visually distinct from the page; fill any subset of regions.
 - [ki-checkbox](https://kimen.dev/llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
+- [ki-chip](https://kimen.dev/llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
+- [ki-chip-group](https://kimen.dev/llms/ki-chip-group.md): label related chips or let people change their reading order.
 - [ki-dialog](https://kimen.dev/llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](https://kimen.dev/llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
 - [ki-icon-button](https://kimen.dev/llms/ki-icon-button.md): a compact, widely understood action where space precludes a visible label: toolbars, card and dialog corners (close), media transport, data-row actions.
