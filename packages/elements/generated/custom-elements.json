@@ -5911,6 +5911,277 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-note.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiNote",
+          "customElement": true,
+          "tagName": "ki-note",
+          "description": "A compact, static explanation beside a control or inside a card.",
+          "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader.",
+          "whenNotToUse": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance.",
+          "attributes": [
+            {
+              "name": "icon",
+              "fieldName": "icon",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Uses caption text at sm and body text at md. Unknown values use md."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Selects the background tint and decorative icon. Unknown values use neutral."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",
+              "attribute": "icon",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Uses caption text at sm and body text at md. Unknown values use md.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Selects the background tint and decorative icon. Unknown values use neutral.",
+              "attribute": "tone",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Short explanatory text that carries the full meaning."
+            },
+            {
+              "name": "icon",
+              "description": "A decorative glyph that replaces the tone's built-in icon."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "icon",
+              "description": "The decorative icon frame."
+            },
+            {
+              "name": "message",
+              "description": "The explanatory text."
+            },
+            {
+              "name": "note",
+              "description": "The surface, including the tint, typography and spacing."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-note-backdrop-filter",
+              "description": "Complete filter behind the note."
+            },
+            {
+              "name": "--ki-note-bg",
+              "description": "Background of a neutral note."
+            },
+            {
+              "name": "--ki-note-bg-image",
+              "description": "Optional image over the note's solid background."
+            },
+            {
+              "name": "--ki-note-danger-bg",
+              "description": "Background of a danger note."
+            },
+            {
+              "name": "--ki-note-danger-fg",
+              "description": "Text ink of a danger note."
+            },
+            {
+              "name": "--ki-note-danger-icon",
+              "description": "Decorative icon ink of a danger note."
+            },
+            {
+              "name": "--ki-note-fg",
+              "description": "Text ink of a neutral note."
+            },
+            {
+              "name": "--ki-note-font-family",
+              "description": "Note text font family."
+            },
+            {
+              "name": "--ki-note-font-size",
+              "description": "Medium note text size."
+            },
+            {
+              "name": "--ki-note-gap",
+              "description": "Space between the icon and the text."
+            },
+            {
+              "name": "--ki-note-icon",
+              "description": "Decorative icon ink of a neutral note."
+            },
+            {
+              "name": "--ki-note-icon-offset",
+              "description": "Medium icon offset from the first line's block start."
+            },
+            {
+              "name": "--ki-note-icon-size",
+              "description": "Medium note icon size."
+            },
+            {
+              "name": "--ki-note-info-bg",
+              "description": "Background of an info note."
+            },
+            {
+              "name": "--ki-note-info-fg",
+              "description": "Text ink of an info note."
+            },
+            {
+              "name": "--ki-note-info-icon",
+              "description": "Decorative icon ink of an info note."
+            },
+            {
+              "name": "--ki-note-line-height",
+              "description": "Medium note text line height."
+            },
+            {
+              "name": "--ki-note-padding-block",
+              "description": "Medium note block padding."
+            },
+            {
+              "name": "--ki-note-padding-inline",
+              "description": "Medium note inline padding."
+            },
+            {
+              "name": "--ki-note-primary-bg",
+              "description": "Background of a primary note."
+            },
+            {
+              "name": "--ki-note-primary-fg",
+              "description": "Text ink of a primary note."
+            },
+            {
+              "name": "--ki-note-primary-icon",
+              "description": "Decorative icon ink of a primary note."
+            },
+            {
+              "name": "--ki-note-radius",
+              "description": "Note surface corner radius."
+            },
+            {
+              "name": "--ki-note-sm-font-size",
+              "description": "Small note caption size."
+            },
+            {
+              "name": "--ki-note-sm-icon-offset",
+              "description": "Small icon offset from the first line's block start."
+            },
+            {
+              "name": "--ki-note-sm-icon-size",
+              "description": "Small note icon size."
+            },
+            {
+              "name": "--ki-note-sm-line-height",
+              "description": "Small note caption line height."
+            },
+            {
+              "name": "--ki-note-sm-padding-block",
+              "description": "Small note block padding."
+            },
+            {
+              "name": "--ki-note-sm-padding-inline",
+              "description": "Small note inline padding."
+            },
+            {
+              "name": "--ki-note-success-bg",
+              "description": "Background of a success note."
+            },
+            {
+              "name": "--ki-note-success-fg",
+              "description": "Text ink of a success note."
+            },
+            {
+              "name": "--ki-note-success-icon",
+              "description": "Decorative icon ink of a success note."
+            },
+            {
+              "name": "--ki-note-warning-bg",
+              "description": "Background of a warning note."
+            },
+            {
+              "name": "--ki-note-warning-fg",
+              "description": "Text ink of a warning note."
+            },
+            {
+              "name": "--ki-note-warning-icon",
+              "description": "Decorative icon ink of a warning note."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiNote",
+          "declaration": {
+            "name": "KiNote",
+            "module": "dist/components/ki-note.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-note",
+          "declaration": {
+            "name": "KiNote",
+            "module": "dist/components/ki-note.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-option.js",
       "declarations": [
         {

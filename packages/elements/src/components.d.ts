@@ -18,6 +18,8 @@ import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+import { KiNoteTone } from "./components/ki-note/ki-note.icons";
+import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
@@ -44,6 +46,8 @@ export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+export { KiNoteTone } from "./components/ki-note/ki-note.icons";
+export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
@@ -609,6 +613,30 @@ export namespace Components {
           * @default 'md'
          */
         "size": KiListItemSize;
+    }
+    /**
+     * A compact, static explanation beside a control or inside a card.
+     * @whenToUse Add a short constraint, tip or consequence next to the content
+     * it explains. Put the consequence first when warning the reader.
+     * @whenNotToUse For updates that must be announced, use ki-alert. Use Toast
+     * for transient confirmations and the field's help-text for field guidance.
+     */
+    interface KiNote {
+        /**
+          * Shows the decorative icon. Set icon="false" in HTML to hide it.
+          * @default true
+         */
+        "icon": boolean;
+        /**
+          * Uses caption text at sm and body text at md. Unknown values use md.
+          * @default 'md'
+         */
+        "size": KiNoteSize;
+        /**
+          * Selects the background tint and decorative icon. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone": KiNoteTone;
     }
     /**
      * A declarative data option rendered by its owning `ki-select`.
@@ -1628,6 +1656,19 @@ declare global {
         new (): HTMLKiListItemElement;
     };
     /**
+     * A compact, static explanation beside a control or inside a card.
+     * @whenToUse Add a short constraint, tip or consequence next to the content
+     * it explains. Put the consequence first when warning the reader.
+     * @whenNotToUse For updates that must be announced, use ki-alert. Use Toast
+     * for transient confirmations and the field's help-text for field guidance.
+     */
+    interface HTMLKiNoteElement extends Components.KiNote, HTMLStencilElement {
+    }
+    var HTMLKiNoteElement: {
+        prototype: HTMLKiNoteElement;
+        new (): HTMLKiNoteElement;
+    };
+    /**
      * A declarative data option rendered by its owning `ki-select`.
      * @whenToUse declare one choice inside a `ki-select`; its text is the
      * human-facing label and its `value` is the submitted value.
@@ -2032,6 +2073,7 @@ declare global {
         "ki-input": HTMLKiInputElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
+        "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
         "ki-qr": HTMLKiQrElement;
@@ -2619,6 +2661,30 @@ declare namespace LocalJSX {
           * @default 'md'
          */
         "size"?: KiListItemSize;
+    }
+    /**
+     * A compact, static explanation beside a control or inside a card.
+     * @whenToUse Add a short constraint, tip or consequence next to the content
+     * it explains. Put the consequence first when warning the reader.
+     * @whenNotToUse For updates that must be announced, use ki-alert. Use Toast
+     * for transient confirmations and the field's help-text for field guidance.
+     */
+    interface KiNote {
+        /**
+          * Shows the decorative icon. Set icon="false" in HTML to hide it.
+          * @default true
+         */
+        "icon"?: boolean;
+        /**
+          * Uses caption text at sm and body text at md. Unknown values use md.
+          * @default 'md'
+         */
+        "size"?: KiNoteSize;
+        /**
+          * Selects the background tint and decorative icon. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone"?: KiNoteTone;
     }
     /**
      * A declarative data option rendered by its owning `ki-select`.
@@ -3421,6 +3487,11 @@ declare namespace LocalJSX {
     interface KiListItemAttributes {
         "size": KiListItemSize;
     }
+    interface KiNoteAttributes {
+        "tone": KiNoteTone;
+        "size": KiNoteSize;
+        "icon": boolean;
+    }
     interface KiOptionAttributes {
         "value": string;
         "disabled": boolean;
@@ -3560,6 +3631,7 @@ declare namespace LocalJSX {
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
         "ki-list": KiList;
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
+        "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
@@ -3796,6 +3868,14 @@ declare module "@stencil/core" {
              * tabular row, navigation link or whole-item clickable control.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
+            /**
+             * A compact, static explanation beside a control or inside a card.
+             * @whenToUse Add a short constraint, tip or consequence next to the content
+             * it explains. Put the consequence first when warning the reader.
+             * @whenNotToUse For updates that must be announced, use ki-alert. Use Toast
+             * for transient confirmations and the field's help-text for field guidance.
+             */
+            "ki-note": LocalJSX.IntrinsicElements["ki-note"] & JSXBase.HTMLAttributes<HTMLKiNoteElement>;
             /**
              * A declarative data option rendered by its owning `ki-select`.
              * @whenToUse declare one choice inside a `ki-select`; its text is the

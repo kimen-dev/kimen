@@ -3618,6 +3618,205 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-note/ki-note.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-note",
+      "docs": "A compact, static explanation beside a control or inside a card.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance."
+        },
+        {
+          "name": "slot",
+          "text": "- Short explanatory text that carries the full meaning."
+        },
+        {
+          "name": "slot",
+          "text": "icon - A decorative glyph that replaces the tone's built-in icon."
+        },
+        {
+          "name": "part",
+          "text": "note - The surface, including the tint, typography and spacing."
+        },
+        {
+          "name": "part",
+          "text": "icon - The decorative icon frame."
+        },
+        {
+          "name": "part",
+          "text": "message - The explanatory text."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-note usage\n\nPlace one or two lines of static context beside a control or inside a card.\nUse `ki-alert` for results that need announcing, Toast for transient\nconfirmations and the field's `help-text` for field guidance.\n\n```html\n<ki-note>Only workspace owners can change billing details.</ki-note>\n<ki-note tone=\"warning\" size=\"sm\">Changing the slug breaks existing links.</ki-note>\n<ki-note tone=\"info\" icon=\"false\">This link is visible to everyone in the workspace.</ki-note>\n```\n\n## Decorative icon replacement\n\n```html\n<ki-note tone=\"info\">\n  <svg slot=\"icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n    <path d=\"M12 3v18M3 12h18\"></path>\n  </svg>\n  Adding a billing contact gives them access to invoices.\n</ki-note>\n```\n\nThe words convey the message by themselves. The decorative icon is hidden\nfrom assistive technology and adds no tab stop. Start warnings with the\nconsequence.\n"
+      },
+      "props": [
+        {
+          "name": "icon",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "icon",
+          "reflectToAttr": false,
+          "docs": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiNoteSize",
+            "resolved": "\"md\" | \"sm\"",
+            "references": {
+              "KiNoteSize": {
+                "location": "local",
+                "path": "src/components/ki-note/ki-note.tsx",
+                "id": "src/components/ki-note/ki-note.tsx::KiNoteSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Uses caption text at sm and body text at md. Unknown values use md.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
+          "complexType": {
+            "original": "KiNoteTone",
+            "resolved": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
+            "references": {
+              "KiNoteTone": {
+                "location": "import",
+                "path": "./ki-note.icons",
+                "id": "src/components/ki-note/ki-note.icons.ts::KiNoteTone",
+                "referenceLocation": "KiNoteTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Selects the background tint and decorative icon. Unknown values use neutral.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "info",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "value": "warning",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Short explanatory text that carries the full meaning."
+        },
+        {
+          "name": "icon",
+          "docs": "A decorative glyph that replaces the tone's built-in icon."
+        }
+      ],
+      "parts": [
+        {
+          "name": "icon",
+          "docs": "The decorative icon frame."
+        },
+        {
+          "name": "message",
+          "docs": "The explanatory text."
+        },
+        {
+          "name": "note",
+          "docs": "The surface, including the tint, typography and spacing."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-option/ki-option.tsx",
       "encapsulation": "shadow",
       "tag": "ki-option",
@@ -7727,6 +7926,16 @@
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
+    },
+    "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
+      "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-note/ki-note.icons.ts"
+    },
+    "src/components/ki-note/ki-note.tsx::KiNoteSize": {
+      "declaration": "export type KiNoteSize = 'sm' | 'md';",
+      "docstring": "",
+      "path": "src/components/ki-note/ki-note.tsx"
     },
     "src/components/ki-progress/ki-progress.tsx::KiProgressShape": {
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",

@@ -22,6 +22,7 @@ import { defineCustomElement as defineKiIndicator } from '@kimen/elements/compon
 import { defineCustomElement as defineKiInput } from '@kimen/elements/components/ki-input.js';
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
+import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
@@ -428,6 +429,29 @@ export class KiListItem {
 
 
 export declare interface KiListItem extends Components.KiListItem {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiNote,
+  inputs: ['icon', 'size', 'tone']
+})
+@Component({
+  selector: 'ki-note',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon', 'size', 'tone'],
+})
+export class KiNote {
+  protected el: HTMLKiNoteElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiNote extends Components.KiNote {}
 
 
 @ProxyCmp({

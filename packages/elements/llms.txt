@@ -50,6 +50,7 @@ methods, CSS custom properties and examples.
 - [ki-input](llms/ki-input.md): collect one line of free text from a person, always with a visible `label`; choose the `type` and `autocomplete` that match the entry purpose.
 - [ki-list](llms/ki-list.md): settings, contacts, results or activity feeds where each item composes leading media, primary text, optional secondary text and trailing meta or a slotted control.
 - [ki-list-item](llms/ki-list-item.md): only as a child of `ki-list`, for one read-only entry in a similar vertical collection.
+- [ki-note](llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
 - [ki-option](llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-progress](llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
 - [ki-qr](llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.
