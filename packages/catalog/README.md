@@ -258,14 +258,20 @@ Every rejection is a `RenderDiagnostic` — node path, violated rule and
 offending value — pure data, safe to display because a host renders it as
 text.
 
+To use `ki-icon` in a guarded surface, import each glyph by name in the host
+entry point, for example `import '@kimen/elements/icons/circle-check'`. The
+renderer looks up the `name` in the current realm and reports
+`unavailable-icon` on that prop when the glyph is missing. The same check
+runs for streams and live batches. An icon is passive, so a binding on the
+icon itself produces `action-not-allowed`.
+
 `preflightUiSpec(input, options?)` returns the renderer's verdict without a
 DOM: it runs exactly the preparation `renderUiSpec` runs before its first
 attach (purity wall, version gate, payload budget, catalog validation, then
-the depth, node-count, tag, activation and prop-name guards) and renders
-nothing. A DOM-less boundary — the [Kimen MCP server](../mcp-server/README.md),
-or a service that checks specs before forwarding them to a page — reports as
-valid only what the renderer will paint; `validateUiSpec` alone accepts specs
-the renderer's tighter budgets refuse.
+the depth, node-count, tag, activation, icon availability and prop-name
+guards) and renders nothing. Use the same glyph imports in preflight and
+rendering when they run in separate realms. `validateUiSpec` checks the spec
+structure and types without checking which glyphs the host has imported.
 
 ```ts
 import { preflightUiSpec } from '@kimen/catalog';

@@ -117,6 +117,10 @@ export async function checkPackaging({
       'esm-only',
       '--entrypoints',
       ...plan.componentEntrypoints,
+      // Every glyph uses this generated ESM/declaration shape. Cover a
+      // canonical spelling and an alias without probing 2,193 entrypoints.
+      './icons/circle-check',
+      './icons/alert-triangle',
     ],
     root,
   );

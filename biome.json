@@ -42,6 +42,7 @@
       "!.claude/**",
       "!packages/elements/src/components.d.ts",
       "!packages/elements/generated/**",
+      "!packages/elements/vendor/lucide-1.63.0.json",
       "!packages/catalog/src/generated/**",
       "!packages/react/src/components.ts",
       "!packages/react/src/ki-*.ts",

@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 330 semantic
-and 1142 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 334 semantic
+and 1146 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -82,6 +82,15 @@ every component at once.
 | `--ki-focus-ring-color` | `#bb4e2a` | Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. |
 | `--ki-focus-ring-offset` | `0.125rem` | Gap between a focusable component and its keyboard focus ring. |
 | `--ki-focus-ring-width` | `0.125rem` | Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. |
+
+### `ki.glyph`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-glyph-size-lg` | `1.5rem` | Large standalone glyph (24px at the default root size). |
+| `--ki-glyph-size-md` | `1.25rem` | Medium glyph for body content (20px at the default root size). |
+| `--ki-glyph-size-sm` | `1rem` | Small glyph for dense layouts (16px at the default root size). |
+| `--ki-glyph-stroke-width` | `2` | Weight of a line icon's outline in viewBox units. |
 
 ### `ki.inverse-black`
 
@@ -1018,6 +1027,15 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-divider-radius` | `1000px` | dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps). |
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
 | `--ki-divider-thickness` | `1px` | dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). |
+
+### `ki-icon`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-icon-size-lg` | `1.5rem` | Large ki-icon with the surrounding text ink. |
+| `--ki-icon-size-md` | `1.25rem` | Medium ki-icon with the surrounding text ink. |
+| `--ki-icon-size-sm` | `1rem` | Small ki-icon with the surrounding text ink. |
+| `--ki-icon-stroke-width` | `2` | Lucide stroke width in viewBox units, scaled with the glyph. |
 
 ### `ki-icon-button`
 

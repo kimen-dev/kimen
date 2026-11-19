@@ -48,6 +48,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 const V1 = A2UI_V1_BASIC_CATALOG_IDS[0] ?? '';
@@ -144,7 +145,7 @@ describe('each message is handled by the A2UI version it declares', () => {
       expect(isCatalogTree(surface)).toBe(true);
     }
 
-    // The 1.0 contact form: @checks, a ChoicePicker, an Icon (unmapped) and a
+    // The 1.0 contact form: @checks, a ChoicePicker, an Icon and a
     // formatDate call in an action context. Verbatim, its ChoicePicker has no
     // label, so the guarded renderer refuses the unlabeled radio group (the
     // label is its accessible name) and nothing renders.
@@ -157,8 +158,8 @@ describe('each message is handled by the A2UI version it declares', () => {
     });
     expect(surface.childNodes).toHaveLength(0);
 
-    // With the label the schema requires, every other part maps. Its last
-    // message deletes the surface.
+    // The example needs the label and the host's mail glyph to render.
+    // Its last message deletes the surface.
     const [first, components, ...rest] = contactFormV1;
     const labeled = {
       ...components,
@@ -176,19 +177,25 @@ describe('each message is handled by the A2UI version it declares', () => {
       onDegradation: (report) => degradations.push(report),
       surface,
     });
-    for (const message of [first, labeled, ...rest.slice(0, -1)]) {
+    expect(adapter.apply(first)).toMatchObject({ ok: true });
+    expect(adapter.apply(labeled)).toMatchObject({
+      diagnostics: [{ rule: 'unavailable-icon', value: 'mail' }],
+      ok: false,
+    });
+    expect(surface.childNodes).toHaveLength(0);
+
+    // Model the glyph the host would import before applying the update.
+    vi.stubGlobal(Symbol.for('kimen.icon-registry.v1'), new Map([['mail', '<path />']]));
+    for (const message of [labeled, ...rest.slice(0, -1)]) {
       expect(adapter.apply(message)).toMatchObject({ ok: true });
     }
     expect(isCatalogTree(surface)).toBe(true);
     expect(surface.querySelector('ki-radio-group')?.getAttribute('value')).toBe('email');
+    expect(surface.querySelector('ki-icon')?.getAttribute('name')).toBe('mail');
     expect(
       [...surface.querySelectorAll('ki-input')].map((input) => input.getAttribute('label')),
     ).toStrictEqual(['First Name', 'Last Name', 'Email', 'Phone']);
-    // Every accepted message re-renders the whole surface (declared gap), so
-    // the unmapped Icon is reported once per render.
-    expect([...new Set(degradations.map((d) => `${d.componentType}:${d.reason}`))]).toStrictEqual([
-      'Icon:unmapped-type',
-    ]);
+    expect(degradations).toStrictEqual([]);
     expect(adapter.apply(contactFormV1.at(-1))).toMatchObject({ ok: true });
   });
 
