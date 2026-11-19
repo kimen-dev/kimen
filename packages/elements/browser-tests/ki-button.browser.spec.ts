@@ -428,7 +428,8 @@ describe('ki-button in a real browser', () => {
           }
           const style = getComputedStyle(button);
           if (variant === 'primary' || variant === 'secondary' || variant === 'tertiary') {
-            expect(style.backdropFilter, `${variant} backdrop`).toBe('blur(0px)');
+            // #342 lets Calma disable the filter entirely.
+            expect(style.backdropFilter, `${variant} backdrop`).toBe('none');
           }
           if (variant === 'ghost' || variant === 'quaternary') {
             // Non-glass variants stay off the glass path entirely: computed

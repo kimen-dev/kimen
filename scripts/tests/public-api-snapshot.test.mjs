@@ -594,13 +594,17 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // families, and the dialog heading letter spacing. 1247 + 4 = 1251.
   // Issue #345 adds three switch glyph colors. 1251 + 3 = 1254.
   // Issue #349 adds the video hover shadow opacity. 1254 + 1 = 1255.
-  // Issue #341 adds the easing replacement, the inverse tooltip pair and the
-  // flat elevation role. 1255 + 4 = 1259.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1259);
+  // Issue #343 adds three component image tokens and six semantic tokens for
+  // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
+  // Issue #342 adds ten full-filter tokens: two semantic and eight component.
+  // 1264 + 10 = 1274.
+  // Issue #341 adds the emphasized-out curve, two inverse tooltip colors,
+  // and the flat elevation role. 1274 + 4 = 1278.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1278);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1259,
+    1278,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
@@ -630,11 +634,12 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     assert.equal(Object.hasOwn(published, name), false, `${name} is no longer published`);
   }
   // The token deprecation (changes/api/041-token-deprecation) keeps the 85
-  // component leaves nothing reads published, each with deprecatedSince 0.1.0
-  // and a replacement, so a later major can remove them. #341 also
-  // deprecates the spring name on the same schedule.
+  // component leaves published. Issue #343 adds four legacy gradient stops.
+  // All 89 entries carry deprecatedSince 0.1.0 and a live replacement.
   const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
-  assert.equal(deprecated.length, 86);
+  // Issue #342 also deprecates seven legacy backdrop blur lengths. 89 + 7 = 96.
+  // Issue #341 deprecates the spring easing name. 96 + 1 = 97.
+  assert.equal(deprecated.length, 97);
   assert.equal(
     published['--ki-motion-easing-spring'].replacement,
     '--ki-motion-easing-emphasized-out',

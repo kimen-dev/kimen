@@ -54,16 +54,16 @@ description — useful for conditional hints:
 
 | Token                                          | Controls                                  |
 | ---------------------------------------------- | ----------------------------------------- |
-| `--ki-tooltip-bg-start` / `--ki-tooltip-bg-end`| Bubble glass gradient stops               |
+| `--ki-tooltip-bg-image` | Background image layered over the fill. Use `none` for a solid fill. |
 | `--ki-tooltip-backdrop-blur`                   | Bubble backdrop blur                      |
-| `--ki-tooltip-bg`                              | Solid fallback background                 |
+| `--ki-tooltip-bg`                              | Background fill                 |
 | `--ki-tooltip-fg`                              | Bubble text color                         |
 | `--ki-tooltip-max-inline-size`                 | Maximum bubble width                      |
 | `--ki-tooltip-offset`                          | Distance from the trigger                 |
 | `--ki-tooltip-radius`                          | Bubble corner radius                      |
 
-The bubble is a glass surface: a `bg-start`→`bg-end` vertical gradient over
-a backdrop blur (material3 resolves both stops to its opaque inverse bubble).
+Onmars v1 layers a translucent gradient over a backdrop blur. Material 3
+uses a solid inverse fill.
 Single shadow part: `::part(tooltip)` (the non-focusable tooltip bubble).
 
 ## Accessibility

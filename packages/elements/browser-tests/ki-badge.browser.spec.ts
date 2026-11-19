@@ -240,7 +240,8 @@ describe('ki-badge', () => {
     expect(neutralStyle.borderTopWidth).toBe('1px');
     expect(neutralStyle.borderTopColor).toBe(neutralStyle.borderBottomColor);
     expect(hasVisibleShadow(neutralStyle.boxShadow)).toBe(false);
-    expect(neutralStyle.backdropFilter).toBe('blur(0px)');
+    // #342 lets Calma disable the filter entirely.
+    expect(neutralStyle.backdropFilter).toBe('none');
 
     // Tone tags carry width 0 and no effects in the default state.
     const success = await mount('Active', { tone: 'success' });

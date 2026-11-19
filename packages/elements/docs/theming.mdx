@@ -11,7 +11,7 @@ values, enforced by lint. Tokens are layered:
    (`--ki-space-md`, `--ki-font-size-heading-3`…). Never consumed by
    components directly.
 2. **Theme** — each theme's selection from the primitives into the shared
-   ramp names (`--ki-color-brand-500` is the onmars purple by default;
+   ramp names (`--ki-color-brand-500` is the onmars terracotta by default;
    loading the material3 stylesheet rebinds the same name to its baseline).
    This is what makes one-step re-theming possible.
 3. **Semantic** — meaning, not appearance (`--ki-surface-s0…s5`,
@@ -213,24 +213,30 @@ durations and easings, never bypass that gate.
 
 ### Glass
 
-Translucent surfaces are a gradient pair plus a backdrop blur. The dialog
-and tooltip bubbles paint
-`linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))`
-(same pattern for `--ki-tooltip-bg-start/-end`) over
-`backdrop-filter: blur(var(--ki-dialog-backdrop-blur))`; backdrop-blur
-tokens also exist on the select listbox, buttons, icon buttons, card and
-video. material3 resolves both gradient stops to the same opaque surface and
-the blur to none — the glass disappears with zero component changes, which
-is exactly the point:
+Calma uses solid dialog and tooltip fills and a single-color select listbox
+tint. Each surface accepts an optional `-bg-image` token layered over its `-bg`
+color, and reads its complete filter from a token such as
+`--ki-dialog-backdrop-filter`. Material 3 uses solid fills. Set
+`--ki-effect-component-backdrop-filter` to `none` at the theme root to turn
+off the shared effect, including the select listbox. A component token can
+still set its own complete filter value, such as `blur(12px)`.
+
+To make a tooltip flat, set the fill, turn off the image and the filter, and
+use the same color for the arrow edges:
 
 ```css
-/* a flat brand: kill the glass at the token layer */
 :root {
-  --ki-tooltip-bg-start: var(--ki-surface-s2);
-  --ki-tooltip-bg-end: var(--ki-surface-s2);
-  --ki-tooltip-backdrop-blur: 0px;
+  --ki-effect-component-backdrop-filter: none;
+  --ki-tooltip-bg: var(--ki-surface-s2);
+  --ki-tooltip-bg-image: none;
+  --ki-surface-image-tooltip-arrow-start: var(--ki-tooltip-bg);
+  --ki-surface-image-tooltip-arrow-end: var(--ki-tooltip-bg);
 }
 ```
+
+Calma and reduced transparency use `none` for both shared filters. Use
+`--ki-effect-component-listbox-backdrop-filter` to give a glass theme a separate
+listbox filter. Material 3 keeps a zero-radius blur in its standard mode.
 
 ### Bevels
 

@@ -408,14 +408,14 @@ test('S1 a deprecated declaration keeps its value and is annotated in both style
   assert.equal(base.replace(` ${ANNOTATION}`, ''), renderBaseStylesheet(declarations));
 });
 
-test('S1 the published sources mark and annotate all 86 deprecated tokens', async () => {
+test('S1 the published sources mark and annotate all 97 deprecated tokens', async () => {
   const dictionary = await new StyleDictionary({
     ...sharedConfig,
     log: { verbosity: 'silent' },
   }).getPlatformTokens('css');
   const deprecations = collectDeprecations(dictionary.allTokens);
 
-  assert.equal(deprecations.size, 86);
+  assert.equal(deprecations.size, 97);
   const { reason, since, removal, replacement } = deprecations.get('--ki-input-focus-border') ?? {};
   assert.match(reason ?? '', /focus ring/u);
   assert.deepEqual(
@@ -431,7 +431,7 @@ test('S1 the published sources mark and annotate all 86 deprecated tokens', asyn
     css,
     new RegExp(`^  --ki-input-focus-border: [^;]+; ${ANNOTATION.replaceAll('*', '\\*')}$`, 'mu'),
   );
-  assert.equal(css.match(/\/\* deprecated since /gu)?.length, 86);
+  assert.equal(css.match(/\/\* deprecated since /gu)?.length, 97);
 });
 
 /** One composition's expressions, as build.mjs hands them to the renderer. */
@@ -574,6 +574,12 @@ function resolveAll(declarations, scheme) {
   return resolved;
 }
 
+// Style Dictionary resolves DTCG aliases. The onmars v1 compatibility
+// expressions still contain CSS references, which the browser resolves on
+// the theme root. Resolve those against the independent source composition.
+const resolveCompositionValues = (composition, scheme) =>
+  resolveAll(new Map([...composition].map(([name, { resolved }]) => [name, resolved])), scheme);
+
 test('the emitted stylesheets resolve to the Style Dictionary value of every token in every theme and scheme', async () => {
   const read = async (config) =>
     compositionDeclarations(
@@ -593,11 +599,12 @@ test('the emitted stylesheets resolve to the Style Dictionary value of every tok
   assert.ok(overrides.size < base.size, 'a theme emits fewer declarations than the base');
 
   for (const [theme, schemes] of Object.entries(compositions)) {
-    for (const [scheme, expected] of Object.entries(schemes)) {
+    for (const [scheme, composition] of Object.entries(schemes)) {
+      const expected = resolveCompositionValues(composition, scheme);
       const actual = resolveAll(emitted[theme], scheme);
       const mismatches = [...expected]
-        .filter(([name, token]) => actual.get(name) !== token.resolved)
-        .map(([name, token]) => `${name}: ${actual.get(name)} != ${token.resolved}`);
+        .filter(([name, value]) => actual.get(name) !== value)
+        .map(([name, value]) => `${name}: ${actual.get(name)} != ${value}`);
       assert.deepEqual(mismatches, [], `${theme} ${scheme}`);
     }
   }
@@ -781,11 +788,12 @@ test('under every mode the emitted stylesheets resolve to the Style Dictionary v
   for (const mode of MODES) {
     for (const theme of ['onmars', 'material3']) {
       for (const scheme of ['light', 'dark']) {
-        const expected = await read(withMode(configs[theme][scheme], mode.name));
+        const composition = await read(withMode(configs[theme][scheme], mode.name));
+        const expected = resolveCompositionValues(composition, scheme);
         const actual = resolveAll(emitted.get(mode.name)[theme], scheme);
         const mismatches = [...expected]
-          .filter(([name, token]) => actual.get(name) !== token.resolved)
-          .map(([name, token]) => `${name}: ${actual.get(name)} != ${token.resolved}`);
+          .filter(([name, value]) => actual.get(name) !== value)
+          .map(([name, value]) => `${name}: ${actual.get(name)} != ${value}`);
         assert.deepEqual(mismatches, [], `${mode.name} ${theme} ${scheme}`);
       }
     }

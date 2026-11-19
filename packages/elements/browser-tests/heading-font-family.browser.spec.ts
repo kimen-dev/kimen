@@ -71,13 +71,20 @@ describe('component heading typography', () => {
       scheme,
     );
 
-    expect(dialogHeading.fontFamily).toBe(dialogBody.fontFamily);
+    // The Calma dialog links the display family, while Material 3 uses body.
+    if (theme === 'onmars') {
+      expect(dialogHeading.fontFamily).toMatch(/^["']?Newsreader["']?, Georgia, serif$/u);
+      expect(dialogHeading.fontWeight).toBe('500');
+    } else {
+      expect(dialogHeading.fontFamily).toBe(dialogBody.fontFamily);
+    }
     expect(alertHeading.fontFamily).toBe(alertMessage.fontFamily);
     expect(['normal', '0px']).toContain(dialogHeading.letterSpacing);
   });
 
   it('S2: the shared heading family restyles both headings', async () => {
-    const { region, dialogHeading, dialogBody, alertHeading, alertMessage } = await mountHeadings();
+    const { region, dialogHeading, dialogBody, alertHeading, alertMessage } =
+      await mountHeadings('material3');
     const bodyFamily = dialogBody.fontFamily;
     const messageFamily = alertMessage.fontFamily;
 

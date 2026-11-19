@@ -1,5 +1,19 @@
 {
   "ki": {
+    "surface-image": {
+      "dialog": {
+        "$value": "none"
+      },
+      "tooltip": {
+        "$value": "none"
+      },
+      "tooltip-arrow-start": {
+        "$value": "{ki.foundation.onmars-v2.tooltip-arrow-fallback}"
+      },
+      "tooltip-arrow-end": {
+        "$value": "{ki.foundation.onmars-v2.tooltip-arrow-fallback}"
+      }
+    },
     "color": {
       "gray": {
         "50": {
@@ -328,6 +342,12 @@
     },
     "effect": {
       "component": {
+        "backdrop-filter": {
+          "$value": "none"
+        },
+        "listbox-backdrop-filter": {
+          "$value": "none"
+        },
         "primary": {
           "default": {
             "shadow": {
@@ -494,8 +514,19 @@
       "radius": {
         "$value": "{ki.radius.component.3xl}"
       },
+      "bg": {
+        "$value": "{ki.surface.special.light-s0-dark-s2}"
+      },
       "bg-start": {
         "$value": "{ki.surface.special.light-s0-dark-s2}"
+      },
+      "heading": {
+        "font-family": {
+          "$value": "{ki.typography.family.display}"
+        },
+        "font-weight": {
+          "$value": "{ki.typography.weight.display.semibold}"
+        }
       }
     },
     "input": {

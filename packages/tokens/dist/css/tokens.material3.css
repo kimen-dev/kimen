@@ -133,6 +133,8 @@
   --ki-font-letter-spacing-sm:0.0179em;
   --ki-font-letter-spacing-md:0.0071em;
   --ki-font-letter-spacing-lg:-0.0044em;
+  --ki-surface-image-tooltip-arrow-start:var(--ki-surface-inverse-white);
+  --ki-surface-image-tooltip-arrow-end:var(--ki-surface-inverse-white);
   --ki-surface-s0:light-dark(var(--ki-foundation-migrated-semantic-material3-surface-s0),var(--ki-foundation-migrated-modes-material3-dark-surface-s0));
   --ki-surface-s1:light-dark(var(--ki-foundation-migrated-semantic-material3-surface-primary-base-em),var(--ki-foundation-migrated-themes-material3-color-brand-high-em));
   --ki-surface-s2:light-dark(var(--ki-foundation-migrated-semantic-material3-outline-base-em),var(--ki-foundation-migrated-modes-material3-dark-outline-base-em));
@@ -294,6 +296,8 @@
   --ki-elevation-e4:var(--ki-foundation-material3-elevation-level-4);
   --ki-elevation-e5:var(--ki-foundation-material3-elevation-level-5);
   --ki-elevation-e6:var(--ki-foundation-material3-elevation-level-5);
+  --ki-effect-component-backdrop-filter:blur(var(--ki-effect-component-backdrop-blur));
+  --ki-effect-component-listbox-backdrop-filter:blur(var(--ki-blur-48));
   --ki-effect-component-primary-default-shadow:var(--ki-foundation-material3-elevation-level-1);
   --ki-effect-component-primary-hover-shadow:var(--ki-foundation-material3-elevation-level-2);
   --ki-effect-component-secondary-default-shadow:var(--ki-foundation-material3-elevation-level-1);
@@ -458,10 +462,11 @@
   --ki-dialog-radius:var(--ki-radius-big-component-lg);
   --ki-dialog-gap:var(--ki-space-5xl);
   --ki-dialog-bg:var(--ki-surface-s3);
-  --ki-dialog-bg-start:var(--ki-surface-s3);
-  --ki-dialog-bg-end:var(--ki-surface-s3);
+  --ki-dialog-bg-start:var(--ki-surface-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-bg-image */
+  --ki-dialog-bg-end:var(--ki-surface-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-bg-image */
   --ki-dialog-border:none;
   --ki-dialog-shadow:var(--ki-elevation-e3);
+  --ki-dialog-heading-font-family:var(--ki-typography-family-heading);
   --ki-dialog-heading-font-weight:var(--ki-typography-weight-body-normal);
   --ki-dialog-heading-padding-block-start:var(--ki-space-7xl);
   --ki-dialog-heading-padding-block-end:var(--ki-space-zero);
@@ -569,7 +574,7 @@
   --ki-select-disabled-border:var(--ki-outline-low-em);
   --ki-select-disabled-label-fg:var(--ki-text-low-em);
   --ki-select-listbox-bg:var(--ki-surface-s2);
-  --ki-select-listbox-backdrop-blur:var(--ki-blur-none);
+  --ki-select-listbox-backdrop-blur:var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
   --ki-select-listbox-radius:var(--ki-radius-component-xs);
   --ki-select-listbox-shadow:var(--ki-elevation-e2);
   --ki-select-listbox-padding:var(--ki-space-xs);
@@ -644,9 +649,9 @@
   --ki-tooltip-arrow-size:var(--ki-space-zero);
   --ki-tooltip-bg:var(--ki-surface-inverse-white);
   --ki-tooltip-border-color:var(--ki-outline-secondary-button-top);
-  --ki-tooltip-bg-start:var(--ki-surface-inverse-white);
-  --ki-tooltip-bg-end:var(--ki-surface-inverse-white);
-  --ki-tooltip-backdrop-blur:var(--ki-blur-none);
+  --ki-tooltip-bg-start:var(--ki-surface-inverse-white); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-bg-image */
+  --ki-tooltip-bg-end:var(--ki-surface-inverse-white); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-bg-image */
+  --ki-tooltip-backdrop-blur:var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-backdrop-filter */
   --ki-tooltip-fg:var(--ki-text-inverse-black);
   --ki-tooltip-font-size:var(--ki-font-size-caption-2);
   --ki-tooltip-line-height:var(--ki-font-line-height-caption-2);
@@ -693,6 +698,8 @@
     --ki-surface-success-tint:var(--ki-surface-success-base-em);
     --ki-surface-warning-tint:var(--ki-surface-warning-base-em);
     --ki-surface-danger-tint:var(--ki-surface-danger-base-em);
+    --ki-effect-component-backdrop-filter:none;
+    --ki-effect-component-listbox-backdrop-filter:none;
     --ki-alert-shell-bg:var(--ki-surface-s1);
   }
 }
@@ -708,6 +715,8 @@
   --ki-surface-success-tint:var(--ki-surface-success-base-em);
   --ki-surface-warning-tint:var(--ki-surface-warning-base-em);
   --ki-surface-danger-tint:var(--ki-surface-danger-base-em);
+  --ki-effect-component-backdrop-filter:none;
+  --ki-effect-component-listbox-backdrop-filter:none;
   --ki-alert-shell-bg:var(--ki-surface-s1);
 }
 

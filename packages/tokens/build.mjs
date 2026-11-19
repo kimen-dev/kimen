@@ -143,10 +143,22 @@ for (const level of DENSITIES) {
 }
 const densities = densityRules(levels, onmars);
 
+// Spec 061's style queries compare against the default blur, even when the
+// theme replaces the public filter with a complete value.
+const baseWithBackdropDefaults = new Map([
+  ...onmars,
+  ['--_ki-backdrop-filter-default', 'blur(var(--ki-effect-component-backdrop-blur))'],
+  ['--_ki-listbox-backdrop-filter-default', 'blur(var(--ki-blur-48))'],
+]);
 await writeFile(
   new URL('tokens.css', dist),
   compactTokenStylesheet(
-    renderBaseStylesheet(onmars, { deprecations, modes: baseModes, inherited, densities }),
+    renderBaseStylesheet(baseWithBackdropDefaults, {
+      deprecations,
+      modes: baseModes,
+      inherited,
+      densities,
+    }),
     {
       declarations: onmars,
       modes: baseModes,

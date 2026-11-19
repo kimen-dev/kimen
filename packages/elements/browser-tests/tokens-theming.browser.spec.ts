@@ -73,9 +73,13 @@ function extractTokenNames(css: string): string[] {
 }
 
 /** Every published name must resolve: declared, and with no dangling reference. */
-function expectEveryTokenResolved(names: readonly string[]): void {
+function expectEveryTokenResolved(names: readonly string[], absent: readonly string[] = []): void {
   for (const name of names) {
     const value = readToken(name);
+    if (absent.includes(name)) {
+      expect(value, name).toBe('');
+      continue;
+    }
     expect(value, name).not.toBe('');
     // An unresolved reference would surface as a literal var() string —
     // a concrete value never contains one (clean-context review, round 1).
@@ -124,10 +128,14 @@ describe('S1 onmars light default tokens', () => {
     expectTokenColor('--ki-surface-s0', '#ffffff');
   });
 
-  it('S1 resolves every published token name to a concrete value', () => {
+  it('S1 resolves all required tokens and leaves the optional arrow colors unset', () => {
     injectStylesheet(onmarsCss);
 
-    expectEveryTokenResolved(extractTokenNames(onmarsCss));
+    // In Calma the tooltip arrow takes the bubble color through #343's fallback.
+    expectEveryTokenResolved(extractTokenNames(onmarsCss), [
+      '--ki-surface-image-tooltip-arrow-start',
+      '--ki-surface-image-tooltip-arrow-end',
+    ]);
   });
 });
 

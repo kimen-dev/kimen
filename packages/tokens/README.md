@@ -219,11 +219,9 @@ never transcribed by hand.
   (`--ki-motion-easing-standard`, `-emphasized`, `-emphasized-out` and their
   accelerate/decelerate variants), and micro-motion offsets
   (`--ki-motion-distance-xs/sm/md`).
-- **Glass** — translucent surfaces built from gradient pairs plus a backdrop
-  blur: `--ki-dialog-bg-start`/`--ki-dialog-bg-end` with
-  `--ki-dialog-backdrop-blur`, the same pattern for tooltip, and a backdrop
-  blur token for the other glass surfaces (the select listbox, the video
-  controls, the glass button variants).
+- **Glass** — translucent surfaces can use `--ki-dialog-bg-image` with
+  `--ki-dialog-backdrop-filter`. Set `--ki-effect-component-backdrop-filter`
+  to `none` at a theme root to turn glass filtering off.
 - **Elevation** — the `--ki-elevation-e1`…`--ki-elevation-e6` shadow scale,
   plus effect shadows (`--ki-effect-*`) for component-specific depth.
 - **Bevels** — edge tokens such as `--ki-button-tertiary-rest-border-bottom`
@@ -233,10 +231,12 @@ never transcribed by hand.
 
 Calma uses paper ivory in light mode, warm charcoal in dark mode, ink for
 primary surfaces and terracotta for links and focus. Crimson marks errors.
-Surfaces are flat and opaque, with hairline borders and soft shadows.
+Surfaces use hairline borders and soft shadows. Dialogs and tooltips have
+opaque fills, and the select listbox uses a single translucent tint.
 
 The UI and body stack starts with Instrument Sans. The display and serif
-stacks start with Newsreader. Load these faces in your app to use them.
+stacks start with Newsreader, including dialog headings. Load these faces
+in your app to use them.
 
 ## Material 3 theme fonts
 

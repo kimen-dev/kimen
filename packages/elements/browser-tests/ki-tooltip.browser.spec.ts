@@ -1,3 +1,4 @@
+// @spec:062-solid-surface-background
 import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:013-ki-tooltip
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -11,7 +12,6 @@ import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { alphaOf } from './contracts';
 import { disableComponentEffectShadows } from './flat-effects';
-import { fillsOf } from './modes';
 import { moveToNewParent } from './reconnect';
 
 type KiTooltipElement = HTMLElement & {
@@ -409,13 +409,12 @@ describe('ki-tooltip pointer path in a real browser', () => {
     const tooltip = requireTooltip(host);
     const paint = (): string[] => {
       const style = getComputedStyle(tooltip);
-      return [style.backgroundImage, style.color, style.borderTopLeftRadius];
+      return [style.backgroundColor, style.backgroundImage, style.color, style.borderTopLeftRadius];
     };
     const onmars = paint();
     const markup = host.outerHTML;
 
-    // The card paints a gradient; material3 resolves it to its inverse bubble
-    // surface, so the paint is the theme signal — on the tooltip being shown.
+    // Both themes paint a solid fill after #343. Material 3 uses its own inverse colors.
     document.documentElement.setAttribute('data-ki-theme', 'material3');
 
     await expect.poll(paint).not.toEqual(onmars);
@@ -423,7 +422,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(host.outerHTML).toContain('<button aria-description="Send immediately">Send</button>');
   });
 
-  it('S1 renders the onmars inverse card geometry and typography', async () => {
+  it('S1 S3 renders the solid onmars inverse card geometry and typography', async () => {
     const { host, trigger } = await mount({
       style: { marginBlockStart: '160px', marginInlineStart: '160px' },
     });
@@ -444,10 +443,11 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(style.lineHeight).toBe('20px');
     expect(style.fontWeight).toBe('600');
 
-    expect(fillsOf(tooltip)).toEqual(Array(2).fill({ a: 1, r: 46, g: 43, b: 38 }));
+    // #343 supplies the solid fill and #342 removes the zero-radius filter.
+    expect(style.backgroundColor).toBe('rgb(46, 43, 38)');
+    expect(style.backgroundImage).toBe('none');
     expect(style.color).toBe('rgb(249, 247, 244)');
-    expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    expect(style.getPropertyValue('backdrop-filter')).toBe('blur(0px)');
+    expect(style.backdropFilter).toBe('none');
 
     // The hairline keeps its geometry and paints a transparent edge.
     expect(style.borderTopWidth).toBe('1px');
@@ -683,6 +683,9 @@ describe('ki-tooltip pointer path in a real browser', () => {
     document.body.append(spacer, host);
     await expect.poll(() => isTooltipShown(host)).toBe(false);
 
+    // WebKit can keep the old host in the pointer's hit-test path across
+    // removal. Move through the spacer to make the return a fresh entry.
+    await userEvent.hover(spacer);
     await userEvent.hover(trigger);
     await expect.poll(() => isTooltipShown(host)).toBe(true);
     await userEvent.unhover(trigger);

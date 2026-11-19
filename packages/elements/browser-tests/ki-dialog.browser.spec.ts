@@ -1,3 +1,4 @@
+// @spec:062-solid-surface-background
 import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:012-ki-dialog
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -12,7 +13,6 @@ import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
-import { fillsOf } from './modes';
 import { moveToNewParent } from './reconnect';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
@@ -989,7 +989,7 @@ describe('ki-dialog in a real browser', () => {
     const baseline = await mountDialog();
     await openDialog(baseline);
     const baselineDialog = internalDialog(baseline);
-    const onmarsBg = getComputedStyle(baselineDialog).backgroundImage;
+    const onmarsBg = getComputedStyle(baselineDialog).backgroundColor;
     const onmarsRadius = getComputedStyle(baselineDialog).borderRadius;
     await baseline.close();
     baseline.remove();
@@ -999,40 +999,38 @@ describe('ki-dialog in a real browser', () => {
     const el = await mountDialog();
     await openDialog(el);
     const dialog = internalDialog(el);
-    // The theme swap resolves through the cascade, not a timer: wait on the
-    // observable outcome. The surface paints a gradient (material3 resolves
-    // both stops to its opaque surface), so the gradient is the theme signal.
+    // Both themes paint a solid surface after #343. Check the fill change.
     await waitFor(
-      () => getComputedStyle(dialog).backgroundImage !== onmarsBg,
+      () => getComputedStyle(dialog).backgroundColor !== onmarsBg,
       'dialog surface repainted for material3',
     );
     const styles = getComputedStyle(dialog);
     const backdrop = getComputedStyle(dialog, '::backdrop');
 
-    expect(styles.backgroundImage).toContain('gradient(');
+    expect(styles.backgroundImage).toBe('none');
     expect(styles.borderRadius).not.toBe(onmarsRadius);
     // The page behind stays dimmed under the second theme too.
     expect(backdrop.backgroundColor).not.toMatch(/, 0\)$/u);
   });
 
-  it('S1 renders the onmars modal surface, typography, and centering', async () => {
+  it('S1 S3 renders the solid onmars modal surface, typography, and centering', async () => {
     cleanup();
     const el = await mountDialog();
     await openDialog(el);
     const dialog = internalDialog(el);
     const styles = getComputedStyle(dialog);
 
-    expect(fillsOf(dialog)).toEqual(Array(2).fill({ a: 1, r: 255, g: 255, b: 255 }));
-    expect(styles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    expect(styles.getPropertyValue('backdrop-filter')).toBe('blur(0px)');
+    // #343 supplies the solid fill and #342 removes the zero-radius filter.
+    expect(styles.backgroundColor).toBe('rgb(255, 255, 255)');
+    expect(styles.backgroundImage).toBe('none');
+    expect(styles.backdropFilter).toBe('none');
 
     expect(styles.borderRadius).toBe('18px');
     expect(styles.borderTopWidth).toBe('1px');
     expect(styles.borderTopStyle).toBe('solid');
     expect(styles.boxShadow).toContain('0px 20px 44px');
 
-    // Centered composition: heading title_2 18/24 weight 700, body body_1
-    // 13/20 weight 500, both center-aligned.
+    // #347 gives the Calma dialog a display heading and keeps body copy 13/20.
     const shadow = el.shadowRoot;
     expect(shadow).not.toBeNull();
     if (!shadow) {
@@ -1043,7 +1041,8 @@ describe('ki-dialog in a real browser', () => {
     expect(headingStyles.textAlign).toBe('center');
     expect(headingStyles.fontSize).toBe('18px');
     expect(headingStyles.lineHeight).toBe('24px');
-    expect(headingStyles.fontWeight).toBe('700');
+    expect(headingStyles.fontFamily).toMatch(/^["']?Newsreader["']?, Georgia, serif$/u);
+    expect(headingStyles.fontWeight).toBe('500');
 
     const body = bodyPart(el);
     const bodyStyles = getComputedStyle(body);

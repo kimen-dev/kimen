@@ -15,6 +15,8 @@ import { moveToNewParent } from './reconnect';
 
 const STYLE_ID = 'ki-card-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-card-browser-material3-token-style';
+// Composed shadows (#349) serialize a typed `none` as one invisible layer.
+const FLAT_SHADOW = 'rgba(0, 0, 0, 0) 0px 0px 0px 0px';
 
 beforeAll(() => {
   defineButton();
@@ -174,7 +176,7 @@ describe('ki-card in a real browser', () => {
     expect(computed.backgroundColor).not.toMatch(/, 0\)$/u);
     expect(computed.borderTopWidth).toBe('1px');
     expect(computed.borderRadius).toBe('14px');
-    expect(computed.boxShadow).toBe('none');
+    expect(computed.boxShadow).toBe(FLAT_SHADOW);
   });
 
   it('S2 renders a body-only card with no reserved space for absent regions', async () => {
@@ -655,18 +657,19 @@ describe('ki-card in a real browser', () => {
     // probe below the card first so the resting read is hover-free.
     const probe = document.createElement('button');
     probe.textContent = 'probe';
+    probe.style.boxShadow = 'var(--ki-elevation-e2)';
     document.body.append(probe);
     await userEvent.hover(probe);
     await nextFrame();
     await settleMotion();
     const resting = getComputedStyle(cardPart(el)).boxShadow;
-    expect(resting).toBe('none');
+    expect(resting).toBe(FLAT_SHADOW);
 
     await userEvent.hover(el);
     await nextFrame();
     await settleMotion();
     const lifted = getComputedStyle(cardPart(el)).boxShadow;
-    expect(lifted).not.toBe('none');
+    expect(lifted).toBe(getComputedStyle(probe).boxShadow);
     expect(lifted, 'hover must lift the card off its resting elevation').not.toBe(resting);
 
     await userEvent.hover(probe);

@@ -1,9 +1,7 @@
 # Migrate off deprecated tokens
 
-Some published `--ki-*` tokens are painted by no component. They stay in the
-stylesheets with their values, so an override you wrote still applies, but
-they are deprecated and will be removed. Each one names the token that
-replaces it.
+Deprecated `--ki-*` tokens stay in the stylesheets with their values until
+their scheduled removal. Each one names its replacement.
 
 ## Where you see a deprecation
 
@@ -38,11 +36,9 @@ reaches the removal version while still shipping the token.
 
 ## What to change
 
-Replace each deprecated name with its replacement wherever you set or read
-it. The renames are mechanical: a search and replace over the *Deprecated
-tokens* table is enough. The table below groups the tokens deprecated in 0.1.0,
-where `{variant}` is `primary`, `secondary`, `tertiary`, `quaternary` or
-`ghost`:
+Use the replacement in the *Deprecated tokens* table wherever you set or read a
+deprecated token. In the table below, `{variant}` is `primary`, `secondary`,
+`tertiary`, `quaternary` or `ghost`.
 
 | Deprecated | Use instead | Why |
 | --- | --- | --- |
@@ -54,9 +50,30 @@ where `{variant}` is `primary`, `secondary`, `tertiary`, `quaternary` or
 | `--ki-select-listbox-elevation` | `--ki-select-listbox-shadow` | The listbox shadow replaced the hand-composed elevation. |
 | `--ki-motion-easing-spring` | `--ki-motion-easing-emphasized-out` | Onmars now eases out without overshoot. Both names resolve to the theme's same curve until removal. |
 
-Setting a deprecated token changes nothing on screen today, because no
-component reads it. That is why it is going: the replacement is the property
-that actually restyles the component.
+### Backdrop blur lengths
+
+For `*-backdrop-blur` tokens, change how you set and read the value.
+
+- Set `--ki-button-backdrop-filter: blur(8px)` in place of
+  `--ki-button-backdrop-blur: 8px`. Use `none` to turn off the effect.
+- Read the complete value with `backdrop-filter: var(--ki-button-backdrop-filter)`.
+
+The deprecated lengths still drive their original glass filters when a theme
+selects them. A different complete filter takes precedence, including the
+`none` used by Calma and reduced transparency.
+
+### Dialog and tooltip background stops
+
+Combine the old `--ki-dialog-bg-start` and `--ki-dialog-bg-end` colors in one
+CSS `linear-gradient()` assigned to `--ki-dialog-bg-image`. Use
+`--ki-tooltip-bg-image` the same way for the tooltip. For a solid surface,
+set the image to `none` and set `--ki-dialog-bg` or `--ki-tooltip-bg` to the
+fill color. A theme can set the tooltip arrow's edge colors through
+`--ki-surface-image-tooltip-arrow-start` and `--ki-surface-image-tooltip-arrow-end`.
+
+During the deprecation window, the onmars v1 default gradients still take
+their legacy colors from the element that declares the theme. For a
+per-component override, assign the complete image on that component.
 
 ## For contributors
 
@@ -78,5 +95,8 @@ A deprecation is declared once, on the token's base definition in
 The stylesheet comment, the reference row and the snapshot facet are generated
 from it. The build rejects a deprecation without its reason, its schedule or
 a replacement that is a live published token, one declared on a group or in a
-theme overlay, and a component or token that still reads a deprecated token.
-The contract is `specs/041-token-deprecation`.
+theme overlay, and direct reads of deprecated tokens in component CSS or DTCG
+aliases, apart from the temporary backdrop compatibility bridge. Onmars v1
+uses temporary theme CSS expressions to keep the stops working at the theme
+scope. The contracts are `specs/041-token-deprecation` and
+`specs/061-backdrop-filter-token`.

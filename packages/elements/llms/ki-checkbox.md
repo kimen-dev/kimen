@@ -137,7 +137,7 @@ None.
 - `--ki-checkbox-unchecked-rest-border`: color used by the checkbox component for unchecked rest border.
 - `--ki-checkbox-unchecked-rest-fg`: color used by the checkbox component for unchecked rest foreground.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.
+- `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-emphasized-out`: Expressive exit curve for selected controls. Onmars eases out without overshoot.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.

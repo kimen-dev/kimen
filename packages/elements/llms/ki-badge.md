@@ -67,6 +67,7 @@ None.
 
 ## CSS custom properties
 
+- `--ki-badge-backdrop-filter`: Complete backdrop filter for the neutral badge surface.
 - `--ki-badge-border-width`: dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral glass type draws its 1px bevel via ki.badge.neutral.border-width. material3 keeps its border via its override).
 - `--ki-badge-danger-bg`: color used by the badge component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-danger-border`: color used by the badge component for danger border.
@@ -96,8 +97,7 @@ None.
 - `--ki-badge-warning-bg`: color used by the badge component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-warning-border`: color used by the badge component for warning border.
 - `--ki-badge-warning-fg`: color used by the badge component for warning foreground.
-- `--ki-effect-component-backdrop-blur`: MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate).
-- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
+- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-outline-secondary-button-bottom`: semantic color for outline secondary button bottom.

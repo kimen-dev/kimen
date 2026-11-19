@@ -73,3 +73,11 @@ Feature: Onmars v2 theme values
 - Agent's choice, pending founder confirmation. Compact the CSS and inline
   references to fixed private foundations to stay within the existing
   stylesheet budgets. Keep their declarations and the public aliases.
+
+## Integration
+
+Calma uses the merged tokens from #342, #343 and #347. Both complete backdrop
+filters are `none`. Dialog and tooltip use solid fills, and the tooltip arrow
+uses the bubble fill by default. The select listbox keeps its reference tint
+as one background color. The dialog heading uses Newsreader at the display
+semibold weight, while alert headings use the body family.

@@ -763,7 +763,8 @@ describe('ki-alert in a real browser', () => {
 
     expect(hasVisibleShadow(computed.boxShadow)).toBe(false);
 
-    expect(computed.backdropFilter).toBe('blur(0px)');
+    // #342 lets Calma disable the filter entirely.
+    expect(computed.backdropFilter).toBe('none');
   });
 
   it('S15 keeps the message leading and dismiss control trailing under RTL', async () => {
