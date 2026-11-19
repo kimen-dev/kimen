@@ -34,9 +34,9 @@ it('S9 extends the xs icon button hit area to 44px on a coarse pointer', async (
     test.skip('This browser cannot emulate a coarse pointer');
   }
   try {
-    expect(matchMedia('(pointer: coarse)').matches).toBe(true);
+    await expect.poll(() => matchMedia('(pointer: coarse)').matches).toBe(true);
     fixture.innerHTML =
-      '<div style="padding: var(--ki-space-lg)"><ki-copy-button value="token" size="xs"></ki-copy-button></div>';
+      '<div data-ki-density="touch" style="padding: var(--ki-space-lg)"><ki-copy-button value="token" size="xs"></ki-copy-button></div>';
     const host = fixture.querySelector('ki-copy-button');
     const nativeButton = () => host?.shadowRoot?.querySelector('button');
     await expect.poll(nativeButton).toBeInstanceOf(HTMLButtonElement);

@@ -1,19 +1,36 @@
 ---
 title: ki-copy-button
-description: Describe the purpose of ki-copy-button from the approved contract.
+description: Copy a link, token, identifier or code sample to the clipboard.
 ---
 
 import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
 import Demo from '../../../../../../site/docs/src/components/Demo.astro';
 
-{/* TODO(spec): document when to use this component and the accessible usage patterns. */}
+<Demo code={`<ki-copy-button value="https://kimen.dev/i/4f9a" label="Copy invite link"></ki-copy-button>
+<ki-copy-button value="token-4f9a" variant="secondary">Copy token</ki-copy-button>`} />
 
-<Demo code={`<ki-copy-button label="Example"></ki-copy-button>`} />
+Use `value` for known text or `from` for the ID of a source in the same
+document or shadow root. When the person activates the button, it reads the
+source's current string value or its text content.
+
+```html
+<ki-input id="invite" label="Invite link" value="https://kimen.dev/i/4f9a" readonly></ki-input>
+<ki-copy-button from="invite" label="Copy invite link" variant="secondary"></ki-copy-button>
+```
+
+Give an icon-only button a label that identifies what will be copied.
+When the button has visible slot text, that text supplies its accessible name.
+The check or error glyph replaces the copy icon in place. The button retains
+focus and a polite status announces the result. Localize `copied-label` and
+`copy-error-label` for the page's language.
+
+Copying requires the browser Clipboard API and permission to write. Listen
+for `ki-copy` to receive the exact copied string in `detail.value`, or
+`ki-copy-error` to respond to a failed copy. Guarded surfaces can bind a
+declared action to successful copies.
 
 ## API reference
 
 <CemApi tag="ki-copy-button" />
-
-## Workshop
 
 [Open ki-copy-button in Storybook](/storybook/?path=/docs/docs-components-ki-copy-button--docs)

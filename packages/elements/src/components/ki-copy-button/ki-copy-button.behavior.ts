@@ -1,9 +1,11 @@
 export function copySourceText(
   source: { textContent: string | null; value?: unknown } | null,
 ): string | undefined {
-  throw new Error(`Copy source resolution is pending (source present: ${String(source !== null)})`);
+  const value = source?.value;
+  return typeof value === 'string' ? value : (source?.textContent ?? undefined);
 }
 
 export function feedbackTimeout(duration: number): number {
-  throw new Error(`Feedback timing is pending (${String(duration)} ms)`);
+  if (!Number.isFinite(duration) || duration < 0) return 1500;
+  return Math.min(duration, 2_147_483_647);
 }

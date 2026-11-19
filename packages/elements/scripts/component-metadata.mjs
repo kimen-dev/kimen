@@ -43,6 +43,14 @@ export function readComponentMetadata(componentRoot, tag) {
   if (Object.hasOwn(metadata, 'catalog') && typeof metadata.catalog !== 'boolean') {
     invalid('catalog');
   }
+  if (
+    Object.hasOwn(metadata, 'catalogAction') &&
+    (metadata.catalog !== true ||
+      typeof metadata.catalogAction !== 'string' ||
+      metadata.catalogAction.trim() === '')
+  ) {
+    invalid('catalogAction');
+  }
 
   if (
     Object.hasOwn(metadata, 'formBinding') &&

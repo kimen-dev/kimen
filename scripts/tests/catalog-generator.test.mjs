@@ -159,3 +159,10 @@ test('a catalog action must select a public event', () => {
     /ki-probe: catalog action ki-missing is not a declared event/u,
   );
 });
+
+test('preserves a double-quoted manifest string default containing an apostrophe', () => {
+  const props = propsOf([
+    { default: `"Couldn't copy"`, name: 'copy-error-label', type: { text: 'string' } },
+  ]);
+  assert.equal(props['copy-error-label'].default, "Couldn't copy");
+});

@@ -98,6 +98,36 @@ it('S1 copies the exact explicit value and emits a composed ki-copy event', asyn
   expect(failure).not.toHaveBeenCalled();
 });
 
+it('S1 accepts one pending write at a time and can copy again when it settles', async () => {
+  let finishWrite = () => {
+    throw new Error('Clipboard fixture did not start');
+  };
+  const firstWrite = new Promise<void>((resolve) => {
+    finishWrite = () => {
+      resolve();
+    };
+  });
+  writeText.mockReturnValueOnce(firstWrite);
+  const host = await mount('<ki-copy-button value="first" feedback-duration="0"></ki-copy-button>');
+  const success = vi.fn();
+  host.addEventListener('ki-copy', success);
+  const button = part(host, 'button');
+
+  button.click();
+  button.click();
+
+  expect(writeText.mock.calls).toEqual([['first']]);
+  expect(success).not.toHaveBeenCalled();
+  finishWrite();
+  await expect.poll(() => status(host).textContent).toBe('Copied');
+
+  host.setAttribute('value', 'second');
+  button.click();
+
+  await expect.poll(() => success.mock.calls.length).toBe(2);
+  expect(writeText.mock.calls).toEqual([['first'], ['second']]);
+});
+
 it('S2 reads the current field value from the same shadow root', async () => {
   const shadow = fixture.appendChild(document.createElement('div')).attachShadow({ mode: 'open' });
   const host = await mount(

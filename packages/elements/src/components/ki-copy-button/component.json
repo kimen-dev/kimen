@@ -1,4 +1,6 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false }
+  "barePage": { "keyboardPressed": true },
+  "pointer": { "hoverWitness": true },
+  "catalog": true,
+  "catalogAction": "ki-copy"
 }

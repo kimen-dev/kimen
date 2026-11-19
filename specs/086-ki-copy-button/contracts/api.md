@@ -12,7 +12,8 @@
 | `copy-error-label` | string | `Couldn't copy` | Polite failure announcement. |
 
 The default slot accepts a visible label and supplies the accessible name.
-The `button` and `icon` parts expose the native control and its glyph box.
+The `button`, `icon` and `label` parts expose the native control, glyph box
+and visible label wrapper.
 
 `ki-copy` carries `{ value: string }` after a successful write and activates
 the declared catalog action. `ki-copy-error` has no payload. Both events bubble
