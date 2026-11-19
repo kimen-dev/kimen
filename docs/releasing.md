@@ -118,8 +118,10 @@ script execution. Its only elevated permission is short-lived OIDC
 (`id-token: write`) in the protected `npm` environment.
 
 Every owned job uses a full-SHA-pinned action, explicit job permissions and
-blocked egress with a declared endpoint allowlist. Run the global policy gate
-before changing workflow structure:
+blocked egress with a declared endpoint allowlist. The publisher's list is
+the registry plus the two Sigstore services that `npm publish --provenance`
+signs through, Fulcio and Rekor; a test holds it to exactly that. Run the
+global policy gate before changing workflow structure:
 
 ```sh
 pnpm run check:workflows
