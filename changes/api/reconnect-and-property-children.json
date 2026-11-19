@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "e402a4a9f12f06ca3d8524271c484e74f0a760e8efbca44d9ba707a85c0eb7bd",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Components that survive a move in the document and children read by property (bug fixes), cumulative since baseline 0.0.0 and superseding declaration 045-density (its deltas, and those of every declaration it supersedes, remain as declared there). No published name, prop, event, part, slot or token is added, renamed or removed, and no CSS or token value changes. The only snapshot delta is in the component class signatures Stencil emits: KiButton, KiCard, KiCheckbox, KiDialog, KiListItem and KiSwitch gain connectedCallback(), and KiTabs gains componentWillLoad(); no member is removed. Behaviour, pinned by regression tests rather than new scenarios: (1) ki-select and ki-tabs read their children's value and disabled from the property first and the attribute second, keep a requested value until a child carries it, and reconcile again when a child's value changes, so a tree a framework builds from properties resolves its initial value; (2) ki-button, ki-icon-button, ki-checkbox, ki-switch, ki-list-item, ki-card, ki-scroller, ki-select, ki-radio-group, ki-tabs, ki-tooltip and ki-dialog arm their observers and listeners on every connection instead of once on load, so they keep working after a keyed reorder or any other move, and an open ki-dialog is modal again where it lands; (3) ki-radio-group dispatches change in the same task as input, after it, instead of one task later; (4) a ki-tooltip whose label is undefined, null or removed renders no tooltip instead of throwing. The gate classifies every module symbol signature change as MAJOR, so this candidate is declared major; the cumulative delta since 0.0.0 was already MAJOR. Zero removals, no root growth; CEM, llms.txt, catalog and framework wrappers regenerate byte-identical. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

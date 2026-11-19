@@ -101,14 +101,25 @@ export class KiButton {
     return this.disabled || this.formDisabled;
   }
 
-  componentDidLoad(): void {
-    this.syncForwardedDescription();
+  connectedCallback(): void {
+    // Armed on every connection, not once on load: disconnectedCallback
+    // releases the observer, and a button that is moved in the document (a
+    // keyed reorder, a drag between lists) connects again without loading
+    // again.
+    this.descriptionObserver?.disconnect();
     this.descriptionObserver = new MutationObserver(() => {
       this.syncForwardedDescription();
     });
     this.descriptionObserver.observe(this.host, {
       attributeFilter: ['aria-description'],
     });
+    // A description written while the button was out of the document. On the
+    // first connection there is no inner button yet: componentDidLoad syncs.
+    this.syncForwardedDescription();
+  }
+
+  componentDidLoad(): void {
+    this.syncForwardedDescription();
   }
 
   disconnectedCallback(): void {

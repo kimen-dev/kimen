@@ -121,12 +121,18 @@ export class KiDialog {
     this.open = booleanFromAttributePresence(this.open, this.host.hasAttribute('open'));
   }
 
+  connectedCallback(): void {
+    // Back in the document after a move or a removal: disconnectedCallback
+    // released the observer and the document listener, and the dialog loads
+    // only once. On the first connection there is no native dialog yet:
+    // componentDidLoad arms it.
+    if (this.dialog) {
+      this.arm();
+    }
+  }
+
   componentDidLoad(): void {
-    this.openObserver = new MutationObserver(this.handleHostMutation);
-    this.openObserver.observe(this.host, { attributeFilter: ['open', 'close-on-backdrop'] });
-    document.addEventListener('keydown', this.handleKeyDown, { capture: true });
-    this.updateFooterState();
-    this.syncDialogToHost();
+    this.arm();
   }
 
   disconnectedCallback(): void {
@@ -134,6 +140,20 @@ export class KiDialog {
     this.openObserver?.disconnect();
     this.bodyObserver?.disconnect();
     document.removeEventListener('keydown', this.handleKeyDown, { capture: true });
+  }
+
+  /**
+   * Everything the dialog holds only while it is in the document, plus the
+   * state that may have changed while it was out of it: `open` written on a
+   * detached dialog, footer actions added or removed.
+   */
+  private arm(): void {
+    this.openObserver?.disconnect();
+    this.openObserver = new MutationObserver(this.handleHostMutation);
+    this.openObserver.observe(this.host, { attributeFilter: ['open', 'close-on-backdrop'] });
+    document.addEventListener('keydown', this.handleKeyDown, { capture: true });
+    this.updateFooterState();
+    this.syncDialogToHost();
   }
 
   /**
@@ -357,7 +377,13 @@ export class KiDialog {
       return;
     }
 
-    if (this.open && !this.dialog.open) {
+    if (this.open && !this.dialog.matches(':modal')) {
+      // Removal takes a modal dialog out of the top layer and leaves its
+      // native `open` attribute behind: back in the document it would sit in
+      // the page flow, open and not modal, with the page behind it live.
+      // `showModal()` throws on such a dialog, and `close()` would report a
+      // close that never happened, so the stale attribute is dropped first.
+      this.dialog.removeAttribute('open');
       this.dialog.showModal();
       this.observeBody();
       this.assistFocusEntry();

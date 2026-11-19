@@ -1,4 +1,5 @@
 import { Component, Element, Event, Host, Prop, Watch, h } from '@stencil/core';
+import { childDisabled, childValue } from '../../utils/child-props';
 import {
   firstSelectableIndex,
   lastSelectableIndex,
@@ -55,9 +56,19 @@ export class KiTabs {
   private panelRoster: HTMLElement[] = [];
   private pairings: PairingRecord[] = [];
   private tabStrip: HTMLElement | undefined;
-  private revealedTab: HTMLElement | null = null;
-  private disabledObserver?: MutationObserver;
+  // The tab the last reconciliation left selected.
+  private selectedTab: HTMLElement | null = null;
+  private childObserver?: MutationObserver;
   private reconciling = false;
+  private loaded = false;
+  // A value requested by attribute or property that no tab owns yet. `value`
+  // reads the fallback meanwhile, and the request is honoured when a tab that
+  // owns it arrives, loads or takes that value: frameworks and streamed
+  // generated UI set the value before the tabs exist, and nobody sets it
+  // again. Another value or the user's choice replaces it. Writing the
+  // fallback's own value does not: `value` already reads it, so that write is
+  // no change and reaches no watcher.
+  private pendingValue = '';
 
   /**
    * Resolved selected value. The attribute declares the initial request;
@@ -94,17 +105,34 @@ export class KiTabs {
   }
 
   connectedCallback(): void {
-    this.disabledObserver = new MutationObserver(() => {
-      this.reconcile(this.value);
+    this.childObserver = new MutationObserver(() => {
+      this.reconcile();
     });
+    // Back in the document after a move (a keyed reorder, a drag between
+    // lists): disconnectedCallback released the observer, the tabs may have
+    // changed meanwhile, and the group loads only once. On the first
+    // connection there is nothing to reconcile yet: componentDidLoad does it.
+    if (this.loaded) {
+      this.reconcile();
+    }
+  }
+
+  componentWillLoad(): void {
+    // The declared value is a request until a tab owns it: the first
+    // reconciliation may run before any tab is there to be asked. A value
+    // written between connection and load has already registered itself.
+    if (this.pendingValue === '') {
+      this.pendingValue = this.value;
+    }
   }
 
   componentDidLoad(): void {
-    this.reconcile(this.value);
+    this.loaded = true;
+    this.reconcile();
   }
 
   disconnectedCallback(): void {
-    this.disabledObserver?.disconnect();
+    this.childObserver?.disconnect();
   }
 
   private readonly setTabStripRef = (strip?: HTMLElement): void => {
@@ -112,7 +140,7 @@ export class KiTabs {
   };
 
   private readonly handleSlotChange = (): void => {
-    this.reconcile(this.value);
+    this.reconcile();
   };
 
   private readonly handleClick = (event: MouseEvent): void => {
@@ -203,11 +231,17 @@ export class KiTabs {
     return null;
   }
 
-  private reconcile(requestedValue: string): void {
+  /**
+   * Brings selection, pairing and stamps in line with the current children.
+   * With a `requestedValue` it answers a new request (the `value` property,
+   * the user's choice); without one, the children changed and nobody asked
+   * for another tab.
+   */
+  private reconcile(requestedValue?: string): void {
     this.reconciling = true;
     this.stampTabSlots();
     this.readRosters();
-    this.observeDisabledTabs();
+    this.observeChildren();
 
     const tabRecords = this.tabRecords();
     this.pairings = buildPairing(
@@ -215,8 +249,9 @@ export class KiTabs {
       this.panelRoster.map((panel) => ({ value: this.elementValue(panel) })),
     );
 
-    const selectedIndex = resolveSelection(tabRecords, requestedValue);
-    const selectedTab = selectedIndex === null ? null : (this.tabRoster[selectedIndex] ?? null);
+    const previousTab = this.selectedTab;
+    const selectedTab = this.resolveSelectedTab(tabRecords, requestedValue);
+    this.selectedTab = selectedTab;
     this.applyStamps(selectedTab);
     this.value = selectedTab ? this.elementValue(selectedTab) : '';
     this.reconciling = false;
@@ -224,12 +259,43 @@ export class KiTabs {
     // A selection made by pointer or through `value` brings its tab into
     // view. Only a change does: reconciling an unchanged selection (a tab
     // added, a tab disabled) leaves the strip where the person scrolled it.
-    if (selectedTab !== this.revealedTab) {
-      this.revealedTab = selectedTab;
-      if (selectedTab) {
-        this.revealTab(selectedTab);
-      }
+    if (selectedTab !== previousTab && selectedTab) {
+      this.revealTab(selectedTab);
     }
+  }
+
+  private resolveSelectedTab(tabRecords: TabRecord[], requestedValue?: string): HTMLElement | null {
+    const owned = (value: string): boolean => tabRecords.some((tab) => tab.value === value);
+
+    if (requestedValue !== undefined) {
+      // A new request replaces the one that was waiting.
+      this.pendingValue = requestedValue;
+    }
+    const pendingOwned = this.pendingValue !== '' && owned(this.pendingValue);
+    const wanted = requestedValue ?? (pendingOwned ? this.pendingValue : this.value);
+    if (pendingOwned) {
+      // Settled, whatever comes of it: a tab that owns the value and is
+      // disabled yields to the fallback and does not claim the selection
+      // later.
+      this.pendingValue = '';
+    }
+
+    // The children changed and no tab carries the selected value any more,
+    // yet the selected tab is still there: its own value was changed. It
+    // keeps the selection, and `value` follows it.
+    const previousTab = this.selectedTab;
+    if (
+      requestedValue === undefined &&
+      !owned(wanted) &&
+      previousTab &&
+      this.tabRoster.includes(previousTab) &&
+      this.isSelectableTab(previousTab)
+    ) {
+      return previousTab;
+    }
+
+    const selectedIndex = resolveSelection(tabRecords, wanted);
+    return selectedIndex === null ? null : (this.tabRoster[selectedIndex] ?? null);
   }
 
   /**
@@ -277,11 +343,19 @@ export class KiTabs {
     );
   }
 
-  private observeDisabledTabs(): void {
-    this.disabledObserver?.disconnect();
+  /**
+   * What a child declares and the group resolves against: a tab's `disabled`
+   * and `value`, a panel's `value`. Both are reflected, so a property a
+   * framework assigns reaches the group here once the child has rendered.
+   */
+  private observeChildren(): void {
+    this.childObserver?.disconnect();
 
     for (const tab of this.tabRoster) {
-      this.disabledObserver?.observe(tab, { attributes: true, attributeFilter: ['disabled'] });
+      this.childObserver?.observe(tab, { attributeFilter: ['disabled', 'value'] });
+    }
+    for (const panel of this.panelRoster) {
+      this.childObserver?.observe(panel, { attributeFilter: ['value'] });
     }
   }
 
@@ -294,14 +368,14 @@ export class KiTabs {
       seen.add(value);
       return {
         value,
-        disabled: tab.hasAttribute('disabled'),
+        disabled: childDisabled(tab),
         duplicate,
       };
     });
   }
 
   private elementValue(element: HTMLElement): string {
-    return element.getAttribute('value') ?? '';
+    return childValue(element) ?? '';
   }
 
   private applyStamps(selectedTab: HTMLElement | null): void {
@@ -315,7 +389,7 @@ export class KiTabs {
       const selected = tab === selectedTab;
       this.setBooleanAttribute(tab, 'selected', selected);
       tab.setAttribute('aria-selected', selected ? 'true' : 'false');
-      tab.setAttribute('aria-disabled', tab.hasAttribute('disabled') ? 'true' : 'false');
+      tab.setAttribute('aria-disabled', childDisabled(tab) ? 'true' : 'false');
       tab.setAttribute('tabindex', selected ? '0' : '-1');
       this.ensureId(tab, 'ki-tab');
 
@@ -396,7 +470,7 @@ export class KiTabs {
   }
 
   private isSelectableTab(tab: HTMLElement): boolean {
-    return this.pairingForTab(tab) !== undefined && !tab.hasAttribute('disabled');
+    return this.pairingForTab(tab) !== undefined && !childDisabled(tab);
   }
 
   private selectTab(tab: HTMLElement, emit: boolean): void {

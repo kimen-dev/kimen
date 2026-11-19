@@ -57,16 +57,25 @@ export class KiCard {
   private readonly slots = new Map<CardRegion, HTMLSlotElement>();
   private observer?: MutationObserver;
 
-  componentDidLoad(): void {
-    this.syncAllRegions();
+  connectedCallback(): void {
     // slotchange does NOT fire when an already-assigned text node's content
     // changes (e.g. body text driven from '' to real text, or back), so a
     // characterData observer re-checks the regions on those mutations too
-    // (codex review).
+    // (codex review). Armed on every connection: disconnectedCallback
+    // releases the observer, and a card that is moved in the document (a
+    // reordered grid) connects again without loading again.
+    this.observer?.disconnect();
     this.observer = new MutationObserver(() => {
       this.syncAllRegions();
     });
     this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
+    // Content written while the card was out of the document. On the first
+    // connection the slots are not rendered yet: componentDidLoad syncs.
+    this.syncAllRegions();
+  }
+
+  componentDidLoad(): void {
+    this.syncAllRegions();
   }
 
   disconnectedCallback(): void {

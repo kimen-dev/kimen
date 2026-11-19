@@ -259,6 +259,18 @@ export class KiRadioGroup {
         this[attribute] = true;
       },
     );
+    // Added on every connection, as disconnectedCallback removes them: a group
+    // that is moved in the document (a keyed reorder, a drag between lists)
+    // connects again without loading again, and without these it would no
+    // longer coordinate its options — two of them checked, the old value kept.
+    this.host.addEventListener('input', this.handleInput, { capture: true });
+    this.host.addEventListener('keydown', this.handleKeyDown);
+    this.host.addEventListener('focusin', this.handleFocusIn);
+    this.host.addEventListener('invalid', this.handleInvalid);
+    // The roster observer was released too, and the options may have changed
+    // while the group was out of the document. On the first connection the
+    // slot is not rendered yet: componentDidLoad reads the roster.
+    this.syncRoster();
   }
 
   componentWillLoad(): void {
@@ -268,10 +280,6 @@ export class KiRadioGroup {
   }
 
   componentDidLoad(): void {
-    this.host.addEventListener('input', this.handleInput, { capture: true });
-    this.host.addEventListener('keydown', this.handleKeyDown);
-    this.host.addEventListener('focusin', this.handleFocusIn);
-    this.host.addEventListener('invalid', this.handleInvalid);
     this.syncRoster();
   }
 
@@ -339,9 +347,17 @@ export class KiRadioGroup {
 
     this.pendingValue = '';
     this.setSelectedRadio(radio);
-    setTimeout(() => {
-      this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
-    }, 0);
+    // `change` follows `input` in the same task, as on a native radio, a
+    // ki-checkbox or a ki-switch. It cannot be dispatched from here: this
+    // listener runs in the capture phase, before anyone on the group has
+    // heard `input`. The option's own native `change` comes right after
+    // `input` has finished its whole path; it is not composed, so it stops at
+    // the option's shadow root, and that is where the group waits for it.
+    radio.shadowRoot?.addEventListener('change', this.emitChange, { once: true });
+  };
+
+  private readonly emitChange = (): void => {
+    this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   };
 
   private readonly handleKeyDown = (event: KeyboardEvent): void => {
@@ -384,19 +400,23 @@ export class KiRadioGroup {
 
   private syncRoster(): void {
     const slot = this.host.shadowRoot?.querySelector('slot');
+    if (!slot) {
+      // Nothing rendered yet: there is no roster to read.
+      return;
+    }
     const assigned = slot
-      ?.assignedElements()
+      .assignedElements()
       .filter((element): element is KiRadioElement => this.isKiRadio(element));
     // syncInputs() only ever walks the CURRENT roster, so a radio that has just
     // left takes the group's disabled marker with it and keeps it forever —
     // standalone, permanently disabled-looking, with its own `disabled`
     // property unable to explain why. The marker is a claim of ownership, so it
     // is withdrawn here, before the roster that justified it is replaced.
-    const departed = this.roster.filter((radio) => !(assigned ?? []).includes(radio));
+    const departed = this.roster.filter((radio) => !assigned.includes(radio));
     for (const radio of departed) {
       radio.removeAttribute('data-ki-group-disabled');
     }
-    this.roster = assigned ?? [];
+    this.roster = assigned;
     this.rosterObserver?.disconnect();
     this.rosterObserver = new MutationObserver(() => {
       this.reconcileSelection();

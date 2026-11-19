@@ -69,12 +69,21 @@ export class KiScroller {
     this.viewport = viewport;
   };
 
-  componentDidLoad(): void {
+  connectedCallback(): void {
     // Overflow observation only — scrolling itself stays native and the
     // component registers no wheel, touch or scroll listener (FR-004).
-    this.resizeObserver = new ResizeObserver(() => {
+    this.resizeObserver ??= new ResizeObserver(() => {
       this.syncOverflow();
     });
+    // Armed on every connection: disconnectedCallback releases the observed
+    // elements, and a scroller that is moved in the document connects again
+    // without loading again. On the first connection there is no viewport
+    // yet: componentDidLoad arms it.
+    this.observeContent();
+    this.syncOverflow();
+  }
+
+  componentDidLoad(): void {
     this.observeContent();
     this.syncOverflow();
   }
