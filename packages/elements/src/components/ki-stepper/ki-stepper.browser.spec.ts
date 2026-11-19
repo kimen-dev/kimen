@@ -219,12 +219,19 @@ it('S2 keeps a focused completed link reachable when the horizontal list narrows
   await expect.element(list()).toBeVisible();
   const account = await accountLink();
   account.focus();
-  await expect.poll(() => host.shadowRoot?.activeElement).toBe(account);
+  expect(host.shadowRoot?.activeElement).toBe(account);
 
+  // Resize before Stencil has had a chance to render the focus state.
   fixture.style.inlineSize = '18rem';
   const summary = page.getByRole('button', { name: /^Step 3 of 4/ });
-  await expect.element(summary).toHaveAttribute('aria-expanded', 'true');
-  expect(host.shadowRoot?.activeElement).toBe(account);
+  await expect.element(summary).toBeVisible();
+  await expect
+    .poll(() => ({
+      expanded: summary.element().getAttribute('aria-expanded'),
+      linkHasFocus: host.shadowRoot?.activeElement === account,
+    }))
+    .toEqual({ expanded: 'true', linkHasFocus: true });
+  await expect.element(list()).toBeVisible();
 
   (summary.element() as HTMLButtonElement).focus();
   await expect.element(summary).toHaveAttribute('aria-expanded', 'false');

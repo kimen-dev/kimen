@@ -166,7 +166,8 @@ a[part="title"]:focus-visible,
     display: inline-flex;
   }
 
-  [part="summary"][aria-expanded="false"] + [part="list"] {
+  /* Keep the focused link visible even before Stencil renders the new state. */
+  [part="summary"][aria-expanded="false"] + [part="list"]:not(:focus-within) {
     display: none;
   }
 }
