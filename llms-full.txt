@@ -225,9 +225,8 @@ compose several into `ki-avatar-group` for a compact "who is involved"
 stack with overflow.
 When NOT to use: as a clickable control (compose the avatar inside an
 interactive host such as ki-button), for logos or arbitrary illustrations
-(plain `img`), for presence/verification adornments overlaid on the corner
-(a future overlay concern shared with the nav badge), or unlabeled when no
-adjacent text names the identity.
+(plain `img`), or unlabeled when no adjacent text names the identity.
+Use the counter slot for a decorative count or presence dot.
 
 Examples:
 
@@ -259,7 +258,8 @@ Attributes:
 - `size` ("lg" | "md" | "sm" | "xl" | "xs" | "xxs", default 'md'): Size step over the shared scale; per-size metrics (box, initials font, figure glyph) are per-theme component tokens, never hardcoded (FR-004). An unrecognized value matches no style selector, so the avatar keeps the default medium metrics (fallback by CSS construction, FR-007).
 - `src` (string | undefined, URL): Portrait URL, the first step of the fallback chain. When it fails to load — initially or at runtime — the avatar silently falls back to the initials (or the generic figure) with no error, no layout change and no event (FR-001). Loading policy follows the platform image defaults.
 
-Slots: none
+Slots:
+- `counter`: Decorative ki-counter. Counts sit at block-start inline-end and dots at block-end inline-end. Include its meaning in the avatar label.
 
 Parts:
 - `avatar`: The avatar box: size, shape, surface, border and typography.
@@ -297,6 +297,7 @@ CSS custom properties:
 - `--ki-avatar-xxs-font-size`: dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px).
 - `--ki-avatar-xxs-icon-size`: dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl).
 - `--ki-avatar-xxs-size`: dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md).
+- `--ki-counter-ring-width`: Thickness of the separating ring.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
@@ -425,7 +426,7 @@ only reinforces the text, it never replaces it.
 When NOT to use: feedback that must be announced (that is
 ki-alert's job — the badge has no live region), an interactive
 chip, filter or button, empty content (the label IS the meaning), or a
-notification-counter overlay (a future, separate concern).
+notification-counter overlay (use ki-counter).
 
 Examples:
 
@@ -1027,6 +1028,86 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-counter
+
+A decorative count or dot over a trigger or avatar.
+
+When to use: mark unread or pending items on a trigger, or presence on an
+avatar. Supply the full meaning in the host's accessible name and use a
+page-owned polite live region for important updates.
+When NOT to use: for an object's status (use ki-badge), a count inside a list
+row (use text or ki-badge), or an announcement that needs its own semantics.
+
+Examples:
+
+# Notification count and presence
+
+Provide the actual count or presence in the host's label. The visible counter
+is decorative, so a label can expose the full count even if the pill says
+`99+`.
+
+```html
+<ki-icon-button variant="secondary" label="Notifications, 3 unread">
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor">
+    <path d="M6 17h12l-2-3V9a4 4 0 0 0-8 0v5l-2 3Zm4 3h4" stroke-width="2" />
+  </svg>
+  <ki-counter slot="counter" value="3"></ki-counter>
+</ki-icon-button>
+
+<ki-avatar initials="AG" label="Ana García, online">
+  <ki-counter slot="counter" tone="success" dot></ki-counter>
+</ki-avatar>
+```
+
+The `for` attribute attaches the indicator to a trigger ID in the same
+document or shadow root. Set the trigger's accessible name directly.
+
+```html
+<a id="inbox-link" href="/inbox" aria-label="Inbox, 120 unread">Inbox</a>
+<ki-counter for="inbox-link" value="120" max="99"></ki-counter>
+<p id="inbox-updates" role="status"></p>
+```
+
+For an important count update, update the trigger name and the counter, then
+write one localized announcement to the pre-existing status region.
+
+Attributes:
+- `dot` (boolean, default false): Show a dot independently of the count, including when the value is zero.
+- `for` (string | undefined): Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
+- `max` (number, default 99): Largest count displayed in full. Higher values display the cap with a plus sign. Fractional caps round down; invalid caps use 99.
+- `tone` ("danger" | "neutral" | "primary" | "success", default 'danger'): Semantic palette of the pill or dot. An unknown tone uses danger.
+- `value` (number | undefined): Count of unread or pending items. Finite values are rounded down. Values below one and non-finite values hide the count.
+
+Slots: none
+
+Parts:
+- `indicator`: Painted pill or dot, including the surrounding ring.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-counter-backdrop-filter`: Complete backdrop filter for the indicator.
+- `--ki-counter-bg`: Danger notification indicator fill.
+- `--ki-counter-bg-image`: Optional image over the notification indicator fill.
+- `--ki-counter-dot-size`: Width and height of the presence dot.
+- `--ki-counter-fg`: Danger notification count text.
+- `--ki-counter-font-family`: Font family for the count.
+- `--ki-counter-font-size`: Font size for the count.
+- `--ki-counter-font-weight`: Font weight for the count.
+- `--ki-counter-neutral-bg`: Neutral notification indicator fill.
+- `--ki-counter-neutral-fg`: Neutral notification count text.
+- `--ki-counter-padding-inline`: Horizontal padding of a count pill.
+- `--ki-counter-primary-bg`: Primary notification indicator fill.
+- `--ki-counter-primary-fg`: Primary notification count text.
+- `--ki-counter-radius`: Radius of the painted pill or dot.
+- `--ki-counter-ring`: Surface-colored ring that separates the indicator from the trigger.
+- `--ki-counter-ring-width`: Thickness of the separating ring.
+- `--ki-counter-size`: Minimum width and height of a count pill.
+- `--ki-counter-success-bg`: Success notification indicator fill.
+- `--ki-counter-success-fg`: Success notification count text.
+
 ### ki-dialog
 
 A modal dialog for one interrupting decision or short focused task.
@@ -1390,6 +1471,7 @@ Attributes:
 
 Slots:
 - (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name — that comes from `label` alone.
+- `counter`: Decorative ki-counter in the block-start inline-end corner. Include its meaning in the button label.
 
 Parts:
 - `button`: Internal native button.
@@ -1542,6 +1624,7 @@ CSS custom properties:
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
 - `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
+- `--ki-counter-ring-width`: Thickness of the separating ring.
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-icon-button-lg-icon-size`: dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px).

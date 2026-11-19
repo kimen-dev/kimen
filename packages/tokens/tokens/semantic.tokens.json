@@ -1606,6 +1606,29 @@
         "$description": "Weight of a line icon's outline in viewBox units."
       }
     },
+    "notification-marker": {
+      "$type": "dimension",
+      "count-size": {
+        "$value": "{ki.space.4xl}",
+        "$description": "Minimum diameter of a notification marker that displays a count."
+      },
+      "dot-size": {
+        "$value": "{ki.space.lg}",
+        "$description": "Diameter of a notification or presence dot."
+      },
+      "ring-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Width of the separator between a notification marker and its trigger."
+      },
+      "padding-inline": {
+        "$value": "{ki.space.xs}",
+        "$description": "Inline padding of a notification marker with a count."
+      },
+      "radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "Pill radius of a notification marker."
+      }
+    },
     "density": {
       "$description": "Region density (spec 045). The three tokens are inherited from the document root, never redeclared on a theme root, and consumed directly by component CSS, so a density declaration on any element reaches every component inside it, in any theme. Nothing aliases them and no theme or mode reassigns them or what they reference (the build checks both).",
       "control-offset": {

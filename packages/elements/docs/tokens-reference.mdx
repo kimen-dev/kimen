@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 393 semantic
-and 1241 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 398 semantic
+and 1260 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -222,6 +222,16 @@ every component at once.
 | `--ki-motion-easing-standard-accelerate` | `cubic-bezier(0.42, 0, 1, 1)` | Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in). |
 | `--ki-motion-easing-standard-decelerate` | `cubic-bezier(0, 0, 0.58, 1)` | Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out). |
 | `--ki-motion-scale-activity-pulse-min` | `0.7` | Smallest visual scale of an activity pulse. |
+
+### `ki.notification-marker`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-notification-marker-count-size` | `1.125rem` | Minimum diameter of a notification marker that displays a count. |
+| `--ki-notification-marker-dot-size` | `0.625rem` | Diameter of a notification or presence dot. |
+| `--ki-notification-marker-padding-inline` | `0.25rem` | Inline padding of a notification marker with a count. |
+| `--ki-notification-marker-radius` | `1000px` | Pill radius of a notification marker. |
+| `--ki-notification-marker-ring-width` | `0.125rem` | Width of the separator between a notification marker and its trigger. |
 
 ### `ki.outline`
 
@@ -1046,6 +1056,30 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-checkbox-unchecked-rest-bg` | `#ffffff` | color used by the checkbox component for unchecked rest background. |
 | `--ki-checkbox-unchecked-rest-border` | `#86827b` | color used by the checkbox component for unchecked rest border. |
 | `--ki-checkbox-unchecked-rest-fg` | `#181613` | color used by the checkbox component for unchecked rest foreground. |
+
+### `ki-counter`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-counter-backdrop-filter` | `none` | Complete backdrop filter for the indicator. |
+| `--ki-counter-bg` | `#cc1b48` | Danger notification indicator fill. |
+| `--ki-counter-bg-image` | `none` | Optional image over the notification indicator fill. |
+| `--ki-counter-dot-size` | `0.625rem` | Width and height of the presence dot. |
+| `--ki-counter-fg` | `#ffffff` | Danger notification count text. |
+| `--ki-counter-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family for the count. |
+| `--ki-counter-font-size` | `0.6875rem` | Font size for the count. |
+| `--ki-counter-font-weight` | `700` | Font weight for the count. |
+| `--ki-counter-neutral-bg` | `#000000` | Neutral notification indicator fill. |
+| `--ki-counter-neutral-fg` | `#ffffff` | Neutral notification count text. |
+| `--ki-counter-padding-inline` | `0.25rem` | Horizontal padding of a count pill. |
+| `--ki-counter-primary-bg` | `#1d1a16` | Primary notification indicator fill. |
+| `--ki-counter-primary-fg` | `#ffffff` | Primary notification count text. |
+| `--ki-counter-radius` | `1000px` | Radius of the painted pill or dot. |
+| `--ki-counter-ring` | `#ffffff` | Surface-colored ring that separates the indicator from the trigger. |
+| `--ki-counter-ring-width` | `0.125rem` | Thickness of the separating ring. |
+| `--ki-counter-size` | `1.125rem` | Minimum width and height of a count pill. |
+| `--ki-counter-success-bg` | `#2c6a2b` | Success notification indicator fill. |
+| `--ki-counter-success-fg` | `#ffffff` | Success notification count text. |
 
 ### `ki-dialog`
 

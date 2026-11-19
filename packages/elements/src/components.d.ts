@@ -11,6 +11,7 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiLayoutGap } from "./utils/layout-gap";
@@ -40,6 +41,7 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiLayoutGap } from "./utils/layout-gap";
@@ -117,9 +119,8 @@ export namespace Components {
      * stack with overflow.
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
-     * (plain `img`), for presence/verification adornments overlaid on the corner
-     * (a future overlay concern shared with the nav badge), or unlabeled when no
-     * adjacent text names the identity.
+     * (plain `img`), or unlabeled when no adjacent text names the identity.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface KiAvatar {
         /**
@@ -176,7 +177,7 @@ export namespace Components {
      * @whenNotToUse feedback that must be announced (that is
      * ki-alert's job — the badge has no live region), an interactive
      * chip, filter or button, empty content (the label IS the meaning), or a
-     * notification-counter overlay (a future, separate concern).
+     * notification-counter overlay (use ki-counter).
      */
     interface KiBadge {
         /**
@@ -322,6 +323,41 @@ export namespace Components {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A decorative count or dot over a trigger or avatar.
+     * @whenToUse mark unread or pending items on a trigger, or presence on an
+     * avatar. Supply the full meaning in the host's accessible name and use a
+     * page-owned polite live region for important updates.
+     * @whenNotToUse for an object's status (use ki-badge), a count inside a list
+     * row (use text or ki-badge), or an announcement that needs its own semantics.
+     */
+    interface KiCounter {
+        /**
+          * Show a dot independently of the count, including when the value is zero.
+          * @default false
+         */
+        "dot": boolean;
+        /**
+          * Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
+          * @default undefined
+         */
+        "for"?: string;
+        /**
+          * Largest count displayed in full. Higher values display the cap with a plus sign. Fractional caps round down; invalid caps use 99.
+          * @default 99
+         */
+        "max": number;
+        /**
+          * Semantic palette of the pill or dot. An unknown tone uses danger.
+          * @default 'danger'
+         */
+        "tone": KiCounterTone;
+        /**
+          * Count of unread or pending items. Finite values are rounded down. Values below one and non-finite values hide the count.
+          * @default undefined
+         */
+        "value"?: number;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -1432,9 +1468,8 @@ declare global {
      * stack with overflow.
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
-     * (plain `img`), for presence/verification adornments overlaid on the corner
-     * (a future overlay concern shared with the nav badge), or unlabeled when no
-     * adjacent text names the identity.
+     * (plain `img`), or unlabeled when no adjacent text names the identity.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface HTMLKiAvatarElement extends Components.KiAvatar, HTMLStencilElement {
     }
@@ -1468,7 +1503,7 @@ declare global {
      * @whenNotToUse feedback that must be announced (that is
      * ki-alert's job — the badge has no live region), an interactive
      * chip, filter or button, empty content (the label IS the meaning), or a
-     * notification-counter overlay (a future, separate concern).
+     * notification-counter overlay (use ki-counter).
      */
     interface HTMLKiBadgeElement extends Components.KiBadge, HTMLStencilElement {
     }
@@ -1531,6 +1566,20 @@ declare global {
     var HTMLKiCheckboxElement: {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
+    };
+    /**
+     * A decorative count or dot over a trigger or avatar.
+     * @whenToUse mark unread or pending items on a trigger, or presence on an
+     * avatar. Supply the full meaning in the host's accessible name and use a
+     * page-owned polite live region for important updates.
+     * @whenNotToUse for an object's status (use ki-badge), a count inside a list
+     * row (use text or ki-badge), or an announcement that needs its own semantics.
+     */
+    interface HTMLKiCounterElement extends Components.KiCounter, HTMLStencilElement {
+    }
+    var HTMLKiCounterElement: {
+        prototype: HTMLKiCounterElement;
+        new (): HTMLKiCounterElement;
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
@@ -2121,6 +2170,7 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-grid": HTMLKiGridElement;
@@ -2213,9 +2263,8 @@ declare namespace LocalJSX {
      * stack with overflow.
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
-     * (plain `img`), for presence/verification adornments overlaid on the corner
-     * (a future overlay concern shared with the nav badge), or unlabeled when no
-     * adjacent text names the identity.
+     * (plain `img`), or unlabeled when no adjacent text names the identity.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface KiAvatar {
         /**
@@ -2272,7 +2321,7 @@ declare namespace LocalJSX {
      * @whenNotToUse feedback that must be announced (that is
      * ki-alert's job — the badge has no live region), an interactive
      * chip, filter or button, empty content (the label IS the meaning), or a
-     * notification-counter overlay (a future, separate concern).
+     * notification-counter overlay (use ki-counter).
      */
     interface KiBadge {
         /**
@@ -2426,6 +2475,41 @@ declare namespace LocalJSX {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A decorative count or dot over a trigger or avatar.
+     * @whenToUse mark unread or pending items on a trigger, or presence on an
+     * avatar. Supply the full meaning in the host's accessible name and use a
+     * page-owned polite live region for important updates.
+     * @whenNotToUse for an object's status (use ki-badge), a count inside a list
+     * row (use text or ki-badge), or an announcement that needs its own semantics.
+     */
+    interface KiCounter {
+        /**
+          * Show a dot independently of the count, including when the value is zero.
+          * @default false
+         */
+        "dot"?: boolean;
+        /**
+          * Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
+          * @default undefined
+         */
+        "for"?: string;
+        /**
+          * Largest count displayed in full. Higher values display the cap with a plus sign. Fractional caps round down; invalid caps use 99.
+          * @default 99
+         */
+        "max"?: number;
+        /**
+          * Semantic palette of the pill or dot. An unknown tone uses danger.
+          * @default 'danger'
+         */
+        "tone"?: KiCounterTone;
+        /**
+          * Count of unread or pending items. Finite values are rounded down. Values below one and non-finite values hide the count.
+          * @default undefined
+         */
+        "value"?: number;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -3539,6 +3623,13 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiCounterAttributes {
+        "value": number;
+        "max": number;
+        "dot": boolean;
+        "tone": KiCounterTone;
+        "for": string;
+    }
     interface KiDialogAttributes {
         "open": boolean;
         "heading": string;
@@ -3734,6 +3825,7 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
@@ -3798,9 +3890,8 @@ declare module "@stencil/core" {
              * stack with overflow.
              * @whenNotToUse as a clickable control (compose the avatar inside an
              * interactive host such as ki-button), for logos or arbitrary illustrations
-             * (plain `img`), for presence/verification adornments overlaid on the corner
-             * (a future overlay concern shared with the nav badge), or unlabeled when no
-             * adjacent text names the identity.
+             * (plain `img`), or unlabeled when no adjacent text names the identity.
+             * Use the counter slot for a decorative count or presence dot.
              */
             "ki-avatar": LocalJSX.IntrinsicElements["ki-avatar"] & JSXBase.HTMLAttributes<HTMLKiAvatarElement>;
             /**
@@ -3824,7 +3915,7 @@ declare module "@stencil/core" {
              * @whenNotToUse feedback that must be announced (that is
              * ki-alert's job — the badge has no live region), an interactive
              * chip, filter or button, empty content (the label IS the meaning), or a
-             * notification-counter overlay (a future, separate concern).
+             * notification-counter overlay (use ki-counter).
              */
             "ki-badge": LocalJSX.IntrinsicElements["ki-badge"] & JSXBase.HTMLAttributes<HTMLKiBadgeElement>;
             /**
@@ -3868,6 +3959,15 @@ declare module "@stencil/core" {
              * to use: do not expect it for programmatic `checked` writes, which are silent.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
+            /**
+             * A decorative count or dot over a trigger or avatar.
+             * @whenToUse mark unread or pending items on a trigger, or presence on an
+             * avatar. Supply the full meaning in the host's accessible name and use a
+             * page-owned polite live region for important updates.
+             * @whenNotToUse for an object's status (use ki-badge), a count inside a list
+             * row (use text or ki-badge), or an announcement that needs its own semantics.
+             */
+            "ki-counter": LocalJSX.IntrinsicElements["ki-counter"] & JSXBase.HTMLAttributes<HTMLKiCounterElement>;
             /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief

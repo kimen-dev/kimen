@@ -533,6 +533,17 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     ).not.toBeNull();
   });
 
+  it('ki-counter preserves a visible dot and readable count', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount('<ki-counter dot></ki-counter><ki-counter value="3"></ki-counter>');
+    const dot = await partOf(fixture, 'ki-counter[dot]', '[part="indicator"]');
+    const count = await partOf(fixture, 'ki-counter[value]', '[part="indicator"]');
+
+    expect(fillOf(dot)).not.toBeNull();
+    expect(fillOf(count)).not.toBeNull();
+    expect(parseColor(getComputedStyle(count).color).ink).not.toBe(textBackdropOf(count));
+  });
+
   it('ki-divider paints its rule', async (test) => {
     await underForcedColors(test);
     const fixture = await mount('<ki-divider></ki-divider>');
