@@ -20,6 +20,7 @@ import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
+import { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
 import { KiSelectSize } from "./components/ki-select/ki-select";
 import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
@@ -41,6 +42,7 @@ export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
+export { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
 export { KiSelectSize } from "./components/ki-select/ki-select";
 export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
@@ -771,6 +773,53 @@ export namespace Components {
         "orientation": KiScrollerOrientation;
     }
     /**
+     * A single choice in a ki-segmented-control.
+     * @whenToUse offer one mutually exclusive choice with text or a named icon.
+     * @whenNotToUse standalone, for navigation, or for form submission.
+     */
+    interface KiSegment {
+        /**
+          * Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.
+         */
+        "accessibleLabel"?: string;
+        /**
+          * Excludes the option from selection and keyboard navigation.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Required nonempty option identifier. Each value must be unique in its group.
+         */
+        "value": string;
+    }
+    /**
+     * A compact control for one in-place choice among two to five options.
+     * @whenToUse apply a chart range, view mode, or another immediate setting.
+     * @whenNotToUse switching between panels (ki-tabs), submitted form choices
+     * (ki-radio-group), or more than five options (ki-select).
+     */
+    interface KiSegmentedControl {
+        /**
+          * Distribute the available inline space evenly among all segments.
+          * @default false
+         */
+        "fullWidth": boolean;
+        /**
+          * Required accessible name of the group. Use a short name for the setting.
+         */
+        "label": string;
+        /**
+          * Track size. The default heights are 28, 32 and 40 CSS px respectively; surrounding density settings can increase or decrease targets.
+          * @default 'md'
+         */
+        "size": KiSegmentedControlSize;
+        /**
+          * Resolved selected value. Set it to choose an option programmatically. Omit it to select the first available option. The value is empty when there are no available options. Programmatic changes are silent.
+          * @default first available option
+         */
+        "value": string;
+    }
+    /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -1116,6 +1165,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
+}
+export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiSegmentedControlElement;
 }
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1539,6 +1592,40 @@ declare global {
         new (): HTMLKiScrollerElement;
     };
     /**
+     * A single choice in a ki-segmented-control.
+     * @whenToUse offer one mutually exclusive choice with text or a named icon.
+     * @whenNotToUse standalone, for navigation, or for form submission.
+     */
+    interface HTMLKiSegmentElement extends Components.KiSegment, HTMLStencilElement {
+    }
+    var HTMLKiSegmentElement: {
+        prototype: HTMLKiSegmentElement;
+        new (): HTMLKiSegmentElement;
+    };
+    interface HTMLKiSegmentedControlElementEventMap {
+        "ki-change": { value: string };
+    }
+    /**
+     * A compact control for one in-place choice among two to five options.
+     * @whenToUse apply a chart range, view mode, or another immediate setting.
+     * @whenNotToUse switching between panels (ki-tabs), submitted form choices
+     * (ki-radio-group), or more than five options (ki-select).
+     */
+    interface HTMLKiSegmentedControlElement extends Components.KiSegmentedControl, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiSegmentedControlElementEventMap>(type: K, listener: (this: HTMLKiSegmentedControlElement, ev: KiSegmentedControlCustomEvent<HTMLKiSegmentedControlElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiSegmentedControlElementEventMap>(type: K, listener: (this: HTMLKiSegmentedControlElement, ev: KiSegmentedControlCustomEvent<HTMLKiSegmentedControlElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiSegmentedControlElement: {
+        prototype: HTMLKiSegmentedControlElement;
+        new (): HTMLKiSegmentedControlElement;
+    };
+    /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -1749,6 +1836,8 @@ declare global {
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-scroller": HTMLKiScrollerElement;
+        "ki-segment": HTMLKiSegmentElement;
+        "ki-segmented-control": HTMLKiSegmentedControlElement;
         "ki-select": HTMLKiSelectElement;
         "ki-status": HTMLKiStatusElement;
         "ki-switch": HTMLKiSwitchElement;
@@ -2502,6 +2591,57 @@ declare namespace LocalJSX {
         "orientation"?: KiScrollerOrientation;
     }
     /**
+     * A single choice in a ki-segmented-control.
+     * @whenToUse offer one mutually exclusive choice with text or a named icon.
+     * @whenNotToUse standalone, for navigation, or for form submission.
+     */
+    interface KiSegment {
+        /**
+          * Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.
+         */
+        "accessibleLabel"?: string;
+        /**
+          * Excludes the option from selection and keyboard navigation.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Required nonempty option identifier. Each value must be unique in its group.
+         */
+        "value": string;
+    }
+    /**
+     * A compact control for one in-place choice among two to five options.
+     * @whenToUse apply a chart range, view mode, or another immediate setting.
+     * @whenNotToUse switching between panels (ki-tabs), submitted form choices
+     * (ki-radio-group), or more than five options (ki-select).
+     */
+    interface KiSegmentedControl {
+        /**
+          * Distribute the available inline space evenly among all segments.
+          * @default false
+         */
+        "fullWidth"?: boolean;
+        /**
+          * Required accessible name of the group. Use a short name for the setting.
+         */
+        "label": string;
+        /**
+          * Emitted once per changed user choice with the new resolved value.
+         */
+        "onKi-change"?: (event: KiSegmentedControlCustomEvent<{ value: string }>) => void;
+        /**
+          * Track size. The default heights are 28, 32 and 40 CSS px respectively; surrounding density settings can increase or decrease targets.
+          * @default 'md'
+         */
+        "size"?: KiSegmentedControlSize;
+        /**
+          * Resolved selected value. Set it to choose an option programmatically. Omit it to select the first available option. The value is empty when there are no available options. Programmatic changes are silent.
+          * @default first available option
+         */
+        "value"?: string;
+    }
+    /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -2979,6 +3119,17 @@ declare namespace LocalJSX {
         "orientation": KiScrollerOrientation;
         "label": string;
     }
+    interface KiSegmentAttributes {
+        "value": string;
+        "disabled": boolean;
+        "accessibleLabel": string;
+    }
+    interface KiSegmentedControlAttributes {
+        "label": string;
+        "value": string;
+        "size": KiSegmentedControlSize;
+        "fullWidth": boolean;
+    }
     interface KiSelectAttributes {
         "label": string;
         "labelHint": string;
@@ -3062,6 +3213,8 @@ declare namespace LocalJSX {
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
+        "ki-segment": Omit<KiSegment, keyof KiSegmentAttributes> & { [K in keyof KiSegment & keyof KiSegmentAttributes]?: KiSegment[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `attr:${K}`]?: KiSegmentAttributes[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `prop:${K}`]?: KiSegment[K] } & OneOf<"value", KiSegment["value"], KiSegmentAttributes["value"]>;
+        "ki-segmented-control": Omit<KiSegmentedControl, keyof KiSegmentedControlAttributes> & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes]?: KiSegmentedControl[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `attr:${K}`]?: KiSegmentedControlAttributes[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `prop:${K}`]?: KiSegmentedControl[K] } & OneOf<"label", KiSegmentedControl["label"], KiSegmentedControlAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
@@ -3366,6 +3519,19 @@ declare module "@stencil/core" {
              * the other — wrap or size content on the cross axis.
              */
             "ki-scroller": LocalJSX.IntrinsicElements["ki-scroller"] & JSXBase.HTMLAttributes<HTMLKiScrollerElement>;
+            /**
+             * A single choice in a ki-segmented-control.
+             * @whenToUse offer one mutually exclusive choice with text or a named icon.
+             * @whenNotToUse standalone, for navigation, or for form submission.
+             */
+            "ki-segment": LocalJSX.IntrinsicElements["ki-segment"] & JSXBase.HTMLAttributes<HTMLKiSegmentElement>;
+            /**
+             * A compact control for one in-place choice among two to five options.
+             * @whenToUse apply a chart range, view mode, or another immediate setting.
+             * @whenNotToUse switching between panels (ki-tabs), submitted form choices
+             * (ki-radio-group), or more than five options (ki-select).
+             */
+            "ki-segmented-control": LocalJSX.IntrinsicElements["ki-segmented-control"] & JSXBase.HTMLAttributes<HTMLKiSegmentedControlElement>;
             /**
              * A form-associated select-only combobox for choosing one option from
              * declarative `ki-option` children.

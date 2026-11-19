@@ -27,6 +27,8 @@ import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
+import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
+import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
@@ -538,6 +540,57 @@ export class KiScroller {
 
 
 export declare interface KiScroller extends Components.KiScroller {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSegment,
+  inputs: ['accessibleLabel', 'disabled', 'value']
+})
+@Component({
+  selector: 'ki-segment',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['accessibleLabel', 'disabled', { name: 'value', required: true }],
+})
+export class KiSegment {
+  protected el: HTMLKiSegmentElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSegment extends Components.KiSegment {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSegmentedControl,
+  inputs: ['fullWidth', 'label', 'size', 'value']
+})
+@Component({
+  selector: 'ki-segmented-control',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['fullWidth', { name: 'label', required: true }, 'size', 'value'],
+})
+export class KiSegmentedControl {
+  protected el: HTMLKiSegmentedControlElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiSegmentedControl extends Components.KiSegmentedControl {
+  /**
+   * Emitted once per changed user choice with the new resolved value.
+   */
+}
 
 
 @ProxyCmp({
