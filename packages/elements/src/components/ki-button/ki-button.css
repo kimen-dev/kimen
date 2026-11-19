@@ -13,6 +13,7 @@
   --_ki-button-line-height: var(--ki-button-md-line-height);
   --_ki-button-icon-size: var(--ki-button-md-icon-size);
   --_ki-button-min-target: var(--ki-button-md-min-target);
+  --_ki-button-spinner-size: var(--ki-button-md-spinner-size);
 
   font-family: var(--ki-button-font-family);
 }
@@ -26,6 +27,7 @@
   --_ki-button-line-height: var(--ki-button-xs-line-height);
   --_ki-button-icon-size: var(--ki-button-xs-icon-size);
   --_ki-button-min-target: var(--ki-button-xs-min-target);
+  --_ki-button-spinner-size: var(--ki-button-xs-spinner-size);
 }
 
 :host([size="sm"]) {
@@ -37,6 +39,7 @@
   --_ki-button-line-height: var(--ki-button-sm-line-height);
   --_ki-button-icon-size: var(--ki-button-sm-icon-size);
   --_ki-button-min-target: var(--ki-button-sm-min-target);
+  --_ki-button-spinner-size: var(--ki-button-sm-spinner-size);
 }
 
 :host([size="lg"]) {
@@ -48,6 +51,7 @@
   --_ki-button-line-height: var(--ki-button-lg-line-height);
   --_ki-button-icon-size: var(--ki-button-lg-icon-size);
   --_ki-button-min-target: var(--ki-button-lg-min-target);
+  --_ki-button-spinner-size: var(--ki-button-lg-spinner-size);
 }
 
 :host([size="xl"]) {
@@ -59,6 +63,7 @@
   --_ki-button-line-height: var(--ki-button-xl-line-height);
   --_ki-button-icon-size: var(--ki-button-xl-icon-size);
   --_ki-button-min-target: var(--ki-button-xl-min-target);
+  --_ki-button-spinner-size: var(--ki-button-xl-spinner-size);
 }
 
 button {
@@ -106,9 +111,18 @@ slot[name="end"]::slotted(*) {
   inline-size: var(--_ki-button-icon-size);
 }
 
+/* Loading (specs/046-button-loading D4): the label and the slotted icons stay
+   laid out, so the button keeps its width, and turn transparent under the
+   spinner the shared surface draws. Opacity, not visibility: hidden content
+   would leave the accessibility tree and take the button's name with it. */
+button[aria-disabled="true"] > [part="label"],
+button[aria-disabled="true"] > slot::slotted(*) {
+  opacity: 0;
+}
+
 /* The pressed dip; its transition is declared with the shared surface. */
 @media (prefers-reduced-motion: no-preference) {
-  button:is(:active, [data-ki-pressed]):not(:disabled) {
+  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
     transform: scale(0.98);
   }
 }

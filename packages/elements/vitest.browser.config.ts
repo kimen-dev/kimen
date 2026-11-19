@@ -271,6 +271,10 @@ export default defineConfig({
                   live,
                   text: live === null ? '' : textOf(node),
                   focused: property('focused') === true,
+                  // Unavailable and still reachable: what a pending button
+                  // exposes through aria-disabled (spec 046).
+                  disabled: property('disabled') === true,
+                  focusable: property('focusable') === true,
                 };
               });
           } finally {
