@@ -17,16 +17,17 @@ pnpm add @kimen/tokens
 
 ## Stylesheets
 
-The package exports three stylesheets and nothing else:
+The package exports these stylesheets:
 
 | Export | What it is |
 | --- | --- |
 | `@kimen/tokens/css` | The onmars default theme: every `--ki-*` token, both schemes, plus the `color-scheme` contract they resolve from |
 | `@kimen/tokens/css/base` | The page contract: page background/foreground and body font, painted from tokens |
 | `@kimen/tokens/css/material3` | The Material 3 reference theme: its overrides of the default theme, opt-in via `data-ki-theme` |
+| `@kimen/tokens/css/onmars-fonts.css` | Optional Instrument Sans and Newsreader for onmars v2 |
+| `@kimen/tokens/css/material3-fonts.css` | Optional local metric-adjusted fallback for self-hosted Roboto |
 
-Load the default theme once per page. It is the only requirement; the other
-two are additions loaded alongside it:
+Load the default theme once per page. Load the optional stylesheets alongside it:
 
 ```ts
 import '@kimen/tokens/css';
@@ -228,29 +229,62 @@ never transcribed by hand.
 - **Bevels** — edge tokens such as `--ki-button-tertiary-rest-border-bottom`
   that give controls their machined bottom edge.
 
-## Material 3 theme fonts
+## Optional theme fonts
 
-The material3 theme resolves its font stacks to `Roboto` (body/display),
-`Roboto Mono` (mono) and `Roboto Slab` (serif), but the stylesheet does not
-load any webfont — a deliberate decision: tokens never trigger network
-requests. If Roboto is not installed or loaded, the stacks fall back to
-`system-ui` / `ui-monospace` / `Georgia`, which keeps the theme usable with
-metric-compatible defaults.
+The family tokens name fonts and set their fallback order. The token
+stylesheets never fetch fonts by themselves. If your app already self-hosts
+its theme fonts, keep its own `@font-face` rules and use the family tokens.
 
-To get the authentic Material 3 look, load Roboto yourself, for example from
-Google Fonts:
+### onmars v2
 
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap"
-  rel="stylesheet"
-/>
+```ts
+import '@kimen/tokens/css';
+import '@kimen/tokens/css/onmars-fonts.css';
 ```
 
-Add `family=Roboto+Mono` or `family=Roboto+Slab` to the query only if your
-page uses the mono/serif token families.
+The font stylesheet bundles the upright Latin variable faces for Instrument
+Sans (body) and Newsreader (display). Earlier onmars tokens name Inter and
+use their own fallback stack. Keep your Inter source with those versions.
+
+To use the bundled metric-adjusted faces, put the aliases after the web
+fonts in your stack. Apply the overrides to the onmars theme root and load
+them after the token stylesheets.
+
+```css
+[data-ki-theme='onmars'] {
+  --ki-typography-family-body: 'Instrument Sans', 'Instrument Sans Fallback', system-ui, sans-serif;
+  --ki-typography-family-display: 'Newsreader', 'Newsreader Fallback', Georgia, serif;
+}
+```
+
+Instrument Sans uses a measured Arial alias where Arial is installed.
+Newsreader uses a measured Georgia alias. The rest of each stack remains
+available when the browser cannot use the local face.
+
+### Material 3
+
+Apply `data-ki-theme="material3"` and load `@kimen/tokens/css/material3`
+alongside the default tokens. Host Roboto for the body and display families.
+The optional `@kimen/tokens/css/material3-fonts.css` defines the local
+`'Roboto Fallback'` alias. To use it, set the body and display families on
+the theme root to `'Roboto', 'Roboto Fallback', system-ui, sans-serif`.
+The CSS has no Roboto download URL. Roboto Mono and Roboto Slab use separate
+font sources if your page needs them.
+
+### Preloading
+
+Preload only a face used in the initial viewport. Use the deployed URL
+that the font stylesheet requests, including any filename hash added by
+your build. For example, if your build serves Instrument Sans at this URL:
+
+```html
+<link rel="preload" href="/assets/InstrumentSansVariable.woff2" as="font" type="font/woff2" crossorigin />
+```
+
+The `crossorigin` attribute matches the browser's font request mode, even
+for a same-origin URL. When copying the stylesheet as-is, keep its
+`../fonts/` path relative to the stylesheet. The same preload pattern works
+for a separately hosted Roboto file.
 
 ## Theme authoring
 

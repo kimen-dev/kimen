@@ -14,13 +14,13 @@ const SECTION_START = new RegExp(`^${RULE}\\nThird-party notices: (.+)\\n${RULE}
 //   ki-qr, and the Stencil client runtime inside its lazy-loading bundles
 //   (dist/esm, dist/cjs, dist/kimen). Both are MIT, which requires the
 //   copyright and permission notice in every copy.
-// - @kimen/tokens ships stylesheets generated from Kimen's own token sources.
+// - @kimen/tokens ships Kimen's stylesheets and the optional onmars fonts.
 export const PACKAGE_NOTICE_SECTIONS = Object.freeze({
   '@kimen/elements': Object.freeze([
     'QR Code generator library (MIT)',
     'Stencil client runtime (MIT)',
   ]),
-  '@kimen/tokens': Object.freeze([]),
+  '@kimen/tokens': Object.freeze(['onmars theme fonts (SIL OFL 1.1)']),
 });
 
 const withSingleTrailingNewline = (text) => `${text.trimEnd()}\n`;
