@@ -1,0 +1,104 @@
+{
+  "ki": {
+    "toast": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s1}",
+        "$description": "color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself)."
+      },
+      "bg-image": {
+        "$value": "none",
+        "$description": "image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6)."
+      },
+      "backdrop-filter": {
+        "$value": "none",
+        "$description": "filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342)."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "color used by the toast component for the heading ink (issue #353)."
+      },
+      "message-fg": {
+        "$type": "color",
+        "$value": "{ki.text.med-em}",
+        "$description": "color used by the toast component for the message ink (issue #353)."
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.low-em}",
+        "$description": "color used by the toast component for its hairline edge (issue #353)."
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the toast component for its hairline edge."
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{ki.elevation.e4}",
+        "$description": "shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6)."
+      },
+      "radius": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "dimension used by the toast component for its corners (issue #353: 16px)."
+      },
+      "padding": {
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the toast component for its padding (issue #353: 12px)."
+      },
+      "gap": {
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px)."
+      },
+      "width": {
+        "$value": "{ki.size.toast}",
+        "$description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem)."
+      },
+      "heading": {
+        "font-family": {
+          "$value": "{ki.typography.family.heading}",
+          "$description": "Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface."
+        }
+      },
+      "icon-size": {
+        "$value": "{ki.space.5xl}",
+        "$description": "dimension used by the toast component for the tone icon."
+      },
+      "neutral": {
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353)."
+        }
+      },
+      "info": {
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.info-high-em}",
+          "$description": "color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353)."
+        }
+      },
+      "success": {
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.success-high-em}",
+          "$description": "color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353)."
+        }
+      },
+      "warning": {
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.warning-high-em}",
+          "$description": "color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353)."
+        }
+      },
+      "danger": {
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353)."
+        }
+      }
+    }
+  }
+}

@@ -12,6 +12,7 @@ export const DIRECTIVES = [
   d.KiDialog,
   d.KiDivider,
   d.KiGrid,
+  d.KiIcon,
   d.KiIconButton,
   d.KiIndicator,
   d.KiInput,
@@ -24,6 +25,7 @@ export const DIRECTIVES = [
   d.KiRadioGroup,
   d.KiScroller,
   d.KiSelect,
+  d.KiSpinner,
   d.KiStack,
   d.KiStatus,
   d.KiSwitch,
@@ -31,6 +33,8 @@ export const DIRECTIVES = [
   d.KiTabPanel,
   d.KiTabs,
   d.KiTextarea,
+  d.KiToast,
+  d.KiToaster,
   d.KiTooltip,
   d.KiVideo
 ];

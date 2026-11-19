@@ -645,23 +645,25 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   if (entry !== undefined) {
     checkRequiredProps(node, entry, path, issues);
   }
-  if (node.action !== undefined && isNativePrimitive(node.component)) {
-    // A native primitive never binds an action (spec 037 D7): a clickable
-    // div or image is not keyboard operable (Art. V); controls are catalog
-    // components with their own activation.
-    issues.push({
-      code: 'action-not-allowed',
-      message: `the native element ${node.component} cannot bind an action`,
-      path: `${path}.action`,
-      value: node.action,
-    });
-  } else if (node.action !== undefined && !declaredActions.has(node.action)) {
-    issues.push({
-      code: 'undeclared-action',
-      message: `action "${node.action}" is not declared in the spec's action list`,
-      path: `${path}.action`,
-      value: node.action,
-    });
+  if (node.action !== undefined) {
+    const native = isNativePrimitive(node.component);
+    if (native || node.component === 'ki-icon') {
+      // A primitive (037 D7) or icon (069 S11) composes inside an activator
+      // when it accompanies an action.
+      issues.push({
+        code: 'action-not-allowed',
+        message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,
+        path: `${path}.action`,
+        value: node.action,
+      });
+    } else if (!declaredActions.has(node.action)) {
+      issues.push({
+        code: 'undeclared-action',
+        message: `action "${node.action}" is not declared in the spec's action list`,
+        path: `${path}.action`,
+        value: node.action,
+      });
+    }
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     if (entry !== undefined && !Object.hasOwn(entry.slots, slotName)) {

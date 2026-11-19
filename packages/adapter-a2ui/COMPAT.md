@@ -114,7 +114,7 @@ type rejects the message (`unknown-property`, scenario S9).
 | CheckBox      | mapped    | ki-checkbox                   |
 | ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
 | Image         | unmapped  | —                             |
-| Icon          | unmapped  | —                             |
+| Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
 | Modal         | unmapped  | —                             |
@@ -188,6 +188,14 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
 - `ChoicePicker`: `mutuallyExclusive` becomes `ki-radio-group` with the first
   selected value; `multipleSelection` degrades (reason `unsupported-variant`);
   `displayStyle` and `filterable` are not rendered.
+- `Icon.name` accepts static names and bindings in both versions. The host
+  imports each Lucide module that its surface uses. For example, `check`
+  uses `@kimen/elements/icons/check` and `warning` uses
+  `@kimen/elements/icons/triangle-alert`. Other strings pass through as Lucide
+  names. A binding without a value contributes no glyph while the model loads. The
+  guarded renderer rejects an unavailable name and preserves the previous
+  surface. The `svgPath` form uses the fixed fallback with reason
+  `unsupported-variant`. Icons from the adapter are decorative. [Name mappings](src/translate.ts)
 - `accessibility` is accepted and not rendered; `createSurface.theme` is
   accepted and ignored (appearance stays token-driven, Art. VI).
 
@@ -217,7 +225,7 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | CheckBox      | mapped    | ki-checkbox                   |
 | ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
 | Image         | unmapped  | —                             |
-| Icon          | unmapped  | —                             |
+| Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
 | Modal         | unmapped  | —                             |

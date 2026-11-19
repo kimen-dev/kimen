@@ -1536,6 +1536,36 @@
       "block": {
         "$value": "{ki.space.xl}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
+      },
+      "activity-label-gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Gap between an inline activity mark and its label."
+      },
+      "activity-dot-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "Gap between typing dots."
+      }
+    },
+    "glyph": {
+      "size": {
+        "$type": "dimension",
+        "sm": {
+          "$value": "{ki.space.3xl}",
+          "$description": "Small glyph for dense layouts (16px at the default root size)."
+        },
+        "md": {
+          "$value": "{ki.space.5xl}",
+          "$description": "Medium glyph for body content (20px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Large standalone glyph (24px at the default root size)."
+        }
+      },
+      "stroke-width": {
+        "$type": "number",
+        "$value": "{ki.scale.icon-stroke}",
+        "$description": "Weight of a line icon's outline in viewBox units."
       }
     },
     "density": {
@@ -1576,6 +1606,10 @@
       "control": {
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
+      },
+      "activity-mark": {
+        "$value": "{ki.radius.round}",
+        "$description": "Round corners for rings and typing dots."
       }
     },
     "motion": {
@@ -1636,6 +1670,22 @@
         "instant": {
           "$value": "{ki.duration.instant}",
           "$description": "Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs)."
+        },
+        "activity-rotation": {
+          "$value": "{ki.duration.activity-rotation}",
+          "$description": "Period of an indeterminate activity rotation."
+        },
+        "activity-rotation-reduced": {
+          "$value": "{ki.duration.activity-rotation-reduced}",
+          "$description": "Period of an indeterminate activity rotation with reduced motion."
+        },
+        "activity-pulse": {
+          "$value": "{ki.duration.activity-pulse}",
+          "$description": "Period of an indeterminate typing pulse."
+        },
+        "activity-stagger": {
+          "$value": "{ki.duration.activity-stagger}",
+          "$description": "Stagger between neighboring marks of an activity pulse."
         }
       },
       "easing": {
@@ -1683,6 +1733,14 @@
         "emphasized-out": {
           "$value": "{ki.easing.spring}",
           "$description": "Expressive exit curve for selected controls. Onmars eases out without overshoot."
+        },
+        "activity-rotation": {
+          "$value": "{ki.easing.linear}",
+          "$description": "Constant speed for an activity rotation."
+        },
+        "activity-pulse": {
+          "$value": "{ki.easing.in-out}",
+          "$description": "Symmetric easing for fluctuations in a typing pulse."
         }
       },
       "distance": {
@@ -1699,6 +1757,40 @@
           "$value": "{ki.space.md}",
           "$description": "Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise)."
         }
+      },
+      "scale": {
+        "$type": "number",
+        "activity-pulse-min": {
+          "$value": "{ki.scale.activity-pulse-min}",
+          "$description": "Smallest visual scale of an activity pulse."
+        }
+      }
+    },
+    "activity-size": {
+      "$type": "dimension",
+      "ring-sm": {
+        "$value": "{ki.space.3xl}",
+        "$description": "Small inline activity ring diameter."
+      },
+      "ring-md": {
+        "$value": "{ki.space.5xl}",
+        "$description": "Medium inline activity ring diameter."
+      },
+      "ring-lg": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Large inline activity ring diameter."
+      },
+      "stroke": {
+        "$value": "{ki.size.border.thin}",
+        "$description": "Stroke of a small or medium activity ring."
+      },
+      "stroke-lg": {
+        "$value": "{ki.size.border.medium}",
+        "$description": "Stroke of a large activity ring."
+      },
+      "dot": {
+        "$value": "{ki.space.sm}",
+        "$description": "Diameter of a typing dot at its full size."
       }
     },
     "layout": {

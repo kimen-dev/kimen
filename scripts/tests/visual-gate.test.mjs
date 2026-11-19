@@ -5,12 +5,14 @@
 // - disarmed -> the README must document the two-step bootstrap that leads
 //   to arming, so the disarmed state is always a documented transition and
 //   never a silent permanent hole.
+// @spec:069-ki-icon
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { visualGalleryThemes } from '../../packages/elements/browser-tests/visual/theme-matrix.ts';
 import { discoverComponents } from '../lib/component-inventory.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -22,7 +24,7 @@ const readmePath = join(browserTestsDirectory, 'README.md');
 const screenshotsDirectory = join(browserTestsDirectory, '__screenshots__');
 const baselinesWorkflowPath = join(repositoryRoot, '.github/workflows/visual-baselines.yml');
 
-const VISUAL_SPEC = /^ki-[a-z0-9-]+\.visual(?:(?:\.material3)?\.dark)?\.browser\.spec\.ts$/u;
+const VISUAL_SPEC = /^ki-[a-z0-9-]+\.visual(?:\.dark)?\.browser\.spec\.ts$/u;
 // The release matrix runs the whole browser suite, visual specs included, on
 // all three engines, and a capture compares only against the baseline of its
 // own engine: every engine needs its own committed set.
@@ -39,26 +41,13 @@ function parseArmedMarker(content) {
   return value === 'true';
 }
 
-// Mirrors the harness matrix: light specs capture onmars + material3, dark
-// specs capture onmars or opt into Material 3 by filename. toMatchScreenshot names baselines
-// `<name>-<browser>-<platform>.png`.
+// The harness and audit read the same matrix. The screenshot matcher appends
+// the browser and platform to the capture name.
 function expectedLinuxBaselines(specFileName, engine = 'chromium') {
-  const dark = specFileName.endsWith('.dark.browser.spec.ts');
-  const darkTheme = specFileName.endsWith('.visual.material3.dark.browser.spec.ts')
-    ? 'material3'
-    : 'onmars';
-  const component = specFileName.replace(
-    /\.visual(?:(?:\.material3)?\.dark)?\.browser\.spec\.ts$/u,
-    '',
-  );
-  const captures = dark
-    ? [[darkTheme, 'dark']]
-    : [
-        ['onmars', 'light'],
-        ['material3', 'light'],
-      ];
-  return captures.map(
-    ([theme, scheme]) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
+  const scheme = specFileName.endsWith('.visual.dark.browser.spec.ts') ? 'dark' : 'light';
+  const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
+  return visualGalleryThemes(component, scheme).map(
+    (theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
   );
 }
 
@@ -108,12 +97,20 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
   ]);
-  assert.deepEqual(expectedLinuxBaselines('ki-grid.visual.material3.dark.browser.spec.ts'), [
-    'ki-grid-material3-dark-gallery-chromium-linux.png',
-  ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',
     'ki-button-material3-light-gallery-webkit-linux.png',
+  ]);
+});
+
+test('S12 the icon gallery requires both themes in both schemes', () => {
+  assert.deepEqual(expectedLinuxBaselines('ki-icon.visual.browser.spec.ts'), [
+    'ki-icon-onmars-light-gallery-chromium-linux.png',
+    'ki-icon-material3-light-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-icon.visual.dark.browser.spec.ts'), [
+    'ki-icon-onmars-dark-gallery-chromium-linux.png',
+    'ki-icon-material3-dark-gallery-chromium-linux.png',
   ]);
 });
 

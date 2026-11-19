@@ -180,9 +180,12 @@ test('S6 browser setups isolate shared input and page-level capability emulation
   assert.ok(pointerCapability, 'missing isolated pointer-capability setup');
   const inputDeviceSpecs = [
     'browser-tests/pointer-capability.browser.spec.ts',
-    'browser-tests/layout-pointer.browser.spec.ts',
+    'src/components/ki-icon/ki-icon.browser.spec.ts',
     'browser-tests/touch-field-text.browser.spec.ts',
     'browser-tests/touch-size-field-text.browser.spec.ts',
+    // A component's own `<tag>.pointer.browser.spec.ts` joins by name.
+    'browser-tests/**/*.pointer.browser.spec.{ts,tsx}',
+    'src/components/ki-*/**/*.pointer.browser.spec.{ts,tsx}',
   ];
   for (const spec of inputDeviceSpecs) {
     assert.ok(
