@@ -4,7 +4,7 @@ Issue #351 adds native navigation to the Kimen library. Use `ki-link` to move
 to another page, section, or resource. Use `ki-button variant="ghost"` for
 actions on the current page.
 
-The default link inherits typography and stays underlined in running text.
+The default link inherits font size and weight and stays underlined in running text.
 Standalone navigation rows may opt into `underline="hover"`. See the
 [component contract](contracts/ki-link.md) for the public API.
 
@@ -28,6 +28,12 @@ Standalone navigation rows may opt into `underline="hover"`. See the
   links in guarded surfaces. Preserve the existing text-only content model for
   guarded native paragraphs. S10 is subject to founder review with the rest of
   the contract.
+- **Agent's choice, pending founder confirmation.** Link opts into Material 3 dark
+  snapshots through its discovery manifest so both themes are captured in both
+  schemes.
+- **Agent's choice, pending founder confirmation.** The API declaration uses
+  the major floor the gate reports for changes to its exported loader
+  `Components` and `JSX` namespace signatures.
 
 ## Behavior
 

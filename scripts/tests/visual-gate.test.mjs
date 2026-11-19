@@ -39,27 +39,25 @@ function parseArmedMarker(content) {
   return value === 'true';
 }
 
-// Mirrors the harness matrix: light specs capture onmars + material3, dark
-// specs capture onmars only, and toMatchScreenshot names baselines
-// `<name>-<browser>-<platform>.png`.
-function expectedLinuxBaselines(specFileName, engine = 'chromium') {
-  const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
+// Light uses both themes. A component may opt into Material 3 dark through its
+// discovery metadata, which the browser harness also reads.
+function expectedLinuxBaselines(specFileName, engine = 'chromium', material3Dark = new Set()) {
+  const scheme = specFileName.endsWith('.visual.dark.browser.spec.ts') ? 'dark' : 'light';
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
-  const captures = dark
-    ? [['onmars', 'dark']]
-    : [
-        ['onmars', 'light'],
-        ['material3', 'light'],
-      ];
-  return captures.map(
-    ([theme, scheme]) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
-  );
+  const themes =
+    scheme === 'light' || material3Dark.has(component) ? ['onmars', 'material3'] : ['onmars'];
+  return themes.map((theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`);
 }
 
-function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines = ENGINES) {
+function missingLinuxBaselines(
+  specFileNames,
+  existingBaselinesBySpec,
+  engines = ENGINES,
+  material3Dark = new Set(),
+) {
   return engines.flatMap((engine) =>
     specFileNames.flatMap((spec) =>
-      expectedLinuxBaselines(spec, engine)
+      expectedLinuxBaselines(spec, engine, material3Dark)
         .filter((baseline) => !(existingBaselinesBySpec.get(spec)?.has(baseline) ?? false))
         .map((baseline) => `${spec}/${baseline}`),
     ),
@@ -102,6 +100,13 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
   ]);
+  assert.deepEqual(
+    expectedLinuxBaselines('ki-link.visual.dark.browser.spec.ts', 'chromium', new Set(['ki-link'])),
+    [
+      'ki-link-onmars-dark-gallery-chromium-linux.png',
+      'ki-link-material3-dark-gallery-chromium-linux.png',
+    ],
+  );
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',
     'ki-button-material3-light-gallery-webkit-linux.png',
@@ -165,7 +170,16 @@ test('an armed visual gate keeps every committed linux baseline', async () => {
     // companion test below pins the documented path OUT of this state.
     return;
   }
-  const missing = missingLinuxBaselines(specs, await committedLinuxBaselines(specs));
+  const components = await discoverComponents({ workspaceRoot: repositoryRoot });
+  const material3Dark = new Set(
+    components.filter(({ metadata }) => metadata.visual?.material3Dark).map(({ tag }) => tag),
+  );
+  const missing = missingLinuxBaselines(
+    specs,
+    await committedLinuxBaselines(specs),
+    ENGINES,
+    material3Dark,
+  );
   assert.deepEqual(
     missing,
     [],

@@ -203,10 +203,12 @@ export async function mountGallery(gallery: Gallery, theme: Theme): Promise<HTML
 export function runVisualSuite(options: VisualSuiteOptions): void {
   const { define, scheme } = options;
   const name = 'name' in options ? options.name : options.component;
-  const gallery = 'gallery' in options ? options.gallery : fixtureFor(options.component).gallery;
-  // The approved matrix: onmars light + dark for every component, material3
-  // light only (alternate-theme contract at marginal cost).
-  const themes: readonly Theme[] = scheme === 'light' ? ['onmars', 'material3'] : ['onmars'];
+  const { gallery, material3Dark } =
+    'gallery' in options
+      ? { gallery: options.gallery, material3Dark: false }
+      : fixtureFor(options.component);
+  const themes: readonly Theme[] =
+    scheme === 'light' || material3Dark ? ['onmars', 'material3'] : ['onmars'];
 
   describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {

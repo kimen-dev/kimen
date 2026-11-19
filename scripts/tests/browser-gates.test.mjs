@@ -182,6 +182,8 @@ test('S6 browser setups isolate shared input and page-level capability emulation
     'browser-tests/pointer-capability.browser.spec.ts',
     'browser-tests/touch-field-text.browser.spec.ts',
     'browser-tests/touch-size-field-text.browser.spec.ts',
+    'browser-tests/**/*.pointer.browser.spec.{ts,tsx}',
+    'src/components/ki-*/**/*.pointer.browser.spec.{ts,tsx}',
   ];
   for (const spec of inputDeviceSpecs) {
     assert.ok(
@@ -211,6 +213,7 @@ test('S1 component-local specs join the appropriate suite without a shared regis
   assert.deepEqual(suitesFor('.visual.browser.spec.ts'), ['chromium-light']);
   assert.deepEqual(suitesFor('.visual.dark.browser.spec.ts'), ['chromium-dark']);
   assert.deepEqual(suitesFor('.motion.browser.spec.ts'), ['chromium-reduced-motion']);
+  assert.deepEqual(suitesFor('.pointer.browser.spec.ts'), ['chromium-pointer-capability']);
   assert.deepEqual(suitesFor('.logic.spec.ts'), ['elements-unit']);
 });
 

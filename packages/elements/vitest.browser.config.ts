@@ -28,20 +28,17 @@ if (!supportedBrowsers.some((browser) => browser === configuredBrowser)) {
 
 const browser = configuredBrowser as SupportedBrowser;
 const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts';
-// Specs that change the page's input device through CDP touch emulation. They
-// share one isolated setup, never the ordinary light one: the pointer
-// capability audit, the touch text size of fields (spec 048) and of sized
-// fields (spec 050).
-const inputDeviceSpecs = [
-  pointerCapabilitySpec,
-  'browser-tests/touch-field-text.browser.spec.ts',
-  'browser-tests/touch-size-field-text.browser.spec.ts',
-  'src/components/ki-link/ki-link.pointer.browser.spec.ts',
-];
 const browserSpecPatterns = (suffix: string): string[] =>
   ['browser-tests', 'src/components/ki-*'].map(
     (directory) => `${directory}/**/${suffix}.browser.spec.{ts,tsx}`,
   );
+// CDP touch emulation is page-level, so pointer specs share an isolated setup.
+const inputDeviceSpecs = [
+  pointerCapabilitySpec,
+  'browser-tests/touch-field-text.browser.spec.ts',
+  'browser-tests/touch-size-field-text.browser.spec.ts',
+  ...browserSpecPatterns('*.pointer'),
+];
 const visualSpecPatterns = [
   ...browserSpecPatterns('*.visual'),
   ...browserSpecPatterns('*.visual.*'),

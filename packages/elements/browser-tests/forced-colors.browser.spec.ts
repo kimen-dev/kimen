@@ -268,9 +268,10 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     fixture.querySelector('button')?.focus();
     await userEvent.keyboard('{Tab}');
     expect(link.matches(':focus-visible')).toBe(true);
-    expect(paint.outlineStyle).toBe('solid');
-    expect(Number.parseFloat(paint.outlineWidth)).toBeGreaterThan(0);
-    expect(inkOnCanvas(paint.outlineColor)).not.toBeNull();
+    const focused = getComputedStyle(link);
+    expect(focused.outlineStyle).toBe('solid');
+    expect(Number.parseFloat(focused.outlineWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();
   });
 
   it('ki-radio paints the dot of the checked option and none on the others', async (test) => {

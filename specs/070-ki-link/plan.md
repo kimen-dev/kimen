@@ -6,6 +6,7 @@
 3. Style the shadow anchor with semantic token aliases and preserve native
    navigation. Register the component in discovery and the catalog.
 4. Add documentation, stories and a gallery for inline and standalone links.
-   Regenerate package surfaces and declare the public API addition as minor.
+   Regenerate package surfaces and declare the release class required by the
+   public API gate.
 5. Run the local deterministic gates. The integrator verifies the browser
    matrix and captures Linux visual baselines in CI.

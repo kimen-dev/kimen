@@ -1,6 +1,10 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$value": "none",
+        "$description": "No image overlay on a component surface."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1291,6 +1295,34 @@
       "$description": "semantic color for transparent inverse."
     },
     "typography": {
+      "underline": {
+        "thickness": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "Stroke width of a resting text underline."
+        },
+        "thickness-hover": {
+          "$value": "{ki.size.text-decoration.thickness-hover}",
+          "$description": "Stroke width of an emphasized underline on hover."
+        },
+        "offset": {
+          "$value": "{ki.size.text-decoration.offset}",
+          "$description": "Gap between text and its underline."
+        }
+      },
+      "inline-icon": {
+        "size": {
+          "$value": "{ki.size.inline-icon.size}",
+          "$description": "Edge of a glyph placed inline with text."
+        },
+        "gap": {
+          "$value": "{ki.size.inline-icon.gap}",
+          "$description": "Gap between text and a trailing inline glyph."
+        }
+      },
+      "visually-hidden-size": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Nonzero edge for clipped text available to assistive technology."
+      },
       "family": {
         "$type": "fontFamily",
         "display": {
@@ -1573,6 +1605,10 @@
     },
     "corner": {
       "$type": "dimension",
+      "inline": {
+        "$value": "{ki.radius.xxs}",
+        "$description": "Small radius for an outline around inline content."
+      },
       "control": {
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."

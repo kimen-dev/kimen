@@ -1152,19 +1152,27 @@ function evaluateContext(theme, scheme, declarations) {
     );
   }
 
-  // Component cells may be translucent (ghost/quaternary): composite the
-  // cell background over the page surface before measuring.
-  const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
-
+  // A translucent component cell composites over the page. Inline links
+  // can also sit directly on higher surface levels, including inside cards.
   for (const pair of [...CONTRAST_PAIRS, ...swept]) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
-    const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
-    const ratio = contrastRatio(text, surface);
+    const backdrops =
+      pair.component === 'link' && rawSurface.a < 1 ? CONTROL_PAGE_SURFACES : ['--ki-surface-s0'];
     const min = pair.minRatio ?? MIN_RATIO;
 
-    if (ratio < min) {
-      failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (min ${min})`);
+    for (const backdrop of backdrops) {
+      const surface =
+        rawSurface.a < 1
+          ? compositeOver(rawSurface, parseColor(resolveCustomProperty(backdrop, declarations)))
+          : rawSurface;
+      const ratio = contrastRatio(text, surface);
+      if (ratio < min) {
+        const suffix = backdrops.length > 1 ? ` over ${backdrop}` : '';
+        failures.push(
+          `${theme}/${scheme} ${pair.text} on ${pair.surface}${suffix}: ${ratio} (min ${min})`,
+        );
+      }
     }
   }
 
