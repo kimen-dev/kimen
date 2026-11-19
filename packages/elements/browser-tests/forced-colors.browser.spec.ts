@@ -1,3 +1,4 @@
+// @spec:062-solid-surface-background
 // Forced-colors contract (Art. III: the reproduction IS a failing test).
 //
 // A forced palette — Windows Contrast themes, `forced-colors: active` — is the
@@ -64,6 +65,7 @@ async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
+const CUSTOM_IMAGE = 'url(data:image/svg+xml,%3Csvg%2F%3E)';
 const WITNESS_COLOUR = 'rgb(1, 2, 3)';
 
 /** Does the palette repaint an author background, or is it only announced? */
@@ -325,10 +327,10 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     ).toBe(true);
   });
 
-  it('ki-select tells the selected option, the active option and the rest apart', async (test) => {
+  it('S5 ki-select tells the selected option, the active option and the rest apart', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
-      '<ki-select label="Country" value="fr">' +
+      `<ki-select label="Country" value="fr" style="--ki-select-listbox-bg-image: ${CUSTOM_IMAGE}">` +
         '<ki-option value="es">Spain</ki-option>' +
         '<ki-option value="fr">France</ki-option>' +
         '<ki-option value="it">Italy</ki-option>' +
@@ -368,6 +370,7 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
       parseColor(getComputedStyle(active).color).ink,
       'the label of the active option is the colour of the backplate drawn behind it',
     ).not.toBe(textBackdropOf(active));
+    expect(getComputedStyle(listbox).backgroundImage).toBe('none');
     expect(isOpaqueCanvas(listbox), 'the option panel is see-through').toBe(true);
     expect(edgeOf(listbox), 'the option panel has no edge against the page').not.toBeNull();
   });
@@ -448,24 +451,26 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(parseColor(getComputedStyle(label).color).ink, 'the disabled label').toBe(gray);
   });
 
-  it('ki-dialog is an opaque surface with an edge', async (test) => {
+  it('S5 ki-dialog is an opaque surface with an edge', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
-      '<ki-dialog heading="Confirm changes"><p>Publishing replaces the current version.</p></ki-dialog>',
+      `<ki-dialog heading="Confirm changes" style="--ki-dialog-bg-image: ${CUSTOM_IMAGE}"><p>Publishing replaces the current version.</p></ki-dialog>`,
     );
     const surface = await partOf(fixture, 'ki-dialog', '[part="dialog"]');
 
+    expect(getComputedStyle(surface).backgroundImage).toBe('none');
     expect(isOpaqueCanvas(surface), 'the page shows through the dialog').toBe(true);
     expect(edgeOf(surface), 'the dialog has no edge against the page').not.toBeNull();
   });
 
-  it('ki-tooltip is an opaque surface with an edge', async (test) => {
+  it('S5 ki-tooltip is an opaque surface with an edge', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
-      '<ki-tooltip label="Explains the save action"><button type="button">Save</button></ki-tooltip>',
+      `<ki-tooltip label="Explains the save action" style="--ki-tooltip-bg-image: ${CUSTOM_IMAGE}"><button type="button">Save</button></ki-tooltip>`,
     );
     const surface = await partOf(fixture, 'ki-tooltip', '[part="tooltip"]');
 
+    expect(getComputedStyle(surface).backgroundImage).toBe('none');
     expect(isOpaqueCanvas(surface), 'the page shows through the tooltip').toBe(true);
     expect(edgeOf(surface), 'the tooltip has no edge against the page').not.toBeNull();
   });

@@ -1,3 +1,4 @@
+// @spec:062-solid-surface-background
 import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:013-ki-tooltip
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -411,8 +412,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     const onmars = paint();
     const markup = host.outerHTML;
 
-    // The card paints a gradient; material3 resolves it to its inverse bubble
-    // surface, so the paint is the theme signal — on the tooltip being shown.
+    // Material 3 replaces the gradient with its solid inverse bubble fill.
     document.documentElement.setAttribute('data-ki-theme', 'material3');
 
     await expect.poll(paint).not.toEqual(onmars);
@@ -420,7 +420,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(host.outerHTML).toContain('<button aria-description="Send immediately">Send</button>');
   });
 
-  it('S1 renders the MarsUI glass card geometry, bevel, and typography', async () => {
+  it('S1 S3 renders the MarsUI glass card geometry, bevel, and typography', async () => {
     const { host, trigger } = await mount({
       style: { marginBlockStart: '160px', marginInlineStart: '160px' },
     });
