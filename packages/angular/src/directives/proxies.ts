@@ -20,6 +20,7 @@ import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
 import { defineCustomElement as defineKiIndicator } from '@kimen/elements/components/ki-indicator.js';
 import { defineCustomElement as defineKiInput } from '@kimen/elements/components/ki-input.js';
+import { defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
@@ -384,6 +385,29 @@ export class KiInput {
 
 
 export declare interface KiInput extends Components.KiInput {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiLink,
+  inputs: ['download', 'external', 'externalLabel', 'href', 'rel', 'target', 'underline', 'variant']
+})
+@Component({
+  selector: 'ki-link',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['download', 'external', 'externalLabel', { name: 'href', required: true }, 'rel', 'target', 'underline', 'variant'],
+})
+export class KiLink {
+  protected el: HTMLKiLinkElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiLink extends Components.KiLink {}
 
 
 @ProxyCmp({

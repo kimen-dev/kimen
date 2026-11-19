@@ -257,6 +257,25 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     document.documentElement.setAttribute('data-ki-theme', theme);
   });
 
+  it('ki-link keeps its underline and focus ring visible', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<button>Start</button><p>Read the <ki-link href="/catalog">catalog contract</ki-link>.</p>',
+    );
+    const link = await partOf(fixture, 'ki-link', '[part="link"]');
+    const paint = getComputedStyle(link);
+    expect(paint.textDecorationLine).toBe('underline');
+    expect(inkOnCanvas(paint.textDecorationColor)).not.toBeNull();
+
+    fixture.querySelector('button')?.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(link.matches(':focus-visible')).toBe(true);
+    const focused = getComputedStyle(link);
+    expect(focused.outlineStyle).toBe('solid');
+    expect(Number.parseFloat(focused.outlineWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();
+  });
+
   it('leaves layout surfaces transparent and keeps slotted controls in order', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(

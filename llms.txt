@@ -56,6 +56,7 @@ methods, CSS custom properties and examples.
 - [ki-icon-button](https://kimen.dev/llms/ki-icon-button.md): a compact, widely understood action where space precludes a visible label: toolbars, card and dialog corners (close), media transport, data-row actions.
 - [ki-indicator](https://kimen.dev/llms/ki-indicator.md): show the current position within a bounded, sequential set of peer views whose navigation lives elsewhere: carousel slides, unlabeled onboarding steps, gallery pages.
 - [ki-input](https://kimen.dev/llms/ki-input.md): collect one line of free text from a person, always with a visible `label`; choose the `type` and `autocomplete` that match the entry purpose.
+- [ki-link](https://kimen.dev/llms/ki-link.md): navigate to a page, section, or resource.
 - [ki-list](https://kimen.dev/llms/ki-list.md): settings, contacts, results or activity feeds where each item composes leading media, primary text, optional secondary text and trailing meta or a slotted control.
 - [ki-list-item](https://kimen.dev/llms/ki-list-item.md): only as a child of `ki-list`, for one read-only entry in a similar vertical collection.
 - [ki-note](https://kimen.dev/llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.

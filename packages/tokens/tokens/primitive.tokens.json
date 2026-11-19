@@ -826,6 +826,26 @@
           "$description": "Medium stroke for large activity rings."
         }
       },
+      "text-decoration": {
+        "thickness-hover": {
+          "$value": "2px",
+          "$description": "Emphasized underline stroke on hover."
+        },
+        "offset": {
+          "$value": "0.2em",
+          "$description": "Underline gap relative to the surrounding text size."
+        }
+      },
+      "inline-icon": {
+        "size": {
+          "$value": "0.9em",
+          "$description": "Inline glyph edge relative to text size."
+        },
+        "gap": {
+          "$value": "0.25em",
+          "$description": "Space between inline text and a trailing glyph."
+        }
+      },
       "target-min": {
         "$value": "24px",
         "$description": "The smallest pointer target any density may produce: WCAG 2.5.8 (AA) asks for 24 x 24 CSS px. In px on purpose: WCAG measures CSS px, and a page that shrinks its root font size must not shrink the floor."

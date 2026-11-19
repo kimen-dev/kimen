@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-link" />
+
+# ki-link
+
+A styled native anchor for navigation to another page, section, or resource.
+Use `ki-button variant="ghost"` to perform an action on the current page.
+
+```html
+<p>Read the <ki-link href="/docs/catalog">catalog contract</ki-link>.</p>
+<ki-link href="https://github.com/kimen-dev/kimen" external>Source on GitHub</ki-link>
+<ki-link href="/changelog" variant="neutral" underline="hover">Changelog</ki-link>
+```
+
+## Native behavior
+
+Tab moves focus to the link and Enter follows it. The browser also handles
+modifier clicks, the context menu, browsing contexts, and downloads. Use
+descriptive text in the default slot. Keep the underline in running text
+and reserve `underline="hover"` for standalone navigation.
+
+`external` uses `target="_blank"`, preserves supplied relationships, and
+ensures `noopener` is present. It displays a decorative external icon and
+adds a new-tab announcement to the accessible name. Set `external-label`
+to localize that announcement.
+
+## Customization
+
+| Token | Controls |
+| --- | --- |
+| `--ki-link-fg` | Primary accent ink |
+| `--ki-link-neutral-fg` | Neutral body ink |
+| `--ki-link-underline-thickness` | Resting underline width |
+| `--ki-link-underline-thickness-hover` | Hover underline width |
+| `--ki-link-underline-offset` | Gap below the text |
+
+The `link` part exposes the native anchor. The shared Kimen focus-ring
+tokens style keyboard focus.

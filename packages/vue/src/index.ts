@@ -19,6 +19,7 @@ export { KiIcon } from './ki-icon.js';
 export { KiIconButton } from './ki-icon-button.js';
 export { KiIndicator } from './ki-indicator.js';
 export { KiInput } from './ki-input.js';
+export { KiLink } from './ki-link.js';
 export { KiList } from './ki-list.js';
 export { KiListItem } from './ki-list-item.js';
 export { KiNote } from './ki-note.js';
