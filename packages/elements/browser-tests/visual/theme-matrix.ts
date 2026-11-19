@@ -3,7 +3,6 @@ export function visualGalleryThemes(
   name: string,
   scheme: 'light' | 'dark',
 ): readonly ('onmars' | 'material3')[] {
-  return scheme === 'light' || name === 'ki-icon' || name === 'ki-menu'
-    ? ['onmars', 'material3']
-    : ['onmars'];
+  const bothThemes = ['ki-icon', 'ki-menu', 'ki-menu-item', 'ki-menu-group'].includes(name);
+  return scheme === 'light' || bothThemes ? ['onmars', 'material3'] : ['onmars'];
 }
