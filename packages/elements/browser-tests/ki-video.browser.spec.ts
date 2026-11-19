@@ -19,6 +19,7 @@ import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { disableComponentEffectShadows } from './flat-effects';
 
 type KiVideoElement = HTMLElement & { label?: string };
 
@@ -303,6 +304,24 @@ describe('ki-video', () => {
       'the glass container did not settle back at rest',
     );
     await browserCommands.emulateReducedMotion(null);
+  });
+
+  it('S10 keeps the play-container shadow on hover with component effect shadows disabled (#349)', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the product tour' });
+    disableComponentEffectShadows(el);
+    const control = el.shadowRoot?.querySelector<HTMLElement>('.control');
+    if (!control) {
+      throw new Error('ki-video did not render its glass container');
+    }
+    const restShadow = getComputedStyle(control).boxShadow;
+    expect(restShadow).toContain('inset');
+
+    await userEvent.hover(playControlOf(el));
+
+    await expect.poll(() => getComputedStyle(control).transform).toMatch(/^matrix\(1\.02/u);
+    expect(getComputedStyle(control).boxShadow).toBe(restShadow);
+    await userEvent.unhover(playControlOf(el));
   });
 
   it('S3 the video never plays on its own: nothing starts and nothing sounds after load', async () => {

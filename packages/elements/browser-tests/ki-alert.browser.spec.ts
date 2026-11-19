@@ -9,6 +9,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-alert.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { disableComponentEffectShadows } from './flat-effects';
 
 type KiAlertElement = HTMLElement & {
   dismissed: boolean;
@@ -450,6 +451,18 @@ describe('ki-alert in a real browser', () => {
     }
     const focused = getComputedStyle(button);
     expect(`${focused.outlineStyle} ${focused.boxShadow}`).not.toBe('none none');
+  });
+
+  it('S6 keeps the dismiss focus halo with component effect shadows disabled (#349)', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    disableComponentEffectShadows(el);
+
+    await userEvent.keyboard('{Tab}');
+
+    const button = part(el, 'dismiss');
+    expect(button.matches(':focus-visible')).toBe(true);
+    await expect.poll(() => getComputedStyle(button).boxShadow).toMatch(/0px 0px 0px 3px/u);
   });
 
   it('S7 keyboard activation with Enter and Space dismisses exactly once each', async () => {
