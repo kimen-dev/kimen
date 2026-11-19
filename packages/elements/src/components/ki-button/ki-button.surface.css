@@ -42,7 +42,7 @@
   --_ki-button-border-bottom: var(--ki-button-primary-rest-border-bottom);
 }
 
-/* Tertiary is deprecated (#344, spec 002 S16-S18): it keeps its own theme
+/* Tertiary is deprecated (issue 344, spec 002 S16-S18): it keeps its own theme
    hooks, whose defaults alias the secondary ones, so it renders like
    secondary. It carries the SECONDARY bevel pair (Figma 8003:300: stroke 1px
    Outline/secondary_button_top with the secondary_button_bottom edge) and
