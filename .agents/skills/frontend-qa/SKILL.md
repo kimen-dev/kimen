@@ -73,7 +73,7 @@ The evidence for TDD-always is mixed; its reliable value is **design pressure** 
 
 ## 6. CI quality gates (the pipeline IS the QA process)
 
-The ordinary PR pipeline exposes one required `quality` result. `scripts/gates/gates-suite.sh` runs the high-signal core once: constitution sync, format, lint (code + styles), strict typecheck, module boundaries, build, public API/token integrity, unit/component tests, Chromium, axe and budgets. S-ID traceability applies only where an Article II contract exists. Packaging and the three-browser matrix belong to release; mutation runs daily; containment and dependency review are path-scoped; broad security scans run on `main` and weekly. Add a gate only when its defect-detection value exceeds its runtime and maintenance cost.
+The ordinary PR pipeline exposes one required `quality` result. `scripts/gates/gates-suite.sh` runs the high-signal core once: constitution sync, format, lint (code + styles), strict typecheck, module boundaries, build, public API/token integrity, unit/component tests, Chromium, axe and budgets. S-ID traceability applies only where an Article II contract exists. CI runs the same two gates as parallel jobs — `core` (gates-core.sh) and the Chromium browser gate split into two shards of the elements files — and `quality` is green only when each of them is. Packaging and the three-browser matrix belong to release; mutation runs daily; containment and dependency review are path-scoped; broad security scans run on `main` and weekly. Add a gate only when its defect-detection value exceeds its runtime and maintenance cost.
 
 ## 7. Testing generative UI (LLM output) — different rules
 

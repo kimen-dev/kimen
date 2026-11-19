@@ -15,6 +15,21 @@ case "$ENGINE" in
   *) fail 'engine must be exactly one of chromium, firefox, webkit' ;;
 esac
 
+# CI splits the elements suite across parallel jobs (.github/workflows/ci.yml):
+# KIMEN_BROWSER_SHARD=<index>/<count> runs that share of its files, and the
+# smaller Chromium-only suites run once, in the last shard. Unset, the gate is
+# the whole suite in one invocation (local readiness, release).
+SHARD="${KIMEN_BROWSER_SHARD:-}"
+SHARD_INDEX=1
+SHARD_COUNT=1
+if [ -n "$SHARD" ]; then
+  if [[ ! "$SHARD" =~ ^([1-9][0-9]*)/([1-9][0-9]*)$ ]] || [ "${BASH_REMATCH[1]}" -gt "${BASH_REMATCH[2]}" ]; then
+    fail "KIMEN_BROWSER_SHARD must be <index>/<count> with 1 <= index <= count, got '$SHARD'"
+  fi
+  SHARD_INDEX="${BASH_REMATCH[1]}"
+  SHARD_COUNT="${BASH_REMATCH[2]}"
+fi
+
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 if [ "${KIMEN_CACHE_ENV_READY:-}" != '1' ]; then
   exec bash scripts/gates/cache-env.sh -- bash scripts/gates/gates-browser.sh "$@"
@@ -105,11 +120,15 @@ record_browser_evidence "browser-executable:$ENGINE" green
 # Browser targets are deliberately uncached: KIMEN_BROWSER_ENGINE is a runtime
 # input and independent prerelease jobs must execute rather than reuse another
 # engine's Nx result.
-run_browser_gate "test-browser:$ENGINE" pnpm exec nx run @kimen/elements:test-browser --skipNxCache
+if [ -n "$SHARD" ]; then
+  run_browser_gate "test-browser:$ENGINE:$SHARD" pnpm exec nx run @kimen/elements:test-browser --skipNxCache -- "--shard=$SHARD"
+else
+  run_browser_gate "test-browser:$ENGINE" pnpm exec nx run @kimen/elements:test-browser --skipNxCache
+fi
 # Wrapper behavioral suites (spec 034) are Chromium-scoped: the wrapped
 # components already carry the three-engine matrix; the wrapper glue runs
-# on the ordinary PR engine.
-if [ "$ENGINE" = 'chromium' ]; then
+# on the ordinary PR engine. Sharded, they run once, in the last shard.
+if [ "$ENGINE" = 'chromium' ] && [ "$SHARD_INDEX" = "$SHARD_COUNT" ]; then
   run_browser_gate "test-browser-wrappers:$ENGINE" pnpm exec nx run-many -t test-browser-wrapper --skipNxCache
   # The guarded renderer's interaction contract (spec 028 S17) needs real
   # native-control activation; like the wrapper glue it runs on the ordinary
@@ -121,4 +140,4 @@ if [ "$ENGINE" = 'chromium' ]; then
   # is verified on this engine only (packages/adapter-mcp-apps/COMPAT.md).
   run_browser_gate "test-browser-adapter-mcp-apps:$ENGINE" pnpm exec nx run @kimen/adapter-mcp-apps:test-browser --skipNxCache
 fi
-echo "BROWSER GATE GREEN — engine=$ENGINE executable=$BROWSER_EXECUTABLE"
+echo "BROWSER GATE GREEN — engine=$ENGINE shard=${SHARD:-all} executable=$BROWSER_EXECUTABLE"
