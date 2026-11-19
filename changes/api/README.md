@@ -17,7 +17,9 @@ The normative schema is
   `accepted/`. The archive uses gzip to keep the frozen record separate from
   incoming changes to the old generated path. The gate reconstructs only
   the deltas the record approved.
-- `packages/elements/generated/public-api.json` is the generated candidate.
+- [`packages/elements/generated/public-api/`](../../packages/elements/generated/public-api)
+  is the generated candidate. The gate reconstructs its canonical snapshot
+  from the index and component files.
 
 Snapshot and declaration files use canonical JSON: recursively sorted keys,
 two-space indentation, and exactly one trailing line feed. The digest covers

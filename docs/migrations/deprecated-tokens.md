@@ -19,7 +19,7 @@ their scheduled removal. Each one names its replacement.
   tokens* table listing every one with its replacement. That table is the
   migration list: it is generated from the token sources, so it is always
   complete.
-- **The public API snapshot.** `packages/elements/generated/public-api.json`
+- **The public API snapshot.** `packages/elements/generated/public-api/index.json`
   records `deprecatedSince` and `replacement` on each deprecated token.
 
 ## The schedule

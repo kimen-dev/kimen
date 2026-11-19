@@ -46,6 +46,14 @@ symbols also carry target, deprecation version and direct-subpath replacement;
 every root symbol must be covered and no new one may appear. The envelope digest
 covers only canonical `surface`, avoiding self-reference.
 
+Spec 067 records founder approval on 2026-11-19 for the candidate's split
+storage. `packages/elements/generated/public-api/index.json` holds shared
+facets and the whole-surface digest. `components/<tag>.json` holds one
+component's facets and its direct package export and module declaration.
+The gate reconstructs the canonical v1 envelope from the index and shards
+and checks its digest. Each shard is required and drift-checked. Release
+baselines retain the standalone canonical envelope and the same digest.
+
 `modules` inventories the symbols and declaration signatures of every public
 export. `stylesheets` inventories only exported combined CSS entrypoints and
 records the normalized effective value of every public semantic/component

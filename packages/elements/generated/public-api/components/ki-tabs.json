@@ -1,0 +1,130 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for the tablist. Always provide one when multiple tab\ngroups may appear in a view. When NOT to use: do not use `label` as a\nvisible heading; render visible context in surrounding content.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-tabs-divider-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tabs component for divider color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tabs-divider-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tabs-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A tab group for switching between peer content views.",
+    "events": {
+      "ki-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fired once after a user-driven selection change from pointer or keyboard\nnavigation. `detail.value` is the resolved selected value and `value` is\nalready current when listeners run. Programmatic `value` writes and\nfirst-render fallback are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ value: string }>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "tablist": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Internal row around the tab strip: gap, alignment and the divider. The strip inside it carries the `tablist` role.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for the tablist. Always provide one when multiple tab\ngroups may appear in a view. When NOT to use: do not use `label` as a\nvisible heading; render visible context in surrounding content.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "`ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an\ninternal named slot as managed output.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-tabs.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-tabs.d.ts",
+    "symbols": {
+      "KiTabs": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiTabs extends Components.KiTabs, HTMLElement {\n}\nexport const KiTabs: {\n    prototype: KiTabs;\n    new (): KiTabs;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-tabs.js"
+  }
+}

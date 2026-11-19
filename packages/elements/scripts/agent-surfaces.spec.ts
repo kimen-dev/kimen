@@ -1121,7 +1121,7 @@ describe('agent surfaces', () => {
       'packages/elements/generated/custom-elements.json',
       'packages/elements/generated/docs.d.ts',
       'packages/elements/generated/docs.json',
-      'packages/elements/generated/public-api.json',
+      'packages/elements/generated/public-api',
       'packages/elements/llms-full.txt',
       'packages/elements/llms.txt',
       'packages/elements/llms/theming.md',
@@ -1131,6 +1131,7 @@ describe('agent surfaces', () => {
     // One document per component and per GenUI package, derived rather than
     // listed, and both documents directories closed against stray files.
     expect(sync).toContain('`packages/elements/llms/${tag}.md`');
+    expect(sync).toContain('`${publicApiDirectory}/components/${tag}.json`');
     expect(sync).toContain("'packages/elements/llms',");
     expect(sync).toContain("'llms',");
   });

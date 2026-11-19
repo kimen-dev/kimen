@@ -1,0 +1,776 @@
+{
+  "component": {
+    "attributes": {
+      "dismiss-label": {
+        "default": "'Dismiss'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the dismiss button. Override for localization; the\ndefault English string is the component's only built-in user-visible text.\n\nWhen to use: provide a localized action name whenever the document language\nis not English.\nWhen NOT to use: do not put the alert message here; use the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "dismissed": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Reflected dismissed state. User dismissal sets it; applications may also\nset or clear it. While true, the host remains in the document but renders no\nalert subtree and leaves the accessibility tree. Clearing it re-shows the\nalert and creates a dynamic live-region appearance.\n\nWhen to use: persist or restore acknowledgement state from application\ndata.\nWhen NOT to use: do not listen for programmatic changes as dismissal\nevents; `ki-dismiss` is only for user activation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "dismissible": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional emphasized text rendered before the message inside the live\nregion. Empty strings render no heading. The heading is a `strong`\nelement, not a document heading, so it never changes page outline.\n\nWhen to use: add a short label when it helps identify the status message.\nWhen NOT to use: do not use heading for page structure; use a real heading\noutside the alert when the document needs one.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Semantic intent for visual styling and live-region urgency. `danger` and\n`warning` expose `role=\"alert\"`; `neutral`, `success`, `info`, absent, and\nunrecognized values expose `role=\"status\"`. Unknown values keep rendering\nand fall back to the neutral token matrix by CSS construction.\n\nWhen to use: choose the tone that describes the page or section state.\nWhen NOT to use: do not use tone for layout, density, or filled-vs-outlined\nstyling; those are token/theme decisions.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
+      }
+    },
+    "cssProperties": {
+      "--ki-alert-actions-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the gap between slotted actions (MarsUI Alert master CTAs gap Space/xl 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the card border width (MarsUI never strokes alert surfaces: the Alert master card stroke is fully transparent. material3 keeps its 2px border via its override).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-card-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-danger-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-danger-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for danger border (MarsUI draws no tone border on any alert/note/toast surface).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-danger-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the danger card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-danger-icon-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the danger icon frame (MarsUI Alert master Feature-icon Surface/danger-base-em-alpha at 12%).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-danger-icon-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the danger icon glyph (MarsUI Alert master Feature-icon glyph Text/danger-high-em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for dismiss active foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the alert dismiss button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for dismiss hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for dismiss icon size (Figma close glyph box 16px inside the 24px raised circle; repointed from 18px per the fidelity audit).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the dismiss chip shape (MarsUI Radius/radius_round full circle).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for dismiss rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-dismiss-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for dismiss size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-heading-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font family for the alert heading. Override it to give alerts their own heading typeface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-heading-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for heading font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-heading-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-icon-glyph-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the icon glyph inside the frame (MarsUI Alert master Feature-icon glyph 20px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-icon-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the icon frame radius (MarsUI Alert master Feature-icon: a circle).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the icon frame (MarsUI Alert master Feature-icon size xs: 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-info-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-info-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for info border (MarsUI draws no tone border on any alert/note/toast surface).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-info-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the info card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-info-icon-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the info icon frame (MarsUI Alert master Feature-icon Surface/info-base-em-alpha at 12%).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-info-icon-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the info icon glyph (MarsUI Alert master Feature-icon glyph Text/info-high-em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-message-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-neutral-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-neutral-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for neutral border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-neutral-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the neutral card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-neutral-icon-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the neutral icon frame (MarsUI Alert master Feature-icon Surface/primary-base-em-alpha at 12%: the master variable itself, not the heavier primary-tint content fill, so the primary glyph clears 4.5:1 in dark).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-neutral-icon-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the neutral icon glyph (MarsUI Alert master Feature-icon glyph Text/primary-high-em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the card padding block (MarsUI Alert master List_wrap card: 12px on all four sides).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the card padding inline (MarsUI Alert master List_wrap card: 12px on all four sides).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the card radius (MarsUI Alert master List_wrap big_component/radius_xs 16px; the shell around it has its own radius).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-shell-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the alert shell.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-shell-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-shell-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-shell-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-success-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-success-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for success border (MarsUI draws no tone border on any alert/note/toast surface).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-success-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the success card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-success-icon-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the success icon frame (MarsUI Alert master Feature-icon Surface/success-base-em-alpha at 12%).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-success-icon-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the success icon glyph (MarsUI Alert master Feature-icon glyph Text/success-high-em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-text-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-warning-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-warning-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-warning-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the warning card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-warning-icon-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the warning icon frame (MarsUI Alert master Feature-icon Surface/warning-base-em-alpha at 12%).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-alert-warning-icon-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the alert component for the warning icon glyph (MarsUI Alert master Feature-icon glyph Text/warning-high-em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-effect-component-secondary-default-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-distance-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Motion travel distance sm (4px): small slide/settle offsets.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-medium-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-outline-secondary-button-top": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for outline secondary button top.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-special-light-s0-dark-s2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for surface special light s0 dark s2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A persistent inline status message with token-backed tone semantics.",
+    "events": {
+      "ki-dismiss": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fired once after the user dismisses the alert — emitted after the alert is\nhidden and focus has been handed to the next control. `detail` is `null`\nand the event is not cancelable (the alert is already gone when it runs).\nWhen to use: record acknowledgement, or advance an application flow after a\nuser closes the alert.\nWhen NOT to use: do not treat it as a veto point, and do not expect it for\nprogrammatic `dismissed` changes — it fires only for user activation.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<null>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Row around the `actions` slot, rendered only when it holds content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "alert": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outer shell around the card: padding, radius, wash and blur.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "card": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Card holding the icon, text, actions and dismiss control: tone\nbackground, border, radius, padding and elevation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "dismiss": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native dismiss button, rendered only when dismissible.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional emphasized heading, rendered only when non-empty.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Round frame around the `icon` slot, rendered only when it holds content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "message": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message body wrapper around the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "dismissLabel": {
+        "default": "'Dismiss'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the dismiss button. Override for localization; the\ndefault English string is the component's only built-in user-visible text.\n\nWhen to use: provide a localized action name whenever the document language\nis not English.\nWhen NOT to use: do not put the alert message here; use the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "dismissed": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Reflected dismissed state. User dismissal sets it; applications may also\nset or clear it. While true, the host remains in the document but renders no\nalert subtree and leaves the accessibility tree. Clearing it re-shows the\nalert and creates a dynamic live-region appearance.\n\nWhen to use: persist or restore acknowledgement state from application\ndata.\nWhen NOT to use: do not listen for programmatic changes as dismissal\nevents; `ki-dismiss` is only for user activation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "dismissible": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional emphasized text rendered before the message inside the live\nregion. Empty strings render no heading. The heading is a `strong`\nelement, not a document heading, so it never changes page outline.\n\nWhen to use: add a short label when it helps identify the status message.\nWhen NOT to use: do not use heading for page structure; use a real heading\noutside the alert when the document needs one.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Semantic intent for visual styling and live-region urgency. `danger` and\n`warning` expose `role=\"alert\"`; `neutral`, `success`, `info`, absent, and\nunrecognized values expose `role=\"status\"`. Unknown values keep rendering\nand fall back to the neutral token matrix by CSS construction.\n\nWhen to use: choose the tone that describes the page or section state.\nWhen NOT to use: do not use tone for layout, density, or filled-vs-outlined\nstyling; those are token/theme decisions.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message body. It lives inside the live-region boundary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional responses to this message, in a row at the bottom\nof the card, outside the live region. Slot `size=\"sm\"` buttons. The alert\nnever activates them and an action does not dismiss the alert; the\napplication does, by setting `dismissed`. When NOT to use: a response the\nperson cannot skip belongs in `ki-dialog`.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative glyph shown in a round frame at the top of\nthe card, in the tone's colors. Hidden from assistive technology: it never\ncarries meaning the heading and message lack. When to use: give every\nnon-neutral alert an icon. When NOT to use: never as the only cue for the\nmessage.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-alert.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-alert.d.ts",
+    "symbols": {
+      "KiAlert": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiAlert extends Components.KiAlert, HTMLElement {\n}\nexport const KiAlert: {\n    prototype: KiAlert;\n    new (): KiAlert;\n};"
+      },
+      "KiAlertTone": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-alert.js"
+  }
+}

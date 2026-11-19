@@ -4,7 +4,11 @@ import { writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { readCanonicalJson, readPublicApiDeclarations } from '../gates/check-public-api.mjs';
+import {
+  readCanonicalJson,
+  readPublicApiCandidate,
+  readPublicApiDeclarations,
+} from '../gates/check-public-api.mjs';
 import { canonicalJson } from '../lib/canonical-json.mjs';
 import { createPublicApiDeclaration, evaluatePublicApiChange } from '../lib/public-api.mjs';
 
@@ -12,7 +16,7 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const directory = join(root, 'changes/api');
 const baselinePath = join(directory, 'baselines/0.0.0.json');
 const legacyCandidatePath = 'packages/elements/generated/public-api.json';
-const candidatePath = join(root, legacyCandidatePath);
+const candidatePath = join(root, 'packages/elements/generated/public-api');
 
 function legacySnapshot(current, declaration, ref) {
   if (current.surfaceSha256 === declaration.candidateSha256) return current;
@@ -56,7 +60,7 @@ async function declare([mode, name, releaseOrRef, reason, ...extra]) {
   }
   const [baseline, candidate] = await Promise.all([
     readCanonicalJson('baseline', baselinePath),
-    readCanonicalJson('candidate', candidatePath),
+    readPublicApiCandidate(candidatePath),
   ]);
   const declarations = await readPublicApiDeclarations(directory, {
     baseline,

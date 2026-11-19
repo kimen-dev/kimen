@@ -4,9 +4,10 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-// Exactly the three stylesheets @kimen/tokens exports. The build writes no
+// The token reference and three exported stylesheets. The build writes no
 // intermediate per-scheme files: a theme's two schemes are one stylesheet.
 const tokens = Object.freeze([
+  'packages/elements/docs/tokens-reference.mdx',
   'packages/tokens/dist/css/base.css',
   'packages/tokens/dist/css/tokens.css',
   'packages/tokens/dist/css/tokens.material3.css',
@@ -49,20 +50,25 @@ const genUiGuides = JSON.parse(
   readFileSync(new URL('../../docs/genui-surfaces.json', import.meta.url), 'utf8'),
 ).packages.map(({ directory }) => `llms/${directory.split('/').filter(Boolean).at(-1)}.md`);
 
-// llms.txt is an index (spec 017 FR-011): beside each one sit the complete
-// summary and the documents it links, all generated, all drift-checked.
+const packageFullSummary = 'packages/elements/llms-full.txt';
+const siteFullSummary = 'llms-full.txt';
+const publicApiDirectory = 'packages/elements/generated/public-api';
+
+// Both indexes and their per-topic documents are committed. The package's
+// complete summary is verified against the elements portion of the site copy.
 const surfaces = Object.freeze([
   ...genUiGuides,
-  'llms-full.txt',
+  siteFullSummary,
   'llms.txt',
   'packages/elements/generated/custom-elements.json',
   'packages/elements/generated/docs.d.ts',
   'packages/elements/generated/docs.json',
-  'packages/elements/generated/public-api.json',
-  'packages/elements/llms-full.txt',
+  `${publicApiDirectory}/index.json`,
+  ...wrapperTags.map((tag) => `${publicApiDirectory}/components/${tag}.json`),
   'packages/elements/llms.txt',
   ...wrapperTags.map((tag) => `packages/elements/llms/${tag}.md`),
   'packages/elements/llms/theming.md',
+  'packages/elements/src/components.d.ts',
 ]);
 
 const wrapperShells = Object.freeze([
@@ -90,19 +96,23 @@ export const generatedGroups = Object.freeze({
   tokens: Object.freeze({
     required: tokens,
     handWritten: Object.freeze([]),
-    scopes: Object.freeze(['packages/tokens/dist/css']),
+    scopes: Object.freeze([
+      'packages/tokens/dist/css',
+      'packages/elements/docs/tokens-reference.mdx',
+    ]),
   }),
   surfaces: Object.freeze({
     required: surfaces,
     handWritten: Object.freeze([]),
     scopes: Object.freeze([
       'llms',
-      'llms-full.txt',
+      siteFullSummary,
       'llms.txt',
       'packages/elements/generated',
       'packages/elements/llms',
-      'packages/elements/llms-full.txt',
+      packageFullSummary,
       'packages/elements/llms.txt',
+      'packages/elements/src/components.d.ts',
     ]),
   }),
   catalog: Object.freeze({
@@ -145,6 +155,24 @@ function git(root, args, { allowFailure = false } = {}) {
 
 const lines = (source) => source.split(/\r?\n/u).filter(Boolean);
 
+function validatePackageSummary(root) {
+  let packageSummary;
+  try {
+    packageSummary = readFileSync(resolve(root, packageFullSummary), 'utf8');
+  } catch (error) {
+    throw new Error(`generated sync surfaces: build must create ${packageFullSummary}`, {
+      cause: error,
+    });
+  }
+  const siteSummary = readFileSync(resolve(root, siteFullSummary), 'utf8');
+  const genUiStart = siteSummary.lastIndexOf('\n## GenUI layer\n');
+  if (genUiStart < 0 || packageSummary !== siteSummary.slice(0, genUiStart)) {
+    throw new Error(
+      `generated sync surfaces: ${packageFullSummary} must match the elements portion of ${siteFullSummary}`,
+    );
+  }
+}
+
 export function validateGeneratedSync({ root, group, executeGit = git }) {
   const contract = generatedGroups[group];
   if (contract === undefined) {
@@ -181,6 +209,7 @@ export function validateGeneratedSync({ root, group, executeGit = git }) {
   if (diff.status !== 0) {
     throw new Error(`generated sync ${group}: generated output drift detected`);
   }
+  if (group === 'surfaces') validatePackageSummary(root);
   return { group, files: contract.required.length };
 }
 

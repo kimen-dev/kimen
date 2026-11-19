@@ -4,7 +4,11 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { readCanonicalJson, readPublicApiDeclarations } from '../gates/check-public-api.mjs';
+import {
+  readCanonicalJson,
+  readPublicApiCandidate,
+  readPublicApiDeclarations,
+} from '../gates/check-public-api.mjs';
 
 import { canonicalJsonSha256 } from '../lib/canonical-json.mjs';
 import { evaluatePublicApiChange } from '../lib/public-api.mjs';
@@ -511,9 +515,8 @@ test('[S10] repository inventories agree with the protected baseline and active 
     'baseline',
     fileURLToPath(new URL('../../changes/api/baselines/0.0.0.json', import.meta.url)),
   );
-  const candidate = await readCanonicalJson(
-    'candidate',
-    fileURLToPath(new URL('../../packages/elements/generated/public-api.json', import.meta.url)),
+  const candidate = await readPublicApiCandidate(
+    fileURLToPath(new URL('../../packages/elements/generated/public-api', import.meta.url)),
   );
   const declarations = await readPublicApiDeclarations(
     fileURLToPath(new URL('../../changes/api', import.meta.url)),

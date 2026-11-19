@@ -34,8 +34,7 @@ export async function runBuildSurfaces(options = {}) {
     preamblePath: options.preamblePath ?? resolve(selectedPackageRoot, 'scripts/llms-preamble.txt'),
     manifestPath:
       options.manifestPath ?? resolve(selectedPackageRoot, 'generated/custom-elements.json'),
-    publicApiPath:
-      options.publicApiPath ?? resolve(selectedPackageRoot, 'generated/public-api.json'),
+    publicApiPath: options.publicApiPath ?? resolve(selectedPackageRoot, 'generated/public-api'),
     packageLlmsPath: options.packageLlmsPath ?? resolve(selectedPackageRoot, 'llms.txt'),
     rootLlmsPath: options.rootLlmsPath ?? resolve(selectedWorkspaceRoot, 'llms.txt'),
     genUiPath: options.genUiPath ?? resolve(selectedWorkspaceRoot, 'docs/genui-surfaces.json'),
@@ -133,15 +132,16 @@ export async function runBuildSurfaces(options = {}) {
         resolve(options.workspaceRoot ?? workspaceRoot, 'packages/tokens/package.json'),
       rootIndexPath: options.rootIndexPath ?? resolve(paths.packageRoot, 'src/index.ts'),
     }));
-  const publicApiBytes = await serializeCanonicalJson(
-    publicApi,
-    options.workspaceRoot ?? workspaceRoot,
-  );
+  const publicApiFiles = await publicApiOutputs({
+    snapshot: publicApi,
+    target: paths.publicApiPath,
+    workspaceRoot: selectedWorkspaceRoot,
+  });
 
   const outputs = new Map([
     [paths.docsPath, serializeJson(docs)],
     [paths.manifestPath, serializeJson(manifest)],
-    [paths.publicApiPath, publicApiBytes],
+    ...publicApiFiles,
     [paths.packageLlmsPath, packageIndex],
     [packageCompanions.fullPath, packageFull],
     ...packageDocuments.map(([file, content]) => [
@@ -156,13 +156,36 @@ export async function runBuildSurfaces(options = {}) {
     ]),
   ]);
 
-  await mkdir(packageCompanions.documentsDirectory, { recursive: true });
-  await mkdir(rootCompanions.documentsDirectory, { recursive: true });
+  for (const directory of new Set([...outputs.keys()].map((path) => dirname(path)))) {
+    await mkdir(directory, { recursive: true });
+  }
   for (const [outputPath, content] of outputs) {
     await writeFile(outputPath, content);
   }
-  await removeStaleDocuments(packageCompanions.documentsDirectory, packageDocuments);
-  await removeStaleDocuments(rootCompanions.documentsDirectory, rootDocuments);
+  await removeStaleFiles(
+    packageCompanions.documentsDirectory,
+    packageDocuments.map(([file]) => file),
+    /\.md$/u,
+  );
+  await removeStaleFiles(
+    rootCompanions.documentsDirectory,
+    rootDocuments.map(([file]) => file),
+    /\.md$/u,
+  );
+  if (!paths.publicApiPath.endsWith('.json')) {
+    const directory = join(paths.publicApiPath, 'components');
+    const shards = publicApiFiles
+      .filter(([path]) => dirname(path) === directory)
+      .map(([path]) => relative(directory, path));
+    await mkdir(directory, { recursive: true });
+    await removeStaleFiles(directory, shards, /\.json$/u);
+  }
+  // Stencil's per-component output targets write current wrappers. Remove
+  // obsolete generated wrappers left on either side of a merge.
+  const wrappers = docs.components.map(({ tag }) => `${tag}.ts`);
+  for (const directory of options.wrapperDirectories ?? []) {
+    await removeStaleFiles(directory, wrappers, /^ki-[a-z0-9]+(?:-[a-z0-9]+)*\.ts$/u);
+  }
 
   return { ok: true, stderr: '', violations: [], outputs };
 }
@@ -178,13 +201,12 @@ function llmsCompanions(indexPath) {
   return { fullPath: `${stem}-full.txt`, documentsDirectory: stem };
 }
 
-// A documents directory holds exactly what this run generated: the document
-// of a component or package that no longer exists is removed with it, so it
-// can neither ship nor stay published (FR-012).
-async function removeStaleDocuments(directory, documents) {
-  const generated = new Set(documents.map(([file]) => file));
+// A generated directory holds the current outputs. A removed component's
+// shards, wrapper modules and documents are pruned by their output pattern.
+async function removeStaleFiles(directory, files, pattern) {
+  const generated = new Set(files);
   for (const entry of await readdir(directory)) {
-    if (entry.endsWith('.md') && !generated.has(entry)) {
+    if (pattern.test(entry) && !generated.has(entry)) {
       await rm(join(directory, entry));
     }
   }
@@ -376,11 +398,17 @@ async function readPublicStylesheets({ packageRoot, packageExports }) {
   );
 }
 
-async function serializeCanonicalJson(value, workspaceRoot) {
-  const { canonicalJson } = await import(
-    pathToFileURL(resolve(workspaceRoot, 'scripts/lib/canonical-json.mjs')).href
+async function publicApiOutputs({ snapshot, target, workspaceRoot }) {
+  if (target.endsWith('.json')) {
+    const { canonicalJson } = await import(
+      pathToFileURL(resolve(workspaceRoot, 'scripts/lib/canonical-json.mjs')).href
+    );
+    return [[target, canonicalJson(snapshot)]];
+  }
+  const { splitPublicApiSnapshot } = await import(
+    pathToFileURL(resolve(workspaceRoot, 'scripts/lib/public-api-storage.mjs')).href
   );
-  return canonicalJson(value);
+  return [...splitPublicApiSnapshot(snapshot)].map(([path, bytes]) => [join(target, path), bytes]);
 }
 
 function formatViolations(violations) {
@@ -393,7 +421,11 @@ function formatViolations(violations) {
 // not — compare real filesystem paths so a checkout under a path with spaces
 // or non-ASCII characters cannot silently skip generation (S6).
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const result = await runBuildSurfaces();
+  const result = await runBuildSurfaces({
+    wrapperDirectories: ['react', 'vue'].map((name) =>
+      resolve(workspaceRoot, 'packages', name, 'src'),
+    ),
+  });
   if (!result.ok) {
     process.stderr.write(result.stderr);
     process.exit(1);

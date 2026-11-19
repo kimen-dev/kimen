@@ -1,0 +1,330 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the whole group unavailable, skips it in Tab order and removes its\nform entry.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "error-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message shown in place of the help text once a `required` group is left\nwithout a choice, and its `validationMessage` (\"Choose a plan\"). Without\nit the browser's own message shows, in the browser's language. An error\nset with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the options, read with the group as its\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "label-hint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short text shown after the group label and read with it as part of the\nradiogroup name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional questions of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put what the choice decides in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key for the selected option's value. Omit when the group should\nnot contribute a form entry.\nWhen NOT to use: do not put `name` on `ki-radio` options; their internal\nnative inputs are intentionally unnamed.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires one selected option for form submission. The group uses platform\n`valueMissing` from its internal native radio inputs.\nWhen NOT to use: do not use required when no answer is acceptable.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Projection of the current selection. The initial attribute selects the\nfirst matching option; unmatched values leave the group unselected and\noperable. Assigning the property updates selection silently.\nWhen NOT to use: never author selection on `ki-radio`; set this value.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-radio-group-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio group component for gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-group-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio group component for label font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-group-label-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the radio group component for label font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-group-label-hint-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-group-label-hint-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-group-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-med-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text med em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
+    "events": {
+      "change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "Event"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Error line shown in place of the help text while the group is\ninvalid after the person submitted; a polite live region, starting with a\ndecorative error symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Help line under the options, read as the radiogroup description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible group label and accessible-name source.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label-hint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The `label-hint` text after the group label text, inside the label\nand part of the radiogroup's accessible name; rendered only while a hint is set.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the whole group unavailable, skips it in Tab order and removes its\nform entry.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "errorText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message shown in place of the help text once a `required` group is left\nwithout a choice, and its `validationMessage` (\"Choose a plan\"). Without\nit the browser's own message shows, in the browser's language. An error\nset with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the options, read with the group as its\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "labelHint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short text shown after the group label and read with it as part of the\nradiogroup name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional questions of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put what the choice decides in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key for the selected option's value. Omit when the group should\nnot contribute a form entry.\nWhen NOT to use: do not put `name` on `ki-radio` options; their internal\nnative inputs are intentionally unnamed.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires one selected option for form submission. The group uses platform\n`valueMissing` from its internal native radio inputs.\nWhen NOT to use: do not use required when no answer is acceptable.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Projection of the current selection. The initial attribute selects the\nfirst matching option; unmatched values leave the group unselected and\noperable. Assigning the property updates selection silently.\nWhen NOT to use: never author selection on `ki-radio`; set this value.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "`ki-radio` options. Document order is navigation order.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-radio-group.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-radio-group.d.ts",
+    "symbols": {
+      "KiRadioGroup": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiRadioGroup extends Components.KiRadioGroup, HTMLElement {\n}\nexport const KiRadioGroup: {\n    prototype: KiRadioGroup;\n    new (): KiRadioGroup;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-radio-group.js"
+  }
+}

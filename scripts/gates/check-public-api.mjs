@@ -6,11 +6,12 @@ import { pathToFileURL } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
 import { canonicalJson } from '../lib/canonical-json.mjs';
+import { readDirectoryPublicApiSnapshot } from '../lib/public-api-storage.mjs';
 import { createAcceptedPublicApiDeclaration, evaluatePublicApiChange } from '../lib/public-api.mjs';
 
 const OPTIONS = Object.freeze(['--baseline', '--candidate', '--declarations', '--declaration']);
 const USAGE =
-  'usage: check-public-api.mjs --baseline <snapshot.json|none> --candidate <snapshot.json> --declarations <directory>';
+  'usage: check-public-api.mjs --baseline <snapshot.json|none> --candidate <snapshot.json|directory> --declarations <directory>';
 const MISSING_OPTIONS = `${USAGE}; explicit --baseline, --candidate, and --declarations are required`;
 const PRE_067_SURFACE_SHA256 = '916315c023aa2c2168bcfd27b6e7f8171796000ed786778c293d598804e9264e';
 
@@ -64,6 +65,12 @@ export async function readCanonicalJson(label, path, { readText = readFile } = {
 
 async function optionalContract(label, path, readText) {
   return path === 'none' ? null : readCanonicalJson(label, path, { readText });
+}
+
+export function readPublicApiCandidate(path, options) {
+  return path.endsWith('.json')
+    ? readCanonicalJson('candidate', path, options)
+    : readDirectoryPublicApiSnapshot(path);
 }
 
 export async function readPublicApiDeclarations(
@@ -124,7 +131,7 @@ export async function checkPublicApi({
   const options = parsePublicApiArguments(arguments_);
   const [baseline, candidate] = await Promise.all([
     optionalContract('baseline', options.get('--baseline'), readText),
-    readCanonicalJson('candidate', options.get('--candidate'), { readText }),
+    readPublicApiCandidate(options.get('--candidate'), { readText }),
   ]);
   if (options.has('--declarations')) {
     const declarations = await readPublicApiDeclarations(options.get('--declarations'), {

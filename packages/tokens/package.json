@@ -20,7 +20,7 @@
     "./css/material3": "./dist/css/tokens.material3.css"
   },
   "scripts": {
-    "build": "node ./build.mjs",
+    "build": "node ./build.mjs && pnpm run reference",
     "contrast": "node ./scripts/check-contrast.mjs",
     "reference": "node ./scripts/generate-reference.mjs",
     "size": "size-limit",
@@ -29,7 +29,15 @@
   "nx": {
     "tags": [
       "scope:tokens"
-    ]
+    ],
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/dist",
+          "{workspaceRoot}/packages/elements/docs/tokens-reference.mdx"
+        ]
+      }
+    }
   },
   "devDependencies": {
     "@size-limit/esbuild": "14.3.0",

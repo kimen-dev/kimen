@@ -1,0 +1,238 @@
+{
+  "component": {
+    "attributes": {
+      "indeterminate": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Unknown-duration mode. When set, no completed fraction or current value is\nexposed. Its motion is declared only when reduced motion is not requested.\nWhen to use: show ongoing work whose duration or total cannot be measured.\nWhen NOT to use: do not use for known fractions; use `value` and `max`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name applied to the internal progressbar. Always set this to\nwhat is progressing, such as \"Uploading report.pdf\". Without it the\nelement renders but exposes no accessible name, so the catalog contract\nrequires it.\nWhen NOT to use: do not use a generic label such as \"Loading\" when the\ntask can be named more specifically.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max": {
+        "default": "100",
+        "deprecatedSince": null,
+        "description": "Total amount. Non-finite, zero or negative values normalize to `100` for\npresentation and ARIA.\nWhen to use: set when a determinate task's total is not 100.\nWhen NOT to use: omit for conventional percentage-style progress.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "shape": {
+        "default": "'linear'",
+        "deprecatedSince": null,
+        "description": "Structural presentation. Use `linear` in page flows and lists; use\n`circular` in compact or centered placements. Unknown values render linear.\nWhen NOT to use: do not use shape to encode semantic status or task intent.",
+        "replacement": null,
+        "required": false,
+        "type": "\"circular\" | \"linear\""
+      },
+      "value": {
+        "default": "0",
+        "deprecatedSince": null,
+        "description": "Completed amount. Presentation and ARIA clamp this value to `0..max`;\nmalformed values fall back to `0`. Ignored while `indeterminate` is set.\nWhen to use: set with `max` for determinate task advancement.\nWhen NOT to use: do not set a fabricated value for unknown-duration work;\nset `indeterminate` instead.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      }
+    },
+    "cssProperties": {
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-medium-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "M3 md.sys.motion.duration.medium2 (300ms). onmars: MarsUI moderate step (240ms).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-progress-circular-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the progress component for circular size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-progress-circular-track-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the progress component for circular track width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-progress-indeterminate-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "duration used by the progress component for progress indeterminate duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-progress-indicator-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI fills components with the med-em (500) tone of the ramp (marsui-design-dna.md §1; specs/002-ki-button/design-extraction.md §§2.1-2.4 delta 500-vs-high-em): progress indicator uses surface.primary-med-em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-progress-linear-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the progress component for linear radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-progress-linear-thickness": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the progress component for linear thickness.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-progress-track-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the progress component for track color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The advancing fill or arc: indicator ink and indeterminate\nanimation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The full channel or ring: track ink and radius/stroke geometry.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "indeterminate": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Unknown-duration mode. When set, no completed fraction or current value is\nexposed. Its motion is declared only when reduced motion is not requested.\nWhen to use: show ongoing work whose duration or total cannot be measured.\nWhen NOT to use: do not use for known fractions; use `value` and `max`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name applied to the internal progressbar. Always set this to\nwhat is progressing, such as \"Uploading report.pdf\". Without it the\nelement renders but exposes no accessible name, so the catalog contract\nrequires it.\nWhen NOT to use: do not use a generic label such as \"Loading\" when the\ntask can be named more specifically.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max": {
+        "default": "100",
+        "deprecatedSince": null,
+        "description": "Total amount. Non-finite, zero or negative values normalize to `100` for\npresentation and ARIA.\nWhen to use: set when a determinate task's total is not 100.\nWhen NOT to use: omit for conventional percentage-style progress.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "shape": {
+        "default": "'linear'",
+        "deprecatedSince": null,
+        "description": "Structural presentation. Use `linear` in page flows and lists; use\n`circular` in compact or centered placements. Unknown values render linear.\nWhen NOT to use: do not use shape to encode semantic status or task intent.",
+        "replacement": null,
+        "required": false,
+        "type": "\"circular\" | \"linear\""
+      },
+      "value": {
+        "default": "0",
+        "deprecatedSince": null,
+        "description": "Completed amount. Presentation and ARIA clamp this value to `0..max`;\nmalformed values fall back to `0`. Ignored while `indeterminate` is set.\nWhen to use: set with `max` for determinate task advancement.\nWhen NOT to use: do not set a fabricated value for unknown-duration work;\nset `indeterminate` instead.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-progress.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-progress.d.ts",
+    "symbols": {
+      "KiProgress": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiProgress extends Components.KiProgress, HTMLElement {\n}\nexport const KiProgress: {\n    prototype: KiProgress;\n    new (): KiProgress;\n};"
+      },
+      "KiProgressShape": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiProgressShape = 'linear' | 'circular';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-progress.js"
+  }
+}

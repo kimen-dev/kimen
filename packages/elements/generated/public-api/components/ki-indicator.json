@@ -1,0 +1,232 @@
+{
+  "component": {
+    "attributes": {
+      "count": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).\nAt most 20 positions render, and the catalog accepts no more: the\nindicator serves a short sequence of peer views, 20 dots are the longest\nrow that fits a 320 CSS px viewport (the WCAG reflow width) in both\nshipped themes, and one dot renders per position, so the bound also caps\nthe work a single node can demand. A larger value renders 20.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "current": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004). The catalog accepts\n1 to 20, the positions a bounded `count` can have.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the sequence (\"Slide position\"). The exposed name\ncombines it with the wordless numeric position —\n\"<label>, <current> / <count>\" — on a single non-interactive graphic;\nwithout a label the name degrades to the bare position text (documented\nas required authoring, FR-005). The label is never rendered visually\nand position changes are never announced (no live region, FR-006).",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-indicator-dot-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the indicator component for the resting dot block size: the 8px circle diameter measured in the State=inactive vector (the 16px frame height is row alignment, carried by the current dot).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-dot-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_18, which reads 1.53:1 light and 1.64:1 dark against the page; alpha_48 is the first step of the same ramp that clears the 3:1 FR-012 and WCAG 1.4.11 ask. The scheme flip rides the semantic layer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-dot-current-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the indicator component for the current dot block size: Space/3xl, the exact variable bound as the 16px height of the State=active pill (the full row line; declared family extension, design-extraction §Decisiones).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-dot-current-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_48, the same step as the resting dots — the MarsUI State=active ring vector binds the variable of the resting fill, and its alpha_18 reads 1.53-1.64:1 against the page (declared a11y deviation, FR-012). Painted as the pill ring in onmars, where elongation carries the state; as the solid dot in themes that zero the hole.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-dot-current-hole-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the indicator component for the block size of the transparent hole cut from the current pill: the 6px cutout height measured in the State=active vector; the ring width derives by construction as (current block size − hole block size) / 2 and a theme resolves it to zero for a solid dot (declared family extension, design-extraction §Decisiones).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-dot-current-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the indicator component for the current dot inline size: Space/10xl, the exact variable bound as the 32px width of the State=active pill — the MarsUI elongation lives here, never in an attribute (FR-007).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-dot-current-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the indicator component for the current dot shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-dot-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the indicator component for the resting dot inline size: Space/md, the exact variable bound as the 8px width of the State=inactive symbol; the painted circle is 8x8 centered in the 16px row line.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-dot-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the indicator component for the resting dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the indicator component for the space between dots: Space/sm, the exact variable bound as the 6px gap of the composed Nav_indicator row (node 14195:5866, specs/024-ki-indicator/design-extraction.md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-motion-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-indicator-motion-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "easing used by the indicator component for the highlight-transfer transition (MarsUI standard curve; previously the UA default ease applied).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard-decelerate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A non-interactive page-position indicator: one dot per position of a\nbounded sequence, exactly one highlighted as current.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "dot": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Every dot: size, shape and color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "dot-current": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Additionally on the current dot: the highlight treatment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The row container: layout and the token-driven gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "count": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).\nAt most 20 positions render, and the catalog accepts no more: the\nindicator serves a short sequence of peer views, 20 dots are the longest\nrow that fits a 320 CSS px viewport (the WCAG reflow width) in both\nshipped themes, and one dot renders per position, so the bound also caps\nthe work a single node can demand. A larger value renders 20.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "current": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004). The catalog accepts\n1 to 20, the positions a bounded `count` can have.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the sequence (\"Slide position\"). The exposed name\ncombines it with the wordless numeric position —\n\"<label>, <current> / <count>\" — on a single non-interactive graphic;\nwithout a label the name degrades to the bare position text (documented\nas required authoring, FR-005). The label is never rendered visually\nand position changes are never announced (no live region, FR-006).",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-indicator.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-indicator.d.ts",
+    "symbols": {
+      "KiIndicator": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiIndicator extends Components.KiIndicator, HTMLElement {\n}\nexport const KiIndicator: {\n    prototype: KiIndicator;\n    new (): KiIndicator;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-indicator.js"
+  }
+}

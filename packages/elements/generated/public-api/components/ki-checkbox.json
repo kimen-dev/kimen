@@ -1,0 +1,786 @@
+{
+  "component": {
+    "attributes": {
+      "checked": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents activation, removes the checkbox from keyboard reach, exposes the\nunavailable state, and excludes it from form data.\nWhen NOT to use: do not use disabled for validation errors or pending\nstate.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "error-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message shown in place of the help text once a `required` checkbox is\nleft unchecked, and its `validationMessage`. Say what checking it means\n(\"Accept the terms to continue\"). Without it the browser's own message\nshows, in the browser's language. An error set with `setCustomValidity`\noutranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the checkbox, read with it as its description:\nwhat checking it means or commits to.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "indeterminate": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Presentation-only mixed state. It renders the dash mark, is forwarded to\nthe internal native input for mixed assistive-technology exposure, and\nnever changes the submitted value. Any user toggle clears it and removes\nthe reflected attribute.\nWhen NOT to use: do not submit or persist `indeterminate` as a third\nvalue; model data remains binary through `checked`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label-hint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short text shown after the slotted label and read with it as part of the\ncheckbox name, so people know before submitting whether they must check\nit: \"(required)\" on a consent the form cannot do without, \"(optional)\"\non one it can, in the page's own language. It changes no validation; set\n`required` for that, and keep the two consistent.\nWhen NOT to use: do not put what checking it commits to in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key contributed when the checkbox is checked.\nWhen NOT to use: omit when the checkbox should not submit a value.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires the checkbox to be checked before form submission can proceed.\nThe invalid appearance appears after a blocked submission attempt or an\ninvalidating user toggle, never on initial render.\nWhen NOT to use: do not use required to express group-level rules; compose\nthose at the form/application layer.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data value paired with `name` when checked. If omitted, the submitted\nvalue is `on`, matching native checkbox behavior.\nWhen NOT to use: do not encode the unchecked state here; unchecked\ncheckboxes contribute no form entry.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-checkbox-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for border width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked active background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked active border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked active foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-checked-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for checked rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-control-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for control size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for gap (MarsUI md label pairing: Space/xl 12px for the 20px box).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate active background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate active border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate active dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate hover background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate hover border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate hover dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate rest background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate rest border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-indeterminate-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for indeterminate rest dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-invalid-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for invalid background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-invalid-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for invalid border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-invalid-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for invalid foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for label font size (MarsUI md pairing: body_2 15px for the 20px box).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-label-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the checkbox component for label font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-label-hint-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-label-hint-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for label line height (MarsUI body_2 24px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for min target.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked active background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked active border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked active foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-unchecked-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the checkbox component for unchecked rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-effect-component-primary-default-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-spring": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-special-dark-s0-light-s2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for surface special dark s0 light s2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-special-light-s0-dark-s4": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for surface special light s0 dark s4.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
+    "events": {
+      "change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "Event"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "control": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visual checkbox box, border, focus ring and currentColor marks.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Error line shown in place of the help text while the checkbox is\ninvalid after the person toggled it or submitted; a polite live region, starting\nwith a decorative error symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Help line under the checkbox, read as its description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label wrapper around the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label-hint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The `label-hint` text after the slotted label, inside the label\nwrapper and part of the accessible name; rendered only while a hint is set.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "checked": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents activation, removes the checkbox from keyboard reach, exposes the\nunavailable state, and excludes it from form data.\nWhen NOT to use: do not use disabled for validation errors or pending\nstate.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "errorText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message shown in place of the help text once a `required` checkbox is\nleft unchecked, and its `validationMessage`. Say what checking it means\n(\"Accept the terms to continue\"). Without it the browser's own message\nshows, in the browser's language. An error set with `setCustomValidity`\noutranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the checkbox, read with it as its description:\nwhat checking it means or commits to.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "indeterminate": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Presentation-only mixed state. It renders the dash mark, is forwarded to\nthe internal native input for mixed assistive-technology exposure, and\nnever changes the submitted value. Any user toggle clears it and removes\nthe reflected attribute.\nWhen NOT to use: do not submit or persist `indeterminate` as a third\nvalue; model data remains binary through `checked`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "labelHint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short text shown after the slotted label and read with it as part of the\ncheckbox name, so people know before submitting whether they must check\nit: \"(required)\" on a consent the form cannot do without, \"(optional)\"\non one it can, in the page's own language. It changes no validation; set\n`required` for that, and keep the two consistent.\nWhen NOT to use: do not put what checking it commits to in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key contributed when the checkbox is checked.\nWhen NOT to use: omit when the checkbox should not submit a value.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires the checkbox to be checked before form submission can proceed.\nThe invalid appearance appears after a blocked submission attempt or an\ninvalidating user toggle, never on initial render.\nWhen NOT to use: do not use required to express group-level rules; compose\nthose at the form/application layer.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data value paired with `name` when checked. If omitted, the submitted\nvalue is `on`, matching native checkbox behavior.\nWhen NOT to use: do not encode the unchecked state here; unchecked\ncheckboxes contribute no form entry.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label content. This is the accessible name source and a\nnative activation surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-checkbox.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-checkbox.d.ts",
+    "symbols": {
+      "KiCheckbox": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiCheckbox extends Components.KiCheckbox, HTMLElement {\n}\nexport const KiCheckbox: {\n    prototype: KiCheckbox;\n    new (): KiCheckbox;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-checkbox.js"
+  }
+}

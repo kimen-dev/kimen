@@ -1,0 +1,832 @@
+{
+  "component": {
+    "attributes": {
+      "autocomplete": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native autocomplete detail token forwarded to the internal input.\nWhen NOT to use: omit when no autofill entry purpose is known.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents editing, removes the field from keyboard reach and exposes the\nunavailable state through the internal native input.\nWhen NOT to use: do not use disabled for readonly reference values.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "error-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the field, read with it as its description: the\nformat expected, or why the answer is asked. While an error shows, the\nerror takes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label rendered next to the entry area and used as the accessible\nname. This is mandatory for valid usage.\nWhen NOT to use: never use `placeholder` as a label substitute.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "label-hint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key for the submitted value.\nWhen NOT to use: omit when the field must not contribute named form data.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "placeholder": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hint shown when the field is empty.\nWhen NOT to use: do not use placeholder as the accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "readonly": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the value focusable and selectable while rejecting edits.\nWhen NOT to use: use `disabled` when the value must be unavailable and\nexcluded from forms.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "type": {
+        "default": "'text'",
+        "deprecatedSince": null,
+        "description": "Entry kind with native single-line input semantics. Unknown runtime\nvalues fall back to `text`; `number` is not a v1 input kind.\nWhen NOT to use: use future numeric controls for locale-aware number entry.",
+        "replacement": null,
+        "required": false,
+        "type": "\"email\" | \"password\" | \"search\" | \"tel\" | \"text\" | \"url\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Live text value. The attribute declares the initial default; the property\nis the current value and programmatic assignments are silent.\nDeviation from native (deliberate, research D2): assigning the ATTRIBUTE\nprogrammatically also replaces the displayed value, silently — native\ninputs would keep the user's dirty value. Form reset restores the\nattribute's current value.\nWhen NOT to use: do not observe user edits by polling; listen for `input`\nand `change` (both re-dispatched composed across the shadow boundary).",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-border-block-end-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for border block end width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-border-block-start-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for border block start width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-border-inline-end-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for border inline end width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-border-inline-start-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for border inline start width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for disabled foreground (MarsUI disabled text Text/base_em; disabled cells are exempt from the contrast sweep).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-disabled-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for disabled label foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-disabled-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for disabled placeholder foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-focus-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-focus-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for focus foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-focus-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-focus-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-font-size-touch": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the input component for font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for height (MarsUI Input_field md cell: min-height 40px; consume as min-block-size so the field can grow).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-hover-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-hover-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for icon size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-invalid-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for invalid background (MarsUI danger state keeps the white active fill; the ring and hint carry the signal).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-invalid-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for invalid border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-invalid-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for invalid foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-invalid-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-invalid-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-invalid-ring": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the input component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid)).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for label font size (MarsUI UI/Para/medium: body_1 13px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-label-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the input component for label font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-label-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for label gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-label-hint-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-label-hint-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for label line height (MarsUI line_height/para 20px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-label-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for padding inline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-readonly-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for readonly background (retires the deprecated ki.surface.raised alias; same resolved value).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-readonly-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for readonly border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-readonly-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for readonly foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-readonly-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-readonly-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for rest background (MarsUI Input_field rest fill Surface/s2: the fill identifies the field, not the outline).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-rest-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-rest-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the input component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A token-styled single-line text field with native input semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
+    "events": {
+      "change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fired when the user commits an edited value (native text-field\ntiming, such as on blur), composed across the shadow boundary; `value` is\nalready current when listeners run. When to use: react to a committed\nvalue. When NOT to use: do not use it for per-keystroke updates; the native\n`input` event carries those.",
+        "replacement": null,
+        "required": false,
+        "type": "Event"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "field": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Enclosure wrapper for background, border, radius and focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Help line under the field, read as the field's description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Internal native input that owns entry text, caret and selection.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label that provides the accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label-hint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The `label-hint` text after the label text, inside the label and\npart of the accessible name; rendered only while a hint is set.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "autocomplete": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native autocomplete detail token forwarded to the internal input.\nWhen NOT to use: omit when no autofill entry purpose is known.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents editing, removes the field from keyboard reach and exposes the\nunavailable state through the internal native input.\nWhen NOT to use: do not use disabled for readonly reference values.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "errorText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the field, read with it as its description: the\nformat expected, or why the answer is asked. While an error shows, the\nerror takes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label rendered next to the entry area and used as the accessible\nname. This is mandatory for valid usage.\nWhen NOT to use: never use `placeholder` as a label substitute.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "labelHint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key for the submitted value.\nWhen NOT to use: omit when the field must not contribute named form data.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "placeholder": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hint shown when the field is empty.\nWhen NOT to use: do not use placeholder as the accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "readonly": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the value focusable and selectable while rejecting edits.\nWhen NOT to use: use `disabled` when the value must be unavailable and\nexcluded from forms.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "type": {
+        "default": "'text'",
+        "deprecatedSince": null,
+        "description": "Entry kind with native single-line input semantics. Unknown runtime\nvalues fall back to `text`; `number` is not a v1 input kind.\nWhen NOT to use: use future numeric controls for locale-aware number entry.",
+        "replacement": null,
+        "required": false,
+        "type": "\"email\" | \"password\" | \"search\" | \"tel\" | \"text\" | \"url\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Live text value. The attribute declares the initial default; the property\nis the current value and programmatic assignments are silent.\nDeviation from native (deliberate, research D2): assigning the ATTRIBUTE\nprogrammatically also replaces the displayed value, silently — native\ninputs would keep the user's dirty value. Form reset restores the\nattribute's current value.\nWhen NOT to use: do not observe user edits by polling; listen for `input`\nand `change` (both re-dispatched composed across the shadow boundary).",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing icon or text affix inside the field. Follows writing direction.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading icon or text affix inside the field. Follows writing direction.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-input.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-input.d.ts",
+    "symbols": {
+      "KiInput": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiInput extends Components.KiInput, HTMLElement {\n}\nexport const KiInput: {\n    prototype: KiInput;\n    new (): KiInput;\n};"
+      },
+      "KiInputType": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-input.js"
+  }
+}

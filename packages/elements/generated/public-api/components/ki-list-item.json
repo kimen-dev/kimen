@@ -1,0 +1,279 @@
+{
+  "component": {
+    "attributes": {},
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-inverse-white-alpha-3": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for inverse white alpha 3.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-inverse-white-alpha-6": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for inverse white alpha 6.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-min-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item min height (MarsUI md text-only row is ~40px content-sized: 20px line + 2x10 padding).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-min-height-multiline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for multiline item min height (MarsUI md two-line row measures 56px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item padding block (MarsUI md rows: Space/lg 10px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item padding inline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the list component for item primary foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-primary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item primary font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-primary-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the list component for item primary font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-primary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for primary line height (MarsUI primary is UI/Para/medium 13/20, not UI/Body 1 13/24).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-secondary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the list component for item secondary foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-secondary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-secondary-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the list component for item secondary font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-secondary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "content": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text column containing primary and secondary lines.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing region wrapper.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "item": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Item row surface and layout container.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading region wrapper.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {},
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Primary text line.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing media, meta text or a slotted control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "secondary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text below the primary line. Its presence\nselects the multi-line min-height token.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading media such as an icon, avatar or image.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-list-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-list-item.d.ts",
+    "symbols": {
+      "KiListItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiListItem extends Components.KiListItem, HTMLElement {\n}\nexport const KiListItem: {\n    prototype: KiListItem;\n    new (): KiListItem;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-list-item.js"
+  }
+}

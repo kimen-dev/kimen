@@ -26,9 +26,9 @@ over the new scripts.
 
 ```bash
 # Regenerate the surfaces and inspect what changed
-pnpm exec nx run @kimen/elements:build
+pnpm regen
 git status --short -- packages/elements/generated packages/elements/llms.txt \
-  packages/elements/llms-full.txt packages/elements/llms llms.txt llms-full.txt llms
+  packages/elements/llms llms.txt llms-full.txt llms
 
 # Generator tests only
 pnpm --filter @kimen/elements exec vitest run --config vitest.node.config.ts
@@ -98,7 +98,8 @@ bash scripts/gates/check-traceability.sh specs/017-agent-surfaces
    `@kimen/elements` (dry run) and assembles the site into a scratch
    directory, then follows every link of the packaged index inside the
    packed file list and every link of the published index inside the
-   assembled site.
+   assembled site. The elements build produces the package summary before
+   packing.
 
 ## Expected outcomes
 

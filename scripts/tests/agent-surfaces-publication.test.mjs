@@ -32,13 +32,12 @@ const publishedTags = async () => {
 const genUiDirectories = async () =>
   (await readRepositoryJson('docs/genui-surfaces.json')).packages.map(({ directory }) => directory);
 
-test('S5 the surfaces sync gate covers both indexes, both complete summaries and every linked document', async () => {
+test('S5 the surfaces sync gate covers both indexes, the site summary and every linked document', async () => {
   const { required, scopes } = generatedGroups.surfaces;
   const expected = [
     'llms.txt',
     'llms-full.txt',
     'packages/elements/llms.txt',
-    'packages/elements/llms-full.txt',
     'packages/elements/llms/theming.md',
     ...(await publishedTags()).map((tag) => `packages/elements/llms/${tag}.md`),
     ...(await genUiDirectories()).map((directory) => `llms/${directory.split('/').at(-1)}.md`),
@@ -59,6 +58,10 @@ test('S5 the surfaces sync gate covers both indexes, both complete summaries and
   ]) {
     assert.ok(scopes.includes(scope), `${scope} must be a closed surfaces scope`);
   }
+  assert.ok(
+    !required.includes('packages/elements/llms-full.txt'),
+    'the package summary is generated before packing',
+  );
   // Exactly what the generation wrote is what the gate requires, no more.
   const generated = [
     ...(await readdir(join(repositoryRoot, 'llms'))).map((file) => `llms/${file}`),
