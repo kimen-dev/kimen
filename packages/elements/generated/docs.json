@@ -6,6 +6,84 @@
   },
   "components": [
     {
+      "filePath": "src/components/ki-accordion/ki-accordion.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-accordion",
+      "docs": "A set of native disclosure panels with a shared frame.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "group related FAQ answers, settings or expandable sections.\nEnable exclusive when readers benefit from one open section at a time."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "switch between views or make the panels advance a workflow."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-details members in reading order."
+        },
+        {
+          "name": "part",
+          "text": "group - The frame around the disclosure rows."
+        }
+      ],
+      "usage": {
+        "examples": "### Workspace FAQ\n\nGroup direct disclosure children. Set `exclusive` when readers should see\none answer at a time.\n\n```html\n<ki-accordion exclusive>\n  <ki-details open summary=\"Who can see my workspace?\">\n    Only people you invite can see it.\n  </ki-details>\n  <ki-details summary=\"Can I export my data?\">\n    Open Settings, then select Data and Export.\n  </ki-details>\n</ki-accordion>\n```\n"
+      },
+      "props": [
+        {
+          "name": "exclusive",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "exclusive",
+          "reflectToAttr": true,
+          "docs": "Whether the accordion allows at most one direct member to be open.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-details members in reading order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The frame around the disclosure rows."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-alert/ki-alert.tsx",
       "encapsulation": "shadow",
       "tag": "ki-alert",
@@ -1711,6 +1789,165 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-details/ki-details.tsx",
+      "encapsulation": "scoped",
+      "tag": "ki-details",
+      "docs": "A native disclosure for supporting information that can stay collapsed.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "hide the primary action or information needed to complete a task.\nFor script-free HTML, author native details and summary directly."
+        },
+        {
+          "name": "slot",
+          "text": "summary - Rich summary text or an authored heading, replacing the summary prop."
+        },
+        {
+          "name": "slot",
+          "text": "- Content shown when the disclosure is open."
+        }
+      ],
+      "usage": {
+        "examples": "### Workspace permissions\n\nUse one disclosure for an explanation the reader can reveal on demand.\nUse the plain `summary` prop for text or a heading in the `summary` slot.\nThe default slot contains the answer.\n\n```html\n<ki-details summary=\"Who can see my workspace?\">\n  <p>Only people you invite can see it.</p>\n</ki-details>\n```\n\nListen for `ki-toggle` on the disclosure to read `event.detail.open`.\nIn a catalog surface, bind the action to the individual Details node.\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disables summary activation. The page can still set open.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the panel is open. Native changes reflect back to this property.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "summary",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "summary",
+          "reflectToAttr": false,
+          "docs": "Plain label for the control. Supply the summary slot for a rich label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-toggle",
+          "detail": "KiDetailsToggleDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiDetailsToggleDetail",
+            "resolved": "KiDetailsToggleDetail",
+            "references": {
+              "KiDetailsToggleDetail": {
+                "location": "local",
+                "path": "src/components/ki-details/ki-details.tsx",
+                "id": "src/components/ki-details/ki-details.tsx::KiDetailsToggleDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted for a native state change, including an exclusive peer closing.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Content shown when the disclosure is open."
+        },
+        {
+          "name": "summary",
+          "docs": "Rich summary text or an authored heading, replacing the summary prop."
+        }
+      ],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-details": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
       "encapsulation": "shadow",
       "tag": "ki-dialog",
@@ -2142,9 +2379,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-details"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-details": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -6841,6 +7084,11 @@
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
       "docstring": "",
       "path": "src/components/ki-checkbox/ki-checkbox.tsx"
+    },
+    "src/components/ki-details/ki-details.tsx::KiDetailsToggleDetail": {
+      "declaration": "export interface KiDetailsToggleDetail {\n  open: boolean;\n}",
+      "docstring": "The resulting open state of a native disclosure.",
+      "path": "src/components/ki-details/ki-details.tsx"
     },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
       "declaration": "export interface KiDialogCloseDetail {\n  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */\n  reason: KiDialogCloseReason;\n}",

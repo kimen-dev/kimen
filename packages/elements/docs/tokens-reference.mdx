@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 334 semantic
-and 1168 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 340 semantic
+and 1185 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -34,6 +34,7 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
+| `--ki-corner-panel` | `12px` | Corner radius for an outlined content panel. |
 
 ### `ki.density`
 
@@ -47,6 +48,7 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-effect-backdrop-filter-none` | `none` | A surface without backdrop compositing. |
 | `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
 | `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
 | `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
@@ -177,6 +179,7 @@ every component at once.
 | `--ki-outline-danger-low-em` | `#ffcccf` | semantic color for outline danger low em. |
 | `--ki-outline-danger-low-em-alpha` | `rgba(239, 78, 105, 0.4)` | semantic color for outline danger low em alpha. |
 | `--ki-outline-danger-med-em` | `#f1989f` | semantic color for outline danger med em. |
+| `--ki-outline-hairline-width` | `1px` | Width of a thin boundary or separator. |
 | `--ki-outline-high-em` | `rgba(0, 0, 0, 0.12)` | semantic color for outline high em. |
 | `--ki-outline-info-base-em` | `#dff3ff` | semantic color for outline info base em. |
 | `--ki-outline-info-base-em-alpha` | `rgba(19, 185, 236, 0.2)` | semantic color for outline info base em alpha. |
@@ -228,7 +231,9 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-spacing-block` | `0.75rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. |
+| `--ki-spacing-compact-inset` | `0.625rem` | Compact content inset. |
 | `--ki-spacing-inline` | `0.5rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. |
+| `--ki-spacing-standard-inset` | `0.75rem` | Standard content inset. |
 
 ### `ki.state-layer`
 
@@ -332,6 +337,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
+| `--ki-surface-image-none` | `none` | A surface without a background image. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
@@ -457,6 +463,12 @@ every component at once.
 
 The public styling contract of each element. Reassign them on `:root` for a
 theme-wide change or on any subtree for a scoped one.
+
+### `ki-accordion`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-accordion-divider-width` | `1px` | Width of the separator between accordion rows. |
 
 ### `ki-alert`
 
@@ -977,6 +989,27 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-checkbox-unchecked-rest-bg` | `#ffffff` | color used by the checkbox component for unchecked rest background. |
 | `--ki-checkbox-unchecked-rest-border` | `#86827b` | color used by the checkbox component for unchecked rest border. |
 | `--ki-checkbox-unchecked-rest-fg` | `#181613` | color used by the checkbox component for unchecked rest foreground. |
+
+### `ki-details`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-details-backdrop-filter` | `none` | Complete filter for the backdrop behind the disclosure surface. |
+| `--ki-details-bg` | `#ffffff` | Color of the disclosure surface. |
+| `--ki-details-bg-image` | `none` | Optional image painted over the disclosure surface. |
+| `--ki-details-body-bg` | `#ffffff` | Surface color of the disclosure body. |
+| `--ki-details-body-fg` | `#5e5953` | Supporting text color of the disclosure body. |
+| `--ki-details-border` | `rgba(24, 22, 19, 0.1)` | Color of the disclosure frame and accordion separators. |
+| `--ki-details-border-width` | `1px` | Width of the disclosure or accordion frame. |
+| `--ki-details-disabled-fg` | `#5e5953` | Text and icon color of a disabled summary. |
+| `--ki-details-fg` | `#181613` | Text color on the disclosure surface. |
+| `--ki-details-motion-duration` | `150ms` | Duration of the chevron rotation. |
+| `--ki-details-motion-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the chevron rotation. |
+| `--ki-details-padding` | `0.75rem` | Inline inset of the summary and inset of the panel body. |
+| `--ki-details-radius` | `12px` | Corners of a standalone disclosure or the accordion frame. |
+| `--ki-details-summary-hover-bg` | `#f9f7f4` | Surface color of a hovered summary. |
+| `--ki-details-summary-hover-fg` | `#181613` | Text and icon color of a hovered summary. |
+| `--ki-details-summary-padding-block` | `0.625rem` | Block inset of the summary. |
 
 ### `ki-dialog`
 

@@ -11,6 +11,7 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+import { KiDetailsToggleDetail } from "./components/ki-details/ki-details";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiIconSize } from "./components/ki-icon/ki-icon";
@@ -35,6 +36,7 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+export { KiDetailsToggleDetail } from "./components/ki-details/ki-details";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiIconSize } from "./components/ki-icon/ki-icon";
@@ -54,6 +56,19 @@ export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js"
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
+    /**
+     * A set of native disclosure panels with a shared frame.
+     * @whenToUse group related FAQ answers, settings or expandable sections.
+     * Enable exclusive when readers benefit from one open section at a time.
+     * @whenNotToUse switch between views or make the panels advance a workflow.
+     */
+    interface KiAccordion {
+        /**
+          * Whether the accordion allows at most one direct member to be open.
+          * @default false
+         */
+        "exclusive": boolean;
+    }
     /**
      * A persistent inline status message with token-backed tone semantics.
      * @whenToUse show a persistent inline message about the state of a page or
@@ -312,6 +327,29 @@ export namespace Components {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A native disclosure for supporting information that can stay collapsed.
+     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
+     * output on demand. Use ki-accordion for related disclosures.
+     * @whenNotToUse hide the primary action or information needed to complete a task.
+     * For script-free HTML, author native details and summary directly.
+     */
+    interface KiDetails {
+        /**
+          * Disables summary activation. The page can still set open.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Whether the panel is open. Native changes reflect back to this property.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Plain label for the control. Supply the summary slot for a rich label.
+         */
+        "summary"?: string;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -1210,6 +1248,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiDetailsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiDetailsElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -1223,6 +1265,18 @@ export interface KiToastCustomEvent<T> extends CustomEvent<T> {
     target: HTMLKiToastElement;
 }
 declare global {
+    /**
+     * A set of native disclosure panels with a shared frame.
+     * @whenToUse group related FAQ answers, settings or expandable sections.
+     * Enable exclusive when readers benefit from one open section at a time.
+     * @whenNotToUse switch between views or make the panels advance a workflow.
+     */
+    interface HTMLKiAccordionElement extends Components.KiAccordion, HTMLStencilElement {
+    }
+    var HTMLKiAccordionElement: {
+        prototype: HTMLKiAccordionElement;
+        new (): HTMLKiAccordionElement;
+    };
     interface HTMLKiAlertElementEventMap {
         "ki-dismiss": null;
     }
@@ -1366,6 +1420,30 @@ declare global {
     var HTMLKiCheckboxElement: {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
+    };
+    interface HTMLKiDetailsElementEventMap {
+        "ki-toggle": KiDetailsToggleDetail;
+    }
+    /**
+     * A native disclosure for supporting information that can stay collapsed.
+     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
+     * output on demand. Use ki-accordion for related disclosures.
+     * @whenNotToUse hide the primary action or information needed to complete a task.
+     * For script-free HTML, author native details and summary directly.
+     */
+    interface HTMLKiDetailsElement extends Components.KiDetails, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiDetailsElementEventMap>(type: K, listener: (this: HTMLKiDetailsElement, ev: KiDetailsCustomEvent<HTMLKiDetailsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiDetailsElementEventMap>(type: K, listener: (this: HTMLKiDetailsElement, ev: KiDetailsCustomEvent<HTMLKiDetailsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiDetailsElement: {
+        prototype: HTMLKiDetailsElement;
+        new (): HTMLKiDetailsElement;
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
@@ -1885,6 +1963,7 @@ declare global {
         new (): HTMLKiVideoElement;
     };
     interface HTMLElementTagNameMap {
+        "ki-accordion": HTMLKiAccordionElement;
         "ki-alert": HTMLKiAlertElement;
         "ki-avatar": HTMLKiAvatarElement;
         "ki-avatar-group": HTMLKiAvatarGroupElement;
@@ -1892,6 +1971,7 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-details": HTMLKiDetailsElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-icon": HTMLKiIconElement;
@@ -1922,6 +2002,19 @@ declare global {
 declare namespace LocalJSX {
     type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K]?: never };
 
+    /**
+     * A set of native disclosure panels with a shared frame.
+     * @whenToUse group related FAQ answers, settings or expandable sections.
+     * Enable exclusive when readers benefit from one open section at a time.
+     * @whenNotToUse switch between views or make the panels advance a workflow.
+     */
+    interface KiAccordion {
+        /**
+          * Whether the accordion allows at most one direct member to be open.
+          * @default false
+         */
+        "exclusive"?: boolean;
+    }
     /**
      * A persistent inline status message with token-backed tone semantics.
      * @whenToUse show a persistent inline message about the state of a page or
@@ -2192,6 +2285,33 @@ declare namespace LocalJSX {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A native disclosure for supporting information that can stay collapsed.
+     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
+     * output on demand. Use ki-accordion for related disclosures.
+     * @whenNotToUse hide the primary action or information needed to complete a task.
+     * For script-free HTML, author native details and summary directly.
+     */
+    interface KiDetails {
+        /**
+          * Disables summary activation. The page can still set open.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Emitted for a native state change, including an exclusive peer closing.
+         */
+        "onKi-toggle"?: (event: KiDetailsCustomEvent<KiDetailsToggleDetail>) => void;
+        /**
+          * Whether the panel is open. Native changes reflect back to this property.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Plain label for the control. Supply the summary slot for a rich label.
+         */
+        "summary"?: string;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -3106,6 +3226,9 @@ declare namespace LocalJSX {
         "label": string;
     }
 
+    interface KiAccordionAttributes {
+        "exclusive": boolean;
+    }
     interface KiAlertAttributes {
         "tone": KiAlertTone | (string & {});
         "heading": string;
@@ -3149,6 +3272,11 @@ declare namespace LocalJSX {
         "labelHint": string;
         "helpText": string;
         "errorText": string;
+    }
+    interface KiDetailsAttributes {
+        "summary": string;
+        "open": boolean;
+        "disabled": boolean;
     }
     interface KiDialogAttributes {
         "open": boolean;
@@ -3305,6 +3433,7 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "ki-accordion": Omit<KiAccordion, keyof KiAccordionAttributes> & { [K in keyof KiAccordion & keyof KiAccordionAttributes]?: KiAccordion[K] } & { [K in keyof KiAccordion & keyof KiAccordionAttributes as `attr:${K}`]?: KiAccordionAttributes[K] } & { [K in keyof KiAccordion & keyof KiAccordionAttributes as `prop:${K}`]?: KiAccordion[K] };
         "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
         "ki-avatar": Omit<KiAvatar, keyof KiAvatarAttributes> & { [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K] };
         "ki-avatar-group": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K] };
@@ -3312,6 +3441,7 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-details": Omit<KiDetails, keyof KiDetailsAttributes> & { [K in keyof KiDetails & keyof KiDetailsAttributes]?: KiDetails[K] } & { [K in keyof KiDetails & keyof KiDetailsAttributes as `attr:${K}`]?: KiDetailsAttributes[K] } & { [K in keyof KiDetails & keyof KiDetailsAttributes as `prop:${K}`]?: KiDetails[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
@@ -3343,6 +3473,13 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * A set of native disclosure panels with a shared frame.
+             * @whenToUse group related FAQ answers, settings or expandable sections.
+             * Enable exclusive when readers benefit from one open section at a time.
+             * @whenNotToUse switch between views or make the panels advance a workflow.
+             */
+            "ki-accordion": LocalJSX.IntrinsicElements["ki-accordion"] & JSXBase.HTMLAttributes<HTMLKiAccordionElement>;
             /**
              * A persistent inline status message with token-backed tone semantics.
              * @whenToUse show a persistent inline message about the state of a page or
@@ -3441,6 +3578,14 @@ declare module "@stencil/core" {
              * to use: do not expect it for programmatic `checked` writes, which are silent.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
+            /**
+             * A native disclosure for supporting information that can stay collapsed.
+             * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
+             * output on demand. Use ki-accordion for related disclosures.
+             * @whenNotToUse hide the primary action or information needed to complete a task.
+             * For script-free HTML, author native details and summary directly.
+             */
+            "ki-details": LocalJSX.IntrinsicElements["ki-details"] & JSXBase.HTMLAttributes<HTMLKiDetailsElement>;
             /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
