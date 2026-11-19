@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   type KiTooltipRect,
   normalizePlacement,
+  resolveAnchorCorrection,
   resolveTooltipPosition,
 } from './ki-tooltip.position';
 
@@ -135,5 +136,49 @@ describe('ki-tooltip position', () => {
 
     expect(position.effectivePlacement).toBe('top');
     expect(position.crossAxisShift).toBeGreaterThan(0);
+  });
+});
+
+// @spec:013-ki-tooltip
+describe('ki-tooltip anchor correction', () => {
+  const visual = rect(260, 300, 60, 30);
+
+  it('S1 needs no correction where the resolved anchor is the box the person sees', () => {
+    expect(resolveAnchorCorrection('top', 'ltr', visual, visual)).toEqual({ x: 0, y: 0 });
+    // Layout rounding below half a pixel is not a correction.
+    expect(resolveAnchorCorrection('top', 'ltr', rect(260.3, 299.6, 60, 30), visual)).toEqual({
+      x: 0,
+      y: 0,
+    });
+  });
+
+  it('S1 moves the bubble by a translated ancestor', () => {
+    const untransformed = rect(200, 180, 60, 30);
+
+    expect(resolveAnchorCorrection('top', 'ltr', untransformed, visual)).toEqual({ x: 60, y: 120 });
+    expect(resolveAnchorCorrection('end', 'rtl', untransformed, visual)).toEqual({ x: 60, y: 120 });
+  });
+
+  it('S1 measures a scaled anchor at the edge the placement attaches to', () => {
+    const unscaled = rect(120, 120, 40, 20);
+    const scaled = rect(180, 180, 60, 30);
+
+    // Above: the middle of the top edge.
+    expect(resolveAnchorCorrection('top', 'ltr', unscaled, scaled)).toEqual({ x: 70, y: 60 });
+    // Below: the middle of the bottom edge.
+    expect(resolveAnchorCorrection('bottom', 'ltr', unscaled, scaled)).toEqual({ x: 70, y: 70 });
+    // Start in left-to-right is the left edge, end the right one.
+    expect(resolveAnchorCorrection('start', 'ltr', unscaled, scaled)).toEqual({ x: 60, y: 65 });
+    expect(resolveAnchorCorrection('end', 'ltr', unscaled, scaled)).toEqual({ x: 80, y: 65 });
+    // Right-to-left swaps them.
+    expect(resolveAnchorCorrection('start', 'rtl', unscaled, scaled)).toEqual({ x: 80, y: 65 });
+    expect(resolveAnchorCorrection('end', 'rtl', unscaled, scaled)).toEqual({ x: 60, y: 65 });
+  });
+
+  it('S1 corrects one axis when only that one is off', () => {
+    expect(resolveAnchorCorrection('top', 'ltr', rect(260, 290, 60, 30), visual)).toEqual({
+      x: 0,
+      y: 10,
+    });
   });
 });
