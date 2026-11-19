@@ -5,8 +5,8 @@
  */
 /* stylelint-disable scale-unlimited/declaration-strict-value -- Font-face descriptors name installed fonts. */
 @font-face {
-  font-family: 'Roboto Fallback';
-  src: local('Arial');
+  font-family: "Roboto Fallback";
+  src: local("Arial");
 
   /* Roboto v3.015 against Arial, calculated as in onmars-fonts.css. */
   size-adjust: 99.8564%;

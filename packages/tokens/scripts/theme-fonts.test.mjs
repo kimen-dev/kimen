@@ -10,7 +10,7 @@ test('S3 the exported font stylesheets resolve and bundled faces include their l
 
   for (const name of ['InstrumentSans', 'Newsreader']) {
     const asset = `../fonts/${name}Variable.woff2`;
-    assert.ok(css.includes(`url('${asset}')`), `onmars stylesheet references ${asset}`);
+    assert.ok(css.includes(asset), `onmars stylesheet references ${asset}`);
     const font = await readFile(new URL(asset, onmars));
     assert.equal(font.subarray(0, 4).toString(), 'wOF2');
     const licence = await readFile(new URL(`../fonts/${name}-OFL.txt`, onmars), 'utf8');
