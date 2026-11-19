@@ -143,7 +143,7 @@ test('S3 the split candidate round-trips and a changed component only rewrites i
       },
     },
   });
-  const changed = structuredClone(candidate.surface);
+  const changed = globalThis.structuredClone(candidate.surface);
   changed.packages['@kimen/elements'].components['ki-first'].events.change = {};
   const originalFiles = splitPublicApiSnapshot(candidate);
   const newFiles = splitPublicApiSnapshot(createPublicApiSnapshot(changed));

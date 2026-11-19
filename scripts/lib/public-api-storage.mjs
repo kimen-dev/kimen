@@ -10,9 +10,14 @@ const directFacets = ['exports', 'modules'];
 
 export function splitPublicApiSnapshot(snapshot) {
   const { surface } = snapshot;
-  const { components, ...elements } = surface.packages[elementsPackage];
+  const packageSurface = surface.packages[elementsPackage];
+  const { components, ...elements } = packageSurface;
+  const componentSubpaths = new Set(Object.keys(components).map((tag) => `./${tag}`));
   for (const facet of directFacets) {
-    if (Object.hasOwn(elements, facet)) elements[facet] = { ...elements[facet] };
+    if (!Object.hasOwn(elements, facet)) continue;
+    elements[facet] = Object.fromEntries(
+      Object.entries(elements[facet]).filter(([path]) => !componentSubpaths.has(path)),
+    );
   }
   const index = {
     ...snapshot,
@@ -24,9 +29,8 @@ export function splitPublicApiSnapshot(snapshot) {
     const path = `./${tag}`;
     const shard = { component };
     for (const facet of directFacets) {
-      if (!Object.hasOwn(elements[facet] ?? {}, path)) continue;
-      shard[facet] = elements[facet][path];
-      delete elements[facet][path];
+      const entries = packageSurface[facet];
+      if (Object.hasOwn(entries ?? {}, path)) shard[facet] = entries[path];
     }
     shards.push([`components/${tag}.json`, canonicalJson(shard)]);
   }
