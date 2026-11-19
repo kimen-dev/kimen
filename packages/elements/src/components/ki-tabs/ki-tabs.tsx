@@ -1,5 +1,6 @@
 import { Component, Element, Event, Host, Prop, Watch, h } from '@stencil/core';
 import { childDisabled, childValue } from '../../utils/child-props';
+import { rovingTabIndex } from '../../utils/roving-focus';
 import {
   firstSelectableIndex,
   lastSelectableIndex,
@@ -401,12 +402,13 @@ export class KiTabs {
         ? null
         : this.panelRoster[selectedPairing.panelIndex];
 
-    this.tabRoster.forEach((tab) => {
+    const tabStopIndex = this.tabRoster.findIndex((tab) => tab === selectedTab);
+    this.tabRoster.forEach((tab, index) => {
       const selected = tab === selectedTab;
       this.setBooleanAttribute(tab, 'selected', selected);
       tab.setAttribute('aria-selected', selected ? 'true' : 'false');
       tab.setAttribute('aria-disabled', childDisabled(tab) ? 'true' : 'false');
-      tab.setAttribute('tabindex', selected ? '0' : '-1');
+      tab.setAttribute('tabindex', String(rovingTabIndex(index, tabStopIndex)));
       this.ensureId(tab, 'ki-tab');
 
       const pairing = this.pairingForTab(tab);
@@ -422,12 +424,6 @@ export class KiTabs {
         tab.setAttribute('aria-controls', panel.id);
       }
     });
-
-    if (selectedTab === null) {
-      this.tabRoster.forEach((tab) => {
-        tab.setAttribute('tabindex', '-1');
-      });
-    }
 
     this.panelRoster.forEach((panel) => {
       const visible = panel === visiblePanel;
