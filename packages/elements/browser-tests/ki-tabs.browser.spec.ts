@@ -991,24 +991,30 @@ describe('ki-tabs theming behavior in a real browser', () => {
   });
 
   it('S17 switches panels without transition or animation under reduced motion', async () => {
+    // Restored in `finally`: the emulation belongs to the Playwright page,
+    // not to this file, so a leak reaches whichever spec runs next.
     await browserCommands.emulateReducedMotion('reduce');
-    const tabs = await mount(fixture());
+    try {
+      const tabs = await mount(fixture());
 
-    await userEvent.click(tab(tabs, 'notifications'));
+      await userEvent.click(tab(tabs, 'notifications'));
 
-    const visiblePanel = panel(tabs, 'notifications');
-    const indicator = tab(tabs, 'notifications').shadowRoot?.querySelector('[part="indicator"]');
-    const panelPart = visiblePanel.shadowRoot?.querySelector('[part="panel"]');
-    if (!(indicator instanceof HTMLElement) || !(panelPart instanceof HTMLElement)) {
-      throw new Error('Missing indicator or panel part');
+      const visiblePanel = panel(tabs, 'notifications');
+      const indicator = tab(tabs, 'notifications').shadowRoot?.querySelector('[part="indicator"]');
+      const panelPart = visiblePanel.shadowRoot?.querySelector('[part="panel"]');
+      if (!(indicator instanceof HTMLElement) || !(panelPart instanceof HTMLElement)) {
+        throw new Error('Missing indicator or panel part');
+      }
+
+      expect(visiblePanel.hasAttribute('hidden')).toBe(false);
+      expect(getComputedStyle(visiblePanel).transitionDuration).toBe('0s');
+      expect(getComputedStyle(visiblePanel).animationName).toBe('none');
+      expect(getComputedStyle(panelPart).animationName).toBe('none');
+      expect(getComputedStyle(indicator).transitionDuration).toBe('0s');
+      expect(getComputedStyle(indicator).animationName).toBe('none');
+    } finally {
+      await browserCommands.emulateReducedMotion(null);
     }
-
-    expect(visiblePanel.hasAttribute('hidden')).toBe(false);
-    expect(getComputedStyle(visiblePanel).transitionDuration).toBe('0s');
-    expect(getComputedStyle(visiblePanel).animationName).toBe('none');
-    expect(getComputedStyle(panelPart).animationName).toBe('none');
-    expect(getComputedStyle(indicator).transitionDuration).toBe('0s');
-    expect(getComputedStyle(indicator).animationName).toBe('none');
   });
 });
 
