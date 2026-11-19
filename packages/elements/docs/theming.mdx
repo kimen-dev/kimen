@@ -11,7 +11,7 @@ values, enforced by lint. Tokens are layered:
    (`--ki-space-md`, `--ki-font-size-heading-3`…). Never consumed by
    components directly.
 2. **Theme** — each theme's selection from the primitives into the shared
-   ramp names (`--ki-color-brand-500` is the onmars purple by default;
+   ramp names (`--ki-color-brand-500` is the onmars terracotta by default;
    loading the material3 stylesheet rebinds the same name to its baseline).
    This is what makes one-step re-theming possible.
 3. **Semantic** — meaning, not appearance (`--ki-surface-s0…s5`,
@@ -135,7 +135,7 @@ them for the subtree if you want both
 ## The page contract
 
 Tokens are custom properties: loading them paints nothing. The opt-in page
-contract paints the page from them — background from `--ki-surface-s0`, text
+contract paints the page from them — background from `--ki-surface-base`, text
 from `--ki-text-high-em`, and the body typeface:
 
 ```html
@@ -193,7 +193,7 @@ tables live in *Docs → Tokens reference* (generated); this is the model.
 
 Three semantic scales: **durations** (`--ki-motion-duration-instant`,
 `-fast`, `-short-1…4`, `-medium-1…4`, `-long-1…4`), **easings**
-(`--ki-motion-easing-standard`, `-out`, `-emphasized`, `-spring`, plus
+(`--ki-motion-easing-standard`, `-out`, `-emphasized`, `-emphasized-out`, plus
 `-accelerate`/`-decelerate` variants) and **distances**
 (`--ki-motion-distance-xs/sm/md`) for travel-based transitions. Components
 consume them through their own motion tokens, for example:
@@ -201,7 +201,7 @@ consume them through their own motion tokens, for example:
 ```css
 ki-dialog {
   --ki-dialog-motion-duration: var(--ki-motion-duration-fast);
-  --ki-dialog-motion-easing: var(--ki-motion-easing-spring);
+  --ki-dialog-motion-easing: var(--ki-motion-easing-emphasized-out);
 }
 ```
 
@@ -213,9 +213,8 @@ durations and easings, never bypass that gate.
 
 ### Glass
 
-Onmars v1 paints the dialog and tooltip with translucent images and a
-backdrop filter, and the select listbox pairs a translucent fill with one.
-Each surface accepts an optional `-bg-image` token layered over its `-bg`
+Calma uses solid dialog and tooltip fills and a single-color select listbox
+tint. Each surface accepts an optional `-bg-image` token layered over its `-bg`
 color, and reads its complete filter from a token such as
 `--ki-dialog-backdrop-filter`. Material 3 uses solid fills. Set
 `--ki-effect-component-backdrop-filter` to `none` at the theme root to turn
@@ -235,9 +234,9 @@ use the same color for the arrow edges:
 }
 ```
 
-Onmars uses a stronger default filter on the select listbox, exposed as
-`--ki-effect-component-listbox-backdrop-filter`. The reduced transparency mode
-uses `none` for both semantic effects, and Material 3 keeps a zero blur.
+Calma and reduced transparency use `none` for both shared filters. Use
+`--ki-effect-component-listbox-backdrop-filter` to give a glass theme a separate
+listbox filter. Material 3 keeps a zero-radius blur in its standard mode.
 
 ### Bevels
 

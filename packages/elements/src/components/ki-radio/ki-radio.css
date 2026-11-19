@@ -209,7 +209,7 @@ input:active:checked:not([disabled], [data-ki-group-disabled]) ~ [part="control"
   [part="control"]::before {
     transition:
       opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
-      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-spring);
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-emphasized-out);
   }
 
   input:active:not([disabled], [data-ki-group-disabled]) ~ [part="control"] {

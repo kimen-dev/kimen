@@ -349,6 +349,10 @@
       "danger-high-em-hover": {
         "$value": "{ki.color.danger.800}",
         "$description": "semantic color for surface danger high em hover."
+      },
+      "tooltip-inverse": {
+        "$value": "{ki.color.gray.900}",
+        "$description": "Opaque background for an inverse tooltip. Pair with ki.text.tooltip-inverse."
       }
     },
     "text": {
@@ -536,6 +540,10 @@
       "primary-on-danger": {
         "$value": "{ki.color.white.100}",
         "$description": "semantic color for text primary on danger."
+      },
+      "tooltip-inverse": {
+        "$value": "{ki.color.gray.50}",
+        "$description": "Content ink on the inverse tooltip surface."
       }
     },
     "outline": {
@@ -1083,6 +1091,11 @@
           }
         ],
         "$description": "MarsUI Elevation/e6 (cumulative: e5 layers plus 0/72/72/-36)."
+      },
+      "none": {
+        "$type": "shadow",
+        "$value": "none",
+        "$description": "Flat surfaces carry no resting shadow."
       }
     },
     "effect": {
@@ -1657,7 +1670,19 @@
         },
         "spring": {
           "$value": "{ki.easing.spring}",
-          "$description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language)."
+          "$description": "Compatibility name for the theme’s expressive exit curve.",
+          "$deprecated": "The onmars curve now eases out without overshoot.",
+          "$extensions": {
+            "dev.kimen.deprecation": {
+              "since": "0.1.0",
+              "removal": "1.0.0",
+              "replacement": "--ki-motion-easing-emphasized-out"
+            }
+          }
+        },
+        "emphasized-out": {
+          "$value": "{ki.easing.spring}",
+          "$description": "Expressive exit curve for selected controls. Onmars eases out without overshoot."
         }
       },
       "distance": {

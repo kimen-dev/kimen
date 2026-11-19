@@ -78,6 +78,18 @@ Every visual value is a `--ki-*` custom property layered primitive → theme →
 semantic → component; themes reassign tokens, never component CSS. Details in
 the [`@kimen/tokens` README](./packages/tokens/README.md).
 
+### Onmars color and surfaces
+
+Onmars v2, Calma, pairs a paper ivory canvas with warm charcoal in dark mode.
+Ink anchors the primary action. Terracotta marks links, focus and selection.
+Crimson signals errors. Opaque fills, hairline borders and soft shadows give
+surfaces their depth.
+
+### Onmars typography
+
+Instrument Sans leads the UI and body stack. Newsreader leads the display
+and serif stacks. The tokens specify the font families and fallbacks.
+
 Imports from the package root (`import { KiButton } from '@kimen/elements'`)
 are a deprecated compatibility facade: see
 [`docs/migrations/root-imports.md`](./docs/migrations/root-imports.md).

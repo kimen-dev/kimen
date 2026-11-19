@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "select": {
+      "placeholder-fg": {
+        "$type": "color",
+        "$value": "{ki.inverse-white.alpha-80}"
+      }
+    }
+  }
+}

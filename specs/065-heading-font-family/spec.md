@@ -14,22 +14,22 @@ Feature: Component heading typography
   of body copy.
 
   # S1
-  Scenario Outline: Default headings retain the theme's body typeface
+  Scenario Outline: Default headings follow the theme's typeface roles
     Given a <theme> page in the <scheme> scheme with a dialog and an alert
     When their headings are rendered with default tokens
-    Then both headings use their component's body typeface
-    And the dialog heading keeps its normal tracking
+    Then the dialog heading uses the <dialog family> typeface and keeps its normal tracking
+    And the alert heading uses its component's body typeface
 
     Examples:
-      | theme     | scheme |
-      | onmars    | light  |
-      | onmars    | dark   |
-      | material3 | light  |
-      | material3 | dark   |
+      | theme     | scheme | dialog family |
+      | onmars    | light  | display       |
+      | onmars    | dark   | display       |
+      | material3 | light  | body          |
+      | material3 | dark   | body          |
 
   # S2
   Scenario: A theme chooses a shared heading typeface
-    Given a themed region that sets --ki-typography-family-heading to serif
+    Given a Material 3 region that sets --ki-typography-family-heading to serif
     When a dialog and an alert render headings in the region
     Then both headings use serif
     And their body copy keeps the theme's body typeface
@@ -70,11 +70,10 @@ Feature: Component heading typography
   dialog's inherited tracking in both shipped themes. Agent's choice, pending
   founder confirmation.
 
-The four tokens are additive public API. The dialog and alert visual baselines
-must match in the shipped themes, and headings retain their 4.5:1 contrast
-requirement.
+The four tokens are additive public API. Material 3 keeps its heading paint.
+Headings retain their 4.5:1 contrast requirement.
 
-After #341 lands, the onmars v2 theme assigns the dialog heading to
+The onmars v2 theme assigns the dialog heading to
 `--ki-typography-family-display` with
 `--ki-typography-weight-display-semibold`. Alert headings keep the body
 family. The design system re-sync verifies Newsreader and heading contrast.

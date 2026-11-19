@@ -16,7 +16,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import StyleDictionary from 'style-dictionary';
 
-import { lightConfig } from '../style-dictionary.config.mjs';
+import { lightConfig, sharedConfig } from '../style-dictionary.config.mjs';
 import { deprecationNote, readDeprecation } from './deprecation.mjs';
 
 const OUTPUT_URL = new URL('../../elements/docs/tokens-reference.mdx', import.meta.url);
@@ -167,8 +167,18 @@ export function renderReference(allTokens) {
 }
 
 async function main() {
-  const styleDictionary = new StyleDictionary({ ...lightConfig, log: { verbosity: 'silent' } });
-  const { allTokens } = await styleDictionary.getPlatformTokens('css');
+  const [definitions, onmars] = await Promise.all(
+    [sharedConfig, lightConfig].map((config) =>
+      new StyleDictionary({ ...config, log: { verbosity: 'silent' } }).getPlatformTokens('css'),
+    ),
+  );
+  // The theme overlay replaces Style Dictionary's filePath. Preserve the
+  // defining file and deprecation metadata while showing the onmars values.
+  const values = new Map(onmars.allTokens.map((token) => [token.name, token.$value]));
+  const allTokens = definitions.allTokens.map((token) => ({
+    ...token,
+    $value: values.get(token.name),
+  }));
   await writeFile(OUTPUT_URL, renderReference(allTokens));
   const published = allTokens.filter(
     (token) => token.filePath === SEMANTIC_FILE || token.filePath.startsWith(COMPONENT_DIR),

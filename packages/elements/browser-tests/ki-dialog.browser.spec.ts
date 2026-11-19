@@ -989,7 +989,7 @@ describe('ki-dialog in a real browser', () => {
     const baseline = await mountDialog();
     await openDialog(baseline);
     const baselineDialog = internalDialog(baseline);
-    const onmarsBg = getComputedStyle(baselineDialog).backgroundImage;
+    const onmarsBg = getComputedStyle(baselineDialog).backgroundColor;
     const onmarsRadius = getComputedStyle(baselineDialog).borderRadius;
     await baseline.close();
     baseline.remove();
@@ -999,10 +999,9 @@ describe('ki-dialog in a real browser', () => {
     const el = await mountDialog();
     await openDialog(el);
     const dialog = internalDialog(el);
-    // The theme swap resolves through the cascade, not a timer: wait on the
-    // observable outcome. Material 3's solid surface replaces onmars glass.
+    // Both themes paint a solid surface after #343. Check the fill change.
     await waitFor(
-      () => getComputedStyle(dialog).backgroundImage !== onmarsBg,
+      () => getComputedStyle(dialog).backgroundColor !== onmarsBg,
       'dialog surface repainted for material3',
     );
     const styles = getComputedStyle(dialog);
@@ -1014,28 +1013,24 @@ describe('ki-dialog in a real browser', () => {
     expect(backdrop.backgroundColor).not.toMatch(/, 0\)$/u);
   });
 
-  it('S1 S3 renders the MarsUI glass modal surface, typography, and centering', async () => {
+  it('S1 S3 renders the solid onmars modal surface, typography, and centering', async () => {
     cleanup();
     const el = await mountDialog();
     await openDialog(el);
     const dialog = internalDialog(el);
     const styles = getComputedStyle(dialog);
 
-    // Glass surface: bg-start -> bg-end gradient painted over a transparent
-    // color fallback, with the Blur/24 (CSS 12px) backdrop filter.
-    expect(styles.backgroundImage).toContain('linear-gradient(');
-    expect(styles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    expect(styles.getPropertyValue('backdrop-filter')).toBe('blur(12px)');
+    // #343 supplies the solid fill and #342 removes the zero-radius filter.
+    expect(styles.backgroundColor).toBe('rgb(255, 255, 255)');
+    expect(styles.backgroundImage).toBe('none');
+    expect(styles.backdropFilter).toBe('none');
 
-    // Compact Modal master geometry: radius 20, hairline border, e4 elevation
-    // (its deepest layer is 0 32 32 -16).
-    expect(styles.borderRadius).toBe('20px');
+    expect(styles.borderRadius).toBe('18px');
     expect(styles.borderTopWidth).toBe('1px');
     expect(styles.borderTopStyle).toBe('solid');
-    expect(styles.boxShadow).toContain('0px 32px 32px -16px');
+    expect(styles.boxShadow).toContain('0px 20px 44px');
 
-    // Centered composition: heading title_2 18/24 weight 700, body body_1
-    // 13/20 weight 500, both center-aligned.
+    // #347 gives the Calma dialog a display heading and keeps body copy 13/20.
     const shadow = el.shadowRoot;
     expect(shadow).not.toBeNull();
     if (!shadow) {
@@ -1046,7 +1041,8 @@ describe('ki-dialog in a real browser', () => {
     expect(headingStyles.textAlign).toBe('center');
     expect(headingStyles.fontSize).toBe('18px');
     expect(headingStyles.lineHeight).toBe('24px');
-    expect(headingStyles.fontWeight).toBe('700');
+    expect(headingStyles.fontFamily).toMatch(/^["']?Newsreader["']?, Georgia, serif$/u);
+    expect(headingStyles.fontWeight).toBe('500');
 
     const body = bodyPart(el);
     const bodyStyles = getComputedStyle(body);

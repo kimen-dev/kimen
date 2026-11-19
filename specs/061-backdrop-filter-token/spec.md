@@ -15,7 +15,7 @@ compositor layers with the filter enabled and disabled.
   listbox's 24px filter through its own semantic effect token. The other glass
   surfaces use the shared 12px default. A changed shared effect also reaches
   the listbox while it uses its default, and a listbox override can choose its
-  own complete value.
+  own complete value. Calma defaults both filters to `none`.
 - **D2 — agent's choice, pending founder confirmation.** Expose independent
   tokens for the alert shell and dismiss button, and use the shared button
   surface token for the icon button. Checkbox and radio already render without
@@ -24,11 +24,11 @@ compositor layers with the filter enabled and disabled.
   deprecation schedule, from 0.1.0 through the next major at 1.0.0. The old
   lengths still drive the default glass effect through CSS style queries. A
   full filter that differs from the built-in glass default takes precedence.
-  This includes the literal `none` in Material 3 and reduced transparency.
+  This includes the literal `none` in Calma and reduced transparency.
 
 ## Integration note: Material 3 stays at blur(0px) *(2026-11-19)*
 
-Issue #342 asks both built-in flat themes to set `none`. In Material 3 that removes a zero blur that renders nothing, yet on Linux CI it moves anti-aliasing in four Material 3 galleries: button, badge, option and tooltip. The issue's first rule is that Material 3 must not change, so Material 3 keeps `blur(0px)`, which rasterises exactly as before (S3). Moving it to `none` is left to the founder. onmars v2 still takes `none` after #341.
+Issue #342 asks both built-in flat themes to set `none`. In Material 3 that removes a zero blur that renders nothing, yet on Linux CI it moves anti-aliasing in four Material 3 galleries: button, badge, option and tooltip. The issue's first rule is that Material 3 must not change, so Material 3 keeps `blur(0px)`, which rasterises exactly as before (S3). Moving it to `none` is left to the founder. Calma sets both complete filters to `none`.
 
 ## Scenario Family Coverage
 
@@ -48,8 +48,8 @@ Feature: Themes control the complete backdrop filter
 
   # S1
   Scenario: A flat theme turns the backdrop effect off
-    Given an onmars page whose theme sets the backdrop filters to none
-    When glass surfaces are displayed
+    Given an onmars page displaying glass surfaces with a backdrop filter
+    When the theme sets the shared filter to none
     Then each surface has a computed backdrop filter of none
 
   # S2
@@ -60,7 +60,7 @@ Feature: Themes control the complete backdrop filter
     And the button computes none
 
   # S3
-  Scenario Outline: Built-in themes preserve their backdrop appearance
+  Scenario Outline: Built-in themes use their own backdrop settings
     Given the <theme> theme in the <scheme> colour scheme
     When glass surfaces are displayed
     Then the standard backdrop filter computes <filter>
@@ -68,20 +68,20 @@ Feature: Themes control the complete backdrop filter
 
     Examples:
       | theme     | scheme | filter     | listbox    |
-      | onmars    | light  | blur(12px) | blur(24px) |
-      | onmars    | dark   | blur(12px) | blur(24px) |
+      | onmars    | light  | none       | none       |
+      | onmars    | dark   | none       | none       |
       | material3 | light  | blur(0px)  | blur(0px)  |
       | material3 | dark   | blur(0px)  | blur(0px)  |
 
   # S4
   Scenario: An existing blur-length override still controls the glass effect
-    Given an onmars theme that customizes the published backdrop blur lengths
+    Given an onmars theme that selects the original glass filters and customizes their published blur lengths
     When the badge, button and select listbox are displayed
     Then each computes a blur using its customized length
 
   # S5
   Scenario: Reduced transparency turns the backdrop effect off
-    Given a page that enables reduced transparency
+    Given a Material 3 page that enables reduced transparency
     When glass surfaces are displayed
     Then each surface has a computed backdrop filter of none
 ```
