@@ -1,6 +1,7 @@
 # Card variants and primary activation
 
-**Issue** [#379](https://github.com/kimen-dev/kimen/issues/379)  
+**Issue** [#379](https://github.com/kimen-dev/kimen/issues/379)
+
 **Branch** `feat/379-card-variants`
 
 Extend the shipped [card](../009-ki-card/spec.md) with opt-in surface variants and a

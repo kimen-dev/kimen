@@ -1,7 +1,10 @@
 const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const;
 type HeadingTag = (typeof headingTags)[number];
 
-export interface CardTitle { tag: HeadingTag; text: string }
+export interface CardTitle {
+  tag: HeadingTag;
+  text: string;
+}
 
 export function getCardHref(href: string | undefined): string | undefined {
   const destination = href?.trim();

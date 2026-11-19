@@ -182,7 +182,13 @@ slot[name="media"]::slotted(video) {
  * state lives outside the motion gate so reduced-motion users still get it,
  * but inside the hover-capability gate (pointer-capability contract). */
 @media (hover: hover) {
-  :host(:hover) [part="card"]:not([data-variant="elevated"], [data-variant="filled"], [data-variant="outlined"], [data-clickable]) {
+  :host(:hover)
+    [part="card"]:not(
+      [data-variant="elevated"],
+      [data-variant="filled"],
+      [data-variant="outlined"],
+      [data-clickable]
+    ) {
     box-shadow: var(--ki-elevation-e2);
   }
 
