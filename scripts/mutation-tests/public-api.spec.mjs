@@ -729,7 +729,7 @@ describe('public API declaration mutation boundary', () => {
     ).toThrow(/package.*absent from a snapshot/i);
   });
 
-  it('S10 passes undeclared PATCH and MINOR but blocks undeclared or underdeclared MAJOR', () => {
+  it('S10 passes a no-op but blocks undeclared or underdeclared deltas', () => {
     const unchanged = snapshots(noMutation);
     const additive = snapshots((surface) => {
       surface.packages[elementsPackage].components['ki-button'].properties.tone = publicFacet();
@@ -739,7 +739,7 @@ describe('public API declaration mutation boundary', () => {
     });
 
     expect(evaluatePublicApiChange({ ...unchanged, declaration: null }).decision).toBe('passed');
-    expect(evaluatePublicApiChange({ ...additive, declaration: null }).decision).toBe('passed');
+    expect(evaluatePublicApiChange({ ...additive, declaration: null }).decision).toBe('blocked');
     expect(evaluatePublicApiChange({ ...breaking, declaration: null })).toEqual(
       expect.objectContaining({
         release: 'major',

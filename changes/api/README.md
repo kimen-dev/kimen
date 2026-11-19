@@ -1,6 +1,6 @@
 # Public API compatibility records
 
-This directory contains the immutable inputs to Kimen's public-API SemVer gate.
+This directory contains the inputs to Kimen's public API SemVer gate.
 The normative schema is
 [`public-api-snapshot-v1.md`](../../specs/018-project-integrity-hardening/contracts/public-api-snapshot-v1.md).
 
@@ -9,15 +9,55 @@ The normative schema is
 - `baselines/<version>.json` is the canonical snapshot of a protected release.
   It is authoritative in shallow and offline checkouts and must never be
   regenerated from a later worktree.
-- `<feature>.json` is a declaration bound to the exact baseline and candidate
-  `surfaceSha256` values. It records the affected packages, declared release
-  class, and rationale.
-- `packages/elements/generated/public-api.json` is the candidate snapshot. It
-  is generated only after all public deltas for a feature have landed.
+- `<feature>.json` declares one public change. It records the protected
+  baseline, affected packages, release class, rationale and exact delta
+  fingerprints. The gate reads every declaration at this directory level.
+- `archive/` contains historical declarations. `pre-067.json` refers to the
+  archived cumulative record for `4bc11b8` and its immutable snapshot in
+  `accepted/`. The archive uses gzip to keep the frozen record separate from
+  incoming changes to the old generated path. The gate reconstructs only
+  the deltas the record approved.
+- `packages/elements/generated/public-api.json` is the generated candidate.
 
 Snapshot and declaration files use canonical JSON: recursively sorted keys,
 two-space indentation, and exactly one trailing line feed. The digest covers
 only the canonical `surface` value.
+
+## Declare a public change
+
+Regenerate the candidate from the branch's source. On a branch with one public
+change, run `pnpm api:declare <slug> <patch|minor|major> "<reason>"` to capture
+the deltas the active ledger does not cover yet. Review and commit the new
+file. The gate matches each delta's classified before/after values to its
+declaration. The release class is the highest class among matching
+declarations, and each delta must meet its own release floor.
+
+When two branches change the same public member, resolve the source and
+regenerate it. Declare the resulting value if its fingerprint has changed.
+When reverting an unreleased delta to the protected baseline, retire the
+obsolete entry from the active declaration and archive the file if it has no
+remaining deltas. Archive completed declarations when advancing the protected
+release baseline.
+
+## Migrate a cumulative declaration
+
+For #420, #424, #425 and the `ki-toast` PR, merge the updated main, keep the PR's
+legacy declaration at the top of this directory, and run `pnpm regen`. In
+shared-file conflicts, keep the directory-based `check:api` command and the
+inventory-based tests from main. Migrate the record in place:
+
+```sh
+pnpm api:migrate changes/api/<feature>.json <pre-merge-branch-tip>
+pnpm check:api
+```
+
+The commit argument defaults to `ORIG_HEAD` after a merge. Use the explicit
+pre-merge branch tip after rebasing or amending. The command checks the legacy
+declaration against its original sealed candidate and copies its rationale
+and release class. Its output covers only missing deltas that match the
+original declaration. If source conflicts changed a declared delta during
+the merge, review the new behavior, retire the cumulative file to the
+archive and author a fresh declaration with `pnpm api:declare`.
 
 ## Bootstrap baseline 0.0.0
 
@@ -59,23 +99,16 @@ that a public minor already shipped the deprecation.
 
 ## Explicit fixture invocation
 
-The entrypoint has no repository defaults. All three inputs must be named, and
-`none` is accepted only for an intentionally absent baseline or declaration:
+The entrypoint has no repository defaults. Pass explicit fixture paths:
 
 ```sh
 node scripts/gates/check-public-api.mjs \
   --baseline /path/to/baseline.json \
   --candidate /path/to/candidate.json \
-  --declaration /path/to/declaration.json
+  --declarations /path/to/declarations
 ```
 
-During T058-T059, `pnpm run check:api` runs the S10 fixture suite only. It does
-not read or seal the changing repository candidate. The real candidate and
-feature declaration are generated and wired only after token migration and
-root deprecation are complete.
-
-Never edit a released baseline to make a candidate pass. Create the next
-baseline from the protected release artifact; create or update the feature
-declaration for the new candidate digest; and let the gate reject stale
-digests, under-declared changes, frozen-root growth, and removals without the
-required deprecation history.
+The fixture interface also accepts a single explicit v1 declaration path
+with `--declaration`. Use `--baseline none` only when testing or declaring an
+explicit first release. Create future baselines from protected release
+artifacts.

@@ -1,25 +1,26 @@
 #!/usr/bin/env node
 // @spec:018-project-integrity-hardening#S10
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { gunzipSync } from 'node:zlib';
 
 import { canonicalJson } from '../lib/canonical-json.mjs';
-import { evaluatePublicApiChange } from '../lib/public-api.mjs';
+import { createAcceptedPublicApiDeclaration, evaluatePublicApiChange } from '../lib/public-api.mjs';
 
-const REQUIRED_OPTIONS = Object.freeze(['--baseline', '--candidate', '--declaration']);
+const OPTIONS = Object.freeze(['--baseline', '--candidate', '--declarations', '--declaration']);
 const USAGE =
-  'usage: check-public-api.mjs --baseline <snapshot.json|none> --candidate <snapshot.json> --declaration <change.json|none>';
+  'usage: check-public-api.mjs --baseline <snapshot.json|none> --candidate <snapshot.json> --declarations <directory>';
+const MISSING_OPTIONS = `${USAGE}; explicit --baseline, --candidate, and --declarations are required`;
+const PRE_067_SURFACE_SHA256 = '916315c023aa2c2168bcfd27b6e7f8171796000ed786778c293d598804e9264e';
 
 export function parsePublicApiArguments(arguments_) {
   const values = new Map();
   for (let index = 0; index < arguments_.length; index += 2) {
     const option = arguments_[index];
     const value = arguments_[index + 1];
-    if (!REQUIRED_OPTIONS.includes(option) || value === undefined || value.startsWith('--')) {
-      throw new TypeError(
-        `${USAGE}; explicit --baseline, --candidate, and --declaration are required`,
-      );
+    if (!OPTIONS.includes(option) || value === undefined || value.startsWith('--')) {
+      throw new TypeError(MISSING_OPTIONS);
     }
     if (values.has(option)) {
       throw new TypeError(`duplicate option ${option}; ${USAGE}`);
@@ -27,12 +28,12 @@ export function parsePublicApiArguments(arguments_) {
     values.set(option, value);
   }
   if (
-    arguments_.length !== REQUIRED_OPTIONS.length * 2 ||
-    REQUIRED_OPTIONS.some((option) => !values.has(option))
+    values.size !== 3 ||
+    !values.has('--baseline') ||
+    !values.has('--candidate') ||
+    !(values.has('--declarations') || values.has('--declaration'))
   ) {
-    throw new TypeError(
-      `${USAGE}; explicit --baseline, --candidate, and --declaration are required`,
-    );
+    throw new TypeError(MISSING_OPTIONS);
   }
   if (values.get('--candidate') === 'none') {
     throw new TypeError(`--candidate cannot be none; ${USAGE}`);
@@ -65,17 +66,74 @@ async function optionalContract(label, path, readText) {
   return path === 'none' ? null : readCanonicalJson(label, path, { readText });
 }
 
+export async function readPublicApiDeclarations(
+  directory,
+  { baseline, except, readText = readFile } = {},
+) {
+  const absolute = resolve(directory);
+  const entries = await readdir(absolute, { withFileTypes: true });
+  const paths = entries
+    .filter((entry) => entry.name.endsWith('.json'))
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((entry) => {
+      if (!entry.isFile()) throw new Error(`API declaration is not a regular file: ${entry.name}`);
+      return resolve(absolute, entry.name);
+    });
+  return Promise.all(
+    paths
+      .filter((path) => path !== except)
+      .map(async (path) => {
+        const record = await readCanonicalJson('declaration', path, { readText });
+        if (path !== resolve(absolute, 'pre-067.json')) return record;
+
+        const { acceptedSnapshot, legacyDeclaration } = record;
+        const archivalName = /^[a-z0-9][a-z0-9-]*\.json$/u;
+        if (
+          Object.keys(record).length !== 2 ||
+          !/^[a-z0-9][a-z0-9-]*\.json\.gz$/u.test(acceptedSnapshot) ||
+          !archivalName.test(legacyDeclaration)
+        ) {
+          throw new Error('Invalid pre-067 accepted public API record');
+        }
+        const [candidate, declaration] = await Promise.all([
+          readCanonicalJson('accepted snapshot', resolve(absolute, 'accepted', acceptedSnapshot), {
+            readText: async (absolutePath) =>
+              gunzipSync(await readFile(absolutePath), {
+                maxOutputLength: 16 * 1024 ** 2,
+              }).toString('utf8'),
+          }),
+          readCanonicalJson('legacy declaration', resolve(absolute, 'archive', legacyDeclaration), {
+            readText,
+          }),
+        ]);
+        if (candidate.surfaceSha256 !== PRE_067_SURFACE_SHA256) {
+          throw new Error('The accepted pre-067 public API surface is immutable');
+        }
+        // Materialize the legacy release's exact delta bindings from its
+        // frozen snapshot; no fingerprint depends on the working candidate.
+        return createAcceptedPublicApiDeclaration({ baseline, candidate, declaration });
+      }),
+  );
+}
+
 export async function checkPublicApi({
   arguments_,
   readText = readFile,
   evaluate = evaluatePublicApiChange,
 }) {
   const options = parsePublicApiArguments(arguments_);
-  const [baseline, candidate, declaration] = await Promise.all([
+  const [baseline, candidate] = await Promise.all([
     optionalContract('baseline', options.get('--baseline'), readText),
     readCanonicalJson('candidate', options.get('--candidate'), { readText }),
-    optionalContract('declaration', options.get('--declaration'), readText),
   ]);
+  if (options.has('--declarations')) {
+    const declarations = await readPublicApiDeclarations(options.get('--declarations'), {
+      baseline,
+      readText,
+    });
+    return evaluate({ baseline, candidate, declarations });
+  }
+  const declaration = await optionalContract('declaration', options.get('--declaration'), readText);
   return evaluate({ baseline, candidate, declaration });
 }
 

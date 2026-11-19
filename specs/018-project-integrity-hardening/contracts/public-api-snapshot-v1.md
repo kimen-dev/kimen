@@ -64,19 +64,49 @@ tag and retain their digest. In a shallow/offline checkout the checked-in
 baseline is authoritative. A missing baseline is allowed only for an explicit
 first-release declaration; it never silently becomes PATCH/N/A.
 
-Change declaration path: `changes/api/<slug>.json`.
+## Active change declarations
+
+The founder approved additive declarations under Art. X on 2026-11-19 in
+[spec 067](../../067-merge-friendly-checks/spec.md). Snapshot schema v1 and the
+protected-release comparison still apply. Each public change has a declaration
+at `changes/api/<slug>.json`. The gate reads every JSON declaration at that
+directory level.
 
 ```json
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "packages": ["@kimen/elements"],
-  "baselineVersion": "0.0.0",
+  "baselineVersions": { "@kimen/elements": "0.0.0" },
   "baselineSha256": "<64-hex>",
-  "candidateSha256": "<64-hex>",
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-button/properties/legacy": "<64-hex>"
+  },
   "release": "major",
   "reason": "Remove the deprecated legacy property after one minor cycle."
 }
 ```
+
+Each JSON Pointer names an exact delta. Its digest covers the classified
+before and after values, the package, the change kind and the minimum release
+class. A newly published collection has a presence marker and fingerprints
+for its members. This lets another declaration add a sibling without changing
+the first declaration's digest. Each declaration's package list matches its
+deltas and its package versions match the protected baseline.
+
+Every public delta requires a matching fingerprint from a declaration whose
+release class meets its minimum. The highest matching class sets the release
+class for the combined candidate. A later declaration can cover an updated
+value at the same path while older fingerprints at that path lose their
+authority. A declaration for a path that no longer differs from the protected
+baseline must be retired. Unknown unowned deltas and new frozen-root symbols
+always fail.
+
+The one-time `pre-067.json` record rehydrates the already accepted deltas
+from a frozen snapshot and its archived cumulative declaration. The accepted
+snapshot is immutable and has the candidate digest recorded at `4bc11b8`.
+Its coverage applies only to exact deltas still present. Normal declarations
+use the inline delta map. An explicit first release still requires one exact,
+digest-bound v1 first-release declaration for all candidate packages.
 
 Classification:
 
@@ -86,9 +116,7 @@ Classification:
 - MINOR: additive optional facet/export/module symbol/stylesheet context/token.
 - PATCH: description or implementation-only delta.
 
-Actual class greater than declared fails. Breaking change without a valid,
-digest-bound declaration fails. Removal remains forbidden even with a MAJOR
-declaration unless the baseline proves non-empty deprecation/replacement
-metadata shipped for at least one intervening MINOR. First release, missing or
-stale baseline/candidate digests, and stale declarations have explicit fixtures
-and fail closed unless the exact first-release contract applies.
+Removal remains forbidden even with a MAJOR declaration unless the baseline
+proves non-empty deprecation/replacement metadata shipped for at least one
+intervening MINOR. Missing or stale baseline/candidate digests fail closed
+unless the exact first-release contract applies.

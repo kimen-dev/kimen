@@ -1,4 +1,6 @@
 // @spec:018-project-integrity-hardening#S10
+// @spec:067-merge-friendly-checks#S1
+// @spec:067-merge-friendly-checks#S2
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
@@ -14,6 +16,7 @@ import {
 } from '../lib/canonical-json.mjs';
 import {
   classifyPublicApiChange,
+  createPublicApiDeclaration,
   createPublicApiSnapshot,
   evaluatePublicApiChange,
 } from '../lib/public-api.mjs';
@@ -226,6 +229,177 @@ test('[S10] the gate has no implicit repository candidate or declaration', async
   assert.match(output(result), /explicit --baseline, --candidate, and --declaration/u);
 });
 
+test('[S1] the gate combines declarations for independently changed public values', async (t) => {
+  const root = await createFixture(t);
+  const baselinePath = join(root, 'baseline.json');
+  const candidatePath = join(root, 'candidate.json');
+  const declarationsPath = join(root, 'declarations');
+  const baseline = createPublicApiSnapshot(aSurface());
+  const documentation = aSurface();
+  documentation.packages[elementsPackage].components['ki-button'].description = 'Run an action.';
+  const addition = aSurface();
+  addition.browserBaseline.push('servo');
+  const combined = JSON.parse(JSON.stringify(documentation));
+  combined.browserBaseline = addition.browserBaseline;
+  await Promise.all([
+    writeCanonicalJsonFile(baselinePath, baseline),
+    writeCanonicalJsonFile(candidatePath, createPublicApiSnapshot(combined)),
+    writeCanonicalJsonFile(
+      join(declarationsPath, 'browser.json'),
+      createPublicApiDeclaration({
+        baseline,
+        candidate: createPublicApiSnapshot(addition),
+        release: 'minor',
+        reason: 'Support Servo.',
+      }),
+    ),
+    writeCanonicalJsonFile(
+      join(declarationsPath, 'docs.json'),
+      createPublicApiDeclaration({
+        baseline,
+        candidate: createPublicApiSnapshot(documentation),
+        release: 'patch',
+        reason: 'Clarify the purpose of the action button.',
+      }),
+    ),
+  ]);
+
+  const args = [
+    '--baseline',
+    baselinePath,
+    '--candidate',
+    candidatePath,
+    '--declarations',
+    declarationsPath,
+  ];
+  const accepted = runGate(root, ...args);
+  assert.equal(accepted.status, 0, output(accepted));
+  assert.match(accepted.stdout, /PASS public-api: release=minor decision=passed/u);
+
+  await rm(join(declarationsPath, 'docs.json'));
+  const rejected = runGate(root, ...args);
+  assert.equal(rejected.status, 1, output(rejected));
+  assert.match(output(rejected), /undeclared.*ki-button\/description/iu);
+});
+
+test('[S2] an unrelated MAJOR cannot cover a public delta declared as PATCH', () => {
+  const baseline = createPublicApiSnapshot(aSurface());
+  const property = aSurface();
+  property.packages[elementsPackage].components['ki-button'].properties.variant.default = 'danger';
+  const browser = aSurface();
+  browser.browserBaseline.push('servo');
+  const combined = JSON.parse(JSON.stringify(property));
+  combined.browserBaseline = browser.browserBaseline;
+  const candidate = createPublicApiSnapshot(combined);
+  const major = createPublicApiDeclaration({
+    baseline,
+    candidate: createPublicApiSnapshot(property),
+    release: 'major',
+    reason: 'Change the default action intent.',
+  });
+  const patch = createPublicApiDeclaration({
+    baseline,
+    candidate: createPublicApiSnapshot(browser),
+    release: 'patch',
+    reason: 'Add Servo with an insufficient release class.',
+  });
+
+  const result = evaluatePublicApiChange({ baseline, candidate, declarations: [major, patch] });
+  assert.equal(result.decision, 'blocked');
+  assert.match(
+    result.reasons.join('\n'),
+    /Declared patch is lower than actual minor at \/browserBaseline\/servo/u,
+  );
+});
+
+test('[S2] changing the declared value requires a new declaration at that path', () => {
+  const baseline = createPublicApiSnapshot(aSurface());
+  const surface = aSurface();
+  const component = surface.packages[elementsPackage].components['ki-button'];
+  component.description = 'An action with one published description.';
+  const old = createPublicApiDeclaration({
+    baseline,
+    candidate: createPublicApiSnapshot(surface),
+    release: 'patch',
+    reason: 'Clarify the description.',
+  });
+  component.description = 'An action with a later published description.';
+  const candidate = createPublicApiSnapshot(surface);
+  const rejected = evaluatePublicApiChange({ baseline, candidate, declarations: [old] });
+  assert.equal(rejected.decision, 'blocked');
+  assert.match(rejected.reasons.join('\n'), /Stale declaration.*ki-button\/description/u);
+
+  const updated = createPublicApiDeclaration({
+    baseline,
+    candidate,
+    declarations: [old],
+    release: 'patch',
+    reason: 'Document the revised action description.',
+  });
+  assert.equal(
+    evaluatePublicApiChange({ baseline, candidate, declarations: [old, updated] }).decision,
+    'passed',
+  );
+});
+
+test('[S1] cumulative migration upgrades only the exact deltas outside the active ledger', () => {
+  const baseline = createPublicApiSnapshot(aSurface());
+  const browser = aSurface();
+  browser.browserBaseline.push('servo');
+  const first = createPublicApiDeclaration({
+    baseline,
+    candidate: createPublicApiSnapshot(browser),
+    release: 'minor',
+    reason: 'Support Servo.',
+  });
+  const surface = JSON.parse(JSON.stringify(browser));
+  surface.packages[elementsPackage].components['ki-button'].description = 'An action trigger.';
+  const candidate = createPublicApiSnapshot(surface);
+  const legacy = {
+    candidate,
+    declaration: {
+      baselineSha256: baseline.surfaceSha256,
+      baselineVersion: '1.2.0',
+      candidateSha256: candidate.surfaceSha256,
+      packages: [elementsPackage],
+      reason: 'Support Servo and clarify the action button.',
+      release: 'minor',
+      schemaVersion: 1,
+    },
+  };
+
+  const migrated = createPublicApiDeclaration({
+    baseline,
+    candidate,
+    declarations: [first],
+    legacy,
+  });
+  assert.deepEqual(Object.keys(migrated.deltas), [
+    '/packages/@kimen~1elements/components/ki-button/description',
+  ]);
+  assert.equal(migrated.reason, legacy.declaration.reason);
+  assert.equal(
+    evaluatePublicApiChange({
+      baseline,
+      candidate,
+      declarations: [first, migrated],
+    }).decision,
+    'passed',
+  );
+
+  surface.browserBaseline.push('edge');
+  assert.throws(
+    () =>
+      createPublicApiDeclaration({
+        baseline,
+        candidate: createPublicApiSnapshot(surface),
+        declarations: [first],
+        legacy,
+      }),
+    /Legacy declaration does not match the uncovered delta at \/browserBaseline\/edge/u,
+  );
+});
+
 test('[S10] non-canonical snapshot bytes are rejected', async (t) => {
   const root = await createFixture(t);
   const baselinePath = join(root, 'baseline.json');
@@ -294,10 +468,8 @@ test('[S10] public API stays in fast quality while packed consumers stay release
   const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
   const coreGates = await readFile(coreGatesPath, 'utf8');
 
-  assert.equal(
-    packageJson.scripts['check:api'],
-    'node --test scripts/tests/css-token-surface.test.mjs scripts/tests/public-api.test.mjs scripts/tests/public-api-gate.test.mjs scripts/tests/public-api-snapshot.test.mjs && node scripts/gates/check-public-api.mjs --baseline changes/api/baselines/0.0.0.json --candidate packages/elements/generated/public-api.json --declaration changes/api/342-backdrop-filter-token.json',
-  );
+  assert.match(packageJson.scripts['check:api'], /--declarations changes\/api(?:\s|$)/u);
+  assert.doesNotMatch(packageJson.scripts['check:api'], /--declaration\s/u);
   assert.equal(
     packageJson.scripts['test:consumer-contract'],
     'bash scripts/gates/cache-env.sh -- pnpm run test:consumer-contract:isolated',
