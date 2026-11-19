@@ -2,5 +2,9 @@
   "barePage": { "keyboardPressed": true },
   "pointer": { "hoverWitness": true },
   "catalog": true,
-  "catalogAction": "ki-copy"
+  "catalogAction": "ki-copy",
+  "sizeBudget": {
+    "mcpApps": { "gzip": 4392 },
+    "mcpServer": { "raw": 66499, "gzip": 8915 }
+  }
 }

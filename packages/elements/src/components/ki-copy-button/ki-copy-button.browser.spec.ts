@@ -99,7 +99,7 @@ it('S1 copies the exact explicit value and emits a composed ki-copy event', asyn
 });
 
 it('S1 accepts one pending write at a time and can copy again when it settles', async () => {
-  let finishWrite = () => {
+  let finishWrite: () => void = () => {
     throw new Error('Clipboard fixture did not start');
   };
   const firstWrite = new Promise<void>((resolve) => {
