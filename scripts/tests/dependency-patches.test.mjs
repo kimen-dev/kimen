@@ -12,9 +12,10 @@ const rootRequire = createRequire(import.meta.url);
 const LEGACY_MINIMATCH_CONSUMER = 'eslint-plugin-jsx-a11y';
 
 test('the legacy minimatch still expands braces on brace-expansion 5', () => {
-  // `brace-expansion` is pinned to 5.0.12 workspace-wide: GHSA-mh99-v99m-4gvg
+  // `brace-expansion` is pinned to 5.0.13 workspace-wide: GHSA-mh99-v99m-4gvg
   // fixed at 5.0.8, GHSA-rgw5-rvv9-x895 moved the floor to 5.0.9, and
-  // GHSA-6j4f-fj2g-mc7p, GHSA-qhr7-859c-m2p7 and GHSA-q2hr-2g5m-vwhr to 5.0.12.
+  // GHSA-6j4f-fj2g-mc7p, GHSA-qhr7-859c-m2p7 and GHSA-q2hr-2g5m-vwhr to 5.0.12,
+  // and the patch release after it, 5.0.13.
   // That pin crosses a major for this consumer: minimatch 3 does
   // `require('brace-expansion')` and calls the result, while v5 exports an
   // object carrying a named `expand`. Unpatched, every pattern containing
@@ -32,7 +33,7 @@ test('the legacy minimatch still expands braces on brace-expansion 5', () => {
   // ...and the patch must not have been "fixed" by dropping back to a
   // vulnerable brace-expansion instead.
   const { version } = consumerRequire('brace-expansion/package.json');
-  assert.equal(version, '5.0.12');
+  assert.equal(version, '5.0.13');
 });
 
 test('every patch is declared where pnpm reads it', async () => {
