@@ -78,19 +78,25 @@
     );
   }
 
-  /* The label is a SIBLING of the trigger, so the interaction-state label token
-     must be set on the host (which both inherit from), not on the trigger where
-     it never reaches the label (codex review). */
-  :host(:has([part="trigger"]:hover)) {
+  /* The label is a SIBLING of the trigger, so a state set on the trigger never
+     reaches it. The label reads the trigger's state itself, through the
+     sibling that follows it: `:host(:has(...))` matched nothing, because
+     inside `:host()` the `:has()` looks at the host's light-DOM children,
+     never at the shadow tree that holds the trigger. */
+  [part="label"]:has(~ [part="trigger"]:hover:not(:disabled)) {
     --_ki-select-label-fg: var(--ki-select-hover-label-fg);
   }
 }
 
-:host(:has([part="trigger"]:focus-visible)) {
+/* As specific as the hover rule and after it, so keyboard focus wins on a
+   hovered trigger, as in the M3 text field the material3 theme follows. */
+[part="label"]:has(~ [part="trigger"]:focus-visible:not(:disabled)) {
   --_ki-select-label-fg: var(--ki-select-focus-label-fg);
 }
 
-:host(:has([part="trigger"]:disabled)) {
+/* :disabled (not [disabled]) so a select inside a disabled fieldset, which
+   sets no host attribute, dims too; ki-input and ki-textarea do the same. */
+:host(:disabled) {
   --_ki-select-label-fg: var(--ki-select-disabled-label-fg);
 
   /* The help line dims with the label (spec 042 D9). */
