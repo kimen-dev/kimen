@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "dc33528b71402e32e855bea3d4e9ef1d6a239765d99c9f3664390ca4c1a41fba",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Issue #341 and spec 060 port Calma to onmars, changing its resolved palette, surface, type, motion and component tokens. Existing Material 3 token values stay byte-identical after resolution. Adds --ki-motion-easing-emphasized-out, --ki-surface-tooltip-inverse, --ki-text-tooltip-inverse and --ki-elevation-none. Deprecates --ki-motion-easing-spring in 0.1.0 for removal in 1.0.0 per spec 041 and moves the checkbox and radio CSS references to its replacement. The cumulative declaration supersedes 317-321-loading-hint-touch and retains its declared deltas. Explicit effective-value changes and the earlier cumulative delta are MAJOR since 0.0.0. No package is published.",
+  "release": "major",
+  "schemaVersion": 1
+}

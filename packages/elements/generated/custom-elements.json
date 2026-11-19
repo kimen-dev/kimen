@@ -2879,12 +2879,12 @@
               "description": "Fast interaction transition duration."
             },
             {
-              "name": "--ki-motion-easing-out",
-              "description": "Decelerating interaction transition easing curve."
+              "name": "--ki-motion-easing-emphasized-out",
+              "description": "Expressive exit curve for selected controls. Onmars eases out without overshoot."
             },
             {
-              "name": "--ki-motion-easing-spring",
-              "description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language)."
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
             },
             {
               "name": "--ki-motion-easing-standard",
@@ -5758,8 +5758,8 @@
               "description": "Fast interaction transition duration."
             },
             {
-              "name": "--ki-motion-easing-spring",
-              "description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language)."
+              "name": "--ki-motion-easing-emphasized-out",
+              "description": "Expressive exit curve for selected controls. Onmars eases out without overshoot."
             },
             {
               "name": "--ki-motion-easing-standard",
