@@ -169,6 +169,13 @@ types/identifiers; read the generated artifact's version metadata.
   consuming application's token layer (Art. VI), which also closes a style
   injection avenue.
 
+## Amendment: deprecated enum values (#344)
+
+Agent's choice, pending founder confirmation: publish catalog schema 1.4.0
+with optional deprecated enum metadata. Existing declarations with
+`variant="tertiary"` remain valid for both button components. Prompts and
+generated JSON Schema offer the four recommended variants.
+
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
 ```gherkin
