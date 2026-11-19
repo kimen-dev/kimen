@@ -91,7 +91,8 @@ describe('037 — the closed set renders as native elements', () => {
     expect(img?.getAttribute('alt')).toBe('Gráfico de ventas');
   });
 
-  it('S1 the built-in catalog carries exactly the eight native primitives, at catalog schema 1.3.0', () => {
+  it('S1 the built-in catalog carries exactly the eight native primitives at catalog schema 1.4.0', () => {
+    expect(catalogData.catalogSchemaVersion).toBe('1.4.0');
     expect([...NATIVE_PRIMITIVE_TAGS].sort()).toEqual([
       'div',
       'em',
@@ -112,7 +113,6 @@ describe('037 — the closed set renders as native elements', () => {
         expect(entry[field].trim()).not.toBe('');
       }
     }
-    expect(catalogData.catalogSchemaVersion).toBe('1.3.0');
   });
 
   it('S1 a streamed chunk may be a native primitive', () => {

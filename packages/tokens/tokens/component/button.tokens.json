@@ -951,12 +951,12 @@
         "neutral": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.special.light-s0-dark-s2}",
-              "$description": "color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "$value": "{ki.surface.special.secondary-alpha-base}",
+              "$description": "Tertiary alias of the secondary neutral rest background."
             },
             "fg": {
-              "$value": "{ki.text.supporting}",
-              "$description": "color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+              "$value": "{ki.text.high-em}",
+              "$description": "Tertiary alias of the secondary neutral rest foreground."
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
@@ -965,12 +965,12 @@
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.special.light-s1-dark-s2}",
-              "$description": "color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "$value": "{ki.surface.special.secondary-alpha-base}",
+              "$description": "Tertiary alias of the secondary neutral hover background."
             },
             "fg": {
-              "$value": "{ki.text.supporting}",
-              "$description": "color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+              "$value": "{ki.text.high-em}",
+              "$description": "Tertiary alias of the secondary neutral hover foreground."
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
@@ -979,8 +979,8 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.special.light-s2-dark-s3}",
-              "$description": "color used by the button component for tertiary neutral active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
+              "$value": "{ki.surface.special.secondary-alpha-base}",
+              "$description": "Tertiary alias of the secondary neutral active background.",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -991,8 +991,8 @@
               }
             },
             "fg": {
-              "$value": "{ki.text.supporting}",
-              "$description": "color used by the button component for tertiary neutral active foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).",
+              "$value": "{ki.text.high-em}",
+              "$description": "Tertiary alias of the secondary neutral active foreground.",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -1033,8 +1033,8 @@
         "success": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.special.light-s0-dark-s2}",
-              "$description": "color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "$value": "{ki.surface.success-base-em}",
+              "$description": "Tertiary alias of the secondary success rest background."
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
@@ -1047,8 +1047,8 @@
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.special.light-s1-dark-s2}",
-              "$description": "color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "$value": "{ki.surface.success-low-em}",
+              "$description": "Tertiary alias of the secondary success hover background."
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
@@ -1061,8 +1061,8 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.special.light-s2-dark-s3}",
-              "$description": "color used by the button component for tertiary success active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
+              "$value": "{ki.surface.success-low-em}",
+              "$description": "Tertiary alias of the secondary success active background.",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -1139,8 +1139,8 @@
         "danger": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.special.light-s0-dark-s2}",
-              "$description": "color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "$value": "{ki.surface.danger-base-em}",
+              "$description": "Tertiary alias of the secondary danger rest background."
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
@@ -1153,8 +1153,8 @@
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.special.light-s1-dark-s2}",
-              "$description": "color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "$value": "{ki.surface.danger-low-em}",
+              "$description": "Tertiary alias of the secondary danger hover background."
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
@@ -1167,8 +1167,8 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.special.light-s2-dark-s3}",
-              "$description": "color used by the button component for tertiary danger active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
+              "$value": "{ki.surface.danger-low-em}",
+              "$description": "Tertiary alias of the secondary danger active background.",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -1259,6 +1259,11 @@
             "$value": "{ki.effect.component.secondary.hover.shadow}",
             "$description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).",
             "$type": "shadow"
+          },
+          "overlay": {
+            "$value": "{ki.surface.hover-overlay-inverse}",
+            "$type": "color",
+            "$description": "Hover overlay for neutral tertiary buttons, shared with secondary by default."
           }
         },
         "active": {

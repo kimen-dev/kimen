@@ -359,6 +359,7 @@
   --ki-button-tertiary-rest-shadow: var(--ki-foundation-migrated-component-button-button-tertiary-active-shadow);
   --ki-button-tertiary-rest-border-bottom: var(--ki-outline-none);
   --ki-button-tertiary-hover-shadow: var(--ki-foundation-migrated-component-button-button-tertiary-hover-shadow);
+  --ki-button-tertiary-hover-overlay: var(--ki-transparent-inverse);
   --ki-button-tertiary-active-shadow: var(--ki-foundation-migrated-component-button-button-tertiary-active-shadow); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-rest-shadow */
   --ki-button-quaternary-neutral-rest-fg: var(--ki-text-primary-high-em);
   --ki-button-quaternary-neutral-rest-border: var(--ki-outline-primary-med-em);

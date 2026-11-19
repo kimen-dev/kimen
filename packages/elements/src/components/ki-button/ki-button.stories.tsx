@@ -2,6 +2,8 @@ import { h } from '@stencil/core';
 import type { Meta, StoryObj } from '@stencil/storybook-plugin';
 import type { JSX } from '../../components';
 
+const variants = ['primary', 'secondary', 'quaternary', 'ghost'] as const;
+
 const meta = {
   title: 'Elements/ki-button',
   // Tag string, not the class: elements are registered lazily by the loader
@@ -20,6 +22,7 @@ const meta = {
     type: 'submit',
     disabled: false,
   },
+  argTypes: { variant: { control: 'select', options: [...variants] } },
 } satisfies Meta<JSX.KiButton>;
 
 export default meta;
@@ -34,11 +37,11 @@ export const Primary: Story = {
   parameters: { slots: { default: 'Save changes' } },
 };
 
-/** Emphasis scale: one button per variant, same tone and size. */
+/** The four recommended roles, with the same tone and size. */
 export const Variants: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-      {(['primary', 'secondary', 'tertiary', 'quaternary', 'ghost'] as const).map((variant) => (
+      {variants.map((variant) => (
         <ki-button {...args} variant={variant}>
           {variant}
         </ki-button>

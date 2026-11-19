@@ -19,17 +19,22 @@ A token-styled, icon-only action button with native button semantics and a
 
 ### Variants and tones
 
-The same five-level hierarchy and tone model as
-[ki-button](/docs/components/button/):
+Use filled `primary` for the main action and outlined `secondary` (the default)
+for supporting actions. Use `quaternary` for neutral icon actions and `ghost`
+for accent icon actions. The `tone` prop carries intent.
 
 <Demo
   code={`<ki-icon-button variant="primary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
 <ki-icon-button variant="secondary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
-<ki-icon-button variant="tertiary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
 <ki-icon-button variant="quaternary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
 <ki-icon-button variant="ghost" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
 <ki-icon-button variant="primary" tone="danger" label="Delete item"><span aria-hidden="true">🗑</span></ki-icon-button>`}
 />
+
+`tertiary` is deprecated. Use `secondary` for new icon buttons. Existing
+`tertiary` buttons share the `secondary` appearance in onmars and keep
+their legacy appearance in Material 3. Development builds warn when
+the deprecated variant is used.
 
 ### With a tooltip
 

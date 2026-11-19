@@ -30,6 +30,39 @@ const propsOf = (attributes) => {
   return JSON.parse(json).components['ki-probe'].props;
 };
 
+test('S2 a deprecated enum value is separate from the values offered to agents', () => {
+  const props = propsOf([
+    {
+      default: "'secondary'",
+      deprecatedValues: ['tertiary'],
+      name: 'variant',
+      type: { text: '"secondary" | "tertiary"' },
+    },
+  ]);
+  assert.deepEqual(props.variant.values, ['secondary']);
+  assert.deepEqual(props.variant.deprecatedValues, ['tertiary']);
+});
+
+test('S2 deprecated enum metadata must describe an existing non-default value', () => {
+  for (const attribute of [
+    { deprecatedValues: ['tertiary'], type: { text: 'string' } },
+    { deprecatedValues: ['other'], type: { text: '"secondary" | "tertiary"' } },
+    {
+      default: "'tertiary'",
+      deprecatedValues: ['tertiary'],
+      type: { text: '"secondary" | "tertiary"' },
+    },
+  ]) {
+    assert.throws(
+      () =>
+        buildCatalog(manifestWith([{ name: 'variant', ...attribute }]), {
+          elementsVersion: '0.0.0',
+        }),
+      /ki-probe\.variant: .*deprecated/u,
+    );
+  }
+});
+
 test('S15 a required manifest attribute becomes a required constraint and nothing else does', () => {
   const props = propsOf([
     { name: 'label', required: true, type: { text: 'string' } },

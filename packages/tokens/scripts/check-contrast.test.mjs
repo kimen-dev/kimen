@@ -174,8 +174,7 @@ test('overlay ramps pair hover with active and collect every fill they wash', ()
     ['--ki-button-secondary-active-overlay', 'rgba(0, 0, 0, 0.05)'],
     ['--ki-button-secondary-neutral-rest-bg', '#ffffff'],
     ['--ki-button-secondary-danger-rest-bg', '#fdecec'],
-    // hover with no pressed sibling is not a ramp: nothing claims to be a step
-    // beyond it (tertiary and ghost carry their state in the fill instead)
+    // The isolated hover override has no pressed sibling under the same stem.
     ['--ki-button-tertiary-hover-overlay', 'rgba(0, 0, 0, 0.03)'],
     ['--ki-button-tertiary-neutral-rest-bg', 'rgba(0, 0, 0, 0)'],
   ]);

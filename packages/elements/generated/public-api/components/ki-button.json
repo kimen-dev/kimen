@@ -68,7 +68,7 @@
       "variant": {
         "default": "'secondary'",
         "deprecatedSince": null,
-        "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
         "replacement": null,
         "required": false,
         "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
@@ -1206,7 +1206,7 @@
       "--ki-button-tertiary-danger-hover-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).",
+        "description": "Tertiary alias of the secondary danger hover background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1230,7 +1230,7 @@
       "--ki-button-tertiary-danger-rest-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).",
+        "description": "Tertiary alias of the secondary danger rest background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1255,6 +1255,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "value used by the button component for tertiary disabled shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-hover-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hover overlay for neutral tertiary buttons, shared with secondary by default.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1294,7 +1302,7 @@
       "--ki-button-tertiary-neutral-hover-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).",
+        "description": "Tertiary alias of the secondary neutral hover background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1310,7 +1318,7 @@
       "--ki-button-tertiary-neutral-hover-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).",
+        "description": "Tertiary alias of the secondary neutral hover foreground.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1318,7 +1326,7 @@
       "--ki-button-tertiary-neutral-rest-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).",
+        "description": "Tertiary alias of the secondary neutral rest background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1334,7 +1342,7 @@
       "--ki-button-tertiary-neutral-rest-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).",
+        "description": "Tertiary alias of the secondary neutral rest foreground.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1358,7 +1366,7 @@
       "--ki-button-tertiary-success-hover-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).",
+        "description": "Tertiary alias of the secondary success hover background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1382,7 +1390,7 @@
       "--ki-button-tertiary-success-rest-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).",
+        "description": "Tertiary alias of the secondary success rest background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1677,7 +1685,7 @@
       "variant": {
         "default": "'secondary'",
         "deprecatedSince": null,
-        "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
         "replacement": null,
         "required": false,
         "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
