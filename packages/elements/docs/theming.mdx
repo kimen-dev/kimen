@@ -213,21 +213,20 @@ durations and easings, never bypass that gate.
 
 ### Glass
 
-Translucent surfaces are a gradient pair plus a backdrop blur. The dialog
-and tooltip bubbles paint
-`linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))`
-(same pattern for `--ki-tooltip-bg-start/-end`) over
-`backdrop-filter: blur(var(--ki-dialog-backdrop-blur))`; backdrop-blur
-tokens also exist on the select listbox, buttons, icon buttons, card and
-video. material3 resolves both gradient stops to the same opaque surface and
-the blur to none — the glass disappears with zero component changes, which
-is exactly the point:
+Onmars v1 paints the dialog and tooltip with translucent images and
+backdrop blur. The select listbox pairs a translucent fill with blur.
+Each surface accepts an optional `-bg-image` token layered over its
+`-bg` color. Material 3 uses solid fills.
+
+To make a tooltip flat, set the fill and turn off the image. Use the same
+color for the arrow edges and use zero blur:
 
 ```css
-/* a flat brand: kill the glass at the token layer */
 :root {
-  --ki-tooltip-bg-start: var(--ki-surface-s2);
-  --ki-tooltip-bg-end: var(--ki-surface-s2);
+  --ki-tooltip-bg: var(--ki-surface-s2);
+  --ki-tooltip-bg-image: none;
+  --ki-surface-image-tooltip-arrow-start: var(--ki-tooltip-bg);
+  --ki-surface-image-tooltip-arrow-end: var(--ki-tooltip-bg);
   --ki-tooltip-backdrop-blur: 0px;
 }
 ```

@@ -861,6 +861,21 @@
       }
     },
     "foundation": {
+      "onmars-v1": {
+        "$description": "Temporary onmars v1 glass images. Read the legacy stop properties on the theme scope during their deprecation window.",
+        "dialog-bg-image": {
+          "$value": "linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))"
+        },
+        "tooltip-arrow-start": {
+          "$value": "var(--ki-tooltip-bg-start)"
+        },
+        "tooltip-arrow-end": {
+          "$value": "var(--ki-tooltip-bg-end)"
+        },
+        "tooltip-bg-image": {
+          "$value": "linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end))"
+        }
+      },
       "migrated": {
         "modes-material3-dark": {
           "color": {

@@ -93,6 +93,10 @@
   --ki-font-letter-spacing-sm: var(--ki-foundation-material3-typescale-tracking-body-medium);
   --ki-font-letter-spacing-md: var(--ki-foundation-material3-typescale-tracking-label-large);
   --ki-font-letter-spacing-lg: var(--ki-foundation-material3-typescale-tracking-display-large);
+  --ki-surface-image-dialog: none;
+  --ki-surface-image-tooltip-arrow-start: var(--ki-surface-inverse-white);
+  --ki-surface-image-tooltip-arrow-end: var(--ki-surface-inverse-white);
+  --ki-surface-image-tooltip: none;
   --ki-surface-s0: light-dark(var(--ki-foundation-migrated-semantic-material3-surface-s0), var(--ki-foundation-migrated-modes-material3-dark-surface-s0));
   --ki-surface-s1: light-dark(var(--ki-foundation-migrated-semantic-material3-surface-primary-base-em), var(--ki-foundation-migrated-themes-material3-color-brand-high-em));
   --ki-surface-s2: light-dark(var(--ki-foundation-migrated-semantic-material3-outline-base-em), var(--ki-foundation-migrated-modes-material3-dark-outline-base-em));
@@ -400,8 +404,8 @@
   --ki-dialog-radius: var(--ki-radius-big-component-lg);
   --ki-dialog-gap: var(--ki-space-5xl);
   --ki-dialog-bg: var(--ki-surface-s3);
-  --ki-dialog-bg-start: var(--ki-surface-s3);
-  --ki-dialog-bg-end: var(--ki-surface-s3);
+  --ki-dialog-bg-start: var(--ki-surface-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-bg-image */
+  --ki-dialog-bg-end: var(--ki-surface-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-bg-image */
   --ki-dialog-border: none;
   --ki-dialog-shadow: var(--ki-elevation-e3);
   --ki-dialog-heading-font-weight: var(--ki-typography-weight-body-normal);
@@ -634,8 +638,8 @@
   --ki-tooltip-offset: var(--ki-space-xs);
   --ki-tooltip-arrow-size: var(--ki-space-zero);
   --ki-tooltip-bg: var(--ki-surface-inverse-white);
-  --ki-tooltip-bg-start: var(--ki-surface-inverse-white);
-  --ki-tooltip-bg-end: var(--ki-surface-inverse-white);
+  --ki-tooltip-bg-start: var(--ki-surface-inverse-white); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-bg-image */
+  --ki-tooltip-bg-end: var(--ki-surface-inverse-white); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-bg-image */
   --ki-tooltip-backdrop-blur: var(--ki-blur-none);
   --ki-tooltip-fg: var(--ki-text-inverse-black);
   --ki-tooltip-font-size: var(--ki-font-size-caption-2);

@@ -1,3 +1,4 @@
+// @spec:062-solid-surface-background
 import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:005-ki-select
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -903,7 +904,7 @@ describe('ki-select in a real browser', () => {
       .not.toBe(restTransform);
   });
 
-  it('S17 opens a glass Dropmenu panel with MarsUI row geometry and highlight elevation', async () => {
+  it('S17 S3 opens a glass Dropmenu panel with MarsUI row geometry and highlight elevation', async () => {
     const el = await mountSelect();
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -919,6 +920,7 @@ describe('ki-select in a real browser', () => {
     expect(listboxCs?.paddingInlineStart).toBe('8px');
     expect(listboxCs?.backdropFilter).toBe('blur(24px)');
     expect(listboxCs?.backgroundColor).toBe('rgba(255, 255, 255, 0.8)');
+    expect(listboxCs?.backgroundImage).toBe('none');
     expect(listboxCs?.boxShadow).not.toBe('none');
 
     // Menu rows: height 36px (Space/11xl), radius 12px, padding-inline 8px,

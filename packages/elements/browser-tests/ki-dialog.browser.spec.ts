@@ -1,3 +1,4 @@
+// @spec:062-solid-surface-background
 import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:012-ki-dialog
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -999,8 +1000,7 @@ describe('ki-dialog in a real browser', () => {
     await openDialog(el);
     const dialog = internalDialog(el);
     // The theme swap resolves through the cascade, not a timer: wait on the
-    // observable outcome. The surface paints a gradient (material3 resolves
-    // both stops to its opaque surface), so the gradient is the theme signal.
+    // observable outcome. Material 3's solid surface replaces onmars glass.
     await waitFor(
       () => getComputedStyle(dialog).backgroundImage !== onmarsBg,
       'dialog surface repainted for material3',
@@ -1008,13 +1008,13 @@ describe('ki-dialog in a real browser', () => {
     const styles = getComputedStyle(dialog);
     const backdrop = getComputedStyle(dialog, '::backdrop');
 
-    expect(styles.backgroundImage).toContain('gradient(');
+    expect(styles.backgroundImage).toBe('none');
     expect(styles.borderRadius).not.toBe(onmarsRadius);
     // The page behind stays dimmed under the second theme too.
     expect(backdrop.backgroundColor).not.toMatch(/, 0\)$/u);
   });
 
-  it('S1 renders the MarsUI glass modal surface, typography, and centering', async () => {
+  it('S1 S3 renders the MarsUI glass modal surface, typography, and centering', async () => {
     cleanup();
     const el = await mountDialog();
     await openDialog(el);
