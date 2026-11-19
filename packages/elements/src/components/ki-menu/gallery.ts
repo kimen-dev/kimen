@@ -6,7 +6,7 @@ const overflow = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true
 export default {
   minHeight: 340,
   html: `
-    <div style="display:flex;flex-wrap:wrap;gap:var(--ki-space-5xl)">
+    <div style="display:flex;flex-wrap:wrap;gap:var(--ki-space-5xl);--ki-menu-max-inline-size:var(--ki-menu-min-inline-size)">
       <div style="flex:1 1 var(--ki-menu-min-inline-size);padding-block-end:var(--ki-size-surface-xs)">
         <ki-button id="gallery-actions" type="button" variant="quaternary">Actions</ki-button>
         <ki-menu anchor="gallery-actions" filter-label="Filter actions" open>
@@ -24,7 +24,7 @@ export default {
         <ki-icon-button id="gallery-account" type="button" variant="ghost" label="Account for Ana García">
           ${overflow}
         </ki-icon-button>
-        <ki-menu anchor="gallery-account" open>
+        <ki-menu anchor="gallery-account">
           <div slot="header" style="display:flex;align-items:center;gap:var(--ki-space-md);padding:var(--ki-space-md)">
             <ki-avatar initials="AG" size="md"></ki-avatar>
             <div>Ana García<br/><span style="color:var(--ki-menu-meta-fg)">ana@example.com</span></div>
@@ -41,4 +41,23 @@ export default {
       </div>
     </div>
   `,
+  prepare(wrapper) {
+    const actions = wrapper
+      .querySelector('ki-menu[anchor="gallery-actions"]')
+      ?.shadowRoot?.querySelector('[part="popup"]')
+      ?.getBoundingClientRect();
+    const account = wrapper.querySelector('#gallery-account')?.getBoundingClientRect();
+    const viewport = wrapper.ownerDocument.documentElement.clientWidth;
+    // The pointer and contracts harnesses can have a narrower viewport than
+    // their fixture. Open the second popup only when both panels fit.
+    if (
+      actions &&
+      account &&
+      account.left >= actions.right &&
+      account.left + actions.width <= viewport
+    ) {
+      wrapper.querySelector('ki-menu[anchor="gallery-account"]')?.setAttribute('open', '');
+    }
+    return Promise.resolve();
+  },
 } satisfies VisualGallery;

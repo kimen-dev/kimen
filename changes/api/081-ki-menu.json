@@ -30,6 +30,7 @@
     "/packages/@kimen~1elements/components/ki-menu-item/cssProperties/--ki-density-target-min": "d6275d065fe928836944e22fdf637d54eebd1fc7c0d5b18ac76de9374665a3e4",
     "/packages/@kimen~1elements/components/ki-menu-item/cssProperties/--ki-menu-focus-color": "9000ffc8dd1b9ae01b63ad7b2ab42fb1db61cb398c56a26df3844c92dbf8d515",
     "/packages/@kimen~1elements/components/ki-menu-item/cssProperties/--ki-menu-focus-width": "cbe8b82f5f8123783b93fba22ca76cf24d5a741f9ad18ff8cf2ac3736f19cd87",
+    "/packages/@kimen~1elements/components/ki-menu-item/cssProperties/--ki-menu-font-family": "c75c767ec6764997e5df967f008ab5d55e29e16c6a0cc2be7ffe0ac3f182270f",
     "/packages/@kimen~1elements/components/ki-menu-item/cssProperties/--ki-menu-gap": "03d383dc4ddb9f2db7cd299d423624474a133e905c83967a8d2861be68097d47",
     "/packages/@kimen~1elements/components/ki-menu-item/cssProperties/--ki-menu-inline-padding": "8c825ba1ff5bb441a7bb7924e588892bd23f0e3fd5724ee64474b829c13a52f8",
     "/packages/@kimen~1elements/components/ki-menu-item/cssProperties/--ki-menu-item-danger-fg": "59ee8afc3227dfb140a9487b20dcc5374daa9b4f59a2730e1bfe6b9b643200eb",
@@ -1319,7 +1320,7 @@
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Add the anchored action menu and extend the loader Components and JSX types",
+  "reason": "Add the anchored action menu, extend the loader Components and JSX types, and expose its font token on the item host",
   "release": "major",
   "schemaVersion": 2
 }

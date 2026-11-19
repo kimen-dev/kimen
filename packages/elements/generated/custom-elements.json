@@ -6341,6 +6341,10 @@
               "description": "Width of a visible keyboard focus outline."
             },
             {
+              "name": "--ki-menu-font-family",
+              "description": "Family for action labels and the filter."
+            },
+            {
               "name": "--ki-menu-gap",
               "description": "Inline space between the parts of a row."
             },

@@ -1,5 +1,6 @@
 :host {
   display: block;
+  font-family: var(--ki-menu-font-family);
 }
 
 :host([hidden]),
@@ -92,7 +93,7 @@ button:focus-visible {
   color: var(--ki-menu-item-danger-hover-fg);
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) {
   :host(:not([disabled])) button:hover {
     --_ki-menu-meta-fg: var(--ki-menu-meta-hover-fg);
 

@@ -1,5 +1,6 @@
 :host {
   display: block;
+  font-family: var(--ki-menu-font-family);
 }
 
 :host([hidden]) {
@@ -25,7 +26,6 @@
   border-radius: var(--ki-menu-radius);
   box-shadow: var(--ki-menu-shadow);
   color: var(--ki-menu-fg);
-  font-family: var(--ki-menu-font-family);
   font-size: var(--ki-menu-font-size);
   line-height: var(--ki-menu-line-height);
 }

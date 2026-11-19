@@ -71,7 +71,7 @@ export class KiMenu {
   /** Reports the selected action and, for a checkbox or radio, its new checked state. */
   @Event({ eventName: 'ki-select' }) selectAction!: EventEmitter<KiMenuSelectDetail>;
 
-  @State() matches = 0;
+  @State() matchCount = 0;
 
   private panel: HTMLElement | undefined;
   private list: HTMLElement | undefined;
@@ -210,12 +210,13 @@ export class KiMenu {
       this.restoreControl = control && this.saveTriggerAttributes(control);
     }
 
-    trigger.setAttribute('aria-haspopup', 'menu');
-    trigger.setAttribute('aria-expanded', String(this.shown));
     trigger.setAttribute('aria-controls', this.host.id);
+    const button = control ?? trigger;
+    button.setAttribute('aria-haspopup', 'menu');
+    button.setAttribute('aria-expanded', String(this.shown));
     if (control) {
-      control.setAttribute('aria-haspopup', 'menu');
-      control.setAttribute('aria-expanded', String(this.shown));
+      trigger.removeAttribute('aria-haspopup');
+      trigger.removeAttribute('aria-expanded');
       if ('ariaControlsElements' in control && control.ariaControlsElements?.[0] !== this.host) {
         control.ariaControlsElements = [this.host];
       }
@@ -394,7 +395,7 @@ export class KiMenu {
 
     this.filtered = hidden;
     this.available = items;
-    this.matches = items.length;
+    this.matchCount = items.length;
   }
 
   private onFilterInput = (event: InputEvent): void => {
@@ -524,7 +525,7 @@ export class KiMenu {
               onInput={this.onFilterInput}
             />
             <span class="status" role="status" aria-live="polite" aria-atomic="true">
-              {this.filterResultsLabel.replace('{count}', String(this.matches))}
+              {this.filterResultsLabel.replace('{count}', String(this.matchCount))}
             </span>
           </div>
         )}
@@ -532,7 +533,7 @@ export class KiMenu {
           key="menu"
           part="menu"
           role="menu"
-          hidden={Boolean(this.filterLabel) && this.matches === 0}
+          hidden={Boolean(this.filterLabel) && this.matchCount === 0}
           tabIndex={-1}
           ref={(list) => {
             this.list = list;

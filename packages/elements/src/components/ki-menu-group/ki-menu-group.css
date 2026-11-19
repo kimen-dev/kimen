@@ -1,5 +1,6 @@
 :host {
   display: block;
+  font-family: var(--ki-menu-font-family);
 }
 
 :host([data-menu-filtered]),
@@ -13,7 +14,6 @@
   padding-block-start: var(--ki-menu-padding);
   padding-inline: var(--ki-menu-inline-padding);
   color: var(--ki-menu-group-fg);
-  font-family: var(--ki-menu-font-family);
   font-size: var(--ki-menu-meta-font-size);
   font-weight: var(--ki-menu-group-label-weight);
   line-height: var(--ki-menu-meta-line-height);

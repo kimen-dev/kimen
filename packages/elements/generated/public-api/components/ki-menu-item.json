@@ -83,6 +83,14 @@
         "required": false,
         "type": null
       },
+      "--ki-menu-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Family for action labels and the filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-menu-gap": {
         "default": null,
         "deprecatedSince": null,

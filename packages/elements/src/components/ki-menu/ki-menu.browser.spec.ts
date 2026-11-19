@@ -249,11 +249,21 @@ it('S13 disabled actions remain focusable and inert under keyboard and click', a
 });
 
 it('S14 exposes a named menu, groups and check states and passes axe', async () => {
-  const { menu } = mount();
+  const { menu } = mount(
+    '',
+    '<ki-button id="actions" type="button" aria-haspopup="menu">Actions</ki-button>',
+  );
   await openMenu();
-  await expect.element(trigger()).toHaveAttribute('aria-haspopup', 'menu');
-  await expect.element(trigger()).toHaveAttribute('aria-expanded', 'true');
-  expect(fixture.querySelector('#actions')?.getAttribute('aria-controls')).toBe(menu.id);
+  await expect.poll(() => menu.matches('ki-menu[open]')).toBe(true);
+  await expect.poll(() => action('Rename').query()?.matches(':focus')).toBe(true);
+  const button = trigger().element();
+  if (!(button instanceof HTMLButtonElement)) throw new Error('Missing native trigger');
+  const host = fixture.querySelector('#actions');
+  expect(host?.getAttribute('aria-controls')).toBe(menu.id);
+  expect(host?.hasAttribute('aria-expanded')).toBe(false);
+  await expect.element(button).toHaveAttribute('aria-haspopup', 'menu');
+  await expect.element(button).toHaveAttribute('aria-expanded', 'true');
+  expect(button.ariaControlsElements).toEqual([menu]);
   const snapshot = await browserCommands.ariaSnapshot('main');
   expect(snapshot).toContain('menu "Actions"');
   expect(snapshot).toContain('group "Edit"');

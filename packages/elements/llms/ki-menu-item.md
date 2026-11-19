@@ -56,6 +56,7 @@ None.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
 - `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-font-family`: Family for action labels and the filter.
 - `--ki-menu-gap`: Inline space between the parts of a row.
 - `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
 - `--ki-menu-item-danger-fg`: Foreground for destructive actions.
