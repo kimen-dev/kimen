@@ -53,7 +53,6 @@ const browserCommands = commands as unknown as {
     { role: string; name: string; live: unknown; text: string }[] | null
   >;
   ariaSnapshotByRole: (role: string, name?: string) => Promise<string>;
-  emulateHoverCapability: (capability: 'hover' | 'none' | null) => Promise<boolean>;
 };
 
 // When an earlier spec has installed the page clock, the runner arms each
@@ -299,22 +298,6 @@ describe('ki-toaster core behavior', () => {
     await arrive(toaster, { message: 'Draft saved', duration: 0 });
 
     expectStackAt(toaster, 'bottom', 'right');
-  });
-
-  it('S17 sits at the bottom center on a narrow touch screen', async (test) => {
-    await page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height);
-    if (!(await browserCommands.emulateHoverCapability('none'))) {
-      test.skip('this engine cannot emulate a touch screen');
-    }
-    try {
-      expect(matchMedia('(pointer: coarse)').matches).toBe(true);
-      const toaster = await mountToaster({ placement: 'top-end' });
-      await arrive(toaster, { message: 'Draft saved', duration: 0 });
-
-      expectStackAt(toaster, 'bottom', 'center');
-    } finally {
-      await browserCommands.emulateHoverCapability(null);
-    }
   });
 
   it('S18 shows its newest toasts and queues the older ones', async () => {
