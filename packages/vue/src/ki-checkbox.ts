@@ -12,6 +12,7 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 export const KiCheckbox: StencilVueComponent<JSX.KiCheckbox, JSX.KiCheckbox["checked"]> = /*@__PURE__*/ defineContainer<JSX.KiCheckbox, JSX.KiCheckbox["checked"]>('ki-checkbox', defineKiCheckbox, [
   'checked',
   'indeterminate',
+  'size',
   'disabled',
   'required',
   'name',

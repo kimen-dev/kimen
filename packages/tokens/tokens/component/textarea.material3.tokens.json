@@ -136,6 +136,30 @@
       "padding-block": {
         "$value": "{ki.space.xl}",
         "$description": "Material 3 dimension used by the textarea component for padding block."
+      },
+      "xs": {
+        "radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the textarea component for xs radius in material3: material3 keeps its own field shape at every size (spec 050 D8), as it does for ki-button."
+        }
+      },
+      "sm": {
+        "radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the textarea component for sm radius in material3: material3 keeps its own field shape at every size (spec 050 D8), as it does for ki-button."
+        }
+      },
+      "lg": {
+        "radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the textarea component for lg radius in material3: material3 keeps its own field shape at every size (spec 050 D8), as it does for ki-button."
+        }
+      },
+      "xl": {
+        "radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the textarea component for xl radius in material3: material3 keeps its own field shape at every size (spec 050 D8), as it does for ki-button."
+        }
       }
     }
   }

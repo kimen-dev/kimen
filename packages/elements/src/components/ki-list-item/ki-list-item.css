@@ -1,10 +1,16 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
-  --_ki-list-item-min-height: var(--ki-list-item-min-height);
+  /* The size ramp (spec 050): medium is the unsized token family; a size
+     swaps the one-line and two-line minimums and the padding the density
+     scale multiplies. */
+  --_ki-list-item-min-height-one: var(--ki-list-item-min-height);
+  --_ki-list-item-min-height-two: var(--ki-list-item-min-height-multiline);
+  --_ki-list-item-padding-block-base: var(--ki-list-item-padding-block);
+  --_ki-list-item-min-height: var(--_ki-list-item-min-height-one);
   --_ki-list-item-padding-inline: var(--ki-list-item-padding-inline);
   --_ki-list-item-padding-block: calc(
-    var(--ki-list-item-padding-block) *
+    var(--_ki-list-item-padding-block-base) *
     var(--ki-density-space-scale)
   );
   --_ki-list-item-gap: var(--ki-list-item-gap);
@@ -27,8 +33,46 @@
   display: none;
 }
 
+/* Spec 050: each size swaps the List 10063:2066 row metrics. An unknown value
+   matches no rule and keeps medium. */
+:host([size="sm"]) {
+  --_ki-list-item-min-height-one: var(--ki-list-item-sm-min-height);
+  --_ki-list-item-min-height-two: var(--ki-list-item-sm-min-height-multiline);
+  --_ki-list-item-padding-block-base: var(--ki-list-item-sm-padding-block);
+  --_ki-list-item-padding-inline: var(--ki-list-item-sm-padding-inline);
+  --_ki-list-item-gap: var(--ki-list-item-sm-gap);
+  --_ki-list-item-primary-font-size: var(--ki-list-item-sm-primary-font-size);
+  --_ki-list-item-primary-line-height: var(--ki-list-item-sm-primary-line-height);
+  --_ki-list-item-secondary-font-size: var(--ki-list-item-sm-secondary-font-size);
+  --_ki-list-item-secondary-line-height: var(--ki-list-item-sm-secondary-line-height);
+}
+
+:host([size="lg"]) {
+  --_ki-list-item-min-height-one: var(--ki-list-item-lg-min-height);
+  --_ki-list-item-min-height-two: var(--ki-list-item-lg-min-height-multiline);
+  --_ki-list-item-padding-block-base: var(--ki-list-item-lg-padding-block);
+  --_ki-list-item-padding-inline: var(--ki-list-item-lg-padding-inline);
+  --_ki-list-item-gap: var(--ki-list-item-lg-gap);
+  --_ki-list-item-primary-font-size: var(--ki-list-item-lg-primary-font-size);
+  --_ki-list-item-primary-line-height: var(--ki-list-item-lg-primary-line-height);
+  --_ki-list-item-secondary-font-size: var(--ki-list-item-lg-secondary-font-size);
+  --_ki-list-item-secondary-line-height: var(--ki-list-item-lg-secondary-line-height);
+}
+
+:host([size="xl"]) {
+  --_ki-list-item-min-height-one: var(--ki-list-item-xl-min-height);
+  --_ki-list-item-min-height-two: var(--ki-list-item-xl-min-height-multiline);
+  --_ki-list-item-padding-block-base: var(--ki-list-item-xl-padding-block);
+  --_ki-list-item-padding-inline: var(--ki-list-item-xl-padding-inline);
+  --_ki-list-item-gap: var(--ki-list-item-xl-gap);
+  --_ki-list-item-primary-font-size: var(--ki-list-item-xl-primary-font-size);
+  --_ki-list-item-primary-line-height: var(--ki-list-item-xl-primary-line-height);
+  --_ki-list-item-secondary-font-size: var(--ki-list-item-xl-secondary-font-size);
+  --_ki-list-item-secondary-line-height: var(--ki-list-item-xl-secondary-line-height);
+}
+
 :host(.has-secondary) {
-  --_ki-list-item-min-height: var(--ki-list-item-min-height-multiline);
+  --_ki-list-item-min-height: var(--_ki-list-item-min-height-two);
 }
 
 [part="item"] {

@@ -9,6 +9,10 @@
 // document and the manifest), when the binary measured 2,421,589 raw, 458,775
 // gzip and 341,942 brotli: 11,589 and 3,775 bytes over the old raw and gzip
 // lines. Both move to about 5% above; brotli is still inside its line.
+// Brotli re-based for issue #316 (size axes of nine components, spec 050),
+// when the binary measured 2,504,793 raw, 466,471 gzip and 347,334 brotli
+// (on top of #349): 2,334 bytes over the old brotli line, which moves to
+// about 5% above; raw and gzip are still inside theirs.
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -18,7 +22,7 @@ import { describe, expect, it } from 'vitest';
 
 import { BUNDLE, PACKAGE } from './harness.js';
 
-const BUDGET = { brotli: 345_000, gzip: 482_000, raw: 2_543_000 };
+const BUDGET = { brotli: 364_000, gzip: 482_000, raw: 2_543_000 };
 
 describe('Kimen MCP server: the shipped binary (038 S16)', () => {
   it('S16: a fresh build is byte-identical to the shipped binary', () => {

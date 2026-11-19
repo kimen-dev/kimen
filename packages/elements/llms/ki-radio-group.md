@@ -55,6 +55,7 @@ A `disabled` group is skipped in Tab order and contributes no form entry; do not
 - `label-hint` (string | undefined): Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
 - `required` (boolean, default false): Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+- `size` ("md" | "sm", default 'md'): Token-backed size of every `ki-radio` the group holds: the circle is 18 or 20px in onmars, and `sm` takes the smaller option label (13/20, 8px away). The group decides for all its options; the group's own label, help and error keep their size. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around the group. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
 
 ## Slots
@@ -84,6 +85,12 @@ None.
 - `--ki-radio-group-label-hint-fg`: color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
 - `--ki-radio-group-label-hint-gap`: dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).
+- `--ki-radio-sm-control-size`: dimension used by the radio component for the sm circle (Radio 10053:1943 sm: 18px in a 20px cell).
+- `--ki-radio-sm-dot-size`: dimension used by the radio component for the sm dot (Radio 10053:1943 sm: 8px, as at md).
+- `--ki-radio-sm-gap`: dimension used by the radio component for the sm gap between control and label (Radio-label 10100:3931 sm binds Space/md, 8px; spec 050 D4).
+- `--ki-radio-sm-label-font-size`: dimension used by the radio component for the sm label font size (Radio-label 10100:3931 sm: UI/para 13/20; spec 050 D4).
+- `--ki-radio-sm-label-line-height`: dimension used by the radio component for the sm label line height (Radio-label 10100:3931 sm: UI/para 13/20).
+- `--ki-radio-sm-min-target`: dimension used by the radio component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-med-em`: semantic color for text med em.

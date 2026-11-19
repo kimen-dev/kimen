@@ -14,6 +14,8 @@ import { LabelHint } from '../../utils/label-hint';
 import { radioGroupFormValue } from './ki-radio-group.form';
 import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
+export type KiRadioGroupSize = 'sm' | 'md';
+
 type KiRadioElement = HTMLElement & {
   disabled: boolean;
   value?: string;
@@ -100,6 +102,21 @@ export class KiRadioGroup {
    * When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
    */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * Token-backed size of every `ki-radio` the group holds: the circle is 18
+   * or 20px in onmars, and `sm` takes the smaller option label (13/20, 8px
+   * away). The group decides for all its options; the group's own label,
+   * help and error keep their size. An unrecognized value matches no style
+   * rule and keeps the medium metrics.
+   * When to use: match the size of the text and controls around the group.
+   * When NOT to use: do not pick a smaller size to fit a dense region or a
+   * larger one for touch; declare `data-ki-density` on the region instead,
+   * which composes with every size.
+   *
+   * @default 'md'
+   */
+  @Prop({ reflect: true }) size: KiRadioGroupSize = 'md';
 
   /**
    * Short text shown after the group label and read with it as part of the

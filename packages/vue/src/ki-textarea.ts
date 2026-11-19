@@ -16,6 +16,7 @@ export const KiTextarea: StencilVueComponent<JSX.KiTextarea, JSX.KiTextarea["val
   'value',
   'name',
   'rows',
+  'size',
   'required',
   'readonly',
   'disabled',

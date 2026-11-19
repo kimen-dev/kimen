@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/346-theme-fonts.json',
+      '../../changes/api/316-size-axes.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -606,11 +606,15 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     assert.equal(tokenPackage.exports[subpath].target, subpath);
     assert.equal(Object.hasOwn(tokenPackage.stylesheets, subpath), false);
   }
-  assert.equal(Object.keys(tokenPackage.tokens).length, 1275);
+  // Issue #316 (changes/api/316-size-axes) adds 193: the size axes of
+  // ki-input (36), ki-select (32), ki-textarea (28), ki-tabs (4), ki-tab (12),
+  // ki-list-item (27), ki-checkbox (7), ki-radio (6), ki-switch (36) and the
+  // xs ki-badge (5); medium keeps its unsized tokens. 1275 + 193 = 1468.
+  assert.equal(Object.keys(tokenPackage.tokens).length, 1468);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1275,
+    1468,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),

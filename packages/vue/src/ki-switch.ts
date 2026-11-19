@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiSwitch } from '@kimen/elements/component
 
 export const KiSwitch: StencilVueComponent<JSX.KiSwitch, JSX.KiSwitch["checked"]> = /*@__PURE__*/ defineContainer<JSX.KiSwitch, JSX.KiSwitch["checked"]>('ki-switch', defineKiSwitch, [
   'checked',
+  'size',
   'disabled',
   'name',
   'value',

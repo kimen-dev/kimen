@@ -138,6 +138,144 @@
       "well-bg-end": {
         "$value": "{ki.color.transparent.black}",
         "$description": "Material 3 switch has no well."
+      },
+      "sm": {
+        "track-width": {
+          "$value": "{ki.space.15xl}",
+          "$description": "dimension used by the switch component for sm track width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "track-height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for sm track height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "control-width": {
+          "$value": "{ki.space.15xl}",
+          "$description": "dimension used by the switch component for sm control width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "control-height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for sm control height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the switch component for sm thumb height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-width": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the switch component for sm thumb width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-inset": {
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the switch component for sm thumb inset in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "track-radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the switch component for sm track radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "well-radius": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "dimension used by the switch component for sm well radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the switch component for sm thumb radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "min-target": {
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the switch component for sm min target in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        }
+      },
+      "lg": {
+        "track-width": {
+          "$value": "{ki.space.15xl}",
+          "$description": "dimension used by the switch component for lg track width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "track-height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for lg track height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "control-width": {
+          "$value": "{ki.space.15xl}",
+          "$description": "dimension used by the switch component for lg control width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "control-height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for lg control height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the switch component for lg thumb height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-width": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the switch component for lg thumb width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-inset": {
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the switch component for lg thumb inset in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "track-radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the switch component for lg track radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "well-radius": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "dimension used by the switch component for lg well radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the switch component for lg thumb radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "min-target": {
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the switch component for lg min target in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        }
+      },
+      "xl": {
+        "track-width": {
+          "$value": "{ki.space.15xl}",
+          "$description": "dimension used by the switch component for xl track width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "track-height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for xl track height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "control-width": {
+          "$value": "{ki.space.15xl}",
+          "$description": "dimension used by the switch component for xl control width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "control-height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for xl control height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the switch component for xl thumb height in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-width": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the switch component for xl thumb width in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-inset": {
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the switch component for xl thumb inset in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "track-radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the switch component for xl track radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "well-radius": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "dimension used by the switch component for xl well radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "thumb-radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the switch component for xl thumb radius in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        },
+        "min-target": {
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the switch component for xl min target in material3. material3 renders the M3 switch at every size: the shared ramp would put lg under the M3 md switch (spec 050 D8)."
+        }
       }
     }
   }
