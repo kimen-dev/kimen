@@ -1,3 +1,4 @@
+// @spec:067-merge-friendly-checks
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import {
@@ -34,12 +35,14 @@ const environment = {
   COREPACK_HOME: process.env.COREPACK_HOME,
   XDG_CACHE_HOME: process.env.XDG_CACHE_HOME,
   NX_CACHE_DIRECTORY: process.env.NX_CACHE_DIRECTORY,
+  NX_CACHE_PROJECT_GRAPH: process.env.NX_CACHE_PROJECT_GRAPH,
   NX_WORKSPACE_DATA_DIRECTORY: process.env.NX_WORKSPACE_DATA_DIRECTORY,
   NX_NATIVE_FILE_CACHE_DIRECTORY: process.env.NX_NATIVE_FILE_CACHE_DIRECTORY,
   PLAYWRIGHT_BROWSERS_PATH: process.env.PLAYWRIGHT_BROWSERS_PATH,
   KIMEN_CONSUMER_CACHE_DIR: process.env.KIMEN_CONSUMER_CACHE_DIR,
   KIMEN_MUTATION_CACHE_DIR: process.env.KIMEN_MUTATION_CACHE_DIR,
   KIMEN_CACHE_ROOT: process.env.KIMEN_CACHE_ROOT,
+  KIMEN_WORKTREE_CACHE_ROOT: process.env.KIMEN_WORKTREE_CACHE_ROOT,
   NX_DAEMON: process.env.NX_DAEMON,
   KIMEN_CACHE_ENV_READY: process.env.KIMEN_CACHE_ENV_READY,
   PNPM_HOME: process.env.PNPM_HOME ?? null,
@@ -144,6 +147,40 @@ async function prepareValidationEnvironment(fixture, name) {
   assert.equal(prepared.code, 0, prepared.stderr);
   return parseGitHubEnvironment(await readFile(githubEnvironment, 'utf8'));
 }
+
+test('S5 independent worktrees share tool artifacts and isolate workspace state', async (t) => {
+  const fixtures = await Promise.all([createFixture(), createFixture()]);
+  t.after(() => Promise.all(fixtures.map((fixture) => fixture.cleanup())));
+  const sharedRoot = join(fixtures[0].sandbox, 'shared-cache');
+  const environments = await Promise.all(
+    fixtures.map(async (fixture) => {
+      const result = await runCacheEnv(
+        fixture,
+        ['--', 'bash', fixture.script, '--', process.execPath, '-e', selectedEnvironmentScript],
+        { KIMEN_CACHE_ROOT: sharedRoot },
+      );
+      assert.equal(result.code, 0, result.stderr);
+      return JSON.parse(result.stdout);
+    }),
+  );
+
+  for (const environment of environments) {
+    assert.equal(environment.KIMEN_CACHE_ROOT, sharedRoot);
+    assert.equal(environment.NX_CACHE_DIRECTORY, join(sharedRoot, 'nx/cache'));
+    assert.equal(environment.PNPM_CONFIG_STORE_DIR, join(sharedRoot, 'pnpm/store'));
+    assert.equal(environment.PLAYWRIGHT_BROWSERS_PATH, join(sharedRoot, 'playwright'));
+    assert.match(environment.KIMEN_WORKTREE_CACHE_ROOT ?? '', /\/worktrees\/[0-9a-f]{64}$/u);
+    assert.equal(environment.NX_WORKSPACE_DATA_DIRECTORY, join(sharedRoot, 'nx/workspace-data'));
+    assert.equal(environment.NX_CACHE_PROJECT_GRAPH, 'false');
+    assert.ok(
+      (await stat(join(environment.KIMEN_WORKTREE_CACHE_ROOT, 'nx/workspace-data'))).isDirectory(),
+    );
+  }
+  assert.notEqual(
+    environments[0].KIMEN_WORKTREE_CACHE_ROOT,
+    environments[1].KIMEN_WORKTREE_CACHE_ROOT,
+  );
+});
 
 test('runs a command with isolated writable caches when HOME is read-only', async () => {
   const fixture = await createFixture();

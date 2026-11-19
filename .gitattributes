@@ -1,0 +1,15 @@
+/llms-full.txt merge=kimen-generated
+/llms.txt merge=kimen-generated
+/llms/*.md merge=kimen-generated
+/packages/angular/src/directives/** merge=kimen-generated
+/packages/catalog/src/generated/** merge=kimen-generated
+/packages/elements/docs/tokens-reference.mdx merge=kimen-generated
+/packages/elements/generated/** merge=kimen-generated
+/packages/elements/llms.txt merge=kimen-generated
+/packages/elements/llms/*.md merge=kimen-generated
+/packages/elements/src/components.d.ts merge=kimen-generated
+/packages/react/src/components.ts merge=kimen-generated
+/packages/react/src/ki-*.ts merge=kimen-generated
+/packages/tokens/dist/css/*.css merge=kimen-generated
+/packages/vue/src/index.ts merge=kimen-generated
+/packages/vue/src/ki-*.ts merge=kimen-generated

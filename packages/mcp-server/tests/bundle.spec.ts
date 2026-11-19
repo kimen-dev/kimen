@@ -13,10 +13,6 @@
 // when the binary measured 2,504,793 raw, 466,471 gzip and 347,334 brotli
 // (on top of #349): 2,334 bytes over the old brotli line, which moves to
 // about 5% above; raw and gzip are still inside theirs.
-// Raw re-based for spec 049 (ki-toast and ki-toaster) on top of #316, when
-// the binary measured 2,543,801 raw, 475,975 gzip and 352,726 brotli: 801
-// bytes over the old raw line, which moves to about 5% above; gzip and brotli
-// are still inside theirs.
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -26,7 +22,14 @@ import { describe, expect, it } from 'vitest';
 
 import { BUNDLE, PACKAGE } from './harness.js';
 
-const BUDGET = { brotli: 364_000, gzip: 482_000, raw: 2_671_000 };
+// When a limit is exceeded, merge main, run pnpm regen and rebuild the MCP
+// bundle. For expected growth, get founder approval and rebase only the
+// exceeded limit on the merged measurement with about 5% headroom.
+const BUDGET = {
+  brotli: 364_000,
+  gzip: 482_000,
+  raw: 2_543_000,
+};
 
 describe('Kimen MCP server: the shipped binary (038 S16)', () => {
   it('S16: a fresh build is byte-identical to the shipped binary', () => {

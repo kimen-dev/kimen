@@ -1,0 +1,164 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": "'Notifications'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "max": {
+        "default": "3",
+        "deprecatedSince": null,
+        "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A value below 1 or not a\nwhole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "placement": {
+        "default": "'bottom-end'",
+        "deprecatedSince": null,
+        "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}"
+      }
+    },
+    "cssProperties": {
+      "--ki-toast-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toaster-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toaster-inset-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toaster-inset-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "The one place toasts appear: it paints its `ki-toast` children in the top\nlayer at a corner of the viewport, stacks them in arrival order, shows the\nnewest few and queues the older ones, without covering the page beside\nthem.",
+    "events": {},
+    "methods": {
+      "show": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raises a toast: creates a `ki-toast` from `tone`, `title` (its heading),\n`message`, `duration`, `dismissible` and `action` (a ghost\n`ki-button size=\"sm\"` in its `action` slot that calls `onClick`), appends\nit to the toaster and resolves with it. Once the toast has left it is\nremoved from the page. The toaster does not bundle `ki-toast` or\n`ki-button`: define them, as for toasts written in markup.\nWhen to use: raise a toast from script without writing its markup.\nWhen NOT to use: a toast written in markup stays the page's own: append\nit instead, and it is never removed.",
+        "parameters": [
+          {
+            "default": null,
+            "name": "options",
+            "optional": false,
+            "rest": false,
+            "type": "KiToastShowOptions"
+          }
+        ],
+        "replacement": null,
+        "required": false,
+        "signature": "show(options: KiToastShowOptions) => Promise<HTMLElement>",
+        "type": "Promise<HTMLElement>"
+      }
+    },
+    "parts": {
+      "stack": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The stack in the top layer: placement, edge distance, gap\nbetween toasts and width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": "'Notifications'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "max": {
+        "default": "3",
+        "deprecatedSince": null,
+        "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A value below 1 or not a\nwhole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "placement": {
+        "default": "'bottom-end'",
+        "deprecatedSince": null,
+        "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The `ki-toast` elements, in arrival order. Other children are not\ncounted, queued or placed.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-toaster.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-toaster.d.ts",
+    "symbols": {
+      "KiToaster": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiToaster extends Components.KiToaster, HTMLElement {\n}\nexport const KiToaster: {\n    prototype: KiToaster;\n    new (): KiToaster;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-toaster.js"
+  }
+}

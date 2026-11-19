@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
-const cacheRoot = process.env['KIMEN_CACHE_ROOT'];
+const cacheRoot = process.env['KIMEN_WORKTREE_CACHE_ROOT'] ?? process.env['KIMEN_CACHE_ROOT'];
 const cacheDir = cacheRoot ? join(cacheRoot, 'vite/adapter-mcp-apps-browser') : undefined;
 
 // The packaged surface document is only proven where it runs: inside a

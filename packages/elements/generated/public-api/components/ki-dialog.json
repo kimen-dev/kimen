@@ -1,0 +1,523 @@
+{
+  "component": {
+    "attributes": {
+      "close-on-backdrop": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible dialog title and accessible-name source. Always provide a heading;\nan empty value intentionally leaves the native dialog unnamed.\nWhen to use: name the interrupting decision, for example \"Delete\naccount?\". When NOT to use: do not omit it for production dialogs; APG\nmodal dialogs require an accessible name.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Reflected live modal state. Add it or call `show()` to open; remove it or\ncall `close()` to close. When open, the native dialog enters the top layer\nand the page behind is inert.\nWhen to use: bind application state to the dialog's modal lifecycle.\nWhen NOT to use: do not set the internal native `<dialog open>` attribute;\nthe host attribute is the only public source of truth.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-backdrop-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the dialog component for backdrop background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the dialog surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional CSS background image layered over the dialog fill. Use none for a solid fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-body-padding-block-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for body section padding block end (Modal compact Body: Space/5xl 20px.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-body-padding-block-start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for body section padding block start (Modal compact Body 16414:19668: Space/5xl 20px.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-body-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for body section padding inline (Modal compact Body: Space/5xl 20px.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "border used by the dialog component for border (MarsUI 1px solid Outline/base_em Black/3 light / White/3 dark; retires the migrated Black/5 foundation reference).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-divider-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the dialog component for the dividers under the heading and above the footer (Outline/base-em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-divider-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for the dividers under the heading and above the footer (Modal-header and Modal-actions 1px strokes). Zero removes them.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the dialog component for foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the dialog component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-footer-padding-block-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for footer section padding block end (Modal-actions/CTAs: Space/7xl 24px.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-footer-padding-block-start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for footer section padding block start (Modal-actions/CTAs 14158:28302: Space/7xl 24px, below the divider.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-footer-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for footer section padding inline (Modal-actions/CTAs: Space/5xl 20px.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-heading-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font family for the dialog heading. Override it to give dialogs their own heading typeface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-heading-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for heading font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-heading-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the dialog component for heading font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-heading-letter-spacing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Letter spacing for the dialog heading. Override it to tune tracking for the chosen heading typeface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-heading-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for heading line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-heading-padding-block-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for heading section padding block end (Modal-header compact: Space/3xl 16px, above the divider.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-heading-padding-block-start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for heading section padding block start (Modal-header compact 14156:25916: Space/3xl 16px.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-heading-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for heading section padding inline (Modal-header compact: Space/5xl 20px.)",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-max-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-min-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-motion-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "duration used by the dialog component for the enter transition (MarsUI moderate step 240ms; retires the migrated 0ms token that disabled the @starting-style fade).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-motion-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "easing used by the dialog component for the enter transition (MarsUI decelerate curve; retires the migrated linear pair).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for the room it keeps from the viewport edges when its width or height is clamped. Each section pads itself (heading, body and footer padding tokens).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for radius (MarsUI compact Modal master 16414:19665: Radius/big_component/radius_sm 20px; the large variant anchors 24px big_component/radius_md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-primary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-distance-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard-accelerate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-para": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height para.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A modal dialog for one interrupting decision or short focused task.",
+    "events": {
+      "ki-close": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiDialogCloseDetail>"
+      }
+    },
+    "methods": {
+      "close": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
+        "parameters": [],
+        "replacement": null,
+        "required": false,
+        "signature": "close() => Promise<void>",
+        "type": "Promise<void>"
+      },
+      "show": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Opens the dialog modally. No-op when already open. Equivalent to adding\nthe host `open` attribute.\nWhen to use: call from the invoker that should receive focus again after\nclose. When NOT to use: do not call repeatedly to refresh content; update\nslotted content directly while open.",
+        "parameters": [],
+        "replacement": null,
+        "required": false,
+        "signature": "show() => Promise<void>",
+        "type": "Promise<void>"
+      }
+    },
+    "parts": {
+      "body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Scrollable body region.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "dialog": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Internal native dialog surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "footer": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Action row, collapsed when empty.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible h2 title, rendered only when `heading` is non-empty.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "closeOnBackdrop": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible dialog title and accessible-name source. Always provide a heading;\nan empty value intentionally leaves the native dialog unnamed.\nWhen to use: name the interrupting decision, for example \"Delete\naccount?\". When NOT to use: do not omit it for production dialogs; APG\nmodal dialogs require an accessible name.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Reflected live modal state. Add it or call `show()` to open; remove it or\ncall `close()` to close. When open, the native dialog enters the top layer\nand the page behind is inert.\nWhen to use: bind application state to the dialog's modal lifecycle.\nWhen NOT to use: do not set the internal native `<dialog open>` attribute;\nthe host attribute is the only public source of truth.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Dialog body content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "footer": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Dialog actions; applications wire every action to `close()`.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-dialog.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-dialog.d.ts",
+    "symbols": {
+      "KiDialog": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiDialog extends Components.KiDialog, HTMLElement {\n}\nexport const KiDialog: {\n    prototype: KiDialog;\n    new (): KiDialog;\n};"
+      },
+      "KiDialogCloseDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiDialogCloseDetail {\n    reason: KiDialogCloseReason;\n}"
+      },
+      "KiDialogCloseReason": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-dialog.js"
+  }
+}

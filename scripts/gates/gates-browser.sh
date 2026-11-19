@@ -39,7 +39,7 @@ bash scripts/gates/cache-env.sh --validate || exit 1
 export KIMEN_BROWSER_ENGINE="$ENGINE"
 export NX_TUI=false
 
-EVIDENCE_DIRECTORY="$KIMEN_CACHE_ROOT/gate-evidence"
+EVIDENCE_DIRECTORY="${KIMEN_WORKTREE_CACHE_ROOT:-$KIMEN_CACHE_ROOT}/gate-evidence"
 KIMEN_GATE_EVIDENCE_FILE="$EVIDENCE_DIRECTORY/current-run.tsv"
 mkdir -p "$EVIDENCE_DIRECTORY" || fail 'current-run evidence directory could not be created'
 if [ "${KIMEN_GATE_EVIDENCE_READY:-}" != '1' ]; then

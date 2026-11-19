@@ -166,6 +166,16 @@ async function createSurfaceWorkspace({
       resolve(root, 'scripts/lib/canonical-json.mjs'),
       'export const canonicalJson = (value) => `${JSON.stringify(value, null, 2)}\\n`;\n',
     ),
+    writeFile(
+      resolve(root, 'scripts/lib/public-api-storage.mjs'),
+      [
+        "import { canonicalJson } from './canonical-json.mjs';",
+        'export const splitPublicApiSnapshot = (snapshot) => new Map([',
+        "  ['index.json', canonicalJson(snapshot)],",
+        "  ['components/ki-demo.json', canonicalJson({ component: {} })],",
+        ']);',
+      ].join('\n'),
+    ),
   ]);
   const surfacePaths = {
     docsPath: resolve(generatedRoot, 'docs.json'),
@@ -183,12 +193,32 @@ describe('build-surfaces mutation boundary', () => {
   it('derives every default output from injected package/workspace roots', async () => {
     const { root, packageRoot, generatedRoot } = await createSurfaceWorkspace();
     try {
-      const result = await runBuildSurfaces({ packageRoot, workspaceRoot: root });
+      const apiRoot = resolve(generatedRoot, 'public-api');
+      const componentRoot = resolve(apiRoot, 'components');
+      const staleShard = resolve(componentRoot, 'ki-removed.json');
+      const wrapperDirectory = resolve(root, 'packages/react/src');
+      const staleWrapper = resolve(wrapperDirectory, 'ki-removed.ts');
+      const wrapperShell = resolve(wrapperDirectory, 'index.ts');
+      await mkdir(componentRoot, { recursive: true });
+      await mkdir(wrapperDirectory, { recursive: true });
+      await writeFile(staleShard, '{}\n');
+      await writeFile(staleWrapper, '// generated wrapper\n');
+      await writeFile(wrapperShell, '// handwritten wrapper shell\n');
+      const result = await runBuildSurfaces({
+        packageRoot,
+        workspaceRoot: root,
+        wrapperDirectories: [wrapperDirectory],
+      });
       const docs = JSON.parse(await readFile(resolve(generatedRoot, 'docs.json'), 'utf8'));
       const manifestBytes = await readFile(resolve(generatedRoot, 'custom-elements.json'), 'utf8');
       const manifest = JSON.parse(manifestBytes);
-      const publicApiBytes = await readFile(resolve(generatedRoot, 'public-api.json'), 'utf8');
+      const publicApiBytes = await readFile(resolve(apiRoot, 'index.json'), 'utf8');
       const publicApi = JSON.parse(publicApiBytes);
+      const componentShard = resolve(componentRoot, 'ki-demo.json');
+      const componentBytes = await readFile(componentShard, 'utf8');
+      await expect(readFile(staleShard)).rejects.toMatchObject({ code: 'ENOENT' });
+      await expect(readFile(staleWrapper)).rejects.toMatchObject({ code: 'ENOENT' });
+      expect(await readFile(wrapperShell, 'utf8')).toBe('// handwritten wrapper shell\n');
       // Each index owns its companions: the complete summary beside it and
       // the documents it links in the directory named after it.
       const packageIndex = await readFile(resolve(packageRoot, 'llms.txt'), 'utf8');
@@ -205,7 +235,8 @@ describe('build-surfaces mutation boundary', () => {
         new Map([
           [resolve(generatedRoot, 'docs.json'), `${JSON.stringify(docs, null, 2)}\n`],
           [resolve(generatedRoot, 'custom-elements.json'), manifestBytes],
-          [resolve(generatedRoot, 'public-api.json'), publicApiBytes],
+          [resolve(apiRoot, 'index.json'), publicApiBytes],
+          [componentShard, componentBytes],
           [resolve(packageRoot, 'llms.txt'), packageIndex],
           [resolve(packageRoot, 'llms-full.txt'), packageLlms],
           [resolve(packageRoot, 'llms/ki-demo.md'), packageDocument],

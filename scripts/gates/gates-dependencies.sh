@@ -19,8 +19,9 @@ bash scripts/gates/cache-env.sh --validate || exit 1
 
 export NX_TUI=false
 export KNIP_DISABLE_RAW_TRANSFER=1
+. scripts/gates/lib.sh
 
-DEPENDENCY_EVIDENCE_DIRECTORY="$KIMEN_CACHE_ROOT/gate-evidence"
+DEPENDENCY_EVIDENCE_DIRECTORY="${KIMEN_WORKTREE_CACHE_ROOT:-$KIMEN_CACHE_ROOT}/gate-evidence"
 KIMEN_GATE_EVIDENCE_FILE="$DEPENDENCY_EVIDENCE_DIRECTORY/current-run.tsv"
 mkdir -p "$DEPENDENCY_EVIDENCE_DIRECTORY" || exit 1
 : >"$KIMEN_GATE_EVIDENCE_FILE" || exit 1
@@ -32,8 +33,14 @@ run_dependency_gate() {
   shift
   echo "── DEPENDENCY $name"
   if "$@"; then
-    printf 'dependency\t%s\tgreen\n' "$name" >>"$KIMEN_GATE_EVIDENCE_FILE" || exit 1
-    echo "── DEPENDENCY $name: PASS"
+    if [ "$name" = 'infra-tests' ] &&
+      grep -Fxq $'skip\tcross-filesystem\tskipped' "$KIMEN_GATE_EVIDENCE_FILE"; then
+      printf 'dependency\t%s\tpartial\n' "$name" >>"$KIMEN_GATE_EVIDENCE_FILE" || exit 1
+      echo "── DEPENDENCY $name: PARTIAL (cross-filesystem check skipped)"
+    else
+      printf 'dependency\t%s\tgreen\n' "$name" >>"$KIMEN_GATE_EVIDENCE_FILE" || exit 1
+      echo "── DEPENDENCY $name: PASS"
+    fi
   else
     printf 'dependency\t%s\tred\n' "$name" >>"$KIMEN_GATE_EVIDENCE_FILE" || exit 1
     echo "── DEPENDENCY $name: FAIL"
@@ -41,10 +48,11 @@ run_dependency_gate() {
   fi
 }
 
-nx_graph() {
+nx_graph() (
+  kimen_use_worktree_nx_graph
   pnpm exec nx graph --file=.nx/graph.json >/dev/null || return 1
   [ -s .nx/graph.json ]
-}
+)
 
 run_dependency_gate workflows pnpm run check:workflows
 run_dependency_gate format pnpm run format:check
@@ -61,7 +69,10 @@ run_dependency_gate catalog-sync node scripts/gates/check-generated-sync.mjs cat
 run_dependency_gate public-api pnpm run check:api
 run_dependency_gate token-contract pnpm run check:tokens
 run_dependency_gate component-inventory pnpm run check:component-inventory
-run_dependency_gate lint pnpm run lint
+(
+  kimen_use_worktree_nx_graph
+  run_dependency_gate lint pnpm run lint
+) || exit 1
 run_dependency_gate styles pnpm run lint:styles
 run_dependency_gate typecheck pnpm run typecheck
 run_dependency_gate deadcode pnpm run deadcode
@@ -73,5 +84,9 @@ run_dependency_gate size pnpm exec nx affected -t size --base="$BASE_SHA" --head
 if [ "$(node scripts/gates/dependency-browser-impact.mjs --base "$BASE_SHA" --head "$HEAD_SHA")" = 'true' ]; then
   run_dependency_gate browser bash scripts/gates/gates-browser.sh chromium
 fi
-echo 'DEPENDENCY QUALITY GREEN'
+if grep -q $'\tpartial$' "$KIMEN_GATE_EVIDENCE_FILE"; then
+  echo 'DEPENDENCY CHECKS PASSED WITH SKIPS'
+else
+  echo 'DEPENDENCY QUALITY GREEN'
+fi
 echo "CURRENT-RUN EVIDENCE: $KIMEN_GATE_EVIDENCE_FILE"

@@ -2,9 +2,10 @@
 // @spec:031-site-experience#S8
 // @spec:031-site-experience#S9
 // @spec:031-site-experience#S10
+// @spec:067-merge-friendly-checks
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { accessSync, constants, statSync } from 'node:fs';
+import { accessSync, appendFileSync, constants, statSync } from 'node:fs';
 import { mkdir, mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
@@ -16,6 +17,8 @@ const execFileAsync = promisify(execFile);
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const siteRoot = join(repositoryRoot, 'site');
+const crossFilesystemTest =
+  'the documentation build publishes into an output directory on another filesystem';
 
 async function readSiteFile(path) {
   return readFile(join(siteRoot, path), 'utf8');
@@ -559,9 +562,8 @@ function describeDevice(label, path) {
 // /dev/shm behind the caller's back would reproduce the boundary on a mount
 // nobody granted, and picking a directory by st_dev alone says nothing about
 // whether a build may write there. So every precondition is settled before the
-// build starts, and a missing one is reported as a blocked prerequisite — the
-// case did not run — never as a fallback to another mount, a skip, or the
-// same-device control below.
+// build starts. A missing prerequisite blocks CI and sandbox runs. Local
+// tests report a skip and require a different run to verify portability.
 function authorisedCrossDeviceRoot() {
   const repositoryDevice = statSync(repositoryRoot).dev;
   const blocked = (reason) => ({ root: null, repositoryDevice, reason });
@@ -594,12 +596,58 @@ function authorisedCrossDeviceRoot() {
   return { root, repositoryDevice, device: stats.dev, reason: null };
 }
 
-test('the documentation build publishes into an output directory on another filesystem', async (t) => {
+test('S8 missing cross-filesystem TMPDIR is a local skip and a CI failure', async (t) => {
+  const scratch = await mkdtemp(join(tmpdir(), 'kimen-cross-filesystem-evidence-'));
+  t.after(() => rm(scratch, { force: true, recursive: true }));
+  const evidence = join(scratch, 'current-run.tsv');
+  for (const [CI, KIMEN_SANDBOX] of [
+    ['', ''],
+    ['true', ''],
+    ['', '1'],
+  ]) {
+    const result = await execFileAsync(
+      process.execPath,
+      [
+        '--test',
+        '--test-reporter=tap',
+        `--test-name-pattern=^${crossFilesystemTest}$`,
+        fileURLToPath(import.meta.url),
+      ],
+      {
+        cwd: repositoryRoot,
+        env: {
+          ...process.env,
+          NODE_TEST_CONTEXT: undefined,
+          CI,
+          KIMEN_SANDBOX,
+          TMPDIR: repositoryRoot,
+          KIMEN_GATE_EVIDENCE_FILE: evidence,
+        },
+      },
+    ).catch((error) => error);
+    if (CI || KIMEN_SANDBOX) {
+      assert.equal(result.code, 1, result.stdout);
+      assert.match(result.stdout, /blocked prerequisite.*TMPDIR.*another filesystem/u);
+    } else {
+      assert.equal(result.code, undefined, result.stdout);
+      assert.match(result.stdout, /# SKIP CROSS-FILESYSTEM.*TMPDIR.*another filesystem/u);
+    }
+  }
+  assert.equal(await readFile(evidence, 'utf8'), 'skip\tcross-filesystem\tskipped\n');
+});
+
+test(crossFilesystemTest, async (t) => {
   const { root, repositoryDevice, device, reason } = authorisedCrossDeviceRoot();
-  assert.ok(
-    root,
-    `blocked prerequisite, not a result: this case needs an authorised temporary directory on another filesystem and ${reason} (repository st_dev ${repositoryDevice})`,
-  );
+  if (!root) {
+    const missing = `set TMPDIR to a writable directory on another filesystem. ${reason} (repository st_dev ${repositoryDevice})`;
+    if (process.env.CI || process.env.KIMEN_SANDBOX === '1') {
+      assert.fail(`blocked prerequisite: ${missing}`);
+    }
+    const evidence = process.env.KIMEN_GATE_EVIDENCE_FILE;
+    if (evidence) appendFileSync(evidence, 'skip\tcross-filesystem\tskipped\n');
+    t.skip(`CROSS-FILESYSTEM — ${missing}. Release requires this check to run.`);
+    return;
+  }
 
   let output;
   try {

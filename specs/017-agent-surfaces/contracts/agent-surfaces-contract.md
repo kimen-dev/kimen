@@ -12,14 +12,15 @@ implementation re-enters through the spec, not through code (Art. II).
 | Normalized docs-json intermediate | `packages/elements/generated/docs.json` | `stencil build` + normalization step (FR-008) |
 | Custom Elements Manifest | `packages/elements/generated/custom-elements.json` | `buildManifest` |
 | LLM index (published) | `packages/elements/llms.txt` | `buildLlmsIndex`, relative links |
-| LLM complete summary (published) | `packages/elements/llms-full.txt` | `buildLlmsTxt` |
+| LLM complete summary (published) | `packages/elements/llms-full.txt` | `buildLlmsTxt` during the elements build before packing |
 | Component documents and guides (published) | `packages/elements/llms/<tag>.md`, `packages/elements/llms/theming.md` | `buildLlmsDocuments` |
 | LLM index (repo root, served at `https://kimen.dev/llms.txt`) | `llms.txt` | `buildLlmsIndex`, absolute site links, plus the GenUI guides |
 | LLM complete summary (repo root) | `llms-full.txt` | the published one + the GenUI layer (`buildRootLlmsTxt`) |
 | GenUI guides (repo root) | `llms/<package>.md` | `buildGenUiDocuments` from `docs/genui-surfaces.json` |
 
 Hand-editing any of them is an Art. I violation; the `surfaces-sync` gate
-turns it into a failure.
+turns it into a failure. The package summary is a build output. Its bytes
+must match the elements portion of the committed site summary.
 
 ## Custom Elements Manifest format
 

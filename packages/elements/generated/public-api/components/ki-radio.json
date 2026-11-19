@@ -1,0 +1,489 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents this option from being selected or focused. Disabled options are\nskipped by group arrow navigation and omitted from form submission when\nselected before becoming disabled.\nWhen NOT to use: do not use disabled as a temporary loading state.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": "'on'",
+        "deprecatedSince": null,
+        "description": "Submission value projected by the parent `ki-radio-group` when this option\nis selected. Omit for native radio parity with value `\"on\"`.\nWhen NOT to use: do not use `value` to author selection; set the group's\n`value` property or attribute.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-effect-component-primary-default-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-spring": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for border width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-control-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for control radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-control-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for control size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-dot-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the radio component for the selected dot (MarsUI Small_dark_shadow: drop 0/2/3/-1.5 Elevation/shadow_dark, the lifted-dot look of the master).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-dot-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for dot size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for gap (MarsUI md label pairing: Space/xl 12px for the 20px circle / 24px target geometry).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for label font size (MarsUI md pairing: body_2 15px; line-height stays 24 and weight 500).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-label-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the radio component for label font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for label line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for min target.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected active background (MarsUI defines no pressed state; mirrors rest).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected active border (same as the fill: borderless look).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected active foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-active-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected disabled background (MarsUI Surface/disabled_med_em Gray/300).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected disabled border (same as the fill: borderless look).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected disabled dot (MarsUI Surface/disabled_base_em Gray/100 — a light dot one quiet value step above the gray donut, not a dark dot).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected hover background (the master has no selected-hover variant; mirrors ki-checkbox checked hover: a real delta in both schemes).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected hover border (same as the fill: borderless look).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected rest background (MarsUI active radio is a solid Surface/primary_med_em #845abe circle — the filled donut with a white dot is the signature, mirroring ki-checkbox checked).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected rest border (same as the fill: the selected circle is borderless in the master).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-selected-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for selected rest dot (MarsUI Text/primary_on_primary white 8px dot).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected active background. Brief §1: neutral surface em ramp one step above hover (s1→s2), matching ki-checkbox unchecked active; the primary-tinted alpha stays in radio.material3.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected active border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected active foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected disabled background (MarsUI Surface/disabled_med_em Gray/300).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected disabled border (same as the fill: borderless look in the master).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected disabled dot color (dot is hidden unselected; kept coherent with the disabled ladder, retiring the deprecated ki.text.muted alias).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-unselected-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the radio component for unselected rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-special-dark-s0-light-s2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for surface special dark s0 light s2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-special-light-s0-dark-s4": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for surface special light s0 dark s4.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-med-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text med em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "One option in a token-styled radio group.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "control": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visual ring and selected dot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapper around the option label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents this option from being selected or focused. Disabled options are\nskipped by group arrow navigation and omitted from form submission when\nselected before becoming disabled.\nWhen NOT to use: do not use disabled as a temporary loading state.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": "'on'",
+        "deprecatedSince": null,
+        "description": "Submission value projected by the parent `ki-radio-group` when this option\nis selected. Omit for native radio parity with value `\"on\"`.\nWhen NOT to use: do not use `value` to author selection; set the group's\n`value` property or attribute.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Option label. This is the accessible name and activation surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-radio.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-radio.d.ts",
+    "symbols": {
+      "KiRadio": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiRadio extends Components.KiRadio, HTMLElement {\n}\nexport const KiRadio: {\n    prototype: KiRadio;\n    new (): KiRadio;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-radio.js"
+  }
+}

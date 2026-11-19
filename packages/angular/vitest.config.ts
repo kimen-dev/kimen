@@ -2,7 +2,7 @@ import { join } from 'node:path';
 
 import { defineConfig } from 'vitest/config';
 
-const cacheRoot = process.env['KIMEN_CACHE_ROOT'];
+const cacheRoot = process.env['KIMEN_WORKTREE_CACHE_ROOT'] ?? process.env['KIMEN_CACHE_ROOT'];
 const cacheDir = cacheRoot ? join(cacheRoot, 'vite/angular-wrapper') : undefined;
 
 // The Angular value-accessor scenario exercises the generated accessor
