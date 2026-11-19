@@ -4,7 +4,7 @@
   "catalog": true,
   "catalogAction": "ki-copy",
   "sizeBudget": {
-    "mcpApps": { "gzip": 4392 },
-    "mcpServer": { "raw": 66499, "gzip": 8915 }
+    "mcpApps": { "gzip": 4394 },
+    "mcpServer": { "raw": 66499, "gzip": 8916 }
   }
 }

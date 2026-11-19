@@ -1417,6 +1417,10 @@
   --ki-checkbox-sm-label-line-height:var(--ki-typography-line-height-para);
   --ki-checkbox-lg-control-size:var(--ki-space-7xl);
   --ki-checkbox-lg-min-target:var(--ki-space-9xl);
+  --ki-copy-button-success-bg:var(--ki-surface-success-low-em);
+  --ki-copy-button-success-fg:var(--ki-text-success-high-em);
+  --ki-copy-button-error-bg:var(--ki-surface-danger-low-em);
+  --ki-copy-button-error-fg:var(--ki-text-danger-high-em);
   --ki-dialog-radius:var(--ki-radius-component-3xl);
   --ki-dialog-padding:var(--ki-space-7xl);
   --ki-dialog-gap:var(--ki-space-xl);
