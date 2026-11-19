@@ -13,6 +13,7 @@ Feature: ki-empty-state explains an empty view
     Given an empty state with a folder icon
     When the application supplies a decorative illustration
     Then the illustration takes the icon's place
+    And the illustration cannot receive keyboard focus
 
   # S3
   Scenario: A compact message fits inside a results panel
@@ -49,6 +50,7 @@ Feature: ki-empty-state explains an empty view
       | 5           | 5        |
       | 6           | 6        |
       | 3.5         | 3        |
+      | 2junk       | 3        |
       | unsupported | 3        |
 
   # S7

@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { AttrDeserialize, Component, h, Prop, State } from '@stencil/core';
 
 import { getIcon } from '../../utils/icon-registry.mjs';
 import { resolveHeadingLevel } from './ki-empty-state.heading.js';
@@ -65,6 +65,11 @@ export class KiEmptyState {
    */
   @Prop() announce = false;
 
+  @AttrDeserialize('headingLevel')
+  private deserializeHeadingLevel(value: string | null): number {
+    return resolveHeadingLevel(value);
+  }
+
   @State() private hasMedia = false;
   @State() private hasActions = false;
   @State() private liveRegionReady = false;
@@ -100,7 +105,7 @@ export class KiEmptyState {
 
     return (
       <div part="container">
-        <div part="media" aria-hidden="true" hidden={!this.hasMedia && !hasIcon}>
+        <div part="media" aria-hidden="true" inert hidden={!this.hasMedia && !hasIcon}>
           <slot name="media" onSlotchange={this.syncMedia}>
             {hasIcon &&
               h(

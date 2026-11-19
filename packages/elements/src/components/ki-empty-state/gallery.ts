@@ -5,6 +5,7 @@ import { settleFrames } from '../../../browser-tests/visual/fixtures';
 import type { VisualGallery } from '../../../browser-tests/visual/galleries';
 
 export default {
+  width: 380,
   html: `
     <div style="display:grid;gap:var(--ki-space-7xl)">
       <ki-empty-state heading="No projects yet" icon-name="folder-plus" tone="primary-light">

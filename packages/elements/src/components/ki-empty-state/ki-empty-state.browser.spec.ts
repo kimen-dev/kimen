@@ -88,10 +88,13 @@ it('S2 substitutes slotted media and restores the icon when it is removed', asyn
 
   const illustration = document.createElement('span');
   illustration.slot = 'media';
+  illustration.tabIndex = 0;
   illustration.textContent = 'Illustration';
   host.append(illustration);
 
   await expect.element(page.getByText('Illustration')).toBeVisible();
+  illustration.focus();
+  expect(document.activeElement).not.toBe(illustration);
   expect(part(host, 'media').getAttribute('aria-hidden')).toBe('true');
   expect(host.shadowRoot?.querySelector('ki-icon')?.getClientRects().length ?? 0).toBe(0);
 
@@ -189,6 +192,7 @@ it.each([
   ['heading-level="5"', 5],
   ['heading-level="6"', 6],
   ['heading-level="3.5"', 3],
+  ['heading-level="2junk"', 3],
   ['heading-level="unsupported"', 3],
 ])('S6 resolves %s to a native level %s heading in a static message', async (attributes, level) => {
   fixture.innerHTML = markup(attributes);
