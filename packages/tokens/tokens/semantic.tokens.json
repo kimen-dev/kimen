@@ -1546,6 +1546,36 @@
       "block": {
         "$value": "{ki.space.xl}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
+      },
+      "activity-label-gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Gap between an inline activity mark and its label."
+      },
+      "activity-dot-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "Gap between typing dots."
+      }
+    },
+    "glyph": {
+      "size": {
+        "$type": "dimension",
+        "sm": {
+          "$value": "{ki.space.3xl}",
+          "$description": "Small glyph for dense layouts (16px at the default root size)."
+        },
+        "md": {
+          "$value": "{ki.space.5xl}",
+          "$description": "Medium glyph for body content (20px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Large standalone glyph (24px at the default root size)."
+        }
+      },
+      "stroke-width": {
+        "$type": "number",
+        "$value": "{ki.scale.icon-stroke}",
+        "$description": "Weight of a line icon's outline in viewBox units."
       }
     },
     "density": {
@@ -1586,6 +1616,10 @@
       "control": {
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
+      },
+      "activity-mark": {
+        "$value": "{ki.radius.round}",
+        "$description": "Round corners for rings and typing dots."
       }
     },
     "motion": {
@@ -1646,6 +1680,22 @@
         "instant": {
           "$value": "{ki.duration.instant}",
           "$description": "Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs)."
+        },
+        "activity-rotation": {
+          "$value": "{ki.duration.activity-rotation}",
+          "$description": "Period of an indeterminate activity rotation."
+        },
+        "activity-rotation-reduced": {
+          "$value": "{ki.duration.activity-rotation-reduced}",
+          "$description": "Period of an indeterminate activity rotation with reduced motion."
+        },
+        "activity-pulse": {
+          "$value": "{ki.duration.activity-pulse}",
+          "$description": "Period of an indeterminate typing pulse."
+        },
+        "activity-stagger": {
+          "$value": "{ki.duration.activity-stagger}",
+          "$description": "Stagger between neighboring marks of an activity pulse."
         }
       },
       "easing": {
@@ -1693,6 +1743,14 @@
         "emphasized-out": {
           "$value": "{ki.easing.spring}",
           "$description": "Expressive exit curve for selected controls. Onmars eases out without overshoot."
+        },
+        "activity-rotation": {
+          "$value": "{ki.easing.linear}",
+          "$description": "Constant speed for an activity rotation."
+        },
+        "activity-pulse": {
+          "$value": "{ki.easing.in-out}",
+          "$description": "Symmetric easing for fluctuations in a typing pulse."
         }
       },
       "distance": {
@@ -1709,6 +1767,181 @@
           "$value": "{ki.space.md}",
           "$description": "Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise)."
         }
+      },
+      "scale": {
+        "$type": "number",
+        "activity-pulse-min": {
+          "$value": "{ki.scale.activity-pulse-min}",
+          "$description": "Smallest visual scale of an activity pulse."
+        }
+      }
+    },
+    "activity-size": {
+      "$type": "dimension",
+      "ring-sm": {
+        "$value": "{ki.space.3xl}",
+        "$description": "Small inline activity ring diameter."
+      },
+      "ring-md": {
+        "$value": "{ki.space.5xl}",
+        "$description": "Medium inline activity ring diameter."
+      },
+      "ring-lg": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Large inline activity ring diameter."
+      },
+      "stroke": {
+        "$value": "{ki.size.border.thin}",
+        "$description": "Stroke of a small or medium activity ring."
+      },
+      "stroke-lg": {
+        "$value": "{ki.size.border.medium}",
+        "$description": "Stroke of a large activity ring."
+      },
+      "dot": {
+        "$value": "{ki.space.sm}",
+        "$description": "Diameter of a typing dot at its full size."
+      }
+    },
+    "layout": {
+      "$type": "dimension",
+      "spacing": {
+        "zero": {
+          "$value": "{ki.space.zero}",
+          "$description": "The zero spacing step for a stack or grid gap."
+        },
+        "xxs": {
+          "$value": "{ki.space.xxs}",
+          "$description": "The xxs spacing step for a stack or grid gap."
+        },
+        "xs": {
+          "$value": "{ki.space.xs}",
+          "$description": "The xs spacing step for a stack or grid gap."
+        },
+        "sm": {
+          "$value": "{ki.space.sm}",
+          "$description": "The sm spacing step for a stack or grid gap."
+        },
+        "md": {
+          "$value": "{ki.space.md}",
+          "$description": "The md spacing step for a stack or grid gap."
+        },
+        "lg": {
+          "$value": "{ki.space.lg}",
+          "$description": "The lg spacing step for a stack or grid gap."
+        },
+        "xl": {
+          "$value": "{ki.space.xl}",
+          "$description": "The xl spacing step for a stack or grid gap."
+        },
+        "2xl": {
+          "$value": "{ki.space.2xl}",
+          "$description": "The 2xl spacing step for a stack or grid gap."
+        },
+        "3xl": {
+          "$value": "{ki.space.3xl}",
+          "$description": "The 3xl spacing step for a stack or grid gap."
+        },
+        "4xl": {
+          "$value": "{ki.space.4xl}",
+          "$description": "The 4xl spacing step for a stack or grid gap."
+        },
+        "5xl": {
+          "$value": "{ki.space.5xl}",
+          "$description": "The 5xl spacing step for a stack or grid gap."
+        },
+        "6xl": {
+          "$value": "{ki.space.6xl}",
+          "$description": "The 6xl spacing step for a stack or grid gap."
+        },
+        "7xl": {
+          "$value": "{ki.space.7xl}",
+          "$description": "The 7xl spacing step for a stack or grid gap."
+        },
+        "8xl": {
+          "$value": "{ki.space.8xl}",
+          "$description": "The 8xl spacing step for a stack or grid gap."
+        },
+        "9xl": {
+          "$value": "{ki.space.9xl}",
+          "$description": "The 9xl spacing step for a stack or grid gap."
+        },
+        "10xl": {
+          "$value": "{ki.space.10xl}",
+          "$description": "The 10xl spacing step for a stack or grid gap."
+        },
+        "11xl": {
+          "$value": "{ki.space.11xl}",
+          "$description": "The 11xl spacing step for a stack or grid gap."
+        },
+        "12xl": {
+          "$value": "{ki.space.12xl}",
+          "$description": "The 12xl spacing step for a stack or grid gap."
+        },
+        "13xl": {
+          "$value": "{ki.space.13xl}",
+          "$description": "The 13xl spacing step for a stack or grid gap."
+        },
+        "14xl": {
+          "$value": "{ki.space.14xl}",
+          "$description": "The 14xl spacing step for a stack or grid gap."
+        },
+        "15xl": {
+          "$value": "{ki.space.15xl}",
+          "$description": "The 15xl spacing step for a stack or grid gap."
+        },
+        "16xl": {
+          "$value": "{ki.space.16xl}",
+          "$description": "The 16xl spacing step for a stack or grid gap."
+        },
+        "17xl": {
+          "$value": "{ki.space.17xl}",
+          "$description": "The 17xl spacing step for a stack or grid gap."
+        },
+        "18xl": {
+          "$value": "{ki.space.18xl}",
+          "$description": "The 18xl spacing step for a stack or grid gap."
+        },
+        "19xl": {
+          "$value": "{ki.space.19xl}",
+          "$description": "The 19xl spacing step for a stack or grid gap."
+        },
+        "20xl": {
+          "$value": "{ki.space.20xl}",
+          "$description": "The 20xl spacing step for a stack or grid gap."
+        },
+        "21xl": {
+          "$value": "{ki.space.21xl}",
+          "$description": "The 21xl spacing step for a stack or grid gap."
+        },
+        "22xl": {
+          "$value": "{ki.space.22xl}",
+          "$description": "The 22xl spacing step for a stack or grid gap."
+        },
+        "23xl": {
+          "$value": "{ki.space.23xl}",
+          "$description": "The 23xl spacing step for a stack or grid gap."
+        },
+        "24xl": {
+          "$value": "{ki.space.24xl}",
+          "$description": "The 24xl spacing step for a stack or grid gap."
+        },
+        "25xl": {
+          "$value": "{ki.space.25xl}",
+          "$description": "The 25xl spacing step for a stack or grid gap."
+        },
+        "26xl": {
+          "$value": "{ki.space.26xl}",
+          "$description": "The 26xl spacing step for a stack or grid gap."
+        }
+      },
+      "grid-min": {
+        "$value": "{ki.size.layout.grid-min}",
+        "$description": "Default minimum inline size of an automatic grid track."
+      },
+      "grid-fixed-breakpoint": {
+        "$value": "{ki.size.layout.grid-fixed-breakpoint}",
+        "$description": "Minimum available inline size for a fixed grid to use multiple tracks."
       }
     }
   }

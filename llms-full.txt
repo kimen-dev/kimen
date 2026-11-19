@@ -58,9 +58,9 @@ section, such as a failed save, completed operation, or service notice, that
 remains until the condition is resolved or the person dismisses it. Express
 severity with `tone`, never custom styling.
 When NOT to use: transient confirmations that expire on their own belong to
-the future `ki-toast`; tiny status descriptors attached to another element
-belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
-field-level validation belongs to the form control.
+`ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to
+another element belong to `ki-badge`; blocking decisions belong to
+`ki-dialog`; inline field-level validation belongs to the form control.
 
 Assistive technology note: alerts that must be announced should be inserted
 dynamically, or re-shown by clearing `dismissed`; alerts present at initial
@@ -119,7 +119,7 @@ The `icon` slot takes a decorative glyph, drawn in the tone's colors in a round 
 Attributes:
 - `dismiss-label` (string, default 'Dismiss'): Accessible name for the dismiss button. Override for localization; the default English string is the component's only built-in user-visible text. When to use: provide a localized action name whenever the document language is not English. When NOT to use: do not put the alert message here; use the default slot.
 - `dismissed` (boolean, default false): Reflected dismissed state. User dismissal sets it; applications may also set or clear it. While true, the host remains in the document but renders no alert subtree and leaves the accessibility tree. Clearing it re-shows the alert and creates a dynamic live-region appearance. When to use: persist or restore acknowledgement state from application data. When NOT to use: do not listen for programmatic changes as dismissal events; `ki-dismiss` is only for user activation.
-- `dismissible` (boolean, default false): Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop. When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; that is future `ki-toast` behavior.
+- `dismissible` (boolean, default false): Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop. When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; those belong to `ki-toast`.
 - `heading` (string | undefined): Optional emphasized text rendered before the message inside the live region. Empty strings render no heading. The heading is a `strong` element, not a document heading, so it never changes page outline. When to use: add a short label when it helps identify the status message. When NOT to use: do not use heading for page structure; use a real heading outside the alert when the document needs one.
 - `tone` ("danger" | "info" | "neutral" | "success" | "warning" | string & {}, default 'neutral'): Semantic intent for visual styling and live-region urgency. `danger` and `warning` expose `role="alert"`; `neutral`, `success`, `info`, absent, and unrecognized values expose `role="status"`. Unknown values keep rendering and fall back to the neutral token matrix by CSS construction. When to use: choose the tone that describes the page or section state. When NOT to use: do not use tone for layout, density, or filled-vs-outlined styling; those are token/theme decisions.
 
@@ -1036,7 +1036,7 @@ critical input that must be resolved before returning to the page. Always
 provide a `heading`, place actions in the `footer` slot, wire each footer
 action to `close()`, and in destructive confirmations put `autofocus` on
 the least destructive action.
-When NOT to use: non-blocking feedback (`ki-alert`, future `ki-toast`),
+When NOT to use: non-blocking feedback (`ki-alert`, `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows
 (navigate or use a future full-screen variant), menus, or pickers.
 
@@ -1187,6 +1187,132 @@ CSS custom properties:
 - `--ki-divider-thickness`: dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-grid
+
+A passive responsive grid for content items.
+
+When to use: lay out items on responsive tracks with consistent token spacing.
+When NOT to use: for page shells, painted grouping (use ki-card), or a data grid.
+
+Examples:
+
+# Grid examples
+
+An automatic grid fills its available space with tracks at least as wide as
+`min-column` where room allows. Here the summary takes two tracks when
+possible.
+
+```html
+<ki-grid min-column="8rem" gap="xl">
+  <ki-card data-span="2">Overview</ki-card>
+  <ki-card>Orders</ki-card>
+  <ki-card>Inventory</ki-card>
+  <ki-card>Customers</ki-card>
+</ki-grid>
+```
+
+For a fixed count, set `columns`. The grid switches to one column when its
+own available inline size drops below 30rem.
+
+```html
+<ki-grid columns="3" gap="sm">
+  <ki-card>Orders</ki-card>
+  <ki-card>Inventory</ki-card>
+  <ki-card>Customers</ki-card>
+</ki-grid>
+```
+
+Attributes:
+- `columns` (number | undefined, minimum 1): Positive whole track count. Below 30rem of available inline size the fixed grid uses one column. Omit columns for automatic tracks.
+- `gap` ("10xl" | "11xl" | "12xl" | "13xl" | "14xl" | "15xl" | "16xl" | "17xl" | "18xl" | "19xl" | "20xl" | "21xl" | "22xl" | "23xl" | "24xl" | "25xl" | "26xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl" | "9xl" | "lg" | "md" | "sm" | "xl" | "xs" | "xxs" | "zero", default 'xl'): Kimen spacing step, xl by default. Unsupported values keep the default gap.
+- `min-column` (string, default '15rem'): Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.
+
+Slots:
+- (default): The content in reading order. A direct child with data-span="2" spans two tracks when they fit.
+
+Parts:
+- `grid`: The grid layout containing the slotted content.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-grid-gap`: Default gap between grid tracks.
+- `--ki-grid-min`: Default minimum size of an automatic grid track.
+- `--ki-layout-grid-fixed-breakpoint`: Minimum available inline size for a fixed grid to use multiple tracks.
+- `--ki-layout-grid-min`: Default minimum inline size of an automatic grid track.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-icon
+
+A static Lucide glyph selected by name from the application's per-icon imports.
+
+When to use: show a named glyph next to text, or give a standalone meaningful
+glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+mounting the component or rendering a guarded surface.
+When NOT to use: make an icon interactive, accept arbitrary SVG or URLs, or
+replace the accessible name of a control. Use the control's own label.
+
+Examples:
+
+# ki-icon examples
+
+Import the exact Lucide names used by your markup before you mount it.
+
+```js
+import '@kimen/elements/icons/circle-check';
+import '@kimen/elements/icons/triangle-alert';
+import { defineCustomElement } from '@kimen/elements/ki-icon';
+
+defineCustomElement();
+```
+
+A confirmation has adjacent text, so the glyph is decorative.
+
+```html
+<span style="color: var(--ki-text-success-high-em)">
+  <ki-icon name="circle-check"></ki-icon> Confirmed
+</span>
+```
+
+A standalone meaningful glyph takes its accessible name from the label.
+
+```html
+<ki-icon name="triangle-alert" size="lg" label="Warning"></ki-icon>
+```
+
+For a guarded catalog surface, import the glyph in the host and reference it
+by name. The icon has no slots or actions.
+
+```json
+{
+  "type": "ki-icon",
+  "props": { "name": "triangle-alert", "size": "lg", "label": "Warning" }
+}
+```
+
+Attributes:
+- `label` (string | undefined): Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.
+- `name` (string, required): Lucide name made available by a per-icon import. An unavailable name draws no glyph.
+- `size` ("inherit" | "lg" | "md" | "sm", default 'inherit'): Glyph size. Inherit follows the surrounding text at 1em.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-icon-size-lg`: Large ki-icon with the surrounding text ink.
+- `--ki-icon-size-md`: Medium ki-icon with the surrounding text ink.
+- `--ki-icon-size-sm`: Small ki-icon with the surrounding text ink.
+- `--ki-icon-stroke-width`: Lucide stroke width in viewBox units, scaled with the glyph.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-icon-button
@@ -2630,6 +2756,144 @@ CSS custom properties:
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-spinner
+
+A compact status for an indeterminate wait.
+
+When to use: show brief inline activity such as saving a change or running a
+tool. Choose typing dots for an assistant that is thinking. Set a localized
+label that names the activity and mount the spinner when the wait starts.
+When NOT to use: use ki-progress for page-level work or a known fraction of
+a task. Use ki-alert for persistent notices.
+
+Examples:
+
+# ki-spinner examples
+
+## Inline save status
+
+Insert the spinner when the save begins. Remove it when the save ends.
+
+```html
+<ki-spinner size="sm" label="Saving changes…" show-label></ki-spinner>
+```
+
+## Assistant status
+
+Use a visually hidden label when the surrounding UI already describes the
+activity.
+
+```html
+<ki-spinner variant="dots" label="Assistant is thinking"></ki-spinner>
+```
+
+## Custom-elements entry point
+
+```ts
+import { defineCustomElement } from '@kimen/elements/ki-spinner';
+
+defineCustomElement();
+```
+
+Attributes:
+- `label` (string, required): Localized name of the ongoing activity, such as "Saving changes". Supply a meaningful label for every spinner, even when the text is hidden. Use the activity's name whenever it can be more specific than "Loading".
+- `show-label` (boolean, default false): Display the label beside the graphic when sighted users also need the activity description. The same text names the status in either case.
+- `size` ("lg" | "md" | "sm", default 'md'): Diameter of the ring. Choose the size that fits the surrounding content. Dots use a fixed size. Unrecognized values draw the medium ring.
+- `variant` ("dots" | "ring", default 'ring'): Use a ring for general inline activity and dots for assistant typing or thinking. Unrecognized values draw a ring.
+
+Slots: none
+
+Parts:
+- `dots`: Group of three animated dots, in the dots variant.
+- `label`: Activity text, adjacent to the graphic when show-label is set.
+- `ring`: Rotating ring with a track and indicator, in the ring variant.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-spinner-dot-delay`: Delay between consecutive typing dots.
+- `--ki-spinner-dot-duration`: Typing pulse period.
+- `--ki-spinner-dot-easing`: Easing of the typing pulse.
+- `--ki-spinner-dot-gap`: Gap between dots.
+- `--ki-spinner-dot-scale-min`: Smallest scale of a dot during the pulse.
+- `--ki-spinner-dot-size`: Diameter of each dot at full size.
+- `--ki-spinner-indicator`: Ink of the revolving ring segment.
+- `--ki-spinner-label-bg`: Background of the inline activity label.
+- `--ki-spinner-label-fg`: Ink of the visible label and the typing dots.
+- `--ki-spinner-label-font-family`: Font family of the visible label.
+- `--ki-spinner-label-font-size`: Font size of the visible label.
+- `--ki-spinner-label-gap`: Gap between the graphic and the visible label.
+- `--ki-spinner-label-line-height`: Line height of the visible label.
+- `--ki-spinner-radius`: Round corners of the ring and dots.
+- `--ki-spinner-ring-duration`: Standard ring rotation period.
+- `--ki-spinner-ring-duration-reduced`: Ring rotation period when reduced motion is requested.
+- `--ki-spinner-ring-easing`: Easing for ring rotation.
+- `--ki-spinner-size`: Default ring diameter.
+- `--ki-spinner-size-lg`: Large ring diameter.
+- `--ki-spinner-size-sm`: Small ring diameter.
+- `--ki-spinner-stroke`: Stroke width of the small and medium rings.
+- `--ki-spinner-stroke-lg`: Stroke width of the large ring.
+- `--ki-spinner-track`: Ink of the ring track.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-stack
+
+A passive flex layout for content on one axis.
+
+When to use: arrange content in a vertical sequence or a horizontal row with
+consistent token spacing.
+When NOT to use: for page shells, painted grouping (use ki-card), or tabular data.
+
+Examples:
+
+# Stack examples
+
+A vertical sequence uses the default direction and the medium spacing step.
+
+```html
+<ki-stack>
+  <h2>Account</h2>
+  <p>Review the settings for your workspace.</p>
+  <ki-button variant="secondary">Edit settings</ki-button>
+</ki-stack>
+```
+
+A toolbar keeps its source order with a horizontal axis, wrapping and a
+growing label. Place `data-grow` on a direct child to give it a share of the
+available free space.
+
+```html
+<ki-stack direction="row" gap="sm" justify="between" align="center" wrap>
+  <strong data-grow>Order summary</strong>
+  <ki-button variant="secondary">Cancel</ki-button>
+  <ki-button variant="primary">Save</ki-button>
+</ki-stack>
+```
+
+Attributes:
+- `align` ("baseline" | "center" | "end" | "start" | "stretch", default 'stretch'): Cross-axis alignment, stretch by default.
+- `direction` ("column" | "row", default 'column'): Main axis, column by default.
+- `gap` ("10xl" | "11xl" | "12xl" | "13xl" | "14xl" | "15xl" | "16xl" | "17xl" | "18xl" | "19xl" | "20xl" | "21xl" | "22xl" | "23xl" | "24xl" | "25xl" | "26xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl" | "9xl" | "lg" | "md" | "sm" | "xl" | "xs" | "xxs" | "zero", default 'md'): Kimen spacing step, md by default. Unsupported values keep the default gap.
+- `justify` ("between" | "center" | "end" | "start", default 'start'): Main-axis distribution, start by default. Use between to distribute spare space.
+- `wrap` (boolean, default false): Allow items to continue on a new line. Defaults to false.
+
+Slots:
+- (default): The content in reading order. A direct child with data-grow takes a share of free space.
+
+Parts:
+- `stack`: The flex layout containing the slotted content.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
+- `--ki-stack-gap`: Default gap of a stack.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-status
 
 A tiny, non-interactive status dot that marks the state of a nearby item.
@@ -3287,6 +3551,190 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-toast
+
+A short, transient message about something the person just did, shown without blocking the page. It leaves on its own after its time, which stops while the person points at the toaster, works inside it or is away from the page; a toast with an action, or reporting an error, waits for the person.
+
+When to use: confirm an action that happened elsewhere on screen ("Changes
+saved", "Link copied"), report a background result ("Export ready"), or
+offer a quick undo. Raise it into a `ki-toaster`, in markup or with its
+`show()` method; express urgency with `tone`.
+When NOT to use: anything the person must read or act on to continue belongs
+to `ki-dialog`; form validation belongs to the field's error text; a lasting
+condition of the page belongs to `ki-alert`, which stays inline.
+
+Assistive technology note: a toast announces as it appears, so append it
+when the event happens; a toast present at initial page load is exposed with
+its role but its announcement is not guaranteed. The heading and the message
+are the whole announcement: the icon, the action and the dismiss button
+stay outside the live region.
+
+Examples:
+
+Put a toast in a `ki-toaster` when something happens; it announces itself as it appears and leaves on its own after 5 seconds. `tone` picks the icon and its ink and the live-region urgency: `danger` exposes `role="alert"`, every other value `role="status"`:
+
+```html
+<ki-toaster>
+  <ki-toast tone="success" heading="Changes saved">Workspace settings are up to date.</ki-toast>
+</ki-toaster>
+```
+
+`duration` (milliseconds) changes the time; `0` keeps the toast until it is dismissed. A toast in the `danger` tone, or holding an action, never leaves on its own, whatever its `duration`. The time stops while the pointer rests on the toaster, while focus is inside it, or while the page is hidden:
+
+```html
+<ki-toast duration="8000">The export is ready in your downloads.</ki-toast>
+<ki-toast tone="danger" heading="Upload failed">The file is larger than 20 MB.</ki-toast>
+```
+
+The `action` slot takes one ghost `ki-button size="sm"`. Its own click handler runs, then the toast leaves:
+
+```html
+<ki-toast heading="Message archived">
+  The conversation moved to your archive.
+  <ki-button slot="action" variant="ghost" size="sm">Undo</ki-button>
+</ki-toast>
+```
+
+`ki-dismiss` says why the toast left: `detail.reason` is `"timeout"`, `"button"`, `"escape"` or `"action"`. `dismissible="false"` drops the dismiss button (Escape still works on a focused toast); `dismiss-label` is the component's only built-in word, so localize it whenever the document language is not English:
+
+```html
+<ki-toast lang="es" dismiss-label="Descartar">Borrador guardado.</ki-toast>
+```
+
+Attributes:
+- `dismiss-label` (string, default 'Dismiss'): Accessible name of the dismiss button. Override for localization; the default English word is the component's only built-in text. When to use: whenever the document language is not English. When NOT to use: do not put the message here; use the default slot.
+- `dismissed` (boolean, default false): Reflected state: true once the toast has left. The timer, the dismiss button, Escape and the action set it; the page may set or clear it. While true the host stays in the document but renders nothing and leaves the accessibility tree. Clearing it shows the toast again with its full time. When to use: show a toast again, or close it from the page. When NOT to use: do not read programmatic changes as dismissals; `ki-dismiss` reports only the timer and the person.
+- `dismissible` (boolean, default true): Shows the dismiss button, a ghost `ki-icon-button` named by `dismiss-label`. Escape still dismisses a focused toast without it. When to use: keep it on unless the toast leaves on its own and the page offers no other way to read it again. When NOT to use: do not turn it off on a toast that waits for the person.
+- `duration` (number | undefined, minimum 0): How long the toast stays, in milliseconds, before it leaves on its own; `0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast holds an action or its tone is `danger`. Unset, or not a finite number of zero or more, it is 5000. The time stops while the pointer rests on the toaster, while focus is inside it, or while the page is hidden, and continues with what was left. Changing it restarts the time. When to use: give a longer message more time. When NOT to use: do not shorten it below what a person needs to read the message.
+- `heading` (string | undefined): Optional bold first line, inside the live region. Empty strings render no heading. It is a `strong` element, never a document heading. When to use: a short label for the event ("Changes saved"). When NOT to use: do not use it for page structure.
+- `queued` (boolean, default false): Output-only state written by an enclosing `ki-toaster`: true while the toast waits for a place. A queued toast renders nothing, is absent from the accessibility tree and its time does not run. Authors do not set it; the toaster overwrites it.
+- `tone` ("danger" | "info" | "neutral" | "success" | "warning" | string & {}, default 'neutral'): Picks the icon and its ink, and the live-region urgency: `danger` exposes `role="alert"` and never leaves on its own; `neutral`, `info`, `success`, `warning`, absent and unrecognized values expose `role="status"`. The surface and the text look the same in every tone. Unknown values render neutral. When to use: choose the tone that describes what happened. When NOT to use: do not use tone for emphasis; a lasting failure belongs in `ki-alert`.
+
+Slots:
+- (default): Message text. It lives inside the live-region boundary.
+- `action`: At most one action, as a `ki-button size="sm" variant="ghost"`. Its own click handler runs, then the toast leaves (`reason: "action"`). A toast holding an action never leaves on its own. When NOT to use: a response the person cannot skip belongs in `ki-dialog`.
+
+Parts:
+- `action`: Wrapper around the `action` slot, rendered only when it holds content.
+- `dismiss`: The dismiss `ki-icon-button`, rendered only when `dismissible`.
+- `heading`: Optional bold first line, rendered only when non-empty.
+- `icon`: The tone icon, drawn by the component in the tone's ink.
+- `message`: Message wrapper around the default slot.
+- `toast`: The flat surface: fill, image, edge, radius, padding, elevation and backdrop filter.
+
+Events:
+- `ki-dismiss` (CustomEvent<KiToastDismissDetail>): Fired once when the toast leaves because its time ran out (`reason: "timeout"`), the person used the dismiss button (`"button"`), pressed Escape inside it (`"escape"`) or activated its action (`"action"`), after it is hidden and focus has been handed on. Not cancelable. When to use: remove the element, or record that the message was seen. When NOT to use: do not expect it for programmatic `dismissed` changes.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-toast-backdrop-filter`: filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342).
+- `--ki-toast-bg`: color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself).
+- `--ki-toast-bg-image`: image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6).
+- `--ki-toast-border`: color used by the toast component for its hairline edge (issue #353).
+- `--ki-toast-border-width`: dimension used by the toast component for its hairline edge.
+- `--ki-toast-danger-icon`: color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353).
+- `--ki-toast-fg`: color used by the toast component for the heading ink (issue #353).
+- `--ki-toast-gap`: dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px).
+- `--ki-toast-heading-font-family`: Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface.
+- `--ki-toast-icon-size`: dimension used by the toast component for the tone icon.
+- `--ki-toast-info-icon`: color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353).
+- `--ki-toast-message-fg`: color used by the toast component for the message ink (issue #353).
+- `--ki-toast-neutral-icon`: color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353).
+- `--ki-toast-padding`: dimension used by the toast component for its padding (issue #353: 12px).
+- `--ki-toast-radius`: dimension used by the toast component for its corners (issue #353: 16px).
+- `--ki-toast-shadow`: shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6).
+- `--ki-toast-success-icon`: color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353).
+- `--ki-toast-warning-icon`: color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353).
+- `--ki-toast-width`: dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+
+### ki-toaster
+
+The one place toasts appear: it paints its `ki-toast` children in the top layer at a corner of the viewport, stacks them in arrival order, shows the newest few and queues the older ones, without covering the page beside them.
+
+When to use: once per page (or once inside a modal `ki-dialog`), as the place
+every `ki-toast` of the application appears in: append toasts to it, or call
+`show()`. Choose the corner with `placement`.
+When NOT to use: do not put anything but `ki-toast` elements in it; do not use
+it for persistent content, which belongs in the page or in `ki-alert`.
+
+Assistive technology note: while it shows toasts the toaster is a group
+named by `label`, never a landmark; F6 moves focus into it and Escape on a
+toast returns focus to where it was. An empty toaster exposes nothing and
+covers nothing.
+
+Examples:
+
+Place one toaster per page (or one inside a modal `ki-dialog`). It paints its stack in the top layer, stacks toasts from the top down in arrival order and shows the newest three; older ones wait their turn:
+
+```html
+<ki-toaster></ki-toaster>
+<script>
+  document.querySelector('ki-toaster').show({
+    tone: 'success',
+    title: 'Changes saved',
+    message: 'Workspace settings are up to date.',
+    action: { label: 'Undo', onClick: undo },
+  });
+</script>
+```
+
+`show()` creates the toast, appends it, and removes it once it has left; its action renders as a ghost `ki-button size="sm"`. The toaster does not bundle either element, so define `ki-toast` and `ki-button` too. Toasts can also be written in markup inside the toaster; those stay the page's own and are never removed.
+
+`placement` picks the corner — `top-center`, `top-end`, `bottom-center` or `bottom-end` (the default); `end` follows the writing direction, and a narrow touch screen always uses the bottom center. `max` sets how many toasts show at once:
+
+```html
+<ki-toaster placement="top-center" max="2"></ki-toaster>
+```
+
+While it shows toasts the toaster is a group named by `label` (`Notifications` by default); F6 moves focus into it, and Escape on a toast returns focus to where it was. Localize the name whenever the document language is not English:
+
+```html
+<ki-toaster lang="es" label="Avisos"></ki-toaster>
+```
+
+The distance from the viewport edges and the gap between toasts are tokens:
+
+```css
+:root {
+  --ki-toaster-inset-block: 24px;
+  --ki-toaster-inset-inline: 24px;
+}
+```
+
+Attributes:
+- `label` (string, default 'Notifications'): Accessible name of the group the toaster exposes while it shows toasts. Override for localization. When to use: provide the name in the document language. When NOT to use: do not put a message here.
+- `max` (number, default 3, minimum 1): How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A toast holding focus keeps its place until focus leaves the toaster; the oldest other one waits instead. A value below 1 or not a whole number shows 3. When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
+- `placement` ("bottom-center" | "bottom-end" | "top-center" | "top-end" | string & {}, default 'bottom-end'): Corner or edge of the viewport the stack sits against; `end` follows the writing direction. On a coarse pointer and a viewport narrower than 40rem the stack always sits at the bottom center. Unknown values place the stack at the bottom end. When to use: keep toasts away from where the page's own controls live. When NOT to use: do not change it per toast; one toaster keeps one place.
+
+Slots:
+- (default): The `ki-toast` elements, in arrival order. Other children are not counted, queued or placed.
+
+Parts:
+- `stack`: The stack in the top layer: placement, edge distance, gap between toasts and width.
+
+Events: none
+
+Methods:
+- `show(options)` (Promise<HTMLElement>): Raises a toast: creates a `ki-toast` from `tone`, `title` (its heading), `message`, `duration`, `dismissible` and `action` (a ghost `ki-button size="sm"` in its `action` slot that calls `onClick`), appends it to the toaster and resolves with it. Once the toast has left it is removed from the page. The toaster does not bundle `ki-toast` or `ki-button`: define them, as for toasts written in markup. When to use: raise a toast from script without writing its markup. When NOT to use: a toast written in markup stays the page's own: append it instead, and it is never removed.
+
+CSS custom properties:
+- `--ki-toast-width`: dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).
+- `--ki-toaster-gap`: dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014).
+- `--ki-toaster-inset-block`: dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014).
+- `--ki-toaster-inset-inline`: dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-tooltip
 
 A transient, text-only description bubble for one slotted trigger.
@@ -3517,7 +3965,7 @@ When NOT to use: The agent can emit neutral Kimen UI specs directly (use @kimen/
 Entry points:
 - `createA2uiAdapter(options) => A2uiAdapter`: Creates the translation boundary: adapter.apply(message) turns A2UI 1.0 and v0.9.1 messages (createSurface, updateComponents, updateDataModel, deleteSurface) into neutral UI specs rendered only through the guarded renderer, resolving the surface data model inside the adapter. Each message is validated against the version its envelope declares, and a surface accepts only the version that created it. User interactions return through options.onAction as A2UI action events in the surface's version, rejected messages through options.onError as VALIDATION_FAILED errors; unmapped basic-catalog types degrade to a fixed fallback reported through options.onDegradation, and every A2UI 1.0 callRendererFunction is refused through options.onFunctionResponse.
 - `SUPPORTED_A2UI_VERSIONS`: The exact A2UI envelope versions this adapter accepts: 1.0 (preferred) plus v0.9.1 and v0.9 (one payload-compatible family), each pinned to an upstream commit in A2UI_PROTOCOLS and versioned with the adapter in COMPAT.md.
-- `A2UI_COVERAGE`: Machine-readable coverage table declaring how each A2UI 0.9.1 basic-catalog component type is handled: mapped to catalog components, rendered inline, flattened as layout, degraded as unmapped, or forbidden. A2UI_V1_COVERAGE is the A2UI 1.0 counterpart.
+- `A2UI_COVERAGE`: Machine-readable coverage table declaring how each A2UI 0.9.1 basic-catalog component type is handled: mapped to catalog components, rendered inline, degraded as unmapped, or forbidden. A2UI_V1_COVERAGE is the A2UI 1.0 counterpart.
 - `A2UI_RENDERER_CAPABILITIES`: The renderer capabilities a host transport attaches for each supported A2UI version, preferred version (1.0) first: the metadata key (a2uiRendererCapabilities or a2uiClientCapabilities) and its value naming the basic catalog of that version.
 
 ### @kimen/adapter-mcp-apps

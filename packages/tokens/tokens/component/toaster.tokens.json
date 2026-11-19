@@ -1,0 +1,18 @@
+{
+  "ki": {
+    "toaster": {
+      "inset-block": {
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014)."
+      },
+      "inset-inline": {
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014)."
+      },
+      "gap": {
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014)."
+      }
+    }
+  }
+}

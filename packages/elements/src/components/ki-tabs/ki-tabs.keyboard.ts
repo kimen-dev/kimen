@@ -1,63 +1,39 @@
+import {
+  getKeyboardIntent,
+  isNavigationIntent,
+  type KeyboardDirection,
+  type NavigationIntent,
+} from '../../utils/keyboard-intent';
+import { rovingFocusIndex } from '../../utils/roving-focus';
 import type { TabRecord } from './ki-tabs.selection';
 
-export type NavigationIntent = 'next' | 'previous' | 'first' | 'last' | null;
+const isFocusable = (tab: TabRecord): boolean => !tab.disabled && !tab.duplicate;
 
 export function nextSelectableIndex(
-  tabs: TabRecord[],
+  tabs: readonly TabRecord[],
   currentIndex: number,
   direction: 'next' | 'previous',
 ): number | null {
-  if (tabs.length === 0 || tabs.every((tab) => tab.disabled || tab.duplicate)) {
-    return null;
+  // A direct child can fire keydown before it has joined the slot roster.
+  // Previous starts before the last tab and stops at the first in that case.
+  if (currentIndex === -1 && direction === 'previous' && tabs.length > 1) {
+    return rovingFocusIndex(tabs, tabs.length - 1, direction, { isFocusable });
   }
-
-  const step = direction === 'next' ? 1 : -1;
-
-  for (let offset = 1; offset <= tabs.length; offset += 1) {
-    const index = (currentIndex + offset * step + tabs.length) % tabs.length;
-    const tab = tabs[index];
-
-    if (tab && !tab.disabled && !tab.duplicate) {
-      return index;
-    }
-  }
-
-  return null;
+  return rovingFocusIndex(tabs, currentIndex, direction, { isFocusable, wrap: true });
 }
 
-export function firstSelectableIndex(tabs: TabRecord[]): number | null {
-  const index = tabs.findIndex((tab) => !tab.disabled && !tab.duplicate);
-  return index >= 0 ? index : null;
+export function firstSelectableIndex(tabs: readonly TabRecord[]): number | null {
+  return rovingFocusIndex(tabs, -1, 'first', { isFocusable });
 }
 
-export function lastSelectableIndex(tabs: TabRecord[]): number | null {
-  for (let index = tabs.length - 1; index >= 0; index -= 1) {
-    const tab = tabs[index];
-
-    if (tab && !tab.disabled && !tab.duplicate) {
-      return index;
-    }
-  }
-
-  return null;
+export function lastSelectableIndex(tabs: readonly TabRecord[]): number | null {
+  return rovingFocusIndex(tabs, -1, 'last', { isFocusable });
 }
 
-export function navigationIntentForKey(key: string, dir: 'ltr' | 'rtl'): NavigationIntent {
-  if (key === 'Home') {
-    return 'first';
-  }
-
-  if (key === 'End') {
-    return 'last';
-  }
-
-  if (key === 'ArrowRight') {
-    return dir === 'rtl' ? 'previous' : 'next';
-  }
-
-  if (key === 'ArrowLeft') {
-    return dir === 'rtl' ? 'next' : 'previous';
-  }
-
-  return null;
+export function navigationIntentForKey(
+  key: string,
+  direction: KeyboardDirection,
+): NavigationIntent | null {
+  const intent = getKeyboardIntent(key, 'horizontal', direction);
+  return isNavigationIntent(intent) ? intent : null;
 }
