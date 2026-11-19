@@ -162,6 +162,20 @@ below what most platforms treat as a floor for informative text.
 - **FR-A1-001**: an extra-small button's label MUST render at 12px or more in
   every shipped theme (S15).
 
+## Amendment: four button roles (#344)
+
+Use `primary` for the filled main action, `secondary` for an outlined
+surface action, `quaternary` for a neutral text action, and `ghost` for an
+accent text action. The catalog offers these four variants to agents.
+
+The button still accepts `tertiary` in existing markup and code. It
+shares the secondary role's tokens by default, with a development-only
+warning recommending `secondary`. Material 3 retains its existing
+tertiary appearance through theme-specific token values.
+
+Agent's choice, pending founder confirmation: keep `quaternary` in this
+release. Whether to rename it to `text` remains open for the next major.
+
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
 ```gherkin
@@ -270,26 +284,46 @@ Feature: Button
       | theme     |
       | onmars    |
       | material3 |
+
+  # Family: theming (appended)
+  # S16
+  Scenario: Tertiary shares the secondary appearance in onmars
+    Given an onmars page with secondary and tertiary buttons labeled "Save"
+    When the page renders
+    Then the tertiary button has the same appearance as the secondary button
+
+  # Family: core behavior (appended)
+  # S17
+  Scenario: The deprecated variant warns in development
+    Given a development build with a button labeled "Save"
+    When the button uses the tertiary variant
+    Then the developer sees a deprecation warning recommending secondary
+
+  # S18
+  Scenario: The catalog offers four recommended variants
+    Given an agent choosing a button variant
+    When the agent reads the catalog schema
+    Then the available variants are primary, secondary, quaternary and ghost
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S11 | |
+| Core behavior | S1, S2, S11, S17, S18 | |
 | Keyboard path | S3, S4 | |
 | Assistive-tech outcome | S5, S6, S14 | |
 | Form participation | S7, S8, S12 | |
-| Theming | S9, S10, S13, S15 | |
+| Theming | S9, S10, S13, S15, S16 | |
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: The button MUST expose a `variant` attribute with exactly five
-  semantic emphasis levels — `primary`, `secondary`, `tertiary`,
-  `quaternary`, `ghost` — defaulting to `secondary`. Levels describe action
-  hierarchy, never appearance.
+- **FR-001**: The button MUST expose a `variant` attribute defaulting
+  to `secondary`. The four recommended variants are `primary`, `secondary`,
+  `quaternary` and `ghost`. The component MUST still accept the deprecated
+  `tertiary` value as described in the #344 amendment.
 - **FR-002**: The button MUST expose a `tone` attribute with values
   `neutral` (default), `success`, `danger`, orthogonal to `variant`.
 - **FR-003**: The button MUST expose a `size` attribute with values `xs`,

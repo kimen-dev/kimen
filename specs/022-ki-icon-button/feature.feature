@@ -94,3 +94,23 @@ Feature: Icon button
     Given a focused button, then a disabled icon button labeled "Close", then a second button
     When the user presses Tab
     Then focus lands on the second button, never on the disabled icon button
+
+  # Family: theming (appended)
+  # S15
+  Scenario: Tertiary shares the secondary appearance in onmars
+    Given an onmars page with secondary and tertiary icon buttons labeled "Close"
+    When the page renders
+    Then the tertiary icon button has the same appearance as the secondary icon button
+
+  # Family: core behavior (appended)
+  # S16
+  Scenario: The deprecated variant warns in development
+    Given a development build with a icon button labeled "Close"
+    When the icon button uses the tertiary variant
+    Then the developer sees a deprecation warning recommending secondary
+
+  # S17
+  Scenario: The catalog offers four recommended variants
+    Given an agent choosing a icon button variant
+    When the agent reads the catalog schema
+    Then the available variants are primary, secondary, quaternary and ghost

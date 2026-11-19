@@ -103,3 +103,23 @@ Feature: Button
       | theme     |
       | onmars    |
       | material3 |
+
+  # Family: theming (appended)
+  # S16
+  Scenario: Tertiary shares the secondary appearance in onmars
+    Given an onmars page with secondary and tertiary buttons labeled "Save"
+    When the page renders
+    Then the tertiary button has the same appearance as the secondary button
+
+  # Family: core behavior (appended)
+  # S17
+  Scenario: The deprecated variant warns in development
+    Given a development build with a button labeled "Save"
+    When the button uses the tertiary variant
+    Then the developer sees a deprecation warning recommending secondary
+
+  # S18
+  Scenario: The catalog offers four recommended variants
+    Given an agent choosing a button variant
+    When the agent reads the catalog schema
+    Then the available variants are primary, secondary, quaternary and ghost
