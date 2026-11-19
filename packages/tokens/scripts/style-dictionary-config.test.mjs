@@ -8,7 +8,10 @@ import {
   lightConfig,
   material3DarkConfig,
   material3LightConfig,
+  MODE_SOURCES,
+  withMode,
 } from '../style-dictionary.config.mjs';
+import { compositionDeclarations } from './theme-stylesheet.mjs';
 
 const configs = Object.entries({
   lightConfig,
@@ -63,3 +66,23 @@ for (const [name, config] of configs) {
     assert.equal(values.none, '0ms');
   });
 }
+
+test('onmars tertiary button tokens use the secondary role in every scheme and mode', async () => {
+  const tertiary = '--ki-button-tertiary-';
+  const secondary = '--ki-button-secondary-';
+
+  for (const [scheme, config] of Object.entries({ light: lightConfig, dark: darkConfig })) {
+    const modes = ['standard', ...Object.keys(MODE_SOURCES)];
+    for (const mode of modes) {
+      const composition = mode === 'standard' ? config : withMode(config, mode);
+      const dictionary = await new StyleDictionary(composition).getPlatformTokens('css');
+      const declarations = compositionDeclarations(dictionary);
+
+      for (const [name, token] of declarations) {
+        if (!name.startsWith(tertiary)) continue;
+        const counterpart = `${secondary}${name.slice(tertiary.length)}`;
+        assert.deepEqual(token, declarations.get(counterpart), `${scheme}/${mode}: ${name}`);
+      }
+    }
+  }
+});

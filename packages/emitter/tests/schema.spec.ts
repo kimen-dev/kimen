@@ -8,7 +8,7 @@ import type { Catalog } from '@kimen/catalog';
 import { catalogData, validateUiSpec } from '@kimen/catalog';
 import Ajv2020 from 'ajv/dist/2020.js';
 import { describe, expect, it } from 'vitest';
-import { type EmitterTarget, uiSpecJsonSchema } from '../src/index.js';
+import { catalogPrompt, type EmitterTarget, uiSpecJsonSchema } from '../src/index.js';
 
 function compile(artifact: Record<string, unknown>) {
   const ajv = new Ajv2020({ allErrors: false, strict: false });
@@ -65,6 +65,27 @@ describe('uiSpecJsonSchema', () => {
       version: 1,
     });
     expect(accepted).toBe(false);
+  });
+
+  it.each([
+    ['ki-button', 'S18'],
+    ['ki-icon-button', 'S17'],
+  ] as const)('%s %s only offers recommended variants to agents', (component) => {
+    const artifact = deriveOrThrow(catalogData, { components: [component] });
+    const defs = artifact['$defs'] as Record<
+      string,
+      { properties: { props: { properties: { variant: { enum: readonly string[] } } } } }
+    >;
+    expect(defs[component]?.properties.props.properties.variant.enum).toEqual([
+      'ghost',
+      'primary',
+      'quaternary',
+      'secondary',
+    ]);
+    const prompt = catalogPrompt(catalogData, { components: [component] });
+    expect(prompt.ok && prompt.artifact).toContain(
+      '- `variant` (enum: "ghost" | "primary" | "quaternary" | "secondary")',
+    );
   });
 
   it('S4 refuses a component subset outside the catalog', () => {
