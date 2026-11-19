@@ -69,3 +69,27 @@ that were all rule content, not repository code.
 
 The rules are Semgrep Rules License v1.0 (see the `license` field on each
 rule); each carries its `source` and `shortlink` back to semgrep.dev.
+
+## The engine
+
+`requirements.txt` is the engine's lock: Semgrep at the version
+`scripts/gates/semgrep-scan.sh` pins, and every package it depends on, each
+with the hashes of its files. The workflows install from it through
+`scripts/gates/install-semgrep.sh`, which checks every file against its hash,
+resolves no dependency and builds nothing from source. One of those jobs
+builds the tarballs a release publishes, so nothing unvouched runs beside
+them.
+
+To move to another Semgrep version, change `SEMGREP_VERSION` in
+`scripts/gates/semgrep-scan.sh` and in the command below, regenerate the lock
+keeping its header comment, and run the scan:
+
+```sh
+printf 'semgrep==1.168.0\n' >/tmp/semgrep.in
+uv pip compile /tmp/semgrep.in --universal --generate-hashes \
+  --python-version 3.10 --no-header --no-annotate -o /tmp/semgrep.lock
+bash scripts/gates/semgrep-scan.sh
+```
+
+Review the lock's diff as a dependency bump: it is the full list of what runs
+in the release job.
