@@ -86,10 +86,13 @@ jobs:
 
       # The Semgrep scan is a gate inside gates-suite.sh (see ci.yml quality).
       # A hosted runner has no semgrep on PATH, so the engine is installed
-      # here at the version the gate demands; without it the suite stops at
-      # the core gate before anything this workflow exists for has run.
-      - name: Install Semgrep (pinned)
-        run: pipx install semgrep==1.168.0
+      # here; without it the suite stops at the core gate before anything
+      # this workflow exists for has run. This job builds the bytes a release
+      # publishes, so the engine comes from .semgrep/requirements.txt, where
+      # every package is named with its hashes: pip resolves nothing and
+      # builds nothing here.
+      - name: Install Semgrep (hash-locked)
+        run: bash scripts/gates/install-semgrep.sh "$RUNNER_TEMP/semgrep"
 
       # Release validation runs the FULL fast suite (core + the Chromium
       # browser gate), not just the core gates a PR runs: the browser gate

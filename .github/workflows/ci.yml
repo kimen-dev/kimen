@@ -72,11 +72,11 @@ jobs:
       # redden a pull request that changed nothing (Art. X). security.yml keeps
       # the live registry on its schedule: the pinned set blocks, the live set
       # explores.
-      - name: Install Semgrep (pinned)
+      - name: Install Semgrep (hash-locked)
         if: >-
           github.event_name != 'pull_request' ||
           steps.scope.outputs.scope == 'full'
-        run: pipx install semgrep==1.168.0
+        run: bash scripts/gates/install-semgrep.sh "$RUNNER_TEMP/semgrep"
 
       # The cross-device regressions (cache-env-reentry, site-publication)
       # require the caller to designate TMPDIR on a filesystem other than the
