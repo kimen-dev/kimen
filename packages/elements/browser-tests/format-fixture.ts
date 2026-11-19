@@ -5,6 +5,19 @@ import { defineCustomElement as defineNumber } from '../dist/components/ki-forma
 import { defineCustomElement as defineRelative } from '../dist/components/ki-relative-time.js';
 import { parkPointer } from './axe';
 
+import { commands } from 'vitest/browser';
+
+export const formatBrowserCommands = commands as unknown as {
+  accessibilityTree: () => Promise<{ name: string; role: string }[] | null>;
+  emulateForcedColors: (value: 'active' | null) => Promise<void>;
+  emulateHoverCapability: (value: 'none' | null) => Promise<boolean>;
+  emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
+  fastForwardClock: (milliseconds: number) => Promise<void>;
+  installClock: () => Promise<void>;
+  pauseClock: () => Promise<void>;
+  resumeClock: () => Promise<void>;
+};
+
 export function setupFormatTests(): void {
   beforeAll(() => {
     defineDate();

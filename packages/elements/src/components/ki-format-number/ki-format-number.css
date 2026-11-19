@@ -1,0 +1,7 @@
+:host {
+  font-family: var(--ki-format-number-font-family, inherit);
+}
+
+span {
+  font-variant-numeric: tabular-nums;
+}

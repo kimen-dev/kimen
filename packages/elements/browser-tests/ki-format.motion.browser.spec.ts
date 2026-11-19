@@ -1,12 +1,16 @@
 // @spec:093-ki-format
 import { expect, it } from 'vitest';
-import { commands } from 'vitest/browser';
-import { formatOutput, mountFormat, setupFormatTests } from './format-fixture';
+import {
+  formatBrowserCommands,
+  formatOutput,
+  mountFormat,
+  setupFormatTests,
+} from './format-fixture';
 
 setupFormatTests();
 
 it('S11 renders without animation under reduced motion', async () => {
-  await commands.emulateReducedMotion('reduce');
+  await formatBrowserCommands.emulateReducedMotion('reduce');
   try {
     expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
     const main = mountFormat(`
@@ -20,6 +24,6 @@ it('S11 renders without animation under reduced motion', async () => {
       expect(output?.getAnimations({ subtree: true })).toEqual([]);
     }
   } finally {
-    await commands.emulateReducedMotion(null);
+    await formatBrowserCommands.emulateReducedMotion(null);
   }
 });

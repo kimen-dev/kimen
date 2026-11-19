@@ -38,7 +38,7 @@ Each decision below is an agent's choice, pending founder confirmation.
 - **Markup and styling.** Dates use native `time` elements. Numbers use inline
   text with tabular figures, as in the reference preview. The visible relative
   wording has a stable, visually hidden absolute timestamp for assistive
-  technology. All three use a shared semantic body-font alias for bare pages
+  technology. All three use semantic body-font aliases for bare pages
   and inherit surrounding color, size, line height and direction.
 - **Source layout.** Scaffold each shipped tag in its discovery directory, as
   with Layout, and use one shared Format token pair and overview page.

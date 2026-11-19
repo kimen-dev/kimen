@@ -1,8 +1,13 @@
 // @spec:093-ki-format
 import { expect, it } from 'vitest';
-import { commands } from 'vitest/browser';
 import { expectAccessible } from './axe';
-import { expectFormat, formatOutput, mountFormat, setupFormatTests } from './format-fixture';
+import {
+  expectFormat,
+  formatBrowserCommands,
+  formatOutput,
+  mountFormat,
+  setupFormatTests,
+} from './format-fixture';
 
 setupFormatTests();
 
@@ -72,11 +77,25 @@ it('S11 inherits typography and color in RTL text and uses tabular figures', asy
 });
 
 it('S11 remains visible in forced colors with the surrounding ink', async (test) => {
-  if ((await commands.emulateForcedColors('active')) === false) {
-    test.skip('this engine cannot emulate forced colors');
-  }
+  await formatBrowserCommands.emulateForcedColors('active');
   try {
-    expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    const witness = document.createElement('span');
+    witness.style.backgroundColor = 'rgb(1, 2, 3)';
+    document.body.append(witness);
+    const applied = () =>
+      matchMedia('(forced-colors: active)').matches &&
+      getComputedStyle(witness).backgroundColor !== 'rgb(1, 2, 3)';
+    const deadline = Date.now() + 2_000;
+    while (!applied() && Date.now() < deadline) {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    if (navigator.userAgent.includes('Chrome/')) {
+      expect(applied(), 'Chromium applies the emulated palette').toBe(true);
+    }
+    if (!applied()) {
+      test.skip('this engine does not repaint under forced-colors emulation');
+    }
+    witness.remove();
     const main = mountFormat(`
       <ki-format-date date="2026-11-19"></ki-format-date>
       <ki-format-number value="49" currency="EUR"></ki-format-number>
@@ -91,6 +110,6 @@ it('S11 remains visible in forced colors with the surrounding ink', async (test)
       expect(getComputedStyle(output).color).toBe(getComputedStyle(main).color);
     }
   } finally {
-    await commands.emulateForcedColors(null);
+    await formatBrowserCommands.emulateForcedColors(null);
   }
 });

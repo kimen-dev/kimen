@@ -1,7 +1,12 @@
 // @spec:093-ki-format
 import { expect, it } from 'vitest';
-import { commands } from 'vitest/browser';
-import { expectFormat, formatOutput, mountFormat, setupFormatTests } from './format-fixture';
+import {
+  expectFormat,
+  formatBrowserCommands,
+  formatOutput,
+  mountFormat,
+  setupFormatTests,
+} from './format-fixture';
 
 setupFormatTests();
 
@@ -11,7 +16,7 @@ it('S11 retains its inline density and tabular figures on coarse pointers', asyn
   const number = formatOutput(main, 'ki-format-number');
   if (!number) throw new Error('Missing number text');
   const before = number.getBoundingClientRect();
-  if (!(await commands.emulateHoverCapability('none'))) {
+  if (!(await formatBrowserCommands.emulateHoverCapability('none'))) {
     test.skip('this engine cannot emulate a coarse pointer');
   }
   try {
@@ -20,6 +25,6 @@ it('S11 retains its inline density and tabular figures on coarse pointers', asyn
     expect(number.getBoundingClientRect().width).toBeCloseTo(before.width);
     expect(getComputedStyle(number).fontVariantNumeric).toBe('tabular-nums');
   } finally {
-    await commands.emulateHoverCapability(null);
+    await formatBrowserCommands.emulateHoverCapability(null);
   }
 });

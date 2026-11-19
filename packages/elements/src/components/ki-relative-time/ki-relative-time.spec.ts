@@ -45,6 +45,14 @@ describe('relative-time formatting boundaries', () => {
     expect(describeRelativeTime(-1)).toEqual({ value: 0, unit: 'second', nextDelay: 999 });
   });
 
+  it('reaches a subsecond threshold even when the future wording rounds to zero', () => {
+    expect(describeRelativeTime(300, 0.5)).toEqual({
+      value: 0,
+      unit: 'second',
+      nextDelay: 800,
+    });
+  });
+
   it('schedules the threshold ahead of the next relative unit boundary', () => {
     expect(describeRelativeTime(-65_000, 90)).toEqual({
       value: -1,

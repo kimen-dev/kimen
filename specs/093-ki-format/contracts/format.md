@@ -15,4 +15,5 @@ for currency output, an Intl unit identifier for unit output and `compact`
 notation for abbreviated numbers. Relative wording accepts `auto` and
 `always`. The optional threshold is expressed in seconds.
 
-The `--ki-format-font-family` token defaults to the semantic body family.
+The `--ki-format-date-font-family`, `--ki-format-number-font-family` and
+`--ki-relative-time-font-family` tokens default to the semantic body family.

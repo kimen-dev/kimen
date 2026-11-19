@@ -1,37 +1,42 @@
 // @spec:093-ki-format
 import { afterEach, expect, it, vi } from 'vitest';
-import { commands } from 'vitest/browser';
 import { expectAccessible } from './axe';
-import { expectFormat, formatOutput, mountFormat, setupFormatTests } from './format-fixture';
+import {
+  expectFormat,
+  formatBrowserCommands,
+  formatOutput,
+  mountFormat,
+  setupFormatTests,
+} from './format-fixture';
 
 const formatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' });
 let clockPaused = false;
 
 vi.setConfig({ testTimeout: 120_000 });
 
+setupFormatTests();
+
 afterEach(async () => {
   if (clockPaused) {
     clockPaused = false;
-    await commands.resumeClock();
+    await formatBrowserCommands.resumeClock();
   }
 });
 
-setupFormatTests();
-
 async function useClock(): Promise<void> {
   try {
-    await commands.installClock();
+    await formatBrowserCommands.installClock();
   } catch {
     // Another browser spec may already have installed this page's clock.
   }
-  await commands.pauseClock();
+  await formatBrowserCommands.pauseClock();
   clockPaused = true;
 }
 
 async function pass(ms: number): Promise<void> {
-  await commands.fastForwardClock(ms);
+  await formatBrowserCommands.fastForwardClock(ms);
   // Let Stencil complete its render after the time boundary.
-  await commands.fastForwardClock(64);
+  await formatBrowserCommands.fastForwardClock(64);
 }
 
 function ago(ms: number): string {
@@ -93,15 +98,16 @@ it('S10 exposes a stable absolute date as assistive text while relative text cha
   expect(
     host?.shadowRoot?.querySelector('[aria-live], [role="status"], [role="alert"]'),
   ).toBeNull();
-  const browser = commands as unknown as {
-    accessibilityTree: () => Promise<{ name: string }[] | null>;
-  };
-  const nodes = await browser.accessibilityTree();
-  if (nodes) {
-    expect(nodes).toEqual(expect.arrayContaining([expect.objectContaining({ name: absolute })]));
+  const nodes = await formatBrowserCommands.accessibilityTree();
+  if (nodes === null) {
+    expect(navigator.userAgent.includes('Chrome/'), 'Chromium exposes its AX tree').toBe(false);
+  } else {
+    expect(nodes).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: absolute, role: 'StaticText' })]),
+    );
     expect(nodes.some(({ name }) => name === '11 seconds ago')).toBe(false);
   }
-  await commands.resumeClock();
+  await formatBrowserCommands.resumeClock();
   clockPaused = false;
   await expectAccessible(main);
 });
