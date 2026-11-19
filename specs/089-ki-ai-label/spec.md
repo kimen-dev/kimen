@@ -1,8 +1,8 @@
 # Feature specification for AI provenance
 
-**Feature branch** `feat/398-ki-ai-label`  
-**Issue** #398  
-**Design source** Kimen design system, Components → Proposed → AILabel
+- **Feature branch** `feat/398-ki-ai-label`
+- **Issue** #398
+- **Design source** Kimen design system, Components → Proposed → AILabel
 
 A quiet mark identifies AI-generated content. Where a source explanation is available, people can inspect it and ask the application to restore their original text.
 

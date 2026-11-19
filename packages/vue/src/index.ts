@@ -5,6 +5,7 @@
  * Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+export { KiAiLabel } from './ki-ai-label.js';
 export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';

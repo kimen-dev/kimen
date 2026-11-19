@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 384 semantic
-and 1194 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 390 semantic
+and 1217 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -45,6 +45,8 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
+| `--ki-corner-anchored-panel` | `12px` | Corner radius of an anchored explanation panel. |
+| `--ki-corner-compact-mark` | `6px` | Corner radius of a compact inline mark. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 
 ### `ki.density`
@@ -61,6 +63,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
 | `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
+| `--ki-effect-component-flat-backdrop-filter` | `none` | Default complete backdrop filter for an opaque, flat component surface. |
 | `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
 | `--ki-effect-component-primary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow. |
 | `--ki-effect-component-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter. |
@@ -235,6 +238,7 @@ every component at once.
 | `--ki-outline-danger-low-em` | `#ffcccf` | semantic color for outline danger low em. |
 | `--ki-outline-danger-low-em-alpha` | `rgba(239, 78, 105, 0.4)` | semantic color for outline danger low em alpha. |
 | `--ki-outline-danger-med-em` | `#f1989f` | semantic color for outline danger med em. |
+| `--ki-outline-hairline-width` | `1px` | Width of a hairline component surface edge. |
 | `--ki-outline-high-em` | `rgba(0, 0, 0, 0.12)` | semantic color for outline high em. |
 | `--ki-outline-info-base-em` | `#dff3ff` | semantic color for outline info base em. |
 | `--ki-outline-info-base-em-alpha` | `rgba(19, 185, 236, 0.2)` | semantic color for outline info base em alpha. |
@@ -391,10 +395,17 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
+| `--ki-surface-image-flat` | `none` | Default image for a flat component surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
+
+### `ki.surface-size`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-surface-size-compact` | `18rem` | Inline size of a compact anchored surface. |
 
 ### `ki.text`
 
@@ -517,6 +528,34 @@ every component at once.
 
 The public styling contract of each element. Reassign them on `:root` for a
 theme-wide change or on any subtree for a scoped one.
+
+### `ki-ai-label`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-ai-label-backdrop-filter` | `none` | Complete filter behind the AI provenance mark. Defaults to none. |
+| `--ki-ai-label-bg` | `#ffebe5` | Fill of the AI provenance mark. |
+| `--ki-ai-label-bg-image` | `none` | Optional image over the AI provenance fill. Defaults to none. |
+| `--ki-ai-label-border-width` | `1px` | Border width of the panel and the forced-colors mark. |
+| `--ki-ai-label-fg` | `#9a3715` | Text and icon ink of the AI provenance mark. |
+| `--ki-ai-label-gap` | `0.25rem` | Gap between the mark and its icon or between provenance metadata items. |
+| `--ki-ai-label-md-height` | `1.5rem` | Minimum painted block size of the medium AI mark. |
+| `--ki-ai-label-md-icon-size` | `1rem` | Sparkles icon size in the medium AI mark. |
+| `--ki-ai-label-md-padding-inline` | `0.5rem` | Inline inset of the medium AI mark. |
+| `--ki-ai-label-popover-backdrop-filter` | `none` | Complete filter behind the provenance explanation. Defaults to none. |
+| `--ki-ai-label-popover-bg` | `#f9f7f4` | Raised fill of the provenance explanation. |
+| `--ki-ai-label-popover-bg-image` | `none` | Optional image over the provenance explanation fill. Defaults to none. |
+| `--ki-ai-label-popover-border` | `rgba(24, 22, 19, 0.1)` | Hairline color of the explanation panel. |
+| `--ki-ai-label-popover-fg` | `#181613` | Ink of the provenance explanation and metadata. |
+| `--ki-ai-label-popover-gap` | `0.5rem` | Gap between the panel sections and between the panel and trigger. |
+| `--ki-ai-label-popover-padding` | `0.75rem` | Inset of the explanation panel. |
+| `--ki-ai-label-popover-radius` | `12px` | Corner radius of the explanation panel. |
+| `--ki-ai-label-popover-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the explanation panel. |
+| `--ki-ai-label-popover-width` | `18rem` | Preferred inline size of the explanation panel. |
+| `--ki-ai-label-radius` | `6px` | Corner radius of the AI provenance mark. |
+| `--ki-ai-label-sm-height` | `1.25rem` | Minimum painted block size of the small AI mark. |
+| `--ki-ai-label-sm-icon-size` | `0.75rem` | Sparkles icon size in the small AI mark. |
+| `--ki-ai-label-sm-padding-inline` | `0.375rem` | Inline inset of the small AI mark. |
 
 ### `ki-alert`
 
