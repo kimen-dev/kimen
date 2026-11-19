@@ -37,7 +37,7 @@ import { catalogData, validateUiSpec } from '@kimen/catalog';
 
 // What may an agent emit? One entry per published element:
 catalogData.components['ki-button'].props.variant;
-// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary', 'tertiary'], ... }
+// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary'], ... }
 
 // Validate an agent-emitted UI spec before anything renders:
 const report = validateUiSpec({
@@ -60,6 +60,9 @@ const report = validateUiSpec({
 });
 report.ok; // true — or false with issues naming each offender and location
 ```
+
+Use `values` when generating enum props. The optional `deprecatedValues`
+field lists older values the runtime still accepts for existing specs.
 
 A UI spec is data, never code. Validation rejects — naming the offender —
 unknown components, unknown props, wrong-typed values, undeclared slots,

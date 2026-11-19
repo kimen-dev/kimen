@@ -598,15 +598,16 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
   // Issue #342 adds ten full-filter tokens: two semantic and eight component.
   // 1264 + 10 = 1274.
+  // Issue #344 adds the tertiary hover overlay. 1274 + 1 = 1275.
   // Issue #316 (changes/api/316-size-axes) adds 193: the size axes of
   // ki-input (36), ki-select (32), ki-textarea (28), ki-tabs (4), ki-tab (12),
   // ki-list-item (27), ki-checkbox (7), ki-radio (6), ki-switch (36) and the
-  // xs ki-badge (5); medium keeps its unsized tokens. 1274 + 193 = 1467.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1467);
+  // xs ki-badge (5); medium keeps its unsized tokens. 1275 + 193 = 1468.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1468);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1467,
+    1468,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),

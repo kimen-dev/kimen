@@ -10,6 +10,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-icon-button.js';
 import { expectAccessible, parkPointer } from './axe';
+import { expectTertiaryAlias, expectTertiaryWarning } from './button-variant';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { alphaOf } from './contracts';
 import { moveToNewParent } from './reconnect';
@@ -591,6 +592,28 @@ describe('ki-icon-button in a real browser', () => {
     await userEvent.keyboard('{Tab}');
 
     expect(document.activeElement).toBe(second);
+  });
+
+  it.each(['light', 'dark'] as const)(
+    'S15 tertiary shares secondary paint in onmars %s',
+    async (scheme) => {
+      cleanup();
+      document.documentElement.setAttribute('data-ki-color-scheme', scheme);
+      await browserCommands.emulateReducedMotion('reduce');
+      try {
+        await expectTertiaryAlias(async (variant, tone, disabled) =>
+          requireButton(await mount('Close', { variant, tone, disabled })),
+        );
+      } finally {
+        await browserCommands.emulateReducedMotion(null);
+        cleanup();
+      }
+    },
+  );
+
+  it('S16 warns for tertiary only in a development build', async () => {
+    cleanup();
+    await expectTertiaryWarning('ki-icon-button', (variant) => mount('Close', { variant }));
   });
 
   it('S2 renders one tone-independent disabled appearance in every variant', async () => {

@@ -29,7 +29,8 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 The API below is the union of patterns found in both reference designs, so
 that neither theme lacks expressive power (and future themes inherit the same
-guarantee):
+guarantee). The variant column records the original extraction. The #344
+amendment below defines the current hierarchy:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-icon-button |
 |---|---|---|---|
@@ -177,6 +178,24 @@ values and observe default rendering.
   resolve through the semantic layer cascade (missing theme stylesheet falls
   back to onmars, per the 001 contract).
 
+## Amendment: four button roles (#344)
+
+Use `primary` for the filled main action, `secondary` for an outlined
+surface action, `quaternary` for a neutral text action, and `ghost` for an
+accent text action. The catalog offers these four variants to agents.
+
+The icon button still accepts `tertiary` in existing markup and code. It
+shares the secondary role's tokens by default, with a development-only
+warning recommending `secondary`. Material 3 retains its existing
+tertiary appearance through theme-specific token values.
+
+Agent's choice, pending founder confirmation: keep a dedicated tertiary
+hover overlay token. It uses the secondary wash by default and is
+transparent in Material 3.
+
+Agent's choice, pending founder confirmation: keep `quaternary` in this
+release. Whether to rename it to `text` remains open for the next major.
+
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
 ```gherkin
@@ -276,17 +295,37 @@ Feature: Icon button
     Given a focused button, then a disabled icon button labeled "Close", then a second button
     When the user presses Tab
     Then focus lands on the second button, never on the disabled icon button
+
+  # Family: theming (appended)
+  # S15
+  Scenario: Tertiary shares the secondary appearance in onmars
+    Given an onmars page with secondary and tertiary icon buttons labeled "Close"
+    When the page renders
+    Then the tertiary icon button has the same appearance as the secondary icon button
+
+  # Family: core behavior (appended)
+  # S16
+  Scenario: The deprecated variant warns in development
+    Given a development build with an icon button labeled "Close"
+    When the icon button uses the tertiary variant
+    Then the developer sees a deprecation warning recommending secondary
+
+  # S17
+  Scenario: The catalog offers four recommended variants
+    Given an agent choosing an icon button variant
+    When the agent reads the catalog schema
+    Then the available variants are primary, secondary, quaternary and ghost
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3 | |
+| Core behavior | S1, S2, S3, S16, S17 | |
 | Keyboard path | S4, S5, S14 | |
 | Assistive-tech outcome | S6, S7, S8, S12, S13 | |
 | Form participation | S9 | |
-| Theming | S10, S11 | |
+| Theming | S10, S11, S15 | |
 
 Form participation is covered by a deliberate negative contract (S9):
 ki-icon-button is not form-associated in v1 and MUST NOT submit or reset an
@@ -297,10 +336,10 @@ founder decision it batches.
 
 ### Functional Requirements
 
-- **FR-001**: The icon button MUST expose a `variant` attribute with exactly
-  the five semantic emphasis levels established by 002 — `primary`,
-  `secondary`, `tertiary`, `quaternary`, `ghost` — defaulting to
-  `secondary`. Levels describe action hierarchy, never appearance.
+- **FR-001**: The icon button MUST expose a `variant` attribute defaulting
+  to `secondary`. The four recommended variants are `primary`, `secondary`,
+  `quaternary` and `ghost`. The component MUST still accept the deprecated
+  `tertiary` value as described in the #344 amendment.
 - **FR-002**: The icon button MUST expose a `tone` attribute with values
   `neutral` (default), `success`, `danger`, orthogonal to `variant`.
 - **FR-003**: The icon button MUST expose a `size` attribute with values

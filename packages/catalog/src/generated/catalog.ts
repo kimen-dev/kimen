@@ -3,7 +3,7 @@
 // packages/catalog/scripts/generate-catalog.mjs; the catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.3.0",
+  "catalogSchemaVersion": "1.4.0",
   "components": {
     "div": {
       "description": "A native layout container (`<div>`) that lays its children out as a flex column or row, separated by a spacing token. It has no visual identity of its own: no background, border or padding.",
@@ -357,11 +357,13 @@ export const catalogData = {
             "ghost",
             "primary",
             "quaternary",
-            "secondary",
-            "tertiary"
+            "secondary"
           ],
-          "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
-          "default": "secondary"
+          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "default": "secondary",
+          "deprecatedValues": [
+            "tertiary"
+          ]
         }
       },
       "slots": {
@@ -552,11 +554,13 @@ export const catalogData = {
             "ghost",
             "primary",
             "quaternary",
-            "secondary",
-            "tertiary"
+            "secondary"
           ],
-          "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
-          "default": "secondary"
+          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "default": "secondary",
+          "deprecatedValues": [
+            "tertiary"
+          ]
         }
       },
       "slots": {

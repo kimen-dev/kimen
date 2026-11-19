@@ -2,6 +2,8 @@ import { h } from '@stencil/core';
 import type { Meta, StoryObj } from '@stencil/storybook-plugin';
 import type { JSX } from '../../components';
 
+const variants = ['primary', 'secondary', 'quaternary', 'ghost'] as const;
+
 const closeIcon = (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -27,6 +29,7 @@ const meta = {
     label: 'Close',
     disabled: false,
   },
+  argTypes: { variant: { control: 'select', options: [...variants] } },
 } satisfies Meta<JSX.KiIconButton>;
 
 export default meta;
@@ -40,11 +43,11 @@ export const Primary: Story = {
   args: { variant: 'primary' },
 };
 
-/** Emphasis scale: one icon button per variant, same tone and size. */
+/** The four recommended roles, with the same tone and size. */
 export const Variants: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-      {(['primary', 'secondary', 'tertiary', 'quaternary', 'ghost'] as const).map((variant) => (
+      {variants.map((variant) => (
         <ki-icon-button {...args} variant={variant} label={variant}>
           {closeIcon}
         </ki-icon-button>

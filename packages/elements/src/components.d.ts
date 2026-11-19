@@ -221,8 +221,9 @@ export namespace Components {
          */
         "value"?: string;
         /**
-          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
           * @default 'secondary'
+          * @deprecatedValue tertiary
          */
         "variant": KiButtonVariant;
     }
@@ -403,8 +404,9 @@ export namespace Components {
          */
         "tone": KiIconButtonTone;
         /**
-          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, and `ghost` for accent icon actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
           * @default 'secondary'
+          * @deprecatedValue tertiary
          */
         "variant": KiIconButtonVariant;
     }
@@ -1904,8 +1906,9 @@ declare namespace LocalJSX {
          */
         "value"?: string;
         /**
-          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
           * @default 'secondary'
+          * @deprecatedValue tertiary
          */
         "variant"?: KiButtonVariant;
     }
@@ -2086,8 +2089,9 @@ declare namespace LocalJSX {
          */
         "tone"?: KiIconButtonTone;
         /**
-          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, and `ghost` for accent icon actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
           * @default 'secondary'
+          * @deprecatedValue tertiary
          */
         "variant"?: KiIconButtonVariant;
     }
