@@ -213,23 +213,31 @@ durations and easings, never bypass that gate.
 
 ### Glass
 
-Onmars v1 paints the dialog and tooltip with translucent images and
-backdrop blur. The select listbox pairs a translucent fill with blur.
-Each surface accepts an optional `-bg-image` token layered over its
-`-bg` color. Material 3 uses solid fills.
+Onmars v1 paints the dialog and tooltip with translucent images and a
+backdrop filter, and the select listbox pairs a translucent fill with one.
+Each surface accepts an optional `-bg-image` token layered over its `-bg`
+color, and reads its complete filter from a token such as
+`--ki-dialog-backdrop-filter`. Material 3 uses solid fills. Set
+`--ki-effect-component-backdrop-filter` to `none` at the theme root to turn
+off the shared effect, including the select listbox. A component token can
+still set its own complete filter value, such as `blur(12px)`.
 
-To make a tooltip flat, set the fill and turn off the image. Use the same
-color for the arrow edges and use zero blur:
+To make a tooltip flat, set the fill, turn off the image and the filter, and
+use the same color for the arrow edges:
 
 ```css
 :root {
+  --ki-effect-component-backdrop-filter: none;
   --ki-tooltip-bg: var(--ki-surface-s2);
   --ki-tooltip-bg-image: none;
   --ki-surface-image-tooltip-arrow-start: var(--ki-tooltip-bg);
   --ki-surface-image-tooltip-arrow-end: var(--ki-tooltip-bg);
-  --ki-tooltip-backdrop-blur: 0px;
 }
 ```
+
+Onmars uses a stronger default filter on the select listbox, exposed as
+`--ki-effect-component-listbox-backdrop-filter`. The reduced transparency mode
+uses `none` for both semantic effects, and Material 3 keeps a zero blur.
 
 ### Bevels
 

@@ -249,7 +249,7 @@
   --ki-elevation-e4: var(--ki-foundation-material3-elevation-level-4);
   --ki-elevation-e5: var(--ki-foundation-material3-elevation-level-5);
   --ki-elevation-e6: var(--ki-foundation-material3-elevation-level-5);
-  --ki-effect-component-backdrop-blur: var(--ki-blur-none);
+  --ki-effect-component-backdrop-blur: var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-effect-component-backdrop-filter */
   --ki-effect-component-primary-default-shadow: var(--ki-foundation-material3-elevation-level-1);
   --ki-effect-component-primary-hover-shadow: var(--ki-foundation-material3-elevation-level-2);
   --ki-effect-component-secondary-default-shadow: var(--ki-foundation-material3-elevation-level-1);
@@ -518,7 +518,7 @@
   --ki-select-disabled-border: var(--ki-outline-low-em);
   --ki-select-disabled-label-fg: var(--ki-text-low-em);
   --ki-select-listbox-bg: var(--ki-surface-s2);
-  --ki-select-listbox-backdrop-blur: var(--ki-blur-none);
+  --ki-select-listbox-backdrop-blur: var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
   --ki-select-listbox-radius: var(--ki-radius-component-xs);
   --ki-select-listbox-shadow: var(--ki-elevation-e2);
   --ki-select-listbox-padding: var(--ki-space-xs);
@@ -640,7 +640,7 @@
   --ki-tooltip-bg: var(--ki-surface-inverse-white);
   --ki-tooltip-bg-start: var(--ki-surface-inverse-white); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-bg-image */
   --ki-tooltip-bg-end: var(--ki-surface-inverse-white); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-bg-image */
-  --ki-tooltip-backdrop-blur: var(--ki-blur-none);
+  --ki-tooltip-backdrop-blur: var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-backdrop-filter */
   --ki-tooltip-fg: var(--ki-text-inverse-black);
   --ki-tooltip-font-size: var(--ki-font-size-caption-2);
   --ki-tooltip-line-height: var(--ki-font-line-height-caption-2);

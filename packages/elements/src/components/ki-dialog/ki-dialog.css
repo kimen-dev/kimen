@@ -44,7 +44,6 @@
   --_ki-dialog-min-width: var(--ki-dialog-min-width);
   --_ki-dialog-max-width: var(--ki-dialog-max-width);
   --_ki-dialog-bg: var(--ki-dialog-bg);
-  --_ki-dialog-backdrop-blur: var(--ki-dialog-backdrop-blur);
   --_ki-dialog-fg: var(--ki-dialog-fg);
   --_ki-dialog-border: var(--ki-dialog-border);
   --_ki-dialog-shadow: var(--ki-dialog-shadow);
@@ -87,7 +86,7 @@
   font-family: var(--ki-typography-family-body);
   background-color: var(--_ki-dialog-bg);
   background-image: var(--ki-dialog-bg-image, none);
-  backdrop-filter: blur(var(--_ki-dialog-backdrop-blur));
+  backdrop-filter: var(--_ki-dialog-backdrop-filter, var(--ki-dialog-backdrop-filter));
   border: var(--_ki-dialog-border);
   border-radius: var(--_ki-dialog-radius);
   box-shadow: var(--_ki-dialog-shadow);
@@ -236,5 +235,12 @@ slot[name="footer"] {
   [part="dialog"] {
     background: Canvas;
     border: thin solid CanvasText;
+  }
+}
+
+/* Compatibility with the deprecated length while the full filter uses its default. */
+@container style(--ki-dialog-backdrop-filter: var(--_ki-backdrop-filter-default)) {
+  [part="dialog"] {
+    --_ki-dialog-backdrop-filter: blur(var(--ki-dialog-backdrop-blur));
   }
 }

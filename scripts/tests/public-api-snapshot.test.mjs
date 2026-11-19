@@ -596,15 +596,17 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // Issue #349 adds the video hover shadow opacity. 1254 + 1 = 1255.
   // Issue #343 adds three component image tokens and six semantic tokens for
   // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
+  // Issue #342 adds ten full-filter tokens: two semantic and eight component.
+  // 1264 + 10 = 1274.
   // Issue #316 (changes/api/316-size-axes) adds 193: the size axes of
   // ki-input (36), ki-select (32), ki-textarea (28), ki-tabs (4), ki-tab (12),
   // ki-list-item (27), ki-checkbox (7), ki-radio (6), ki-switch (36) and the
-  // xs ki-badge (5); medium keeps its unsized tokens. 1264 + 193 = 1457.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1457);
+  // xs ki-badge (5); medium keeps its unsized tokens. 1274 + 193 = 1467.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1467);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1457,
+    1467,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
@@ -637,7 +639,8 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // component leaves published. Issue #343 adds four legacy gradient stops.
   // All 89 entries carry deprecatedSince 0.1.0 and a live replacement.
   const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
-  assert.equal(deprecated.length, 89);
+  // Issue #342 also deprecates seven legacy backdrop blur lengths. 89 + 7 = 96.
+  assert.equal(deprecated.length, 96);
   assert.ok(
     deprecated.every(
       ({ deprecatedSince, replacement }) => deprecatedSince === '0.1.0' && replacement,

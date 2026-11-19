@@ -20,14 +20,11 @@
   --_ki-button-border: var(--_ki-button-rest-border);
   --_ki-button-shadow: var(--_ki-button-rest-shadow);
   --_ki-button-border-bottom: var(--ki-button-secondary-rest-border-bottom);
-  --_ki-button-backdrop-blur: var(--ki-button-backdrop-blur);
 
   /* Glass backdrop is a variant trait: only the glass variants (primary and
      the secondary default) establish the full filter; non-glass variants
-     reset it below so backdrop-filter computes `none` off the glass path.
-     Declared and accepted: under material3 the blur token resolves to 0, so
-     glass variants compute blur(0px) — visually identical to none. */
-  --_ki-button-backdrop-filter: blur(var(--_ki-button-backdrop-blur));
+     reset it below so backdrop-filter computes `none` off the glass path. */
+  --_ki-button-backdrop-filter: var(--ki-button-backdrop-filter);
 
   display: inline-block;
 }
@@ -163,7 +160,6 @@
 :host([variant="quaternary"]),
 :host([variant="ghost"]) {
   --_ki-button-border-bottom: var(--_ki-button-border);
-  --_ki-button-backdrop-blur: initial;
   --_ki-button-backdrop-filter: initial;
 }
 
@@ -306,9 +302,7 @@ button {
      specs/002-ki-button/design-extraction.md §0). Off-path by default: only
      the glass variants set --_ki-button-backdrop-filter; everything else
      (and consumers without the token loaded) resolves the `none` fallback.
-     material3 keeps the glass path but its blur token is 0 → blur(0px),
-     declared and accepted. Stencil does not autoprefix, so the -webkit-
-     alias ships explicitly for Safari. */
+     Stencil does not autoprefix; the -webkit- alias ships for Safari. */
   /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-backdrop-filter: var(--_ki-button-backdrop-filter, none);
   backdrop-filter: var(--_ki-button-backdrop-filter, none);
@@ -567,4 +561,11 @@ button[aria-disabled="true"] {
   overflow: hidden;
   position: absolute;
   white-space: nowrap;
+}
+
+/* Compatibility with the deprecated length while the full filter uses its default. */
+@container style(--_ki-button-backdrop-filter: var(--_ki-backdrop-filter-default)) {
+  button {
+    --_ki-button-backdrop-filter: blur(var(--ki-button-backdrop-blur));
+  }
 }

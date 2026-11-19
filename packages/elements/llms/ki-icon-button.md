@@ -97,7 +97,7 @@ None.
 
 ## CSS custom properties
 
-- `--ki-button-backdrop-blur`: backdrop blur used by the button component glass variants (primary/secondary). material3 resolves to blur none via the semantic override.
+- `--ki-button-backdrop-filter`: Complete backdrop filter for glass button and icon-button variants.
 - `--ki-button-border-width`: dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px).
 - `--ki-button-focus-ring-color`: color used by the button component for focus ring color.
 - `--ki-button-focus-ring-offset`: dimension used by the button component for focus ring offset.

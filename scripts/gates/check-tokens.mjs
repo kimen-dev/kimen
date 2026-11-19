@@ -9,7 +9,7 @@ import {
   splitTopLevel,
   stripComments,
 } from '../lib/css-token-surface.mjs';
-import { parseTokenComposition } from '../lib/token-inventory.mjs';
+import { isLegacyBackdropBlur, parseTokenComposition } from '../lib/token-inventory.mjs';
 
 const configRelativePath = 'packages/tokens/style-dictionary.config.mjs';
 
@@ -126,6 +126,7 @@ export function issueDiagnostic(issue, composition) {
 export function collectCssIssues(filePath, contents, recordsByCssName, { workspaceRoot }) {
   const issues = [];
   const relativePath = normalizePath(relative(workspaceRoot, filePath));
+  const tag = relativePath.split('/').at(-2);
   for (const match of contents.matchAll(/var\(\s*(--ki-[a-z0-9-]+)/giu)) {
     const cssName = match[1].toLowerCase();
     const record = recordsByCssName.get(cssName);
@@ -135,7 +136,7 @@ export function collectCssIssues(filePath, contents, recordsByCssName, { workspa
       issues.push(`primitive-css-consumption ${relativePath} ${cssName}`);
     } else if (record.layer === 'theme') {
       issues.push(`theme-css-consumption ${relativePath} ${cssName}`);
-    } else if (record.deprecation) {
+    } else if (record.deprecation && !isLegacyBackdropBlur(tag, cssName, contents, match.index)) {
       issues.push(`deprecated-css-consumption ${relativePath} ${cssName}`);
     }
   }

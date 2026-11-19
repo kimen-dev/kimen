@@ -80,7 +80,8 @@ None.
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
+- `--ki-effect-component-backdrop-filter`: Complete backdrop filter for glass components. Use none to turn the effect off.
+- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter.
 - `--ki-elevation-e1`: MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow.
 - `--ki-focus-danger`: MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation.
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
@@ -144,8 +145,8 @@ None.
 - `--ki-select-lg-padding-inline`: dimension used by the select component for lg padding inline (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Space/xl, 12px).
 - `--ki-select-lg-radius`: dimension used by the select component for lg radius (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Radius/small-component/lg).
 - `--ki-select-line-height`: dimension used by the select component for the trigger value line height (MarsUI body_1 24px).
-- `--ki-select-listbox-backdrop-blur`: backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override).
-- `--ki-select-listbox-bg`: color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with backdrop-filter blur(var(--ki-select-listbox-backdrop-blur))).
+- `--ki-select-listbox-backdrop-filter`: Complete backdrop filter behind the select listbox.
+- `--ki-select-listbox-bg`: color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter).
 - `--ki-select-listbox-bg-image`: Optional CSS background image layered over the listbox fill. Use none for a solid fill.
 - `--ki-select-listbox-max-block-size`: dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale).
 - `--ki-select-listbox-offset`: dimension used by the select component for listbox offset.

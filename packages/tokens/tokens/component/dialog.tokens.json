@@ -56,7 +56,20 @@
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
         "$type": "dimension",
-        "$description": "backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5)."
+        "$description": "backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5).",
+        "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
+        "$extensions": {
+          "dev.kimen.deprecation": {
+            "since": "0.1.0",
+            "removal": "1.0.0",
+            "replacement": "--ki-dialog-backdrop-filter"
+          }
+        }
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.backdrop-filter}",
+        "$description": "Complete backdrop filter behind the dialog surface."
       },
       "fg": {
         "$value": "{ki.text.high-em}",

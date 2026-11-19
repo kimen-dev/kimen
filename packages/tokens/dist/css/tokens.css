@@ -824,7 +824,9 @@
   --ki-elevation-e4: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow);
   --ki-elevation-e5: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow);
   --ki-elevation-e6: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-6) var(--ki-shadow-distance-6) var(--ki-shadow-spread-6) var(--ki-elevation-shadow);
-  --ki-effect-component-backdrop-blur: var(--ki-blur-24);
+  --ki-effect-component-backdrop-blur: var(--ki-blur-24); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-effect-component-backdrop-filter */
+  --ki-effect-component-backdrop-filter: blur(var(--ki-effect-component-backdrop-blur));
+  --ki-effect-component-listbox-backdrop-filter: blur(var(--ki-blur-48));
   --ki-effect-component-primary-default-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-default);
   --ki-effect-component-primary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-hover);
   --ki-effect-component-secondary-default-shadow: 0 var(--ki-shadow-effect-y) var(--ki-shadow-effect-blur) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-default);
@@ -959,6 +961,7 @@
   --ki-alert-warning-border: var(--ki-outline-none);
   --ki-alert-warning-icon-bg: var(--ki-surface-warning-tint);
   --ki-alert-warning-icon-fg: var(--ki-text-warning-high-em);
+  --ki-alert-dismiss-backdrop-filter: var(--ki-effect-component-backdrop-filter);
   --ki-alert-dismiss-border-width: var(--ki-size-border-hairline);
   --ki-alert-dismiss-radius: var(--ki-radius-round);
   --ki-alert-dismiss-rest-fg: var(--ki-text-high-em);
@@ -972,7 +975,8 @@
   --ki-alert-shell-padding: var(--ki-space-xl);
   --ki-alert-shell-radius: var(--ki-radius-big-component-lg);
   --ki-alert-shell-bg: var(--ki-inverse-white-alpha-3);
-  --ki-alert-shell-backdrop-blur: var(--ki-effect-component-backdrop-blur);
+  --ki-alert-shell-backdrop-blur: var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-alert-shell-backdrop-filter */
+  --ki-alert-shell-backdrop-filter: var(--ki-effect-component-backdrop-filter);
   --ki-alert-card-shadow: var(--ki-elevation-e5);
   --ki-alert-icon-size: var(--ki-space-10xl);
   --ki-alert-icon-radius: var(--ki-radius-round);
@@ -1029,6 +1033,7 @@
   --ki-avatar-border-color: var(--ki-outline-base-em);
   --ki-avatar-font-family: var(--ki-typography-family-body);
   --ki-avatar-font-weight: var(--ki-typography-weight-body-medium);
+  --ki-badge-backdrop-filter: var(--ki-effect-component-backdrop-filter);
   --ki-badge-sm-height: var(--ki-space-7xl);
   --ki-badge-sm-padding-inline: var(--ki-space-md);
   --ki-badge-sm-radius: var(--ki-radius-component-sm);
@@ -1112,7 +1117,8 @@
   --ki-button-font-weight: var(--ki-typography-weight-body-medium);
   --ki-button-padding-block: var(--ki-space-xs);
   --ki-button-label-padding-inline: var(--ki-space-xs);
-  --ki-button-backdrop-blur: var(--ki-effect-component-backdrop-blur);
+  --ki-button-backdrop-blur: var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-backdrop-filter */
+  --ki-button-backdrop-filter: var(--ki-effect-component-backdrop-filter);
   --ki-button-focus-ring-color: var(--ki-focus-ring-color);
   --ki-button-focus-ring-width: var(--ki-focus-ring-width);
   --ki-button-focus-ring-offset: var(--ki-focus-ring-offset);
@@ -1409,7 +1415,8 @@
   --ki-dialog-bg-image: var(--ki-surface-image-dialog);
   --ki-dialog-bg-start: var(--ki-surface-special-blur-base-light); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-bg-image */
   --ki-dialog-bg-end: var(--ki-surface-special-light-s0-dark-s2); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-bg-image */
-  --ki-dialog-backdrop-blur: var(--ki-effect-component-backdrop-blur);
+  --ki-dialog-backdrop-blur: var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-backdrop-filter */
+  --ki-dialog-backdrop-filter: var(--ki-effect-component-backdrop-filter);
   --ki-dialog-fg: var(--ki-text-high-em);
   --ki-dialog-border: var(--ki-border-hairline-base-em);
   --ki-dialog-shadow: var(--ki-elevation-e4);
@@ -1737,7 +1744,8 @@
   --ki-select-placeholder-fg: var(--ki-text-supporting);
   --ki-select-listbox-bg: var(--ki-surface-special-blur-base-light);
   --ki-select-listbox-bg-image: var(--ki-surface-image-listbox);
-  --ki-select-listbox-backdrop-blur: var(--ki-blur-48);
+  --ki-select-listbox-backdrop-blur: var(--ki-blur-48); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
+  --ki-select-listbox-backdrop-filter: var(--ki-effect-component-listbox-backdrop-filter);
   --ki-select-listbox-radius: var(--ki-radius-big-component-xs);
   --ki-select-listbox-elevation: var(--ki-elevation-shadow-med); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-shadow */
   --ki-select-listbox-shadow: var(--ki-elevation-e3);
@@ -2028,7 +2036,8 @@
   --ki-tooltip-bg-image: var(--ki-surface-image-tooltip);
   --ki-tooltip-bg-start: var(--ki-surface-special-blur-base-light); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-bg-image */
   --ki-tooltip-bg-end: var(--ki-surface-special-light-s0-dark-s2); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-bg-image */
-  --ki-tooltip-backdrop-blur: var(--ki-effect-component-backdrop-blur);
+  --ki-tooltip-backdrop-blur: var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-tooltip-backdrop-filter */
+  --ki-tooltip-backdrop-filter: var(--ki-effect-component-backdrop-filter);
   --ki-tooltip-fg: var(--ki-text-high-em);
   --ki-tooltip-font-size: var(--ki-font-size-body-1);
   --ki-tooltip-font-weight: var(--ki-font-weight-body-medium);
@@ -2040,7 +2049,8 @@
   --ki-video-scrim-color: var(--ki-inverse-white-alpha-6);
   --ki-video-scrim-radius: var(--ki-radius-component-6xl);
   --ki-video-scrim-padding: var(--ki-space-3xl);
-  --ki-video-backdrop-blur: var(--ki-effect-component-backdrop-blur);
+  --ki-video-backdrop-blur: var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-video-backdrop-filter */
+  --ki-video-backdrop-filter: var(--ki-effect-component-backdrop-filter);
   --ki-video-play-size: var(--ki-space-16xl);
   --ki-video-play-icon-size: var(--ki-space-9xl);
   --ki-video-play-radius: var(--ki-radius-component-xl);
@@ -2053,6 +2063,8 @@
   --ki-video-focus-ring-width: var(--ki-focus-ring-width);
   --ki-video-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-video-motion-duration: var(--ki-motion-duration-fast);
+  --_ki-backdrop-filter-default: blur(var(--ki-effect-component-backdrop-blur));
+  --_ki-listbox-backdrop-filter-default: blur(var(--ki-blur-48));
 }
 
 :root {
@@ -2090,10 +2102,12 @@
     --ki-surface-success-tint: var(--ki-surface-success-base-em);
     --ki-surface-warning-tint: var(--ki-surface-warning-base-em);
     --ki-surface-danger-tint: var(--ki-surface-danger-base-em);
-    --ki-effect-component-backdrop-blur: var(--ki-blur-none);
+    --ki-effect-component-backdrop-blur: var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-effect-component-backdrop-filter */
+    --ki-effect-component-backdrop-filter: none;
+    --ki-effect-component-listbox-backdrop-filter: none;
     --ki-alert-neutral-icon-bg: var(--ki-surface-primary-base-em);
     --ki-alert-shell-bg: var(--ki-surface-s1);
-    --ki-select-listbox-backdrop-blur: var(--ki-blur-none);
+    --ki-select-listbox-backdrop-blur: var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
   }
 }
 
@@ -2108,10 +2122,12 @@
   --ki-surface-success-tint: var(--ki-surface-success-base-em);
   --ki-surface-warning-tint: var(--ki-surface-warning-base-em);
   --ki-surface-danger-tint: var(--ki-surface-danger-base-em);
-  --ki-effect-component-backdrop-blur: var(--ki-blur-none);
+  --ki-effect-component-backdrop-blur: var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-effect-component-backdrop-filter */
+  --ki-effect-component-backdrop-filter: none;
+  --ki-effect-component-listbox-backdrop-filter: none;
   --ki-alert-neutral-icon-bg: var(--ki-surface-primary-base-em);
   --ki-alert-shell-bg: var(--ki-surface-s1);
-  --ki-select-listbox-backdrop-blur: var(--ki-blur-none);
+  --ki-select-listbox-backdrop-blur: var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
 }
 
 @media (prefers-contrast: more) {

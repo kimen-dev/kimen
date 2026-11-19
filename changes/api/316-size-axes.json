@@ -1,12 +1,12 @@
 {
   "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
   "baselineVersion": "0.0.0",
-  "candidateSha256": "5d76669ad659008cd68c07c79da01782277a7fb225781c15f863d0d630e76483",
+  "candidateSha256": "64a8246cc75c7e299233c4c43d99f35cdfb9b808e5982311fc7f9a1941fceb9e",
   "packages": [
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Size axes for nine components (issue #316, spec 050), cumulative since baseline 0.0.0 and superseding declaration 343-solid-surface-background (its deltas, and those of every declaration it supersedes, remain as declared there). Nothing is removed or renamed. Added: the size prop on ki-input, ki-textarea, ki-select and ki-tabs (xs, sm, md, lg, xl), on ki-list-item and ki-switch (sm, md, lg, xl), on ki-checkbox (sm, md, lg) and on ki-radio-group (sm, md), the xs value of ki-badge size, and 193 tokens: --ki-input-{xs,sm,lg,xl}-* (36), --ki-select-{xs,sm,lg,xl}-* (32), --ki-textarea-{xs,sm,lg,xl}-* (28), --ki-tabs-{xs,sm,lg,xl}-gap (4), --ki-tab-{xs,sm,lg,xl}-* (12), --ki-list-item-{sm,lg,xl}-* (27), --ki-checkbox-{sm,lg}-* (7), --ki-radio-sm-* (6), --ki-switch-{sm,lg,xl}-* (36) and --ki-badge-xs-* (5). Medium keeps its unsized token names, and no existing token changes its effective value. The new props change the component class signatures, which the gate classifies as MAJOR; the cumulative delta since 0.0.0 was already MAJOR. Zero removals, no root growth. Nothing is published yet (0.0.0, private).",
+  "reason": "Size axes for nine components (issue #316, spec 050), cumulative since baseline 0.0.0 and superseding declaration 342-backdrop-filter-token (its deltas, and those of every declaration it supersedes, remain as declared there). Nothing is removed or renamed. Added: the size prop on ki-input, ki-textarea, ki-select and ki-tabs (xs, sm, md, lg, xl), on ki-list-item and ki-switch (sm, md, lg, xl), on ki-checkbox (sm, md, lg) and on ki-radio-group (sm, md), the xs value of ki-badge size, and 193 tokens: --ki-input-{xs,sm,lg,xl}-* (36), --ki-select-{xs,sm,lg,xl}-* (32), --ki-textarea-{xs,sm,lg,xl}-* (28), --ki-tabs-{xs,sm,lg,xl}-gap (4), --ki-tab-{xs,sm,lg,xl}-* (12), --ki-list-item-{sm,lg,xl}-* (27), --ki-checkbox-{sm,lg}-* (7), --ki-radio-sm-* (6), --ki-switch-{sm,lg,xl}-* (36) and --ki-badge-xs-* (5). Medium keeps its unsized token names, and no existing token changes its effective value. The new props change the component class signatures, which the gate classifies as MAJOR; the cumulative delta since 0.0.0 was already MAJOR. Zero removals, no root growth. Nothing is published yet (0.0.0, private).",
   "release": "major",
   "schemaVersion": 1
 }

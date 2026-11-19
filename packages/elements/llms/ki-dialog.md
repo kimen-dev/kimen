@@ -67,7 +67,7 @@ Open it with the `show()` method (and close with `close()`); the `ki-close` even
 
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background.
-- `--ki-dialog-backdrop-blur`: backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5).
+- `--ki-dialog-backdrop-filter`: Complete backdrop filter behind the dialog surface.
 - `--ki-dialog-bg`: Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image.
 - `--ki-dialog-bg-image`: Optional CSS background image layered over the dialog fill. Use none for a solid fill.
 - `--ki-dialog-body-padding-block-end`: dimension used by the dialog component for body section padding block end (Modal compact Body: Space/5xl 20px.)

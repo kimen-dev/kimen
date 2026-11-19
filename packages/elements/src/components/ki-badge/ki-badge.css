@@ -20,7 +20,7 @@
   --_ki-badge-border-bottom: var(--ki-outline-secondary-button-bottom);
   --_ki-badge-border-width: var(--ki-badge-neutral-border-width);
   --_ki-badge-shadow: var(--ki-effect-component-secondary-default-shadow);
-  --_ki-badge-backdrop-filter: blur(var(--ki-effect-component-backdrop-blur));
+  --_ki-badge-backdrop-filter: var(--ki-badge-backdrop-filter);
   --_ki-badge-height: var(--ki-badge-md-height);
   --_ki-badge-padding-inline: var(--ki-badge-md-padding-inline);
   --_ki-badge-radius: var(--ki-badge-md-radius);
@@ -154,5 +154,12 @@
 @media (forced-colors: active) {
   [part="badge"] {
     border: thin solid CanvasText;
+  }
+}
+
+/* Compatibility with the deprecated length while the full filter uses its default. */
+@container style(--_ki-badge-backdrop-filter: var(--_ki-backdrop-filter-default)) {
+  [part="badge"] {
+    --_ki-badge-backdrop-filter: blur(var(--ki-effect-component-backdrop-blur));
   }
 }
