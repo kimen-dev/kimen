@@ -17,9 +17,17 @@ A quiet mark identifies AI-generated content. Where a source explanation is avai
 
 ## Interpretations
 
-- **Agent's choice, pending founder confirmation.** Use Kimen's shared anchored native popover because a standalone `ki-popover` is absent from this checkout. Focus enters the explanation, Escape and revert restore it to the trigger, and Tab can leave. A pointer press outside also dismisses the explanation.
+- **Agent's choice, pending founder confirmation.** Use Kimen's shared anchored native popover because a standalone `ki-popover` is absent from this checkout. Focus enters the explanation, Escape and revert restore it to the trigger, and Tab can leave. Reactivating the trigger or pressing outside also dismisses the explanation.
 - **Agent's choice, pending founder confirmation.** A missing or whitespace-only explanation always leaves a static mark, including when `revertible` is set. The application owns the original text and receives a payload-free revert request. The explanation and metadata are plain text. Display the supplied generation date with its original time and zone as provided.
 - **Agent's choice, pending founder confirmation.** Support the direct `ki-input` end-slot example automatically. Localize its description with `ai-suggestion-text` on the field and localize the label, button names and metadata prefixes on the label. The AI label itself has a prop-only content surface.
+
+- **Agent's choice, pending founder confirmation.** The revert action uses a
+  native ghost-style button. This keeps the explanation and reversion
+  keyboard-operable within the standalone component budget.
+
+- **Agent's choice, pending founder confirmation.** Declare the API change
+  as major. The gate classifies the changed `KiInput`, loader `Components`
+  and loader `JSX` signatures as major.
 
 ## Scenario family coverage
 
@@ -27,7 +35,7 @@ A quiet mark identifies AI-generated content. Where a source explanation is avai
 | --- | --- |
 | Core behavior | S1, S2, S3 |
 | Keyboard path | S4, S5 |
-| Assistive technology | S6, S7 |
+| Assistive-tech outcome | S6, S7 |
 | Form participation | S8, through the containing field |
 | Theming | S9, S10, S11, S12, S13 |
 
@@ -95,7 +103,7 @@ Feature: ki-ai-label identifies AI-generated content
     Then the mark has a navy fill and white text
 
   # S10
-  Scenario: Arabic reading direction places the icon at the logical start
+  Scenario: Right-to-left reading order places the icon at the logical start
     Given a right-to-left page with an AI label
     When the label appears
     Then the icon is to the right of its text

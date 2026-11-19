@@ -1,0 +1,110 @@
+{
+  "ki": {
+    "ai-label": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Fill of the AI provenance mark."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Text and icon ink of the AI provenance mark."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.flat}",
+        "$description": "Optional image over the AI provenance fill. Defaults to none."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.flat-backdrop-filter}",
+        "$description": "Complete filter behind the AI provenance mark. Defaults to none."
+      },
+      "radius": {
+        "$value": "{ki.corner.compact-mark}",
+        "$description": "Corner radius of the AI provenance mark."
+      },
+      "gap": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Gap between the mark and its icon or between provenance metadata items."
+      },
+      "border-width": {
+        "$value": "{ki.outline.hairline-width}",
+        "$description": "Border width of the panel and the forced-colors mark."
+      },
+      "sm": {
+        "height": {
+          "$value": "{ki.layout.spacing.5xl}",
+          "$description": "Minimum painted block size of the small AI mark."
+        },
+        "padding-inline": {
+          "$value": "{ki.layout.spacing.sm}",
+          "$description": "Inline inset of the small AI mark."
+        },
+        "icon-size": {
+          "$value": "{ki.layout.spacing.xl}",
+          "$description": "Sparkles icon size in the small AI mark."
+        }
+      },
+      "md": {
+        "height": {
+          "$value": "{ki.layout.spacing.7xl}",
+          "$description": "Minimum painted block size of the medium AI mark."
+        },
+        "padding-inline": {
+          "$value": "{ki.layout.spacing.md}",
+          "$description": "Inline inset of the medium AI mark."
+        },
+        "icon-size": {
+          "$value": "{ki.layout.spacing.3xl}",
+          "$description": "Sparkles icon size in the medium AI mark."
+        }
+      },
+      "popover": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s1}",
+          "$description": "Raised fill of the provenance explanation."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Ink of the provenance explanation and metadata."
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.flat}",
+          "$description": "Optional image over the provenance explanation fill. Defaults to none."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.component.flat-backdrop-filter}",
+          "$description": "Complete filter behind the provenance explanation. Defaults to none."
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.low-em}",
+          "$description": "Hairline color of the explanation panel."
+        },
+        "radius": {
+          "$value": "{ki.corner.anchored-panel}",
+          "$description": "Corner radius of the explanation panel."
+        },
+        "shadow": {
+          "$type": "shadow",
+          "$value": "{ki.elevation.e3}",
+          "$description": "Elevation of the explanation panel."
+        },
+        "width": {
+          "$value": "{ki.surface-size.compact}",
+          "$description": "Preferred inline size of the explanation panel."
+        },
+        "padding": {
+          "$value": "{ki.layout.spacing.xl}",
+          "$description": "Inset of the explanation panel."
+        },
+        "gap": {
+          "$value": "{ki.layout.spacing.md}",
+          "$description": "Gap between the panel sections and between the panel and trigger."
+        }
+      }
+    }
+  }
+}

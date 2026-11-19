@@ -31,6 +31,8 @@ beforeAll(() => {
 afterEach(async () => {
   fixture.replaceChildren();
   fixture.removeAttribute('dir');
+  document.documentElement.style.removeProperty('--ki-surface-primary-low-em');
+  document.documentElement.style.removeProperty('--ki-text-primary-on-primary-light');
   await parkPointer();
 });
 
@@ -95,6 +97,11 @@ it('S2 shows plain-text provenance in a non-modal dialog and dismisses outside',
 
   await expect.element(dialog()).not.toBeInTheDocument();
   await expect.element(trigger()).toHaveAttribute('aria-expanded', 'false');
+
+  await trigger().click();
+  await expect.element(dialog()).toBeVisible();
+  await trigger().click();
+  await expect.element(dialog()).not.toBeInTheDocument();
 });
 
 it('S3 sends one revert request without changing or submitting the field', async () => {
@@ -109,7 +116,9 @@ it('S3 sends one revert request without changing or submitting the field', async
   form.append(field);
   fixture.append(form);
   const reverted = vi.fn();
-  const submitted = vi.fn((event: Event) => { event.preventDefault(); });
+  const submitted = vi.fn((event: Event) => {
+    event.preventDefault();
+  });
   form.addEventListener('ki-revert', reverted);
   form.addEventListener('submit', submitted);
 
@@ -155,7 +164,7 @@ it('S5 Tabs from the explanation to its action and then out to the next control'
   await expect.element(dialog()).toBeVisible();
 
   await userEvent.tab();
-  await expect.element(revertAction()).toHaveFocus();
+  expect(label.shadowRoot?.activeElement).toBe(part(label, 'revert'));
 
   await userEvent.tab();
 
@@ -232,8 +241,8 @@ it('S8 submits only the native field value', async () => {
 
 it('S9 resolves the mark colors from reassigned theme tokens', async () => {
   const label = mountLabel();
-  label.style.setProperty('--ki-surface-primary-low-em', 'navy');
-  label.style.setProperty('--ki-text-primary-on-primary-light', 'white');
+  document.documentElement.style.setProperty('--ki-surface-primary-low-em', 'navy');
+  document.documentElement.style.setProperty('--ki-text-primary-on-primary-light', 'white');
   await expect.element(page.getByText('AI', { exact: true })).toBeVisible();
 
   const style = getComputedStyle(part(label, 'label'));

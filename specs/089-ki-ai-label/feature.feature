@@ -59,7 +59,7 @@ Feature: ki-ai-label identifies AI-generated content
     Then the mark has a navy fill and white text
 
   # S10
-  Scenario: Arabic reading direction places the icon at the logical start
+  Scenario: Right-to-left reading order places the icon at the logical start
     Given a right-to-left page with an AI label
     When the label appears
     Then the icon is to the right of its text

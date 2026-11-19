@@ -1,6 +1,10 @@
 {
   "ki": {
     "surface-image": {
+      "flat": {
+        "$value": "none",
+        "$description": "Default image for a flat component surface."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -20,6 +24,12 @@
       "tooltip": {
         "$value": "{ki.foundation.onmars-v1.tooltip-bg-image}",
         "$description": "Theme image layered over a tooltip surface."
+      }
+    },
+    "surface-size": {
+      "compact": {
+        "$value": "{ki.size.surface.xxs}",
+        "$description": "Inline size of a compact anchored surface."
       }
     },
     "surface": {
@@ -548,6 +558,11 @@
     },
     "outline": {
       "$type": "color",
+      "hairline-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of a hairline component surface edge."
+      },
       "high-em": {
         "$value": "{ki.color.black.12}",
         "$description": "semantic color for outline high em."
@@ -1100,6 +1115,11 @@
     },
     "effect": {
       "component": {
+        "flat-backdrop-filter": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "Default complete backdrop filter for an opaque, flat component surface."
+        },
         "backdrop-blur": {
           "$type": "dimension",
           "$value": "{ki.blur.24}",
@@ -1602,6 +1622,14 @@
       }
     },
     "corner": {
+      "compact-mark": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Corner radius of a compact inline mark."
+      },
+      "anchored-panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of an anchored explanation panel."
+      },
       "$type": "dimension",
       "control": {
         "$value": "{ki.radius.md}",
