@@ -57,6 +57,7 @@ function fakePlaywrightBoundary() {
     documentBody: '',
     fulfilledModules: 0,
     scriptAdded: false,
+    stylesheets: [],
     themeReadBeforeScript: false,
   };
   const tokens = new Map();
@@ -203,6 +204,7 @@ function fakePlaywrightBoundary() {
       definedElements.set('ki-button', Object.freeze({}));
     },
     addStyleTag: async ({ content }) => {
+      state.stylesheets.push(content);
       for (const match of content.matchAll(/(--[a-z0-9-]+)\s*:\s*([^;]+);/giu)) {
         tokens.set(match[1], match[2].trim());
       }
@@ -233,8 +235,11 @@ function fakePlaywrightBoundary() {
     close: async () => {
       state.browserClosed = true;
     },
-    newContext: async ({ serviceWorkers }) => {
-      expect(serviceWorkers).toBe('block');
+    newContext: async (options) => {
+      // Reduced motion is part of the contract: the override check reads a
+      // colour in the task that changes its token, and the shipped button
+      // fades between the two unless the page asks it not to.
+      expect(options).toEqual({ reducedMotion: 'reduce', serviceWorkers: 'block' });
       return context;
     },
   };
@@ -431,17 +436,17 @@ describe('packed consumer mutation boundary', () => {
     const tokensMetadata = {
       name: '@kimen/tokens',
       version: '1.0.0',
-      exports: { './css': './dist/tokens.css' },
+      exports: { './css': './dist/tokens.css', './css/base': './dist/base.css' },
     };
+    const themeStyles = ':root { --ki-button-secondary-neutral-rest-bg: rgb(12, 34, 56); }\n';
+    const pageContractStyles =
+      ':root { --ki-button-secondary-neutral-rest-fg: rgb(250, 251, 252); }\n';
     await Promise.all([
       put(elementsRoot, 'package.json', JSON.stringify(elementsMetadata)),
       put(elementsRoot, 'dist/ki-button.js', 'export const defineCustomElement = () => {};\n'),
       put(tokensRoot, 'package.json', JSON.stringify(tokensMetadata)),
-      put(
-        tokensRoot,
-        'dist/tokens.css',
-        ':root { --ki-button-secondary-neutral-rest-bg: rgb(12, 34, 56); --ki-button-secondary-neutral-rest-fg: rgb(250, 251, 252); }\n',
-      ),
+      put(tokensRoot, 'dist/tokens.css', themeStyles),
+      put(tokensRoot, 'dist/base.css', pageContractStyles),
     ]);
     const fake = fakePlaywrightBoundary();
 
@@ -459,7 +464,7 @@ describe('packed consumer mutation boundary', () => {
           ['@kimen/elements', { metadata: elementsMetadata, packageRoot: elementsRoot }],
           ['@kimen/tokens', { metadata: tokensMetadata, packageRoot: tokensRoot }],
         ]),
-        tokenCssSpecifier: '@kimen/tokens/css',
+        tokenCssSpecifiers: ['@kimen/tokens/css', '@kimen/tokens/css/base'],
       },
       { loadPlaywright: () => fake.playwright },
     );
@@ -483,6 +488,64 @@ describe('packed consumer mutation boundary', () => {
       scriptAdded: true,
       themeReadBeforeScript: true,
     });
+    // Every documented stylesheet reaches the page, in document order.
+    expect(fake.state.stylesheets).toEqual([themeStyles, pageContractStyles]);
+  });
+
+  it.each([
+    ['no documented stylesheet', []],
+    ['a stylesheet the tokens package does not export', ['@kimen/tokens/css/absent']],
+    [
+      'one exported and one unexported stylesheet',
+      ['@kimen/tokens/css', '@kimen/tokens/css/absent'],
+    ],
+    ['a specifier with no subpath', ['@kimen/tokens']],
+  ])('S8 refuses to launch a browser for %s', async (_label, tokenCssSpecifiers) => {
+    const root = await temporaryRoot();
+    const consumer = join(root, 'consumer');
+    const elementsRoot = join(consumer, 'node_modules/@kimen/elements');
+    const tokensRoot = join(consumer, 'node_modules/@kimen/tokens');
+    const elementsMetadata = {
+      name: '@kimen/elements',
+      version: '1.0.0',
+      exports: { './ki-button': './dist/ki-button.js' },
+    };
+    const tokensMetadata = {
+      name: '@kimen/tokens',
+      version: '1.0.0',
+      exports: { './css': './dist/tokens.css' },
+    };
+    await Promise.all([
+      put(elementsRoot, 'package.json', JSON.stringify(elementsMetadata)),
+      put(elementsRoot, 'dist/ki-button.js', 'export const defineCustomElement = () => {};\n'),
+      put(tokensRoot, 'package.json', JSON.stringify(tokensMetadata)),
+      put(tokensRoot, 'dist/tokens.css', ':root { --unrelated: 1; }\n'),
+    ]);
+    let launched = false;
+
+    await expect(
+      consumerContractModule.runBrowserSmoke(
+        {
+          browserSource: '',
+          consumerDirectory: consumer,
+          elementSpecifier: '@kimen/elements/ki-button',
+          engine: 'chromium',
+          expectedSnippetCount: 0,
+          installedPackages: new Map([
+            ['@kimen/elements', { metadata: elementsMetadata, packageRoot: elementsRoot }],
+            ['@kimen/tokens', { metadata: tokensMetadata, packageRoot: tokensRoot }],
+          ]),
+          tokenCssSpecifiers,
+        },
+        {
+          loadPlaywright: () => {
+            launched = true;
+            throw new Error('the browser must not be loaded');
+          },
+        },
+      ),
+    ).rejects.toThrow(/token CSS export is unavailable/iu);
+    expect(launched).toBe(false);
   });
 
   it('S8 derives complete passing evidence only from distinct resolved theme colors and exact overrides', () => {
@@ -1186,37 +1249,56 @@ describe('packed consumer mutation boundary', () => {
     expect(() => moduleSpecifiers('import {')).toThrow(/cannot be parsed/iu);
   });
 
-  it('S8 binds the documented direct import, registration call, and one theme stylesheet', () => {
+  it('S8 binds the documented direct import, registration call, and every documented token stylesheet', () => {
     const snippets = [
       "import { defineCustomElement as defineButton } from '@kimen/elements/ki-button';\nimport '@kimen/tokens/css';",
       'defineButton();',
     ];
     expect(browserSnippetContract(snippets)).toEqual({
       elementSpecifier: '@kimen/elements/ki-button',
-      tokenCssSpecifier: '@kimen/tokens/css',
+      tokenCssSpecifiers: ['@kimen/tokens/css'],
     });
     expect(() => browserSnippetContract([snippets[0]])).toThrow(/registration call/iu);
     expect(() => browserSnippetContract(['const noImport = true;'])).toThrow(
       /defineCustomElement/iu,
     );
+    // The guidance may load the page contract or a second theme after the
+    // default one: each is reported once, in document order.
+    expect(
+      browserSnippetContract([
+        `${snippets[0]}\nimport '@kimen/tokens/css/base';\nimport '@kimen/tokens/css';\ndefineButton();`,
+        "import '@kimen/tokens/css/material3';",
+      ]).tokenCssSpecifiers,
+    ).toEqual(['@kimen/tokens/css', '@kimen/tokens/css/base', '@kimen/tokens/css/material3']);
+    // A named import from the tokens package is not a stylesheet, and neither
+    // is a side-effect import of anything else.
     expect(() =>
       browserSnippetContract([
-        `${snippets[0]}\nimport '@kimen/tokens/css/material3';\ndefineButton();`,
+        "import { defineCustomElement as defineButton } from '@kimen/elements/ki-button';\nimport tokens from '@kimen/tokens/css';\nimport './local.css';\ndefineButton();",
       ]),
-    ).toThrow(/exactly one/iu);
+    ).toThrow(/at least one @kimen\/tokens stylesheet/iu);
   });
 
-  it('S8 transpiles documented TypeScript while removing only the browser-incompatible CSS import', () => {
+  it('S8 transpiles documented TypeScript while removing only the browser-incompatible CSS imports', () => {
     const source = executableBrowserSnippets(
       [
-        "import { defineCustomElement } from '@kimen/elements/ki-button';\nimport '@kimen/tokens/css';\nconst button: HTMLElement = document.createElement('ki-button');\ndefineCustomElement();",
+        "import { defineCustomElement } from '@kimen/elements/ki-button';\nimport '@kimen/tokens/css';\nimport '@kimen/tokens/css/base';\nimport './kept.js';\nconst button: HTMLElement = document.createElement('ki-button');\ndefineCustomElement();",
       ],
-      '@kimen/tokens/css',
+      ['@kimen/tokens/css', '@kimen/tokens/css/base'],
     );
     expect(source).toContain('@kimen/elements/ki-button');
     expect(source).toContain('defineCustomElement();');
-    expect(source).not.toContain('@kimen/tokens/css');
+    expect(source).toContain('./kept.js');
+    expect(source).not.toContain('@kimen/tokens');
     expect(source).not.toContain(': HTMLElement');
+    // Only the stylesheets named by the contract are removed: one that was
+    // not named stays in the code, where the browser would refuse it.
+    expect(
+      executableBrowserSnippets(
+        ["import '@kimen/tokens/css';\nimport '@kimen/tokens/css/base';"],
+        ['@kimen/tokens/css'],
+      ),
+    ).toContain('@kimen/tokens/css/base');
     expect(source.indexOf('requestAnimationFrame')).toBeGreaterThanOrEqual(0);
     expect(source.indexOf('dataset')).toBeGreaterThan(source.indexOf('requestAnimationFrame'));
   });

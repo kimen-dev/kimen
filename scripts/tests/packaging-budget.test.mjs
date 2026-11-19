@@ -43,6 +43,31 @@ test('packaging invokes publint once per publishable package and derives one ATT
   assert.equal(componentAttw.args.filter((argument) => argument.startsWith('./ki-')).length, 29);
 });
 
+// The elements build names every file its declarations import (see
+// scripts/lib/declaration-specifiers.mjs), so no entrypoint needs a rule
+// switched off. An exemption here is how unresolved types shipped unnoticed:
+// the checker ran, and was told not to look.
+test('packaging runs ATTW over every elements entrypoint with no rule exempted', async () => {
+  const calls = [];
+  await checkPackaging({
+    workspaceRoot,
+    execute(command, args, cwd) {
+      calls.push({ command, args, cwd });
+    },
+  });
+
+  const elementsAttw = calls.filter(
+    ({ args }) => args[1] === 'attw' && args.includes('packages/elements'),
+  );
+  assert.deepEqual(
+    elementsAttw.map(({ args }) => args[args.indexOf('--entrypoints') + 1]),
+    ['.', './loader', './ki-alert'],
+  );
+  for (const { args } of elementsAttw) {
+    assert.equal(args.includes('--ignore-rules'), false, args.join(' '));
+  }
+});
+
 test('standalone packaging re-enters through the isolated cache environment', async () => {
   const manifest = JSON.parse(await readFile(`${workspaceRoot}/package.json`, 'utf8'));
 

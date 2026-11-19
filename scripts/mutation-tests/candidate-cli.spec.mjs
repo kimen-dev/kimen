@@ -40,6 +40,8 @@ async function createRepository() {
       join(packageDirectory, 'index.js'),
       `export const name = ${JSON.stringify(name)};\n`,
     );
+    await writeFile(join(packageDirectory, 'LICENSE'), 'Apache License, Version 2.0 (fixture)\n');
+    await writeFile(join(packageDirectory, 'NOTICE'), 'Kimen fixture notices\n');
     await writeFile(
       join(packageDirectory, 'package.json'),
       `${JSON.stringify(
@@ -48,7 +50,7 @@ async function createRepository() {
           version: '0.0.0',
           private: true,
           type: 'module',
-          files: ['index.js'],
+          files: ['index.js', 'NOTICE'],
           repository: {
             type: 'git',
             url: 'git+https://github.com/kimen-dev/kimen.git',

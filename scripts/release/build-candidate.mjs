@@ -39,6 +39,11 @@ const REQUIRED_PACKAGES = Object.freeze([
     fileStem: 'kimen-tokens',
   }),
 ]);
+// Apache-2.0 §4 asks every redistribution to carry the licence text and the
+// notices that pertain to it, and the MIT material the bundles embed asks the
+// same of its own notice. npm packs what the package directory holds, so a
+// tarball without either file is a package that must not be published.
+const REQUIRED_LEGAL_FILES = Object.freeze(['LICENSE', 'NOTICE']);
 const FORBIDDEN_LIFECYCLE_SCRIPTS = new Set([
   'postpack',
   'postpublish',
@@ -558,6 +563,7 @@ export async function buildCandidate(options) {
         expectedFile,
       });
       const bytes = await readFile(packedPath);
+      verifyPackedLegalFiles(bytes, input.expected);
       packageFiles.set(expectedFile, bytes);
       records.push(packageRecordFromBytes(input.expected, version, bytes));
     }
@@ -616,14 +622,30 @@ function entryMap(entries, label) {
   return files;
 }
 
-function verifyPackedManifest(bytes, expected, candidateManifest) {
+function packedEntries(bytes, expected) {
   let packageTar;
   try {
     packageTar = gunzipSync(bytes);
   } catch {
     fail(`${expected.name} tarball is not valid gzip data`);
   }
-  const entries = parseTar(packageTar);
+  return parseTar(packageTar);
+}
+
+function verifyPackedLegalFiles(bytes, expected) {
+  const entries = packedEntries(bytes, expected);
+  for (const file of REQUIRED_LEGAL_FILES) {
+    const entry = entries.find(({ name, type }) => name === `package/${file}` && type === '0');
+    if (entry === undefined || entry.bytes.length === 0) {
+      fail(
+        `${expected.name} tarball is missing package/${file}; a published package carries its licence and its notices`,
+      );
+    }
+  }
+}
+
+function verifyPackedManifest(bytes, expected, candidateManifest) {
+  const entries = packedEntries(bytes, expected);
   const packageJson = entries.find(
     (entry) => entry.name === 'package/package.json' && entry.type === '0',
   );
@@ -701,6 +723,7 @@ export async function verifyCandidate({ archivePath, expectedSha256, environment
       fail(`${record.name} tarball digest, integrity or size mismatch`);
     }
     verifyPackedManifest(bytes, REQUIRED_PACKAGES[index], manifest);
+    verifyPackedLegalFiles(bytes, REQUIRED_PACKAGES[index]);
     sumInputs.set(record.file, bytes);
   }
   const checksums = files.get(CHECKSUM_FILE);

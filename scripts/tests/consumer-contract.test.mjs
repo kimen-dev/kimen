@@ -38,6 +38,21 @@ export function defineCustomElement() {
 }
 `;
 
+// The shipped ki-button fades its background between states and drops the
+// fade under reduced motion; a stand-in that never animates hides whatever
+// the contract gets wrong about reading a style that is still changing.
+const animatedElementsModule = elementsModule.replace(
+  '    color: var(--ki-button-secondary-neutral-rest-fg);\n  }',
+  [
+    '    color: var(--ki-button-secondary-neutral-rest-fg);',
+    '    transition: background-color 120ms;',
+    '  }',
+    '  @media (prefers-reduced-motion: reduce) {',
+    '    button { transition: none; }',
+    '  }',
+  ].join('\n'),
+);
+
 const elementsRuntime = `
 export function installButton(buttonStyles) {
   customElements.define(
@@ -113,11 +128,11 @@ test('@spec:018-project-integrity-hardening S8 derives executable browser code f
   ];
 
   const contract = browserSnippetContract(snippets);
-  const source = executableBrowserSnippets(snippets, contract.tokenCssSpecifier);
+  const source = executableBrowserSnippets(snippets, contract.tokenCssSpecifiers);
 
   assert.deepEqual(contract, {
     elementSpecifier: '@kimen/elements/ki-button',
-    tokenCssSpecifier: '@kimen/tokens/css',
+    tokenCssSpecifiers: ['@kimen/tokens/css'],
   });
   assert.match(source, /defineKiButton\(\)/u);
   assert.match(source, /document\.createElement\('ki-button'\)/u);
@@ -184,7 +199,7 @@ test('@spec:018-project-integrity-hardening S8 rejects installation guidance in 
 test('@spec:018-project-integrity-hardening S8 delays each browser completion marker until an async error checkpoint', () => {
   const source = executableBrowserSnippets(
     ["Promise.reject(new Error('late snippet failure'));"],
-    '@kimen/tokens/css',
+    ['@kimen/tokens/css'],
   );
   const checkpoint = source.indexOf('requestAnimationFrame');
   const completionMarker = source.indexOf('dataset');
@@ -201,6 +216,52 @@ test('@spec:018-project-integrity-hardening S8 rejects imported registration tha
       ]),
     /registration call/iu,
   );
+});
+
+test('@spec:018-project-integrity-hardening S8 reports every documented token stylesheet in document order and keeps none in the executable code', () => {
+  const snippets = [
+    [
+      "import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';",
+      "import '@kimen/tokens/css';",
+      "import '@kimen/tokens/css/base';",
+      'defineKiButton();',
+    ].join('\n'),
+  ];
+
+  const contract = browserSnippetContract(snippets);
+  const source = executableBrowserSnippets(snippets, contract.tokenCssSpecifiers);
+
+  assert.deepEqual(contract.tokenCssSpecifiers, ['@kimen/tokens/css', '@kimen/tokens/css/base']);
+  assert.match(source, /defineKiButton\(\)/u);
+  assert.doesNotMatch(source, /@kimen\/tokens/u);
+});
+
+test('@spec:018-project-integrity-hardening S8 rejects guidance that documents no token stylesheet', () => {
+  assert.throws(
+    () =>
+      browserSnippetContract([
+        "import { defineCustomElement } from '@kimen/elements/ki-button';\ndefineCustomElement();",
+      ]),
+    /stylesheet/iu,
+  );
+});
+
+// The packed guidance is generated, and the contract that executes it lives
+// in another file: nothing but this test ties the two together on an ordinary
+// change. The real consumer smoke only runs at release.
+test('@spec:018-project-integrity-hardening S8 the committed llms.txt quick start is one the consumer contract can execute', async () => {
+  const guidance = await readFile(join(repositoryRoot, 'packages/elements/llms.txt'), 'utf8');
+  const snippets = extractExecutableSnippets(guidance).map(({ source }) => source);
+
+  const contract = browserSnippetContract(snippets);
+  const source = executableBrowserSnippets(snippets, contract.tokenCssSpecifiers);
+
+  assert.equal(contract.elementSpecifier, '@kimen/elements/ki-button');
+  assert.ok(
+    contract.tokenCssSpecifiers.includes('@kimen/tokens/css'),
+    `the default theme is not among ${JSON.stringify(contract.tokenCssSpecifiers)}`,
+  );
+  assert.doesNotMatch(source, /@kimen\/tokens/u);
 });
 
 test('@spec:018-project-integrity-hardening S8 maps a minified bare dependency before browser launch', async (t) => {
@@ -406,6 +467,7 @@ function packLocalPackage(fixture, packageDirectory) {
 async function createConsumerFixture(
   t,
   {
+    buttonModule = elementsModule,
     importPath = '@kimen/elements/ki-button',
     includeRegistration = true,
     includeRuntime = true,
@@ -417,6 +479,7 @@ async function createConsumerFixture(
       'document.body.append(button);',
     ].join('\n'),
     packedLlms = true,
+    pageContractStyles = null,
     tokenStyles = tokensCss,
   } = {},
 ) {
@@ -450,6 +513,7 @@ async function createConsumerFixture(
     '```ts',
     `import { defineCustomElement as defineKiButton } from '${importPath}';`,
     "import '@kimen/tokens/css';",
+    ...(pageContractStyles === null ? [] : ["import '@kimen/tokens/css/base';"]),
     '',
     ...(includeRegistration ? ['defineKiButton();'] : []),
     '```',
@@ -489,7 +553,7 @@ async function createConsumerFixture(
         },
       }),
     ),
-    writeFixtureFile(fixture.elementsPackage, 'dist/ki-button.js', elementsModule),
+    writeFixtureFile(fixture.elementsPackage, 'dist/ki-button.js', buttonModule),
     writeFixtureFile(fixture.elementsPackage, 'dist/ki-button.d.ts', elementsDeclaration),
     ...(includeRuntime
       ? [writeFixtureFile(fixture.elementsPackage, 'dist/runtime.js', elementsRuntime)]
@@ -507,10 +571,14 @@ async function createConsumerFixture(
         files: ['dist'],
         exports: {
           './css': './dist/tokens.css',
+          ...(pageContractStyles === null ? {} : { './css/base': './dist/base.css' }),
         },
       }),
     ),
     writeFixtureFile(fixture.tokensPackage, 'dist/tokens.css', tokenStyles),
+    ...(pageContractStyles === null
+      ? []
+      : [writeFixtureFile(fixture.tokensPackage, 'dist/base.css', pageContractStyles)]),
     writeFile(fixture.llms, llmsText, 'utf8'),
   ]);
 
@@ -727,6 +795,32 @@ test('@spec:018-project-integrity-hardening S8 rejects a minified bare runtime i
 
   assert.notEqual(result.status, 0);
   assert.match(diagnostic(result), /runtime.*(?:absent|missing|export target)/iu);
+});
+
+test('@spec:018-project-integrity-hardening S8 loads every documented token stylesheet before rendering the button', async (t) => {
+  // Each stylesheet carries one of the two tokens the button consumes, so the
+  // theme only resolves when both documented imports reach the page.
+  const fixture = await createConsumerFixture(t, {
+    tokenStyles: ':root { --ki-button-secondary-neutral-rest-bg: rgb(12, 34, 56); }\n',
+    pageContractStyles: ':root { --ki-button-secondary-neutral-rest-fg: rgb(250, 251, 252); }\n',
+  });
+
+  const result = runConsumerContract(fixture);
+
+  assert.equal(result.status, 0, diagnostic(result));
+  const report = JSON.parse(await readFile(fixture.report, 'utf8'));
+  assert.equal(report.browser.themeResolved, true);
+});
+
+test('@spec:018-project-integrity-hardening S8 observes a token override on a button that fades its background', async (t) => {
+  assert.notEqual(animatedElementsModule, elementsModule);
+  const fixture = await createConsumerFixture(t, { buttonModule: animatedElementsModule });
+
+  const result = runConsumerContract(fixture);
+
+  assert.equal(result.status, 0, diagnostic(result));
+  const report = JSON.parse(await readFile(fixture.report, 'utf8'));
+  assert.equal(report.browser.themeTokenOverrideResolved, true);
 });
 
 test('@spec:018-project-integrity-hardening S8 rejects a documented theme stylesheet without the consumed button tokens', async (t) => {

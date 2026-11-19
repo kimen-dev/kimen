@@ -154,6 +154,37 @@ test('@spec:018-project-integrity-hardening S6 publication needs the complete pr
   assert.deepEqual(publishNeeds, ['validate-core', 'verify-candidate', 'browser']);
 });
 
+// `npm publish --provenance` signs the statement before it uploads anything:
+// it trades the job's OIDC token for a short-lived certificate at Fulcio and
+// records the signature in Rekor (the defaults of npm's bundled
+// @sigstore/sign). With egress blocked, both hosts have to be declared or the
+// first real release fails at its last step, which no dry run ever reaches.
+// The list stays exact: the one job that holds publication authority reaches
+// nothing it does not need.
+test('@spec:018-project-integrity-hardening S6 publication reaches the registry and the two services that sign its provenance, and nothing else', () => {
+  const publish = readJob(releaseWorkflow, 'publish');
+  assert.match(publish, /npm publish .* --provenance/u);
+  assert.match(publish, /^ {10}egress-policy: block$/m);
+
+  const allowlist = /^ {10}allowed-endpoints: >-\n((?: {12}\S+\n)+)/m.exec(publish);
+  assert.ok(allowlist, 'publish must declare its allowed endpoints as a folded list');
+
+  assert.deepEqual(
+    allowlist[1]
+      .split('\n')
+      .filter(Boolean)
+      .map((line) => line.trim()),
+    [
+      'api.github.com:443',
+      '*.actions.githubusercontent.com:443',
+      '*.blob.core.windows.net:443',
+      'registry.npmjs.org:443',
+      'fulcio.sigstore.dev:443',
+      'rekor.sigstore.dev:443',
+    ],
+  );
+});
+
 test('@spec:018-project-integrity-hardening S8 prerelease primes both documented offline installer stores before the consumer runs', () => {
   const browserJob = readJob(releaseWorkflow, 'browser');
   const npmPrime = `npm cache add --cache "$consumer_cache/npm" @stencil/core@${elementsStencil}`;

@@ -55,11 +55,18 @@ authority. A non-tag dispatch always emits a manifest whose `mode` is
 4. Do not add `prepack`, `postpack`, `prepare`, `prepublish`,
    `prepublishOnly`, `publish` or `postpublish` scripts. Publication always
    uses `--ignore-scripts`.
-5. Let the ordinary protected-main PR run all required checks and merge it by
+5. Keep each package's `LICENSE` and `NOTICE`. They are derived from the
+   repository's own: the licence is a byte copy, and the notice is the header
+   plus the third-party sections that pertain to what that tarball contains
+   (`scripts/lib/package-notices.mjs` names them). After editing the root
+   `LICENSE` or `NOTICE`, run
+   `node scripts/release/write-package-legal-files.mjs` and commit the result.
+   The candidate gate rejects a tarball that lacks either file.
+6. Let the ordinary protected-main PR run all required checks and merge it by
    squash. The release workflow never pushes a version or changelog commit.
-6. Run a manual dry run against the merged revision. It must validate the
+7. Run a manual dry run against the merged revision. It must validate the
    exact two-package candidate and all three browser engines.
-7. Create and push `vX.Y.Z` at that protected-main commit. Candidate validation
+8. Create and push `vX.Y.Z` at that protected-main commit. Candidate validation
    rejects a tag/version mismatch, a tag pointing elsewhere, or a source SHA
    not reachable from `refs/heads/main`.
 
@@ -111,8 +118,10 @@ script execution. Its only elevated permission is short-lived OIDC
 (`id-token: write`) in the protected `npm` environment.
 
 Every owned job uses a full-SHA-pinned action, explicit job permissions and
-blocked egress with a declared endpoint allowlist. Run the global policy gate
-before changing workflow structure:
+blocked egress with a declared endpoint allowlist. The publisher's list is
+the registry plus the two Sigstore services that `npm publish --provenance`
+signs through, Fulcio and Rekor; a test holds it to exactly that. Run the
+global policy gate before changing workflow structure:
 
 ```sh
 pnpm run check:workflows

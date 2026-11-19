@@ -614,16 +614,20 @@ export function browserSnippetContract(snippets) {
   if (![...registrationBindings].some((binding) => calledBindings.has(binding))) {
     fail('llms.txt must include a registration call to the imported defineCustomElement');
   }
-  if (tokenCssSpecifiers.size !== 1) {
-    fail('llms.txt must side-effect import exactly one @kimen/tokens theme stylesheet');
+  if (tokenCssSpecifiers.size === 0) {
+    fail('llms.txt must side-effect import at least one @kimen/tokens stylesheet');
   }
+  // Document order is cascade order: the guidance may load the page contract
+  // or a second theme after the default one, and the browser smoke applies
+  // them the way a consumer's bundler would.
   return {
     elementSpecifier: '@kimen/elements/ki-button',
-    tokenCssSpecifier: [...tokenCssSpecifiers][0],
+    tokenCssSpecifiers: [...tokenCssSpecifiers],
   };
 }
 
-export function executableBrowserSnippets(snippets, tokenCssSpecifier) {
+export function executableBrowserSnippets(snippets, tokenCssSpecifiers) {
+  const stylesheetSpecifiers = new Set(tokenCssSpecifiers);
   const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
   return snippets
     .map((snippet, index) => {
@@ -650,7 +654,7 @@ export function executableBrowserSnippets(snippets, tokenCssSpecifier) {
             ts.isImportDeclaration(statement) &&
             statement.importClause === undefined &&
             ts.isStringLiteral(statement.moduleSpecifier) &&
-            statement.moduleSpecifier.text === tokenCssSpecifier
+            stylesheetSpecifiers.has(statement.moduleSpecifier.text)
           ),
       );
       const marker = `globalThis.document.documentElement.dataset[${JSON.stringify(
@@ -902,7 +906,7 @@ export async function runBrowserSmoke(
     engine,
     expectedSnippetCount,
     installedPackages,
-    tokenCssSpecifier,
+    tokenCssSpecifiers,
   },
   overrides = {},
 ) {
@@ -910,15 +914,23 @@ export async function runBrowserSmoke(
   const elements = installedPackages.get('@kimen/elements');
   const tokens = installedPackages.get('@kimen/tokens');
   const elementSubpath = packageAndSubpath(elementSpecifier)?.subpath;
-  const tokenSubpath = packageAndSubpath(tokenCssSpecifier)?.subpath;
   const elementTarget = elementSubpath && exportedTarget(elements.metadata, elementSubpath);
-  const tokenTarget = tokenSubpath && exportedTarget(tokens.metadata, tokenSubpath);
-  if (typeof elementTarget !== 'string' || typeof tokenTarget !== 'string') {
+  const tokenTargets = tokenCssSpecifiers.map((specifier) => {
+    const subpath = packageAndSubpath(specifier)?.subpath;
+    return subpath && exportedTarget(tokens.metadata, subpath);
+  });
+  if (
+    typeof elementTarget !== 'string' ||
+    tokenTargets.length === 0 ||
+    tokenTargets.some((target) => typeof target !== 'string')
+  ) {
     fail('documented ki-button or token CSS export is unavailable');
   }
-  const tokenCssFile = await resolvePackageFile(tokens.packageRoot, tokenTarget, 'token CSS');
-  const [tokenCss, moduleGraph] = await Promise.all([
-    runtime.readFile(tokenCssFile.path, 'utf8'),
+  const tokenCssFiles = await Promise.all(
+    tokenTargets.map((target) => resolvePackageFile(tokens.packageRoot, target, 'token CSS')),
+  );
+  const [tokenStylesheets, moduleGraph] = await Promise.all([
+    Promise.all(tokenCssFiles.map((file) => runtime.readFile(file.path, 'utf8'))),
     createBrowserModuleGraph({
       consumerDirectory,
       elementSpecifier,
@@ -935,7 +947,13 @@ export async function runBrowserSmoke(
     fail(`${engine} could not launch from PLAYWRIGHT_BROWSERS_PATH: ${error.message}`);
   }
   try {
-    const context = await browser.newContext({ serviceWorkers: 'block' });
+    // The override check below reads the button's colours in the same task
+    // that changes its tokens. ki-button fades its background between
+    // values, so that read lands on the first frame of the fade and reports
+    // the old colour. Reduced motion is the documented way to switch the
+    // fade off: the check then measures what resolved, not how far a
+    // transition has got.
+    const context = await browser.newContext({ reducedMotion: 'reduce', serviceWorkers: 'block' });
     const documentUrl = `${browserOrigin}/index.html`;
     const documentBody = browserDocument(moduleGraph.importMap);
     const blockedRequests = new Set();
@@ -1011,7 +1029,9 @@ export async function runBrowserSmoke(
     if (!webSocketRejected || !blockedWebSockets.has(deniedWebSocketUrl)) {
       fail(`browser request policy did not block WebSocket ${deniedWebSocketUrl}`);
     }
-    await page.addStyleTag({ content: tokenCss });
+    for (const stylesheet of tokenStylesheets) {
+      await page.addStyleTag({ content: stylesheet });
+    }
     const themeSentinels = await page.evaluate(() => {
       const rootStyle = globalThis.getComputedStyle(globalThis.document.documentElement);
       const background = rootStyle.getPropertyValue('--ki-button-secondary-neutral-rest-bg').trim();
@@ -1281,13 +1301,13 @@ export async function executeConsumerContract(options, overrides = {}) {
     installedPackages,
   );
   const browser = await runtime.runBrowserSmoke({
-    browserSource: executableBrowserSnippets(snippetSources, snippetContract.tokenCssSpecifier),
+    browserSource: executableBrowserSnippets(snippetSources, snippetContract.tokenCssSpecifiers),
     consumerDirectory,
     elementSpecifier: snippetContract.elementSpecifier,
     engine,
     expectedSnippetCount: executableSnippets.length,
     installedPackages,
-    tokenCssSpecifier: snippetContract.tokenCssSpecifier,
+    tokenCssSpecifiers: snippetContract.tokenCssSpecifiers,
   });
   const report = {
     schemaVersion: 1,
