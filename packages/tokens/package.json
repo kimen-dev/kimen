@@ -11,13 +11,17 @@
     "directory": "packages/tokens"
   },
   "files": [
+    "css",
     "dist",
+    "fonts",
     "NOTICE"
   ],
   "exports": {
     "./css": "./dist/css/tokens.css",
     "./css/base": "./dist/css/base.css",
-    "./css/material3": "./dist/css/tokens.material3.css"
+    "./css/material3": "./dist/css/tokens.material3.css",
+    "./css/material3-fonts.css": "./css/material3-fonts.css",
+    "./css/onmars-fonts.css": "./css/onmars-fonts.css"
   },
   "scripts": {
     "build": "node ./build.mjs",

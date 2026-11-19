@@ -599,11 +599,18 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // Issue #342 adds ten full-filter tokens: two semantic and eight component.
   // 1264 + 10 = 1274.
   // Issue #344 adds the tertiary hover overlay. 1274 + 1 = 1275.
+  // Issue #346 adds two font stylesheet exports outside the effective token
+  // surface. The token total and deprecation count stay at main's totals.
+  const tokenPackage = candidate.surface.packages['@kimen/tokens'];
+  for (const subpath of ['./css/onmars-fonts.css', './css/material3-fonts.css']) {
+    assert.equal(tokenPackage.exports[subpath].target, subpath);
+    assert.equal(Object.hasOwn(tokenPackage.stylesheets, subpath), false);
+  }
   // Issue #316 (changes/api/316-size-axes) adds 193: the size axes of
   // ki-input (36), ki-select (32), ki-textarea (28), ki-tabs (4), ki-tab (12),
   // ki-list-item (27), ki-checkbox (7), ki-radio (6), ki-switch (36) and the
   // xs ki-badge (5); medium keeps its unsized tokens. 1275 + 193 = 1468.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1468);
+  assert.equal(Object.keys(tokenPackage.tokens).length, 1468);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
