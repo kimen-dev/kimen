@@ -27,8 +27,14 @@ run_gate() {
   local name="$1"; shift
   echo "── GATE $name"
   if "$@"; then
-    record_suite_evidence "$name" green
-    echo "── GATE $name: PASS"
+    if [ "$name" = 'test-browser' ] && [ "$(uname -s)" != 'Linux' ] &&
+      [ -z "${CI:-}" ] && [ "${KIMEN_RUN_VISUALS:-}" != '1' ]; then
+      record_suite_evidence "$name" partial
+      echo "── GATE $name: PARTIAL (visual specs skipped)"
+    else
+      record_suite_evidence "$name" green
+      echo "── GATE $name: PASS"
+    fi
   else
     record_suite_evidence "$name" red
     echo "── GATE $name: FAIL"
@@ -38,5 +44,9 @@ run_gate() {
 
 run_gate core bash scripts/gates/gates-core.sh
 run_gate test-browser bash scripts/gates/gates-browser.sh chromium
-echo "QUALITY GATES GREEN"
+if grep -q $'\tpartial$' "$KIMEN_GATE_EVIDENCE_FILE"; then
+  echo 'LOCAL QUALITY CHECKS PASSED WITH SKIPS'
+else
+  echo 'QUALITY GATES GREEN'
+fi
 echo "CURRENT-RUN EVIDENCE: $KIMEN_GATE_EVIDENCE_FILE"

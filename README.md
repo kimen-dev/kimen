@@ -146,8 +146,11 @@ Human-readable docs live at the
 Every component ships with real-browser tests (three engines at release),
 zero axe-core violations (WCAG 2.2 AA + EN 301 549 target), a single-digit-KB
 size budget, tokens-only styling (no hardcoded visual values), and RTL support
-by construction. The whole repo is guarded by a deterministic gate suite that
-runs identically locally and in CI: `bash scripts/gates/gates-suite.sh`.
+by construction. Run `bash scripts/gates/gates-suite.sh` for full local checks
+before a pull request. CI requires visual validation.
+
+On a non-Linux host the local browser suite reports how many visual specs it
+skips. Set `KIMEN_RUN_VISUALS=1` to run them with your host's baselines.
 
 ### Share local caches across worktrees
 

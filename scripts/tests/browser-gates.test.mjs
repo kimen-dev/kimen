@@ -1,4 +1,5 @@
 // @spec:018-project-integrity-hardening#S6
+// @spec:067-merge-friendly-checks
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import {
@@ -187,6 +188,61 @@ test('S6 browser setups isolate shared input and page-level capability emulation
     );
   }
   assert.deepEqual(pointerCapability.include, inputDeviceSpecs);
+});
+
+test('S6 local non-Linux visual specs are counted and CI or opt-in preserves them', async () => {
+  const configUrl = pathToFileURL(browserConfig).href;
+  const visualSpecNames = (
+    await readdir(join(repositoryRoot, 'packages/elements/browser-tests'), {
+      recursive: true,
+      withFileTypes: true,
+    })
+  ).filter((entry) => entry.isFile() && /\.visual\..*browser\.spec\.tsx?$/u.test(entry.name));
+  assert.ok(visualSpecNames.length > 0);
+
+  for (const [platform, ci, override, skipped] of [
+    ['darwin', '', '', true],
+    ['darwin', 'true', '', false],
+    ['darwin', '', '1', false],
+    ['linux', '', '', false],
+  ]) {
+    const result = spawnSync(
+      process.execPath,
+      [
+        '--input-type=module',
+        '--eval',
+        `
+      await import('./packages/elements/node_modules/vitest/dist/config.js');
+      await import('./packages/elements/node_modules/@vitest/browser-playwright/dist/index.js');
+      Object.defineProperty(process, 'platform', { value: ${JSON.stringify(platform)} });
+      const { default: config } = await import(${JSON.stringify(configUrl)});
+      process.stdout.write(JSON.stringify(config.test.browser.instances));
+    `,
+      ],
+      {
+        cwd: repositoryRoot,
+        encoding: 'utf8',
+        env: { ...process.env, CI: ci, KIMEN_RUN_VISUALS: override },
+      },
+    );
+    assert.equal(result.status, 0, diagnostic(result));
+    const instances = JSON.parse(result.stdout);
+    for (const instance of instances.slice(0, 3)) {
+      assert.equal(
+        instance.exclude?.some((pattern) => pattern.includes('.visual.')) ?? false,
+        skipped,
+      );
+    }
+    if (skipped) {
+      assert.match(
+        result.stderr,
+        new RegExp(`visual specs run only on Linux: ${visualSpecNames.length} skipped`, 'u'),
+      );
+      assert.match(result.stderr, /KIMEN_RUN_VISUALS=1/u);
+    } else {
+      assert.doesNotMatch(result.stderr, /visual specs run only on Linux/u);
+    }
+  }
 });
 
 test('S6 Vitest configs isolate writable caches by suite and browser engine', () => {
