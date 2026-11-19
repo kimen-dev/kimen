@@ -457,6 +457,35 @@ describe('ki-dialog in a real browser', () => {
     expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
   });
 
+  // The window can change size while no dialog is in the document: a phone
+  // turned, a window resized, a dialog a framework mounts only to open it.
+  // The next dialog has to fit the window it opens in. WebKit resolves
+  // viewport units in a component's styles against the window size the last
+  // instance saw when no instance was there to see the resize.
+  it('S15 a dialog created after the window shrank fits the window it opens in', async () => {
+    cleanup();
+    const details = '<p>Line of the details.</p>'.repeat(14);
+    try {
+      const before = await mountDialog({}, document.body, details);
+      await openDialog(before);
+      await before.close();
+      before.remove();
+
+      await page.viewport(320, 256);
+      const el = await mountDialog({}, document.body, details);
+      await openDialog(el);
+
+      const box = internalDialog(el).getBoundingClientRect();
+      expect(box.height).toBeLessThanOrEqual(window.innerHeight);
+      expect(box.width).toBeLessThanOrEqual(window.innerWidth);
+      const body = bodyPart(el);
+      expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      await el.close();
+    } finally {
+      await page.viewport(414, 896);
+    }
+  });
+
   // WCAG 2.1.1 at 400% zoom (320x256): the body is the only way to read the
   // overflowing copy, so it has to be a Tab stop that the native scroll keys
   // operate — and stop being one as soon as the content fits again.
