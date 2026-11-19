@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "737cdb6f862123e8786717a8feb367b9b5d652a8d1e91814a55b2c11c46e085a",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Issue #347 (spec 065-heading-font-family) adds --ki-typography-family-heading, --ki-dialog-heading-font-family, --ki-alert-heading-font-family, and --ki-dialog-heading-letter-spacing. The cumulative delta since baseline 0.0.0 supersedes declaration 317-321-loading-hint-touch and retains its declared changes.",
+  "release": "major",
+  "schemaVersion": 1
+}

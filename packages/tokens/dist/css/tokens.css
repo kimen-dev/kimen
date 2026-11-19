@@ -829,6 +829,7 @@
   --ki-transparent-inverse: light-dark(var(--ki-color-transparent-white), var(--ki-color-transparent-black));
   --ki-typography-family-display: var(--ki-font-family-display);
   --ki-typography-family-body: var(--ki-font-family-body);
+  --ki-typography-family-heading: var(--ki-typography-family-body);
   --ki-typography-family-serif: var(--ki-font-family-serif);
   --ki-typography-family-mono: var(--ki-font-family-mono);
   --ki-typography-family-base: var(--ki-font-family-body);
@@ -917,6 +918,7 @@
   --ki-alert-font-size: var(--ki-typography-size-body-1);
   --ki-alert-line-height: var(--ki-typography-line-height-body-1);
   --ki-alert-message-line-height: var(--ki-typography-line-height-para);
+  --ki-alert-heading-font-family: var(--ki-typography-family-heading);
   --ki-alert-heading-font-size: var(--ki-typography-size-body-2);
   --ki-alert-heading-font-weight: var(--ki-typography-weight-body-medium);
   --ki-alert-dismiss-size: var(--ki-space-7xl);
@@ -1388,8 +1390,10 @@
   --ki-dialog-border: var(--ki-border-hairline-base-em);
   --ki-dialog-shadow: var(--ki-elevation-e4);
   --ki-dialog-backdrop-bg: var(--ki-overlay-high-em);
+  --ki-dialog-heading-font-family: var(--ki-typography-family-heading);
   --ki-dialog-heading-font-size: var(--ki-typography-size-title-2);
   --ki-dialog-heading-font-weight: var(--ki-typography-weight-body-semibold);
+  --ki-dialog-heading-letter-spacing: var(--ki-typography-letter-spacing-none);
   --ki-dialog-heading-line-height: var(--ki-typography-line-height-title-2);
   --ki-dialog-heading-padding-block-start: var(--ki-space-3xl);
   --ki-dialog-heading-padding-block-end: var(--ki-space-3xl);
