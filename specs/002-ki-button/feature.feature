@@ -92,3 +92,14 @@ Feature: Button
     Given a right-to-left document with icons in the start and end slots
     When the page renders
     Then the start content leads and the end content trails the label
+
+  # S15
+  Scenario Outline: An extra-small button's label is at least 12 pixels
+    Given a <theme> page with an extra-small button labeled "Undo"
+    When the page renders
+    Then the label measures at least 12 CSS pixels
+
+    Examples:
+      | theme     |
+      | onmars    |
+      | material3 |
