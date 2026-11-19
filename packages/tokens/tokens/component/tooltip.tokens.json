@@ -25,13 +25,21 @@
         "$value": "{ki.space.md}",
         "$description": "dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger."
       },
+      "arrow-bg-start": {
+        "$value": "{ki.surface-image.tooltip-arrow-start}",
+        "$description": "Color of the tooltip arrow at the bubble's block-start edge. Defaults to the bubble fill when omitted."
+      },
+      "arrow-bg-end": {
+        "$value": "{ki.surface-image.tooltip-arrow-end}",
+        "$description": "Color of the tooltip arrow at the bubble's block-end edge. Defaults to the bubble fill when omitted."
+      },
       "arrow-radius": {
         "$value": "{ki.radius.xxs}",
         "$description": "dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step)."
       },
       "bg": {
-        "$value": "{ki.surface.special.light-s0-dark-s2}",
-        "$description": "color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override)."
+        "$value": "{ki.surface.transparent}",
+        "$description": "Base background color of the tooltip. Onmars v1 uses a transparent backing beneath its glass image."
       },
       "border-width": {
         "$value": "{ki.size.border.hairline}",
@@ -42,13 +50,33 @@
         "$description": "color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.",
         "$type": "color"
       },
+      "bg-image": {
+        "$value": "{ki.surface-image.tooltip}",
+        "$description": "Optional CSS background image layered over the tooltip fill. Use none for a solid fill."
+      },
       "bg-start": {
         "$value": "{ki.surface.special.blur-base-light}",
-        "$description": "color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end))."
+        "$description": "Legacy start color of the onmars v1 tooltip glass image.",
+        "$deprecated": "Set the complete background image through the image token.",
+        "$extensions": {
+          "dev.kimen.deprecation": {
+            "since": "0.1.0",
+            "removal": "1.0.0",
+            "replacement": "--ki-tooltip-bg-image"
+          }
+        }
       },
       "bg-end": {
         "$value": "{ki.surface.special.light-s0-dark-s2}",
-        "$description": "color used by the tooltip component for the glass gradient end (MarsUI Surface/special/light-s0_dark-s2)."
+        "$description": "Legacy end color of the onmars v1 tooltip glass image.",
+        "$deprecated": "Set the complete background image through the image token.",
+        "$extensions": {
+          "dev.kimen.deprecation": {
+            "since": "0.1.0",
+            "removal": "1.0.0",
+            "replacement": "--ki-tooltip-bg-image"
+          }
+        }
       },
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",

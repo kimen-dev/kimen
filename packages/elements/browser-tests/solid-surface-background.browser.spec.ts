@@ -24,7 +24,8 @@ const surfaces = [
     part: 'tooltip',
     material3: { light: 'rgb(0, 0, 0)', dark: 'rgb(255, 255, 255)' },
     token: '--ki-tooltip-bg',
-    markup: '<ki-tooltip label="Copy link"><button type="button">Copy</button></ki-tooltip>',
+    markup:
+      '<ki-tooltip label="Copy link" placement="bottom"><button type="button">Copy</button></ki-tooltip>',
   },
   {
     tag: 'ki-select',
@@ -51,7 +52,9 @@ async function showSurface(fixture: HTMLElement, { tag, part }: Surface): Promis
     findDeep(host, byPart('trigger')).click();
   }
   const surface = findDeep(host, byPart(part));
-  await expect.poll(() => surface.checkVisibility()).toBe(true);
+  await expect
+    .poll(() => surface.checkVisibility({ opacityProperty: true, visibilityProperty: true }))
+    .toBe(true);
   return surface;
 }
 
@@ -114,5 +117,9 @@ describe.each(glassSurfaces)('onmars v1 $part background', (overlay) => {
     const surface = await showSurface(fixture, overlay);
 
     expect(getComputedStyle(surface).backgroundImage).toContain('rgb(10, 20, 30), rgb(40, 50, 60)');
+    if (overlay.tag === 'ki-tooltip') {
+      const arrow = findDeep(surface, (element) => element.getAttribute('aria-hidden') === 'true');
+      expect(getComputedStyle(arrow).backgroundColor).toBe('rgb(10, 20, 30)');
+    }
   });
 });

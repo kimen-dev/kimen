@@ -1,5 +1,13 @@
 {
   "ki": {
+    "surface-image": {
+      "tooltip-arrow-start": {
+        "$value": "{ki.surface.inverse-white}"
+      },
+      "tooltip-arrow-end": {
+        "$value": "{ki.surface.inverse-white}"
+      }
+    },
     "surface": {
       "$type": "color",
       "s0": {

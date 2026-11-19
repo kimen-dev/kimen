@@ -1,5 +1,13 @@
 {
   "ki": {
+    "floating-surface-image": {
+      "dialog": {
+        "$value": "none"
+      },
+      "tooltip": {
+        "$value": "none"
+      }
+    },
     "color": {
       "brand": {
         "50": {

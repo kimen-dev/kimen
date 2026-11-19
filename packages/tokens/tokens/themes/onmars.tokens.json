@@ -1,5 +1,19 @@
 {
   "ki": {
+    "floating-surface-image": {
+      "dialog": {
+        "$value": "{ki.foundation.onmars-v1.dialog-bg-image}"
+      },
+      "tooltip-arrow-start": {
+        "$value": "{ki.foundation.onmars-v1.tooltip-arrow-start}"
+      },
+      "tooltip-arrow-end": {
+        "$value": "{ki.foundation.onmars-v1.tooltip-arrow-end}"
+      },
+      "tooltip": {
+        "$value": "{ki.foundation.onmars-v1.tooltip-bg-image}"
+      }
+    },
     "color": {
       "brand": {
         "50": {

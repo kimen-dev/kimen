@@ -170,7 +170,8 @@
 }
 
 [part="listbox"] {
-  background: var(--ki-select-listbox-bg);
+  background-color: var(--ki-select-listbox-bg);
+  background-image: var(--ki-select-listbox-bg-image, none);
 
   /* MarsUI Dropmenu glass: White/80 panel + BACKGROUND_BLUR Blur/48 (24px). */
   backdrop-filter: blur(var(--ki-select-listbox-backdrop-blur));

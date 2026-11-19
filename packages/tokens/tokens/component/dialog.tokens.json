@@ -22,16 +22,36 @@
         "$description": "dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale)."
       },
       "bg": {
-        "$value": "{ki.surface.special.light-s0-dark-s2}",
-        "$description": "color used by the dialog component for background (flat fallback of the MarsUI glass gradient: Surface/Special/light-s0_dark-s2; components paint the gradient from ki.dialog.bg-start to ki.dialog.bg-end)."
+        "$value": "{ki.surface.transparent}",
+        "$description": "Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.dialog}",
+        "$description": "Optional CSS background image layered over the dialog fill. Use none for a solid fill."
       },
       "bg-start": {
         "$value": "{ki.surface.special.blur-base-light}",
-        "$description": "color used by the dialog component for the glass gradient start (MarsUI Surface/Special/blur_base_light White/80; dark resolves rgba(36,36,36,0.8)). Paint background: linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))."
+        "$description": "Legacy start color of the onmars v1 dialog glass image.",
+        "$deprecated": "Set the complete background image through the image token.",
+        "$extensions": {
+          "dev.kimen.deprecation": {
+            "since": "0.1.0",
+            "removal": "1.0.0",
+            "replacement": "--ki-dialog-bg-image"
+          }
+        }
       },
       "bg-end": {
         "$value": "{ki.surface.special.light-s0-dark-s2}",
-        "$description": "color used by the dialog component for the glass gradient end (MarsUI Surface/Special/light-s0_dark-s2: white light / Dark/800 dark)."
+        "$description": "Legacy end color of the onmars v1 dialog glass image.",
+        "$deprecated": "Set the complete background image through the image token.",
+        "$extensions": {
+          "dev.kimen.deprecation": {
+            "since": "0.1.0",
+            "removal": "1.0.0",
+            "replacement": "--ki-dialog-bg-image"
+          }
+        }
       },
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
