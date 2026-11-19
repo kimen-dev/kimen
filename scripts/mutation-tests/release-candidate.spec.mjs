@@ -133,13 +133,23 @@ const writePackage = async (root, name, directory, options) => {
     type: 'module',
     license: 'Apache-2.0',
     repository: repositoryMetadata(directory, options.repositoryOverrides[name]),
-    files: ['dist'],
+    files: ['dist', 'NOTICE'],
     ...(options.scripts[name] === undefined ? {} : { scripts: options.scripts[name] }),
+  };
+  // A published package carries its licence and its notices. `null` leaves a
+  // file out of the fixture, an empty string writes an empty one.
+  const legalFiles = {
+    LICENSE: 'Apache License, Version 2.0 (fixture)\n',
+    NOTICE: 'Kimen fixture notices\n',
+    ...options.legalFiles[name],
   };
   await mkdir(join(packageDirectory, 'dist'), { recursive: true });
   await Promise.all([
     writeFile(join(packageDirectory, 'package.json'), canonicalJson(manifest)),
     writeFile(join(packageDirectory, 'dist/index.js'), `export const name = '${name}';\n`),
+    ...Object.entries(legalFiles)
+      .filter(([, contents]) => contents !== null)
+      .map(([file, contents]) => writeFile(join(packageDirectory, file), contents)),
   ]);
   return { directory: packageDirectory, manifest };
 };
@@ -150,6 +160,7 @@ const createRepositoryFixture = async (overrides = {}) => {
     privatePackages: false,
     tag,
     candidateOutsideMain: false,
+    legalFiles: {},
     packageVersions: {},
     repositoryOverrides: {},
     scripts: {},
@@ -412,6 +423,60 @@ describe('release candidate build and verification mutation boundary', () => {
     const fixture = await createRepositoryFixture(options.fixture);
 
     await expect(buildFixture(fixture, options.build)).rejects.toThrow(expected);
+  });
+
+  it.each([
+    ['@kimen/elements', 'LICENSE', null],
+    ['@kimen/elements', 'NOTICE', null],
+    ['@kimen/tokens', 'LICENSE', ''],
+    ['@kimen/tokens', 'NOTICE', ''],
+  ])(
+    'S7 refuses a candidate whose %s tarball would lack a usable %s',
+    async (name, file, contents) => {
+      const fixture = await createRepositoryFixture({
+        legalFiles: { [name]: { [file]: contents } },
+      });
+
+      await expect(buildFixture(fixture)).rejects.toThrow(
+        `${name} tarball is missing package/${file}; a published package carries its licence and its notices`,
+      );
+    },
+  );
+
+  it('S7 a legal file only counts when it is a regular file at the package root', async () => {
+    // A directory named NOTICE packs its contents under package/NOTICE/, and
+    // a nested dist/LICENSE is not the package's licence.
+    const fixture = await createRepositoryFixture({
+      legalFiles: { '@kimen/tokens': { NOTICE: null } },
+    });
+    const tokens = fixture.packageDirectories[1];
+    await mkdir(join(tokens, 'NOTICE'), { recursive: true });
+    await writeFile(join(tokens, 'NOTICE/inner.txt'), 'not a notice file\n');
+    await writeFile(join(tokens, 'dist/NOTICE'), 'nested, not at the root\n');
+    run('git', ['add', '.'], fixture.root);
+    run('git', ['commit', '-m', 'fixture: notice directory'], fixture.root);
+
+    await expect(
+      buildFixture(fixture, {
+        sourceSha: run('git', ['rev-parse', 'HEAD'], fixture.root),
+        tag: null,
+        mode: 'dry-run',
+      }),
+    ).rejects.toThrow(/@kimen\/tokens tarball is missing package\/NOTICE/u);
+  });
+
+  it('S7 packs LICENSE and NOTICE into both tarballs of a complete candidate', async () => {
+    const fixture = await createRepositoryFixture();
+    const candidate = await buildFixture(fixture);
+    const directory = await mkdtemp(join(tmpdir(), 'kimen-release-mutation-legal-'));
+    onTestFinished(() => rm(directory, { recursive: true, force: true }));
+    run('tar', ['-xf', candidate.archivePath, '-C', directory], directory);
+
+    for (const { file } of candidate.manifest.packages) {
+      const listing = run('tar', ['-tzf', join(directory, file)], directory).split('\n');
+      expect(listing).toContain('package/LICENSE');
+      expect(listing).toContain('package/NOTICE');
+    }
   });
 
   it('S7 rejects lifecycle scripts before npm can execute them', async () => {
