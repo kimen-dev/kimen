@@ -79,9 +79,11 @@ button {
   line-height: var(--_ki-button-line-height);
 
   /* Density (spec 045): the region's step on top of the size, floored at the
-     WCAG 2.5.8 target minimum. */
+     target minimum — a floor that stops a shrink but never lifts a size above
+     its own height (A1-D4): under touch's 44px minimum an xs button paints
+     28px and the shared surface extends its target instead. */
   min-block-size: max(
-    var(--ki-density-target-min),
+    min(var(--ki-density-target-min), var(--_ki-button-height)),
     calc(var(--_ki-button-height) + var(--ki-density-control-offset))
   );
   min-inline-size: var(--_ki-button-min-target);

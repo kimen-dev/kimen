@@ -297,7 +297,25 @@ function modeRules(modes, theme, deprecations) {
 }
 
 /** The density levels the stylesheet publishes, besides `default` (spec 045). */
-export const DENSITIES = Object.freeze(['compact']);
+export const DENSITIES = Object.freeze(['compact', 'touch']);
+
+/**
+ * The density rules, in declaration order: each level, then `default`. Every
+ * rule declares every density token some level reassigns — a level that keeps
+ * one at its default value says so — so the nearest declaration wins whatever
+ * level it is nested in (spec 045 A1-D5): a touch region inside a compact one
+ * is touch through and through, and `default` restores all of them. `levels`
+ * holds what each level changes; `base` the default value of every token.
+ */
+export function densityRules(levels, base) {
+  const names = [...new Set(levels.flatMap(({ declarations }) => [...declarations.keys()]))];
+  const complete = (declarations) =>
+    new Map(names.map((name) => [name, declarations.get(name) ?? base.get(name)]));
+  return [
+    ...levels.map(({ level, declarations }) => ({ level, declarations: complete(declarations) })),
+    { level: 'default', declarations: complete(new Map()) },
+  ];
+}
 
 /**
  * A document-inherited token (`$extensions['dev.kimen'].inherit: 'document'`)

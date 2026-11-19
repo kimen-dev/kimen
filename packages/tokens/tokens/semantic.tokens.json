@@ -1473,7 +1473,7 @@
       }
     },
     "density": {
-      "$description": "Region density (spec 045). Both tokens are inherited from the document root, never redeclared on a theme root, and consumed directly by component CSS, so a density declaration on any element reaches every component inside it, in any theme. Nothing aliases them and no theme or mode reassigns them or what they reference (the build checks both).",
+      "$description": "Region density (spec 045). The three tokens are inherited from the document root, never redeclared on a theme root, and consumed directly by component CSS, so a density declaration on any element reaches every component inside it, in any theme. Nothing aliases them and no theme or mode reassigns them or what they reference (the build checks both).",
       "control-offset": {
         "$type": "dimension",
         "$value": "{ki.space.zero}",
@@ -1497,7 +1497,12 @@
       "target-min": {
         "$type": "dimension",
         "$value": "{ki.size.target-min}",
-        "$description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+        "$description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "$extensions": {
+          "dev.kimen": {
+            "inherit": "document"
+          }
+        }
       }
     },
     "corner": {

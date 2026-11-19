@@ -331,9 +331,29 @@ button {
   color: var(--_ki-button-fg);
   cursor: pointer;
   display: inline-flex;
+
+  /* The pointer target below paints behind the content, inside the button's
+     own stacking context. */
+  isolation: isolate;
   justify-content: center;
+  position: relative;
   touch-action: manipulation;
   user-select: none;
+}
+
+/* The pointer target (spec 045 A1-D3): at least --ki-density-target-min
+   across both axes, centred on the button, whatever the button paints. It
+   paints nothing and takes no space: inside any button that is already as
+   large, it extends the target of one painted smaller (an icon button or an
+   xs button under touch's 44px minimum). Behind the content (z-index -1 in
+   the button's stacking context), so a pointer over the label or a slotted
+   icon still lands on them. */
+button::before {
+  content: "";
+  inset-block: calc((100% - var(--ki-density-target-min)) / 2);
+  inset-inline: calc((100% - var(--ki-density-target-min)) / 2);
+  position: absolute;
+  z-index: -1;
 }
 
 /* Disabled resolves the disabled matrix cells (tone-independent), keyed on

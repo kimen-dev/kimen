@@ -152,24 +152,40 @@ contrast. The public token surface publishes each mode as its own context
 
 ### Density
 
-`data-ki-density="compact"` on any element makes its region compact;
-`data-ki-density="default"` restores the default inside it (spec 045). Two
-tokens carry the step and are **inherited from the document**: declared once
-in their own `:root` rule, never redeclared on a theme root, and read by
-component CSS where a size is used — so the declaration reaches every
-component inside the element, in any theme, and the nearest declaration wins
-by plain inheritance:
+`data-ki-density="compact"` on any element makes its region compact,
+`data-ki-density="touch"` gives it 44 × 44 pointer targets, and
+`data-ki-density="default"` restores the default inside it (spec 045 and its
+Amendment A1). Three tokens carry the level and are **inherited from the
+document**: declared once in their own `:root` rule, never redeclared on a
+theme root, and read by component CSS where a size is used — so the
+declaration reaches every component inside the element, in any theme, and
+the nearest declaration wins by plain inheritance. Every level's rule
+declares all three, so a level nested in another is that level through and
+through:
 
-| Token | Default | Compact | Used for |
-|---|---|---|---|
-| `--ki-density-control-offset` | `0` | `-0.5rem` | added to the block size of buttons, icon buttons, fields, selects, options, list items, tabs |
-| `--ki-density-space-scale` | `1` | `0.75` | multiplies the padding and gaps of cards, dialogs, alerts, lists, listboxes, tab panels, tooltips |
-| `--ki-density-target-min` | `24px` | `24px` | the floor every scaled control respects (WCAG 2.5.8) |
+| Token | Default | Compact | Touch | Used for |
+|---|---|---|---|---|
+| `--ki-density-control-offset` | `0` | `-0.5rem` | `0.25rem` | added to the block size of buttons, fields, selects, options, list items, tabs; icon buttons take a negative step only |
+| `--ki-density-space-scale` | `1` | `0.75` | `1` | multiplies the padding and gaps of cards, dialogs, alerts, lists, listboxes, tab panels, tooltips |
+| `--ki-density-target-min` | `24px` | `24px` | `44px` | the pointer target every interactive control reaches (WCAG 2.5.8; 2.5.5 in touch): a control painted smaller extends its target without painting more |
 
 The build marks the inherited tokens with
 `$extensions["dev.kimen"].inherit = "document"` and fails if a token aliases
 them or a theme or mode reassigns them or what they reference. The levels
-live in `tokens/modes/compact.tokens.json`.
+live in `tokens/modes/compact.tokens.json` and `tokens/modes/touch.tokens.json`.
+
+Touch is opt-in: no Kimen stylesheet applies it under a coarse pointer. A
+page that wants that writes it in its own stylesheet, after Kimen's:
+
+```css
+@media (pointer: coarse) {
+  :root {
+    --ki-density-control-offset: var(--ki-space-xs);
+    --ki-density-space-scale: var(--ki-scale-unit);
+    --ki-density-target-min: var(--ki-size-target-touch);
+  }
+}
+```
 
 ## Layer model
 

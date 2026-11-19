@@ -144,8 +144,19 @@ input {
   inset-inline-start: 0;
   z-index: 1;
   box-sizing: border-box;
-  inline-size: max(var(--ki-checkbox-control-size), var(--ki-checkbox-min-target));
-  block-size: max(var(--ki-checkbox-control-size), var(--ki-checkbox-min-target));
+
+  /* The pointer target: never under the region's target minimum (spec 045
+     A1-D3), which extends it without moving or growing the painted box. */
+  inline-size: max(
+    var(--ki-checkbox-control-size),
+    var(--ki-checkbox-min-target),
+    var(--ki-density-target-min)
+  );
+  block-size: max(
+    var(--ki-checkbox-control-size),
+    var(--ki-checkbox-min-target),
+    var(--ki-density-target-min)
+  );
   margin: 0;
   opacity: 0;
   transform: translateY(-50%);

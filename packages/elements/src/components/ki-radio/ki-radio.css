@@ -89,8 +89,19 @@ input {
   inset-block-start: 50%;
   inset-inline-start: 0;
   box-sizing: border-box;
-  inline-size: max(var(--_ki-radio-control-size), var(--_ki-radio-min-target));
-  block-size: max(var(--_ki-radio-control-size), var(--_ki-radio-min-target));
+
+  /* The pointer target: never under the region's target minimum (spec 045
+     A1-D3), which extends it without moving or growing the painted circle. */
+  inline-size: max(
+    var(--_ki-radio-control-size),
+    var(--_ki-radio-min-target),
+    var(--ki-density-target-min)
+  );
+  block-size: max(
+    var(--_ki-radio-control-size),
+    var(--_ki-radio-min-target),
+    var(--ki-density-target-min)
+  );
   margin: 0;
   opacity: 0;
   transform: translateY(-50%);

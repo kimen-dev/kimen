@@ -53,15 +53,25 @@ button {
      24/32/40/48/56 square comes from border-box sizing on fixed block/inline
      sizes — the 1px border stays inside the box (the calc(padding - border)
      mechanic of ki-button does not apply to a padding-less square;
-     specs/022-ki-icon-button/design-extraction.md decision 3). */
-  block-size: max(
-    var(--ki-density-target-min),
-    calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+     specs/022-ki-icon-button/design-extraction.md decision 3).
+     Density (spec 045): a negative step shrinks the square down to the
+     target minimum; no step grows it past its own size (A1-D3/D4), so under
+     touch the square keeps its size and the shared surface extends its
+     target to the minimum instead. */
+  block-size: min(
+    var(--_ki-icon-button-size),
+    max(
+      var(--ki-density-target-min),
+      calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+    )
   );
   box-sizing: border-box;
-  inline-size: max(
-    var(--ki-density-target-min),
-    calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+  inline-size: min(
+    var(--_ki-icon-button-size),
+    max(
+      var(--ki-density-target-min),
+      calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+    )
   );
   padding-block: 0;
   padding-inline: 0;
