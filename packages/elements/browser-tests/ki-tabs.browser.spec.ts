@@ -413,6 +413,70 @@ describe('ki-tabs built and updated through properties', () => {
   });
 });
 
+// A definition loaded before the body (a classic script in the head) makes
+// the parser upgrade the group at its start tag, before any child exists; a
+// document that arrives in chunks gives the group time to load meanwhile.
+// The children then come in source order, attributes and all.
+describe('ki-tabs defined before the parser reaches its children', () => {
+  function parsedChild(localName: 'ki-tab' | 'ki-tab-panel', value: string): HTMLElement {
+    const child = document.createElement(localName);
+    child.setAttribute('value', value);
+    child.textContent = localName === 'ki-tab' ? `Tab ${value}` : `Panel ${value}`;
+    return child;
+  }
+
+  async function loadedEmptyGroup(value: string): Promise<KiTabsElement> {
+    ensureTokens();
+    const tabs = document.createElement('ki-tabs') as KiTabsElement;
+    tabs.setAttribute('label', 'Settings');
+    tabs.setAttribute('value', value);
+    const main = document.createElement('main');
+    main.append(tabs);
+    document.body.append(main);
+    await waitForRender(tabs);
+    return tabs;
+  }
+
+  it('S1 selects the tab its value attribute declares once the tabs are parsed', async () => {
+    const tabs = await loadedEmptyGroup('q');
+    const onChange = vi.fn();
+    tabs.addEventListener('ki-change', onChange);
+
+    // The first tab arrives in one chunk, the rest in the next one.
+    tabs.append(parsedChild('ki-tab', 'p'));
+    await waitForRender(tabs);
+    tabs.append(
+      parsedChild('ki-tab', 'q'),
+      parsedChild('ki-tab', 'r'),
+      parsedChild('ki-tab-panel', 'p'),
+      parsedChild('ki-tab-panel', 'q'),
+      parsedChild('ki-tab-panel', 'r'),
+    );
+
+    await expect.poll(() => tab(tabs, 'q').hasAttribute('selected')).toBe(true);
+    expect(tabs.value).toBe('q');
+    expect([...tabs.querySelectorAll('ki-tab[selected]')]).toHaveLength(1);
+    expect(panel(tabs, 'q').hasAttribute('hidden')).toBe(false);
+    expect(panel(tabs, 'p').hasAttribute('hidden')).toBe(true);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('S3 still falls back to the first tab when the declared value names none of them', async () => {
+    const tabs = await loadedEmptyGroup('missing');
+
+    tabs.append(
+      parsedChild('ki-tab', 'p'),
+      parsedChild('ki-tab', 'q'),
+      parsedChild('ki-tab-panel', 'p'),
+      parsedChild('ki-tab-panel', 'q'),
+    );
+
+    await expect.poll(() => tab(tabs, 'p').hasAttribute('selected')).toBe(true);
+    expect(tabs.value).toBe('p');
+    expect(panel(tabs, 'p').hasAttribute('hidden')).toBe(false);
+  });
+});
+
 describe('ki-tabs moved to another parent', () => {
   it('S2 a tab disabled after the move gives up the selection', async () => {
     const tabs = await mount(fixture('notifications'));
