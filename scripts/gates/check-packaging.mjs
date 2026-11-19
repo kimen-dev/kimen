@@ -93,8 +93,6 @@ export async function checkPackaging({
       'esm-only',
       '--entrypoints',
       ...plan.loaderEntrypoints,
-      '--ignore-rules',
-      'internal-resolution-error',
     ],
     root,
   );
@@ -119,8 +117,6 @@ export async function checkPackaging({
       'esm-only',
       '--entrypoints',
       ...plan.componentEntrypoints,
-      '--ignore-rules',
-      'internal-resolution-error',
     ],
     root,
   );
