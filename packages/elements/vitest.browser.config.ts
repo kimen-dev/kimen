@@ -1,5 +1,6 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, globSync, readFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
@@ -28,8 +29,27 @@ const browser = configuredBrowser as SupportedBrowser;
 const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts';
 // Specs that change the page's input device through CDP touch emulation. They
 // share one isolated setup, never the ordinary light one: the pointer
-// capability audit, and the touch text size of fields (spec 048).
-const inputDeviceSpecs = [pointerCapabilitySpec, 'browser-tests/touch-field-text.browser.spec.ts'];
+// capability audit, the touch text size of fields (spec 048) and of sized
+// fields (spec 050).
+const inputDeviceSpecs = [
+  pointerCapabilitySpec,
+  'browser-tests/touch-field-text.browser.spec.ts',
+  'browser-tests/touch-size-field-text.browser.spec.ts',
+];
+const visualSpecPattern = 'browser-tests/**/*.visual.*browser.spec.{ts,tsx}';
+const visualExcludes =
+  process.platform !== 'linux' && !process.env['CI'] && process.env['KIMEN_RUN_VISUALS'] !== '1'
+    ? [visualSpecPattern]
+    : [];
+if (visualExcludes.length > 0) {
+  const cwd = fileURLToPath(new URL('.', import.meta.url));
+  const count = globSync(visualSpecPattern, { cwd, withFileTypes: true }).filter((entry) =>
+    entry.isFile(),
+  ).length;
+  console.warn(
+    `VISUAL TESTS: visual specs run only on Linux: ${count} skipped. Set KIMEN_RUN_VISUALS=1 to run them locally.`,
+  );
+}
 
 // The interaction media features (`hover`, `pointer`) are the only way to ask
 // a page "can this device hover?", and Playwright's emulateMedia() does not
@@ -40,7 +60,7 @@ const inputDeviceSpecs = [pointerCapabilitySpec, 'browser-tests/touch-field-text
 const cdpSessions = new WeakMap<object, Promise<{ send: CdpSend }>>();
 type CdpSend = (method: string, params: Record<string, unknown>) => Promise<unknown>;
 
-const cacheRoot = process.env['KIMEN_CACHE_ROOT'];
+const cacheRoot = process.env['KIMEN_WORKTREE_CACHE_ROOT'] ?? process.env['KIMEN_CACHE_ROOT'];
 const cacheDir = cacheRoot ? join(cacheRoot, `vite/elements-browser-${browser}`) : undefined;
 // Playwright's default headless Chromium selects a separate headless-shell
 // binary. Selecting the installed `chromium` channel makes the executable that
@@ -353,6 +373,7 @@ export default defineConfig({
             'browser-tests/**/*.dark.browser.spec.{ts,tsx}',
             'browser-tests/**/*.motion.browser.spec.{ts,tsx}',
             ...inputDeviceSpecs,
+            ...visualExcludes,
           ],
           // Files in one browser setup have isolated DOMs but share the
           // Playwright page's physical pointer, keyboard focus and CDP media
@@ -364,12 +385,14 @@ export default defineConfig({
           browser,
           name: `${browser}-dark`,
           include: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+          ...(visualExcludes.length > 0 ? { exclude: visualExcludes } : {}),
           fileParallelism: false,
         },
         {
           browser,
           name: `${browser}-reduced-motion`,
           include: ['browser-tests/**/*.motion.browser.spec.{ts,tsx}'],
+          ...(visualExcludes.length > 0 ? { exclude: visualExcludes } : {}),
           fileParallelism: false,
         },
         {

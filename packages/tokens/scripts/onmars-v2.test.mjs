@@ -18,6 +18,7 @@ const published = [
   'surface-primary-med-em',
   'surface-info-tint',
   'text-high-em',
+  'focus-danger',
   'focus-ring-color',
   'typography-family-body',
   'typography-family-display',
@@ -29,6 +30,7 @@ const published = [
   'tooltip-fg',
   'tooltip-bg',
   'tooltip-padding-block',
+  'tooltip-shadow',
   'duration-fast',
   'duration-moderate',
   'duration-slow',
@@ -57,6 +59,7 @@ test('S1 onmars resolves its paper, charcoal, ink, tints, accent and type stacks
     'surface-primary-med-em': '#1d1a16',
     'surface-info-tint': '#e6f1fb',
     'text-high-em': '#181613',
+    'focus-danger': '0 0 0 3px rgba(239,78,105,0.2)',
     'focus-ring-color': '#bb4e2a',
     'typography-family-body': "'Instrument Sans',system-ui,sans-serif",
     'typography-family-display': "'Newsreader',Georgia,serif",
@@ -66,6 +69,7 @@ test('S1 onmars resolves its paper, charcoal, ink, tints, accent and type stacks
     'surface-primary-med-em': '#edebe7',
     'surface-info-tint': '#13283a',
     'text-high-em': '#edebe7',
+    'focus-danger': '0 0 0 3px rgba(239,78,105,0.4)',
     'focus-ring-color': '#c5735a',
   });
 });
@@ -91,10 +95,14 @@ test('S2 onmars resolves the new corner, card and tooltip roles', () => {
     'tooltip-fg': '#f9f7f4',
     'tooltip-bg': '#2e2b26',
     'tooltip-padding-block': '0.375rem',
+    'tooltip-shadow':
+      '0 2px 6px 0 rgba(24,22,19,0.05),0 12px 28px 0 rgba(24,22,19,0.09),0 10px 24px 0 transparent',
   });
   assertValues('./css', 'dark', {
     'tooltip-fg': '#181613',
     'tooltip-bg': '#f3f0eb',
+    'tooltip-shadow':
+      '0 2px 6px 0 rgba(0,0,0,0.4),0 12px 28px 0 transparent,0 10px 24px 0 rgba(0,0,0,0.45)',
   });
 });
 

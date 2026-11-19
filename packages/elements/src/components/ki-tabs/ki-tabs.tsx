@@ -13,6 +13,8 @@ import {
   type TabRecord,
 } from './ki-tabs.selection';
 
+export type KiTabsSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 // Local structural type for the Stencil @Event emitter. Declaring it here
 // (rather than importing EventEmitter from '@stencil/core') keeps the
 // generated .d.ts from referencing '../../stencil-public-runtime', whose
@@ -87,6 +89,20 @@ export class KiTabs {
    * @default undefined
    */
   @Prop({ reflect: true }) label?: string;
+
+  /**
+   * Token-backed strip size: every `ki-tab` it holds is 24, 32, 40, 48 or
+   * 56px tall in onmars, with its text, and the gap between tabs follows.
+   * The strip decides for all its tabs; a tab has no size of its own. An
+   * unrecognized value matches no style rule and keeps the medium metrics.
+   * When to use: match the size of the controls around the strip.
+   * When NOT to use: do not pick a smaller size to fit a dense region or a
+   * larger one for touch; declare `data-ki-density` on the region instead,
+   * which composes with every size.
+   *
+   * @default 'md'
+   */
+  @Prop({ reflect: true }) size: KiTabsSize = 'md';
 
   /**
    * Fired once after a user-driven selection change from pointer or keyboard

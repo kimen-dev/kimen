@@ -498,7 +498,7 @@ describe('language-model index and documents', () => {
     }
   });
 
-  it('S10 the committed llms-full.txt holds every published component', async () => {
+  it('S10 both complete summaries cover every published component', async () => {
     const [docs, packageFull, rootFull] = await Promise.all([
       readDocs(),
       readFile(new URL('./llms-full.txt', packageRoot), 'utf8'),

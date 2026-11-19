@@ -1,0 +1,1491 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "loading": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Pending state of the action this icon button started (refreshing,\nsending). While set, every activation is blocked (pointer, Enter and\nSpace), but the icon button stays focusable, in the Tab order and at its\nsize: the icon stays laid out, transparent, and a spinner is drawn in its\nplace. The internal native button is exposed with `aria-disabled=\"true\"`\nand keeps its `label`, and `loadingLabel` is announced as a polite status\nmessage. `disabled` wins over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this icon button started is\nrunning, so a second activation cannot repeat it.\nWhen NOT to use: for an icon button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress).",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "loading-label": {
+        "default": "'Loading'",
+        "deprecatedSince": null,
+        "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\" | \"success\""
+      },
+      "variant": {
+        "default": "'secondary'",
+        "deprecatedSince": null,
+        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+        "replacement": null,
+        "required": false,
+        "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+      }
+    },
+    "cssProperties": {
+      "--ki-button-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for glass button and icon-button variants.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-danger-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost danger hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-danger-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost danger hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-danger-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost danger hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-danger-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost danger rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-danger-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost danger rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-danger-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost danger rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-disabled-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for ghost disabled shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for ghost hover shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-rest-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for ghost rest shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-success-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost success hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-success-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost success hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-success-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost success hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-success-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost success rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-success-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost success rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-success-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-lg-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-md-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-active-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-danger-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-danger-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-danger-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary danger hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-danger-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-danger-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-danger-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary danger rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-disabled-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for primary disabled shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-hover-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-rest-border-bottom": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-rest-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-success-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-success-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-success-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary success hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-success-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-success-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-success-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-danger-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary danger hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-danger-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-danger-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary danger hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-danger-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary danger rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-danger-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-danger-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary danger rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-disabled-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for quaternary disabled shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for quaternary hover shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-rest-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for quaternary rest shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-success-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary success hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-success-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-success-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary success hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-success-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary success rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-success-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-success-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-active-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-danger-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary danger hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-danger-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-danger-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary danger hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-danger-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary danger rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-danger-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-danger-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary danger rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-disabled-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for secondary disabled shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-hover-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral disabled foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral hover foreground (MarsUI text/high_em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-rest-border-bottom": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-rest-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-success-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary success hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-success-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-success-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary success hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-success-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary success rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-success-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-success-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-sm-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-spinner-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-spinner-stroke-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-danger-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tertiary alias of the secondary danger hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-danger-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-danger-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary danger hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-danger-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tertiary alias of the secondary danger rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-danger-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-danger-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary danger rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-disabled-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "value used by the button component for tertiary disabled shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-hover-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hover overlay for neutral tertiary buttons, shared with secondary by default.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary neutral disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary neutral disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary neutral disabled foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tertiary alias of the secondary neutral hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tertiary alias of the secondary neutral hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tertiary alias of the secondary neutral rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tertiary alias of the secondary neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-rest-border-bottom": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-rest-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-success-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tertiary alias of the secondary success hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-success-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-success-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary success hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-success-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tertiary alias of the secondary success rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-success-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-success-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for tertiary success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-xl-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-xs-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-lg-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-lg-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for lg box (48px square).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-lg-spinner-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for the lg loading spinner box (24px, the lg icon size; spec 046 D5: the spinner takes the place of the icon).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-md-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-md-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for md box (40px square, Figma node 10078:3129).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-md-spinner-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-sm-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-sm-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for sm box (32px square).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-sm-spinner-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-xl-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-xl-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for xl box (56px square).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-xl-spinner-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-xs-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-xs-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for xs box (24px square, Figma Space/7xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-xs-spinner-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for the xs loading spinner box (16px, the xs icon size; spec 046 D5: the spinner takes the place of the icon).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "button": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Internal native button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Icon wrapper around the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "spinner": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Loading spinner drawn in place of the icon, in the button's\nforeground ink, rendered only while `loading` is in effect.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "loading": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Pending state of the action this icon button started (refreshing,\nsending). While set, every activation is blocked (pointer, Enter and\nSpace), but the icon button stays focusable, in the Tab order and at its\nsize: the icon stays laid out, transparent, and a spinner is drawn in its\nplace. The internal native button is exposed with `aria-disabled=\"true\"`\nand keeps its `label`, and `loadingLabel` is announced as a polite status\nmessage. `disabled` wins over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this icon button started is\nrunning, so a second activation cannot repeat it.\nWhen NOT to use: for an icon button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress).",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "loadingLabel": {
+        "default": "'Loading'",
+        "deprecatedSince": null,
+        "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\" | \"success\""
+      },
+      "variant": {
+        "default": "'secondary'",
+        "deprecatedSince": null,
+        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+        "replacement": null,
+        "required": false,
+        "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-icon-button.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-icon-button.d.ts",
+    "symbols": {
+      "KiIconButton": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiIconButton extends Components.KiIconButton, HTMLElement {\n}\nexport const KiIconButton: {\n    prototype: KiIconButton;\n    new (): KiIconButton;\n};"
+      },
+      "KiIconButtonSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
+      },
+      "KiIconButtonTone": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiIconButtonTone = 'neutral' | 'success' | 'danger';"
+      },
+      "KiIconButtonVariant": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-icon-button.js"
+  }
+}

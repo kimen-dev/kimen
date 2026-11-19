@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 const FACET_KEYS = ['attributes', 'members', 'events', 'slots', 'cssParts', 'cssProperties'];
+const GENUI_FULL_HEADING = '## GenUI layer';
 
 export function serializeJson(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
@@ -626,7 +627,7 @@ export function validateGenUiSurfaces(genUi, packages) {
  */
 export function buildGenUiSection(genUi, packages) {
   const sources = new Map(packages.map((entry) => [entry.directory, entry]));
-  const lines = ['## GenUI layer', '', (genUi.intro ?? []).join('\n')];
+  const lines = [GENUI_FULL_HEADING, '', (genUi.intro ?? []).join('\n')];
 
   for (const entry of genUi.packages ?? []) {
     const { packageJson } = sources.get(entry.directory);
@@ -653,6 +654,12 @@ export function buildGenUiSection(genUi, packages) {
  */
 export function buildRootLlmsTxt(llmsTxt, genUiSection) {
   return `${llmsTxt}\n${genUiSection}`;
+}
+
+export function packageSummaryFromSiteSummary(summary) {
+  const genUiStart = summary.lastIndexOf(`\n${GENUI_FULL_HEADING}\n`);
+  if (genUiStart < 0) throw new Error('Site llms-full.txt is missing its GenUI appendix');
+  return summary.slice(0, genUiStart);
 }
 
 function cssPropertiesFor(component, inputs) {

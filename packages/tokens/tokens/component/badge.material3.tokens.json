@@ -68,6 +68,12 @@
         "fg": {
           "$value": "{ki.text.warning-high-em}"
         }
+      },
+      "xs": {
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the badge component for xs radius in material3: the pill shape of every size (spec 050 D8)."
+        }
       }
     }
   }

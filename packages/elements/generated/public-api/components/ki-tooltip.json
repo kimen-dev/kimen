@@ -1,0 +1,311 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "placement": {
+        "default": "'top'",
+        "deprecatedSince": null,
+        "description": "Preferred placement for the tooltip. The component may flip or clamp the\nrendered placement to keep the bubble inside the viewport; unknown runtime\nvalues fall back to `top`.\nWhen NOT to use: do not depend on placement for meaning or reading order.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bottom\" | \"end\" | \"start\" | \"top\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-effect-component-secondary-default-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-distance-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Motion travel distance sm (4px): small slide/settle offsets.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-instant": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard-accelerate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-image-tooltip-arrow-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "End-edge arrow color for a themed tooltip surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-image-tooltip-arrow-start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Start-edge arrow color for a themed tooltip surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-arrow-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-arrow-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the tooltip bubble.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Base background color of the tooltip. Onmars v1 uses a transparent backing beneath its glass image.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional CSS background image layered over the tooltip fill. Use none for a solid fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-border-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the tooltip component for font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for line height (MarsUI line_height/para 20px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-max-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for max inline size (288px; the master card is fixed 280px wide in its rich variants — the 8px divergence is a documented text-only reduction).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for offset (MarsUI caret depth 8px with zero extra gap = trigger-to-card distance).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for padding block (MarsUI card padding Space/xl 12px on all sides).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for padding inline (MarsUI card padding Space/xl 12px on all sides).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tooltip component for radius (MarsUI Tooltip master 12089:7621 List_wrap: Radius/big_component/radius_xs 16px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A transient, text-only description bubble for one slotted trigger.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "tooltip": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The non-focusable tooltip bubble.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "placement": {
+        "default": "'top'",
+        "deprecatedSince": null,
+        "description": "Preferred placement for the tooltip. The component may flip or clamp the\nrendered placement to keep the bubble inside the viewport; unknown runtime\nvalues fall back to `top`.\nWhen NOT to use: do not depend on placement for meaning or reading order.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bottom\" | \"end\" | \"start\" | \"top\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Exactly one interactive trigger. The component reflects `label` to\nthe trigger's `aria-description`.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-tooltip.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-tooltip.d.ts",
+    "symbols": {
+      "KiTooltip": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiTooltip extends Components.KiTooltip, HTMLElement {\n}\nexport const KiTooltip: {\n    prototype: KiTooltip;\n    new (): KiTooltip;\n};"
+      },
+      "KiTooltipPlacement": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-tooltip.js"
+  }
+}

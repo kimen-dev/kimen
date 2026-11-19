@@ -1,0 +1,433 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Output-only selected state written by `ki-tabs`. Set the group's `value`\nto choose an initial tab; author-set `selected` is overwritten.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Pairing identifier shared with a `ki-tab-panel`. The first tab with a\nvalue owns it; later duplicates render but are not selectable.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-distance-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Motion travel distance xs (2px): hover-lift offsets.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the tab component for font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-indicator-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for indicator color (MarsUI active underline is Outline/inverse_white: black in light, white in dark — the inverse neutral, not primary).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-indicator-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for indicator radius (the master underline is a square-ended 2px bottom border).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for indicator size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-min-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for min block size (MarsUI Tab_nav md bar height 40px: 24px body_1 label + 8px block-end clearance + underline; retargeted from ki.space.7xl per the fidelity audit — material3 pins its own value).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-padding-block-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for padding inline (MarsUI items carry no inline padding: spacing comes from the bar gap and the underline spans the full item width).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-selected-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for selected active background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-selected-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-selected-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for selected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-selected-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for selected disabled foreground (MarsUI disabled ladder: Gray/500 light / White-32 dark, the value ki-status and ki-switch already use for disabled glyphs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-selected-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for selected hover background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-selected-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-selected-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for selected rest background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-selected-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-unselected-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for unselected active background (MarsUI Tab_nav is transparent_inverse in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-unselected-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for unselected active foreground (mirrors hover; MarsUI defines no pressed variant).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-unselected-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for unselected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-unselected-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for unselected disabled foreground (MarsUI disabled ladder: Gray/500 light / White-32 dark, the value ki-status and ki-switch already use for disabled glyphs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-unselected-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for unselected hover background (MarsUI Tab_nav is transparent_inverse in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-unselected-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for unselected hover foreground (with rest at med_em, hover darkens one em step, preserving the master rest-to-hover direction).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-unselected-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for unselected rest background (MarsUI Tab_nav is transparent_inverse in every state).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-unselected-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the tab component for unselected rest foreground (Figma inactive is Text/low_em, which fails the 4.5:1 text gate at 13px; med_em is the gate-compliant rest value — declared deviation).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "One selectable tab inside a `ki-tabs` view switcher.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative selected-tab marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "tab": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tab surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Output-only selected state written by `ki-tabs`. Set the group's `value`\nto choose an initial tab; author-set `selected` is overwritten.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Pairing identifier shared with a `ki-tab-panel`. The first tab with a\nvalue owns it; later duplicates render but are not selectable.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tab label; this is the accessible name source.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing icon or media. Follows writing direction.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading icon or media. Follows writing direction.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-tab.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-tab.d.ts",
+    "symbols": {
+      "KiTab": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiTab extends Components.KiTab, HTMLElement {\n}\nexport const KiTab: {\n    prototype: KiTab;\n    new (): KiTab;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-tab.js"
+  }
+}

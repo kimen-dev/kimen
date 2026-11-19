@@ -262,7 +262,9 @@ prepare_empty_private_file() {
     [ -f "$path" ] || fail "$label is not a regular file"
     [ ! -s "$path" ] || fail "$label must be empty"
   else
-    (set -o noclobber; : >"$path") 2>/dev/null || fail "$label could not be created"
+    # Another worktree may have created the same empty shared file first.
+    (set -o noclobber; : >"$path") 2>/dev/null || [ -f "$path" ] ||
+      fail "$label could not be created"
   fi
   assert_no_symlink_components "$label" "$path"
   [ ! -L "$path" ] || fail "$label became a symbolic link"
@@ -431,6 +433,11 @@ validate_prepared_environment() {
     fail 'KIMEN_CACHE_ENV_READY must equal 1 for validation'
 
   validate_prepared_cache_root
+  if [ -n "${KIMEN_WORKTREE_CACHE_ROOT:-}" ]; then
+    [ "$KIMEN_WORKTREE_CACHE_ROOT" = "$(shared_worktree_cache_root)" ] ||
+      fail 'KIMEN_WORKTREE_CACHE_ROOT does not belong to this worktree'
+    validate_prepared_directory KIMEN_WORKTREE_CACHE_ROOT
+  fi
   validate_prepared_directory NPM_CONFIG_CACHE
   validate_prepared_directory NPM_CONFIG_STORE_DIR
   validate_prepared_directory COREPACK_HOME
@@ -444,6 +451,16 @@ validate_prepared_environment() {
   validate_prepared_file NPM_CONFIG_USERCONFIG
   validate_prepared_file NPM_CONFIG_GLOBALCONFIG
   [ "${NX_DAEMON:-}" = 'false' ] || fail 'NX_DAEMON must equal false'
+}
+
+shared_worktree_cache_root() {
+  local digest
+  if command -v sha256sum >/dev/null; then
+    digest="$(printf '%s' "$REPOSITORY_ROOT" | sha256sum)" || return 1
+  else
+    digest="$(printf '%s' "$REPOSITORY_ROOT" | shasum -a 256)" || return 1
+  fi
+  printf '%s/worktrees/%s\n' "$KIMEN_CACHE_ROOT" "${digest%% *}"
 }
 
 [ "$#" -gt 0 ] || usage
@@ -477,6 +494,7 @@ fi
 
 if [ "$MODE" = '--' ] && [ "${KIMEN_CACHE_ENV_READY:-}" = '1' ]; then
   validate_prepared_environment
+  if [ -n "${KIMEN_WORKTREE_CACHE_ROOT:-}" ]; then export NX_CACHE_PROJECT_GRAPH=false; fi
   export PNPM_CONFIG_STORE_DIR="$NPM_CONFIG_STORE_DIR"
   export pnpm_config_store_dir="$NPM_CONFIG_STORE_DIR"
   exec "$@"
@@ -496,6 +514,21 @@ else
 fi
 export KIMEN_CACHE_ROOT
 
+# Workspace-specific state cannot safely share a directory between checkouts.
+# Keep the isolated layout for the default, CI and the unattended sandbox.
+unset KIMEN_WORKTREE_CACHE_ROOT
+worktree_cache_root="$KIMEN_CACHE_ROOT"
+if [ "$KIMEN_CACHE_ROOT" != "$REPOSITORY_ROOT/reports/cache" ] && [ "$MODE" = '--' ] &&
+  [ -z "${CI:-}" ] && [ "${KIMEN_SANDBOX:-}" != '1' ]; then
+  worktree_cache_root="$(shared_worktree_cache_root)" || fail 'worktree cache could not be identified'
+  prepare_directory KIMEN_WORKTREE_CACHE_ROOT "$worktree_cache_root"
+  prepare_directory 'worktree Nx graph' "$worktree_cache_root/nx/workspace-data"
+  export KIMEN_WORKTREE_CACHE_ROOT="$worktree_cache_root"
+  # Nx 24 indexes cached task outputs in its workspace data directory. Share
+  # both, and keep source-specific graph files out of that directory.
+  export NX_CACHE_PROJECT_GRAPH=false
+fi
+
 select_directory NPM_CONFIG_CACHE "$KIMEN_CACHE_ROOT/npm/cache"
 select_directory NPM_CONFIG_STORE_DIR "$KIMEN_CACHE_ROOT/pnpm/store"
 # pnpm (since 11) reads its own configuration names; replace both inherited spellings.
@@ -504,13 +537,13 @@ export pnpm_config_store_dir="$NPM_CONFIG_STORE_DIR"
 select_empty_file NPM_CONFIG_USERCONFIG "$KIMEN_CACHE_ROOT/npm/userconfig"
 select_empty_file NPM_CONFIG_GLOBALCONFIG "$KIMEN_CACHE_ROOT/npm/globalconfig"
 select_directory COREPACK_HOME "$KIMEN_CACHE_ROOT/corepack"
-select_directory XDG_CACHE_HOME "$KIMEN_CACHE_ROOT/xdg"
+select_directory XDG_CACHE_HOME "$worktree_cache_root/xdg"
 select_directory NX_CACHE_DIRECTORY "$KIMEN_CACHE_ROOT/nx/cache"
 select_directory NX_WORKSPACE_DATA_DIRECTORY "$KIMEN_CACHE_ROOT/nx/workspace-data"
 select_directory NX_NATIVE_FILE_CACHE_DIRECTORY "$KIMEN_CACHE_ROOT/nx/native"
 select_directory PLAYWRIGHT_BROWSERS_PATH "$KIMEN_CACHE_ROOT/playwright"
-select_directory KIMEN_CONSUMER_CACHE_DIR "$KIMEN_CACHE_ROOT/consumer"
-select_directory KIMEN_MUTATION_CACHE_DIR "$KIMEN_CACHE_ROOT/mutation"
+select_directory KIMEN_CONSUMER_CACHE_DIR "$worktree_cache_root/consumer"
+select_directory KIMEN_MUTATION_CACHE_DIR "$worktree_cache_root/mutation"
 
 NX_DAEMON=false
 KIMEN_CACHE_ENV_READY=1

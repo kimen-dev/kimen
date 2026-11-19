@@ -10,9 +10,10 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
-import { alphaOf } from './contracts';
+import { alphaOf, hasVisibleShadow } from './contracts';
 import { disableComponentEffectShadows } from './flat-effects';
 import { moveToNewParent } from './reconnect';
+import { resolvedShadowToken } from './resolved-token';
 
 type KiTooltipElement = HTMLElement & {
   label: string;
@@ -456,10 +457,14 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(alphaOf(style.borderTopColor)).toBe(0);
     expect(alphaOf(style.borderBottomColor)).toBe(0);
 
-    // e3 wrap elevation. onmars v2 sets the secondary effect to a transparent
-    // zero layer, so the highlight layer carries no inset.
-    expect(style.boxShadow).toContain('0px 12px 28px');
-    expect(getComputedStyle(tooltip, '::before').boxShadow).not.toContain('inset');
+    // Calma paints the bubble elevation and keeps the separate highlight transparent.
+    expect(style.boxShadow).toBe(resolvedShadowToken(tooltip, '--ki-tooltip-shadow'));
+    expect(hasVisibleShadow(style.boxShadow)).toBe(true);
+    const highlight = getComputedStyle(tooltip, '::before').boxShadow;
+    expect(highlight).toBe(
+      resolvedShadowToken(tooltip, '--ki-effect-component-secondary-default-shadow'),
+    );
+    expect(hasVisibleShadow(highlight)).toBe(false);
 
     // Caret-depth offset: 8px trigger-to-card distance (top placement).
     const triggerRect = trigger.getBoundingClientRect();
@@ -472,11 +477,14 @@ describe('ki-tooltip pointer path in a real browser', () => {
       style: { marginBlockStart: '160px', marginInlineStart: '160px' },
     });
     disableComponentEffectShadows(host);
+    host.style.setProperty('--ki-tooltip-shadow', 'var(--ki-elevation-e2)');
 
     await hoverTrigger(host, trigger);
 
-    // The onmars v2 bubble elevation (e3) survives the disabled effects.
-    expect(getComputedStyle(requireTooltip(host)).boxShadow).toContain('0px 12px 28px');
+    const tooltip = requireTooltip(host);
+    const bubbleShadow = getComputedStyle(tooltip).boxShadow;
+    expect(bubbleShadow).toBe(resolvedShadowToken(tooltip, '--ki-tooltip-shadow'));
+    expect(hasVisibleShadow(bubbleShadow)).toBe(true);
   });
 
   it('S11 start placement renders on the right side under RTL', async () => {

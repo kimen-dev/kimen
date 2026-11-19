@@ -1,0 +1,519 @@
+{
+  "component": {
+    "attributes": {
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height\n(48, 56, 64 or 72px with a secondary line in onmars), padding, gap and\ntext. Slotted start and end content keeps the size its author gave it.\nAn unrecognized value matches no style rule and keeps the medium metrics.\nWhen to use: give every row of one list the same size.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-inverse-white-alpha-3": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for inverse white alpha 3.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-inverse-white-alpha-6": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for inverse white alpha 6.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for lg item gap (List 10063:2066 lg binds Space/xl, 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-min-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for the lg one-line item min height (two List 10063:2066 lg block paddings plus the primary line: 48px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-min-height-multiline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for the lg two-line item min height (List 10063:2066 lg measures 64px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for lg item padding block (List 10063:2066 lg binds Space/xl, 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for lg item padding inline (List 10063:2066 lg binds Space/md, 8px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-primary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for lg primary font size (List 10063:2066 lg primary: UI/body-2).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-primary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for lg primary line height (List 10063:2066 lg).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-secondary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for lg secondary font size (List 10063:2066 lg description: UI/caption-2).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-lg-secondary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for lg secondary line height (List 10063:2066 lg).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-min-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item min height (MarsUI md text-only row is ~40px content-sized: 20px line + 2x10 padding).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-min-height-multiline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for multiline item min height (MarsUI md two-line row measures 56px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item padding block (MarsUI md rows: Space/lg 10px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item padding inline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the list component for item primary foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-primary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item primary font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-primary-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the list component for item primary font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-primary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for primary line height (MarsUI primary is UI/Para/medium 13/20, not UI/Body 1 13/24).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-secondary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the list component for item secondary foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-secondary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-secondary-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the list component for item secondary font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-secondary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for sm item gap (List 10063:2066 sm binds Space/lg, 10px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-min-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for the sm one-line item min height (two List 10063:2066 sm block paddings plus the primary line: 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-min-height-multiline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for the sm two-line item min height (List 10063:2066 sm measures 48px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for sm item padding block (List 10063:2066 sm binds Space/sm, 6px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for sm item padding inline (List 10063:2066 sm binds Space/md, 8px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-primary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for sm primary font size (List 10063:2066 sm primary: UI/para).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-primary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for sm primary line height (List 10063:2066 sm).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-secondary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for sm secondary font size (List 10063:2066 sm description: UI/caption-2).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-sm-secondary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for sm secondary line height (List 10063:2066 sm).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for xl item gap (List 10063:2066 xl binds Space/3xl, 16px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-min-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for the xl one-line item min height (two List 10063:2066 xl block paddings plus the primary line: 52px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-min-height-multiline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for the xl two-line item min height (List 10063:2066 xl measures 72px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for xl item padding block (List 10063:2066 xl binds Space/2xl, 14px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for xl item padding inline (List 10063:2066 xl binds Space/xl, 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-primary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for xl primary font size (List 10063:2066 xl primary: UI/title-2).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-primary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for xl primary line height (List 10063:2066 xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-secondary-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-xl-secondary-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for xl secondary line height (List 10063:2066 xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "content": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text column containing primary and secondary lines.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing region wrapper.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "item": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Item row surface and layout container.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading region wrapper.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height\n(48, 56, 64 or 72px with a secondary line in onmars), padding, gap and\ntext. Slotted start and end content keeps the size its author gave it.\nAn unrecognized value matches no style rule and keeps the medium metrics.\nWhen to use: give every row of one list the same size.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Primary text line.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing media, meta text or a slotted control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "secondary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text below the primary line. Its presence\nselects the multi-line min-height token.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading media such as an icon, avatar or image.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-list-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-list-item.d.ts",
+    "symbols": {
+      "KiListItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiListItem extends Components.KiListItem, HTMLElement {\n}\nexport const KiListItem: {\n    prototype: KiListItem;\n    new (): KiListItem;\n};"
+      },
+      "KiListItemSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-list-item.js"
+  }
+}

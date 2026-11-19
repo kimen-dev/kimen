@@ -1,6 +1,7 @@
 // @spec:062-solid-surface-background
 import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:005-ki-select
+// @spec:067-merge-friendly-checks
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III).
 import tokensCss from '@kimen/tokens/css?raw';
@@ -14,6 +15,7 @@ import { hasVisibleShadow } from './contracts';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { disableComponentEffectShadows } from './flat-effects';
 import { moveToNewParent } from './reconnect';
+import { resolvedShadowToken } from './resolved-token';
 
 type KiSelectElement = HTMLElement & {
   value: string;
@@ -708,16 +710,18 @@ describe('ki-select in a real browser', () => {
       .toMatch(/0px 0px 0px 3px/u);
   });
 
-  it('S14 keeps the invalid ring with component effect shadows disabled (#349)', async () => {
+  it('S14 / 067 S4 keeps the themed invalid ring with component effect shadows disabled (#349)', async () => {
     const { form, el } = await mountForm('required');
     disableComponentEffectShadows(el);
+    el.style.setProperty('--ki-focus-danger', '0 0 0 4px rgb(150 30 70 / 40%)');
 
     form.requestSubmit();
 
-    await expect.element(trigger(el)).toHaveAttribute('aria-invalid', 'true');
+    const button = trigger(el);
+    await expect.element(button).toHaveAttribute('aria-invalid', 'true');
     await expect
-      .poll(() => getComputedStyle(trigger(el), '::before').boxShadow)
-      .toContain('rgba(239, 78, 105, 0.2)');
+      .poll(() => getComputedStyle(button, '::before').boxShadow)
+      .toBe(resolvedShadowToken(button, '--ki-focus-danger'));
   });
 
   it('S14 blocks required empty submission and clears invalid after commit', async () => {
@@ -734,12 +738,12 @@ describe('ki-select in a real browser', () => {
     expect(trigger(el).getAttribute('aria-invalid')).toBe('true');
     expect(el.matches(':invalid')).toBe(true);
 
-    // MarsUI Dropdown danger state: a persistent 3px Focus/danger ring
-    // (danger-500 at 20% light) composes over the secondary_default rest
-    // elevation. Poll: box-shadow is motion-gated (120ms transition).
-    await expect
-      .poll(() => getComputedStyle(trigger(el), '::before').boxShadow)
-      .toContain('rgba(239, 78, 105, 0.2)');
+    // The theme's danger ring composes over the trigger's rest elevation.
+    // Poll while its box-shadow transition settles.
+    const button = trigger(el);
+    const dangerRing = resolvedShadowToken(button, '--ki-focus-danger');
+    await expect.poll(() => getComputedStyle(button, '::before').boxShadow).toBe(dangerRing);
+    expect(hasVisibleShadow(dangerRing)).toBe(true);
 
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));

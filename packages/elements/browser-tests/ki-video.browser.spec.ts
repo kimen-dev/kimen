@@ -19,7 +19,9 @@ import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { hasVisibleShadow } from './contracts';
 import { disableComponentEffectShadows } from './flat-effects';
+import { resolvedShadowToken } from './resolved-token';
 
 type KiVideoElement = HTMLElement & { label?: string };
 
@@ -285,10 +287,9 @@ describe('ki-video', () => {
 
     await userEvent.hover(playControlOf(el));
 
-    // The glass lift (Component_effect/primary_hover): the hover drops
-    // layer over the rest e6 stack and the container settles at 102% —
-    // box-shadow/transform only, so layout never moves; the transition
-    // itself is gated by prefers-reduced-motion (motion tokens).
+    // Hover updates the separate shadow layer and scales the container to 102%.
+    // Both changes leave layout alone and use the motion tokens only when
+    // reduced motion is off.
     await waitUntil(
       () => getComputedStyle(control, '::before').boxShadow !== rest,
       'hover did not lift the glass container',
@@ -297,6 +298,8 @@ describe('ki-video', () => {
       () => getComputedStyle(control).transform.startsWith('matrix(1.02'),
       'hover did not scale the glass container to 102%',
     );
+    // Calma keeps the lift and makes the additional shadow layer transparent.
+    expect(hasVisibleShadow(getComputedStyle(control, '::before').boxShadow)).toBe(false);
 
     await userEvent.unhover(playControlOf(el));
     await waitUntil(
@@ -310,13 +313,14 @@ describe('ki-video', () => {
     cleanup();
     const el = await mount(landmark(), { label: 'Play the product tour' });
     disableComponentEffectShadows(el);
+    el.style.setProperty('--ki-video-play-shadow', 'var(--ki-elevation-e2)');
     const control = el.shadowRoot?.querySelector<HTMLElement>('.control');
     if (!control) {
       throw new Error('ki-video did not render its glass container');
     }
-    const restShadow = getComputedStyle(control).boxShadow;
-    // onmars v2 draws no inner highlight, but the container keeps its shadow.
-    expect(restShadow).not.toBe('none');
+    const restShadow = resolvedShadowToken(control, '--ki-video-play-shadow');
+    expect(getComputedStyle(control).boxShadow).toBe(restShadow);
+    expect(hasVisibleShadow(restShadow)).toBe(true);
 
     await userEvent.hover(playControlOf(el));
 
@@ -329,14 +333,16 @@ describe('ki-video', () => {
   it('S13 a theme can hide just the hover shadow', async () => {
     cleanup();
     const el = await mount(landmark(), { label: 'Play the product tour' });
+    // Supply a visible hover effect because Calma ships a transparent layer.
+    el.style.setProperty('--ki-effect-component-primary-hover-shadow', 'var(--ki-elevation-e2)');
     el.style.setProperty('--ki-effect-video-hover-opacity', '0');
     const control = el.shadowRoot?.querySelector<HTMLElement>('.control');
     if (!control) {
       throw new Error('ki-video did not render its glass container');
     }
-    const restShadow = getComputedStyle(control).boxShadow;
-    // onmars v2 draws no inner highlight, but the container keeps its shadow.
-    expect(restShadow).not.toBe('none');
+    const restShadow = resolvedShadowToken(control, '--ki-video-play-shadow');
+    expect(getComputedStyle(control).boxShadow).toBe(restShadow);
+    expect(hasVisibleShadow(restShadow)).toBe(true);
 
     await userEvent.hover(playControlOf(el));
 
@@ -344,8 +350,9 @@ describe('ki-video', () => {
     expect(getComputedStyle(control).boxShadow).toBe(restShadow);
     const hoverLayer = getComputedStyle(control, '::before');
     expect(hoverLayer.opacity).toBe('0');
-    // The hover layer still takes the effect; the opacity token hides it.
-    expect(hoverLayer.boxShadow).not.toBe('none');
+    const hoverShadow = resolvedShadowToken(control, '--ki-effect-component-primary-hover-shadow');
+    await expect.poll(() => hoverLayer.boxShadow).toBe(hoverShadow);
+    expect(hasVisibleShadow(hoverShadow)).toBe(true);
     await userEvent.unhover(playControlOf(el));
   });
 

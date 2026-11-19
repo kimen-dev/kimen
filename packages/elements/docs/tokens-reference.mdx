@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 330 semantic
-and 949 component tokens. Values are the resolved **onmars light**
+and 1142 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -609,6 +609,11 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-badge-warning-bg` | `#fcf0dc` | color used by the badge component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically). |
 | `--ki-badge-warning-border` | `rgba(255, 255, 255, 0)` | color used by the badge component for warning border. |
 | `--ki-badge-warning-fg` | `#945b05` | color used by the badge component for warning foreground. |
+| `--ki-badge-xs-font-size` | `0.75rem` | dimension used by the badge component for xs font size (Tag 10106:4651 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7). |
+| `--ki-badge-xs-height` | `1.25rem` | dimension used by the badge component for xs height (Tag 10106:4651 xs: 20px). |
+| `--ki-badge-xs-line-height` | `1rem` | dimension used by the badge component for xs line height (caption_2 16px, the same height as caption_1). |
+| `--ki-badge-xs-padding-inline` | `0.375rem` | dimension used by the badge component for xs padding inline (Tag 10106:4651 xs: Space/xs plus the Text_wrap Space/xxs, 6px). |
+| `--ki-badge-xs-radius` | `6px` | dimension used by the badge component for xs radius (Tag 10106:4651 xs binds Radius/small-component/xs). |
 
 ### `ki-button`
 
@@ -942,8 +947,15 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-checkbox-label-hint-fg` | `#5e5953` | color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
 | `--ki-checkbox-label-hint-gap` | `0.25rem` | dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-checkbox-label-line-height` | `1.5rem` | dimension used by the checkbox component for label line height (MarsUI body_2 24px). |
+| `--ki-checkbox-lg-control-size` | `1.5rem` | dimension used by the checkbox component for the lg box (Checkbox 10030:982 lg: 24px in a 28px cell). |
+| `--ki-checkbox-lg-min-target` | `1.75rem` | dimension used by the checkbox component for the lg min target (Checkbox 10030:982 lg cell: 28px). |
 | `--ki-checkbox-min-target` | `1.5rem` | dimension used by the checkbox component for min target. |
 | `--ki-checkbox-radius` | `6px` | dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap). |
+| `--ki-checkbox-sm-control-size` | `1.125rem` | dimension used by the checkbox component for the sm box (Checkbox 10030:982 sm: 18px in a 20px cell). |
+| `--ki-checkbox-sm-gap` | `0.5rem` | dimension used by the checkbox component for the sm gap between control and label (Checkbox-label 10095:3846 sm binds Space/md, 8px; spec 050 D4). |
+| `--ki-checkbox-sm-label-font-size` | `0.8125rem` | dimension used by the checkbox component for the sm label font size (Checkbox-label 10095:3846 sm: UI/para 13/20; spec 050 D4). |
+| `--ki-checkbox-sm-label-line-height` | `1.25rem` | dimension used by the checkbox component for the sm label line height (Checkbox-label 10095:3846 sm: UI/para 13/20). |
+| `--ki-checkbox-sm-min-target` | `1.5rem` | dimension used by the checkbox component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell. |
 | `--ki-checkbox-unchecked-active-bg` | `#f3f0eb` | color used by the checkbox component for unchecked active background. |
 | `--ki-checkbox-unchecked-active-border` | `#bc4c26` | color used by the checkbox component for unchecked active border. |
 | `--ki-checkbox-unchecked-active-fg` | `#181613` | color used by the checkbox component for unchecked active foreground. |
@@ -1091,6 +1103,15 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-label-hint-gap` | `0.25rem` | dimension used by the input component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-input-label-line-height` | `1.25rem` | dimension used by the input component for label line height (MarsUI line_height/para 20px). |
 | `--ki-input-label-padding-inline` | `0.125rem` | dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius). |
+| `--ki-input-lg-font-size` | `0.9375rem` | dimension used by the input component for lg font size: body-2 (Input-cell 8016:286 lg). |
+| `--ki-input-lg-height` | `3rem` | dimension used by the input component for lg height (Input-cell 8016:286 lg: 48px; consumed as min-block-size, spec 050). |
+| `--ki-input-lg-icon-size` | `1.25rem` | dimension used by the input component for the lg icon box (Input-cell 8016:286 lg icon 20px). |
+| `--ki-input-lg-label-font-size` | `0.9375rem` | dimension used by the input component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4). |
+| `--ki-input-lg-label-line-height` | `1.5rem` | dimension used by the input component for the lg label line height (body-2, Input-label lg; spec 050 D4). |
+| `--ki-input-lg-line-height` | `1.5rem` | dimension used by the input component for lg line height (body-2, Input-cell 8016:286 lg). |
+| `--ki-input-lg-padding-inline` | `0.75rem` | dimension used by the input component for lg padding inline (Input-cell 8016:286 lg binds Space/xl, 12px). |
+| `--ki-input-lg-radius` | `12px` | dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg). |
+| `--ki-input-lg-text-padding-inline` | `0.25rem` | dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token). |
 | `--ki-input-line-height` | `1.5rem` | dimension used by the input component for line height. |
 | `--ki-input-min-target` | `1.5rem` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-input-height. dimension used by the input component for min target. |
 | `--ki-input-padding-inline` | `0.625rem` | dimension used by the input component for padding inline. |
@@ -1105,6 +1126,33 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-rest-fg` | `#181613` | color used by the input component for rest foreground. |
 | `--ki-input-rest-label-fg` | `#5e5953` | color used by the input component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint). |
 | `--ki-input-rest-placeholder-fg` | `#5e5953` | color used by the input component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
+| `--ki-input-sm-font-size` | `0.75rem` | dimension used by the input component for sm font size: caption-2 (Input-cell 8016:286 sm). |
+| `--ki-input-sm-height` | `2rem` | dimension used by the input component for sm height (Input-cell 8016:286 sm: 32px; consumed as min-block-size, spec 050). |
+| `--ki-input-sm-icon-size` | `1rem` | dimension used by the input component for the sm icon box (Input-cell 8016:286 sm icon 16px). |
+| `--ki-input-sm-label-font-size` | `0.75rem` | dimension used by the input component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4). |
+| `--ki-input-sm-label-line-height` | `1rem` | dimension used by the input component for the sm label line height (caption-2, Input-label sm; spec 050 D4). |
+| `--ki-input-sm-line-height` | `1rem` | dimension used by the input component for sm line height (caption-2, Input-cell 8016:286 sm). |
+| `--ki-input-sm-padding-inline` | `0.5rem` | dimension used by the input component for sm padding inline (Input-cell 8016:286 sm binds Space/md, 8px). |
+| `--ki-input-sm-radius` | `8px` | dimension used by the input component for sm radius (Input-cell 8016:286 sm binds Radius/small-component/sm). |
+| `--ki-input-sm-text-padding-inline` | `0.25rem` | dimension used by the input component for the sm inline padding of the native control (Input-cell 8016:286 sm Text_wrap binds Space/xs, 4px; medium uses the gap token). |
+| `--ki-input-xl-font-size` | `1.125rem` | dimension used by the input component for xl font size: title-2 (Input-cell 8016:286 xl). |
+| `--ki-input-xl-height` | `3.5rem` | dimension used by the input component for xl height (Input-cell 8016:286 xl: 56px; consumed as min-block-size, spec 050). |
+| `--ki-input-xl-icon-size` | `1.5rem` | dimension used by the input component for the xl icon box (Input-cell 8016:286 xl icon 24px). |
+| `--ki-input-xl-label-font-size` | `0.9375rem` | dimension used by the input component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4). |
+| `--ki-input-xl-label-line-height` | `1.5rem` | dimension used by the input component for the xl label line height (body-2, Input-label lg; spec 050 D4). |
+| `--ki-input-xl-line-height` | `1.5rem` | dimension used by the input component for xl line height (title-2, Input-cell 8016:286 xl). |
+| `--ki-input-xl-padding-inline` | `0.875rem` | dimension used by the input component for xl padding inline (Input-cell 8016:286 xl binds Space/2xl, 14px). |
+| `--ki-input-xl-radius` | `14px` | dimension used by the input component for xl radius (Input-cell 8016:286 xl binds Radius/small-component/xl). |
+| `--ki-input-xl-text-padding-inline` | `0.375rem` | dimension used by the input component for the xl inline padding of the native control (Input-cell 8016:286 xl Text_wrap binds Space/sm, 6px; medium uses the gap token). |
+| `--ki-input-xs-font-size` | `0.75rem` | dimension used by the input component for xs font size: caption-2 (Input-cell 8016:286 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7). |
+| `--ki-input-xs-height` | `1.5rem` | dimension used by the input component for xs height (Input-cell 8016:286 xs: 24px; consumed as min-block-size, spec 050). |
+| `--ki-input-xs-icon-size` | `0.875rem` | dimension used by the input component for the xs icon box (Input-cell 8016:286 xs icon 14px). |
+| `--ki-input-xs-label-font-size` | `0.75rem` | dimension used by the input component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4). |
+| `--ki-input-xs-label-line-height` | `1rem` | dimension used by the input component for the xs label line height (caption-2, Input-label sm; spec 050 D4). |
+| `--ki-input-xs-line-height` | `1rem` | dimension used by the input component for xs line height (caption-2, Input-cell 8016:286 xs). |
+| `--ki-input-xs-padding-inline` | `0.375rem` | dimension used by the input component for xs padding inline (Input-cell 8016:286 xs binds Space/sm, 6px). |
+| `--ki-input-xs-radius` | `6px` | dimension used by the input component for xs radius (Input-cell 8016:286 xs binds Radius/small-component/xs). |
+| `--ki-input-xs-text-padding-inline` | `0.125rem` | dimension used by the input component for the xs inline padding of the native control (Input-cell 8016:286 xs Text_wrap binds Space/xxs, 2px; medium uses the gap token). |
 
 ### `ki-list`
 
@@ -1115,6 +1163,15 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-list-item-divider-color` | `rgba(24, 22, 19, 0.1)` | color used by the list component for item divider color. |
 | `--ki-list-item-divider-width` | `0rem` | dimension used by the list component for item divider width (no divider renders in any master variant; the color hook ki.list.item.divider-color stays so consumers can opt hairlines back in). |
 | `--ki-list-item-gap` | `0.75rem` | dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions). |
+| `--ki-list-item-lg-gap` | `0.75rem` | dimension used by the list component for lg item gap (List 10063:2066 lg binds Space/xl, 12px). |
+| `--ki-list-item-lg-min-height` | `3rem` | dimension used by the list component for the lg one-line item min height (two List 10063:2066 lg block paddings plus the primary line: 48px). |
+| `--ki-list-item-lg-min-height-multiline` | `4rem` | dimension used by the list component for the lg two-line item min height (List 10063:2066 lg measures 64px). |
+| `--ki-list-item-lg-padding-block` | `0.75rem` | dimension used by the list component for lg item padding block (List 10063:2066 lg binds Space/xl, 12px). |
+| `--ki-list-item-lg-padding-inline` | `0.5rem` | dimension used by the list component for lg item padding inline (List 10063:2066 lg binds Space/md, 8px). |
+| `--ki-list-item-lg-primary-font-size` | `0.9375rem` | dimension used by the list component for lg primary font size (List 10063:2066 lg primary: UI/body-2). |
+| `--ki-list-item-lg-primary-line-height` | `1.5rem` | dimension used by the list component for lg primary line height (List 10063:2066 lg). |
+| `--ki-list-item-lg-secondary-font-size` | `0.75rem` | dimension used by the list component for lg secondary font size (List 10063:2066 lg description: UI/caption-2). |
+| `--ki-list-item-lg-secondary-line-height` | `1rem` | dimension used by the list component for lg secondary line height (List 10063:2066 lg). |
 | `--ki-list-item-min-height` | `2.5rem` | dimension used by the list component for item min height (MarsUI md text-only row is ~40px content-sized: 20px line + 2x10 padding). |
 | `--ki-list-item-min-height-multiline` | `3.5rem` | dimension used by the list component for multiline item min height (MarsUI md two-line row measures 56px). |
 | `--ki-list-item-padding-block` | `0.625rem` | dimension used by the list component for item padding block (MarsUI md rows: Space/lg 10px). |
@@ -1128,6 +1185,24 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-list-item-secondary-font-size` | `0.75rem` | dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px). |
 | `--ki-list-item-secondary-font-weight` | `500` | font weight used by the list component for item secondary font weight. |
 | `--ki-list-item-secondary-line-height` | `1rem` | dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance). |
+| `--ki-list-item-sm-gap` | `0.625rem` | dimension used by the list component for sm item gap (List 10063:2066 sm binds Space/lg, 10px). |
+| `--ki-list-item-sm-min-height` | `2rem` | dimension used by the list component for the sm one-line item min height (two List 10063:2066 sm block paddings plus the primary line: 32px). |
+| `--ki-list-item-sm-min-height-multiline` | `3rem` | dimension used by the list component for the sm two-line item min height (List 10063:2066 sm measures 48px). |
+| `--ki-list-item-sm-padding-block` | `0.375rem` | dimension used by the list component for sm item padding block (List 10063:2066 sm binds Space/sm, 6px). |
+| `--ki-list-item-sm-padding-inline` | `0.5rem` | dimension used by the list component for sm item padding inline (List 10063:2066 sm binds Space/md, 8px). |
+| `--ki-list-item-sm-primary-font-size` | `0.8125rem` | dimension used by the list component for sm primary font size (List 10063:2066 sm primary: UI/para). |
+| `--ki-list-item-sm-primary-line-height` | `1.25rem` | dimension used by the list component for sm primary line height (List 10063:2066 sm). |
+| `--ki-list-item-sm-secondary-font-size` | `0.75rem` | dimension used by the list component for sm secondary font size (List 10063:2066 sm description: UI/caption-2). |
+| `--ki-list-item-sm-secondary-line-height` | `1rem` | dimension used by the list component for sm secondary line height (List 10063:2066 sm). |
+| `--ki-list-item-xl-gap` | `1rem` | dimension used by the list component for xl item gap (List 10063:2066 xl binds Space/3xl, 16px). |
+| `--ki-list-item-xl-min-height` | `3.25rem` | dimension used by the list component for the xl one-line item min height (two List 10063:2066 xl block paddings plus the primary line: 52px). |
+| `--ki-list-item-xl-min-height-multiline` | `4.5rem` | dimension used by the list component for the xl two-line item min height (List 10063:2066 xl measures 72px). |
+| `--ki-list-item-xl-padding-block` | `0.875rem` | dimension used by the list component for xl item padding block (List 10063:2066 xl binds Space/2xl, 14px). |
+| `--ki-list-item-xl-padding-inline` | `0.75rem` | dimension used by the list component for xl item padding inline (List 10063:2066 xl binds Space/xl, 12px). |
+| `--ki-list-item-xl-primary-font-size` | `1.125rem` | dimension used by the list component for xl primary font size (List 10063:2066 xl primary: UI/title-2). |
+| `--ki-list-item-xl-primary-line-height` | `1.5rem` | dimension used by the list component for xl primary line height (List 10063:2066 xl). |
+| `--ki-list-item-xl-secondary-font-size` | `0.8125rem` | dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para). |
+| `--ki-list-item-xl-secondary-line-height` | `1.25rem` | dimension used by the list component for xl secondary line height (List 10063:2066 xl). |
 | `--ki-list-padding` | `0rem` | dimension used by the list component for padding. |
 
 ### `ki-option`
@@ -1204,6 +1279,12 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-radio-selected-rest-bg` | `#1d1a16` | color used by the radio component for selected rest background (MarsUI active radio is a solid Surface/primary_med_em #845abe circle — the filled donut with a white dot is the signature, mirroring ki-checkbox checked). |
 | `--ki-radio-selected-rest-border` | `#1d1a16` | color used by the radio component for selected rest border (same as the fill: the selected circle is borderless in the master). |
 | `--ki-radio-selected-rest-fg` | `#ffffff` | color used by the radio component for selected rest dot (MarsUI Text/primary_on_primary white 8px dot). |
+| `--ki-radio-sm-control-size` | `1.125rem` | dimension used by the radio component for the sm circle (Radio 10053:1943 sm: 18px in a 20px cell). |
+| `--ki-radio-sm-dot-size` | `0.5rem` | dimension used by the radio component for the sm dot (Radio 10053:1943 sm: 8px, as at md). |
+| `--ki-radio-sm-gap` | `0.5rem` | dimension used by the radio component for the sm gap between control and label (Radio-label 10100:3931 sm binds Space/md, 8px; spec 050 D4). |
+| `--ki-radio-sm-label-font-size` | `0.8125rem` | dimension used by the radio component for the sm label font size (Radio-label 10100:3931 sm: UI/para 13/20; spec 050 D4). |
+| `--ki-radio-sm-label-line-height` | `1.25rem` | dimension used by the radio component for the sm label line height (Radio-label 10100:3931 sm: UI/para 13/20). |
+| `--ki-radio-sm-min-target` | `1.5rem` | dimension used by the radio component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell. |
 | `--ki-radio-unselected-active-bg` | `#f3f0eb` | color used by the radio component for unselected active background. Brief §1: neutral surface em ramp one step above hover (s1→s2), matching ki-checkbox unchecked active; the primary-tinted alpha stays in radio.material3. |
 | `--ki-radio-unselected-active-border` | `#bc4c26` | color used by the radio component for unselected active border. |
 | `--ki-radio-unselected-active-fg` | `#ad411c` | color used by the radio component for unselected active foreground. |
@@ -1283,6 +1364,14 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-label-hint-gap` | `0.25rem` | dimension used by the select component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-select-label-line-height` | `1.25rem` | dimension used by the select component for label line height (MarsUI line_height/para 20px). |
 | `--ki-select-label-padding-inline` | `0.125rem` | dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea). |
+| `--ki-select-lg-font-size` | `0.9375rem` | dimension used by the select component for lg font size: body-2 (Input-cell 8016:286 lg, composed by Dropdown 12041:1595). |
+| `--ki-select-lg-height` | `3rem` | dimension used by the select component for lg height (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: 48px). |
+| `--ki-select-lg-indicator-size` | `1.25rem` | dimension used by the select component for the lg indicator box (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: icon 20px). |
+| `--ki-select-lg-label-font-size` | `0.9375rem` | dimension used by the select component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4). |
+| `--ki-select-lg-label-line-height` | `1.5rem` | dimension used by the select component for the lg label line height (body-2, Input-label lg; spec 050 D4). |
+| `--ki-select-lg-line-height` | `1.5rem` | dimension used by the select component for lg line height (body-2, Input-cell 8016:286 lg, composed by Dropdown 12041:1595). |
+| `--ki-select-lg-padding-inline` | `0.75rem` | dimension used by the select component for lg padding inline (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Space/xl, 12px). |
+| `--ki-select-lg-radius` | `12px` | dimension used by the select component for lg radius (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Radius/small-component/lg). |
 | `--ki-select-line-height` | `1.5rem` | dimension used by the select component for the trigger value line height (MarsUI body_1 24px). |
 | `--ki-select-listbox-backdrop-blur` | `24px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-select-listbox-backdrop-filter. backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override). |
 | `--ki-select-listbox-backdrop-filter` | `none` | Complete backdrop filter behind the select listbox. |
@@ -1302,6 +1391,30 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-rest-border` | `#86827b` | color used by the select component for rest border. |
 | `--ki-select-rest-fg` | `#181613` | color used by the select component for rest foreground. |
 | `--ki-select-rest-label-fg` | `#5e5953` | color used by the select component for rest label foreground. |
+| `--ki-select-sm-font-size` | `0.75rem` | dimension used by the select component for sm font size: caption-2 (Input-cell 8016:286 sm, composed by Dropdown 12041:1595). |
+| `--ki-select-sm-height` | `2rem` | dimension used by the select component for sm height (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: 32px). |
+| `--ki-select-sm-indicator-size` | `1rem` | dimension used by the select component for the sm indicator box (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: icon 16px). |
+| `--ki-select-sm-label-font-size` | `0.75rem` | dimension used by the select component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4). |
+| `--ki-select-sm-label-line-height` | `1rem` | dimension used by the select component for the sm label line height (caption-2, Input-label sm; spec 050 D4). |
+| `--ki-select-sm-line-height` | `1rem` | dimension used by the select component for sm line height (caption-2, Input-cell 8016:286 sm, composed by Dropdown 12041:1595). |
+| `--ki-select-sm-padding-inline` | `0.5rem` | dimension used by the select component for sm padding inline (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Space/md, 8px). |
+| `--ki-select-sm-radius` | `8px` | dimension used by the select component for sm radius (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Radius/small-component/sm). |
+| `--ki-select-xl-font-size` | `1.125rem` | dimension used by the select component for xl font size: title-2 (Input-cell 8016:286 xl, composed by Dropdown 12041:1595). |
+| `--ki-select-xl-height` | `3.5rem` | dimension used by the select component for xl height (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: 56px). |
+| `--ki-select-xl-indicator-size` | `1.5rem` | dimension used by the select component for the xl indicator box (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: icon 24px). |
+| `--ki-select-xl-label-font-size` | `0.9375rem` | dimension used by the select component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4). |
+| `--ki-select-xl-label-line-height` | `1.5rem` | dimension used by the select component for the xl label line height (body-2, Input-label lg; spec 050 D4). |
+| `--ki-select-xl-line-height` | `1.5rem` | dimension used by the select component for xl line height (title-2, Input-cell 8016:286 xl, composed by Dropdown 12041:1595). |
+| `--ki-select-xl-padding-inline` | `0.875rem` | dimension used by the select component for xl padding inline (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Space/2xl, 14px). |
+| `--ki-select-xl-radius` | `14px` | dimension used by the select component for xl radius (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Radius/small-component/xl). |
+| `--ki-select-xs-font-size` | `0.75rem` | dimension used by the select component for xs font size: caption-2 (Input-cell 8016:286 xs, composed by Dropdown 12041:1595). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7). |
+| `--ki-select-xs-height` | `1.5rem` | dimension used by the select component for xs height (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: 24px). |
+| `--ki-select-xs-indicator-size` | `0.875rem` | dimension used by the select component for the xs indicator box (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: icon 14px). |
+| `--ki-select-xs-label-font-size` | `0.75rem` | dimension used by the select component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4). |
+| `--ki-select-xs-label-line-height` | `1rem` | dimension used by the select component for the xs label line height (caption-2, Input-label sm; spec 050 D4). |
+| `--ki-select-xs-line-height` | `1rem` | dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595). |
+| `--ki-select-xs-padding-inline` | `0.375rem` | dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px). |
+| `--ki-select-xs-radius` | `6px` | dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs). |
 
 ### `ki-status`
 
@@ -1348,7 +1461,32 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-switch-glyph-height` | `0.375rem` | dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height). |
 | `--ki-switch-glyph-unchecked` | `rgba(255, 255, 255, 0)` | Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb. |
 | `--ki-switch-glyph-width` | `0.5rem` | dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb). |
+| `--ki-switch-lg-control-height` | `2rem` | dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px). |
+| `--ki-switch-lg-control-width` | `3.5rem` | dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px). |
+| `--ki-switch-lg-min-target` | `2rem` | dimension used by the switch component for lg min target (Toggle 10023:1125 lg cell height: 32px). |
+| `--ki-switch-lg-thumb-inset` | `0.125rem` | dimension used by the switch component for lg thumb inset (Toggle 10023:1125 lg binds Space/xxs, 2px). |
+| `--ki-switch-lg-thumb-radius` | `6px` | dimension used by the switch component for lg thumb radius (Toggle 10023:1125 lg pointer binds Radius/small-component/xs). |
+| `--ki-switch-lg-thumb-size` | `1.25rem` | dimension used by the switch component for lg thumb height (Toggle 10023:1125 lg pointer: 20px). |
+| `--ki-switch-lg-thumb-width` | `1.625rem` | dimension used by the switch component for lg thumb width (Toggle 10023:1125 lg pointer: 26px). |
+| `--ki-switch-lg-track-height` | `1.625rem` | dimension used by the switch component for lg track height (Toggle 10023:1125 lg: 26px). |
+| `--ki-switch-lg-track-radius` | `8px` | dimension used by the switch component for lg track radius (Toggle 10023:1125 lg binds Radius/small-component/sm). |
+| `--ki-switch-lg-track-width` | `3rem` | dimension used by the switch component for lg track width (Toggle 10023:1125 lg: 48px). |
+| `--ki-switch-lg-well-radius` | `10px` | dimension used by the switch component for lg well radius (Toggle 10023:1125 lg Base binds Radius/small-component/md). |
 | `--ki-switch-min-target` | `1.75rem` | dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint). |
+| `--ki-switch-sm-control-height` | `1.75rem` | dimension used by the switch component for sm control height (Toggle 10023:1125 sm cell: 28px). |
+| `--ki-switch-sm-control-width` | `2.5rem` | dimension used by the switch component for sm control width (Toggle 10023:1125 sm cell: 40px). |
+| `--ki-switch-sm-gap` | `0.5rem` | dimension used by the switch component for the sm gap between control and label (Toggle_label 10101:3995 sm binds Space/md, 8px; spec 050 D4). |
+| `--ki-switch-sm-label-font-size` | `0.8125rem` | dimension used by the switch component for the sm label font size (Toggle_label 10101:3995 sm: UI/para 13/20; spec 050 D4). |
+| `--ki-switch-sm-label-line-height` | `1.25rem` | dimension used by the switch component for the sm label line height (Toggle_label 10101:3995 sm: UI/para 13/20). |
+| `--ki-switch-sm-min-target` | `1.75rem` | dimension used by the switch component for sm min target (Toggle 10023:1125 sm cell height: 28px). |
+| `--ki-switch-sm-thumb-inset` | `0.125rem` | dimension used by the switch component for sm thumb inset (Toggle 10023:1125 sm binds Space/xxs, 2px). |
+| `--ki-switch-sm-thumb-radius` | `4px` | dimension used by the switch component for sm thumb radius (Toggle 10023:1125 sm pointer binds Radius/small-component/xxs). |
+| `--ki-switch-sm-thumb-size` | `0.875rem` | dimension used by the switch component for sm thumb height (Toggle 10023:1125 sm pointer: 14px). |
+| `--ki-switch-sm-thumb-width` | `1.125rem` | dimension used by the switch component for sm thumb width (Toggle 10023:1125 sm pointer: 18px). |
+| `--ki-switch-sm-track-height` | `1.125rem` | dimension used by the switch component for sm track height (Toggle 10023:1125 sm: 18px). |
+| `--ki-switch-sm-track-radius` | `6px` | dimension used by the switch component for sm track radius (Toggle 10023:1125 sm binds Radius/small-component/xs). |
+| `--ki-switch-sm-track-width` | `2rem` | dimension used by the switch component for sm track width (Toggle 10023:1125 sm: 32px). |
+| `--ki-switch-sm-well-radius` | `10px` | dimension used by the switch component for sm well radius (Toggle 10023:1125 sm Base binds Radius/small-component/md). |
 | `--ki-switch-thumb-inset` | `0.125rem` | dimension used by the switch component for thumb inset. |
 | `--ki-switch-thumb-radius` | `6px` | dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs). |
 | `--ki-switch-thumb-size` | `1.125rem` | dimension used by the switch component for thumb size. |
@@ -1371,6 +1509,17 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-switch-well-bg-end` | `#f9f7f4` | color used by the switch component for the bottom of the well gradient (Toggle md Base). |
 | `--ki-switch-well-bg-start` | `#ebe7e1` | color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well. |
 | `--ki-switch-well-radius` | `10px` | dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md). |
+| `--ki-switch-xl-control-height` | `2.5rem` | dimension used by the switch component for xl control height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 40px). |
+| `--ki-switch-xl-control-width` | `4rem` | dimension used by the switch component for xl control width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 64px). |
+| `--ki-switch-xl-min-target` | `2.5rem` | dimension used by the switch component for xl min target (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell height: 40px). |
+| `--ki-switch-xl-thumb-inset` | `0.25rem` | dimension used by the switch component for xl thumb inset (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Space/xs, 4px). |
+| `--ki-switch-xl-thumb-radius` | `6px` | dimension used by the switch component for xl thumb radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer binds Radius/small-component/xs). |
+| `--ki-switch-xl-thumb-size` | `1.5rem` | dimension used by the switch component for xl thumb height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 24px). |
+| `--ki-switch-xl-thumb-width` | `2rem` | dimension used by the switch component for xl thumb width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 32px). |
+| `--ki-switch-xl-track-height` | `2rem` | dimension used by the switch component for xl track height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 32px). |
+| `--ki-switch-xl-track-radius` | `10px` | dimension used by the switch component for xl track radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Radius/small-component/md). |
+| `--ki-switch-xl-track-width` | `3.5rem` | dimension used by the switch component for xl track width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 56px). |
+| `--ki-switch-xl-well-radius` | `12px` | dimension used by the switch component for xl well radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) Base binds Radius/small-component/lg). |
 
 ### `ki-tab`
 
@@ -1386,6 +1535,9 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-indicator-color` | `#1d1a16` | color used by the tab component for indicator color (MarsUI active underline is Outline/inverse_white: black in light, white in dark — the inverse neutral, not primary). |
 | `--ki-tab-indicator-radius` | `0px` | dimension used by the tab component for indicator radius (the master underline is a square-ended 2px bottom border). |
 | `--ki-tab-indicator-size` | `0.125rem` | dimension used by the tab component for indicator size. |
+| `--ki-tab-lg-font-size` | `0.9375rem` | dimension used by the tab component for lg font size (Tab-nav-item 10048:1068 lg: UI/body-2). |
+| `--ki-tab-lg-line-height` | `1.5rem` | dimension used by the tab component for lg line height (Tab-nav-item 10048:1068 lg: UI/body-2). |
+| `--ki-tab-lg-min-block-size` | `3rem` | dimension used by the tab component for lg min block size (Tab-nav-item 10048:1068 lg: 48px). |
 | `--ki-tab-line-height` | `1.5rem` | dimension used by the tab component for line height. |
 | `--ki-tab-min-block-size` | `2.5rem` | dimension used by the tab component for min block size (MarsUI Tab_nav md bar height 40px: 24px body_1 label + 8px block-end clearance + underline; retargeted from ki.space.7xl per the fidelity audit — material3 pins its own value). |
 | `--ki-tab-padding-block-end` | `0.5rem` | dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes). |
@@ -1399,6 +1551,9 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-selected-hover-fg` | `#181613` | color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240). |
 | `--ki-tab-selected-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for selected rest background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language). |
 | `--ki-tab-selected-rest-fg` | `#181613` | color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240). |
+| `--ki-tab-sm-font-size` | `0.8125rem` | dimension used by the tab component for sm font size (Tab-nav-item 10048:1068 sm: UI/para). |
+| `--ki-tab-sm-line-height` | `1.25rem` | dimension used by the tab component for sm line height (Tab-nav-item 10048:1068 sm: UI/para). |
+| `--ki-tab-sm-min-block-size` | `2rem` | dimension used by the tab component for sm min block size (Tab-nav-item 10048:1068 sm: 32px). |
 | `--ki-tab-unselected-active-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for unselected active background (MarsUI Tab_nav is transparent_inverse in every state). |
 | `--ki-tab-unselected-active-fg` | `#181613` | color used by the tab component for unselected active foreground (mirrors hover; MarsUI defines no pressed variant). |
 | `--ki-tab-unselected-disabled-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for unselected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill). |
@@ -1407,6 +1562,12 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-unselected-hover-fg` | `#181613` | color used by the tab component for unselected hover foreground (with rest at med_em, hover darkens one em step, preserving the master rest-to-hover direction). |
 | `--ki-tab-unselected-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for unselected rest background (MarsUI Tab_nav is transparent_inverse in every state). |
 | `--ki-tab-unselected-rest-fg` | `#5e5953` | color used by the tab component for unselected rest foreground (Figma inactive is Text/low_em, which fails the 4.5:1 text gate at 13px; med_em is the gate-compliant rest value — declared deviation). |
+| `--ki-tab-xl-font-size` | `1.125rem` | dimension used by the tab component for xl font size (Tab-nav-item 10048:1068 xl: UI/title-2). |
+| `--ki-tab-xl-line-height` | `1.5rem` | dimension used by the tab component for xl line height (Tab-nav-item 10048:1068 xl: UI/title-2). |
+| `--ki-tab-xl-min-block-size` | `3.5rem` | dimension used by the tab component for xl min block size (Tab-nav-item 10048:1068 xl: 56px). |
+| `--ki-tab-xs-font-size` | `0.75rem` | dimension used by the tab component for xs font size (Tab-nav-item 10048:1068 xs: UI/caption-2). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7). |
+| `--ki-tab-xs-line-height` | `1rem` | dimension used by the tab component for xs line height (Tab-nav-item 10048:1068 xs: UI/caption-2). |
+| `--ki-tab-xs-min-block-size` | `1.5rem` | dimension used by the tab component for xs min block size (Tab-nav-item 10048:1068 xs: 24px). |
 
 ### `ki-tab-panel`
 
@@ -1427,6 +1588,10 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tabs-divider-color` | `rgba(24, 22, 19, 0.1)` | color used by the tabs component for divider color. |
 | `--ki-tabs-divider-width` | `0rem` | dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override). |
 | `--ki-tabs-gap` | `1.625rem` | dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding). |
+| `--ki-tabs-lg-gap` | `1.75rem` | dimension used by the tabs component for the lg gap between tabs (Tab-nav 10048:1249 lg binds Space/9xl, 28px). |
+| `--ki-tabs-sm-gap` | `1.5rem` | dimension used by the tabs component for the sm gap between tabs (Tab-nav 10048:1249 sm binds Space/7xl, 24px). |
+| `--ki-tabs-xl-gap` | `2rem` | dimension used by the tabs component for the xl gap between tabs (Tab-nav 10048:1249 xl binds Space/10xl, 32px). |
+| `--ki-tabs-xs-gap` | `1.25rem` | dimension used by the tabs component for the xs gap between tabs (Tab-nav 10048:1249 xs binds Space/5xl, 20px). |
 
 ### `ki-textarea`
 
@@ -1472,6 +1637,13 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-label-hint-gap` | `0.25rem` | dimension used by the textarea component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-textarea-label-line-height` | `1.25rem` | dimension used by the textarea component for label line height (MarsUI line_height/para 20px). |
 | `--ki-textarea-label-padding-inline` | `0.125rem` | dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input). |
+| `--ki-textarea-lg-font-size` | `0.9375rem` | dimension used by the textarea component for lg font size: body-2 (Input-cell 8016:286 Type=textarea lg). |
+| `--ki-textarea-lg-label-font-size` | `0.9375rem` | dimension used by the textarea component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4). |
+| `--ki-textarea-lg-label-line-height` | `1.5rem` | dimension used by the textarea component for the lg label line height (body-2, Input-label lg; spec 050 D4). |
+| `--ki-textarea-lg-line-height` | `1.5rem` | dimension used by the textarea component for lg line height (body-2, Input-cell 8016:286 Type=textarea lg). |
+| `--ki-textarea-lg-padding-block` | `0.625rem` | dimension used by the textarea component for lg padding block (Input-cell 8016:286 Type=textarea lg binds Space/lg, 10px). |
+| `--ki-textarea-lg-padding-inline` | `0.75rem` | dimension used by the textarea component for lg padding inline (Input-cell 8016:286 Type=textarea lg binds Space/xl, 12px). |
+| `--ki-textarea-lg-radius` | `12px` | dimension used by the textarea component for lg radius (Input-cell 8016:286 Type=textarea lg binds Radius/small-component/lg). |
 | `--ki-textarea-line-height` | `1.5rem` | dimension used by the textarea component for line height. |
 | `--ki-textarea-min-target` | `1.5rem` | dimension used by the textarea component for min target. |
 | `--ki-textarea-padding-block` | `0.5rem` | dimension used by the textarea component for padding block (Input-cell textarea md 8018:176: Space/md 8px). |
@@ -1487,6 +1659,27 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-rest-fg` | `#181613` | color used by the textarea component for rest foreground. |
 | `--ki-textarea-rest-label-fg` | `#5e5953` | color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
 | `--ki-textarea-rest-placeholder-fg` | `#5e5953` | color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
+| `--ki-textarea-sm-font-size` | `0.75rem` | dimension used by the textarea component for sm font size: caption-2 (Input-cell 8016:286 Type=textarea sm). |
+| `--ki-textarea-sm-label-font-size` | `0.75rem` | dimension used by the textarea component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4). |
+| `--ki-textarea-sm-label-line-height` | `1rem` | dimension used by the textarea component for the sm label line height (caption-2, Input-label sm; spec 050 D4). |
+| `--ki-textarea-sm-line-height` | `1rem` | dimension used by the textarea component for sm line height (caption-2, Input-cell 8016:286 Type=textarea sm). |
+| `--ki-textarea-sm-padding-block` | `0.5rem` | dimension used by the textarea component for sm padding block (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px). |
+| `--ki-textarea-sm-padding-inline` | `0.5rem` | dimension used by the textarea component for sm padding inline (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px). |
+| `--ki-textarea-sm-radius` | `8px` | dimension used by the textarea component for sm radius (Input-cell 8016:286 Type=textarea sm binds Radius/small-component/sm). |
+| `--ki-textarea-xl-font-size` | `1.125rem` | dimension used by the textarea component for xl font size: title-2 (Input-cell 8016:286 Type=textarea xl). |
+| `--ki-textarea-xl-label-font-size` | `0.9375rem` | dimension used by the textarea component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4). |
+| `--ki-textarea-xl-label-line-height` | `1.5rem` | dimension used by the textarea component for the xl label line height (body-2, Input-label lg; spec 050 D4). |
+| `--ki-textarea-xl-line-height` | `1.5rem` | dimension used by the textarea component for xl line height (title-2, Input-cell 8016:286 Type=textarea xl). |
+| `--ki-textarea-xl-padding-block` | `0.75rem` | dimension used by the textarea component for xl padding block (Input-cell 8016:286 Type=textarea xl binds Space/xl, 12px). |
+| `--ki-textarea-xl-padding-inline` | `0.875rem` | dimension used by the textarea component for xl padding inline (Input-cell 8016:286 Type=textarea xl binds Space/2xl, 14px). |
+| `--ki-textarea-xl-radius` | `14px` | dimension used by the textarea component for xl radius (Input-cell 8016:286 Type=textarea xl binds Radius/small-component/xl). |
+| `--ki-textarea-xs-font-size` | `0.75rem` | dimension used by the textarea component for xs font size: caption-2 (Input-cell 8016:286 Type=textarea xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7). |
+| `--ki-textarea-xs-label-font-size` | `0.75rem` | dimension used by the textarea component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4). |
+| `--ki-textarea-xs-label-line-height` | `1rem` | dimension used by the textarea component for the xs label line height (caption-2, Input-label sm; spec 050 D4). |
+| `--ki-textarea-xs-line-height` | `1rem` | dimension used by the textarea component for xs line height (caption-2, Input-cell 8016:286 Type=textarea xs). |
+| `--ki-textarea-xs-padding-block` | `0.5rem` | dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px). |
+| `--ki-textarea-xs-padding-inline` | `0.375rem` | dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px). |
+| `--ki-textarea-xs-radius` | `6px` | dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs). |
 
 ### `ki-tooltip`
 

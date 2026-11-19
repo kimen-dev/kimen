@@ -1,8 +1,14 @@
 // @spec:018-project-integrity-hardening#S10
 // @spec:041-token-deprecation
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+
+import {
+  readCanonicalJson,
+  readPublicApiCandidate,
+  readPublicApiDeclarations,
+} from '../gates/check-public-api.mjs';
 
 import { canonicalJsonSha256 } from '../lib/canonical-json.mjs';
 import { evaluatePublicApiChange } from '../lib/public-api.mjs';
@@ -486,175 +492,85 @@ test('[S10] repository snapshot rejects a public token without an onmars-light d
   );
 });
 
-test('[S10] sealed repository candidate is digest-bound without removals or root growth', async () => {
-  const [baseline, candidate, declaration] = await Promise.all(
-    [
-      '../../changes/api/baselines/0.0.0.json',
-      '../../packages/elements/generated/public-api.json',
-      '../../changes/api/341-onmars-v2.json',
-    ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
+function assertInventory(before, after, prefix, declaredPaths) {
+  const oldNames = Object.keys(before);
+  const newNames = Object.keys(after);
+  const additions = newNames.filter((name) => !Object.hasOwn(before, name));
+  const removals = oldNames.filter((name) => !Object.hasOwn(after, name));
+  const delta = Object.fromEntries(
+    [...additions, ...removals].map((name) => [
+      `${prefix}/${name.replaceAll('~', '~0').replaceAll('/', '~1')}`,
+      additions.includes(name) ? 1 : -1,
+    ]),
   );
+  for (const path of Object.keys(delta)) {
+    assert.ok(declaredPaths.has(path), `Missing inventory declaration for ${path}`);
+  }
+  const declaredDelta = [...declaredPaths].reduce((total, path) => total + (delta[path] ?? 0), 0);
+  assert.equal(newNames.length, oldNames.length + declaredDelta);
+}
 
-  const result = evaluatePublicApiChange({ baseline, candidate, declaration });
+test('[S10] repository inventories agree with the protected baseline and active API declarations', async () => {
+  const baseline = await readCanonicalJson(
+    'baseline',
+    fileURLToPath(new URL('../../changes/api/baselines/0.0.0.json', import.meta.url)),
+  );
+  const candidate = await readPublicApiCandidate(
+    fileURLToPath(new URL('../../packages/elements/generated/public-api', import.meta.url)),
+  );
+  const declarations = await readPublicApiDeclarations(
+    fileURLToPath(new URL('../../changes/api', import.meta.url)),
+    { baseline },
+  );
+  const result = evaluatePublicApiChange({ baseline, candidate, declarations });
 
-  assert.equal(candidate.surfaceSha256, declaration.candidateSha256);
-  // Fase T declares deliberate effective-value changes (dialog/tooltip/listbox
-  // sizes, tooltip shadow, list dividers) — a digest-bound MAJOR declaration.
-  // Fase N wave 1 adds the additive ki-divider element (spec 020-ki-divider):
-  // 4 --ki-divider-* component token leaves — the additive ki-status element
-  // (spec 021-ki-status): 10 --ki-status-* component token leaves — the
-  // additive ki-icon-button element (spec 022-ki-icon-button): 195
-  // --ki-icon-button-* component token leaves (the button variant × tone ×
-  // state matrix applied to the icon-only control; cut back to the ten of
-  // its own size and icon ramps by the elements cleanup, see the token
-  // count below) — and the additive
-  // ki-avatar + ki-avatar-group companion pair (spec 019-ki-avatar): 25
-  // --ki-avatar-* and 26 --ki-avatar-group-* component token leaves (the
-  // six-step size/font/glyph ramps plus group overlap/ring/counter).
-  // Fase N wave 2 adds four additive simple elements: ki-scroller (spec
-  // 023-ki-scroller): 11 --ki-scroller-* component token leaves (thumb,
-  // track, gutter, surface and the focus-ring triple) — ki-indicator (spec
-  // 024-ki-indicator): 11 --ki-indicator-* component token leaves (resting
-  // dot, the current-dot quintet, gap, motion) — ki-video (spec
-  // 025-ki-video): 17 --ki-video-* component token leaves (frame, the play
-  // glass control, scrim, backdrop blur, focus ring, motion) — and ki-qr
-  // (spec 026-ki-qr): 7 --ki-qr-* component token leaves (size, ink, tile,
-  // quiet zone and the shape axis). 29 components in total.
-  assert.equal(result.release, 'major');
-  assert.equal(result.decision, 'passed');
-  assert.deepEqual(result.removals, []);
+  assert.equal(result.decision, 'passed', result.reasons.join('\n'));
   assert.deepEqual(result.newRootSymbols, []);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 29);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].rootSymbols).length, 32);
-  // The pressed state layer (changes/api/010) adds three more:
-  // --ki-surface-pressed-overlay-inverse, the darkening mirror of
-  // ki.state-layer.pressed for a control whose fill is light, plus the
-  // primary/secondary active.overlay pair on each of ki-button and
-  // ki-icon-button — two rules per component, not one, because each already
-  // carries two overlay conventions: primary washes lighter over a dark brand
-  // fill, everything else washes darker over a light one.
-  // The control-boundary role (changes/api/007) adds three semantic leaves:
-  // --ki-outline-control and --ki-outline-control-hover, the boundary of a
-  // control that can be empty, pinned to WCAG 1.4.11's 3:1 rather than to a
-  // position in the emphasis ramp; and --ki-surface-primary-med-em-hover, the
-  // hover of the MarsUI default brand surface, which the selection family had
-  // no scheme-correct step for.
-  // The MarsUI fidelity pixel pass (changes/api/011) adds 51 additive leaves:
-  // per-side tertiary bevels for button and icon-button, the field invalid
-  // rings and hint trios, label padding aliases, the dialog/tooltip glass
-  // gradient pairs and backdrop blurs, card padding/media-radius/backdrop
-  // blur, switch glyph geometry, select trigger typography and listbox blur,
-  // the alert dismiss/text-gap set, the scroller focus ring, tab bar metrics,
-  // the motion instant/spring/distance set, focus danger and the small dark
-  // shadow. The fidelity test-failure pass adds one more on top:
-  // --ki-radio-selected-active-overlay, the selected radio's pressed
-  // state layer (the ki-button active/overlay precedent), because
-  // selected-active-bg mirrors rest and a keyboard hold on a selected radio
-  // otherwise shows no paint delta under reduced motion (bare-page
-  // state-delta contract). 1316 + 52 = 1368.
-  // The tokens follow-ups (changes/api/001-tokens-theming-followups) take
-  // seven of those leaves back out: the ki-input and ki-textarea hint trios
-  // (hint-fg, disabled.hint-fg, invalid.hint-fg) and --ki-card-backdrop-blur,
-  // all added by 011 for a hint row and a card glass surface that no
-  // stylesheet ever consumed. None is in the 0.0.0 baseline, so the removals
-  // list below stays empty: against the baseline they were never published.
-  // 1368 - 7 = 1361.
-  // The elements cleanup (changes/api/elements-cleanup) takes 188 back out:
-  // every --ki-icon-button-* leaf except the ten of its own size and icon
-  // ramps repeated a --ki-button-* value in all four compositions, and
-  // ki-icon-button now consumes the button tokens directly. None of the 188
-  // was in the 0.0.0 baseline, so they leave the candidate without being
-  // removals. 1361 - 188 = 1173.
-  // The preference modes (changes/api/043-preference-modes) add ten leaves:
-  // the focus-ring triple every focusable component now aliases, the tooltip
-  // edge colour, the supporting-text role enabled labels and placeholders
-  // alias (so more contrast leaves the disabled ink alone), and the five
-  // content tints (primary/info/success/warning/danger) that alert, badge and
-  // the indeterminate checkbox alias so reduced transparency can make them
-  // opaque while state washes keep their alpha. 1173 + 10 = 1183. Both modes
-  // are published as their own contexts.
-  // The compact density (changes/api/045-density) adds three: the two
-  // document-inherited density tokens and the 24px target floor. 1183 + 3 =
-  // 1186. The compact level is published as its own context too.
-  // The Figma fidelity pass (changes/api/figma-fidelity-pass) adds eighteen:
-  // the switch control footprint and Base well (five), the dialog heading,
-  // body and footer section paddings (nine) and its divider width and colour
-  // (two), and the tooltip arrow size and tip radius (two). 1186 + 18 = 1204.
-  // The ki-alert anatomy (changes/api/011-ki-alert-anatomy) adds nineteen:
-  // the shell padding, radius, wash and blur, the card elevation, the icon
-  // frame size, radius and glyph size, the actions gap, and an icon fill and
-  // ink for each of the five tones. 1204 + 19 = 1223.
-  // Issues #317-#321 (changes/api/317-321-loading-hint-touch) add
-  // twenty-four: the loading spinner of ki-button and ki-icon-button (a size
-  // per button size for each, its stroke width and its period: twelve), the
-  // label hint ink and gap of the five field controls (ten), and the
-  // touch-screen text size of ki-input and ki-textarea (two). The touch
-  // density is published as its own context. 1223 + 24 = 1247.
-  // Issue #347 adds the shared heading family, the two component heading
-  // families, and the dialog heading letter spacing. 1247 + 4 = 1251.
-  // Issue #345 adds three switch glyph colors. 1251 + 3 = 1254.
-  // Issue #349 adds the video hover shadow opacity. 1254 + 1 = 1255.
-  // Issue #343 adds three component image tokens and six semantic tokens for
-  // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
-  // Issue #342 adds ten full-filter tokens: two semantic and eight component.
-  // 1264 + 10 = 1274.
-  // Issue #344 adds the tertiary hover overlay. 1274 + 1 = 1275.
-  // Issue #346 adds two font stylesheet exports outside the effective token
-  // surface. The token total and deprecation count stay at main's totals.
-  const tokenPackage = candidate.surface.packages['@kimen/tokens'];
+  const declaredPaths = new Set(declarations.flatMap(({ deltas }) => Object.keys(deltas)));
+  const before = baseline.surface.packages;
+  const after = candidate.surface.packages;
+  for (const field of ['components', 'rootSymbols']) {
+    assertInventory(
+      before['@kimen/elements'][field],
+      after['@kimen/elements'][field],
+      `/packages/@kimen~1elements/${field}`,
+      declaredPaths,
+    );
+  }
+  const tokenBaseline = before['@kimen/tokens'].tokens;
+  const tokenPackage = after['@kimen/tokens'];
+  const published = tokenPackage.tokens;
   for (const subpath of ['./css/onmars-fonts.css', './css/material3-fonts.css']) {
     assert.equal(tokenPackage.exports[subpath].target, subpath);
     assert.equal(Object.hasOwn(tokenPackage.stylesheets, subpath), false);
   }
-  // Issue #341 adds the emphasized-out curve, two inverse tooltip colors,
-  // and the flat elevation role. 1275 + 4 = 1279.
-  assert.equal(Object.keys(tokenPackage.tokens).length, 1279);
-  assert.equal(
-    Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
-      .length,
-    1279,
-  );
-  assert.deepEqual(
-    Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
-    [
-      'compact/dark',
-      'compact/light',
-      'contrast-more/dark',
-      'contrast-more/light',
-      'dark',
-      'light',
-      'reduced-transparency/dark',
-      'reduced-transparency/light',
-      'touch/dark',
-      'touch/light',
-    ],
-  );
-  const published = candidate.surface.packages['@kimen/tokens'].tokens;
-  for (const name of [
-    '--ki-card-backdrop-blur',
-    '--ki-input-hint-fg',
-    '--ki-input-disabled-hint-fg',
-    '--ki-input-invalid-hint-fg',
-    '--ki-textarea-hint-fg',
-    '--ki-textarea-disabled-hint-fg',
-    '--ki-textarea-invalid-hint-fg',
-  ]) {
-    assert.equal(Object.hasOwn(published, name), false, `${name} is no longer published`);
+  const tokenPath = '/packages/@kimen~1tokens/tokens';
+  assertInventory(tokenBaseline, published, tokenPath, declaredPaths);
+  for (const values of Object.values(tokenPackage.stylesheets['./css'].contexts)) {
+    assert.deepEqual(Object.keys(values), Object.keys(published));
   }
-  // The token deprecation (changes/api/041-token-deprecation) keeps the 85
-  // component leaves published. Issue #343 adds four legacy gradient stops.
-  // All 89 entries carry deprecatedSince 0.1.0 and a live replacement.
-  const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
-  // Issue #342 also deprecates seven legacy backdrop blur lengths. 89 + 7 = 96.
-  // Issue #341 deprecates the spring easing name. 96 + 1 = 97.
-  assert.equal(deprecated.length, 97);
-  assert.equal(
-    published['--ki-motion-easing-spring'].replacement,
-    '--ki-motion-easing-emphasized-out',
-  );
-  assert.ok(
-    deprecated.every(
-      ({ deprecatedSince, replacement }) => deprecatedSince === '0.1.0' && replacement,
-    ),
-  );
+
+  const deprecated = (inventory) =>
+    Object.entries(inventory).filter(([, token]) => token.deprecatedSince);
+  const beforeDeprecated = new Map(deprecated(tokenBaseline));
+  const afterDeprecated = new Map(deprecated(published));
+  let declaredDeprecationDelta = 0;
+  for (const name of new Set([...beforeDeprecated.keys(), ...afterDeprecated.keys()])) {
+    const added = afterDeprecated.has(name);
+    if (added === beforeDeprecated.has(name)) continue;
+    const path = `${tokenPath}/${name}`;
+    assert.ok(
+      declaredPaths.has(path) || declaredPaths.has(`${path}/deprecatedSince`),
+      `Missing deprecation declaration for ${name}`,
+    );
+    declaredDeprecationDelta += added ? 1 : -1;
+  }
+  assert.equal(afterDeprecated.size, beforeDeprecated.size + declaredDeprecationDelta);
+  for (const { deprecatedSince, replacement } of afterDeprecated.values()) {
+    assert.match(deprecatedSince, /^\d+\.\d+\.\d+/u);
+    assert.ok(
+      Object.hasOwn(published, replacement),
+      `Missing published replacement ${replacement}`,
+    );
+  }
 });

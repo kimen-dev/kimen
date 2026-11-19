@@ -4,6 +4,9 @@ import { canonicalJson, canonicalJsonSha256 } from './canonical-json.mjs';
 
 const RELEASE_RANK = Object.freeze({ patch: 0, minor: 1, major: 2 });
 const SNAPSHOT_SCHEMA_VERSION = 1;
+const DECLARATION_SCHEMA_VERSION = 2;
+const SHA256_PATTERN = /^[0-9a-f]{64}$/u;
+const ACCEPTED_DECLARATION = Symbol('accepted public API declaration');
 const ELEMENTS_PACKAGE = '@kimen/elements';
 const SEMVER_PATTERN =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
@@ -304,7 +307,7 @@ function validateSnapshot(snapshot, label) {
 function changedUnknownKeys(before, after, knownKeys, path, addChange, packageName = null) {
   for (const key of new Set([...Object.keys(before), ...Object.keys(after)])) {
     if (!knownKeys.has(key) && !isDeepStrictEqual(before[key], after[key])) {
-      addChange('major', `${path}.${key}`, 'unknown', packageName);
+      addChange('major', [...path, key], 'unknown', packageName);
     }
   }
 }
@@ -358,31 +361,31 @@ function compareEntry(
     'parameters',
   ]);
   if (!isDeepStrictEqual(before.description, after.description)) {
-    addChange('patch', `${path}.description`, 'documentation', packageName);
+    addChange('patch', [...path, 'description'], 'documentation', packageName);
   }
   if (!ignoreTypeDefault && !isDeepStrictEqual(before.type, after.type)) {
-    addChange(classifyTypeChange(before.type, after.type), `${path}.type`, 'type', packageName);
+    addChange(classifyTypeChange(before.type, after.type), [...path, 'type'], 'type', packageName);
   }
   if (!ignoreTypeDefault && !isDeepStrictEqual(before.default, after.default)) {
-    addChange('major', `${path}.default`, 'default', packageName);
+    addChange('major', [...path, 'default'], 'default', packageName);
   }
   if (!isDeepStrictEqual(before.required, after.required)) {
     addChange(
       before.required === true && after.required === false ? 'minor' : 'major',
-      `${path}.required`,
+      [...path, 'required'],
       'requiredness',
       packageName,
     );
   }
   if (!isDeepStrictEqual(before.target, after.target)) {
-    addChange('major', `${path}.target`, 'target', packageName);
+    addChange('major', [...path, 'target'], 'target', packageName);
   }
   for (const contractKey of ['signature', 'parameters']) {
     if (isDeepStrictEqual(before[contractKey], after[contractKey])) continue;
     const enriched = before[contractKey] === undefined && after[contractKey] !== undefined;
     addChange(
       enriched ? 'patch' : 'major',
-      `${path}.${contractKey}`,
+      [...path, contractKey],
       enriched ? 'contract-enrichment' : 'signature',
       packageName,
     );
@@ -393,26 +396,26 @@ function compareEntry(
       (before[metadata] === null || before[metadata] === undefined) &&
       typeof after[metadata] === 'string' &&
       after[metadata].trim() !== '';
-    addChange(introduced ? 'minor' : 'major', `${path}.${metadata}`, 'deprecation', packageName);
+    addChange(introduced ? 'minor' : 'major', [...path, metadata], 'deprecation', packageName);
   }
   changedUnknownKeys(before, after, knownKeys, path, addChange, packageName);
 }
 
 function compareEntryMap(before, after, path, packageName, addChange, removals, options = {}) {
-  const beforeMap = assertRecord(before ?? {}, `${path} baseline`);
-  const afterMap = assertRecord(after ?? {}, `${path} candidate`);
+  const beforeMap = assertRecord(before ?? {}, `${path.join('.')} baseline`);
+  const afterMap = assertRecord(after ?? {}, `${path.join('.')} candidate`);
   for (const key of new Set([...Object.keys(beforeMap), ...Object.keys(afterMap)])) {
-    const entryPath = `${path}.${key}`;
+    const entryPath = [...path, key];
     if (!Object.hasOwn(afterMap, key)) {
       addChange('major', entryPath, 'removed', packageName);
-      removals.push({ path: entryPath, packageName, entry: beforeMap[key] });
+      removals.push({ path: entryPath.join('.'), packageName, entry: beforeMap[key] });
     } else if (!Object.hasOwn(beforeMap, key)) {
-      const entry = assertRecord(afterMap[key], `${entryPath} candidate`);
+      const entry = assertRecord(afterMap[key], `${entryPath.join('.')} candidate`);
       addChange(entry.required === true ? 'major' : 'minor', entryPath, 'added', packageName);
     } else {
       compareEntry(
-        assertRecord(beforeMap[key], `${entryPath} baseline`),
-        assertRecord(afterMap[key], `${entryPath} candidate`),
+        assertRecord(beforeMap[key], `${entryPath.join('.')} baseline`),
+        assertRecord(afterMap[key], `${entryPath.join('.')} candidate`),
         entryPath,
         addChange,
         packageName,
@@ -423,29 +426,35 @@ function compareEntryMap(before, after, path, packageName, addChange, removals, 
 }
 
 function compareComponents(before, after, path, packageName, addChange, removals) {
-  const beforeComponents = assertRecord(before ?? {}, `${path} baseline`);
-  const afterComponents = assertRecord(after ?? {}, `${path} candidate`);
+  const beforeComponents = assertRecord(before ?? {}, `${path.join('.')} baseline`);
+  const afterComponents = assertRecord(after ?? {}, `${path.join('.')} candidate`);
   for (const tag of new Set([...Object.keys(beforeComponents), ...Object.keys(afterComponents)])) {
-    const componentPath = `${path}.${tag}`;
+    const componentPath = [...path, tag];
     if (!Object.hasOwn(afterComponents, tag)) {
       addChange('major', componentPath, 'removed', packageName);
-      removals.push({ path: componentPath, packageName, entry: beforeComponents[tag] });
+      removals.push({ path: componentPath.join('.'), packageName, entry: beforeComponents[tag] });
       continue;
     }
     if (!Object.hasOwn(beforeComponents, tag)) {
       addChange('minor', componentPath, 'added', packageName);
       continue;
     }
-    const beforeComponent = assertRecord(beforeComponents[tag], `${componentPath} baseline`);
-    const afterComponent = assertRecord(afterComponents[tag], `${componentPath} candidate`);
+    const beforeComponent = assertRecord(
+      beforeComponents[tag],
+      `${componentPath.join('.')} baseline`,
+    );
+    const afterComponent = assertRecord(
+      afterComponents[tag],
+      `${componentPath.join('.')} candidate`,
+    );
     if (!isDeepStrictEqual(beforeComponent.description, afterComponent.description)) {
-      addChange('patch', `${componentPath}.description`, 'documentation', packageName);
+      addChange('patch', [...componentPath, 'description'], 'documentation', packageName);
     }
     for (const facet of COMPONENT_FACETS) {
       compareEntryMap(
         beforeComponent[facet],
         afterComponent[facet],
-        `${componentPath}.${facet}`,
+        [...componentPath, facet],
         packageName,
         addChange,
         removals,
@@ -463,20 +472,20 @@ function compareComponents(before, after, path, packageName, addChange, removals
 }
 
 function compareRootSymbols(before, after, path, packageName, addChange, removals, newRootSymbols) {
-  const beforeSymbols = assertRecord(before ?? {}, `${path} baseline`);
-  const afterSymbols = assertRecord(after ?? {}, `${path} candidate`);
+  const beforeSymbols = assertRecord(before ?? {}, `${path.join('.')} baseline`);
+  const afterSymbols = assertRecord(after ?? {}, `${path.join('.')} candidate`);
   for (const symbol of new Set([...Object.keys(beforeSymbols), ...Object.keys(afterSymbols)])) {
-    const symbolPath = `${path}.${symbol}`;
+    const symbolPath = [...path, symbol];
     if (!Object.hasOwn(afterSymbols, symbol)) {
       addChange('major', symbolPath, 'removed', packageName);
-      removals.push({ path: symbolPath, packageName, entry: beforeSymbols[symbol] });
+      removals.push({ path: symbolPath.join('.'), packageName, entry: beforeSymbols[symbol] });
     } else if (!Object.hasOwn(beforeSymbols, symbol)) {
       addChange('major', symbolPath, 'added-root-symbol', packageName);
-      newRootSymbols.push(symbolPath);
+      newRootSymbols.push(symbolPath.join('.'));
     } else {
       compareEntry(
-        assertRecord(beforeSymbols[symbol], `${symbolPath} baseline`),
-        assertRecord(afterSymbols[symbol], `${symbolPath} candidate`),
+        assertRecord(beforeSymbols[symbol], `${symbolPath.join('.')} baseline`),
+        assertRecord(afterSymbols[symbol], `${symbolPath.join('.')} candidate`),
         symbolPath,
         addChange,
         packageName,
@@ -486,24 +495,24 @@ function compareRootSymbols(before, after, path, packageName, addChange, removal
 }
 
 function compareModules(before, after, path, packageName, addChange, removals) {
-  const beforeModules = assertRecord(before ?? {}, `${path} baseline`);
-  const afterModules = assertRecord(after ?? {}, `${path} candidate`);
+  const beforeModules = assertRecord(before ?? {}, `${path.join('.')} baseline`);
+  const afterModules = assertRecord(after ?? {}, `${path.join('.')} candidate`);
   for (const subpath of new Set([...Object.keys(beforeModules), ...Object.keys(afterModules)])) {
-    const modulePath = `${path}.${subpath}`;
+    const modulePath = [...path, subpath];
     if (!Object.hasOwn(afterModules, subpath)) {
       addChange('major', modulePath, 'removed', packageName);
-      removals.push({ path: modulePath, packageName, entry: beforeModules[subpath] });
+      removals.push({ path: modulePath.join('.'), packageName, entry: beforeModules[subpath] });
       continue;
     }
     if (!Object.hasOwn(beforeModules, subpath)) {
       addChange('minor', modulePath, 'added', packageName);
       continue;
     }
-    const beforeModule = assertRecord(beforeModules[subpath], `${modulePath} baseline`);
-    const afterModule = assertRecord(afterModules[subpath], `${modulePath} candidate`);
+    const beforeModule = assertRecord(beforeModules[subpath], `${modulePath.join('.')} baseline`);
+    const afterModule = assertRecord(afterModules[subpath], `${modulePath.join('.')} candidate`);
     for (const key of ['target', 'declaration']) {
       if (!isDeepStrictEqual(beforeModule[key], afterModule[key])) {
-        addChange('major', `${modulePath}.${key}`, key, packageName);
+        addChange('major', [...modulePath, key], key, packageName);
       }
     }
     const beforeSymbols = assertRecord(
@@ -512,10 +521,10 @@ function compareModules(before, after, path, packageName, addChange, removals) {
     );
     const afterSymbols = assertRecord(afterModule.symbols ?? {}, `${modulePath}.symbols candidate`);
     for (const symbol of new Set([...Object.keys(beforeSymbols), ...Object.keys(afterSymbols)])) {
-      const symbolPath = `${modulePath}.symbols.${symbol}`;
+      const symbolPath = [...modulePath, 'symbols', symbol];
       if (!Object.hasOwn(afterSymbols, symbol)) {
         addChange('major', symbolPath, 'removed', packageName);
-        removals.push({ path: symbolPath, packageName, entry: beforeSymbols[symbol] });
+        removals.push({ path: symbolPath.join('.'), packageName, entry: beforeSymbols[symbol] });
       } else if (!Object.hasOwn(beforeSymbols, symbol)) {
         addChange('minor', symbolPath, 'added', packageName);
       } else if (!isDeepStrictEqual(beforeSymbols[symbol], afterSymbols[symbol])) {
@@ -534,13 +543,13 @@ function compareModules(before, after, path, packageName, addChange, removals) {
 }
 
 function compareStylesheets(before, after, path, packageName, addChange) {
-  const beforeStylesheets = assertRecord(before ?? {}, `${path} baseline`);
-  const afterStylesheets = assertRecord(after ?? {}, `${path} candidate`);
+  const beforeStylesheets = assertRecord(before ?? {}, `${path.join('.')} baseline`);
+  const afterStylesheets = assertRecord(after ?? {}, `${path.join('.')} candidate`);
   for (const subpath of new Set([
     ...Object.keys(beforeStylesheets),
     ...Object.keys(afterStylesheets),
   ])) {
-    const stylesheetPath = `${path}.${subpath}`;
+    const stylesheetPath = [...path, subpath];
     if (!Object.hasOwn(afterStylesheets, subpath)) {
       addChange('major', stylesheetPath, 'removed', packageName);
       continue;
@@ -549,10 +558,16 @@ function compareStylesheets(before, after, path, packageName, addChange) {
       addChange('minor', stylesheetPath, 'added', packageName);
       continue;
     }
-    const beforeStylesheet = assertRecord(beforeStylesheets[subpath], `${stylesheetPath} baseline`);
-    const afterStylesheet = assertRecord(afterStylesheets[subpath], `${stylesheetPath} candidate`);
+    const beforeStylesheet = assertRecord(
+      beforeStylesheets[subpath],
+      `${stylesheetPath.join('.')} baseline`,
+    );
+    const afterStylesheet = assertRecord(
+      afterStylesheets[subpath],
+      `${stylesheetPath.join('.')} candidate`,
+    );
     if (beforeStylesheet.target !== afterStylesheet.target) {
-      addChange('major', `${stylesheetPath}.target`, 'target', packageName);
+      addChange('major', [...stylesheetPath, 'target'], 'target', packageName);
     }
     const beforeContexts = assertRecord(
       beforeStylesheet.contexts,
@@ -566,7 +581,7 @@ function compareStylesheets(before, after, path, packageName, addChange) {
       ...Object.keys(beforeContexts),
       ...Object.keys(afterContexts),
     ])) {
-      const contextPath = `${stylesheetPath}.contexts.${context}`;
+      const contextPath = [...stylesheetPath, 'contexts', context];
       if (!Object.hasOwn(afterContexts, context)) {
         addChange('major', contextPath, 'removed', packageName);
         continue;
@@ -575,10 +590,16 @@ function compareStylesheets(before, after, path, packageName, addChange) {
         addChange('minor', contextPath, 'added', packageName);
         continue;
       }
-      const beforeTokens = assertRecord(beforeContexts[context], `${contextPath} baseline`);
-      const afterTokens = assertRecord(afterContexts[context], `${contextPath} candidate`);
+      const beforeTokens = assertRecord(
+        beforeContexts[context],
+        `${contextPath.join('.')} baseline`,
+      );
+      const afterTokens = assertRecord(
+        afterContexts[context],
+        `${contextPath.join('.')} candidate`,
+      );
       for (const token of new Set([...Object.keys(beforeTokens), ...Object.keys(afterTokens)])) {
-        const tokenPath = `${contextPath}.${token}`;
+        const tokenPath = [...contextPath, token];
         if (!Object.hasOwn(afterTokens, token)) {
           addChange('major', tokenPath, 'removed', packageName);
         } else if (!Object.hasOwn(beforeTokens, token)) {
@@ -600,11 +621,11 @@ function compareStylesheets(before, after, path, packageName, addChange) {
 }
 
 function comparePackage(packageName, before, after, addChange, removals, newRootSymbols) {
-  const path = `packages.${packageName}`;
+  const path = ['packages', packageName];
   compareEntryMap(
     before.exports,
     after.exports,
-    `${path}.exports`,
+    [...path, 'exports'],
     packageName,
     addChange,
     removals,
@@ -612,7 +633,7 @@ function comparePackage(packageName, before, after, addChange, removals, newRoot
   compareComponents(
     before.components,
     after.components,
-    `${path}.components`,
+    [...path, 'components'],
     packageName,
     addChange,
     removals,
@@ -620,25 +641,33 @@ function comparePackage(packageName, before, after, addChange, removals, newRoot
   compareModules(
     before.modules,
     after.modules,
-    `${path}.modules`,
+    [...path, 'modules'],
     packageName,
     addChange,
     removals,
   );
-  compareEntryMap(before.tokens, after.tokens, `${path}.tokens`, packageName, addChange, removals, {
-    ignoreTypeDefault: before.stylesheets !== undefined && after.stylesheets !== undefined,
-  });
+  compareEntryMap(
+    before.tokens,
+    after.tokens,
+    [...path, 'tokens'],
+    packageName,
+    addChange,
+    removals,
+    {
+      ignoreTypeDefault: before.stylesheets !== undefined && after.stylesheets !== undefined,
+    },
+  );
   compareStylesheets(
     before.stylesheets,
     after.stylesheets,
-    `${path}.stylesheets`,
+    [...path, 'stylesheets'],
     packageName,
     addChange,
   );
   compareRootSymbols(
     before.rootSymbols,
     after.rootSymbols,
-    `${path}.rootSymbols`,
+    [...path, 'rootSymbols'],
     packageName,
     addChange,
     removals,
@@ -647,14 +676,108 @@ function comparePackage(packageName, before, after, addChange, removals, newRoot
   changedUnknownKeys(before, after, PACKAGE_KEYS, path, addChange, packageName);
 }
 
-function classifySnapshots(baseline, candidate) {
+function jsonPointer(path) {
+  return `/${path.map((segment) => segment.replaceAll('~', '~0').replaceAll('/', '~1')).join('/')}`;
+}
+
+function surfaceValue(surface, [scope, ...segments]) {
+  if (scope === 'browserBaseline')
+    return surface.browserBaseline.includes(segments[0]) || undefined;
+  let value = scope === 'surface' ? surface : surface[scope];
+  for (const key of segments) {
+    if (value === undefined || value === null) return undefined;
+    value = Object.getOwnPropertyDescriptor(value, key)?.value;
+  }
+  return value;
+}
+
+function addedCollections(path) {
+  const [scope, , facet, , group] = path;
+  if (scope !== 'packages') return null;
+  if (path.length === 2) return PACKAGE_KEYS;
+  if (path.length === 4) {
+    if (facet === 'components') return COMPONENT_FACETS;
+    if (facet === 'modules') return new Set(['symbols']);
+    if (facet === 'stylesheets') return new Set(['contexts']);
+  }
+  if (path.length === 6 && facet === 'stylesheets' && group === 'contexts') return new Set();
+  return null;
+}
+
+function bindDelta(deltas, path, beforeSurface, afterSurface, classification) {
+  const save = (segments, before, after, container = false) => {
+    const pointer = jsonPointer(segments);
+    if (deltas.has(pointer)) throw new Error(`Duplicate public API delta at ${pointer}`);
+    const sha256 = canonicalJsonSha256({
+      ...classification,
+      before: before === undefined ? [] : [before],
+      after: after === undefined ? [] : [after],
+      container,
+    });
+    deltas.set(pointer, { ...classification, sha256 });
+  };
+
+  // A newly added collection has its own presence marker and per-member
+  // bindings. Adding a sibling must leave already declared members valid.
+  const bindAddition = (segments, value) => {
+    const collections = addedCollections(segments);
+    if (!collections || value === null || typeof value !== 'object' || Array.isArray(value)) {
+      save(segments, undefined, value);
+      return;
+    }
+    save(segments, undefined, true, true);
+    for (const [key, child] of Object.entries(value)) {
+      if (segments.length === 2 && key === 'version') continue;
+      if (
+        !collections.has(key) ||
+        child === null ||
+        typeof child !== 'object' ||
+        Array.isArray(child)
+      ) {
+        save([...segments, key], undefined, child);
+        continue;
+      }
+      for (const [name, entry] of Object.entries(child)) {
+        bindAddition([...segments, key, name], entry);
+      }
+    }
+  };
+
+  let after = surfaceValue(afterSurface, path);
+  if (classification.kind === 'added') {
+    const [scope, name, facet] = path;
+    if (
+      scope === 'packages' &&
+      facet === 'tokens' &&
+      beforeSurface.packages[name]?.stylesheets &&
+      afterSurface.packages[name]?.stylesheets
+    ) {
+      after = { ...after };
+      delete after.type;
+      delete after.default;
+    }
+    bindAddition(path, after);
+  } else {
+    save(path, surfaceValue(beforeSurface, path), after);
+  }
+}
+
+function classifySnapshots(baseline, candidate, { bind = false } = {}) {
   const changes = [];
   const removals = [];
+  const deltas = new Map();
   const newRootSymbols = [];
   let release = 'patch';
   const addChange = (changeRelease, path, kind, packageName = null) => {
     if (RELEASE_RANK[changeRelease] > RELEASE_RANK[release]) release = changeRelease;
-    changes.push({ release: changeRelease, path, kind, packageName });
+    changes.push({ release: changeRelease, path: path.join('.'), kind, packageName });
+    if (bind) {
+      bindDelta(deltas, path, baseline.surface, candidate.surface, {
+        release: changeRelease,
+        kind,
+        packageName,
+      });
+    }
   };
 
   const beforeSurface = baseline.surface;
@@ -663,12 +786,12 @@ function classifySnapshots(baseline, candidate) {
   const afterBrowsers = new Set(afterSurface.browserBaseline);
   for (const browser of beforeBrowsers) {
     if (!afterBrowsers.has(browser)) {
-      addChange('major', `browserBaseline.${browser}`, 'removed', ELEMENTS_PACKAGE);
+      addChange('major', ['browserBaseline', browser], 'removed', ELEMENTS_PACKAGE);
     }
   }
   for (const browser of afterBrowsers) {
     if (!beforeBrowsers.has(browser)) {
-      addChange('minor', `browserBaseline.${browser}`, 'added', ELEMENTS_PACKAGE);
+      addChange('minor', ['browserBaseline', browser], 'added', ELEMENTS_PACKAGE);
     }
   }
 
@@ -679,14 +802,14 @@ function classifySnapshots(baseline, candidate) {
     ...Object.keys(afterPackages),
   ])) {
     if (!Object.hasOwn(afterPackages, packageName)) {
-      addChange('major', `packages.${packageName}`, 'removed', packageName);
+      addChange('major', ['packages', packageName], 'removed', packageName);
       removals.push({
         path: `packages.${packageName}`,
         packageName,
         entry: beforePackages[packageName],
       });
     } else if (!Object.hasOwn(beforePackages, packageName)) {
-      addChange('minor', `packages.${packageName}`, 'added', packageName);
+      addChange('minor', ['packages', packageName], 'added', packageName);
     } else {
       comparePackage(
         packageName,
@@ -702,10 +825,10 @@ function classifySnapshots(baseline, candidate) {
     beforeSurface,
     afterSurface,
     new Set(['packages', 'browserBaseline']),
-    'surface',
+    ['surface'],
     addChange,
   );
-  return { release, changes, removals, newRootSymbols };
+  return { release, changes, removals, newRootSymbols, ...(bind ? { deltas } : {}) };
 }
 
 function validatePackages(packages, label) {
@@ -722,10 +845,10 @@ function validatePackages(packages, label) {
   return [...unique].sort((left, right) => left.localeCompare(right));
 }
 
-function validateDeclarationCommon(declaration) {
+function validateDeclarationCommon(declaration, schemaVersion = SNAPSHOT_SCHEMA_VERSION) {
   const record = assertRecord(declaration, 'API change declaration');
-  if (record.schemaVersion !== SNAPSHOT_SCHEMA_VERSION) {
-    throw new TypeError(`API change declaration schemaVersion must be ${SNAPSHOT_SCHEMA_VERSION}`);
+  if (record.schemaVersion !== schemaVersion) {
+    throw new TypeError(`API change declaration schemaVersion must be ${schemaVersion}`);
   }
   const packages = validatePackages(record.packages, 'API change declaration');
   if (!Object.hasOwn(RELEASE_RANK, record.release)) {
@@ -801,6 +924,76 @@ function validateFirstReleaseDeclaration(declaration, candidate) {
   return record;
 }
 
+function validateAdditiveDeclaration(declaration, baseline, deltas) {
+  const { record, packages } = validateDeclarationCommon(declaration, DECLARATION_SCHEMA_VERSION);
+  const fields = new Set([
+    'baselineSha256',
+    'baselineVersions',
+    'deltas',
+    'packages',
+    'reason',
+    'release',
+    'schemaVersion',
+  ]);
+  if (Object.keys(record).some((key) => !fields.has(key))) {
+    throw new TypeError('API change declaration contains an unknown field');
+  }
+  if (record.baselineSha256 !== baseline.surfaceSha256) {
+    throw new Error('API change declaration baseline digest is stale');
+  }
+  const baselineVersions = Object.fromEntries(
+    packages.map((name) => [name, baseline.surface.packages[name]?.version ?? null]),
+  );
+  if (!isDeepStrictEqual(record.baselineVersions, baselineVersions)) {
+    throw new Error('API change declaration baseline versions are stale');
+  }
+  const entries = Object.entries(assertRecord(record.deltas, 'API change declaration deltas'));
+  const accepted = record[ACCEPTED_DECLARATION] === true;
+  const affectedPackages = new Set();
+  const active = entries.filter(([pointer, sha256]) => {
+    if (typeof sha256 !== 'string' || !SHA256_PATTERN.test(sha256)) {
+      throw new TypeError(`API change declaration delta digest is invalid at ${pointer}`);
+    }
+    const delta = deltas.get(pointer);
+    if (accepted && !delta) return false;
+    if (!delta?.packageName) {
+      throw new Error(`API change declaration delta is stale at ${pointer}`);
+    }
+    affectedPackages.add(delta.packageName);
+    return true;
+  });
+  if (
+    !accepted &&
+    !isDeepStrictEqual(
+      packages,
+      [...affectedPackages].sort((a, b) => a.localeCompare(b)),
+    )
+  ) {
+    throw new Error('API change declaration packages must exactly match its deltas');
+  }
+  return { entries: active, release: record.release };
+}
+
+function highestRelease(left, right) {
+  return RELEASE_RANK[right] > RELEASE_RANK[left] ? right : left;
+}
+
+function declarationCoverage(declarations, baseline, deltas) {
+  const coverage = new Map();
+  const stale = new Set();
+  for (const declaration of declarations) {
+    const { entries, release } = validateAdditiveDeclaration(declaration, baseline, deltas);
+    for (const [pointer, sha256] of entries) {
+      if (deltas.get(pointer).sha256 === sha256) {
+        coverage.set(pointer, highestRelease(coverage.get(pointer) ?? 'patch', release));
+      } else {
+        stale.add(pointer);
+      }
+    }
+  }
+  return { coverage, stale };
+}
+
 function deprecationIsAtLeastOneMinorOld(deprecatedSince, baselineVersion) {
   const deprecated = parseSemver(deprecatedSince, 'removed API deprecatedSince');
   const baseline = parseSemver(baselineVersion, 'removed API baseline version');
@@ -848,23 +1041,113 @@ export function classifyPublicApiChange({ baseline, candidate }) {
   return classifySnapshots(validBaseline, validCandidate);
 }
 
-/** Bind a declaration to both snapshots and decide whether the candidate may proceed. */
-export function evaluatePublicApiChange({ baseline, candidate, declaration }) {
+/** Draft a declaration for the candidate deltas not already covered by the ledger. */
+export function createPublicApiDeclaration({
+  baseline,
+  candidate,
+  declarations = [],
+  release,
+  reason,
+  legacy,
+}) {
+  const validBaseline = validateSnapshot(baseline, 'baseline');
+  const validCandidate = validateSnapshot(candidate, 'candidate');
+  const classification = classifySnapshots(validBaseline, validCandidate, { bind: true });
+  const { deltas } = classification;
+  const { coverage } = declarationCoverage(declarations, validBaseline, deltas);
+  const uncovered = [...deltas].filter(([path]) => !coverage.has(path));
+  if (uncovered.length === 0) throw new Error('No undeclared public API deltas');
+
+  if (legacy) {
+    const { candidate: oldCandidate, declaration } = legacy;
+    const old =
+      oldCandidate === candidate
+        ? validCandidate
+        : validateSnapshot(oldCandidate, 'legacy candidate');
+    const previous =
+      old === validCandidate
+        ? classification
+        : classifySnapshots(validBaseline, old, { bind: true });
+    validateBoundDeclaration(declaration, validBaseline, old, previous);
+    if (RELEASE_RANK[declaration.release] < RELEASE_RANK[previous.release]) {
+      throw new Error('Legacy API change declaration release is lower than its actual release');
+    }
+    const different = uncovered.find(
+      ([path, { sha256 }]) => previous.deltas.get(path)?.sha256 !== sha256,
+    );
+    if (different) {
+      throw new Error(`Legacy declaration does not match the uncovered delta at ${different[0]}`);
+    }
+    ({ release, reason } = declaration);
+  }
+
+  const packages = [...new Set(uncovered.map(([, delta]) => delta.packageName))].sort((a, b) =>
+    a.localeCompare(b),
+  );
+  const result = {
+    baselineSha256: validBaseline.surfaceSha256,
+    baselineVersions: Object.fromEntries(
+      packages.map((name) => [name, validBaseline.surface.packages[name]?.version ?? null]),
+    ),
+    deltas: Object.fromEntries(uncovered.map(([path, delta]) => [path, delta.sha256])),
+    packages,
+    reason,
+    release,
+    schemaVersion: DECLARATION_SCHEMA_VERSION,
+  };
+  validateAdditiveDeclaration(result, validBaseline, deltas);
+  return result;
+}
+
+/** Rehydrate a grandfathered declaration from the exact previously accepted snapshot. */
+export function createAcceptedPublicApiDeclaration({ baseline, candidate, declaration }) {
+  return {
+    ...createPublicApiDeclaration({ baseline, candidate, legacy: { candidate, declaration } }),
+    [ACCEPTED_DECLARATION]: true,
+  };
+}
+
+/** Decide whether every public API delta has a matching declaration and release class. */
+export function evaluatePublicApiChange({ baseline, candidate, declaration, declarations }) {
+  if (declaration !== undefined && declarations !== undefined) {
+    throw new TypeError('Pass either a fixture declaration or active declarations');
+  }
   const validCandidate = validateSnapshot(candidate, 'candidate');
   if (baseline === null) {
-    validateFirstReleaseDeclaration(declaration, validCandidate);
+    const firstRelease = declarations ?? (declaration ? [declaration] : []);
+    if (firstRelease.length > 1)
+      throw new Error('A first release requires exactly one declaration');
+    validateFirstReleaseDeclaration(firstRelease[0], validCandidate);
     return { release: 'minor', decision: 'passed', reasons: [], changes: [] };
   }
 
   const validBaseline = validateSnapshot(baseline, 'baseline');
-  const classification = classifySnapshots(validBaseline, validCandidate);
+  const { deltas, ...classification } = classifySnapshots(validBaseline, validCandidate, {
+    bind: declarations !== undefined,
+  });
   const validDeclaration = declaration
     ? validateBoundDeclaration(declaration, validBaseline, validCandidate, classification)
     : null;
   const reasons = [];
-
-  if (!validDeclaration && classification.release === 'major') {
+  let release = classification.release;
+  if (declarations !== undefined) {
+    const { coverage, stale } = declarationCoverage(declarations, validBaseline, deltas);
+    for (const [pointer, delta] of deltas) {
+      const declared = coverage.get(pointer);
+      if (!declared) {
+        reasons.push(
+          `${stale.has(pointer) ? 'Stale declaration for' : 'Undeclared'} public API delta: ${pointer}`,
+        );
+      } else if (RELEASE_RANK[declared] < RELEASE_RANK[delta.release]) {
+        reasons.push(`Declared ${declared} is lower than actual ${delta.release} at ${pointer}`);
+      } else {
+        release = highestRelease(release, declared);
+      }
+    }
+  } else if (!validDeclaration && classification.release === 'major') {
     reasons.push('A breaking public API change requires a digest-bound MAJOR declaration');
+  } else if (!validDeclaration && classification.changes.length > 0) {
+    reasons.push('Public API changes require a digest-bound declaration');
   } else if (
     validDeclaration &&
     RELEASE_RANK[validDeclaration.release] < RELEASE_RANK[classification.release]
@@ -876,7 +1159,7 @@ export function evaluatePublicApiChange({ baseline, candidate, declaration }) {
   for (const path of classification.newRootSymbols) {
     reasons.push(`${path} is a new symbol in the frozen legacy root barrel`);
   }
-  if (validDeclaration?.release === 'major') {
+  if (declarations !== undefined || validDeclaration?.release === 'major') {
     for (const removal of classification.removals) {
       const reason = removalReason(removal, validBaseline);
       if (reason) reasons.push(reason);
@@ -890,6 +1173,7 @@ export function evaluatePublicApiChange({ baseline, candidate, declaration }) {
 
   return {
     ...classification,
+    release,
     decision: reasons.length === 0 ? 'passed' : 'blocked',
     reasons,
   };

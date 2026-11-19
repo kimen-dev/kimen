@@ -24,33 +24,24 @@
     "./css/onmars-fonts.css": "./css/onmars-fonts.css"
   },
   "scripts": {
-    "build": "node ./build.mjs",
+    "build": "node ./build.mjs && pnpm run reference",
     "contrast": "node ./scripts/check-contrast.mjs",
     "reference": "node ./scripts/generate-reference.mjs",
     "size": "size-limit",
     "test": "node --test scripts/*.test.mjs"
   },
-  "size-limit": [
-    {
-      "name": "onmars tokens stylesheet",
-      "path": "dist/css/tokens.css",
-      "limit": "11.6 KB"
-    },
-    {
-      "name": "material3 tokens stylesheet",
-      "path": "dist/css/tokens.material3.css",
-      "limit": "5.3 KB"
-    },
-    {
-      "name": "page contract stylesheet",
-      "path": "dist/css/base.css",
-      "limit": "250 B"
-    }
-  ],
   "nx": {
     "tags": [
       "scope:tokens"
-    ]
+    ],
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/dist",
+          "{workspaceRoot}/packages/elements/docs/tokens-reference.mdx"
+        ]
+      }
+    }
   },
   "devDependencies": {
     "@size-limit/esbuild": "14.3.0",

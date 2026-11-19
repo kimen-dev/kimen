@@ -457,7 +457,7 @@ A typical placement — trailing status on a list entry:
 ```
 
 Attributes:
-- `size` ("md" | "sm", default 'md'): Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+- `size` ("md" | "sm" | "xs", default 'md'): Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in onmars, with 12px text at every size. An unrecognized value falls back to the `md` metrics the same way.
 - `tone` ("danger" | "info" | "neutral" | "success" | "warning", default 'neutral'): Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
 
 Slots:
@@ -501,6 +501,11 @@ CSS custom properties:
 - `--ki-badge-warning-bg`: color used by the badge component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-warning-border`: color used by the badge component for warning border.
 - `--ki-badge-warning-fg`: color used by the badge component for warning foreground.
+- `--ki-badge-xs-font-size`: dimension used by the badge component for xs font size (Tag 10106:4651 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-badge-xs-height`: dimension used by the badge component for xs height (Tag 10106:4651 xs: 20px).
+- `--ki-badge-xs-line-height`: dimension used by the badge component for xs line height (caption_2 16px, the same height as caption_1).
+- `--ki-badge-xs-padding-inline`: dimension used by the badge component for xs padding inline (Tag 10106:4651 xs: Space/xs plus the Text_wrap Space/xxs, 6px).
+- `--ki-badge-xs-radius`: dimension used by the badge component for xs radius (Tag 10106:4651 xs binds Radius/small-component/xs).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
@@ -927,6 +932,7 @@ Attributes:
 - `label-hint` (string | undefined): Short text shown after the slotted label and read with it as part of the checkbox name, so people know before submitting whether they must check it: "(required)" on a consent the form cannot do without, "(optional)" on one it can, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what checking it commits to in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
 - `required` (boolean, default false): Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+- `size` ("lg" | "md" | "sm", default 'md'): Token-backed size: the box is 18, 20 or 24px in onmars. `sm` also takes the smaller label (13/20, 8px away); `md` and `lg` keep the 15px label. The pointer target never drops under 24px. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string | undefined): Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
 
 Slots:
@@ -984,8 +990,15 @@ CSS custom properties:
 - `--ki-checkbox-label-hint-fg`: color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
 - `--ki-checkbox-label-hint-gap`: dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-checkbox-label-line-height`: dimension used by the checkbox component for label line height (MarsUI body_2 24px).
+- `--ki-checkbox-lg-control-size`: dimension used by the checkbox component for the lg box (Checkbox 10030:982 lg: 24px in a 28px cell).
+- `--ki-checkbox-lg-min-target`: dimension used by the checkbox component for the lg min target (Checkbox 10030:982 lg cell: 28px).
 - `--ki-checkbox-min-target`: dimension used by the checkbox component for min target.
 - `--ki-checkbox-radius`: dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap).
+- `--ki-checkbox-sm-control-size`: dimension used by the checkbox component for the sm box (Checkbox 10030:982 sm: 18px in a 20px cell).
+- `--ki-checkbox-sm-gap`: dimension used by the checkbox component for the sm gap between control and label (Checkbox-label 10095:3846 sm binds Space/md, 8px; spec 050 D4).
+- `--ki-checkbox-sm-label-font-size`: dimension used by the checkbox component for the sm label font size (Checkbox-label 10095:3846 sm: UI/para 13/20; spec 050 D4).
+- `--ki-checkbox-sm-label-line-height`: dimension used by the checkbox component for the sm label line height (Checkbox-label 10095:3846 sm: UI/para 13/20).
+- `--ki-checkbox-sm-min-target`: dimension used by the checkbox component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell.
 - `--ki-checkbox-unchecked-active-bg`: color used by the checkbox component for unchecked active background.
 - `--ki-checkbox-unchecked-active-border`: color used by the checkbox component for unchecked active border.
 - `--ki-checkbox-unchecked-active-fg`: color used by the checkbox component for unchecked active foreground.
@@ -1541,6 +1554,7 @@ Attributes:
 - `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
 - `readonly` (boolean, default false): Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
 - `required` (boolean, default false): Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `type` ("email" | "password" | "search" | "tel" | "text" | "url", default 'text'): Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
 - `value` (string, default ''): Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
 
@@ -1605,6 +1619,15 @@ CSS custom properties:
 - `--ki-input-label-hint-gap`: dimension used by the input component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-input-label-line-height`: dimension used by the input component for label line height (MarsUI line_height/para 20px).
 - `--ki-input-label-padding-inline`: dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius).
+- `--ki-input-lg-font-size`: dimension used by the input component for lg font size: body-2 (Input-cell 8016:286 lg).
+- `--ki-input-lg-height`: dimension used by the input component for lg height (Input-cell 8016:286 lg: 48px; consumed as min-block-size, spec 050).
+- `--ki-input-lg-icon-size`: dimension used by the input component for the lg icon box (Input-cell 8016:286 lg icon 20px).
+- `--ki-input-lg-label-font-size`: dimension used by the input component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-input-lg-label-line-height`: dimension used by the input component for the lg label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-input-lg-line-height`: dimension used by the input component for lg line height (body-2, Input-cell 8016:286 lg).
+- `--ki-input-lg-padding-inline`: dimension used by the input component for lg padding inline (Input-cell 8016:286 lg binds Space/xl, 12px).
+- `--ki-input-lg-radius`: dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg).
+- `--ki-input-lg-text-padding-inline`: dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token).
 - `--ki-input-line-height`: dimension used by the input component for line height.
 - `--ki-input-padding-inline`: dimension used by the input component for padding inline.
 - `--ki-input-radius`: dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it).
@@ -1618,13 +1641,42 @@ CSS custom properties:
 - `--ki-input-rest-fg`: color used by the input component for rest foreground.
 - `--ki-input-rest-label-fg`: color used by the input component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
 - `--ki-input-rest-placeholder-fg`: color used by the input component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
+- `--ki-input-sm-font-size`: dimension used by the input component for sm font size: caption-2 (Input-cell 8016:286 sm).
+- `--ki-input-sm-height`: dimension used by the input component for sm height (Input-cell 8016:286 sm: 32px; consumed as min-block-size, spec 050).
+- `--ki-input-sm-icon-size`: dimension used by the input component for the sm icon box (Input-cell 8016:286 sm icon 16px).
+- `--ki-input-sm-label-font-size`: dimension used by the input component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-input-sm-label-line-height`: dimension used by the input component for the sm label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-input-sm-line-height`: dimension used by the input component for sm line height (caption-2, Input-cell 8016:286 sm).
+- `--ki-input-sm-padding-inline`: dimension used by the input component for sm padding inline (Input-cell 8016:286 sm binds Space/md, 8px).
+- `--ki-input-sm-radius`: dimension used by the input component for sm radius (Input-cell 8016:286 sm binds Radius/small-component/sm).
+- `--ki-input-sm-text-padding-inline`: dimension used by the input component for the sm inline padding of the native control (Input-cell 8016:286 sm Text_wrap binds Space/xs, 4px; medium uses the gap token).
+- `--ki-input-xl-font-size`: dimension used by the input component for xl font size: title-2 (Input-cell 8016:286 xl).
+- `--ki-input-xl-height`: dimension used by the input component for xl height (Input-cell 8016:286 xl: 56px; consumed as min-block-size, spec 050).
+- `--ki-input-xl-icon-size`: dimension used by the input component for the xl icon box (Input-cell 8016:286 xl icon 24px).
+- `--ki-input-xl-label-font-size`: dimension used by the input component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-input-xl-label-line-height`: dimension used by the input component for the xl label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-input-xl-line-height`: dimension used by the input component for xl line height (title-2, Input-cell 8016:286 xl).
+- `--ki-input-xl-padding-inline`: dimension used by the input component for xl padding inline (Input-cell 8016:286 xl binds Space/2xl, 14px).
+- `--ki-input-xl-radius`: dimension used by the input component for xl radius (Input-cell 8016:286 xl binds Radius/small-component/xl).
+- `--ki-input-xl-text-padding-inline`: dimension used by the input component for the xl inline padding of the native control (Input-cell 8016:286 xl Text_wrap binds Space/sm, 6px; medium uses the gap token).
+- `--ki-input-xs-font-size`: dimension used by the input component for xs font size: caption-2 (Input-cell 8016:286 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-input-xs-height`: dimension used by the input component for xs height (Input-cell 8016:286 xs: 24px; consumed as min-block-size, spec 050).
+- `--ki-input-xs-icon-size`: dimension used by the input component for the xs icon box (Input-cell 8016:286 xs icon 14px).
+- `--ki-input-xs-label-font-size`: dimension used by the input component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-input-xs-label-line-height`: dimension used by the input component for the xs label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-input-xs-line-height`: dimension used by the input component for xs line height (caption-2, Input-cell 8016:286 xs).
+- `--ki-input-xs-padding-inline`: dimension used by the input component for xs padding inline (Input-cell 8016:286 xs binds Space/sm, 6px).
+- `--ki-input-xs-radius`: dimension used by the input component for xs radius (Input-cell 8016:286 xs binds Radius/small-component/xs).
+- `--ki-input-xs-text-padding-inline`: dimension used by the input component for the xs inline padding of the native control (Input-cell 8016:286 xs Text_wrap binds Space/xxs, 2px; medium uses the gap token).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
@@ -1751,7 +1803,8 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 </ki-list>
 ```
 
-Attributes: none
+Attributes:
+- `size` ("lg" | "md" | "sm" | "xl", default 'md'): Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 
 Slots:
 - (default): Primary text line.
@@ -1776,6 +1829,15 @@ CSS custom properties:
 - `--ki-inverse-white-alpha-3`: semantic color for inverse white alpha 3.
 - `--ki-inverse-white-alpha-6`: semantic color for inverse white alpha 6.
 - `--ki-list-item-gap`: dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).
+- `--ki-list-item-lg-gap`: dimension used by the list component for lg item gap (List 10063:2066 lg binds Space/xl, 12px).
+- `--ki-list-item-lg-min-height`: dimension used by the list component for the lg one-line item min height (two List 10063:2066 lg block paddings plus the primary line: 48px).
+- `--ki-list-item-lg-min-height-multiline`: dimension used by the list component for the lg two-line item min height (List 10063:2066 lg measures 64px).
+- `--ki-list-item-lg-padding-block`: dimension used by the list component for lg item padding block (List 10063:2066 lg binds Space/xl, 12px).
+- `--ki-list-item-lg-padding-inline`: dimension used by the list component for lg item padding inline (List 10063:2066 lg binds Space/md, 8px).
+- `--ki-list-item-lg-primary-font-size`: dimension used by the list component for lg primary font size (List 10063:2066 lg primary: UI/body-2).
+- `--ki-list-item-lg-primary-line-height`: dimension used by the list component for lg primary line height (List 10063:2066 lg).
+- `--ki-list-item-lg-secondary-font-size`: dimension used by the list component for lg secondary font size (List 10063:2066 lg description: UI/caption-2).
+- `--ki-list-item-lg-secondary-line-height`: dimension used by the list component for lg secondary line height (List 10063:2066 lg).
 - `--ki-list-item-min-height`: dimension used by the list component for item min height (MarsUI md text-only row is ~40px content-sized: 20px line + 2x10 padding).
 - `--ki-list-item-min-height-multiline`: dimension used by the list component for multiline item min height (MarsUI md two-line row measures 56px).
 - `--ki-list-item-padding-block`: dimension used by the list component for item padding block (MarsUI md rows: Space/lg 10px).
@@ -1789,6 +1851,24 @@ CSS custom properties:
 - `--ki-list-item-secondary-font-size`: dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px).
 - `--ki-list-item-secondary-font-weight`: font weight used by the list component for item secondary font weight.
 - `--ki-list-item-secondary-line-height`: dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance).
+- `--ki-list-item-sm-gap`: dimension used by the list component for sm item gap (List 10063:2066 sm binds Space/lg, 10px).
+- `--ki-list-item-sm-min-height`: dimension used by the list component for the sm one-line item min height (two List 10063:2066 sm block paddings plus the primary line: 32px).
+- `--ki-list-item-sm-min-height-multiline`: dimension used by the list component for the sm two-line item min height (List 10063:2066 sm measures 48px).
+- `--ki-list-item-sm-padding-block`: dimension used by the list component for sm item padding block (List 10063:2066 sm binds Space/sm, 6px).
+- `--ki-list-item-sm-padding-inline`: dimension used by the list component for sm item padding inline (List 10063:2066 sm binds Space/md, 8px).
+- `--ki-list-item-sm-primary-font-size`: dimension used by the list component for sm primary font size (List 10063:2066 sm primary: UI/para).
+- `--ki-list-item-sm-primary-line-height`: dimension used by the list component for sm primary line height (List 10063:2066 sm).
+- `--ki-list-item-sm-secondary-font-size`: dimension used by the list component for sm secondary font size (List 10063:2066 sm description: UI/caption-2).
+- `--ki-list-item-sm-secondary-line-height`: dimension used by the list component for sm secondary line height (List 10063:2066 sm).
+- `--ki-list-item-xl-gap`: dimension used by the list component for xl item gap (List 10063:2066 xl binds Space/3xl, 16px).
+- `--ki-list-item-xl-min-height`: dimension used by the list component for the xl one-line item min height (two List 10063:2066 xl block paddings plus the primary line: 52px).
+- `--ki-list-item-xl-min-height-multiline`: dimension used by the list component for the xl two-line item min height (List 10063:2066 xl measures 72px).
+- `--ki-list-item-xl-padding-block`: dimension used by the list component for xl item padding block (List 10063:2066 xl binds Space/2xl, 14px).
+- `--ki-list-item-xl-padding-inline`: dimension used by the list component for xl item padding inline (List 10063:2066 xl binds Space/xl, 12px).
+- `--ki-list-item-xl-primary-font-size`: dimension used by the list component for xl primary font size (List 10063:2066 xl primary: UI/title-2).
+- `--ki-list-item-xl-primary-line-height`: dimension used by the list component for xl primary line height (List 10063:2066 xl).
+- `--ki-list-item-xl-secondary-font-size`: dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para).
+- `--ki-list-item-xl-secondary-line-height`: dimension used by the list component for xl secondary line height (List 10063:2066 xl).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
@@ -2148,6 +2228,7 @@ Attributes:
 - `label-hint` (string | undefined): Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
 - `required` (boolean, default false): Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+- `size` ("md" | "sm", default 'md'): Token-backed size of every `ki-radio` the group holds: the circle is 18 or 20px in onmars, and `sm` takes the smaller option label (13/20, 8px away). The group decides for all its options; the group's own label, help and error keep their size. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around the group. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
 
 Slots:
@@ -2171,6 +2252,12 @@ CSS custom properties:
 - `--ki-radio-group-label-hint-fg`: color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
 - `--ki-radio-group-label-hint-gap`: dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).
+- `--ki-radio-sm-control-size`: dimension used by the radio component for the sm circle (Radio 10053:1943 sm: 18px in a 20px cell).
+- `--ki-radio-sm-dot-size`: dimension used by the radio component for the sm dot (Radio 10053:1943 sm: 8px, as at md).
+- `--ki-radio-sm-gap`: dimension used by the radio component for the sm gap between control and label (Radio-label 10100:3931 sm binds Space/md, 8px; spec 050 D4).
+- `--ki-radio-sm-label-font-size`: dimension used by the radio component for the sm label font size (Radio-label 10100:3931 sm: UI/para 13/20; spec 050 D4).
+- `--ki-radio-sm-label-line-height`: dimension used by the radio component for the sm label line height (Radio-label 10100:3931 sm: UI/para 13/20).
+- `--ki-radio-sm-min-target`: dimension used by the radio component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-med-em`: semantic color for text med em.
@@ -2306,6 +2393,7 @@ Attributes:
 - `name` (string | undefined): Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
 - `placeholder` (string, default ''): Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
 - `required` (boolean, default false): Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and indicator; the label and help text follow in three steps. The listbox and its options keep their size. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
 
 Slots:
@@ -2387,6 +2475,14 @@ CSS custom properties:
 - `--ki-select-label-hint-gap`: dimension used by the select component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-select-label-line-height`: dimension used by the select component for label line height (MarsUI line_height/para 20px).
 - `--ki-select-label-padding-inline`: dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea).
+- `--ki-select-lg-font-size`: dimension used by the select component for lg font size: body-2 (Input-cell 8016:286 lg, composed by Dropdown 12041:1595).
+- `--ki-select-lg-height`: dimension used by the select component for lg height (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: 48px).
+- `--ki-select-lg-indicator-size`: dimension used by the select component for the lg indicator box (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: icon 20px).
+- `--ki-select-lg-label-font-size`: dimension used by the select component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-select-lg-label-line-height`: dimension used by the select component for the lg label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-select-lg-line-height`: dimension used by the select component for lg line height (body-2, Input-cell 8016:286 lg, composed by Dropdown 12041:1595).
+- `--ki-select-lg-padding-inline`: dimension used by the select component for lg padding inline (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Space/xl, 12px).
+- `--ki-select-lg-radius`: dimension used by the select component for lg radius (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Radius/small-component/lg).
 - `--ki-select-line-height`: dimension used by the select component for the trigger value line height (MarsUI body_1 24px).
 - `--ki-select-listbox-backdrop-filter`: Complete backdrop filter behind the select listbox.
 - `--ki-select-listbox-bg`: color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter).
@@ -2404,12 +2500,38 @@ CSS custom properties:
 - `--ki-select-rest-border`: color used by the select component for rest border.
 - `--ki-select-rest-fg`: color used by the select component for rest foreground.
 - `--ki-select-rest-label-fg`: color used by the select component for rest label foreground.
+- `--ki-select-sm-font-size`: dimension used by the select component for sm font size: caption-2 (Input-cell 8016:286 sm, composed by Dropdown 12041:1595).
+- `--ki-select-sm-height`: dimension used by the select component for sm height (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: 32px).
+- `--ki-select-sm-indicator-size`: dimension used by the select component for the sm indicator box (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: icon 16px).
+- `--ki-select-sm-label-font-size`: dimension used by the select component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-select-sm-label-line-height`: dimension used by the select component for the sm label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-select-sm-line-height`: dimension used by the select component for sm line height (caption-2, Input-cell 8016:286 sm, composed by Dropdown 12041:1595).
+- `--ki-select-sm-padding-inline`: dimension used by the select component for sm padding inline (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Space/md, 8px).
+- `--ki-select-sm-radius`: dimension used by the select component for sm radius (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Radius/small-component/sm).
+- `--ki-select-xl-font-size`: dimension used by the select component for xl font size: title-2 (Input-cell 8016:286 xl, composed by Dropdown 12041:1595).
+- `--ki-select-xl-height`: dimension used by the select component for xl height (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: 56px).
+- `--ki-select-xl-indicator-size`: dimension used by the select component for the xl indicator box (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: icon 24px).
+- `--ki-select-xl-label-font-size`: dimension used by the select component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-select-xl-label-line-height`: dimension used by the select component for the xl label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-select-xl-line-height`: dimension used by the select component for xl line height (title-2, Input-cell 8016:286 xl, composed by Dropdown 12041:1595).
+- `--ki-select-xl-padding-inline`: dimension used by the select component for xl padding inline (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Space/2xl, 14px).
+- `--ki-select-xl-radius`: dimension used by the select component for xl radius (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Radius/small-component/xl).
+- `--ki-select-xs-font-size`: dimension used by the select component for xs font size: caption-2 (Input-cell 8016:286 xs, composed by Dropdown 12041:1595). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-select-xs-height`: dimension used by the select component for xs height (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: 24px).
+- `--ki-select-xs-indicator-size`: dimension used by the select component for the xs indicator box (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: icon 14px).
+- `--ki-select-xs-label-font-size`: dimension used by the select component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-select-xs-label-line-height`: dimension used by the select component for the xs label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-select-xs-line-height`: dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595).
+- `--ki-select-xs-padding-inline`: dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px).
+- `--ki-select-xs-radius`: dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs).
 - `--ki-surface-hover-overlay-inverse`: semantic color for surface hover overlay inverse.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-line-height-para`: semantic dimension for typography line height para.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
@@ -2527,6 +2649,7 @@ Attributes:
 - `disabled` (boolean, default false): Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
 - `help-text` (string | undefined): One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `setCustomValidity` shows in this line's place.
 - `name` (string | undefined): Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
+- `size` ("lg" | "md" | "sm" | "xl", default 'md'): Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in onmars (`xl` is the design's mobile size), with its thumb. `sm` also takes the smaller label (13/20, 8px away). An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string | undefined): Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
 
 Slots:
@@ -2576,7 +2699,32 @@ CSS custom properties:
 - `--ki-switch-glyph-height`: dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height).
 - `--ki-switch-glyph-unchecked`: Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb.
 - `--ki-switch-glyph-width`: dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb).
+- `--ki-switch-lg-control-height`: dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px).
+- `--ki-switch-lg-control-width`: dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px).
+- `--ki-switch-lg-min-target`: dimension used by the switch component for lg min target (Toggle 10023:1125 lg cell height: 32px).
+- `--ki-switch-lg-thumb-inset`: dimension used by the switch component for lg thumb inset (Toggle 10023:1125 lg binds Space/xxs, 2px).
+- `--ki-switch-lg-thumb-radius`: dimension used by the switch component for lg thumb radius (Toggle 10023:1125 lg pointer binds Radius/small-component/xs).
+- `--ki-switch-lg-thumb-size`: dimension used by the switch component for lg thumb height (Toggle 10023:1125 lg pointer: 20px).
+- `--ki-switch-lg-thumb-width`: dimension used by the switch component for lg thumb width (Toggle 10023:1125 lg pointer: 26px).
+- `--ki-switch-lg-track-height`: dimension used by the switch component for lg track height (Toggle 10023:1125 lg: 26px).
+- `--ki-switch-lg-track-radius`: dimension used by the switch component for lg track radius (Toggle 10023:1125 lg binds Radius/small-component/sm).
+- `--ki-switch-lg-track-width`: dimension used by the switch component for lg track width (Toggle 10023:1125 lg: 48px).
+- `--ki-switch-lg-well-radius`: dimension used by the switch component for lg well radius (Toggle 10023:1125 lg Base binds Radius/small-component/md).
 - `--ki-switch-min-target`: dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint).
+- `--ki-switch-sm-control-height`: dimension used by the switch component for sm control height (Toggle 10023:1125 sm cell: 28px).
+- `--ki-switch-sm-control-width`: dimension used by the switch component for sm control width (Toggle 10023:1125 sm cell: 40px).
+- `--ki-switch-sm-gap`: dimension used by the switch component for the sm gap between control and label (Toggle_label 10101:3995 sm binds Space/md, 8px; spec 050 D4).
+- `--ki-switch-sm-label-font-size`: dimension used by the switch component for the sm label font size (Toggle_label 10101:3995 sm: UI/para 13/20; spec 050 D4).
+- `--ki-switch-sm-label-line-height`: dimension used by the switch component for the sm label line height (Toggle_label 10101:3995 sm: UI/para 13/20).
+- `--ki-switch-sm-min-target`: dimension used by the switch component for sm min target (Toggle 10023:1125 sm cell height: 28px).
+- `--ki-switch-sm-thumb-inset`: dimension used by the switch component for sm thumb inset (Toggle 10023:1125 sm binds Space/xxs, 2px).
+- `--ki-switch-sm-thumb-radius`: dimension used by the switch component for sm thumb radius (Toggle 10023:1125 sm pointer binds Radius/small-component/xxs).
+- `--ki-switch-sm-thumb-size`: dimension used by the switch component for sm thumb height (Toggle 10023:1125 sm pointer: 14px).
+- `--ki-switch-sm-thumb-width`: dimension used by the switch component for sm thumb width (Toggle 10023:1125 sm pointer: 18px).
+- `--ki-switch-sm-track-height`: dimension used by the switch component for sm track height (Toggle 10023:1125 sm: 18px).
+- `--ki-switch-sm-track-radius`: dimension used by the switch component for sm track radius (Toggle 10023:1125 sm binds Radius/small-component/xs).
+- `--ki-switch-sm-track-width`: dimension used by the switch component for sm track width (Toggle 10023:1125 sm: 32px).
+- `--ki-switch-sm-well-radius`: dimension used by the switch component for sm well radius (Toggle 10023:1125 sm Base binds Radius/small-component/md).
 - `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset.
 - `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs).
 - `--ki-switch-thumb-size`: dimension used by the switch component for thumb size.
@@ -2599,6 +2747,17 @@ CSS custom properties:
 - `--ki-switch-well-bg-end`: color used by the switch component for the bottom of the well gradient (Toggle md Base).
 - `--ki-switch-well-bg-start`: color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well.
 - `--ki-switch-well-radius`: dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md).
+- `--ki-switch-xl-control-height`: dimension used by the switch component for xl control height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 40px).
+- `--ki-switch-xl-control-width`: dimension used by the switch component for xl control width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 64px).
+- `--ki-switch-xl-min-target`: dimension used by the switch component for xl min target (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell height: 40px).
+- `--ki-switch-xl-thumb-inset`: dimension used by the switch component for xl thumb inset (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Space/xs, 4px).
+- `--ki-switch-xl-thumb-radius`: dimension used by the switch component for xl thumb radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer binds Radius/small-component/xs).
+- `--ki-switch-xl-thumb-size`: dimension used by the switch component for xl thumb height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 24px).
+- `--ki-switch-xl-thumb-width`: dimension used by the switch component for xl thumb width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 32px).
+- `--ki-switch-xl-track-height`: dimension used by the switch component for xl track height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 32px).
+- `--ki-switch-xl-track-radius`: dimension used by the switch component for xl track radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Radius/small-component/md).
+- `--ki-switch-xl-track-width`: dimension used by the switch component for xl track width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 56px).
+- `--ki-switch-xl-well-radius`: dimension used by the switch component for xl well radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) Base binds Radius/small-component/lg).
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
@@ -2823,6 +2982,7 @@ A disabled tab stays visible but cannot be selected by any modality; user select
 
 Attributes:
 - `label` (string | undefined): Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed strip size: every `ki-tab` it holds is 24, 32, 40, 48 or 56px tall in onmars, with its text, and the gap between tabs follows. The strip decides for all its tabs; a tab has no size of its own. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the controls around the strip. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
 
 Slots:
@@ -2837,9 +2997,25 @@ Events:
 Methods: none
 
 CSS custom properties:
+- `--ki-tab-lg-font-size`: dimension used by the tab component for lg font size (Tab-nav-item 10048:1068 lg: UI/body-2).
+- `--ki-tab-lg-line-height`: dimension used by the tab component for lg line height (Tab-nav-item 10048:1068 lg: UI/body-2).
+- `--ki-tab-lg-min-block-size`: dimension used by the tab component for lg min block size (Tab-nav-item 10048:1068 lg: 48px).
+- `--ki-tab-sm-font-size`: dimension used by the tab component for sm font size (Tab-nav-item 10048:1068 sm: UI/para).
+- `--ki-tab-sm-line-height`: dimension used by the tab component for sm line height (Tab-nav-item 10048:1068 sm: UI/para).
+- `--ki-tab-sm-min-block-size`: dimension used by the tab component for sm min block size (Tab-nav-item 10048:1068 sm: 32px).
+- `--ki-tab-xl-font-size`: dimension used by the tab component for xl font size (Tab-nav-item 10048:1068 xl: UI/title-2).
+- `--ki-tab-xl-line-height`: dimension used by the tab component for xl line height (Tab-nav-item 10048:1068 xl: UI/title-2).
+- `--ki-tab-xl-min-block-size`: dimension used by the tab component for xl min block size (Tab-nav-item 10048:1068 xl: 56px).
+- `--ki-tab-xs-font-size`: dimension used by the tab component for xs font size (Tab-nav-item 10048:1068 xs: UI/caption-2). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-tab-xs-line-height`: dimension used by the tab component for xs line height (Tab-nav-item 10048:1068 xs: UI/caption-2).
+- `--ki-tab-xs-min-block-size`: dimension used by the tab component for xs min block size (Tab-nav-item 10048:1068 xs: 24px).
 - `--ki-tabs-divider-color`: color used by the tabs component for divider color.
 - `--ki-tabs-divider-width`: dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override).
 - `--ki-tabs-gap`: dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding).
+- `--ki-tabs-lg-gap`: dimension used by the tabs component for the lg gap between tabs (Tab-nav 10048:1249 lg binds Space/9xl, 28px).
+- `--ki-tabs-sm-gap`: dimension used by the tabs component for the sm gap between tabs (Tab-nav 10048:1249 sm binds Space/7xl, 24px).
+- `--ki-tabs-xl-gap`: dimension used by the tabs component for the xl gap between tabs (Tab-nav 10048:1249 xl binds Space/10xl, 32px).
+- `--ki-tabs-xs-gap`: dimension used by the tabs component for the xs gap between tabs (Tab-nav 10048:1249 xs binds Space/5xl, 20px).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-textarea
@@ -2904,6 +3080,7 @@ Attributes:
 - `readonly` (boolean, default false): Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
 - `required` (boolean, default false): Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
 - `rows` (number, default 2): Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
 
 Slots: none
@@ -2966,6 +3143,13 @@ CSS custom properties:
 - `--ki-textarea-label-hint-gap`: dimension used by the textarea component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-textarea-label-line-height`: dimension used by the textarea component for label line height (MarsUI line_height/para 20px).
 - `--ki-textarea-label-padding-inline`: dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input).
+- `--ki-textarea-lg-font-size`: dimension used by the textarea component for lg font size: body-2 (Input-cell 8016:286 Type=textarea lg).
+- `--ki-textarea-lg-label-font-size`: dimension used by the textarea component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-textarea-lg-label-line-height`: dimension used by the textarea component for the lg label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-textarea-lg-line-height`: dimension used by the textarea component for lg line height (body-2, Input-cell 8016:286 Type=textarea lg).
+- `--ki-textarea-lg-padding-block`: dimension used by the textarea component for lg padding block (Input-cell 8016:286 Type=textarea lg binds Space/lg, 10px).
+- `--ki-textarea-lg-padding-inline`: dimension used by the textarea component for lg padding inline (Input-cell 8016:286 Type=textarea lg binds Space/xl, 12px).
+- `--ki-textarea-lg-radius`: dimension used by the textarea component for lg radius (Input-cell 8016:286 Type=textarea lg binds Radius/small-component/lg).
 - `--ki-textarea-line-height`: dimension used by the textarea component for line height.
 - `--ki-textarea-min-target`: dimension used by the textarea component for min target.
 - `--ki-textarea-padding-block`: dimension used by the textarea component for padding block (Input-cell textarea md 8018:176: Space/md 8px).
@@ -2981,8 +3165,31 @@ CSS custom properties:
 - `--ki-textarea-rest-fg`: color used by the textarea component for rest foreground.
 - `--ki-textarea-rest-label-fg`: color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
 - `--ki-textarea-rest-placeholder-fg`: color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
+- `--ki-textarea-sm-font-size`: dimension used by the textarea component for sm font size: caption-2 (Input-cell 8016:286 Type=textarea sm).
+- `--ki-textarea-sm-label-font-size`: dimension used by the textarea component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-textarea-sm-label-line-height`: dimension used by the textarea component for the sm label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-textarea-sm-line-height`: dimension used by the textarea component for sm line height (caption-2, Input-cell 8016:286 Type=textarea sm).
+- `--ki-textarea-sm-padding-block`: dimension used by the textarea component for sm padding block (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px).
+- `--ki-textarea-sm-padding-inline`: dimension used by the textarea component for sm padding inline (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px).
+- `--ki-textarea-sm-radius`: dimension used by the textarea component for sm radius (Input-cell 8016:286 Type=textarea sm binds Radius/small-component/sm).
+- `--ki-textarea-xl-font-size`: dimension used by the textarea component for xl font size: title-2 (Input-cell 8016:286 Type=textarea xl).
+- `--ki-textarea-xl-label-font-size`: dimension used by the textarea component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-textarea-xl-label-line-height`: dimension used by the textarea component for the xl label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-textarea-xl-line-height`: dimension used by the textarea component for xl line height (title-2, Input-cell 8016:286 Type=textarea xl).
+- `--ki-textarea-xl-padding-block`: dimension used by the textarea component for xl padding block (Input-cell 8016:286 Type=textarea xl binds Space/xl, 12px).
+- `--ki-textarea-xl-padding-inline`: dimension used by the textarea component for xl padding inline (Input-cell 8016:286 Type=textarea xl binds Space/2xl, 14px).
+- `--ki-textarea-xl-radius`: dimension used by the textarea component for xl radius (Input-cell 8016:286 Type=textarea xl binds Radius/small-component/xl).
+- `--ki-textarea-xs-font-size`: dimension used by the textarea component for xs font size: caption-2 (Input-cell 8016:286 Type=textarea xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-textarea-xs-label-font-size`: dimension used by the textarea component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-textarea-xs-label-line-height`: dimension used by the textarea component for the xs label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-textarea-xs-line-height`: dimension used by the textarea component for xs line height (caption-2, Input-cell 8016:286 Type=textarea xs).
+- `--ki-textarea-xs-padding-block`: dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px).
+- `--ki-textarea-xs-padding-inline`: dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px).
+- `--ki-textarea-xs-radius`: dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 

@@ -14,6 +14,30 @@
           "$value": "{ki.outline.low-em}",
           "$description": "color used by the tabs component for divider color."
         }
+      },
+      "xs": {
+        "gap": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the tabs component for the xs gap between tabs (Tab-nav 10048:1249 xs binds Space/5xl, 20px)."
+        }
+      },
+      "sm": {
+        "gap": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the tabs component for the sm gap between tabs (Tab-nav 10048:1249 sm binds Space/7xl, 24px)."
+        }
+      },
+      "lg": {
+        "gap": {
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the tabs component for the lg gap between tabs (Tab-nav 10048:1249 lg binds Space/9xl, 28px)."
+        }
+      },
+      "xl": {
+        "gap": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the tabs component for the xl gap between tabs (Tab-nav 10048:1249 xl binds Space/10xl, 32px)."
+        }
       }
     }
   }

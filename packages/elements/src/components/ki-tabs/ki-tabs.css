@@ -9,6 +9,50 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* Spec 050: the strip's size sets the gap and every tab it holds. A rule from
+ * this shadow tree on a slotted tab outranks the tab's own :host defaults,
+ * so the strip stays uniform; a strip nested in a panel is not slotted here
+ * and keeps its own size. An unknown value matches no rule and keeps medium. */
+:host([size="xs"]) {
+  --_ki-tabs-gap: var(--ki-tabs-xs-gap);
+}
+
+:host([size="xs"]) ::slotted(ki-tab) {
+  --_ki-tab-min-block-size: var(--ki-tab-xs-min-block-size);
+  --_ki-tab-font-size: var(--ki-tab-xs-font-size);
+  --_ki-tab-line-height: var(--ki-tab-xs-line-height);
+}
+
+:host([size="sm"]) {
+  --_ki-tabs-gap: var(--ki-tabs-sm-gap);
+}
+
+:host([size="sm"]) ::slotted(ki-tab) {
+  --_ki-tab-min-block-size: var(--ki-tab-sm-min-block-size);
+  --_ki-tab-font-size: var(--ki-tab-sm-font-size);
+  --_ki-tab-line-height: var(--ki-tab-sm-line-height);
+}
+
+:host([size="lg"]) {
+  --_ki-tabs-gap: var(--ki-tabs-lg-gap);
+}
+
+:host([size="lg"]) ::slotted(ki-tab) {
+  --_ki-tab-min-block-size: var(--ki-tab-lg-min-block-size);
+  --_ki-tab-font-size: var(--ki-tab-lg-font-size);
+  --_ki-tab-line-height: var(--ki-tab-lg-line-height);
+}
+
+:host([size="xl"]) {
+  --_ki-tabs-gap: var(--ki-tabs-xl-gap);
+}
+
+:host([size="xl"]) ::slotted(ki-tab) {
+  --_ki-tab-min-block-size: var(--ki-tab-xl-min-block-size);
+  --_ki-tab-font-size: var(--ki-tab-xl-font-size);
+  --_ki-tab-line-height: var(--ki-tab-xl-line-height);
+}
+
 /* More tabs than fit scroll inside the strip instead of widening the page
  * (WCAG 1.4.10). The strip around the tab slot is the scroll container, not
  * the tablist, so the tablist box and its divider stay exactly where they

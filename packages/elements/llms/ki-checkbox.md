@@ -59,6 +59,7 @@ Boolean attributes use presence semantics — omit `checked` to express unchecke
 - `label-hint` (string | undefined): Short text shown after the slotted label and read with it as part of the checkbox name, so people know before submitting whether they must check it: "(required)" on a consent the form cannot do without, "(optional)" on one it can, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what checking it commits to in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
 - `required` (boolean, default false): Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+- `size` ("lg" | "md" | "sm", default 'md'): Token-backed size: the box is 18, 20 or 24px in onmars. `sm` also takes the smaller label (13/20, 8px away); `md` and `lg` keep the 15px label. The pointer target never drops under 24px. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string | undefined): Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
 
 ## Slots
@@ -122,8 +123,15 @@ None.
 - `--ki-checkbox-label-hint-fg`: color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
 - `--ki-checkbox-label-hint-gap`: dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-checkbox-label-line-height`: dimension used by the checkbox component for label line height (MarsUI body_2 24px).
+- `--ki-checkbox-lg-control-size`: dimension used by the checkbox component for the lg box (Checkbox 10030:982 lg: 24px in a 28px cell).
+- `--ki-checkbox-lg-min-target`: dimension used by the checkbox component for the lg min target (Checkbox 10030:982 lg cell: 28px).
 - `--ki-checkbox-min-target`: dimension used by the checkbox component for min target.
 - `--ki-checkbox-radius`: dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap).
+- `--ki-checkbox-sm-control-size`: dimension used by the checkbox component for the sm box (Checkbox 10030:982 sm: 18px in a 20px cell).
+- `--ki-checkbox-sm-gap`: dimension used by the checkbox component for the sm gap between control and label (Checkbox-label 10095:3846 sm binds Space/md, 8px; spec 050 D4).
+- `--ki-checkbox-sm-label-font-size`: dimension used by the checkbox component for the sm label font size (Checkbox-label 10095:3846 sm: UI/para 13/20; spec 050 D4).
+- `--ki-checkbox-sm-label-line-height`: dimension used by the checkbox component for the sm label line height (Checkbox-label 10095:3846 sm: UI/para 13/20).
+- `--ki-checkbox-sm-min-target`: dimension used by the checkbox component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell.
 - `--ki-checkbox-unchecked-active-bg`: color used by the checkbox component for unchecked active background.
 - `--ki-checkbox-unchecked-active-border`: color used by the checkbox component for unchecked active border.
 - `--ki-checkbox-unchecked-active-fg`: color used by the checkbox component for unchecked active foreground.
