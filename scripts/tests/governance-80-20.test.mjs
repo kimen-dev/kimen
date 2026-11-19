@@ -235,3 +235,25 @@ test('SAST blocks inside the one required result on pinned rules, and explores o
   assert.equal(pinned(security), undefined);
   assert.match(security, /run: bash scripts\/gates\/install-semgrep\.sh /u);
 });
+
+// The gate scans a ruleset pinned in-tree and needs no network, but Semgrep
+// asks semgrep.dev for its latest release on every `--version` and at the end
+// of every scan. The required check blocks that host, and each question hung
+// about 100 seconds before giving up: three of them were a third of a CI run.
+test('the SAST gate never asks semgrep.dev for a version, when installed or when scanning', async () => {
+  const [gate, installer] = await Promise.all([
+    readRepositoryFile('scripts/gates/semgrep-scan.sh'),
+    readRepositoryFile('scripts/gates/install-semgrep.sh'),
+  ]);
+
+  const exported = gate.indexOf('export SEMGREP_ENABLE_VERSION_CHECK=0');
+  assert.notEqual(exported, -1, 'semgrep-scan.sh must disable the version check');
+  assert.ok(
+    exported < gate.indexOf('installed_version()'),
+    'the version check is disabled before the first semgrep invocation',
+  );
+  for (const line of installer.split('\n').filter((entry) => /semgrep" --version/u.test(entry))) {
+    assert.match(line, /SEMGREP_ENABLE_VERSION_CHECK=0 "\$target\/bin\/semgrep" --version/u, line);
+  }
+  assert.match(installer, /SEMGREP_ENABLE_VERSION_CHECK=0 /u);
+});

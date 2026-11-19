@@ -41,7 +41,9 @@ mkdir "$target/bin"
 printf '#!/usr/bin/env bash\nexec %q "$@"\n' "$target/venv/bin/semgrep" >"$target/bin/semgrep"
 chmod +x "$target/bin/semgrep"
 
-installed="$("$target/bin/semgrep" --version 2>/dev/null | head -1 | tr -d '[:space:]')"
+# `--version` asks semgrep.dev for the latest release unless told not to; a
+# runner with blocked egress waits about 100 seconds for that answer.
+installed="$(SEMGREP_ENABLE_VERSION_CHECK=0 "$target/bin/semgrep" --version 2>/dev/null | head -1 | tr -d '[:space:]')"
 [ "$installed" = "$expected" ] ||
   fail "installed semgrep reports '${installed}', expected ${expected}"
 

@@ -13,6 +13,14 @@ cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
 SEMGREP_VERSION='1.168.0'
 
+# No network, at the start or at the end. Every `semgrep --version` and every
+# `semgrep scan` asks semgrep.dev for the latest release unless told not to,
+# and the required check runs with blocked egress: each of those questions
+# hung until it gave up, about 100 seconds apiece, three times per run (the
+# install, the version check below, the end of the scan). The ruleset is
+# pinned in-tree; there is nothing to ask.
+export SEMGREP_ENABLE_VERSION_CHECK=0
+
 # `.specify`, `.agents` and `.claude` are vendored agent tooling, not shipped
 # code. `.semgrep` is the ruleset itself: rule files carry code patterns as
 # data, and other rules match them.
