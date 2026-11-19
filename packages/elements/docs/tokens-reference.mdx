@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 330 semantic
-and 1142 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 338 semantic
+and 1154 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -34,6 +34,7 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
+| `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
 
 ### `ki.density`
 
@@ -323,6 +324,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
+| `--ki-surface-image-none` | `none` | No image overlay on a component surface. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
@@ -395,6 +397,8 @@ every component at once.
 | `--ki-typography-family-heading` | `'Instrument Sans', system-ui, sans-serif` | Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy. |
 | `--ki-typography-family-mono` | `'JetBrains Mono', ui-monospace, monospace` | semantic font family for typography family mono. |
 | `--ki-typography-family-serif` | `'Newsreader', Georgia, serif` | semantic font family for typography family serif. |
+| `--ki-typography-inline-icon-gap` | `0.25em` | Gap between text and a trailing inline glyph. |
+| `--ki-typography-inline-icon-size` | `0.9em` | Edge of a glyph placed inline with text. |
 | `--ki-typography-letter-spacing-lg` | `-0.02em` | semantic dimension for typography letter spacing lg. |
 | `--ki-typography-letter-spacing-md` | `-0.015em` | semantic dimension for typography letter spacing md. |
 | `--ki-typography-letter-spacing-none` | `0em` | semantic dimension for typography letter spacing none. |
@@ -435,6 +439,10 @@ every component at once.
 | `--ki-typography-size-overline` | `0.6875rem` | semantic dimension for typography size overline. |
 | `--ki-typography-size-title-1` | `0.9375rem` | semantic dimension for typography size title 1. |
 | `--ki-typography-size-title-2` | `1.125rem` | semantic dimension for typography size title 2. |
+| `--ki-typography-underline-offset` | `0.2em` | Gap between text and its underline. |
+| `--ki-typography-underline-thickness` | `1px` | Stroke width of a resting text underline. |
+| `--ki-typography-underline-thickness-hover` | `2px` | Stroke width of an emphasized underline on hover. |
+| `--ki-typography-visually-hidden-size` | `1px` | Nonzero edge for clipped text available to assistive technology. |
 | `--ki-typography-weight-body-bold` | `800` | semantic font weight for typography weight body bold. |
 | `--ki-typography-weight-body-medium` | `600` | semantic font weight for typography weight body medium. |
 | `--ki-typography-weight-body-normal` | `500` | semantic font weight for typography weight body normal. |
@@ -1153,6 +1161,23 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-xs-padding-inline` | `0.375rem` | dimension used by the input component for xs padding inline (Input-cell 8016:286 xs binds Space/sm, 6px). |
 | `--ki-input-xs-radius` | `6px` | dimension used by the input component for xs radius (Input-cell 8016:286 xs binds Radius/small-component/xs). |
 | `--ki-input-xs-text-padding-inline` | `0.125rem` | dimension used by the input component for the xs inline padding of the native control (Input-cell 8016:286 xs Text_wrap binds Space/xxs, 2px; medium uses the gap token). |
+
+### `ki-link`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-link-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for primary link text. |
+| `--ki-link-bg-image` | `none` | Optional image overlay for link backing. |
+| `--ki-link-fg` | `#ad411c` | Accent ink for primary links. |
+| `--ki-link-font-family` | `'Instrument Sans', system-ui, sans-serif` | Body typeface used by link text. |
+| `--ki-link-icon-gap` | `0.25em` | Space between the label and the external link icon. |
+| `--ki-link-icon-size` | `0.9em` | External link icon edge relative to the inherited text size. |
+| `--ki-link-neutral-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for neutral link text. |
+| `--ki-link-neutral-fg` | `#181613` | Body ink for neutral links. |
+| `--ki-link-radius` | `2px` | Corner radius used by the link focus outline. |
+| `--ki-link-underline-offset` | `0.2em` | Space between link text and its underline. |
+| `--ki-link-underline-thickness` | `1px` | Resting underline thickness. |
+| `--ki-link-underline-thickness-hover` | `2px` | Underline thickness under a hover-capable pointer. |
 
 ### `ki-list`
 

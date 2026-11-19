@@ -3013,6 +3013,299 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-link/ki-link.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-link",
+      "docs": "A native navigation link with Kimen ink, underline, and focus styles.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "perform an action on the current page. Use ki-button variant=\"ghost\" for that."
+        },
+        {
+          "name": "slot",
+          "text": "- Descriptive link text. Use phrasing content without nested interactive controls."
+        },
+        {
+          "name": "part",
+          "text": "link - The native anchor that renders the link and receives focus."
+        }
+      ],
+      "usage": {
+        "examples": "## Read a related page\n\n```html\n<p>Read the <ki-link href=\"/docs/catalog\">catalog contract</ki-link> before adding a component.</p>\n```\n\n## Open an external resource\n\n```html\n<ki-link href=\"https://github.com/kimen-dev/kimen\" external>Source on GitHub</ki-link>\n```\n\n## Link from standalone navigation\n\n```html\n<nav aria-label=\"Resources\">\n  <ki-link href=\"/docs\" underline=\"hover\">Documentation</ki-link>\n  <ki-link href=\"/changelog\" variant=\"neutral\" underline=\"hover\">Changelog</ki-link>\n</nav>\n```\n\n## Navigate from a guarded surface\n\nSupply `href` and the default text slot. The surface URL policy applies.\nLeave the action binding unset for native navigation.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-link\",\n    \"props\": { \"href\": \"/docs/catalog\" },\n    \"slots\": { \"\": [\"Catalog contract\"] }\n  }\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "download",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "download",
+          "reflectToAttr": false,
+          "docs": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "external",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "external",
+          "reflectToAttr": false,
+          "docs": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "externalLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "external-label",
+          "reflectToAttr": false,
+          "docs": "Localizable text appended to the accessible name in external mode.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'(opens in a new tab)'"
+            }
+          ],
+          "default": "'(opens in a new tab)'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "rel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "rel",
+          "reflectToAttr": false,
+          "docs": "Space-separated native link relationships. External links always include noopener.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "target",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "target",
+          "reflectToAttr": false,
+          "docs": "Native browsing-context name. External links use _blank.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "underline",
+          "type": "\"always\" | \"hover\"",
+          "complexType": {
+            "original": "KiLinkUnderline",
+            "resolved": "\"always\" | \"hover\"",
+            "references": {
+              "KiLinkUnderline": {
+                "location": "local",
+                "path": "src/components/ki-link/ki-link.tsx",
+                "id": "src/components/ki-link/ki-link.tsx::KiLinkUnderline"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "underline",
+          "reflectToAttr": true,
+          "docs": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'always'"
+            }
+          ],
+          "default": "'always'",
+          "values": [
+            {
+              "value": "always",
+              "type": "string"
+            },
+            {
+              "value": "hover",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"neutral\" | \"primary\"",
+          "complexType": {
+            "original": "KiLinkVariant",
+            "resolved": "\"neutral\" | \"primary\"",
+            "references": {
+              "KiLinkVariant": {
+                "location": "local",
+                "path": "src/components/ki-link/ki-link.tsx",
+                "id": "src/components/ki-link/ki-link.tsx::KiLinkVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Ink role. Primary uses accent ink and neutral uses body ink.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'primary'"
+            }
+          ],
+          "default": "'primary'",
+          "values": [
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "primary",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Descriptive link text. Use phrasing content without nested interactive controls."
+        }
+      ],
+      "parts": [
+        {
+          "name": "link",
+          "docs": "The native anchor that renders the link and receives focus."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-list/ki-list.tsx",
       "encapsulation": "shadow",
       "tag": "ki-list",
@@ -6180,6 +6473,16 @@
       "declaration": "export type KiInputSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-input/ki-input.tsx"
+    },
+    "src/components/ki-link/ki-link.tsx::KiLinkVariant": {
+      "declaration": "export type KiLinkVariant = 'primary' | 'neutral';",
+      "docstring": "",
+      "path": "src/components/ki-link/ki-link.tsx"
+    },
+    "src/components/ki-link/ki-link.tsx::KiLinkUnderline": {
+      "declaration": "export type KiLinkUnderline = 'always' | 'hover';",
+      "docstring": "",
+      "path": "src/components/ki-link/ki-link.tsx"
     },
     "src/components/ki-list-item/ki-list-item.tsx::KiListItemSize": {
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",

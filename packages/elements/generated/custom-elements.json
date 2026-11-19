@@ -5262,6 +5262,290 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-link.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiLink",
+          "customElement": true,
+          "tagName": "ki-link",
+          "description": "A native navigation link with Kimen ink, underline, and focus styles.",
+          "whenToUse": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.",
+          "whenNotToUse": "perform an action on the current page. Use ki-button variant=\"ghost\" for that.",
+          "attributes": [
+            {
+              "name": "download",
+              "fieldName": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name."
+            },
+            {
+              "name": "external",
+              "fieldName": "external",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules."
+            },
+            {
+              "name": "external-label",
+              "fieldName": "externalLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'(opens in a new tab)'",
+              "description": "Localizable text appended to the accessible name in external mode."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+              "required": true,
+              "format": "url"
+            },
+            {
+              "name": "rel",
+              "fieldName": "rel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Space-separated native link relationships. External links always include noopener."
+            },
+            {
+              "name": "target",
+              "fieldName": "target",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native browsing-context name. External links use _blank."
+            },
+            {
+              "name": "underline",
+              "fieldName": "underline",
+              "type": {
+                "text": "\"always\" | \"hover\""
+              },
+              "default": "'always'",
+              "description": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"neutral\" | \"primary\""
+              },
+              "default": "'primary'",
+              "description": "Ink role. Primary uses accent ink and neutral uses body ink."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "download",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name.",
+              "attribute": "download",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "external",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules.",
+              "attribute": "external",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "externalLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'(opens in a new tab)'",
+              "description": "Localizable text appended to the accessible name in external mode.",
+              "attribute": "external-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+              "attribute": "href",
+              "reflects": false,
+              "required": true,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Space-separated native link relationships. External links always include noopener.",
+              "attribute": "rel",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native browsing-context name. External links use _blank.",
+              "attribute": "target",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "underline",
+              "privacy": "public",
+              "type": {
+                "text": "\"always\" | \"hover\""
+              },
+              "default": "'always'",
+              "description": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it.",
+              "attribute": "underline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"neutral\" | \"primary\""
+              },
+              "default": "'primary'",
+              "description": "Ink role. Primary uses accent ink and neutral uses body ink.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Descriptive link text. Use phrasing content without nested interactive controls."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "link",
+              "description": "The native anchor that renders the link and receives focus."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-link-bg",
+              "description": "Transparent backing for primary link text."
+            },
+            {
+              "name": "--ki-link-bg-image",
+              "description": "Optional image overlay for link backing."
+            },
+            {
+              "name": "--ki-link-fg",
+              "description": "Accent ink for primary links."
+            },
+            {
+              "name": "--ki-link-font-family",
+              "description": "Body typeface used by link text."
+            },
+            {
+              "name": "--ki-link-icon-gap",
+              "description": "Space between the label and the external link icon."
+            },
+            {
+              "name": "--ki-link-icon-size",
+              "description": "External link icon edge relative to the inherited text size."
+            },
+            {
+              "name": "--ki-link-neutral-bg",
+              "description": "Transparent backing for neutral link text."
+            },
+            {
+              "name": "--ki-link-neutral-fg",
+              "description": "Body ink for neutral links."
+            },
+            {
+              "name": "--ki-link-radius",
+              "description": "Corner radius used by the link focus outline."
+            },
+            {
+              "name": "--ki-link-underline-offset",
+              "description": "Space between link text and its underline."
+            },
+            {
+              "name": "--ki-link-underline-thickness",
+              "description": "Resting underline thickness."
+            },
+            {
+              "name": "--ki-link-underline-thickness-hover",
+              "description": "Underline thickness under a hover-capable pointer."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiLink",
+          "declaration": {
+            "name": "KiLink",
+            "module": "dist/components/ki-link.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-link",
+          "declaration": {
+            "name": "KiLink",
+            "module": "dist/components/ki-link.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-list.js",
       "declarations": [
         {

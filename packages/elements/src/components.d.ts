@@ -15,6 +15,7 @@ import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
+import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
@@ -35,6 +36,7 @@ export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
+export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
@@ -524,6 +526,50 @@ export namespace Components {
           * @default ''
          */
         "value": string;
+    }
+    /**
+     * A native navigation link with Kimen ink, underline, and focus styles.
+     * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+     * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
+     */
+    interface KiLink {
+        /**
+          * Native download attribute. Set it to an empty string to let the browser choose the file name, or supply a suggested file name.
+         */
+        "download"?: string;
+        /**
+          * Requests a new tab with noopener and adds an icon and an accessible announcement. An explicit download still follows native download rules.
+          * @default false
+         */
+        "external": boolean;
+        /**
+          * Localizable text appended to the accessible name in external mode.
+          * @default '(opens in a new tab)'
+         */
+        "externalLabel": string;
+        /**
+          * Destination URL. Relative URLs and fragments use native anchor resolution.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Space-separated native link relationships. External links always include noopener.
+         */
+        "rel"?: string;
+        /**
+          * Native browsing-context name. External links use _blank.
+         */
+        "target"?: string;
+        /**
+          * Keep the underline in running text. Use hover for standalone navigation, where placement identifies the link and keyboard focus still underlines it.
+          * @default 'always'
+         */
+        "underline": KiLinkUnderline;
+        /**
+          * Ink role. Primary uses accent ink and neutral uses body ink.
+          * @default 'primary'
+         */
+        "variant": KiLinkVariant;
     }
     /**
      * A non-interactive vertical list container for read-only collections of
@@ -1355,6 +1401,17 @@ declare global {
         new (): HTMLKiInputElement;
     };
     /**
+     * A native navigation link with Kimen ink, underline, and focus styles.
+     * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+     * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
+     */
+    interface HTMLKiLinkElement extends Components.KiLink, HTMLStencilElement {
+    }
+    var HTMLKiLinkElement: {
+        prototype: HTMLKiLinkElement;
+        new (): HTMLKiLinkElement;
+    };
+    /**
      * A non-interactive vertical list container for read-only collections of
      * similar entries composed with `ki-list-item` children.
      * @whenToUse settings, contacts, results or activity feeds where each item
@@ -1701,6 +1758,7 @@ declare global {
         "ki-icon-button": HTMLKiIconButtonElement;
         "ki-indicator": HTMLKiIndicatorElement;
         "ki-input": HTMLKiInputElement;
+        "ki-link": HTMLKiLinkElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
         "ki-option": HTMLKiOptionElement;
@@ -2213,6 +2271,50 @@ declare namespace LocalJSX {
           * @default ''
          */
         "value"?: string;
+    }
+    /**
+     * A native navigation link with Kimen ink, underline, and focus styles.
+     * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+     * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
+     */
+    interface KiLink {
+        /**
+          * Native download attribute. Set it to an empty string to let the browser choose the file name, or supply a suggested file name.
+         */
+        "download"?: string;
+        /**
+          * Requests a new tab with noopener and adds an icon and an accessible announcement. An explicit download still follows native download rules.
+          * @default false
+         */
+        "external"?: boolean;
+        /**
+          * Localizable text appended to the accessible name in external mode.
+          * @default '(opens in a new tab)'
+         */
+        "externalLabel"?: string;
+        /**
+          * Destination URL. Relative URLs and fragments use native anchor resolution.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Space-separated native link relationships. External links always include noopener.
+         */
+        "rel"?: string;
+        /**
+          * Native browsing-context name. External links use _blank.
+         */
+        "target"?: string;
+        /**
+          * Keep the underline in running text. Use hover for standalone navigation, where placement identifies the link and keyboard focus still underlines it.
+          * @default 'always'
+         */
+        "underline"?: KiLinkUnderline;
+        /**
+          * Ink role. Primary uses accent ink and neutral uses body ink.
+          * @default 'primary'
+         */
+        "variant"?: KiLinkVariant;
     }
     /**
      * A non-interactive vertical list container for read-only collections of
@@ -2874,6 +2976,16 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiLinkAttributes {
+        "href": string;
+        "variant": KiLinkVariant;
+        "underline": KiLinkUnderline;
+        "external": boolean;
+        "externalLabel": string;
+        "download": string;
+        "target": string;
+        "rel": string;
+    }
     interface KiListItemAttributes {
         "size": KiListItemSize;
     }
@@ -2985,6 +3097,7 @@ declare namespace LocalJSX {
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
+        "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
         "ki-list": KiList;
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
@@ -3183,6 +3296,12 @@ declare module "@stencil/core" {
              * `input` event carries those.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
+            /**
+             * A native navigation link with Kimen ink, underline, and focus styles.
+             * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+             * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
+             */
+            "ki-link": LocalJSX.IntrinsicElements["ki-link"] & JSXBase.HTMLAttributes<HTMLKiLinkElement>;
             /**
              * A non-interactive vertical list container for read-only collections of
              * similar entries composed with `ki-list-item` children.

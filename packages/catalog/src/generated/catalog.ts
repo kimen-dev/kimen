@@ -686,6 +686,64 @@ export const catalogData = {
       "whenNotToUse": "multiline text, predefined choices, boolean state, numeric\nstepper entry, or placeholder-only labeling.",
       "whenToUse": "collect one line of free text from a person, always with a\nvisible `label`; choose the `type` and `autocomplete` that match the entry\npurpose."
     },
+    "ki-link": {
+      "description": "A native navigation link with Kimen ink, underline, and focus styles.",
+      "events": {},
+      "props": {
+        "download": {
+          "type": "string",
+          "description": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name."
+        },
+        "external": {
+          "type": "boolean",
+          "description": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules.",
+          "default": false
+        },
+        "external-label": {
+          "type": "string",
+          "description": "Localizable text appended to the accessible name in external mode.",
+          "default": "(opens in a new tab)"
+        },
+        "href": {
+          "type": "string",
+          "description": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+          "required": true,
+          "format": "url"
+        },
+        "rel": {
+          "type": "string",
+          "description": "Space-separated native link relationships. External links always include noopener."
+        },
+        "target": {
+          "type": "string",
+          "description": "Native browsing-context name. External links use _blank."
+        },
+        "underline": {
+          "type": "enum",
+          "values": [
+            "always",
+            "hover"
+          ],
+          "description": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it.",
+          "default": "always"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "neutral",
+            "primary"
+          ],
+          "description": "Ink role. Primary uses accent ink and neutral uses body ink.",
+          "default": "primary"
+        }
+      },
+      "slots": {
+        "": "Descriptive link text. Use phrasing content without nested interactive controls."
+      },
+      "tag": "ki-link",
+      "whenNotToUse": "perform an action on the current page. Use ki-button variant=\"ghost\" for that.",
+      "whenToUse": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation."
+    },
     "ki-list": {
       "description": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
       "events": {},

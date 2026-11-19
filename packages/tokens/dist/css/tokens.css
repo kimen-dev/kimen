@@ -264,6 +264,10 @@
   --ki-shadow-inner-secondary-default:0 0 rgba(0,0,0,0);
   --ki-shadow-inner-secondary-hover:0 0 rgba(0,0,0,0);
   --ki-size-border-hairline:1px;
+  --ki-size-text-decoration-thickness-hover:2px;
+  --ki-size-text-decoration-offset:0.2em;
+  --ki-size-inline-icon-size:0.9em;
+  --ki-size-inline-icon-gap:0.25em;
   --ki-size-target-min:24px;
   --ki-size-target-touch:44px;
   --ki-size-qr:8rem;
@@ -599,6 +603,7 @@
   --ki-font-letter-spacing-sm:-0.03em;
   --ki-font-letter-spacing-md:-0.05em;
   --ki-font-letter-spacing-lg:-0.07em;
+  --ki-surface-image-none:none;
   --ki-surface-image-dialog:none;
   --ki-surface-image-listbox:none;
   --ki-surface-image-tooltip-arrow-start:initial;
@@ -843,6 +848,12 @@
   --ki-focus-ring-color:light-dark(#bb4e2a,#c5735a);
   --ki-focus-ring-offset:var(--ki-space-xxs);
   --ki-transparent-inverse:light-dark(var(--ki-color-transparent-white),var(--ki-color-transparent-black));
+  --ki-typography-underline-thickness:var(--ki-size-border-hairline);
+  --ki-typography-underline-thickness-hover:var(--ki-size-text-decoration-thickness-hover);
+  --ki-typography-underline-offset:var(--ki-size-text-decoration-offset);
+  --ki-typography-inline-icon-size:var(--ki-size-inline-icon-size);
+  --ki-typography-inline-icon-gap:var(--ki-size-inline-icon-gap);
+  --ki-typography-visually-hidden-size:var(--ki-size-border-hairline);
   --ki-typography-family-display:var(--ki-font-family-display);
   --ki-typography-family-body:var(--ki-font-family-body);
   --ki-typography-family-heading:var(--ki-typography-family-body);
@@ -899,6 +910,7 @@
   --ki-typography-letter-spacing-lg:-0.02em;
   --ki-spacing-inline:var(--ki-space-md);
   --ki-spacing-block:var(--ki-space-xl);
+  --ki-corner-inline:var(--ki-radius-xxs);
   --ki-corner-control:var(--ki-radius-md);
   --ki-motion-duration-fast:var(--ki-duration-fast);
   --ki-motion-duration-short-1:var(--ki-duration-fast);
@@ -1571,6 +1583,18 @@
   --ki-input-xl-icon-size:var(--ki-space-7xl);
   --ki-input-xl-label-font-size:var(--ki-typography-size-body-2);
   --ki-input-xl-label-line-height:var(--ki-typography-line-height-body-2);
+  --ki-link-bg:var(--ki-surface-transparent);
+  --ki-link-fg:var(--ki-text-primary-high-em);
+  --ki-link-neutral-bg:var(--ki-surface-transparent);
+  --ki-link-neutral-fg:var(--ki-text-high-em);
+  --ki-link-bg-image:var(--ki-surface-image-none);
+  --ki-link-underline-thickness:var(--ki-typography-underline-thickness);
+  --ki-link-underline-thickness-hover:var(--ki-typography-underline-thickness-hover);
+  --ki-link-underline-offset:var(--ki-typography-underline-offset);
+  --ki-link-radius:var(--ki-corner-inline);
+  --ki-link-font-family:var(--ki-typography-family-body);
+  --ki-link-icon-size:var(--ki-typography-inline-icon-size);
+  --ki-link-icon-gap:var(--ki-typography-inline-icon-gap);
   --ki-list-bg:var(--ki-surface-s0);
   --ki-list-padding:var(--ki-space-zero);
   --ki-list-gap:var(--ki-space-zero);
