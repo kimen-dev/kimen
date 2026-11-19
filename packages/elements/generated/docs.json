@@ -3252,7 +3252,7 @@
             "resolved": "boolean",
             "references": {}
           },
-          "mutable": false,
+          "mutable": true,
           "attr": "icon",
           "reflectToAttr": false,
           "docs": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",

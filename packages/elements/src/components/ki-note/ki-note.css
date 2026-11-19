@@ -1,6 +1,7 @@
 :host {
   display: block;
   min-inline-size: 0;
+  font-family: var(--ki-note-font-family);
 
   --_ki-note-bg: var(--ki-note-bg);
   --_ki-note-fg: var(--ki-note-fg);
@@ -69,7 +70,6 @@
   -webkit-backdrop-filter: var(--ki-note-backdrop-filter);
   backdrop-filter: var(--ki-note-backdrop-filter);
   color: var(--_ki-note-fg);
-  font-family: var(--ki-note-font-family);
   font-size: var(--_ki-note-font-size);
   line-height: var(--_ki-note-line-height);
 }

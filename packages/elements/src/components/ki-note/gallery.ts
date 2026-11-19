@@ -14,6 +14,6 @@ export default {
         <path d="M12 3v18M3 12h18"/>
       </svg>Adding a billing contact gives them access to invoices.
     </ki-note>
-    <ki-note dir="rtl" lang="ar" tone="warning">يؤدي حذف هذا المشروع إلى إزالة بياناته للجميع.</ki-note>
+    <ki-note dir="rtl" tone="warning">Existing links break when you change the slug.</ki-note>
   </section>`,
 } satisfies VisualGallery;

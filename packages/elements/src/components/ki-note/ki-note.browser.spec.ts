@@ -126,8 +126,9 @@ it('S5: unknown values paint with the neutral medium defaults', async () => {
 });
 
 it('S6: Tab skips the note and its decorative slot', async () => {
+  // WebKit on macOS needs an explicit tabindex to include native buttons.
   await mount(
-    `<button>Cancel</button><ki-note>${customIcon}${message}</ki-note><button>Save</button>`,
+    `<button tabindex="0">Cancel</button><ki-note>${customIcon}${message}</ki-note><button tabindex="0">Save</button>`,
   );
   fixture.querySelector('button')?.focus();
   await userEvent.keyboard('{Tab}');
