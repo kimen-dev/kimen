@@ -42,6 +42,8 @@ beforeAll(() => {
 afterEach(async () => {
   fixture.replaceChildren();
   fixture.removeAttribute('dir');
+  fixture.removeAttribute('data-ki-theme');
+  fixture.removeAttribute('style');
   await parkPointer();
 });
 
@@ -197,9 +199,10 @@ it.each([
 });
 
 it('S7 takes its heading family and wrapping width from tokens', async () => {
-  fixture.innerHTML = markup(
-    'style="--ki-typography-family-heading: serif; --ki-empty-state-max-width: 10rem"',
-  );
+  fixture.setAttribute('data-ki-theme', 'onmars');
+  fixture.style.setProperty('--ki-typography-family-heading', 'serif');
+  fixture.style.setProperty('--ki-empty-state-max-width', '10rem');
+  fixture.innerHTML = markup();
   const title = page.getByRole('heading', { name: heading });
   await expect.element(title).toBeVisible();
   const host = emptyState();

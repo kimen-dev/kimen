@@ -17,7 +17,7 @@ it('registers EmptyState properties and the three content slots', () => {
   expect(entry?.props).toMatchObject({
     announce: { default: false, type: 'boolean' },
     heading: { required: true, type: 'string' },
-    'heading-level': { default: 3, min: 2, max: 6, type: 'number' },
+    'heading-level': { default: 3, minimum: 2, maximum: 6, type: 'number' },
     'icon-name': { type: 'string' },
     size: { default: 'md', type: 'enum' },
     tone: { default: 'neutral', type: 'enum' },

@@ -1,6 +1,10 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$value": "none",
+        "$description": "Default image layer for a flat surface."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1118,6 +1122,11 @@
           "$value": "blur({ki.effect.component.backdrop-blur})",
           "$description": "Complete backdrop filter for glass components. Use none to turn the effect off."
         },
+        "backdrop-filter-none": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "Default backdrop filter for a flat surface."
+        },
         "listbox-backdrop-filter": {
           "$type": "other",
           "$value": "blur({ki.blur.48})",
@@ -1544,6 +1553,21 @@
       "activity-dot-gap": {
         "$value": "{ki.space.xs}",
         "$description": "Gap between typing dots."
+      }
+    },
+    "empty-layout": {
+      "$type": "dimension",
+      "max-width": {
+        "$value": "{ki.size.surface.sm}",
+        "$description": "Readable maximum line length for a short message in an empty view."
+      },
+      "tile-regular": {
+        "$value": "{ki.space.14xl}",
+        "$description": "Size of the decorative tile in a regular empty view."
+      },
+      "tile-compact": {
+        "$value": "{ki.space.12xl}",
+        "$description": "Size of the decorative tile in a compact empty view."
       }
     },
     "glyph": {

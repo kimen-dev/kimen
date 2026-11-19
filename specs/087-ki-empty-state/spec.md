@@ -40,6 +40,15 @@ without taking focus away from the search field.
   token-styled fallback before that dependency is available. The regular size
   uses the large FeatureIcon tile and the compact size uses the medium tile.
 
+- **Agent's choice, pending founder confirmation.** The description uses
+  the semantic supporting-text ink. It matches medium emphasis in standard
+  mode and strengthens under contrast-more. The content surface defaults to
+  the theme canvas color. Material 3 uses its medium body weight for the
+  heading.
+- **Agent's choice, pending founder confirmation.** The public API gate uses
+  its major classification for the change to the existing Stencil `Components`
+  and `JSX` namespace signatures.
+
 ## Scenario family coverage
 
 | Family | Scenarios | Justification when N/A |
