@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 317 semantic
-and 1127 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 318 semantic
+and 1130 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -53,6 +53,7 @@ every component at once.
 | `--ki-effect-component-secondary-default-shadow` | `0 2px 1.5px -0.5px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.03)` | MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). |
 | `--ki-effect-component-secondary-hover-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.08)` | MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). |
 | `--ki-effect-small-dark-shadow` | `0 2px 3px -1.5px rgba(0, 0, 0, 0.32)` | MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters. |
+| `--ki-effect-video-hover-opacity` | `1` | Opacity of the added play-container shadow on hover. onmars shows the full primary hover effect over the resting shadow. |
 
 ### `ki.elevation`
 
@@ -1428,8 +1429,11 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-switch-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
 | `--ki-switch-focus-ring-width` | `0.125rem` | dimension used by the switch component for focus ring width. |
 | `--ki-switch-gap` | `0.75rem` | dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio). |
+| `--ki-switch-glyph-checked` | `#5f3993` | Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb. |
 | `--ki-switch-glyph-dash-height` | `0.125rem` | dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash). |
+| `--ki-switch-glyph-disabled` | `#c3c6cc` | Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs. |
 | `--ki-switch-glyph-height` | `0.375rem` | dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height). |
+| `--ki-switch-glyph-unchecked` | `rgba(255, 255, 255, 0)` | Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb. |
 | `--ki-switch-glyph-width` | `0.5rem` | dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb). |
 | `--ki-switch-lg-control-height` | `2rem` | dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px). |
 | `--ki-switch-lg-control-width` | `3.5rem` | dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px). |

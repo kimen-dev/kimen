@@ -86,3 +86,8 @@ Feature: Video
     And a rendered video labeled "Play the product tour" showing its poster facade
     When the user activates the play control
     Then the facade is dismissed without transitional motion
+  # S13
+  Scenario: A theme can hide just the hover shadow
+    Given a video with a visible play-container shadow and a theme with video hover-shadow opacity set to zero
+    When the user hovers the play control
+    Then the play container keeps its resting shadow with no additional shadow

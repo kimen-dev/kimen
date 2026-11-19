@@ -73,6 +73,18 @@
         "$value": "{ki.space.xxs}",
         "$description": "dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash)."
       },
+      "glyph-checked": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb."
+      },
+      "glyph-unchecked": {
+        "$value": "{ki.text.none}",
+        "$description": "Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb."
+      },
+      "glyph-disabled": {
+        "$value": "{ki.text.base-em}",
+        "$description": "Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs."
+      },
       "unchecked": {
         "rest": {
           "track": {

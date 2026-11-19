@@ -10,6 +10,7 @@ import { defineCustomElement as defineKiOption } from '../dist/components/ki-opt
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { disableComponentEffectShadows } from './flat-effects';
 import { moveToNewParent } from './reconnect';
 
 type KiSelectElement = HTMLElement & {
@@ -692,6 +693,31 @@ describe('ki-select in a real browser', () => {
     expect(el.matches(':state(user-invalid)')).toBe(false);
   });
 
+  it('S6 keeps the keyboard focus halo with component effect shadows disabled (#349)', async () => {
+    const el = await mountSelect();
+    disableComponentEffectShadows(el);
+
+    await userEvent.keyboard('{Tab}');
+
+    const button = trigger(el);
+    expect(button.matches(':focus-visible')).toBe(true);
+    await expect
+      .poll(() => getComputedStyle(button, '::before').boxShadow)
+      .toMatch(/0px 0px 0px 3px/u);
+  });
+
+  it('S14 keeps the invalid ring with component effect shadows disabled (#349)', async () => {
+    const { form, el } = await mountForm('required');
+    disableComponentEffectShadows(el);
+
+    form.requestSubmit();
+
+    await expect.element(trigger(el)).toHaveAttribute('aria-invalid', 'true');
+    await expect
+      .poll(() => getComputedStyle(trigger(el), '::before').boxShadow)
+      .toContain('rgba(240, 81, 73, 0.2)');
+  });
+
   it('S14 blocks required empty submission and clears invalid after commit', async () => {
     const { form, el } = await mountForm('required');
     let submitted = false;
@@ -710,7 +736,7 @@ describe('ki-select in a real browser', () => {
     // (danger-500 at 20% light) composes over the secondary_default rest
     // elevation. Poll: box-shadow is motion-gated (120ms transition).
     await expect
-      .poll(() => getComputedStyle(trigger(el)).boxShadow)
+      .poll(() => getComputedStyle(trigger(el), '::before').boxShadow)
       .toContain('rgba(240, 81, 73, 0.2)');
 
     trigger(el).click();

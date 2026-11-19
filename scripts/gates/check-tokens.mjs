@@ -4,6 +4,11 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import {
+  buildPublicStylesheetSurface,
+  splitTopLevel,
+  stripComments,
+} from '../lib/css-token-surface.mjs';
 import { parseTokenComposition } from '../lib/token-inventory.mjs';
 
 const configRelativePath = 'packages/tokens/style-dictionary.config.mjs';
@@ -144,6 +149,82 @@ export function collectCssIssues(filePath, contents, recordsByCssName, { workspa
   return issues;
 }
 
+function shadowListTokens(css, label) {
+  const shadows = [];
+  const privateProperties = new Map();
+  const declarations = /(?:^|[;{])\s*(box-shadow|--_[a-z0-9-]+)\s*:\s*([^;{}]+)/giu;
+  for (const [, name, value] of stripComments(css, label).matchAll(declarations)) {
+    if (name.toLowerCase() === 'box-shadow') {
+      shadows.push(value);
+    } else {
+      const values = privateProperties.get(name) ?? [];
+      values.push(value);
+      privateProperties.set(name, values);
+    }
+  }
+
+  // Follow private aliases conservatively across states. A comma inside a
+  // var() fallback or colour function is not a shadow layer separator.
+  const tokens = new Set();
+  const visited = new Set();
+  function visit(value, inList) {
+    const composed = inList || splitTopLevel(value, ',', label).length > 1;
+    for (const [, name] of value.matchAll(/var\(\s*(--(?:ki-|_)[a-z0-9-]+)/giu)) {
+      if (name.startsWith('--ki-') && composed) tokens.add(name);
+      const state = `${name} ${composed}`;
+      if (visited.has(state)) continue;
+      visited.add(state);
+      for (const definition of privateProperties.get(name) ?? []) visit(definition, composed);
+    }
+  }
+  for (const shadow of shadows) visit(shadow, false);
+  return tokens;
+}
+
+async function shadowListIssues(uses, tokenRoot, readText) {
+  const publicTokenNames = [...new Set(uses.flatMap(({ tokens }) => tokens))];
+  if (publicTokenNames.length === 0) return [];
+
+  // Lint the shipped expressions after normalization and alias resolution.
+  // The same resolver checks the API and includes every theme, scheme and mode.
+  const { exports: exports_ } = JSON.parse(await readText(join(tokenRoot, 'package.json'), 'utf8'));
+  const cssExports = Object.entries(exports_).filter(
+    ([, target]) => typeof target === 'string' && target.endsWith('.css'),
+  );
+  const surfaces = buildPublicStylesheetSurface({
+    packageExports: Object.fromEntries(cssExports.map(([name, target]) => [name, { target }])),
+    stylesheetSources: Object.fromEntries(
+      await Promise.all(
+        cssExports.map(async ([name, target]) => [
+          name,
+          await readText(join(tokenRoot, target), 'utf8'),
+        ]),
+      ),
+    ),
+    publicTokenNames,
+  });
+
+  const issues = [];
+  for (const [stylesheet, { contexts = {} }] of Object.entries(surfaces)) {
+    for (const [context, values] of Object.entries(contexts)) {
+      const label = `${stylesheet} ${context}`;
+      const none = new Set(
+        Object.entries(values)
+          .filter(([, value]) =>
+            splitTopLevel(value, ',', label).some((layer) => layer.trim().toLowerCase() === 'none'),
+          )
+          .map(([name]) => name),
+      );
+      for (const { path, tokens } of uses) {
+        for (const name of tokens.filter((token) => none.has(token))) {
+          issues.push(`none-in-shadow-list ${path} ${name} ${label}`);
+        }
+      }
+    }
+  }
+  return issues;
+}
+
 export async function checkTokens({
   workspaceRoot,
   loadConfig = (href) => import(href),
@@ -189,13 +270,21 @@ export async function checkTokens({
     }
   }
   const cssRoot = join(workspaceRoot, 'packages/elements/src/components');
+  const shadowUses = [];
   for (const cssPath of await cssFilesBelow(cssRoot)) {
+    const contents = await readText(cssPath, 'utf8');
     diagnostics.push(
-      ...collectCssIssues(cssPath, await readText(cssPath, 'utf8'), recordsByCssName, {
+      ...collectCssIssues(cssPath, contents, recordsByCssName, {
         workspaceRoot,
       }),
     );
+    const path = normalizePath(relative(workspaceRoot, cssPath));
+    const tokens = [...shadowListTokens(contents, path)].filter(
+      (name) => recordsByCssName.get(name)?.public,
+    );
+    if (tokens.length > 0) shadowUses.push({ path, tokens });
   }
+  diagnostics.push(...(await shadowListIssues(shadowUses, tokenRoot, readText)));
 
   return { compositions, diagnostics, recordsByCssName };
 }

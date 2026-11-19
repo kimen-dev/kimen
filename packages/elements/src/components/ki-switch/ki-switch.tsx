@@ -367,8 +367,8 @@ export class KiSwitch {
         />
         <span part="track">
           <span part="thumb">
-            {/* State glyphs (MarsUI Toggle master): ON check, OFF+disabled
-                dash. Filled rounded vectors adapted from the Figma pointer
+            {/* State glyphs (MarsUI Toggle master): ON check, OFF dash.
+                Filled rounded vectors adapted from the Figma pointer
                 exports; ink comes from currentColor via CSS. */}
             <svg class="glyph glyph-check" viewBox="0 0 9.2 7.5" aria-hidden="true">
               <path

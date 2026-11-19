@@ -110,6 +110,7 @@
   cursor: pointer;
   display: inline-flex;
   gap: var(--ki-select-gap);
+  isolation: isolate;
   justify-content: space-between;
   min-block-size: max(
     var(--ki-density-target-min),
@@ -120,6 +121,7 @@
   );
   min-inline-size: 100%;
   padding-inline: var(--_ki-select-padding-inline);
+  position: relative;
   font: inherit;
   font-size: var(--_ki-select-font-size);
 
@@ -130,6 +132,22 @@
   /* The list is anchored here: it opens in the top layer, outside the
      host's box, so it can no longer hang off the host itself. */
   anchor-name: --ki-select-trigger;
+}
+
+/* Match the trigger's border box so the halo retains its spread. */
+[part="trigger"]::before {
+  position: absolute;
+  inset-block: calc(-1 * var(--ki-select-border-block-start-width))
+    calc(-1 * var(--ki-select-border-block-end-width));
+  inset-inline: calc(-1 * var(--ki-select-border-inline-start-width))
+    calc(-1 * var(--ki-select-border-inline-end-width));
+  border: inherit;
+  border-color: transparent;
+  border-radius: inherit;
+  box-shadow: var(--_ki-select-trigger-ring, none);
+  content: "";
+  pointer-events: none;
+  z-index: -1;
 }
 
 @media (hover: hover) {
@@ -184,9 +202,8 @@
   --_ki-select-bg: var(--ki-select-focus-bg);
   --_ki-select-fg: var(--ki-select-focus-fg);
   --_ki-select-border: var(--ki-select-focus-border);
+  --_ki-select-trigger-ring: var(--ki-select-focus-ring-shadow);
 
-  box-shadow:
-    var(--ki-select-focus-ring-shadow), var(--ki-effect-component-secondary-default-shadow);
   outline-offset: var(--ki-select-focus-ring-offset);
   outline: var(--ki-select-focus-ring-width) solid var(--ki-select-focus-ring-color);
 }
@@ -195,7 +212,7 @@
    Focus/danger ring (danger-500 at 20%/40%) signals invalidity. Placed after
    :focus-visible so a focused invalid trigger shows the danger ring. */
 [part="trigger"][aria-invalid="true"] {
-  box-shadow: var(--ki-focus-danger), var(--ki-effect-component-secondary-default-shadow);
+  --_ki-select-trigger-ring: var(--ki-focus-danger);
 }
 
 [part="trigger"]:disabled {
@@ -377,6 +394,10 @@
       box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
       border-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
       background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  [part="trigger"]::before {
+    transition: box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
   }
 
   /* Slight settle on press (xs distance / 4 = 0.5px). */

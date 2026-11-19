@@ -44,10 +44,15 @@ const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
  * density, touch-size field text), when the document measured 608 693 raw,
  * 141 120 gzip, 115 435 brotli: 2 693 bytes over the old raw line, with gzip
  * and brotli still inside theirs, so only raw moves, to about 5% above.
+ * Gzip re-based for issue #349 (composed shadows) on top of #345 and #347,
+ * when CI measured 142 140 gzip (a local macOS build of the same document
+ * measures 611 265 raw, 141 560 gzip, 115 734 brotli): 140 bytes over the old gzip line,
+ * with raw and brotli still inside theirs, so only gzip moves, to about 5%
+ * above the CI figure.
  * Re-based for issue #316 (size axes of nine components, spec 050: 193
- * tokens and their CSS), when the document measured 641 544 raw, 145 266
- * gzip, 117 881 brotli: over all three lines, so all three move to about 5%
- * above.
+ * tokens and their CSS) on top of #349, when the document measured 644 092
+ * raw, 145 722 gzip, 118 102 brotli on macOS: over all three lines, so all
+ * three move to about 5% above.
  */
 const SIZE_BUDGET = { brotli: 124_000, gzip: 152_500, raw: 674_000 } as const;
 
