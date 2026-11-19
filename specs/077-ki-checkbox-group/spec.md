@@ -1,6 +1,7 @@
 # Feature specification for `ki-checkbox-group`
 
-**Branch** `feat/367-ki-checkbox-group`  
+**Branch** `feat/367-ki-checkbox-group`
+
 **Issue** #367
 
 A group collects independent selections under a common label, guidance and

@@ -182,6 +182,7 @@ test('S6 browser setups isolate shared input and page-level capability emulation
     'browser-tests/pointer-capability.browser.spec.ts',
     'browser-tests/touch-field-text.browser.spec.ts',
     'browser-tests/touch-size-field-text.browser.spec.ts',
+    'browser-tests/ki-checkbox-group.touch.browser.spec.ts',
   ];
   for (const spec of inputDeviceSpecs) {
     assert.ok(
