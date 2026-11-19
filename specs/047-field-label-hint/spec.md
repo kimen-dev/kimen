@@ -8,7 +8,8 @@
 **Created**: 2026-11-19
 
 **Status**: Confirmed by the founder (D1–D5, 2026-11-19, issue #318); the
-implementation notes under D4 and D5 are the agent's and await review
+implementation notes under D4 and D5, settled at implementation, were
+confirmed with the change on 2026-11-19 (PR #340)
 
 **Input**: Issue #318, "Fields: show required / optional before submission".
 A person filling a Kimen form learns that a field was required only after a

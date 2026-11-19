@@ -102,10 +102,10 @@ theme roots), and roughly 70 new mode declarations instead of 2.
 **Status**: Intent decided by the founder on 2026-11-19, who approved the
 proposal of issue #319 (a third level on the existing machinery, opt-in
 only). The values and the rules below record that decision. Three points
-follow from it and were settled at implementation, so they await the
-founder's confirmation with the change: which controls extend their target
-and which grow to it (A1-D3, last two sentences), the capped floor (A1-D4)
-and the complete density set per level (A1-D5).
+followed from it and were settled at implementation: which controls extend
+their target and which grow to it (A1-D3, last two sentences), the capped
+floor (A1-D4) and the complete density set per level (A1-D5). The founder
+confirmed them with the change on 2026-11-19 (PR #340).
 
 **Path**: in place, through the Art. II amendment path: one feature, so the
 new scenarios are appended (S13–S23) and none is retired or renumbered.
