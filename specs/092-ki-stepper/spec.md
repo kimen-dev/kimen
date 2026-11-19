@@ -1,6 +1,7 @@
 # Stepper
 
-**Issue** #394  
+**Issue** #394
+
 **Branch** `feat/394-ki-stepper`
 
 Use `ki-stepper` for named progress through a setup, checkout or wizard. Authors

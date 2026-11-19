@@ -229,3 +229,20 @@ it('S2 keeps a focused completed link reachable when the horizontal list narrows
   (summary.element() as HTMLButtonElement).focus();
   await expect.element(summary).toHaveAttribute('aria-expanded', 'false');
 });
+
+it('S2 still closes the compact list after its focused link is removed', async () => {
+  fixture.style.inlineSize = '18rem';
+  const host = mount();
+  await page.getByRole('button', { name: /^Step 3 of 4/ }).click();
+  const account = await accountLink();
+  account.focus();
+  await expect.poll(() => host.shadowRoot?.activeElement).toBe(account);
+
+  host.querySelector('ki-step')?.remove();
+
+  const summary = page.getByRole('button', { name: /^Step 2 of 3/ });
+  await expect.element(summary).toHaveAttribute('aria-expanded', 'true');
+  await summary.click();
+  await expect.element(summary).toHaveAttribute('aria-expanded', 'false');
+  await expect.element(list()).not.toBeInTheDocument();
+});

@@ -146,6 +146,7 @@ export class KiStepper {
   disconnectedCallback(): void {
     this.observer?.disconnect();
     this.observer = undefined;
+    this.listFocused = false;
   }
 
   private syncSteps(): void {
@@ -236,6 +237,8 @@ export class KiStepper {
     if (this.listFocused && currentTarget instanceof HTMLElement) {
       currentTarget.focus();
     }
+    // Removing a focused step can leave the list without a focusout event.
+    this.listFocused = false;
     this.expanded = !expanded;
   };
 
