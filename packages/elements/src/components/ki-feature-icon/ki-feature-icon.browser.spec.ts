@@ -278,6 +278,7 @@ it('S10 repaints a changed tone without motion under reduced motion', async () =
     const durations = getComputedStyle(tile).transitionDuration.split(',');
     expect(durations.every((duration) => Number.parseFloat(duration) === 0)).toBe(true);
     expect(host.getAnimations({ subtree: true })).toEqual([]);
+    expect(tile.getAnimations({ subtree: true })).toEqual([]);
   } finally {
     await media.emulateReducedMotion(null);
   }
