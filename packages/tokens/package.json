@@ -11,7 +11,8 @@
     "directory": "packages/tokens"
   },
   "files": [
-    "dist"
+    "dist",
+    "NOTICE"
   ],
   "exports": {
     "./css": "./dist/css/tokens.css",

@@ -90,11 +90,19 @@ function packageFixture(name, directory, options) {
       type: 'module',
       license: 'Apache-2.0',
       repository: repositoryMetadata(directory, options.repositoryOverrides?.[name]),
-      files: ['dist'],
+      files: ['dist', 'NOTICE'],
       ...(options.scripts?.[name] === undefined ? {} : { scripts: options.scripts[name] }),
     },
+    legalFiles: { ...defaultLegalFiles, ...options.legalFiles?.[name] },
   };
 }
+
+// A published package carries its licence and its notices. `null` leaves the
+// file out of the fixture, an empty string writes an empty one.
+const defaultLegalFiles = {
+  LICENSE: 'Apache License, Version 2.0 (fixture)\n',
+  NOTICE: 'Kimen fixture notices\n',
+};
 
 async function writePackage(root, fixture) {
   const directory = join(root, 'packages', fixture.directory);
@@ -105,6 +113,9 @@ async function writePackage(root, fixture) {
       join(directory, 'dist', 'index.js'),
       `export const packageName = '${fixture.manifest.name}';\n`,
     ),
+    ...Object.entries(fixture.legalFiles ?? defaultLegalFiles)
+      .filter(([, contents]) => contents !== null)
+      .map(([name, contents]) => writeFile(join(directory, name), contents)),
   ]);
   return directory;
 }
@@ -115,6 +126,7 @@ async function createRepositoryFixture(t, overrides = {}) {
     privatePackages: false,
     tag: releaseTag,
     candidateOutsideMain: false,
+    legalFiles: {},
     repositoryOverrides: {},
     scripts: {},
     extraPackages: [],
@@ -505,6 +517,36 @@ test('S7 rebuilding unchanged package bytes yields the same canonical candidate 
 
   assert.equal(second.candidateSha256, first.candidateSha256);
   assert.deepEqual(await readFile(second.archivePath), await readFile(first.archivePath));
+});
+
+for (const [file, contents, state] of [
+  ['LICENSE', null, 'without'],
+  ['NOTICE', null, 'without'],
+  ['LICENSE', '', 'with an empty'],
+  ['NOTICE', '', 'with an empty'],
+]) {
+  test(`S7 refuses to build a candidate from a package that would ship ${state} ${file}`, async (t) => {
+    const fixture = await createRepositoryFixture(t, {
+      legalFiles: { '@kimen/tokens': { [file]: contents } },
+    });
+
+    await assert.rejects(
+      buildFixture(t, fixture),
+      new RegExp(`@kimen/tokens tarball.*package/${file}`, 'u'),
+    );
+  });
+}
+
+test('S7 a candidate built from complete packages carries LICENSE and NOTICE in both tarballs', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  const result = await buildFixture(t, fixture);
+  const { directory } = await extractCandidate(t, result.archivePath);
+
+  for (const { file } of result.manifest.packages) {
+    const listing = run('tar', ['-tzf', join(directory, file)], directory).split('\n');
+    assert.equal(listing.includes('package/LICENSE'), true, `${file} has no LICENSE`);
+    assert.equal(listing.includes('package/NOTICE'), true, `${file} has no NOTICE`);
+  }
 });
 
 test('S7 rejects a prepack lifecycle hook before npm can execute it', async (t) => {

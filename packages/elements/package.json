@@ -16,7 +16,8 @@
     "generated/custom-elements.json",
     "llms.txt",
     "llms-full.txt",
-    "llms"
+    "llms",
+    "NOTICE"
   ],
   "scripts": {
     "build": "stencil build && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/build-surfaces.mjs",
