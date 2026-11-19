@@ -46,6 +46,13 @@ reader needs it. An accordion presents related disclosures as one visual group.
   loader `Components` and `JSX` namespaces that way. The new component APIs
   are additive.
 
+- **Agent's choice, pending founder confirmation.** Charge the combined
+  Details and Accordion MCP server bundle increase to the Details metadata.
+  The same pinned build from the branch base `1329347` grows by 15,603 raw
+  bytes. The gzip increase is 3,267 bytes on CI's Node 26 and 3,399 bytes on
+  supported Node 22, where the original gzip ceiling is exceeded. The Brotli
+  increase is 2,071 bytes and fits its original ceiling.
+
 ## Scenario Family Coverage
 
 | Family | Scenarios | Justification |
