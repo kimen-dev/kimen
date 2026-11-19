@@ -26,6 +26,10 @@ compositor layers with the filter enabled and disabled.
   full filter that differs from the built-in glass default takes precedence.
   This includes the literal `none` in Material 3 and reduced transparency.
 
+## Integration note: Material 3 stays at blur(0px) *(2026-11-19)*
+
+Issue #342 asks both built-in flat themes to set `none`. In Material 3 that removes a zero blur that renders nothing, yet on Linux CI it moves anti-aliasing in four Material 3 galleries: button, badge, option and tooltip. The issue's first rule is that Material 3 must not change, so Material 3 keeps `blur(0px)`, which rasterises exactly as before (S3). Moving it to `none` is left to the founder. onmars v2 still takes `none` after #341.
+
 ## Scenario Family Coverage
 
 | Family | Scenario IDs | N/A justification |
@@ -66,8 +70,8 @@ Feature: Themes control the complete backdrop filter
       | theme     | scheme | filter     | listbox    |
       | onmars    | light  | blur(12px) | blur(24px) |
       | onmars    | dark   | blur(12px) | blur(24px) |
-      | material3 | light  | none       | none       |
-      | material3 | dark   | none       | none       |
+      | material3 | light  | blur(0px)  | blur(0px)  |
+      | material3 | dark   | blur(0px)  | blur(0px)  |
 
   # S4
   Scenario: An existing blur-length override still controls the glass effect

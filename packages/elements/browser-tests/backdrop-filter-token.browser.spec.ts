@@ -122,7 +122,7 @@ describe.each(THEMES)('S3 built-in %s theme', (theme) => {
       ]) {
         expect(getComputedStyle(root).getPropertyValue(name).trim(), name).toBe('0px');
       }
-      expectFilters(fixture, 'none', 'none');
+      expectFilters(fixture, 'blur(0px)', 'blur(0px)');
     }
   });
 });

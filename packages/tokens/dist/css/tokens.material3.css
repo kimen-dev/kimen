@@ -246,8 +246,6 @@
   --ki-elevation-e5: var(--ki-foundation-material3-elevation-level-5);
   --ki-elevation-e6: var(--ki-foundation-material3-elevation-level-5);
   --ki-effect-component-backdrop-blur: var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-effect-component-backdrop-filter */
-  --ki-effect-component-backdrop-filter: none;
-  --ki-effect-component-listbox-backdrop-filter: none;
   --ki-effect-component-primary-default-shadow: var(--ki-foundation-material3-elevation-level-1);
   --ki-effect-component-primary-hover-shadow: var(--ki-foundation-material3-elevation-level-2);
   --ki-effect-component-secondary-default-shadow: var(--ki-foundation-material3-elevation-level-1);

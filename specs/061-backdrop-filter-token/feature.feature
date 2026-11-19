@@ -25,8 +25,8 @@ Feature: Themes control the complete backdrop filter
       | theme     | scheme | filter     | listbox    |
       | onmars    | light  | blur(12px) | blur(24px) |
       | onmars    | dark   | blur(12px) | blur(24px) |
-      | material3 | light  | none       | none       |
-      | material3 | dark   | none       | none       |
+      | material3 | light  | blur(0px)  | blur(0px)  |
+      | material3 | dark   | blur(0px)  | blur(0px)  |
 
   # S4
   Scenario: An existing blur-length override still controls the glass effect

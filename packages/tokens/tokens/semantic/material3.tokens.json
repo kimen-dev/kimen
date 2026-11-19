@@ -398,16 +398,6 @@
         "$description": "Material 3 keeps the filled video play control flat on hover. The opacity applies only to the added hover layer."
       },
       "component": {
-        "backdrop-filter": {
-          "$type": "other",
-          "$value": "none",
-          "$description": "Flat surfaces have no backdrop effect."
-        },
-        "listbox-backdrop-filter": {
-          "$type": "other",
-          "$value": "none",
-          "$description": "The flat listbox has no backdrop effect."
-        },
         "backdrop-blur": {
           "$type": "dimension",
           "$value": "{ki.blur.none}",
