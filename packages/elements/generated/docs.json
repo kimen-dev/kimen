@@ -17,15 +17,31 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed."
+          "text": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone."
         },
         {
           "name": "slot",
           "text": "- Message body. It lives inside the live-region boundary."
         },
         {
+          "name": "slot",
+          "text": "icon - Optional decorative glyph shown in a round frame at the top of\nthe card, in the tone's colors. Hidden from assistive technology: it never\ncarries meaning the heading and message lack. When to use: give every\nnon-neutral alert an icon. When NOT to use: never as the only cue for the\nmessage."
+        },
+        {
+          "name": "slot",
+          "text": "actions - Optional responses to this message, in a row at the bottom\nof the card, outside the live region. Slot `size=\"sm\"` buttons. The alert\nnever activates them and an action does not dismiss the alert; the\napplication does, by setting `dismissed`. When NOT to use: a response the\nperson cannot skip belongs in `ki-dialog`."
+        },
+        {
           "name": "part",
-          "text": "alert - Outer alert surface: tone background, border, radius, and padding."
+          "text": "alert - Outer shell around the card: padding, radius, wash and blur."
+        },
+        {
+          "name": "part",
+          "text": "card - Card holding the icon, text, actions and dismiss control: tone\nbackground, border, radius, padding and elevation."
+        },
+        {
+          "name": "part",
+          "text": "icon - Round frame around the `icon` slot, rendered only when it holds content."
         },
         {
           "name": "part",
@@ -37,11 +53,15 @@
         },
         {
           "name": "part",
+          "text": "actions - Row around the `actions` slot, rendered only when it holds content."
+        },
+        {
+          "name": "part",
           "text": "dismiss - Native dismiss button, rendered only when dismissible."
         }
       ],
       "usage": {
-        "examples": "`tone` sets the token-backed colors and the live-region urgency — `danger` and `warning` expose `role=\"alert\"`, every other value `role=\"status\"`:\n\n```html\n<ki-alert tone=\"success\">Your changes were saved.</ki-alert>\n<ki-alert tone=\"danger\">Payment failed. Update your billing details.</ki-alert>\n```\n\nAn optional `heading` adds emphasized text inside the live region; it is a `strong` element, never a document heading:\n\n```html\n<ki-alert tone=\"warning\" heading=\"Storage almost full\">\n  You are using 92% of your plan.\n</ki-alert>\n```\n\n`dismissible` renders the alert's only tab stop; user dismissal reflects `dismissed` and fires a composed `ki-dismiss` (programmatic `dismissed` writes stay silent, and clearing the attribute re-shows the alert):\n\n```html\n<ki-alert tone=\"danger\" heading=\"Save failed\" dismissible>\n  Your changes could not be saved. Retry or copy your work elsewhere.\n</ki-alert>\n```\n\n`dismiss-label` overrides the dismiss button's accessible name — the default `Dismiss` is the component's only built-in user-visible string, so localize it whenever the document language is not English:\n\n```html\n<ki-alert lang=\"es\" tone=\"info\" dismissible dismiss-label=\"Descartar\">\n  Mantenimiento programado el sábado desde las 02:00 UTC.\n</ki-alert>\n```\n"
+        "examples": "`tone` sets the token-backed colors and the live-region urgency — `danger` and `warning` expose `role=\"alert\"`, every other value `role=\"status\"`:\n\n```html\n<ki-alert tone=\"success\">Your changes were saved.</ki-alert>\n<ki-alert tone=\"danger\">Payment failed. Update your billing details.</ki-alert>\n```\n\nAn optional `heading` adds emphasized text inside the live region; it is a `strong` element, never a document heading:\n\n```html\n<ki-alert tone=\"warning\" heading=\"Storage almost full\">\n  You are using 92% of your plan.\n</ki-alert>\n```\n\n`dismissible` renders the alert's only tab stop; user dismissal reflects `dismissed` and fires a composed `ki-dismiss` (programmatic `dismissed` writes stay silent, and clearing the attribute re-shows the alert):\n\n```html\n<ki-alert tone=\"danger\" heading=\"Save failed\" dismissible>\n  Your changes could not be saved. Retry or copy your work elsewhere.\n</ki-alert>\n```\n\n`dismiss-label` overrides the dismiss button's accessible name — the default `Dismiss` is the component's only built-in user-visible string, so localize it whenever the document language is not English:\n\n```html\n<ki-alert lang=\"es\" tone=\"info\" dismissible dismiss-label=\"Descartar\">\n  Mantenimiento programado el sábado desde las 02:00 UTC.\n</ki-alert>\n```\n\nThe `icon` slot takes a decorative glyph, drawn in the tone's colors in a round frame at the top of the card; give every non-neutral alert one, since that is where the tone shows. The `actions` slot takes the responses to the message as `size=\"sm\"` buttons, in a row after the message and outside the live region. An action never dismisses the alert by itself: set `dismissed` when it should go, and focus moves on to the next control:\n\n```html\n<ki-alert tone=\"warning\" heading=\"Session ending\" dismissible>\n  <svg slot=\"icon\" viewBox=\"0 0 20 20\" aria-hidden=\"true\">\n    <path fill=\"currentColor\" d=\"M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm.75 4v4.5h-1.5V6h1.5Zm-.75 8.25a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\" />\n  </svg>\n  Your session expires in one minute. Choose Stay signed in to keep working.\n  <ki-button slot=\"actions\" type=\"button\" variant=\"tertiary\" size=\"sm\">Sign out</ki-button>\n  <ki-button slot=\"actions\" type=\"button\" variant=\"primary\" size=\"sm\">Stay signed in</ki-button>\n</ki-alert>\n```\n"
       },
       "props": [
         {
@@ -237,12 +257,28 @@
         {
           "name": "",
           "docs": "Message body. It lives inside the live-region boundary."
+        },
+        {
+          "name": "actions",
+          "docs": "Optional responses to this message, in a row at the bottom\nof the card, outside the live region. Slot `size=\"sm\"` buttons. The alert\nnever activates them and an action does not dismiss the alert; the\napplication does, by setting `dismissed`. When NOT to use: a response the\nperson cannot skip belongs in `ki-dialog`."
+        },
+        {
+          "name": "icon",
+          "docs": "Optional decorative glyph shown in a round frame at the top of\nthe card, in the tone's colors. Hidden from assistive technology: it never\ncarries meaning the heading and message lack. When to use: give every\nnon-neutral alert an icon. When NOT to use: never as the only cue for the\nmessage."
         }
       ],
       "parts": [
         {
+          "name": "actions",
+          "docs": "Row around the `actions` slot, rendered only when it holds content."
+        },
+        {
           "name": "alert",
-          "docs": "Outer alert surface: tone background, border, radius, and padding."
+          "docs": "Outer shell around the card: padding, radius, wash and blur."
+        },
+        {
+          "name": "card",
+          "docs": "Card holding the icon, text, actions and dismiss control: tone\nbackground, border, radius, padding and elevation."
         },
         {
           "name": "dismiss",
@@ -251,6 +287,10 @@
         {
           "name": "heading",
           "docs": "Optional emphasized heading, rendered only when non-empty."
+        },
+        {
+          "name": "icon",
+          "docs": "Round frame around the `icon` slot, rendered only when it holds content."
         },
         {
           "name": "message",

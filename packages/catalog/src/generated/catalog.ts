@@ -185,10 +185,12 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Message body. It lives inside the live-region boundary."
+        "": "Message body. It lives inside the live-region boundary.",
+        "actions": "Optional responses to this message, in a row at the bottom\nof the card, outside the live region. Slot `size=\"sm\"` buttons. The alert\nnever activates them and an action does not dismiss the alert; the\napplication does, by setting `dismissed`. When NOT to use: a response the\nperson cannot skip belongs in `ki-dialog`.",
+        "icon": "Optional decorative glyph shown in a round frame at the top of\nthe card, in the tone's colors. Hidden from assistive technology: it never\ncarries meaning the heading and message lack. When to use: give every\nnon-neutral alert an icon. When NOT to use: never as the only cue for the\nmessage."
       },
       "tag": "ki-alert",
-      "whenNotToUse": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.",
+      "whenNotToUse": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
       "whenToUse": "show a persistent inline message about the state of a page or\nsection, such as a failed save, completed operation, or service notice, that\nremains until the condition is resolved or the person dismisses it. Express\nseverity with `tone`, never custom styling."
     },
     "ki-avatar": {

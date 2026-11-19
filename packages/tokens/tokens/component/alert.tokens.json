@@ -3,27 +3,27 @@
     "alert": {
       "padding-inline": {
         "$value": "{ki.space.xl}",
-        "$description": "dimension used by the alert component for padding inline (MarsUI Alert master card: 12px on all four sides)."
+        "$description": "dimension used by the alert component for the card padding inline (MarsUI Alert master List_wrap card: 12px on all four sides)."
       },
       "padding-block": {
         "$value": "{ki.space.xl}",
-        "$description": "dimension used by the alert component for padding block (MarsUI Alert master card: 12px on all four sides)."
+        "$description": "dimension used by the alert component for the card padding block (MarsUI Alert master List_wrap card: 12px on all four sides)."
       },
       "gap": {
         "$value": "{ki.space.xl}",
-        "$description": "dimension used by the alert component for gap (MarsUI Alert master card gap Space/xl 12px)."
+        "$description": "dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px)."
       },
       "text-gap": {
         "$value": "{ki.space.xs}",
         "$description": "dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap)."
       },
       "radius": {
-        "$value": "{ki.radius.component.md}",
-        "$description": "dimension used by the alert component for radius (Info Notes pills measure component radius 8-10px; same 10px value, repointed to the component ramp so personality modes reach it. The card-form Alert master anchors 16px big_component/radius_xs — applies if ki-alert grows the icon-chip card form)."
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "dimension used by the alert component for the card radius (MarsUI Alert master List_wrap big_component/radius_xs 16px; the shell around it has its own radius)."
       },
       "border-width": {
         "$value": "{ki.space.zero}",
-        "$description": "dimension used by the alert component for border width (MarsUI never strokes alert surfaces: Alert master, Info Notes and Toasts all carry width 0; tone lives in the fill and text. material3 keeps its 2px border via its override)."
+        "$description": "dimension used by the alert component for the card border width (MarsUI never strokes alert surfaces: the Alert master card stroke is fully transparent. material3 keeps its 2px border via its override)."
       },
       "font-size": {
         "$value": "{ki.typography.size.body-1}",
@@ -55,72 +55,112 @@
       },
       "neutral": {
         "bg": {
-          "$value": "{ki.surface.s1}",
-          "$description": "color used by the alert component for neutral background."
+          "$value": "{ki.surface.special.light-s0-dark-s2}",
+          "$description": "color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
-          "$description": "color used by the alert component for neutral foreground."
+          "$description": "color used by the alert component for the neutral card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8)."
         },
         "border": {
           "$value": "{ki.outline.none}",
           "$description": "color used by the alert component for neutral border."
+        },
+        "icon-bg": {
+          "$value": "{ki.surface.primary-base-em-alpha}",
+          "$description": "color used by the alert component for the neutral icon frame (MarsUI Alert master Feature-icon Surface/primary-base-em-alpha at 12%: the master variable itself, not the heavier primary-tint content fill, so the primary glyph clears 4.5:1 in dark)."
+        },
+        "icon-fg": {
+          "$value": "{ki.text.primary-high-em}",
+          "$description": "color used by the alert component for the neutral icon glyph (MarsUI Alert master Feature-icon glyph Text/primary-high-em)."
         }
       },
       "success": {
         "bg": {
-          "$value": "{ki.surface.success-tint}",
-          "$description": "color used by the alert component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
+          "$value": "{ki.surface.special.light-s0-dark-s2}",
+          "$description": "color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
         },
         "fg": {
-          "$value": "{ki.text.success-high-em}",
-          "$description": "color used by the alert component for success foreground."
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the alert component for the success card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8)."
         },
         "border": {
           "$value": "{ki.outline.none}",
           "$description": "color used by the alert component for success border (MarsUI draws no tone border on any alert/note/toast surface)."
+        },
+        "icon-bg": {
+          "$value": "{ki.surface.success-tint}",
+          "$description": "color used by the alert component for the success icon frame (MarsUI Alert master Feature-icon Surface/success-base-em-alpha at 12%)."
+        },
+        "icon-fg": {
+          "$value": "{ki.text.success-high-em}",
+          "$description": "color used by the alert component for the success icon glyph (MarsUI Alert master Feature-icon glyph Text/success-high-em)."
         }
       },
       "danger": {
         "bg": {
-          "$value": "{ki.surface.danger-tint}",
-          "$description": "color used by the alert component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
+          "$value": "{ki.surface.special.light-s0-dark-s2}",
+          "$description": "color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
         },
         "fg": {
-          "$value": "{ki.text.danger-high-em}",
-          "$description": "color used by the alert component for danger foreground."
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the alert component for the danger card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8)."
         },
         "border": {
           "$value": "{ki.outline.none}",
           "$description": "color used by the alert component for danger border (MarsUI draws no tone border on any alert/note/toast surface)."
+        },
+        "icon-bg": {
+          "$value": "{ki.surface.danger-tint}",
+          "$description": "color used by the alert component for the danger icon frame (MarsUI Alert master Feature-icon Surface/danger-base-em-alpha at 12%)."
+        },
+        "icon-fg": {
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "color used by the alert component for the danger icon glyph (MarsUI Alert master Feature-icon glyph Text/danger-high-em)."
         }
       },
       "info": {
         "bg": {
-          "$value": "{ki.surface.info-tint}",
-          "$description": "color used by the alert component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
+          "$value": "{ki.surface.special.light-s0-dark-s2}",
+          "$description": "color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
         },
         "fg": {
-          "$value": "{ki.text.info-high-em}",
-          "$description": "color used by the alert component for info foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 7.3:1)."
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the alert component for the info card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8)."
         },
         "border": {
           "$value": "{ki.outline.none}",
           "$description": "color used by the alert component for info border (MarsUI draws no tone border on any alert/note/toast surface)."
+        },
+        "icon-bg": {
+          "$value": "{ki.surface.info-tint}",
+          "$description": "color used by the alert component for the info icon frame (MarsUI Alert master Feature-icon Surface/info-base-em-alpha at 12%)."
+        },
+        "icon-fg": {
+          "$value": "{ki.text.info-high-em}",
+          "$description": "color used by the alert component for the info icon glyph (MarsUI Alert master Feature-icon glyph Text/info-high-em)."
         }
       },
       "warning": {
         "bg": {
-          "$value": "{ki.surface.warning-tint}",
-          "$description": "color used by the alert component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
+          "$value": "{ki.surface.special.light-s0-dark-s2}",
+          "$description": "color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
         },
         "fg": {
-          "$value": "{ki.text.warning-high-em}",
-          "$description": "color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1)."
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the alert component for the warning card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8)."
         },
         "border": {
           "$value": "{ki.outline.none}",
           "$description": "color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface)."
+        },
+        "icon-bg": {
+          "$value": "{ki.surface.warning-tint}",
+          "$description": "color used by the alert component for the warning icon frame (MarsUI Alert master Feature-icon Surface/warning-base-em-alpha at 12%)."
+        },
+        "icon-fg": {
+          "$value": "{ki.text.warning-high-em}",
+          "$description": "color used by the alert component for the warning icon glyph (MarsUI Alert master Feature-icon glyph Text/warning-high-em)."
         }
       },
       "dismiss": {
@@ -172,6 +212,52 @@
           "$value": "{ki.focus.primary}",
           "$type": "shadow",
           "$description": "shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
+        }
+      },
+      "shell": {
+        "padding": {
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides)."
+        },
+        "radius": {
+          "$value": "{ki.radius.big-component.lg}",
+          "$description": "dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px)."
+        },
+        "bg": {
+          "$value": "{ki.inverse-white.alpha-3}",
+          "$description": "color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark)."
+        },
+        "backdrop-blur": {
+          "$value": "{ki.effect.component.backdrop-blur}",
+          "$type": "dimension",
+          "$description": "backdrop blur used by the alert component behind the shell (MarsUI Alert master BACKGROUND_BLUR Blur/24 = CSS 12px; reduced transparency and material3 resolve to blur none through the semantic token)."
+        }
+      },
+      "card": {
+        "shadow": {
+          "$value": "{ki.elevation.e5}",
+          "$type": "shadow",
+          "$description": "shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5)."
+        }
+      },
+      "icon": {
+        "size": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the alert component for the icon frame (MarsUI Alert master Feature-icon size xs: 32px)."
+        },
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the alert component for the icon frame radius (MarsUI Alert master Feature-icon: a circle)."
+        },
+        "glyph-size": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the alert component for the icon glyph inside the frame (MarsUI Alert master Feature-icon glyph 20px)."
+        }
+      },
+      "actions": {
+        "gap": {
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the alert component for the gap between slotted actions (MarsUI Alert master CTAs gap Space/xl 12px)."
         }
       }
     }

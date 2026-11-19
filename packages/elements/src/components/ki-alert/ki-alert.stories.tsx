@@ -76,6 +76,35 @@ export const Dismissible: Story = {
   ),
 };
 
+// A fresh vnode per alert: Stencil binds each vnode to one element.
+const glyph = () => (
+  <svg slot="icon" viewBox="0 0 20 20" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm.75 4v4.5h-1.5V6h1.5Zm-.75 8.25a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+    />
+  </svg>
+);
+
+export const IconAndActions: Story = {
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '0.75rem', inlineSize: '25rem' }}>
+      {tones.map((tone) => (
+        <ki-alert {...args} tone={tone} heading={`${tone} heading`} dismissible>
+          {glyph()}
+          Something you might like to know.
+          <ki-button slot="actions" type="button" variant="tertiary" size="sm">
+            Later
+          </ki-button>
+          <ki-button slot="actions" type="button" variant="primary" size="sm">
+            Review
+          </ki-button>
+        </ki-alert>
+      ))}
+    </div>
+  ),
+};
+
 export const RTL: Story = {
   render: (args) => (
     <div dir="rtl" style={{ inlineSize: '32rem' }}>

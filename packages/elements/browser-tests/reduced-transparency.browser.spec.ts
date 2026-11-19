@@ -113,11 +113,13 @@ describe('044 reduced transparency under the system preference', () => {
 
   it('S2: tinted alerts and badges keep their tone on an opaque surface', async (context) => {
     themeDocument('onmars', 'dark');
+    // Since spec 011 A1 an onmars alert wears its tone on the icon frame
+    // alone: that frame is the alert's tinted surface.
     const fixture = await mount(
-      '<ki-alert tone="info">Saved</ki-alert><ki-badge tone="success">Paid</ki-badge>',
+      '<ki-alert tone="info"><svg slot="icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="currentColor"></circle></svg>Saved</ki-alert><ki-badge tone="success">Paid</ki-badge>',
     );
     await underTransparency('no-preference', context);
-    const alert = findDeep(host(fixture, 'ki-alert'), byPart('alert'));
+    const alert = findDeep(host(fixture, 'ki-alert'), byPart('icon'));
     const badge = findDeep(host(fixture, 'ki-badge'), byPart('badge'));
     const standardHues = [hueOf(surfaceOf(alert)), hueOf(surfaceOf(badge))];
     await underTransparency('reduce', context);
