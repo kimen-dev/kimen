@@ -1,0 +1,125 @@
+:host {
+  --_ki-spinner-size: var(--ki-spinner-size);
+  --_ki-spinner-stroke: var(--ki-spinner-stroke);
+
+  display: inline-flex;
+  max-inline-size: 100%;
+  font-family: var(--ki-typography-family-body);
+  vertical-align: middle;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([size="sm"]) {
+  --_ki-spinner-size: var(--ki-spinner-size-sm);
+}
+
+:host([size="lg"]) {
+  --_ki-spinner-size: var(--ki-spinner-size-lg);
+  --_ki-spinner-stroke: var(--ki-spinner-stroke-lg);
+}
+
+.status {
+  display: inline-flex;
+  min-inline-size: 0;
+  align-items: center;
+  gap: var(--ki-spinner-label-gap);
+}
+
+[part="ring"] {
+  box-sizing: border-box;
+  inline-size: var(--_ki-spinner-size);
+  block-size: var(--_ki-spinner-size);
+  flex: none;
+  border: var(--_ki-spinner-stroke) solid var(--ki-spinner-track);
+  border-block-start-color: var(--ki-spinner-indicator);
+  border-radius: var(--ki-spinner-radius);
+  animation: ki-spinner-ring var(--ki-spinner-ring-duration) var(--ki-spinner-ring-easing) infinite;
+}
+
+[part="dots"] {
+  display: inline-flex;
+  flex: none;
+  gap: var(--ki-spinner-dot-gap);
+}
+
+[part="dots"] > span {
+  inline-size: var(--ki-spinner-dot-size);
+  block-size: var(--ki-spinner-dot-size);
+  border-radius: var(--ki-spinner-radius);
+  background-color: var(--ki-spinner-label-fg);
+}
+
+[part="label"] {
+  min-inline-size: 0;
+  background-color: var(--ki-spinner-label-bg);
+  color: var(--ki-spinner-label-fg);
+  font-family: var(--ki-spinner-label-font-family);
+  font-size: var(--ki-spinner-label-font-size);
+  line-height: var(--ki-spinner-label-line-height);
+  overflow-wrap: anywhere;
+}
+
+/* A single label stays in the accessibility tree when visually hidden. */
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes ki-spinner-ring {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes ki-spinner-dot {
+  0%,
+  80%,
+  100% {
+    transform: scale(var(--ki-spinner-dot-scale-min));
+  }
+
+  40% {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [part="dots"] > span {
+    animation: ki-spinner-dot var(--ki-spinner-dot-duration) var(--ki-spinner-dot-easing) infinite;
+  }
+
+  [part="dots"] > span:nth-child(2) {
+    animation-delay: var(--ki-spinner-dot-delay);
+  }
+
+  [part="dots"] > span:nth-child(3) {
+    animation-delay: calc(2 * var(--ki-spinner-dot-delay));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [part="ring"] {
+    animation-duration: var(--ki-spinner-ring-duration-reduced);
+  }
+}
+
+@media (forced-colors: active) {
+  /* The dotted track and solid arc also differ when the palette has one ink. */
+  [part="ring"] {
+    border-style: dotted;
+    border-block-start-style: solid;
+    border-color: CanvasText;
+  }
+
+  [part="dots"] > span {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
+}

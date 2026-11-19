@@ -661,7 +661,7 @@ function applySet(
     // A native layout element's props are CSSOM layout (spec 037 D4): the
     // whole layout is re-derived and only changed style properties written.
     if (previous !== current && !writeNativeLayout(element, node.component, node.props)) {
-      writeProp(element, name, current);
+      writeProp(element, node.component, name, current);
     }
     if (overriding) {
       const live = current ?? ownEntry(entry?.props, name)?.default;

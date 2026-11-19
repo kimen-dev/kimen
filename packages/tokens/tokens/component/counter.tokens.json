@@ -24,7 +24,7 @@
         "$description": "Optional image over the notification indicator fill."
       },
       "backdrop-filter": {
-        "$value": "{ki.effect.component.flat-backdrop-filter}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete backdrop filter for the indicator."
       },
       "ring": {

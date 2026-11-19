@@ -32,7 +32,7 @@ const publishedTags = async () => {
 const genUiDirectories = async () =>
   (await readRepositoryJson('docs/genui-surfaces.json')).packages.map(({ directory }) => directory);
 
-test('a cold elements build prepares the package summary before Stencil validates its file list', async (t) => {
+test('a cold elements build prepares the package summary and icon modules before Stencil validates its file list', async (t) => {
   const { preparePackageSummary } = await import(
     '../../packages/elements/scripts/build-surfaces.mjs'
   );
@@ -48,11 +48,11 @@ test('a cold elements build prepares the package summary before Stencil validate
   assert.ok(files.includes('llms-full.txt'));
   assert.match(
     scripts.build,
-    /^node scripts\/build-surfaces\.mjs --prepare-package-summary && stencil build\b/u,
+    /^node scripts\/build-surfaces\.mjs --prepare-package-summary && node scripts\/generate-icons\.mjs && stencil build\b/u,
   );
   assert.match(
     await readRepositoryFile('scripts/gates/build-mutation-elements.sh'),
-    /^node packages\/elements\/scripts\/build-surfaces\.mjs --prepare-package-summary\npnpm --filter @kimen\/elements exec stencil build$/mu,
+    /^node packages\/elements\/scripts\/build-surfaces\.mjs --prepare-package-summary\nnode packages\/elements\/scripts\/generate-icons\.mjs\npnpm --filter @kimen\/elements exec stencil build$/mu,
   );
 });
 

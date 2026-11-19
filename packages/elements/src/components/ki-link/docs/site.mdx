@@ -1,0 +1,36 @@
+---
+title: Link
+description: Navigate to a page, section, or resource with native link behavior.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-link` for navigation. Use `ki-button variant="ghost"` for actions on
+the current page. Write link text that identifies its destination when read
+on its own.
+
+<Demo code={`<p>Read the <ki-link href="#api-reference">API reference</ki-link>, or browse <ki-link href="https://github.com/kimen-dev/kimen" external>the source on GitHub</ki-link>.</p>`} />
+
+## Standalone links
+
+In a navigation row or footer, use `underline="hover"` when placement already
+identifies the link. The underline also appears on keyboard focus and on
+devices without hover. Use `variant="neutral"` to match the body ink.
+
+<Demo code={`<ki-link href="#api-reference" variant="neutral" underline="hover">API reference</ki-link>`} />
+
+## External destinations
+
+`external` requests a new tab with `noopener` and adds an icon and a spoken
+announcement. Override `external-label` to localize the announcement.
+`download`, `target`, and `rel` follow native anchor behavior, with
+`external` taking precedence over `target`.
+
+## API reference
+
+<CemApi tag="ki-link" />
+
+## Workshop
+
+[Open ki-link in Storybook](/storybook/?path=/docs/docs-components-ki-link--docs)

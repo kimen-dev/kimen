@@ -27,6 +27,7 @@ import { defineAllComponents } from '../all-components';
 import robotoWoff2Url from './fonts/RobotoVariable.woff2?url';
 import type { VisualComponent, VisualGallery } from './galleries';
 import { fixtureFor } from './galleries';
+import { visualGalleryThemes } from './theme-matrix';
 
 type Scheme = 'dark' | 'light';
 type Theme = 'material3' | 'onmars';
@@ -35,7 +36,6 @@ type Gallery = VisualGallery & { inlinePadding?: number };
 
 type VisualSuiteOptions = {
   scheme: Scheme;
-  includeMaterial3Dark?: boolean;
 } & (
   | { component: VisualComponent; define?: readonly (() => void)[] }
   | { name: string; gallery: Gallery; define: readonly (() => void)[] }
@@ -205,9 +205,7 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
   const { define, scheme } = options;
   const name = 'name' in options ? options.name : options.component;
   const gallery = 'gallery' in options ? options.gallery : fixtureFor(options.component).gallery;
-  // Material 3 dark is opt-in for components whose contract includes it.
-  const themes: readonly Theme[] =
-    scheme === 'light' || options.includeMaterial3Dark ? ['onmars', 'material3'] : ['onmars'];
+  const themes = visualGalleryThemes(name, scheme);
 
   describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {

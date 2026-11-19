@@ -1,0 +1,72 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
+ * Logical properties only (Art. IV): direction-agnostic by construction. */
+:host {
+  --_ki-toaster-inset-block: var(--ki-toaster-inset-block);
+  --_ki-toaster-inset-inline: var(--ki-toaster-inset-inline);
+
+  /* The host takes no room in the page: the stack is painted in the top
+   * layer, out of the flow. */
+  display: block;
+  font-family: var(--ki-typography-family-body);
+}
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
+/* The stack is a manual popover. Closed, it generates no box: nothing covers
+ * the page and no group is exposed. Open, it sits against the edges of the
+ * viewport, its containing block, as wide as a toast and never wider than
+ * the viewport minus the edge distance on both sides. The popover defaults
+ * (centered inset, auto margin, border, padding, canvas fill, scrolling
+ * overflow) are cleared so the placement rules alone place it. Toasts stack
+ * from the top down in arrival order whatever the placement (I-5). */
+[part="stack"] {
+  position: fixed;
+  inset: auto;
+  inset-block: auto var(--_ki-toaster-inset-block);
+  inset-inline: auto var(--_ki-toaster-inset-inline);
+  display: none;
+  flex-direction: column;
+  gap: var(--ki-toaster-gap);
+  box-sizing: border-box;
+  inline-size: min(var(--ki-toast-width), calc(100% - 2 * var(--_ki-toaster-inset-inline)));
+  block-size: auto;
+  max-block-size: calc(100% - 2 * var(--_ki-toaster-inset-block));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow: visible;
+}
+
+[part="stack"]:popover-open {
+  display: flex;
+}
+
+/* Placement. The bottom end is set above, and stays for unknown values. */
+:host([placement="top-center"]) [part="stack"],
+:host([placement="top-end"]) [part="stack"] {
+  inset-block: var(--_ki-toaster-inset-block) auto;
+}
+
+:host([placement="top-center"]) [part="stack"],
+:host([placement="bottom-center"]) [part="stack"] {
+  inset-inline: 0;
+  margin-inline: auto;
+}
+
+/* A narrow touch screen keeps the stack at the bottom center whatever the
+ * placement (issue 353): 40rem is the surface step the stack never fits
+ * beside content under. A viewport query, not a container one: the stack is
+ * placed against the viewport. */
+@media (pointer: coarse) and (width < 40rem) {
+  :host [part="stack"],
+  :host([placement]) [part="stack"] {
+    inset-block: auto var(--_ki-toaster-inset-block);
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+}

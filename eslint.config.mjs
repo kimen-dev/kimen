@@ -25,6 +25,8 @@ export default tseslint.config(
       'internal/**',
       '**/loader/**',
       '**/generated/**',
+      // Generated per-icon package modules. Lint their source generator.
+      'packages/elements/icons/**',
       // Generated framework wrappers (spec 034, Art. I): produced by the
       // Stencil output targets, drift-gated by wrappers-sync, never
       // hand-edited — the hand-written entry shells stay linted.
