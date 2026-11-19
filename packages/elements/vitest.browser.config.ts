@@ -36,6 +36,7 @@ const inputDeviceSpecs = [
   pointerCapabilitySpec,
   'src/components/ki-icon/ki-icon.browser.spec.ts',
   'browser-tests/touch-field-text.browser.spec.ts',
+  'browser-tests/touch-button-group.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
 ];
 const browserSpecPatterns = (suffix: string): string[] =>
