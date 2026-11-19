@@ -331,9 +331,29 @@ button {
   color: var(--_ki-button-fg);
   cursor: pointer;
   display: inline-flex;
+
+  /* The pointer target below paints behind the content, inside the button's
+     own stacking context. */
+  isolation: isolate;
   justify-content: center;
+  position: relative;
   touch-action: manipulation;
   user-select: none;
+}
+
+/* The pointer target (spec 045 A1-D3): at least --ki-density-target-min
+   across both axes, centred on the button, whatever the button paints. It
+   paints nothing and takes no space: inside any button that is already as
+   large, it extends the target of one painted smaller (an icon button or an
+   xs button under touch's 44px minimum). Behind the content (z-index -1 in
+   the button's stacking context), so a pointer over the label or a slotted
+   icon still lands on them. */
+button::before {
+  content: "";
+  inset-block: calc((100% - var(--ki-density-target-min)) / 2);
+  inset-inline: calc((100% - var(--ki-density-target-min)) / 2);
+  position: absolute;
+  z-index: -1;
 }
 
 /* Disabled resolves the disabled matrix cells (tone-independent), keyed on
@@ -409,7 +429,7 @@ button:focus-visible {
  * Placed after the structural rules it now shares a target with, so
  * specificity still descends down the file (stylelint no-descending-
  * specificity). */
-button:is(:active, [data-ki-pressed]):not(:disabled) {
+button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
   --_ki-button-bg: var(--_ki-button-rest-bg);
   --_ki-button-fg: var(--_ki-button-rest-fg);
   --_ki-button-border: var(--_ki-button-rest-border);
@@ -455,14 +475,17 @@ button:is(:active, [data-ki-pressed]):not(:disabled) {
    two hover overlays this file already carries — a single pressed overlay
    would LIGHTEN the primary button on press and read as less pressed, not
    more. */
-:host([variant="primary"]) button:is(:active, [data-ki-pressed]):not(:disabled) {
+:host([variant="primary"])
+  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
   --_ki-button-overlay: var(--ki-button-primary-active-overlay);
 }
 
 /* The non-glass bottom edge follows the border, but the host resolved that
    from the HOVER border; re-derive it here from the restored one. */
-:host([variant="quaternary"]) button:is(:active, [data-ki-pressed]):not(:disabled),
-:host([variant="ghost"]) button:is(:active, [data-ki-pressed]):not(:disabled) {
+:host([variant="quaternary"])
+  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]),
+:host([variant="ghost"])
+  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
   --_ki-button-border-bottom: var(--_ki-button-border);
 }
 
@@ -477,4 +500,71 @@ button:is(:active, [data-ki-pressed]):not(:disabled) {
     transition-property: background-color, box-shadow, transform;
     transition-timing-function: var(--ki-motion-easing-out);
   }
+}
+
+/* Loading (specs/046-button-loading). Keyed, like disabled, on the inner
+   native button: it carries aria-disabled="true" exactly while loading is in
+   effect, so a disabled button that is also set loading never matches (D8).
+   The button keeps its resting and hover paint and its box; the pressed
+   rules above exclude it, because pressing it does nothing (D3), and the
+   pointer says so. Each component hides its own content and sizes the
+   spinner through --_ki-button-spinner-size in its size ramp. */
+button[aria-disabled="true"] {
+  cursor: progress;
+  position: relative;
+}
+
+/* The circular ki-progress geometry (D5): a 25-unit arc of the 100-unit
+   ring, round caps, a non-scaling stroke in the button's own ink, so the
+   spinner contrasts with the fill exactly as the label does. Centered over
+   the content it replaces; on the smallest sizes the stroke reaches just
+   past the box, so the box does not clip it. Drawn from the top, like
+   ki-progress. */
+[part="spinner"] {
+  block-size: var(--_ki-button-spinner-size);
+  inline-size: var(--_ki-button-spinner-size);
+  inset: 0;
+  margin: auto;
+  overflow: visible;
+  position: absolute;
+  transform: rotate(-90deg);
+}
+
+/* The ring paints with its fill="none" stroke="currentColor" attributes, so
+   under forced colors it follows the forced text color too. */
+[part="spinner"] circle {
+  stroke-dasharray: 25 100;
+  stroke-linecap: round;
+  stroke-width: var(--ki-button-spinner-stroke-width);
+}
+
+/* Motion (D6): the turn is declared only when reduced motion is not
+   requested; otherwise the arc is drawn still. */
+@media (prefers-reduced-motion: no-preference) {
+  [part="spinner"] {
+    animation: ki-button-spinner var(--ki-button-spinner-duration) linear infinite;
+  }
+}
+
+@keyframes ki-button-spinner {
+  from {
+    transform: rotate(-90deg);
+  }
+
+  to {
+    transform: rotate(270deg);
+  }
+}
+
+/* The status region (D7): read by assistive technology, painted nowhere.
+   Clipped away entirely; one pixel rather than none, because some screen
+   readers skip a node that has no size. Out of flow, beside the button, so
+   it never takes part in the button's layout. */
+.status {
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
 }

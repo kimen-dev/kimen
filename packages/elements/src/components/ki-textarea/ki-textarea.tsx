@@ -6,6 +6,7 @@ import {
   fieldText,
   fieldValidationMessage,
 } from '../../utils/field-message';
+import { LabelHint } from '../../utils/label-hint';
 import { normalizeKiTextareaRows } from './ki-textarea.form';
 
 /**
@@ -33,6 +34,8 @@ import { normalizeKiTextareaRows } from './ki-textarea.form';
  * @part help - Help line under the field, read as the field's description.
  * @part textarea - Internal native multiline control.
  * @part label - Rendered visible label and accessible-name source.
+ * @part label-hint - The `label-hint` text after the label text, inside the label and
+ * part of the accessible name; rendered only while a hint is set.
  * @event change - Fired when the user commits an edited value (on blur, with native
  * textarea timing), composed across the shadow boundary; `value` is already
  * current when listeners run. When to use: react to a committed value. When
@@ -41,7 +44,7 @@ import { normalizeKiTextareaRows } from './ki-textarea.form';
  */
 @Component({
   tag: 'ki-textarea',
-  styleUrls: ['../../utils/field-message.css', 'ki-textarea.css'],
+  styleUrls: ['../../utils/field-message.css', '../../utils/label-hint.css', 'ki-textarea.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -55,6 +58,17 @@ export class KiTextarea {
    * text. When NOT to use: do not substitute placeholder text for the label.
    */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * Short text shown after the label and read with it as part of the field's
+   * name, so people know before submitting whether to answer: "(optional)" on
+   * the few optional fields of a mostly required form, or "(required)" the
+   * other way round, in the page's own language. It changes no validation;
+   * set `required` for that, and keep the two consistent.
+   * When NOT to use: do not put instructions or length limits in it (use
+   * `help-text`), errors (use `error-text`), or a repeat of the label.
+   */
+  @Prop({ reflect: true }) labelHint?: string;
 
   /**
    * Hint shown while the textarea is empty.
@@ -373,6 +387,7 @@ export class KiTextarea {
       <div class="root">
         <label part="label" htmlFor={this.controlId}>
           {this.label}
+          <LabelHint hint={fieldText(this.labelHint)} />
         </label>
         <div part="field">
           <textarea

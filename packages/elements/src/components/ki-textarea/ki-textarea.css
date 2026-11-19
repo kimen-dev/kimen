@@ -5,6 +5,10 @@
   --_ki-textarea-label-fg: var(--ki-textarea-rest-label-fg);
   --_ki-textarea-placeholder-fg: var(--ki-textarea-rest-placeholder-fg);
 
+  /* The label hint (spec 047, utils/label-hint.css). */
+  --_ki-label-hint-fg: var(--ki-textarea-label-hint-fg);
+  --_ki-label-hint-gap: var(--ki-textarea-label-hint-gap);
+
   display: block;
   font-family: var(--ki-typography-family-body);
 }
@@ -60,8 +64,10 @@
   --_ki-textarea-label-fg: var(--ki-textarea-disabled-label-fg);
   --_ki-textarea-placeholder-fg: var(--ki-textarea-disabled-placeholder-fg);
 
-  /* The help line dims with the label (spec 042 D9). */
+  /* The help line dims with the label (spec 042 D9), and so does the label
+     hint (spec 047 D5). */
   --_ki-field-help-fg: var(--ki-textarea-disabled-label-fg);
+  --_ki-label-hint-fg: var(--ki-textarea-disabled-label-fg);
 }
 
 .root {
@@ -131,6 +137,16 @@
 
 [part="textarea"]::placeholder {
   color: var(--_ki-textarea-placeholder-fg);
+}
+
+/* Spec 048: under a coarse primary pointer the text a person types is at
+   least 16px, the size under which Safari on iOS zooms the page into the
+   focused field and leaves it zoomed. Only the native control (and so its
+   placeholder): the label and the help and error lines keep their size. */
+@media (pointer: coarse) {
+  [part="textarea"] {
+    font-size: var(--ki-textarea-font-size-touch);
+  }
 }
 
 /* Micro-motion (MarsUI soft-surface language): fill/border crossfade on

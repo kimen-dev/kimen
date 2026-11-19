@@ -16,7 +16,8 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * @whenToUse a compact, widely understood action where space precludes a
  * visible label: toolbars, card and dialog corners (close), media transport,
  * data-row actions. Always supply `label`; usually pair with ki-tooltip for
- * sighted discoverability.
+ * sighted discoverability. While the action it started is in progress, set
+ * `loading` instead of disabling it.
  * @whenNotToUse whenever a visible label fits (use ki-button), toggling
  * state (a future toggle icon button), navigation (use a link), or form
  * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
@@ -27,6 +28,8 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * accessible name — that comes from `label` alone.
  * @part button - Internal native button.
  * @part icon - Icon wrapper around the default slot.
+ * @part spinner - Loading spinner drawn in place of the icon, in the button's
+ * foreground ink, rendered only while `loading` is in effect.
  */
 @Component({
   tag: 'ki-icon-button',
@@ -78,12 +81,45 @@ export class KiIconButton {
 
   /**
    * Prevents activation, removes the icon button from keyboard reach, and
-   * exposes the unavailable state through the internal native button.
-   * When NOT to use: do not use disabled for pending/loading semantics.
+   * exposes the unavailable state through the internal native button. Wins
+   * over `loading` when both are set.
+   * When NOT to use: do not use disabled for pending/loading semantics; use
+   * `loading`.
    *
    * @default false
    */
   @Prop({ reflect: true }) disabled = false;
+
+  /**
+   * Pending state of the action this icon button started (refreshing,
+   * sending). While set, every activation is blocked (pointer, Enter and
+   * Space), but the icon button stays focusable, in the Tab order and at its
+   * size: the icon stays laid out, transparent, and a spinner is drawn in its
+   * place. The internal native button is exposed with `aria-disabled="true"`
+   * and keeps its `label`, and `loadingLabel` is announced as a polite status
+   * message. `disabled` wins over it. The application sets it when the
+   * action starts and clears it when the action ends.
+   * When to use: while the work a click on this icon button started is
+   * running, so a second activation cannot repeat it.
+   * When NOT to use: for an icon button the person cannot use yet (use
+   * `disabled`), or for the progress of a page or region (use ki-progress).
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) loading = false;
+
+  /**
+   * Text of the polite status message announced while `loading` is set.
+   * Override for localization; the default English string is the icon
+   * button's only built-in user-visible text.
+   * When to use: provide a localized message whenever the document language
+   * is not English, or a more specific one ("Refreshing").
+   * When NOT to use: do not repeat `label` here; the person already hears it
+   * on focus.
+   *
+   * @default 'Loading'
+   */
+  @Prop({ attribute: 'loading-label', reflect: true }) loadingLabel = 'Loading';
 
   private button: HTMLButtonElement | undefined;
   private descriptionObserver?: MutationObserver;
@@ -129,12 +165,19 @@ export class KiIconButton {
     }
   }
 
+  /** Loading is in effect only on an icon button that is not disabled (046 D8). */
+  private get effectiveLoading(): boolean {
+    return this.loading && !this.disabled;
+  }
+
   // A real browser never dispatches click on a disabled native button, but
   // synthetic activation (element.click(), dispatched events) still would:
   // cancel both phases so the disabled contract (S2) holds for every caller
-  // (002 precedent).
+  // (002 precedent). An aria-disabled (loading) button does dispatch real
+  // clicks, for the pointer and for Enter/Space: cancelled the same way (046
+  // D3).
   private readonly handleClick = (event: MouseEvent): void => {
-    if (this.disabled) {
+    if (this.disabled || this.effectiveLoading) {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
@@ -144,7 +187,11 @@ export class KiIconButton {
     // Not form-associated (FR-008): no ElementInternals, and the internal
     // native button is type="button" inside the shadow root, so activation
     // can never submit or reset an enclosing form.
-    return (
+    const loading = this.effectiveLoading;
+    // The status region is rendered always, empty until the button loads: a
+    // polite region created together with its text is not announced (042
+    // D6). It sits outside the native button, next to it (046 D7).
+    return [
       <button
         ref={(el) => {
           this.button = el;
@@ -153,6 +200,7 @@ export class KiIconButton {
         type="button"
         tabIndex={this.disabled ? -1 : 0}
         disabled={this.disabled}
+        aria-disabled={loading ? 'true' : undefined}
         aria-label={this.label}
         onClick={this.handleClick}
         onKeyDown={startKeyboardPress}
@@ -162,7 +210,24 @@ export class KiIconButton {
         <span part="icon" aria-hidden="true">
           <slot />
         </span>
-      </button>
-    );
+        {loading ? (
+          // The circular ki-progress geometry (015), as in ki-button.
+          <svg part="spinner" viewBox="0 0 40 40" aria-hidden="true">
+            <circle
+              cx="20"
+              cy="20"
+              r="18"
+              pathLength="100"
+              fill="none"
+              stroke="currentColor"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+        ) : null}
+      </button>,
+      <span class="status" role="status">
+        {loading ? this.loadingLabel : null}
+      </span>,
+    ];
   }
 }

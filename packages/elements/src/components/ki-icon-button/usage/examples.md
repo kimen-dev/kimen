@@ -37,3 +37,11 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
   </ki-icon-button>
 </ki-tooltip>
 ```
+
+While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
+
+```html
+<ki-icon-button label="Refresh" loading loading-label="Refreshing">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2" stroke="currentColor" stroke-width="2" fill="none" /></svg>
+</ki-icon-button>
+```

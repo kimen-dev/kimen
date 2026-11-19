@@ -19,16 +19,20 @@
           "$description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
         },
         "font-size": {
-          "$value": "{ki.typography.size.caption-1}",
-          "$description": "dimension used by the button component for xs font size (MarsUI caption_1 10px)."
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.caption-1}",
-          "$description": "dimension used by the button component for xs line height (MarsUI caption_1 16px)."
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1)."
         },
         "icon-size": {
           "$value": "{ki.space.2xl}",
           "$description": "dimension used by the button component for xs icon size (MarsUI 14px)."
+        },
+        "spinner-size": {
+          "$value": "{ki.space.2xl}",
+          "$description": "dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
         },
         "min-target": {
           "$value": "{ki.space.7xl}",
@@ -64,6 +68,10 @@
           "$value": "{ki.space.3xl}",
           "$description": "dimension used by the button component for sm icon size."
         },
+        "spinner-size": {
+          "$value": "{ki.space.3xl}",
+          "$description": "dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+        },
         "min-target": {
           "$value": "{ki.space.7xl}",
           "$description": "dimension used by the button component for sm min target."
@@ -97,6 +105,10 @@
         "icon-size": {
           "$value": "{ki.space.4xl}",
           "$description": "dimension used by the button component for md icon size."
+        },
+        "spinner-size": {
+          "$value": "{ki.space.4xl}",
+          "$description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
         },
         "min-target": {
           "$value": "{ki.space.7xl}",
@@ -132,6 +144,10 @@
           "$value": "{ki.space.5xl}",
           "$description": "dimension used by the button component for lg icon size."
         },
+        "spinner-size": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the button component for the lg loading spinner box (20px, the lg icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+        },
         "min-target": {
           "$value": "{ki.space.7xl}",
           "$description": "dimension used by the button component for lg min target."
@@ -165,6 +181,10 @@
         "icon-size": {
           "$value": "{ki.space.7xl}",
           "$description": "dimension used by the button component for xl icon size."
+        },
+        "spinner-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the button component for the xl loading spinner box (24px, the xl icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
         },
         "min-target": {
           "$value": "{ki.space.7xl}",
@@ -209,6 +229,17 @@
           "$value": "{ki.focus.primary}",
           "$type": "shadow",
           "$description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring)."
+        }
+      },
+      "spinner": {
+        "stroke-width": {
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
+        },
+        "duration": {
+          "$type": "duration",
+          "$value": "{ki.foundation.migrated.component-progress.progress.indeterminate.duration}",
+          "$description": "duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference."
         }
       },
       "primary": {

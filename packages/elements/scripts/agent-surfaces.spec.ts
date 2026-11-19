@@ -321,10 +321,26 @@ describe('agent surfaces', () => {
         declaration: { name: 'KiButton', module: 'src/components/ki-button/ki-button.tsx' },
       },
     ]);
-    expect(declaration.members).toHaveLength(7);
-    expect(declaration.attributes).toHaveLength(7);
+    // Spec 046 adds the loading state: the loading and loadingLabel members,
+    // their attributes, and the spinner part.
+    expect(declaration.members.map((member: ManifestMember) => member.name)).toEqual([
+      'disabled',
+      'loading',
+      'loadingLabel',
+      'name',
+      'size',
+      'tone',
+      'type',
+      'value',
+      'variant',
+    ]);
+    expect(declaration.attributes).toHaveLength(9);
     expect(declaration.slots).toHaveLength(3);
-    expect(declaration.cssParts).toHaveLength(2);
+    expect(declaration.cssParts.map((part: { name: string }) => part.name)).toEqual([
+      'button',
+      'label',
+      'spinner',
+    ]);
     expect(declaration.events).toEqual([]);
     expect(declaration.cssProperties).toEqual([]);
     expect(declaration.members.map((member: ManifestMember) => member.name)).toContain('variant');

@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiSelect } from '@kimen/elements/component
 
 export const KiSelect: StencilVueComponent<JSX.KiSelect, JSX.KiSelect["value"]> = /*@__PURE__*/ defineContainer<JSX.KiSelect, JSX.KiSelect["value"]>('ki-select', defineKiSelect, [
   'label',
+  'labelHint',
   'placeholder',
   'name',
   'value',

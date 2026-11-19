@@ -165,6 +165,7 @@ export function withMode(config, mode) {
 // level's file as the sole `source`.
 export const DENSITY_SOURCES = Object.freeze({
   compact: 'tokens/modes/compact.tokens.json',
+  touch: 'tokens/modes/touch.tokens.json',
 });
 
 export function withDensity(config, level) {

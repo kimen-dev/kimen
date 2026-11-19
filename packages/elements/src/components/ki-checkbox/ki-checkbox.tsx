@@ -10,6 +10,7 @@ import {
   fieldText,
   fieldValidationMessage,
 } from '../../utils/field-message';
+import { LabelHint } from '../../utils/label-hint';
 import { checkboxFormValue } from './ki-checkbox.form';
 
 /**
@@ -36,6 +37,8 @@ import { checkboxFormValue } from './ki-checkbox.form';
  * with a decorative error symbol.
  * @part help - Help line under the checkbox, read as its description.
  * @part label - Label wrapper around the default slot.
+ * @part label-hint - The `label-hint` text after the slotted label, inside the label
+ * wrapper and part of the accessible name; rendered only while a hint is set.
  * @event change - Fired once after a user toggle (pointer, slotted label or Space)
  * commits, composed across the shadow boundary; `checked` is already current
  * when listeners run. When to use: react to the committed selection. When NOT
@@ -43,7 +46,7 @@ import { checkboxFormValue } from './ki-checkbox.form';
  */
 @Component({
   tag: 'ki-checkbox',
-  styleUrls: ['../../utils/field-message.css', 'ki-checkbox.css'],
+  styleUrls: ['../../utils/field-message.css', '../../utils/label-hint.css', 'ki-checkbox.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -111,6 +114,17 @@ export class KiCheckbox {
    * checkboxes contribute no form entry.
    */
   @Prop({ reflect: true }) value?: string;
+
+  /**
+   * Short text shown after the slotted label and read with it as part of the
+   * checkbox name, so people know before submitting whether they must check
+   * it: "(required)" on a consent the form cannot do without, "(optional)"
+   * on one it can, in the page's own language. It changes no validation; set
+   * `required` for that, and keep the two consistent.
+   * When NOT to use: do not put what checking it commits to in it (use
+   * `help-text`), errors (use `error-text`), or a repeat of the label.
+   */
+  @Prop({ reflect: true }) labelHint?: string;
 
   /**
    * One line of help under the checkbox, read with it as its description:
@@ -459,7 +473,13 @@ export class KiCheckbox {
           </svg>
         </span>
         <span part="label">
-          <slot />
+          {/* The slotted label keeps its own inline flow in one wrapper, so a
+              hint beside it (spec 047) lays out two items, not one per
+              slotted node. */}
+          <span class="label-text">
+            <slot />
+          </span>
+          <LabelHint hint={fieldText(this.labelHint)} />
         </span>
       </label>,
       <FieldMessage {...messages} />,

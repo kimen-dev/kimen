@@ -162,15 +162,27 @@ export namespace Components {
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
-     * loading/progress semantics.
+     * While the action a button started is in progress, set `loading` on that
+     * button instead of disabling it.
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+     * progress of a page or region (use ki-progress).
      */
     interface KiButton {
         /**
-          * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
          */
         "disabled": boolean;
+        /**
+          * Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
+          * @default false
+         */
+        "loading": boolean;
+        /**
+          * Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
+          * @default 'Loading'
+         */
+        "loadingLabel": string;
         /**
           * Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
          */
@@ -256,6 +268,10 @@ export namespace Components {
          */
         "indeterminate": boolean;
         /**
+          * Short text shown after the slotted label and read with it as part of the checkbox name, so people know before submitting whether they must check it: "(required)" on a consent the form cannot do without, "(optional)" on one it can, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what checking it commits to in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
+        /**
           * Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
          */
         "name"?: string;
@@ -330,7 +346,8 @@ export namespace Components {
      * @whenToUse a compact, widely understood action where space precludes a
      * visible label: toolbars, card and dialog corners (close), media transport,
      * data-row actions. Always supply `label`; usually pair with ki-tooltip for
-     * sighted discoverability.
+     * sighted discoverability. While the action it started is in progress, set
+     * `loading` instead of disabling it.
      * @whenNotToUse whenever a visible label fits (use ki-button), toggling
      * state (a future toggle icon button), navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
@@ -338,7 +355,7 @@ export namespace Components {
      */
     interface KiIconButton {
         /**
-          * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
          */
         "disabled": boolean;
@@ -346,6 +363,16 @@ export namespace Components {
           * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
          */
         "label": string;
+        /**
+          * Pending state of the action this icon button started (refreshing, sending). While set, every activation is blocked (pointer, Enter and Space), but the icon button stays focusable, in the Tab order and at its size: the icon stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its `label`, and `loadingLabel` is announced as a polite status message. `disabled` wins over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this icon button started is running, so a second activation cannot repeat it. When NOT to use: for an icon button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
+          * @default false
+         */
+        "loading": boolean;
+        /**
+          * Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the icon button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Refreshing"). When NOT to use: do not repeat `label` here; the person already hears it on focus.
+          * @default 'Loading'
+         */
+        "loadingLabel": string;
         /**
           * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
           * @default 'md'
@@ -439,6 +466,10 @@ export namespace Components {
           * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
          */
         "label": string;
+        /**
+          * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
         /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
@@ -633,6 +664,10 @@ export namespace Components {
          */
         "label": string;
         /**
+          * Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
+        /**
           * Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
          */
         "name"?: string;
@@ -710,6 +745,10 @@ export namespace Components {
           * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
          */
         "label": string;
+        /**
+          * Short text shown after the label and read with it as part of the combobox name, so people know before submitting whether to choose: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
         /**
           * Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
          */
@@ -907,6 +946,10 @@ export namespace Components {
          */
         "label": string;
         /**
+          * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
+        /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
         "name"?: string;
@@ -1090,8 +1133,10 @@ declare global {
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
-     * loading/progress semantics.
+     * While the action a button started is in progress, set `loading` on that
+     * button instead of disabling it.
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+     * progress of a page or region (use ki-progress).
      */
     interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
     }
@@ -1193,7 +1238,8 @@ declare global {
      * @whenToUse a compact, widely understood action where space precludes a
      * visible label: toolbars, card and dialog corners (close), media transport,
      * data-row actions. Always supply `label`; usually pair with ki-tooltip for
-     * sighted discoverability.
+     * sighted discoverability. While the action it started is in progress, set
+     * `loading` instead of disabling it.
      * @whenNotToUse whenever a visible label fits (use ki-button), toggling
      * state (a future toggle icon button), navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
@@ -1755,12 +1801,14 @@ declare namespace LocalJSX {
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
-     * loading/progress semantics.
+     * While the action a button started is in progress, set `loading` on that
+     * button instead of disabling it.
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+     * progress of a page or region (use ki-progress).
      */
     interface KiButton {
         /**
-          * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
          */
         "disabled"?: boolean;
@@ -1768,6 +1816,16 @@ declare namespace LocalJSX {
           * The `id` of a `<form>` element to associate this element with.
          */
         "form"?: string;
+        /**
+          * Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
+          * @default false
+         */
+        "loading"?: boolean;
+        /**
+          * Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
+          * @default 'Loading'
+         */
+        "loadingLabel"?: string;
         /**
           * Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
          */
@@ -1857,6 +1915,10 @@ declare namespace LocalJSX {
          */
         "indeterminate"?: boolean;
         /**
+          * Short text shown after the slotted label and read with it as part of the checkbox name, so people know before submitting whether they must check it: "(required)" on a consent the form cannot do without, "(optional)" on one it can, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what checking it commits to in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
+        /**
           * Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
          */
         "name"?: string;
@@ -1927,7 +1989,8 @@ declare namespace LocalJSX {
      * @whenToUse a compact, widely understood action where space precludes a
      * visible label: toolbars, card and dialog corners (close), media transport,
      * data-row actions. Always supply `label`; usually pair with ki-tooltip for
-     * sighted discoverability.
+     * sighted discoverability. While the action it started is in progress, set
+     * `loading` instead of disabling it.
      * @whenNotToUse whenever a visible label fits (use ki-button), toggling
      * state (a future toggle icon button), navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
@@ -1935,7 +1998,7 @@ declare namespace LocalJSX {
      */
     interface KiIconButton {
         /**
-          * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
          */
         "disabled"?: boolean;
@@ -1943,6 +2006,16 @@ declare namespace LocalJSX {
           * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
          */
         "label": string;
+        /**
+          * Pending state of the action this icon button started (refreshing, sending). While set, every activation is blocked (pointer, Enter and Space), but the icon button stays focusable, in the Tab order and at its size: the icon stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its `label`, and `loadingLabel` is announced as a polite status message. `disabled` wins over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this icon button started is running, so a second activation cannot repeat it. When NOT to use: for an icon button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
+          * @default false
+         */
+        "loading"?: boolean;
+        /**
+          * Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the icon button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Refreshing"). When NOT to use: do not repeat `label` here; the person already hears it on focus.
+          * @default 'Loading'
+         */
+        "loadingLabel"?: string;
         /**
           * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
           * @default 'md'
@@ -2040,6 +2113,10 @@ declare namespace LocalJSX {
           * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
          */
         "label": string;
+        /**
+          * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
         /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
@@ -2238,6 +2315,10 @@ declare namespace LocalJSX {
          */
         "label": string;
         /**
+          * Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
+        /**
           * Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
          */
         "name"?: string;
@@ -2319,6 +2400,10 @@ declare namespace LocalJSX {
           * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
          */
         "label": string;
+        /**
+          * Short text shown after the label and read with it as part of the combobox name, so people know before submitting whether to choose: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
         /**
           * Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
          */
@@ -2528,6 +2613,10 @@ declare namespace LocalJSX {
          */
         "label": string;
         /**
+          * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+         */
+        "labelHint"?: string;
+        /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
         "name"?: string;
@@ -2635,6 +2724,8 @@ declare namespace LocalJSX {
         "name": string;
         "value": string;
         "disabled": boolean;
+        "loading": boolean;
+        "loadingLabel": string;
     }
     interface KiCheckboxAttributes {
         "checked": boolean;
@@ -2643,6 +2734,7 @@ declare namespace LocalJSX {
         "required": boolean;
         "name": string;
         "value": string;
+        "labelHint": string;
         "helpText": string;
         "errorText": string;
     }
@@ -2660,6 +2752,8 @@ declare namespace LocalJSX {
         "size": KiIconButtonSize;
         "label": string;
         "disabled": boolean;
+        "loading": boolean;
+        "loadingLabel": string;
     }
     interface KiIndicatorAttributes {
         "count": number;
@@ -2669,6 +2763,7 @@ declare namespace LocalJSX {
     interface KiInputAttributes {
         "type": KiInputType;
         "label": string;
+        "labelHint": string;
         "placeholder": string;
         "value": string;
         "name": string;
@@ -2702,6 +2797,7 @@ declare namespace LocalJSX {
         "name": string;
         "value": string;
         "label": string;
+        "labelHint": string;
         "required": boolean;
         "disabled": boolean;
         "helpText": string;
@@ -2713,6 +2809,7 @@ declare namespace LocalJSX {
     }
     interface KiSelectAttributes {
         "label": string;
+        "labelHint": string;
         "placeholder": string;
         "name": string;
         "value": string;
@@ -2747,6 +2844,7 @@ declare namespace LocalJSX {
     }
     interface KiTextareaAttributes {
         "label": string;
+        "labelHint": string;
         "placeholder": string;
         "value": string;
         "name": string;
@@ -2863,8 +2961,10 @@ declare module "@stencil/core" {
              * A token-styled action button with native button semantics.
              * @whenToUse trigger the single main action of a view, supporting actions
              * in descending hierarchy, or confirming/destructive actions through tone.
-             * @whenNotToUse navigation, icon-only actions, persistent toggles, or
-             * loading/progress semantics.
+             * While the action a button started is in progress, set `loading` on that
+             * button instead of disabling it.
+             * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+             * progress of a page or region (use ki-progress).
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
@@ -2930,7 +3030,8 @@ declare module "@stencil/core" {
              * @whenToUse a compact, widely understood action where space precludes a
              * visible label: toolbars, card and dialog corners (close), media transport,
              * data-row actions. Always supply `label`; usually pair with ki-tooltip for
-             * sighted discoverability.
+             * sighted discoverability. While the action it started is in progress, set
+             * `loading` instead of disabling it.
              * @whenNotToUse whenever a visible label fits (use ki-button), toggling
              * state (a future toggle icon button), navigation (use a link), or form
              * submit/reset (ki-icon-button is not form-associated; use ki-button, whose

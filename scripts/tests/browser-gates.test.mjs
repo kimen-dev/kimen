@@ -160,11 +160,17 @@ test('S6 browser setups isolate shared input and page-level capability emulation
   const pointerCapability = instances.find(({ name }) => name === 'chromium-pointer-capability');
   assert.ok(light, 'missing ordinary light-browser setup');
   assert.ok(pointerCapability, 'missing isolated pointer-capability setup');
-  assert.ok(
-    light.exclude?.includes('browser-tests/pointer-capability.browser.spec.ts'),
-    'page-level pointer emulation must not contaminate ordinary hover contracts',
-  );
-  assert.deepEqual(pointerCapability.include, ['browser-tests/pointer-capability.browser.spec.ts']);
+  const inputDeviceSpecs = [
+    'browser-tests/pointer-capability.browser.spec.ts',
+    'browser-tests/touch-field-text.browser.spec.ts',
+  ];
+  for (const spec of inputDeviceSpecs) {
+    assert.ok(
+      light.exclude?.includes(spec),
+      `page-level pointer emulation in ${spec} must not contaminate ordinary hover contracts`,
+    );
+  }
+  assert.deepEqual(pointerCapability.include, inputDeviceSpecs);
 });
 
 test('S6 Vitest configs isolate writable caches by suite and browser engine', () => {
