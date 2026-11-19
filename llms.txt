@@ -51,6 +51,7 @@ methods, CSS custom properties and examples.
 - [ki-checkbox](https://kimen.dev/llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
 - [ki-dialog](https://kimen.dev/llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](https://kimen.dev/llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
+- [ki-grid](https://kimen.dev/llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.
 - [ki-icon-button](https://kimen.dev/llms/ki-icon-button.md): a compact, widely understood action where space precludes a visible label: toolbars, card and dialog corners (close), media transport, data-row actions.
 - [ki-indicator](https://kimen.dev/llms/ki-indicator.md): show the current position within a bounded, sequential set of peer views whose navigation lives elsewhere: carousel slides, unlabeled onboarding steps, gallery pages.
 - [ki-input](https://kimen.dev/llms/ki-input.md): collect one line of free text from a person, always with a visible `label`; choose the `type` and `autocomplete` that match the entry purpose.
@@ -63,6 +64,7 @@ methods, CSS custom properties and examples.
 - [ki-radio-group](https://kimen.dev/llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
 - [ki-scroller](https://kimen.dev/llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
 - [ki-select](https://kimen.dev/llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
+- [ki-stack](https://kimen.dev/llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-status](https://kimen.dev/llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.
 - [ki-switch](https://kimen.dev/llms/ki-switch.md): binary settings whose change takes effect immediately, always with a slotted label.
 - [ki-tab](https://kimen.dev/llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional `start` and `end` slot media.

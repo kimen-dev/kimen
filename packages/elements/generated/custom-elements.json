@@ -3466,6 +3466,145 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-grid.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiGrid",
+          "customElement": true,
+          "tagName": "ki-grid",
+          "description": "A passive responsive grid for content items.",
+          "whenToUse": "lay out items on responsive tracks with consistent token spacing.",
+          "whenNotToUse": "for page shells, painted grouping (use ki-card), or a data grid.",
+          "attributes": [
+            {
+              "name": "columns",
+              "fieldName": "columns",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+              "minimum": 1
+            },
+            {
+              "name": "gap",
+              "fieldName": "gap",
+              "type": {
+                "text": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+              },
+              "default": "'xl'",
+              "description": "Kimen spacing step, xl by default. Unsupported values keep the default gap."
+            },
+            {
+              "name": "min-column",
+              "fieldName": "minColumn",
+              "type": {
+                "text": "string"
+              },
+              "default": "'15rem'",
+              "description": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "columns",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+              "attribute": "columns",
+              "reflects": false,
+              "minimum": 1
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "privacy": "public",
+              "type": {
+                "text": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+              },
+              "default": "'xl'",
+              "description": "Kimen spacing step, xl by default. Unsupported values keep the default gap.",
+              "attribute": "gap",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "minColumn",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'15rem'",
+              "description": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.",
+              "attribute": "min-column",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "grid",
+              "description": "The grid layout containing the slotted content."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-grid-gap",
+              "description": "Default gap between grid tracks."
+            },
+            {
+              "name": "--ki-grid-min",
+              "description": "Default minimum size of an automatic grid track."
+            },
+            {
+              "name": "--ki-layout-grid-fixed-breakpoint",
+              "description": "Minimum available inline size for a fixed grid to use multiple tracks."
+            },
+            {
+              "name": "--ki-layout-grid-min",
+              "description": "Default minimum inline size of an automatic grid track."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiGrid",
+          "declaration": {
+            "name": "KiGrid",
+            "module": "dist/components/ki-grid.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-grid",
+          "declaration": {
+            "name": "KiGrid",
+            "module": "dist/components/ki-grid.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-icon-button.js",
       "declarations": [
         {
@@ -7617,6 +7756,175 @@
           "declaration": {
             "name": "KiSelect",
             "module": "dist/components/ki-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-stack.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiStack",
+          "customElement": true,
+          "tagName": "ki-stack",
+          "description": "A passive flex layout for content on one axis.",
+          "whenToUse": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing.",
+          "whenNotToUse": "for page shells, painted grouping (use ki-card), or tabular data.",
+          "attributes": [
+            {
+              "name": "align",
+              "fieldName": "align",
+              "type": {
+                "text": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\""
+              },
+              "default": "'stretch'",
+              "description": "Cross-axis alignment, stretch by default."
+            },
+            {
+              "name": "direction",
+              "fieldName": "direction",
+              "type": {
+                "text": "\"column\" | \"row\""
+              },
+              "default": "'column'",
+              "description": "Main axis, column by default."
+            },
+            {
+              "name": "gap",
+              "fieldName": "gap",
+              "type": {
+                "text": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+              },
+              "default": "'md'",
+              "description": "Kimen spacing step, md by default. Unsupported values keep the default gap."
+            },
+            {
+              "name": "justify",
+              "fieldName": "justify",
+              "type": {
+                "text": "\"between\" | \"center\" | \"end\" | \"start\""
+              },
+              "default": "'start'",
+              "description": "Main-axis distribution, start by default. Use between to distribute spare space."
+            },
+            {
+              "name": "wrap",
+              "fieldName": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allow items to continue on a new line. Defaults to false."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "align",
+              "privacy": "public",
+              "type": {
+                "text": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\""
+              },
+              "default": "'stretch'",
+              "description": "Cross-axis alignment, stretch by default.",
+              "attribute": "align",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "direction",
+              "privacy": "public",
+              "type": {
+                "text": "\"column\" | \"row\""
+              },
+              "default": "'column'",
+              "description": "Main axis, column by default.",
+              "attribute": "direction",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "privacy": "public",
+              "type": {
+                "text": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+              },
+              "default": "'md'",
+              "description": "Kimen spacing step, md by default. Unsupported values keep the default gap.",
+              "attribute": "gap",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "justify",
+              "privacy": "public",
+              "type": {
+                "text": "\"between\" | \"center\" | \"end\" | \"start\""
+              },
+              "default": "'start'",
+              "description": "Main-axis distribution, start by default. Use between to distribute spare space.",
+              "attribute": "justify",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allow items to continue on a new line. Defaults to false.",
+              "attribute": "wrap",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The content in reading order. A direct child with data-grow takes a share of free space."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "stack",
+              "description": "The flex layout containing the slotted content."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-stack-gap",
+              "description": "Default gap of a stack."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiStack",
+          "declaration": {
+            "name": "KiStack",
+            "module": "dist/components/ki-stack.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-stack",
+          "declaration": {
+            "name": "KiStack",
+            "module": "dist/components/ki-stack.js"
           }
         }
       ]

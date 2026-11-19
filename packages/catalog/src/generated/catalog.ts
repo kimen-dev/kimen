@@ -502,6 +502,67 @@ export const catalogData = {
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
     },
+    "ki-grid": {
+      "description": "A passive responsive grid for content items.",
+      "events": {},
+      "props": {
+        "columns": {
+          "type": "number",
+          "description": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+          "minimum": 1
+        },
+        "gap": {
+          "type": "enum",
+          "values": [
+            "10xl",
+            "11xl",
+            "12xl",
+            "13xl",
+            "14xl",
+            "15xl",
+            "16xl",
+            "17xl",
+            "18xl",
+            "19xl",
+            "20xl",
+            "21xl",
+            "22xl",
+            "23xl",
+            "24xl",
+            "25xl",
+            "26xl",
+            "2xl",
+            "3xl",
+            "4xl",
+            "5xl",
+            "6xl",
+            "7xl",
+            "8xl",
+            "9xl",
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs",
+            "xxs",
+            "zero"
+          ],
+          "description": "Kimen spacing step, xl by default. Unsupported values keep the default gap.",
+          "default": "xl"
+        },
+        "min-column": {
+          "type": "string",
+          "description": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.",
+          "default": "15rem"
+        }
+      },
+      "slots": {
+        "": "The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit."
+      },
+      "tag": "ki-grid",
+      "whenNotToUse": "for page shells, painted grouping (use ki-card), or a data grid.",
+      "whenToUse": "lay out items on responsive tracks with consistent token spacing."
+    },
     "ki-icon-button": {
       "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
       "events": {},
@@ -974,6 +1035,94 @@ export const catalogData = {
       "tag": "ki-select",
       "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
       "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited."
+    },
+    "ki-stack": {
+      "description": "A passive flex layout for content on one axis.",
+      "events": {},
+      "props": {
+        "align": {
+          "type": "enum",
+          "values": [
+            "baseline",
+            "center",
+            "end",
+            "start",
+            "stretch"
+          ],
+          "description": "Cross-axis alignment, stretch by default.",
+          "default": "stretch"
+        },
+        "direction": {
+          "type": "enum",
+          "values": [
+            "column",
+            "row"
+          ],
+          "description": "Main axis, column by default.",
+          "default": "column"
+        },
+        "gap": {
+          "type": "enum",
+          "values": [
+            "10xl",
+            "11xl",
+            "12xl",
+            "13xl",
+            "14xl",
+            "15xl",
+            "16xl",
+            "17xl",
+            "18xl",
+            "19xl",
+            "20xl",
+            "21xl",
+            "22xl",
+            "23xl",
+            "24xl",
+            "25xl",
+            "26xl",
+            "2xl",
+            "3xl",
+            "4xl",
+            "5xl",
+            "6xl",
+            "7xl",
+            "8xl",
+            "9xl",
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs",
+            "xxs",
+            "zero"
+          ],
+          "description": "Kimen spacing step, md by default. Unsupported values keep the default gap.",
+          "default": "md"
+        },
+        "justify": {
+          "type": "enum",
+          "values": [
+            "between",
+            "center",
+            "end",
+            "start"
+          ],
+          "description": "Main-axis distribution, start by default. Use between to distribute spare space.",
+          "default": "start"
+        },
+        "wrap": {
+          "type": "boolean",
+          "description": "Allow items to continue on a new line. Defaults to false.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "The content in reading order. A direct child with data-grow takes a share of free space."
+      },
+      "tag": "ki-stack",
+      "whenNotToUse": "for page shells, painted grouping (use ki-card), or tabular data.",
+      "whenToUse": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing."
     },
     "ki-status": {
       "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",
