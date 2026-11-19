@@ -11,7 +11,7 @@
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
-SEMGREP_VERSION='1.168.0'
+SEMGREP_VERSION='1.185.0'
 
 # No network, at the start or at the end. Every `semgrep --version` and every
 # `semgrep scan` asks semgrep.dev for the latest release unless told not to,

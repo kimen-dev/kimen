@@ -85,11 +85,20 @@ To move to another Semgrep version, change `SEMGREP_VERSION` in
 keeping its header comment, and run the scan:
 
 ```sh
-printf 'semgrep==1.168.0\n' >/tmp/semgrep.in
+printf 'semgrep==1.185.0\n' >/tmp/semgrep.in
 uv pip compile /tmp/semgrep.in --universal --generate-hashes \
-  --python-version 3.10 --no-header --no-annotate -o /tmp/semgrep.lock
+  --python-version 3.10 --no-header --no-annotate \
+  --exclude-newer 2026-11-12T00:00:00Z -o /tmp/semgrep.lock
 bash scripts/gates/semgrep-scan.sh
 ```
 
+`--exclude-newer` is the date seven days before you regenerate: the release age
+Renovate waits for everywhere else (Art. X), applied here to Semgrep and to
+every package it pulls in. Without it, uv takes whatever was published that
+morning. The 1.185.0 lock was generated on 2026-11-19, when that would have
+been a pydantic released the same day.
+
 Review the lock's diff as a dependency bump: it is the full list of what runs
-in the release job.
+in the release job. The OSV scan in `.github/workflows/security.yml` reads this
+file too, so an advisory in any of these packages turns that scan red until it
+is upgraded or ignored with a reason in `osv-scanner.toml`.
