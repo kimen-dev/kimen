@@ -3105,15 +3105,11 @@
             },
             {
               "name": "--ki-dialog-bg",
-              "description": "color used by the dialog component for background (flat fallback of the MarsUI glass gradient: Surface/Special/light-s0_dark-s2; components paint the gradient from ki.dialog.bg-start to ki.dialog.bg-end)."
+              "description": "Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image."
             },
             {
-              "name": "--ki-dialog-bg-end",
-              "description": "color used by the dialog component for the glass gradient end (MarsUI Surface/Special/light-s0_dark-s2: white light / Dark/800 dark)."
-            },
-            {
-              "name": "--ki-dialog-bg-start",
-              "description": "color used by the dialog component for the glass gradient start (MarsUI Surface/Special/blur_base_light White/80; dark resolves rgba(36,36,36,0.8)). Paint background: linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))."
+              "name": "--ki-dialog-bg-image",
+              "description": "Optional CSS background image layered over the dialog fill. Use none for a solid fill."
             },
             {
               "name": "--ki-dialog-body-padding-block-end",
@@ -6901,6 +6897,10 @@
               "description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with backdrop-filter blur(var(--ki-select-listbox-backdrop-blur)))."
             },
             {
+              "name": "--ki-select-listbox-bg-image",
+              "description": "Optional CSS background image layered over the listbox fill. Use none for a solid fill."
+            },
+            {
               "name": "--ki-select-listbox-max-block-size",
               "description": "dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
             },
@@ -8781,6 +8781,14 @@
               "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
             },
             {
+              "name": "--ki-tooltip-arrow-bg-end",
+              "description": "Color of the tooltip arrow at the bubble's block-end edge. Defaults to the bubble fill when omitted."
+            },
+            {
+              "name": "--ki-tooltip-arrow-bg-start",
+              "description": "Color of the tooltip arrow at the bubble's block-start edge. Defaults to the bubble fill when omitted."
+            },
+            {
               "name": "--ki-tooltip-arrow-radius",
               "description": "dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step)."
             },
@@ -8794,15 +8802,11 @@
             },
             {
               "name": "--ki-tooltip-bg",
-              "description": "color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override)."
+              "description": "Base background color of the tooltip. Onmars v1 uses a transparent backing beneath its glass image."
             },
             {
-              "name": "--ki-tooltip-bg-end",
-              "description": "color used by the tooltip component for the glass gradient end (MarsUI Surface/special/light-s0_dark-s2)."
-            },
-            {
-              "name": "--ki-tooltip-bg-start",
-              "description": "color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end))."
+              "name": "--ki-tooltip-bg-image",
+              "description": "Optional CSS background image layered over the tooltip fill. Use none for a solid fill."
             },
             {
               "name": "--ki-tooltip-border-color",

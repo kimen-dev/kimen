@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/317-321-loading-hint-touch.json',
+      '../../changes/api/343-solid-surface-background.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -590,11 +590,14 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // label hint ink and gap of the five field controls (ten), and the
   // touch-screen text size of ki-input and ki-textarea (two). The touch
   // density is published as its own context. 1223 + 24 = 1247.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1247);
+  // Issue #343 adds three component image tokens, two tooltip arrow colors,
+  // and six semantic tokens for images, arrow colors and transparent backing.
+  // 1247 + 11 = 1258.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1258);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1247,
+    1258,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
@@ -624,10 +627,10 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     assert.equal(Object.hasOwn(published, name), false, `${name} is no longer published`);
   }
   // The token deprecation (changes/api/041-token-deprecation) keeps the 85
-  // component leaves nothing reads published, each with deprecatedSince 0.1.0
-  // and a replacement, so a later major can remove them.
+  // component leaves published. Issue #343 adds four legacy gradient stops.
+  // All 89 entries carry deprecatedSince 0.1.0 and a live replacement.
   const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
-  assert.equal(deprecated.length, 85);
+  assert.equal(deprecated.length, 89);
   assert.ok(
     deprecated.every(
       ({ deprecatedSince, replacement }) => deprecatedSince === '0.1.0' && replacement,
