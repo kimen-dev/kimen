@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/342-backdrop-filter-token.json',
+      '../../changes/api/344-button-hierarchy.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -598,11 +598,12 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
   // Issue #342 adds ten full-filter tokens: two semantic and eight component.
   // 1264 + 10 = 1274.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1274);
+  // Issue #344 adds the tertiary hover overlay. 1274 + 1 = 1275.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1275);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1274,
+    1275,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),

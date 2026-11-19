@@ -28,8 +28,10 @@ import { NATIVE_PRIMITIVES } from './primitives.mjs';
  * strong, em, img, div) and prop constraints gain the optional `allowEmpty`.
  * Additive: a 1.2.0 spec still validates, and a 1.2.0 boundary refuses a
  * 1.3.0 spec rather than reading native tags it cannot guard.
+ * 1.4.0 (issue #344): enum constraints can declare optional
+ * `deprecatedValues` accepted in old specs and omitted from new schemas.
  */
-export const CATALOG_SCHEMA_VERSION = '1.3.0';
+export const CATALOG_SCHEMA_VERSION = '1.4.0';
 
 const isBlank = (text) => typeof text !== 'string' || text.trim() === '';
 
@@ -76,6 +78,26 @@ export function parseDefault(source, constraint) {
   if (constraint.type === 'number' && Number.isFinite(Number(source))) {
     return Number(source);
   }
+  return undefined;
+}
+
+function addDeprecatedValues(constraint, deprecatedValues) {
+  const values = constraint.type === 'enum' ? constraint.values : undefined;
+  if (
+    values === undefined ||
+    !Array.isArray(deprecatedValues) ||
+    deprecatedValues.length === 0 ||
+    new Set(deprecatedValues).size !== deprecatedValues.length ||
+    deprecatedValues.some((value) => !values.includes(value))
+  ) {
+    return 'deprecatedValues must list unique declared enum values';
+  }
+  const recommended = values.filter((value) => !deprecatedValues.includes(value));
+  if (recommended.length === 0 || deprecatedValues.includes(constraint.default)) {
+    return 'deprecatedValues must leave recommended values and cannot include the default';
+  }
+  constraint.deprecatedValues = deprecatedValues;
+  constraint.values = recommended;
   return undefined;
 }
 
@@ -147,6 +169,13 @@ export function buildCatalog(manifest, { elementsVersion, primitives = NATIVE_PR
         const defaultValue = parseDefault(attribute.default, constraint);
         if (defaultValue !== undefined) {
           entry.default = defaultValue;
+        }
+        if (attribute.deprecatedValues !== undefined) {
+          const violation = addDeprecatedValues(entry, attribute.deprecatedValues);
+          if (violation !== undefined) {
+            violations.push(`${tag}.${attribute.name}: ${violation}`);
+            continue;
+          }
         }
         // Required by the component contract (a prop declared with `!`):
         // carried only when set, so optional props stay byte-identical.

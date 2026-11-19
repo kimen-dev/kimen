@@ -294,6 +294,10 @@
         "hover": {
           "shadow": {
             "$value": "{ki.foundation.migrated.component-button.button.tertiary.hover.shadow}"
+          },
+          "overlay": {
+            "$value": "{ki.transparent-inverse}",
+            "$description": "Material 3 tertiary uses a transparent hover overlay over its hover fill."
           }
         },
         "active": {

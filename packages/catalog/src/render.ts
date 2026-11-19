@@ -25,7 +25,7 @@ import type {
   UiSpecNode,
   ValidationContext,
 } from './validate.js';
-import { ownEntry, toPlainData, validatePlainData } from './validate.js';
+import { acceptsEnumValue, ownEntry, toPlainData, validatePlainData } from './validate.js';
 
 const builtInCatalog: Catalog = catalogData;
 
@@ -253,7 +253,7 @@ export function matchesConstraint(
     case 'number':
       return typeof value === 'number' && Number.isFinite(value);
     case 'enum':
-      return typeof value === 'string' && constraint.values?.includes(value) === true;
+      return acceptsEnumValue(value, constraint);
     default:
       return typeof value === 'string';
   }

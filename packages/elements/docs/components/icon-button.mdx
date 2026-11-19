@@ -28,17 +28,22 @@ always comes from the required `label` attribute, never from the slot:
 </ki-icon-button>
 ```
 
-Visual hierarchy comes from `variant` — the same five-level emphasis ramp
-as `ki-button` (`primary` → `secondary` → `tertiary` → `quaternary` →
-`ghost`, default `secondary`) — and semantic intent from `tone` (default
-`neutral`); never use `variant` to signal success or danger:
+Use filled `primary` for the main action and outlined `secondary` (the default)
+for supporting actions. Use `quaternary` for neutral icon actions and `ghost`
+for accent icon actions. The `tone` prop carries intent, with `neutral`
+as the default.
 
 ```html
 <ki-icon-button variant="primary" label="Play">…</ki-icon-button>
-<ki-icon-button variant="tertiary" label="Copy">…</ki-icon-button>
+<ki-icon-button variant="secondary" label="Copy">…</ki-icon-button>
 <ki-icon-button variant="quaternary" label="More options">…</ki-icon-button>
 <ki-icon-button variant="ghost" tone="danger" label="Delete row">…</ki-icon-button>
 ```
+
+`tertiary` is deprecated. Use `secondary` for new icon buttons. Existing
+`tertiary` buttons share the `secondary` appearance in onmars and keep
+their legacy appearance in Material 3. Development builds warn when
+the deprecated variant is used.
 
 Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) to `xl`
 (56px, default `md`); each size pairs a square box with its own icon size:

@@ -1,4 +1,4 @@
-import { AttachInternals, Component, Element, h, Prop, State } from '@stencil/core';
+import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
 import {
   endKeyboardPress,
@@ -40,12 +40,14 @@ export class KiButton {
   @AttachInternals() private readonly internals!: ElementInternals;
 
   /**
-   * Visual hierarchy for the action. Use `primary` for the single main action
-   * in a view and lower-emphasis variants for supporting actions.
+   * Visual hierarchy for the action. Use filled `primary` for the single main
+   * action, outlined `secondary` for supporting actions, `quaternary` for
+   * neutral text actions, and `ghost` for accent text actions.
    * When NOT to use: do not use variant to signal success or danger; use
    * `tone` for intent.
    *
    * @default 'secondary'
+   * @deprecatedValue tertiary
    */
   @Prop({ reflect: true }) variant: KiButtonVariant = 'secondary';
 
@@ -164,6 +166,20 @@ export class KiButton {
     // A description written while the button was out of the document. On the
     // first connection there is no inner button yet: componentDidLoad syncs.
     this.syncForwardedDescription();
+  }
+
+  componentWillLoad(): void {
+    this.warnDeprecatedVariant(this.variant);
+  }
+
+  @Watch('variant')
+  protected warnDeprecatedVariant(variant: KiButtonVariant): void {
+    // Stencil replaces NODE_ENV in both lazy and custom-element bundles.
+    if (process.env.NODE_ENV === 'development' && variant === 'tertiary') {
+      console.warn(
+        '[Kimen] ki-button variant="tertiary" is deprecated. Use variant="secondary" instead.',
+      );
+    }
   }
 
   componentDidLoad(): void {
