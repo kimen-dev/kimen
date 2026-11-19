@@ -615,8 +615,8 @@ test('toggle button fills must distinguish both states on every page surface', (
     'material3',
     `${built('tokens.css')}\n${built('tokens.material3.css')}
     :root:where([data-ki-contrast='more']) {
-      --ki-button-ghost-selected-bg: var(--ki-button-ghost-unselected-bg);
-      --ki-button-ghost-selected-fg: var(--ki-button-ghost-unselected-fg);
+      --ki-button-ghost-selected-bg: var(--ki-button-toggle-quiet-bg);
+      --ki-button-ghost-selected-fg: var(--ki-button-toggle-quiet-fg);
       --ki-icon-button-outline-selected-bg: var(--ki-icon-button-outline-rest-bg);
       --ki-icon-button-outline-selected-fg: var(--ki-icon-button-outline-rest-fg);
     }`,
@@ -626,7 +626,7 @@ test('toggle button fills must distinguish both states on every page surface', (
   assert.ok(failures.every((failure) => failure.startsWith('material3+contrast-more/')));
   assert.ok(
     failures.includes(
-      'material3+contrast-more/light --ki-button-ghost-selected-bg against --ki-button-ghost-unselected-bg over --ki-surface-s0: 1 (min 3)',
+      'material3+contrast-more/light --ki-button-ghost-selected-bg against --ki-button-toggle-quiet-bg over --ki-surface-s0: 1 (min 3)',
     ),
   );
   assert.ok(

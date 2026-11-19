@@ -2,30 +2,48 @@
  * Stable fills distinguish the two states through hover and activation.
  * The native button's pressed transform and focus ring still apply. */
 
+/* Primary, secondary and legacy tertiary share the filled inactive palette.
+   The quiet variants share a transparent background. */
+:host {
+  --_ki-button-unselected-bg: var(--ki-button-toggle-unselected-bg);
+  --_ki-button-unselected-fg: var(--ki-button-toggle-unselected-fg);
+  --_ki-button-outline-border: var(--ki-outline-none);
+}
+
+:host([variant="ghost"]),
+:host([variant="quaternary"]) {
+  --_ki-button-unselected-bg: var(--ki-button-toggle-quiet-bg);
+  --_ki-button-unselected-fg: var(--ki-button-toggle-quiet-fg);
+}
+
+:host([variant="quaternary"]) {
+  --_ki-button-unselected-fg: var(--ki-button-quaternary-neutral-rest-fg);
+}
+
 button[aria-pressed] {
   border-radius: var(--_ki-button-toggle-radius);
 }
 
 button[aria-pressed="true"] {
-  border-radius: var(--_ki-button-selected-radius);
+  --_ki-button-toggle-radius: var(--_ki-button-selected-radius);
 }
 
 /* Outline is also available to momentary buttons. */
-:host([variant="outline"]) button:not(:disabled, [aria-pressed]),
-button[aria-pressed]:not(:disabled) {
+:host([variant="outline"]) button:enabled:not([aria-pressed]),
+button[aria-pressed]:enabled {
   --_ki-button-bg: var(--_ki-button-unselected-bg);
   --_ki-button-fg: var(--_ki-button-unselected-fg);
   --_ki-button-border: var(--_ki-button-outline-border);
   --_ki-button-border-bottom: var(--_ki-button-border);
-  --_ki-button-shadow: var(--ki-button-toggle-shadow);
-  --_ki-button-overlay-image: var(--ki-button-toggle-bg-image);
-  --_ki-button-backdrop-filter: var(--ki-button-toggle-backdrop-filter);
+  --_ki-button-shadow: var(--ki-elevation-none);
+  --_ki-button-overlay-image: var(--ki-surface-image-none);
+  --_ki-button-backdrop-filter: var(--ki-effect-component-no-backdrop-filter);
 }
 
-button[aria-pressed="true"]:not(:disabled) {
+button[aria-pressed="true"]:enabled {
   --_ki-button-bg: var(--_ki-button-selected-bg);
   --_ki-button-fg: var(--_ki-button-selected-fg);
-  --_ki-button-border: var(--ki-button-toggle-border);
+  --_ki-button-border: var(--ki-outline-none);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -37,16 +55,13 @@ button[aria-pressed="true"]:not(:disabled) {
 @media (forced-colors: active) {
   /* Both inks come from the user's palette. Keep the selection fill next to
      its matching text and icon colour, including under the text backplate. */
-  button[aria-pressed="true"]:not(:disabled) {
+  button[aria-pressed="true"]:enabled {
     --_ki-button-bg: Highlight;
     --_ki-button-fg: HighlightText;
     --_ki-button-border: Highlight;
+    --ki-button-focus-ring-color: Highlight;
+    --ki-button-focus-ring-shadow: var(--ki-elevation-none);
 
     forced-color-adjust: none;
-  }
-
-  button[aria-pressed="true"]:focus-visible:not(:disabled) {
-    box-shadow: var(--ki-button-toggle-shadow);
-    outline-color: Highlight;
   }
 }

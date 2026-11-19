@@ -114,7 +114,7 @@ export class KiIconButton {
 
   /** Emitted after toggle activation with the new selected state. */
   @Event({ eventName: 'ki-change', bubbles: true, composed: true, cancelable: false })
-  selectionChange!: EventEmitter<{ selected: boolean }>;
+  change!: EventEmitter<{ selected: boolean }>;
 
   /**
    * Prevents activation, removes the icon button from keyboard reach, and
@@ -159,24 +159,6 @@ export class KiIconButton {
   @Prop({ attribute: 'loading-label', reflect: true }) loadingLabel = 'Loading';
 
   private button: HTMLButtonElement | undefined;
-  private descriptionObserver?: MutationObserver;
-
-  connectedCallback(): void {
-    // Armed on every connection, not once on load: disconnectedCallback
-    // releases the observer, and a button that is moved in the document (a
-    // keyed reorder, a drag between lists) connects again without loading
-    // again.
-    this.descriptionObserver?.disconnect();
-    this.descriptionObserver = new MutationObserver(() => {
-      this.syncForwardedDescription();
-    });
-    this.descriptionObserver.observe(this.host, {
-      attributeFilter: ['aria-description'],
-    });
-    // A description written while the button was out of the document. On the
-    // first connection there is no inner button yet: componentDidLoad syncs.
-    this.syncForwardedDescription();
-  }
 
   componentWillLoad(): void {
     this.warnDeprecatedVariant(this.variant);
@@ -196,10 +178,6 @@ export class KiIconButton {
     this.syncForwardedDescription();
   }
 
-  disconnectedCallback(): void {
-    this.descriptionObserver?.disconnect();
-  }
-
   // Assistive tech announces the DELEGATED inner button, not this focus-
   // delegating host, so an `aria-description` set on the host (e.g. by a
   // wrapping ki-tooltip) is never announced. Mirror it onto the inner button.
@@ -207,7 +185,8 @@ export class KiIconButton {
   // (jsx-a11y's allow-list is stale and flags it), and Stencil's vdom never
   // renders this attribute, so an imperative write survives re-renders intact
   // (002 FR-015 pattern, here FR-014).
-  private syncForwardedDescription(): void {
+  @Watch('aria-description')
+  protected syncForwardedDescription(): void {
     const description = this.host.getAttribute('aria-description');
     if (description === null) {
       this.button?.removeAttribute('aria-description');
@@ -228,7 +207,7 @@ export class KiIconButton {
   // clicks, for the pointer and for Enter/Space: cancelled the same way (046
   // D3).
   private readonly handleClick = (event: MouseEvent): void => {
-    if (this.disabled || this.effectiveLoading) {
+    if (this.disabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
       return;
@@ -236,7 +215,7 @@ export class KiIconButton {
 
     if (this.toggle) {
       this.selected = !this.selected;
-      this.selectionChange.emit({ selected: this.selected });
+      this.change.emit({ selected: this.selected });
     }
   };
 
@@ -245,12 +224,14 @@ export class KiIconButton {
     // native button is type="button" inside the shadow root, so activation
     // can never submit or reset an enclosing form.
     const loading = this.effectiveLoading;
-    const pressed = this.toggle && this.selected;
+    const pressed = this.toggle ? (this.selected ? 'true' : 'false') : undefined;
+    const defaultIcon = <slot key="default-icon" />;
     // The status region is rendered always, empty until the button loads: a
     // polite region created together with its text is not announced (042
     // D6). It sits outside the native button, next to it (046 D7).
     return [
       <button
+        key="control"
         ref={(el) => {
           this.button = el;
         }}
@@ -260,20 +241,14 @@ export class KiIconButton {
         disabled={this.disabled}
         aria-disabled={loading ? 'true' : undefined}
         aria-label={this.label}
-        aria-pressed={this.toggle ? (pressed ? 'true' : 'false') : undefined}
+        aria-pressed={pressed}
         onClick={this.handleClick}
         onKeyDown={startKeyboardPress}
         onKeyUp={releaseKeyboardPress}
         onBlur={endKeyboardPress}
       >
-        <span part="icon" aria-hidden="true">
-          {pressed ? (
-            <slot name="selected">
-              <slot />
-            </slot>
-          ) : (
-            <slot />
-          )}
+        <span key="icon" part="icon" aria-hidden="true">
+          {pressed === 'true' ? <slot name="selected">{defaultIcon}</slot> : defaultIcon}
         </span>
         {loading ? (
           // The circular ki-progress geometry (015), as in ki-button.
@@ -290,7 +265,7 @@ export class KiIconButton {
           </svg>
         ) : null}
       </button>,
-      <span class="status" role="status">
+      <span key="status" class="status" role="status">
         {loading ? this.loadingLabel : null}
       </span>,
     ];

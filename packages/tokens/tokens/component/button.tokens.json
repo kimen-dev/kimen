@@ -600,16 +600,6 @@
             "$description": "value used by the button component for primary disabled shadow."
           }
         },
-        "unselected": {
-          "bg": {
-            "$value": "{ki.surface.s2}",
-            "$description": "Background of the unselected primary button toggle."
-          },
-          "fg": {
-            "$value": "{ki.text.high-em}",
-            "$description": "Foreground of the unselected primary button toggle."
-          }
-        },
         "selected": {
           "bg": {
             "$value": "{ki.surface.primary-med-em}",
@@ -964,16 +954,6 @@
           "shadow": {
             "$value": "none",
             "$description": "value used by the button component for secondary disabled shadow."
-          }
-        },
-        "unselected": {
-          "bg": {
-            "$value": "{ki.surface.s2}",
-            "$description": "Background of the unselected secondary button toggle."
-          },
-          "fg": {
-            "$value": "{ki.text.high-em}",
-            "$description": "Foreground of the unselected secondary button toggle."
           }
         },
         "selected": {
@@ -1655,16 +1635,6 @@
             "$description": "value used by the button component for quaternary disabled shadow."
           }
         },
-        "unselected": {
-          "bg": {
-            "$value": "{ki.surface.transparent}",
-            "$description": "Background of the unselected quaternary button toggle."
-          },
-          "fg": {
-            "$value": "{ki.text.supporting}",
-            "$description": "Foreground of the unselected quaternary button toggle."
-          }
-        },
         "selected": {
           "bg": {
             "$value": "{ki.surface.primary-high-em}",
@@ -2003,16 +1973,6 @@
             "$description": "value used by the button component for ghost disabled shadow."
           }
         },
-        "unselected": {
-          "bg": {
-            "$value": "{ki.surface.transparent}",
-            "$description": "Background of the unselected ghost button toggle."
-          },
-          "fg": {
-            "$value": "{ki.text.high-em}",
-            "$description": "Foreground of the unselected ghost button toggle."
-          }
-        },
         "selected": {
           "bg": {
             "$value": "{ki.text.primary-high-em}",
@@ -2063,21 +2023,25 @@
           "$value": "{ki.radius.round}",
           "$description": "Pill shape for a selected text toggle button."
         },
-        "bg-image": {
-          "$value": "{ki.surface-image.none}",
-          "$description": "Background image layer for the toggle button."
+        "unselected": {
+          "bg": {
+            "$value": "{ki.surface.s2}",
+            "$description": "Background of unselected filled toggle buttons."
+          },
+          "fg": {
+            "$value": "{ki.text.high-em}",
+            "$description": "Foreground of unselected filled toggle buttons."
+          }
         },
-        "backdrop-filter": {
-          "$value": "{ki.effect.component.no-backdrop-filter}",
-          "$description": "Complete backdrop filter for the toggle button."
-        },
-        "shadow": {
-          "$value": "{ki.elevation.none}",
-          "$description": "Resting shadow of the flat toggle button surface."
-        },
-        "border": {
-          "$value": "{ki.outline.none}",
-          "$description": "Border color of the flat toggle button surface."
+        "quiet": {
+          "bg": {
+            "$value": "{ki.surface.transparent}",
+            "$description": "Background of unselected ghost and quaternary toggle buttons."
+          },
+          "fg": {
+            "$value": "{ki.text.high-em}",
+            "$description": "Foreground of unselected ghost toggle buttons."
+          }
         }
       }
     }

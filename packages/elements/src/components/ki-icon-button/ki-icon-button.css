@@ -4,11 +4,8 @@
  * Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
-  --_ki-button-unselected-bg: var(--ki-icon-button-secondary-unselected-bg);
-  --_ki-button-unselected-fg: var(--ki-icon-button-secondary-unselected-fg);
   --_ki-button-selected-bg: var(--ki-icon-button-secondary-selected-bg);
   --_ki-button-selected-fg: var(--ki-icon-button-secondary-selected-fg);
-  --_ki-button-outline-border: var(--ki-button-toggle-border);
   --_ki-button-toggle-radius: var(--ki-icon-button-toggle-radius);
   --_ki-button-selected-radius: var(--ki-icon-button-toggle-selected-radius);
   --_ki-icon-button-size: var(--ki-icon-button-md-size);
@@ -48,22 +45,16 @@
 }
 
 :host([variant="primary"]) {
-  --_ki-button-unselected-bg: var(--ki-icon-button-primary-unselected-bg);
-  --_ki-button-unselected-fg: var(--ki-icon-button-primary-unselected-fg);
   --_ki-button-selected-bg: var(--ki-icon-button-primary-selected-bg);
   --_ki-button-selected-fg: var(--ki-icon-button-primary-selected-fg);
 }
 
 :host([variant="quaternary"]) {
-  --_ki-button-unselected-bg: var(--ki-icon-button-quaternary-unselected-bg);
-  --_ki-button-unselected-fg: var(--ki-icon-button-quaternary-unselected-fg);
   --_ki-button-selected-bg: var(--ki-icon-button-quaternary-selected-bg);
   --_ki-button-selected-fg: var(--ki-icon-button-quaternary-selected-fg);
 }
 
 :host([variant="ghost"]) {
-  --_ki-button-unselected-bg: var(--ki-icon-button-ghost-unselected-bg);
-  --_ki-button-unselected-fg: var(--ki-icon-button-ghost-unselected-fg);
   --_ki-button-selected-bg: var(--ki-icon-button-ghost-selected-bg);
   --_ki-button-selected-fg: var(--ki-icon-button-ghost-selected-fg);
 }

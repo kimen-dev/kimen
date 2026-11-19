@@ -912,6 +912,7 @@ function sweepControlBoundaries(theme, scheme, declarations, minRatio = NON_TEXT
 }
 
 const TOGGLE_BUTTON_SELECTED_FILL = /^(--ki-(?:icon-)?button-([a-z]+))-selected-bg$/u;
+const QUIET_TOGGLE_BUTTON_VARIANTS = new Set(['ghost', 'quaternary']);
 
 function sweepToggleButtonFills(theme, scheme, declarations) {
   const failures = [];
@@ -925,7 +926,10 @@ function sweepToggleButtonFills(theme, scheme, declarations) {
     if (match === null) continue;
 
     const [, stem, variant] = match;
-    const unselected = `${stem}-${variant === 'outline' ? 'rest' : 'unselected'}-bg`;
+    const sharedFill = QUIET_TOGGLE_BUTTON_VARIANTS.has(variant)
+      ? '--ki-button-toggle-quiet-bg'
+      : '--ki-button-toggle-unselected-bg';
+    const unselected = variant === 'outline' ? `${stem}-rest-bg` : sharedFill;
     const selectedFill = resolveColor(selected);
     const unselectedFill = resolveColor(unselected);
 

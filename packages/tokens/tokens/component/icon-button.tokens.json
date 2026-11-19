@@ -108,16 +108,6 @@
         }
       },
       "primary": {
-        "unselected": {
-          "bg": {
-            "$value": "{ki.surface.s2}",
-            "$description": "Background of the unselected primary icon button toggle."
-          },
-          "fg": {
-            "$value": "{ki.text.high-em}",
-            "$description": "Foreground of the unselected primary icon button toggle."
-          }
-        },
         "selected": {
           "bg": {
             "$value": "{ki.surface.primary-med-em}",
@@ -130,16 +120,6 @@
         }
       },
       "secondary": {
-        "unselected": {
-          "bg": {
-            "$value": "{ki.surface.s2}",
-            "$description": "Background of the unselected secondary icon button toggle."
-          },
-          "fg": {
-            "$value": "{ki.text.high-em}",
-            "$description": "Foreground of the unselected secondary icon button toggle."
-          }
-        },
         "selected": {
           "bg": {
             "$value": "{ki.surface.secondary-med-em}",
@@ -152,16 +132,6 @@
         }
       },
       "quaternary": {
-        "unselected": {
-          "bg": {
-            "$value": "{ki.surface.transparent}",
-            "$description": "Background of the unselected quaternary icon button toggle."
-          },
-          "fg": {
-            "$value": "{ki.text.supporting}",
-            "$description": "Foreground of the unselected quaternary icon button toggle."
-          }
-        },
         "selected": {
           "bg": {
             "$value": "{ki.surface.primary-high-em}",
@@ -174,16 +144,6 @@
         }
       },
       "ghost": {
-        "unselected": {
-          "bg": {
-            "$value": "{ki.surface.transparent}",
-            "$description": "Background of the unselected ghost icon button toggle."
-          },
-          "fg": {
-            "$value": "{ki.text.high-em}",
-            "$description": "Foreground of the unselected ghost icon button toggle."
-          }
-        },
         "selected": {
           "bg": {
             "$value": "{ki.text.primary-high-em}",
