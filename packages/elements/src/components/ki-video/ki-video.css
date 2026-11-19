@@ -94,7 +94,10 @@
   }
 }
 
-[part="play"]:active .control {
+/* Pressed: `:active` from the pointer, `[data-ki-pressed]` while Space is
+ * held (utils/keyboard-press.ts: Firefox never matches `:active` on a button
+ * held from the keyboard). */
+[part="play"]:is(:active, [data-ki-pressed]) .control {
   box-shadow: var(--ki-effect-component-primary-default-shadow);
   transform: scale(0.97);
 }
@@ -166,7 +169,7 @@
   }
 
   /* Soft press exits on the accelerate curve. */
-  [part="play"]:active .control {
+  [part="play"]:is(:active, [data-ki-pressed]) .control {
     transition-timing-function: var(--ki-motion-easing-standard-accelerate);
   }
 }

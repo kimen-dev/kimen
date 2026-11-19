@@ -287,23 +287,29 @@ describe('ki-indicator', () => {
 
   it('S6 reduced motion moves the highlight without transitional motion', async () => {
     cleanup();
-    await browserCommands.emulateReducedMotion('reduce');
     const el = await mount(landmark(), { label: 'Slide position', count: '5', current: '2' });
+    // Reduced motion is switched on with the component in the document, as a
+    // person turns it on: WebKit re-evaluates a component's media queries
+    // only in the shadow roots present at the change, so an instance mounted
+    // after it can keep the motion of one mounted before.
+    await browserCommands.emulateReducedMotion('reduce');
+    try {
+      el.setAttribute('current', '3');
+      await waitUntil(() => currentIndexOf(el) === 2, 'the highlight did not follow the change');
 
-    el.setAttribute('current', '3');
-    await waitUntil(() => currentIndexOf(el) === 2, 'the highlight did not follow the change');
-
-    // The computed transitions of every dot are inert (SC-004): durations
-    // resolve to zero under prefers-reduced-motion by construction.
-    for (const dot of dotsOf(el)) {
-      const durations = getComputedStyle(dot)
-        .transitionDuration.split(',')
-        .map((duration) => Number.parseFloat(duration));
-      for (const duration of durations) {
-        expect(duration).toBe(0);
+      // The computed transitions of every dot are inert (SC-004): durations
+      // resolve to zero under prefers-reduced-motion by construction.
+      for (const dot of dotsOf(el)) {
+        const durations = getComputedStyle(dot)
+          .transitionDuration.split(',')
+          .map((duration) => Number.parseFloat(duration));
+        for (const duration of durations) {
+          expect(duration).toBe(0);
+        }
       }
+    } finally {
+      await browserCommands.emulateReducedMotion(null);
     }
-    await browserCommands.emulateReducedMotion(null);
   });
 
   it('S6 drives the highlight transfer with the MarsUI standard easing token', async () => {

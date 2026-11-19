@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { commands, page, userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 
 // @spec:009-ki-card
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -9,7 +9,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-card.js';
-import { expectAccessible } from './axe';
+import { expectAccessible, parkPointer } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { moveToNewParent } from './reconnect';
 
@@ -117,9 +117,11 @@ async function mount(markup: string): Promise<HTMLElement> {
   // scale). The pointer position persists across tests — the S5 click on the
   // footer button leaves it parked over where every later card mounts — so a
   // rest-state read taken without parking measures the hover state instead
-  // (e2 shadow, 1.02-scaled media). Park at the page origin, give the
-  // hover-exit transitions a frame to start, then settle all motion.
-  await (commands as unknown as { resetPointer: () => Promise<void> }).resetPointer();
+  // (e2 shadow, 1.02-scaled media). Park the pointer on a probe in the
+  // frame's far corner, give the hover-exit transitions a frame to start,
+  // then settle all motion. Not the page origin: WebKit hit-tests that point
+  // onto a card mounted at the top of the frame, which is then hovered.
+  await parkPointer();
   await nextFrame();
   await nextFrame();
   await settleMotion();
@@ -260,17 +262,14 @@ describe('ki-card in a real browser', () => {
     `;
     const control = await mount(markup(''));
     const foreign = await mount(markup('variant="elevated"'));
-    const appearance = (el: HTMLElement): Record<string, string | number> => {
+    const appearance = (el: HTMLElement): Record<string, string> => {
       const style = getComputedStyle(cardPart(el));
-      const rect = cardPart(el).getBoundingClientRect();
       return {
         backgroundColor: style.backgroundColor,
         borderRadius: style.borderRadius,
         boxShadow: style.boxShadow,
         color: style.color,
-        height: rect.height,
         padding: style.padding,
-        width: rect.width,
       };
     };
 
@@ -283,6 +282,12 @@ describe('ki-card in a real browser', () => {
     await settleMotion();
 
     expect(appearance(foreign)).toEqual(appearance(control));
+    // The same box, to layout precision: the two cards sit at different
+    // heights of the page, and Firefox lays fractional sizes out per position.
+    const foreignBox = cardPart(foreign).getBoundingClientRect();
+    const controlBox = cardPart(control).getBoundingClientRect();
+    expect(foreignBox.width).toBeCloseTo(controlBox.width, 2);
+    expect(foreignBox.height).toBeCloseTo(controlBox.height, 2);
     expect(regionPart(foreign, 'header').getBoundingClientRect().height).toBeGreaterThan(0);
     expect(regionPart(foreign, 'body').getBoundingClientRect().height).toBeGreaterThan(0);
     await expect

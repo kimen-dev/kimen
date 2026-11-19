@@ -10,9 +10,10 @@
 }
 
 /* More tabs than fit scroll inside the strip instead of widening the page
- * (WCAG 1.4.10). The slot is the scroll container, not the tablist, so the
- * tablist box and its divider stay exactly where they were; the slot takes
- * over as the row and inherits the tablist's gap and alignment.
+ * (WCAG 1.4.10). The strip around the tab slot is the scroll container, not
+ * the tablist, so the tablist box and its divider stay exactly where they
+ * were; the strip takes over as the row and inherits the tablist's gap and
+ * alignment.
  *
  * A scrollport clips what its content draws outside it, and a focused tab
  * draws its ring there. While a tab shows that ring the component sets
@@ -20,7 +21,7 @@
  * and gives it back with negative margins, so no tab moves. The inline-end
  * side takes no negative margin (a wider box would overflow the page again).
  * At rest the strip is exactly the row and lies over nothing around it. */
-slot[name="tab"] {
+.strip {
   display: flex;
   flex: 1 1 auto;
   gap: inherit;

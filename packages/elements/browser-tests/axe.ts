@@ -206,6 +206,22 @@ export async function parkPointer(): Promise<void> {
  * (ki-tooltip's shown-by-hover states): parking would dismiss the very state
  * under audit.
  */
+/**
+ * The native buttons a fixture puts in a component's light DOM (a dialog's
+ * footer actions, a form's submit button). The user agent paints them, not
+ * the theme: no Kimen token reaches their face or their text, and Linux
+ * WebKit paints a button in a dark color scheme white on light grey (1.81:1).
+ * Audits of what Kimen paints leave them out; the components' own controls,
+ * in their shadow roots, are not found here and stay in every audit.
+ */
+export function userAgentControls(root: ParentNode): Element[] {
+  return [
+    ...root.querySelectorAll(
+      'button, input[type="button"], input[type="submit"], input[type="reset"]',
+    ),
+  ];
+}
+
 export async function expectAccessible(
   context: Parameters<typeof axe.run>[0] = document.body,
   options: { keepPointer?: boolean } = {},

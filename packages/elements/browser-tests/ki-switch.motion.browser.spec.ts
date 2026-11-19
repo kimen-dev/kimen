@@ -61,6 +61,9 @@ describe('ki-switch with reduced motion', () => {
     await userEvent.click(inputOf(el));
 
     expect(el.checked).toBe(true);
+    // The checked paint follows the reflected attribute, which lands with the
+    // component's next render: WebKit can resolve the click before it.
+    await expect.poll(() => el.hasAttribute('checked')).toBe(true);
     expect(getComputedStyle(thumbOf(el)).transitionDuration).toBe('0s');
     // The travel itself is a transform (translate), so under reduced motion
     // the thumb lands at the checked position instantly — state still applies.

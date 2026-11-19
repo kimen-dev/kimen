@@ -190,6 +190,14 @@ function installPageMarkup(pageName: PageName): void {
   document.body.innerHTML = parsed.body.innerHTML;
 }
 
+/** Take the mounted page down, listeners included, leaving preferences as they are. */
+function unmountPage(): void {
+  disposePage?.();
+  disposePage = undefined;
+  document.body.replaceChildren();
+  document.getElementById(PAGE_STYLE_ID)?.remove();
+}
+
 async function mountPage(pageName: PageName, javaScript = true): Promise<void> {
   installPageMarkup(pageName);
   const { initialize } = pageSources[pageName];
@@ -636,7 +644,15 @@ describe('Kimen public site experience in a real browser', () => {
   });
 
   it('S6 disables automatic motion without hiding landing content', async () => {
+    // The landing opens under a preference switched on while it was showing,
+    // as for a person who turns it on and comes back to the page. WebKit
+    // re-evaluates a component's media queries only in the shadow roots
+    // present when a preference changes, so in a document that has shown the
+    // landing before, components mounted after a change made with none in it
+    // can keep the motion they had.
+    await mountPage('landing');
     await browserCommands.emulateReducedMotion('reduce');
+    unmountPage();
     await mountPage('landing');
 
     expect(window.matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
@@ -665,7 +681,8 @@ describe('Kimen public site experience in a real browser', () => {
     expect(getComputedStyle(hero).paddingBlockEnd).toBe('72px');
     expect(titleStyle.fontSize).toBe('74px');
     expect(titleStyle.fontWeight).toBe('800');
-    expect(titleStyle.lineHeight).toBe('77.7px');
+    // 74px at 1.05: WebKit serializes the float it computed (77.699997px).
+    expect(Number.parseFloat(titleStyle.lineHeight)).toBeCloseTo(77.7, 3);
     expect(titleStyle.color).toBe('rgba(0, 0, 0, 0)');
     expect(titleStyle.backgroundImage).not.toBe('none');
 

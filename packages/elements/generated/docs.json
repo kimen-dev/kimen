@@ -4670,7 +4670,7 @@
         },
         {
           "name": "part",
-          "text": "tablist - Internal strip carrying the `tablist` role."
+          "text": "tablist - Internal row around the tab strip: gap, alignment and the divider. The strip inside it carries the `tablist` role."
         }
       ],
       "usage": {
@@ -4766,7 +4766,7 @@
       "parts": [
         {
           "name": "tablist",
-          "docs": "Internal strip carrying the `tablist` role."
+          "docs": "Internal row around the tab strip: gap, alignment and the divider. The strip inside it carries the `tablist` role."
         }
       ],
       "states": [],

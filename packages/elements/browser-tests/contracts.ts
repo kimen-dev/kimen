@@ -204,18 +204,23 @@ function measure(
 
 /**
  * Contrast of every painted, active text run under `root` — slotted text is
- * styled by its slot, placeholders by `::placeholder` — WCAG 1.4.3.
+ * styled by its slot, placeholders by `::placeholder` — WCAG 1.4.3. Text
+ * inside `exclude` (controls the user agent paints) is not measured.
  */
-export function textMeasurements(root: Element): TextMeasurement[] {
+export function textMeasurements(
+  root: Element,
+  { exclude = [] }: { exclude?: readonly Element[] } = {},
+): TextMeasurement[] {
   const measurements: TextMeasurement[] = [];
   const seen = new Set<Element>();
+  const excluded = (styled: Element): boolean => exclude.some((skip) => skip.contains(styled));
   for (const element of deepElements(root)) {
     for (const node of element.childNodes) {
       if (!(node instanceof Text) || node.data.trim() === '') {
         continue;
       }
       const styled = node.assignedSlot ?? element;
-      if (seen.has(styled) || isInactive(styled) || !isPainted(styled)) {
+      if (seen.has(styled) || excluded(styled) || isInactive(styled) || !isPainted(styled)) {
         continue;
       }
       seen.add(styled);

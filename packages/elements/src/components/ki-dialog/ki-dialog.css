@@ -65,12 +65,18 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The modal dialog is fixed in the top layer, so its containing block is the
+ * viewport and percentages measure the window it opens in, as the UA's own
+ * `dialog:modal` limits do. Not viewport units: WebKit resolves those in a
+ * component's styles against the window size the last instance saw, so a
+ * dialog created after a resize made while none was in the document kept the
+ * old window's limits and outgrew the new one. */
 [part="dialog"] {
   box-sizing: border-box;
   inline-size: max-content;
-  min-inline-size: min(var(--_ki-dialog-min-width), calc(100vi - var(--_ki-dialog-padding)));
-  max-inline-size: min(var(--_ki-dialog-max-width), calc(100vi - var(--_ki-dialog-padding)));
-  max-block-size: calc(100vb - var(--_ki-dialog-padding));
+  min-inline-size: min(var(--_ki-dialog-min-width), calc(100% - var(--_ki-dialog-padding)));
+  max-inline-size: min(var(--_ki-dialog-max-width), calc(100% - var(--_ki-dialog-padding)));
+  max-block-size: calc(100% - var(--_ki-dialog-padding));
 
   /* No padding of its own: the heading, body and footer sections pad
      themselves (Modal master compact 16414:19665: Modal-header, Body and

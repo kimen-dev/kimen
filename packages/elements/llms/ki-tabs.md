@@ -48,7 +48,7 @@ A disabled tab stays visible but cannot be selected by any modality; user select
 
 ## Parts
 
-- `tablist`: Internal strip carrying the `tablist` role.
+- `tablist`: Internal row around the tab strip: gap, alignment and the divider. The strip inside it carries the `tablist` role.
 
 ## Events
 

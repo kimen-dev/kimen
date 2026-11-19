@@ -406,6 +406,35 @@ describe('ki-video', () => {
     expect(Number.parseFloat(focused.outlineWidth)).toBe(2);
   });
 
+  // A press shows whatever the input. Firefox never matches `:active` on a
+  // button held with Space, so from the keyboard the press shows there only
+  // because the component marks it itself (utils/keyboard-press).
+  it('S6 the play control changes appearance while Space is held on it', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the tour' });
+    const play = playControlOf(el);
+    const control = play.querySelector<HTMLElement>('.control');
+    if (!control) {
+      throw new Error('ki-video did not render the play container');
+    }
+    const painted = (): string => {
+      const style = getComputedStyle(control);
+      return [style.boxShadow, style.transform].join('|');
+    };
+    play.focus();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const focused = painted();
+
+    // `{ >}` holds the key down; the matching `{/ }` releases it.
+    await userEvent.keyboard('{ >}');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const held = painted();
+    await userEvent.keyboard('{/ }');
+
+    expect(held, 'the play control looks the same while held from the keyboard').not.toBe(focused);
+  });
+
   it('S7 Enter starts playback from the keyboard exactly once', async () => {
     cleanup();
     const el = await mount(landmark(), { label: 'Play the product tour' });
@@ -439,6 +468,58 @@ describe('ki-video', () => {
       'the facade did not yield the surface',
     );
     expect(document.activeElement).toBe(media);
+  });
+
+  // A consumer may put the media in the Tab order themself. Behind the facade
+  // that stop is a second, meaningless one ahead of the play control (S6);
+  // once the native player takes over it is theirs again (FR-005).
+  it('S6 a tabindex the consumer gave the media waits behind the facade until activation', async () => {
+    cleanup();
+    const media = mediaFixture();
+    media.setAttribute('tabindex', '0');
+    const el = await mount(landmark(), { label: 'Play the tour' }, media);
+
+    (document.activeElement as HTMLElement | null)?.blur();
+    await userEvent.keyboard('{Tab}');
+    expect(el.shadowRoot?.activeElement).toBe(playControlOf(el));
+
+    await userEvent.keyboard('{Enter}');
+    await waitUntil(() => media.controls, 'the native player did not take over');
+    expect(media.getAttribute('tabindex')).toBe('0');
+  });
+
+  // The facade holds the media out of the Tab order only while it slots it.
+  // Taken out unplayed, the media is the consumer's again, tabindex included.
+  it('S6 media taken out of the facade unplayed gets the consumer tabindex back', async () => {
+    cleanup();
+    const media = mediaFixture();
+    media.setAttribute('tabindex', '0');
+    await mount(landmark(), { label: 'Play the tour' }, media);
+    expect(media.getAttribute('tabindex')).toBe('-1');
+
+    landmark().append(media);
+
+    await waitUntil(() => media.getAttribute('tabindex') === '0', 'the tabindex did not come back');
+  });
+
+  // Moved unplayed into another facade, the media keeps the consumer's value:
+  // the second facade must not take the first one's temporary -1 for it.
+  it('S6 media moved unplayed to another facade keeps the consumer tabindex', async () => {
+    cleanup();
+    const media = mediaFixture();
+    media.setAttribute('tabindex', '0');
+    await mount(landmark(), { label: 'Play the tour' }, media);
+    const second = await mount(landmark(), { label: 'Play the other tour' }, mediaFixture());
+    second.replaceChildren(media);
+    await waitUntil(
+      () => media.getAttribute('tabindex') === '-1' && !media.controls,
+      'the second facade did not take the media',
+    );
+
+    playControlOf(second).click();
+
+    await waitUntil(() => media.controls, 'the native player did not take over');
+    expect(media.getAttribute('tabindex')).toBe('0');
   });
 
   // Whoever asks for the video's focus stop on the very next keystroke (a
@@ -543,25 +624,31 @@ describe('ki-video', () => {
 
   it('S12 reduced motion dismisses the facade without transitional motion', async () => {
     cleanup();
-    await browserCommands.emulateReducedMotion('reduce');
     const el = await mount(landmark(), { label: 'Play the product tour' });
     const play = playControlOf(el);
+    // Reduced motion is switched on with the component in the document, as a
+    // person turns it on: WebKit re-evaluates a component's media queries
+    // only in the shadow roots present at the change, so an instance mounted
+    // after it can keep the motion of one mounted before.
+    await browserCommands.emulateReducedMotion('reduce');
+    try {
+      // The computed transitions of the facade are inert (SC-007): durations
+      // resolve to zero under prefers-reduced-motion by construction.
+      for (const duration of getComputedStyle(play).transitionDuration.split(',')) {
+        expect(Number.parseFloat(duration)).toBe(0);
+      }
 
-    // The computed transitions of the facade are inert (SC-007): durations
-    // resolve to zero under prefers-reduced-motion by construction.
-    for (const duration of getComputedStyle(play).transitionDuration.split(',')) {
-      expect(Number.parseFloat(duration)).toBe(0);
+      await userEvent.click(play);
+      await waitUntil(
+        () => getComputedStyle(play).visibility === 'hidden',
+        'the facade was not dismissed',
+      );
+      expect(getComputedStyle(play).opacity).toBe('0');
+      for (const duration of getComputedStyle(play).transitionDuration.split(',')) {
+        expect(Number.parseFloat(duration)).toBe(0);
+      }
+    } finally {
+      await browserCommands.emulateReducedMotion(null);
     }
-
-    await userEvent.click(play);
-    await waitUntil(
-      () => getComputedStyle(play).visibility === 'hidden',
-      'the facade was not dismissed',
-    );
-    expect(getComputedStyle(play).opacity).toBe('0');
-    for (const duration of getComputedStyle(play).transitionDuration.split(',')) {
-      expect(Number.parseFloat(duration)).toBe(0);
-    }
-    await browserCommands.emulateReducedMotion(null);
   });
 });

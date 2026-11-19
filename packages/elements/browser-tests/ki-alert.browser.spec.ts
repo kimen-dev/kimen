@@ -294,6 +294,37 @@ describe('ki-alert in a real browser', () => {
     expect(el.dismissed).toBe(true);
   });
 
+  // A press shows whatever the input. Firefox never matches `:active` on a
+  // button held with Space, so from the keyboard the press shows there only
+  // because the component marks it itself (utils/keyboard-press).
+  it('S3 the dismiss button changes appearance while Space is held on it', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    const button = dismissButton(el);
+    if (!button) {
+      throw new Error('ki-alert did not render a dismiss button');
+    }
+    await motionSettled(el);
+    const painted = (): string => {
+      const style = getComputedStyle(button);
+      return [style.color, style.backgroundImage, style.boxShadow, style.transform].join('|');
+    };
+    button.focus();
+    await nextFrame();
+    const focused = painted();
+
+    // `{ >}` holds the key down; the matching `{/ }` releases it.
+    await userEvent.keyboard('{ >}');
+    await nextFrame();
+    await nextFrame();
+    const held = painted();
+    await userEvent.keyboard('{/ }');
+
+    expect(held, 'the dismiss button looks the same while held from the keyboard').not.toBe(
+      focused,
+    );
+  });
+
   it('S3 programmatic dismissed changes fire no ki-dismiss event', async () => {
     cleanup();
     const el = await mount('Backup completed', { dismissible: true });
@@ -625,12 +656,14 @@ describe('ki-alert in a real browser', () => {
     if (!button) {
       throw new Error('ki-alert did not render a dismiss button');
     }
+    await motionSettled(el);
     const computed = getComputedStyle(button);
 
     // A circle with a hairline bevel, on a fill of its own that lifts it off
-    // the alert surface.
+    // the alert surface. Square to layout precision: at a fractional position
+    // on the page the box the engine reports is a float away from 24 x 24.
     const box = button.getBoundingClientRect();
-    expect(box.width).toBe(box.height);
+    expect(box.width).toBeCloseTo(box.height, 3);
     expect(Number.parseFloat(computed.borderTopLeftRadius)).toBeGreaterThanOrEqual(box.width / 2);
     expect(Number.parseFloat(computed.borderTopWidth)).toBeGreaterThan(0);
     expect(computed.backgroundColor).not.toBe(getComputedStyle(part(el, 'alert')).backgroundColor);

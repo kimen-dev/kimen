@@ -7683,7 +7683,7 @@
           "cssParts": [
             {
               "name": "tablist",
-              "description": "Internal strip carrying the `tablist` role."
+              "description": "Internal row around the tab strip: gap, alignment and the divider. The strip inside it carries the `tablist` role."
             }
           ],
           "cssProperties": [

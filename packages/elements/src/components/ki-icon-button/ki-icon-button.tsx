@@ -1,4 +1,9 @@
 import { Component, Element, h, Prop } from '@stencil/core';
+import {
+  endKeyboardPress,
+  releaseKeyboardPress,
+  startKeyboardPress,
+} from '../../utils/keyboard-press';
 
 export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';
 export type KiIconButtonTone = 'neutral' | 'success' | 'danger';
@@ -150,6 +155,9 @@ export class KiIconButton {
         disabled={this.disabled}
         aria-label={this.label}
         onClick={this.handleClick}
+        onKeyDown={startKeyboardPress}
+        onKeyUp={releaseKeyboardPress}
+        onBlur={endKeyboardPress}
       >
         <span part="icon" aria-hidden="true">
           <slot />
