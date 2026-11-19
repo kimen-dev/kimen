@@ -45,7 +45,9 @@ afterEach(async () => {
   await parkPointer();
 });
 
-afterAll(() => { styles.remove(); });
+afterAll(() => {
+  styles.remove();
+});
 
 function item(text: string, href: string): HTMLElement {
   const element = document.createElement('ki-breadcrumb-item');
@@ -138,6 +140,19 @@ it('S2 keeps the root and last two levels on the trail while the menu exposes th
   ).toEqual(['Projects', 'Kimen', 'Packages']);
 });
 
+it('S2 closes the menu when the overflow button is clicked again', async () => {
+  mount(LONG_PATH, { 'max-items': '4' });
+  const trigger = more();
+  await trigger.click();
+  await expect.element(menuItem('Projects')).toBeVisible();
+  await expectFocus(menuItem('Projects').element() as HTMLElement);
+
+  await trigger.click();
+
+  await expect.element(page.getByRole('menu')).not.toBeInTheDocument();
+  await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
+});
+
 it('S3 moves current to the appended page and links the former current page', async () => {
   const trail = mount();
   await expect
@@ -179,6 +194,10 @@ it('S4 supports Tab, Enter, arrow keys, Home and End and activates a native dest
   await userEvent.keyboard('{End}');
   await expectFocus(menuItem('Packages').element() as HTMLElement);
   await userEvent.keyboard('{Home}');
+  await expectFocus(menuItem('Projects').element() as HTMLElement);
+  await userEvent.keyboard('k');
+  await expectFocus(menuItem('Kimen').element() as HTMLElement);
+  await userEvent.keyboard('{ArrowUp}');
   await expectFocus(menuItem('Projects').element() as HTMLElement);
 
   await userEvent.keyboard('{Enter}');
@@ -257,9 +276,20 @@ it('S6 exposes ordered navigation, announces the count and expanded state, and p
 });
 
 it('S6 localizes the accessible overflow label with its dynamic count', async () => {
-  mount(LONG_PATH, { 'max-items': '4', 'more-label': 'Browse {n} earlier levels' });
+  const trail = mount(LONG_PATH, {
+    label: 'Release path',
+    'max-items': '4',
+    'more-label': 'Browse {n} earlier levels',
+  });
 
   await expect.element(more('Browse 3 earlier levels')).toBeVisible();
+  await expect.element(page.getByRole('navigation', { name: 'Release path' })).toBeVisible();
+
+  trail.removeAttribute('more-label');
+  trail.removeAttribute('label');
+
+  await expect.element(more()).toBeVisible();
+  await expect.element(page.getByRole('navigation', { name: 'Breadcrumb' })).toBeVisible();
 });
 
 it('S7 allows the consumer to change an ancestor foreground through its component token', async () => {

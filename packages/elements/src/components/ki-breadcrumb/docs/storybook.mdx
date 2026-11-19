@@ -1,0 +1,25 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as BreadcrumbStories from '../ki-breadcrumb.stories';
+
+<Meta title="Docs/Components/ki-breadcrumb examples" />
+
+# Breadcrumb examples
+
+## Full path
+
+List the levels from the root to the current page.
+
+<Canvas of={BreadcrumbStories.Playground} />
+
+## Collapsed path
+
+Open the ellipsis to reach the middle levels. Escape returns focus to the
+ellipsis button.
+
+<Canvas of={BreadcrumbStories.Collapsed} />
+
+## Right-to-left
+
+The trail starts on the right, with chevrons pointing toward the current page.
+
+<Canvas of={BreadcrumbStories.RightToLeft} />

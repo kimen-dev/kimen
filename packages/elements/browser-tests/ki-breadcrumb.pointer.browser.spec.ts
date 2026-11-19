@@ -24,7 +24,9 @@ afterEach(async () => {
   await parkPointer();
 });
 
-afterAll(() => { styles.remove(); });
+afterAll(() => {
+  styles.remove();
+});
 
 function expectTarget(element: Element, minimum: number): void {
   const { width, height } = element.getBoundingClientRect();

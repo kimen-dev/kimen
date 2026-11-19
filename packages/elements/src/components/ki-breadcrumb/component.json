@@ -1,0 +1,7 @@
+{
+  "barePage": { "keyboardPressed": false },
+  "pointer": { "hoverWitness": false },
+  "visual": { "material3Dark": true },
+  "catalog": true,
+  "budgetGroup": { "members": ["ki-breadcrumb", "ki-breadcrumb-item"] }
+}

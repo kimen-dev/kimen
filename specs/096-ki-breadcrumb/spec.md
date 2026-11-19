@@ -14,21 +14,23 @@ Breadcrumbs show the path from the top of a hierarchy to the current page. Earli
 
 ## Scenario families
 
-| Family | S-IDs |
-| --- | --- |
-| Core behavior | S1, S2, S3 |
-| Keyboard | S4, S5 |
-| Assistive technology | S6 |
-| Form participation | N/A. Breadcrumbs are navigation and contribute no form value. |
-| Theming and input preferences | S7, S8, S9, S10 |
+| Family | Scenario IDs | N/A justification |
+| --- | --- | --- |
+| Core behavior | S1, S2, S3 | — |
+| Keyboard path | S4, S5 | — |
+| Assistive-tech outcome | S6 | — |
+| Form participation | N/A | Breadcrumbs are navigation and contribute no form value. |
+| Theming | S7, S8, S9, S10 | — |
 
 ## Interpretations
 
 - **Agent's choice, pending founder confirmation.** Use `max-items` as an overflow threshold with a minimum of four visible entries, including the overflow button. Round finite positive limits down and clamp to four. An omitted, non-positive or non-finite limit shows the full path.
 - **Agent's choice, pending founder confirmation.** Infer the last level as current, including when it has an `href`. Accept the proposed `current` marker on the final level. The same marker on earlier levels leaves their link behavior intact.
-- **Agent's choice, pending founder confirmation.** Item content supplies a plain-text label. An ancestor without a destination remains readable inline and appears as an unavailable menu item when collapsed.
+- **Agent's choice, pending founder confirmation.** Item content supplies a plain-text label. A hidden item is omitted. An ancestor without a destination remains readable inline and appears as an unavailable menu item when collapsed.
 - **Agent's choice, pending founder confirmation.** Expose the `more-label` template for localization using `{n}` as the placeholder. Follow the repository density contract so that `data-ki-density="touch"` provides 44 CSS pixel targets.
 - **Agent's choice, pending founder confirmation.** Use a component-owned navigation menu backed by Kimen's anchored-overlay utilities. This branch has no shared Menu component and the reference Menu API describes command values. Hidden levels need native link destinations.
+
+- **Agent's choice, pending founder confirmation.** Alias the ancestor foreground to the semantic supporting ink. It preserves medium emphasis in standard mode and reaches the contrast-more threshold.
 
 ## Gherkin
 

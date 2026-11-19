@@ -18,3 +18,13 @@
 | Default slot | — | The label mirrored as plain text by the owning breadcrumb. |
 
 The current page uses `aria-current="page"` and has no link. The component exposes no custom actions or events.
+
+## Styling
+
+The trail exposes `navigation`, `list`, `list-item`, `link`, `label`,
+`current`, `more-button`, `menu` and `menu-item` parts.
+
+The main trail tokens are `--ki-breadcrumb-fg`, `--ki-breadcrumb-current-fg`,
+`--ki-breadcrumb-separator` and `--ki-breadcrumb-gap`. The popup uses the
+`--ki-breadcrumb-menu-*` surface tokens. Interactive targets inherit
+`--ki-density-target-min`.
