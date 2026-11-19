@@ -28,8 +28,13 @@ const browser = configuredBrowser as SupportedBrowser;
 const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts';
 // Specs that change the page's input device through CDP touch emulation. They
 // share one isolated setup, never the ordinary light one: the pointer
-// capability audit, and the touch text size of fields (spec 048).
-const inputDeviceSpecs = [pointerCapabilitySpec, 'browser-tests/touch-field-text.browser.spec.ts'];
+// capability audit, the touch text size of fields (spec 048) and of sized
+// fields (spec 050).
+const inputDeviceSpecs = [
+  pointerCapabilitySpec,
+  'browser-tests/touch-field-text.browser.spec.ts',
+  'browser-tests/touch-size-field-text.browser.spec.ts',
+];
 
 // The interaction media features (`hover`, `pointer`) are the only way to ask
 // a page "can this device hover?", and Playwright's emulateMedia() does not

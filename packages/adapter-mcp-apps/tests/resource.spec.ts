@@ -49,13 +49,17 @@ const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
  * measures 611 265 raw, 141 560 gzip, 115 734 brotli): 140 bytes over the old gzip line,
  * with raw and brotli still inside theirs, so only gzip moves, to about 5%
  * above the CI figure.
- * Re-based for spec 049 (ki-toast and ki-toaster, two new catalog
- * components) on top of #342 and #343, when a local macOS build measured
- * 637 142 raw, 148 272 gzip, 120 618 brotli: 4 118 bytes over the old brotli
- * line, and raw and gzip within less than CI adds over macOS (see #349
- * above). All three move to about 5% above.
+ * Re-based for issue #316 (size axes of nine components, spec 050: 193
+ * tokens and their CSS) on top of #349, when the document measured 644 092
+ * raw, 145 722 gzip, 118 102 brotli on macOS: over all three lines, so all
+ * three move to about 5% above.
+ * Re-based again for spec 049 (ki-toast and ki-toaster, two new catalog
+ * components) on top of #316, when the document measured 670 766 raw,
+ * 152 699 gzip, 123 340 brotli on macOS: over the gzip line, with raw and
+ * brotli within less than CI adds over macOS, so all three move to about 5%
+ * above.
  */
-const SIZE_BUDGET = { brotli: 126_700, gzip: 155_700, raw: 669_000 } as const;
+const SIZE_BUDGET = { brotli: 129_500, gzip: 160_300, raw: 704_300 } as const;
 
 /**
  * XML namespace names the DOM requires verbatim (`createElementNS`): they are

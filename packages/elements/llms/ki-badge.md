@@ -46,7 +46,7 @@ A typical placement — trailing status on a list entry:
 
 ## Attributes
 
-- `size` ("md" | "sm", default 'md'): Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+- `size` ("md" | "sm" | "xs", default 'md'): Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in onmars, with 12px text at every size. An unrecognized value falls back to the `md` metrics the same way.
 - `tone` ("danger" | "info" | "neutral" | "success" | "warning", default 'neutral'): Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
 
 ## Slots
@@ -97,6 +97,11 @@ None.
 - `--ki-badge-warning-bg`: color used by the badge component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-warning-border`: color used by the badge component for warning border.
 - `--ki-badge-warning-fg`: color used by the badge component for warning foreground.
+- `--ki-badge-xs-font-size`: dimension used by the badge component for xs font size (Tag 10106:4651 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-badge-xs-height`: dimension used by the badge component for xs height (Tag 10106:4651 xs: 20px).
+- `--ki-badge-xs-line-height`: dimension used by the badge component for xs line height (caption_2 16px, the same height as caption_1).
+- `--ki-badge-xs-padding-inline`: dimension used by the badge component for xs padding inline (Tag 10106:4651 xs: Space/xs plus the Text_wrap Space/xxs, 6px).
+- `--ki-badge-xs-radius`: dimension used by the badge component for xs radius (Tag 10106:4651 xs binds Radius/small-component/xs).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.

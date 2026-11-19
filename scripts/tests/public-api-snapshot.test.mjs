@@ -607,16 +607,20 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     assert.equal(tokenPackage.exports[subpath].target, subpath);
     assert.equal(Object.hasOwn(tokenPackage.stylesheets, subpath), false);
   }
+  // Issue #316 (changes/api/316-size-axes) adds 193: the size axes of
+  // ki-input (36), ki-select (32), ki-textarea (28), ki-tabs (4), ki-tab (12),
+  // ki-list-item (27), ki-checkbox (7), ki-radio (6), ki-switch (36) and the
+  // xs ki-badge (5); medium keeps its unsized tokens. 1275 + 193 = 1468.
   // ki-toast and ki-toaster (changes/api/049-ki-toast) add twenty-two:
   // 19 --ki-toast-* (the flat surface's fill, image, backdrop filter, edge,
   // elevation, radius, padding, gap and width, the heading typeface, the
   // heading and message ink, the icon size and an icon ink per tone) and 3
-  // --ki-toaster-* (the two edge distances and the gap). 1275 + 22 = 1297.
-  assert.equal(Object.keys(tokenPackage.tokens).length, 1297);
+  // --ki-toaster-* (the two edge distances and the gap). 1468 + 22 = 1490.
+  assert.equal(Object.keys(tokenPackage.tokens).length, 1490);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1297,
+    1490,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),

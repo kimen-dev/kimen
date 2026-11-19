@@ -43,6 +43,7 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 - `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
 - `readonly` (boolean, default false): Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
 - `required` (boolean, default false): Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `type` ("email" | "password" | "search" | "tel" | "text" | "url", default 'text'): Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
 - `value` (string, default ''): Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
 
@@ -113,6 +114,15 @@ None.
 - `--ki-input-label-hint-gap`: dimension used by the input component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-input-label-line-height`: dimension used by the input component for label line height (MarsUI line_height/para 20px).
 - `--ki-input-label-padding-inline`: dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius).
+- `--ki-input-lg-font-size`: dimension used by the input component for lg font size: body-2 (Input-cell 8016:286 lg).
+- `--ki-input-lg-height`: dimension used by the input component for lg height (Input-cell 8016:286 lg: 48px; consumed as min-block-size, spec 050).
+- `--ki-input-lg-icon-size`: dimension used by the input component for the lg icon box (Input-cell 8016:286 lg icon 20px).
+- `--ki-input-lg-label-font-size`: dimension used by the input component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-input-lg-label-line-height`: dimension used by the input component for the lg label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-input-lg-line-height`: dimension used by the input component for lg line height (body-2, Input-cell 8016:286 lg).
+- `--ki-input-lg-padding-inline`: dimension used by the input component for lg padding inline (Input-cell 8016:286 lg binds Space/xl, 12px).
+- `--ki-input-lg-radius`: dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg).
+- `--ki-input-lg-text-padding-inline`: dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token).
 - `--ki-input-line-height`: dimension used by the input component for line height.
 - `--ki-input-padding-inline`: dimension used by the input component for padding inline.
 - `--ki-input-radius`: dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it).
@@ -126,12 +136,41 @@ None.
 - `--ki-input-rest-fg`: color used by the input component for rest foreground.
 - `--ki-input-rest-label-fg`: color used by the input component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
 - `--ki-input-rest-placeholder-fg`: color used by the input component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
+- `--ki-input-sm-font-size`: dimension used by the input component for sm font size: caption-2 (Input-cell 8016:286 sm).
+- `--ki-input-sm-height`: dimension used by the input component for sm height (Input-cell 8016:286 sm: 32px; consumed as min-block-size, spec 050).
+- `--ki-input-sm-icon-size`: dimension used by the input component for the sm icon box (Input-cell 8016:286 sm icon 16px).
+- `--ki-input-sm-label-font-size`: dimension used by the input component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-input-sm-label-line-height`: dimension used by the input component for the sm label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-input-sm-line-height`: dimension used by the input component for sm line height (caption-2, Input-cell 8016:286 sm).
+- `--ki-input-sm-padding-inline`: dimension used by the input component for sm padding inline (Input-cell 8016:286 sm binds Space/md, 8px).
+- `--ki-input-sm-radius`: dimension used by the input component for sm radius (Input-cell 8016:286 sm binds Radius/small-component/sm).
+- `--ki-input-sm-text-padding-inline`: dimension used by the input component for the sm inline padding of the native control (Input-cell 8016:286 sm Text_wrap binds Space/xs, 4px; medium uses the gap token).
+- `--ki-input-xl-font-size`: dimension used by the input component for xl font size: title-2 (Input-cell 8016:286 xl).
+- `--ki-input-xl-height`: dimension used by the input component for xl height (Input-cell 8016:286 xl: 56px; consumed as min-block-size, spec 050).
+- `--ki-input-xl-icon-size`: dimension used by the input component for the xl icon box (Input-cell 8016:286 xl icon 24px).
+- `--ki-input-xl-label-font-size`: dimension used by the input component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-input-xl-label-line-height`: dimension used by the input component for the xl label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-input-xl-line-height`: dimension used by the input component for xl line height (title-2, Input-cell 8016:286 xl).
+- `--ki-input-xl-padding-inline`: dimension used by the input component for xl padding inline (Input-cell 8016:286 xl binds Space/2xl, 14px).
+- `--ki-input-xl-radius`: dimension used by the input component for xl radius (Input-cell 8016:286 xl binds Radius/small-component/xl).
+- `--ki-input-xl-text-padding-inline`: dimension used by the input component for the xl inline padding of the native control (Input-cell 8016:286 xl Text_wrap binds Space/sm, 6px; medium uses the gap token).
+- `--ki-input-xs-font-size`: dimension used by the input component for xs font size: caption-2 (Input-cell 8016:286 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-input-xs-height`: dimension used by the input component for xs height (Input-cell 8016:286 xs: 24px; consumed as min-block-size, spec 050).
+- `--ki-input-xs-icon-size`: dimension used by the input component for the xs icon box (Input-cell 8016:286 xs icon 14px).
+- `--ki-input-xs-label-font-size`: dimension used by the input component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-input-xs-label-line-height`: dimension used by the input component for the xs label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-input-xs-line-height`: dimension used by the input component for xs line height (caption-2, Input-cell 8016:286 xs).
+- `--ki-input-xs-padding-inline`: dimension used by the input component for xs padding inline (Input-cell 8016:286 xs binds Space/sm, 6px).
+- `--ki-input-xs-radius`: dimension used by the input component for xs radius (Input-cell 8016:286 xs binds Radius/small-component/xs).
+- `--ki-input-xs-text-padding-inline`: dimension used by the input component for the xs inline padding of the native control (Input-cell 8016:286 xs Text_wrap binds Space/xxs, 2px; medium uses the gap token).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.

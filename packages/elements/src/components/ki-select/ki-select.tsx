@@ -41,6 +41,8 @@ import {
   typeaheadIndex,
 } from './ki-select.keyboard';
 
+export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 type RosterOption = SelectOptionRecord & {
   element: HTMLElement;
   id: string;
@@ -113,6 +115,21 @@ export class KiSelect {
    * When NOT to use: do not use it as a replacement for `label`.
    */
   @Prop({ reflect: true }) placeholder = '';
+
+  /**
+   * Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is
+   * 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and
+   * indicator; the label and help text follow in three steps. The listbox
+   * and its options keep their size. An unrecognized value matches no style
+   * rule and keeps the medium metrics.
+   * When to use: match the size of the fields around it.
+   * When NOT to use: do not pick a smaller size to fit a dense region or a
+   * larger one for touch; declare `data-ki-density` on the region instead,
+   * which composes with every size.
+   *
+   * @default 'md'
+   */
+  @Prop({ reflect: true }) size: KiSelectSize = 'md';
 
   /**
    * Form-data key used when a selected option contributes its value.

@@ -693,10 +693,10 @@
       "props": [
         {
           "name": "size",
-          "type": "\"md\" | \"sm\"",
+          "type": "\"md\" | \"sm\" | \"xs\"",
           "complexType": {
             "original": "KiBadgeSize",
-            "resolved": "\"md\" | \"sm\"",
+            "resolved": "\"md\" | \"sm\" | \"xs\"",
             "references": {
               "KiBadgeSize": {
                 "location": "local",
@@ -708,7 +708,7 @@
           "mutable": false,
           "attr": "size",
           "reflectToAttr": true,
-          "docs": "Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value\nfalls back to the `md` metrics the same way.",
+          "docs": "Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in\nonmars, with 12px text at every size. An unrecognized value falls back to\nthe `md` metrics the same way.",
           "docsTags": [
             {
               "name": "default",
@@ -723,6 +723,10 @@
             },
             {
               "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xs",
               "type": "string"
             }
           ],
@@ -1585,6 +1589,50 @@
           "values": [
             {
               "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiCheckboxSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\"",
+            "references": {
+              "KiCheckboxSize": {
+                "location": "local",
+                "path": "src/components/ki-checkbox/ki-checkbox.tsx",
+                "id": "src/components/ki-checkbox/ki-checkbox.tsx::KiCheckboxSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed size: the box is 18, 20 or 24px in onmars. `sm` also takes\nthe smaller label (13/20, 8px away); `md` and `lg` keep the 15px label.\nThe pointer target never drops under 24px. An unrecognized value matches\nno style rule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
             }
           ],
           "optional": false,
@@ -2782,6 +2830,58 @@
           "setter": false
         },
         {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+          "complexType": {
+            "original": "KiInputSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+            "references": {
+              "KiInputSize": {
+                "location": "local",
+                "path": "src/components/ki-input/ki-input.tsx",
+                "id": "src/components/ki-input/ki-input.tsx::KiInputSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed field size (`--ki-input-{size}-*` tokens): the field box is\n24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and\nicon box; the label and help text follow in three steps. An unrecognized\nvalue matches no style rule and keeps the medium metrics.\nWhen to use: match the size of the buttons and fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "type",
           "type": "\"email\" | \"password\" | \"search\" | \"tel\" | \"text\" | \"url\"",
           "complexType": {
@@ -3016,7 +3116,56 @@
       "usage": {
         "examples": "Valid only as a child of `ki-list`; the default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Release 1.4 shipped</ki-list-item>\n</ki-list>\n```\n\n`secondary` adds a supporting line below the primary text; its presence selects the multi-line min-height token:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Backups\n    <span slot=\"secondary\">Last run 2 hours ago</span>\n  </ki-list-item>\n</ki-list>\n```\n\n`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while a slotted control needs its own accessible name:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <ki-icon-button slot=\"end\" size=\"sm\" label=\"Edit Grace Hopper\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 20l1-4L16 5l3 3L8 19l-4 1z\" fill=\"currentColor\" /></svg>\n    </ki-icon-button>\n  </ki-list-item>\n</ki-list>\n```\n"
       },
-      "props": [],
+      "props": [
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\"",
+          "complexType": {
+            "original": "KiListItemSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\"",
+            "references": {
+              "KiListItemSize": {
+                "location": "local",
+                "path": "src/components/ki-list-item/ki-list-item.tsx",
+                "id": "src/components/ki-list-item/ki-list-item.tsx::KiListItemSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height\n(48, 56, 64 or 72px with a secondary line in onmars), padding, gap and\ntext. Slotted start and end content keeps the size its author gave it.\nAn unrecognized value matches no style rule and keeps the medium metrics.\nWhen to use: give every row of one list the same size.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
       "methods": [],
       "events": [],
       "listeners": [],
@@ -3801,6 +3950,46 @@
           "setter": false
         },
         {
+          "name": "size",
+          "type": "\"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiRadioGroupSize",
+            "resolved": "\"md\" | \"sm\"",
+            "references": {
+              "KiRadioGroupSize": {
+                "location": "local",
+                "path": "src/components/ki-radio-group/ki-radio-group.tsx",
+                "id": "src/components/ki-radio-group/ki-radio-group.tsx::KiRadioGroupSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed size of every `ki-radio` the group holds: the circle is 18\nor 20px in onmars, and `sm` takes the smaller option label (13/20, 8px\naway). The group decides for all its options; the group's own label,\nhelp and error keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around the group.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "value",
           "type": "string",
           "complexType": {
@@ -4253,6 +4442,58 @@
           "setter": false
         },
         {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+          "complexType": {
+            "original": "KiSelectSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+            "references": {
+              "KiSelectSize": {
+                "location": "local",
+                "path": "src/components/ki-select/ki-select.tsx",
+                "id": "src/components/ki-select/ki-select.tsx::KiSelectSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is\n24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and\nindicator; the label and help text follow in three steps. The listbox\nand its options keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "value",
           "type": "string",
           "complexType": {
@@ -4656,6 +4897,54 @@
           "setter": false
         },
         {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\"",
+          "complexType": {
+            "original": "KiSwitchSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\"",
+            "references": {
+              "KiSwitchSize": {
+                "location": "local",
+                "path": "src/components/ki-switch/ki-switch.tsx",
+                "id": "src/components/ki-switch/ki-switch.tsx::KiSwitchSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in\nonmars (`xl` is the design's mobile size), with its thumb. `sm` also takes\nthe smaller label (13/20, 8px away). An unrecognized value matches no\nstyle rule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "value",
           "type": "string | undefined",
           "complexType": {
@@ -5026,6 +5315,58 @@
             }
           ],
           "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+          "complexType": {
+            "original": "KiTabsSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+            "references": {
+              "KiTabsSize": {
+                "location": "local",
+                "path": "src/components/ki-tabs/ki-tabs.tsx",
+                "id": "src/components/ki-tabs/ki-tabs.tsx::KiTabsSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed strip size: every `ki-tab` it holds is 24, 32, 40, 48 or\n56px tall in onmars, with its text, and the gap between tabs follows.\nThe strip decides for all its tabs; a tab has no size of its own. An\nunrecognized value matches no style rule and keeps the medium metrics.\nWhen to use: match the size of the controls around the strip.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            }
+          ],
+          "optional": false,
           "required": false,
           "getter": false,
           "setter": false
@@ -5431,6 +5772,58 @@
           "values": [
             {
               "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+          "complexType": {
+            "original": "KiTextareaSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+            "references": {
+              "KiTextareaSize": {
+                "location": "local",
+                "path": "src/components/ki-textarea/ki-textarea.tsx",
+                "id": "src/components/ki-textarea/ki-textarea.tsx::KiTextareaSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed field size (`--ki-textarea-{size}-*` tokens): padding,\nradius and text; the label and help text follow in three steps. The\nheight stays `rows` lines. An unrecognized value matches no style rule\nand keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
             }
           ],
           "optional": false,
@@ -6292,7 +6685,7 @@
       "path": "src/components/ki-badge/ki-badge.tsx"
     },
     "src/components/ki-badge/ki-badge.tsx::KiBadgeSize": {
-      "declaration": "export type KiBadgeSize = 'sm' | 'md';",
+      "declaration": "export type KiBadgeSize = 'xs' | 'sm' | 'md';",
       "docstring": "",
       "path": "src/components/ki-badge/ki-badge.tsx"
     },
@@ -6315,6 +6708,11 @@
       "declaration": "export type KiButtonType = 'submit' | 'reset' | 'button';",
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
+    },
+    "src/components/ki-checkbox/ki-checkbox.tsx::KiCheckboxSize": {
+      "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
+      "docstring": "",
+      "path": "src/components/ki-checkbox/ki-checkbox.tsx"
     },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
       "declaration": "export interface KiDialogCloseDetail {\n  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */\n  reason: KiDialogCloseReason;\n}",
@@ -6346,20 +6744,55 @@
       "docstring": "",
       "path": "src/components/ki-input/ki-input.tsx"
     },
+    "src/components/ki-input/ki-input.tsx::KiInputSize": {
+      "declaration": "export type KiInputSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-input/ki-input.tsx"
+    },
+    "src/components/ki-list-item/ki-list-item.tsx::KiListItemSize": {
+      "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-list-item/ki-list-item.tsx"
+    },
     "src/components/ki-progress/ki-progress.tsx::KiProgressShape": {
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",
       "docstring": "",
       "path": "src/components/ki-progress/ki-progress.tsx"
+    },
+    "src/components/ki-radio-group/ki-radio-group.tsx::KiRadioGroupSize": {
+      "declaration": "export type KiRadioGroupSize = 'sm' | 'md';",
+      "docstring": "",
+      "path": "src/components/ki-radio-group/ki-radio-group.tsx"
     },
     "src/components/ki-scroller/ki-scroller.tsx::KiScrollerOrientation": {
       "declaration": "export type KiScrollerOrientation = 'vertical' | 'horizontal';",
       "docstring": "",
       "path": "src/components/ki-scroller/ki-scroller.tsx"
     },
+    "src/components/ki-select/ki-select.tsx::KiSelectSize": {
+      "declaration": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-select/ki-select.tsx"
+    },
     "src/components/ki-status/ki-status.tsx::KiStatusTone": {
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
       "path": "src/components/ki-status/ki-status.tsx"
+    },
+    "src/components/ki-switch/ki-switch.tsx::KiSwitchSize": {
+      "declaration": "export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-switch/ki-switch.tsx"
+    },
+    "src/components/ki-tabs/ki-tabs.tsx::KiTabsSize": {
+      "declaration": "export type KiTabsSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-tabs/ki-tabs.tsx"
+    },
+    "src/components/ki-textarea/ki-textarea.tsx::KiTextareaSize": {
+      "declaration": "export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-textarea/ki-textarea.tsx"
     },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",

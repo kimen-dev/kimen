@@ -50,7 +50,7 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 
 ## Attributes
 
-None.
+- `size` ("lg" | "md" | "sm" | "xl", default 'md'): Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 
 ## Slots
 
@@ -82,6 +82,15 @@ None.
 - `--ki-inverse-white-alpha-3`: semantic color for inverse white alpha 3.
 - `--ki-inverse-white-alpha-6`: semantic color for inverse white alpha 6.
 - `--ki-list-item-gap`: dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).
+- `--ki-list-item-lg-gap`: dimension used by the list component for lg item gap (List 10063:2066 lg binds Space/xl, 12px).
+- `--ki-list-item-lg-min-height`: dimension used by the list component for the lg one-line item min height (two List 10063:2066 lg block paddings plus the primary line: 48px).
+- `--ki-list-item-lg-min-height-multiline`: dimension used by the list component for the lg two-line item min height (List 10063:2066 lg measures 64px).
+- `--ki-list-item-lg-padding-block`: dimension used by the list component for lg item padding block (List 10063:2066 lg binds Space/xl, 12px).
+- `--ki-list-item-lg-padding-inline`: dimension used by the list component for lg item padding inline (List 10063:2066 lg binds Space/md, 8px).
+- `--ki-list-item-lg-primary-font-size`: dimension used by the list component for lg primary font size (List 10063:2066 lg primary: UI/body-2).
+- `--ki-list-item-lg-primary-line-height`: dimension used by the list component for lg primary line height (List 10063:2066 lg).
+- `--ki-list-item-lg-secondary-font-size`: dimension used by the list component for lg secondary font size (List 10063:2066 lg description: UI/caption-2).
+- `--ki-list-item-lg-secondary-line-height`: dimension used by the list component for lg secondary line height (List 10063:2066 lg).
 - `--ki-list-item-min-height`: dimension used by the list component for item min height (MarsUI md text-only row is ~40px content-sized: 20px line + 2x10 padding).
 - `--ki-list-item-min-height-multiline`: dimension used by the list component for multiline item min height (MarsUI md two-line row measures 56px).
 - `--ki-list-item-padding-block`: dimension used by the list component for item padding block (MarsUI md rows: Space/lg 10px).
@@ -95,6 +104,24 @@ None.
 - `--ki-list-item-secondary-font-size`: dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px).
 - `--ki-list-item-secondary-font-weight`: font weight used by the list component for item secondary font weight.
 - `--ki-list-item-secondary-line-height`: dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance).
+- `--ki-list-item-sm-gap`: dimension used by the list component for sm item gap (List 10063:2066 sm binds Space/lg, 10px).
+- `--ki-list-item-sm-min-height`: dimension used by the list component for the sm one-line item min height (two List 10063:2066 sm block paddings plus the primary line: 32px).
+- `--ki-list-item-sm-min-height-multiline`: dimension used by the list component for the sm two-line item min height (List 10063:2066 sm measures 48px).
+- `--ki-list-item-sm-padding-block`: dimension used by the list component for sm item padding block (List 10063:2066 sm binds Space/sm, 6px).
+- `--ki-list-item-sm-padding-inline`: dimension used by the list component for sm item padding inline (List 10063:2066 sm binds Space/md, 8px).
+- `--ki-list-item-sm-primary-font-size`: dimension used by the list component for sm primary font size (List 10063:2066 sm primary: UI/para).
+- `--ki-list-item-sm-primary-line-height`: dimension used by the list component for sm primary line height (List 10063:2066 sm).
+- `--ki-list-item-sm-secondary-font-size`: dimension used by the list component for sm secondary font size (List 10063:2066 sm description: UI/caption-2).
+- `--ki-list-item-sm-secondary-line-height`: dimension used by the list component for sm secondary line height (List 10063:2066 sm).
+- `--ki-list-item-xl-gap`: dimension used by the list component for xl item gap (List 10063:2066 xl binds Space/3xl, 16px).
+- `--ki-list-item-xl-min-height`: dimension used by the list component for the xl one-line item min height (two List 10063:2066 xl block paddings plus the primary line: 52px).
+- `--ki-list-item-xl-min-height-multiline`: dimension used by the list component for the xl two-line item min height (List 10063:2066 xl measures 72px).
+- `--ki-list-item-xl-padding-block`: dimension used by the list component for xl item padding block (List 10063:2066 xl binds Space/2xl, 14px).
+- `--ki-list-item-xl-padding-inline`: dimension used by the list component for xl item padding inline (List 10063:2066 xl binds Space/xl, 12px).
+- `--ki-list-item-xl-primary-font-size`: dimension used by the list component for xl primary font size (List 10063:2066 xl primary: UI/title-2).
+- `--ki-list-item-xl-primary-line-height`: dimension used by the list component for xl primary line height (List 10063:2066 xl).
+- `--ki-list-item-xl-secondary-font-size`: dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para).
+- `--ki-list-item-xl-secondary-line-height`: dimension used by the list component for xl secondary line height (List 10063:2066 xl).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.

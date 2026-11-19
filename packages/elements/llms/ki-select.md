@@ -48,6 +48,7 @@ An option without `value` submits its trimmed label text, and `required` blocks 
 - `name` (string | undefined): Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
 - `placeholder` (string, default ''): Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
 - `required` (boolean, default false): Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and indicator; the label and help text follow in three steps. The listbox and its options keep their size. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
 
 ## Slots
@@ -135,6 +136,14 @@ None.
 - `--ki-select-label-hint-gap`: dimension used by the select component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-select-label-line-height`: dimension used by the select component for label line height (MarsUI line_height/para 20px).
 - `--ki-select-label-padding-inline`: dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea).
+- `--ki-select-lg-font-size`: dimension used by the select component for lg font size: body-2 (Input-cell 8016:286 lg, composed by Dropdown 12041:1595).
+- `--ki-select-lg-height`: dimension used by the select component for lg height (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: 48px).
+- `--ki-select-lg-indicator-size`: dimension used by the select component for the lg indicator box (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: icon 20px).
+- `--ki-select-lg-label-font-size`: dimension used by the select component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-select-lg-label-line-height`: dimension used by the select component for the lg label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-select-lg-line-height`: dimension used by the select component for lg line height (body-2, Input-cell 8016:286 lg, composed by Dropdown 12041:1595).
+- `--ki-select-lg-padding-inline`: dimension used by the select component for lg padding inline (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Space/xl, 12px).
+- `--ki-select-lg-radius`: dimension used by the select component for lg radius (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Radius/small-component/lg).
 - `--ki-select-line-height`: dimension used by the select component for the trigger value line height (MarsUI body_1 24px).
 - `--ki-select-listbox-backdrop-filter`: Complete backdrop filter behind the select listbox.
 - `--ki-select-listbox-bg`: color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter).
@@ -152,12 +161,38 @@ None.
 - `--ki-select-rest-border`: color used by the select component for rest border.
 - `--ki-select-rest-fg`: color used by the select component for rest foreground.
 - `--ki-select-rest-label-fg`: color used by the select component for rest label foreground.
+- `--ki-select-sm-font-size`: dimension used by the select component for sm font size: caption-2 (Input-cell 8016:286 sm, composed by Dropdown 12041:1595).
+- `--ki-select-sm-height`: dimension used by the select component for sm height (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: 32px).
+- `--ki-select-sm-indicator-size`: dimension used by the select component for the sm indicator box (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: icon 16px).
+- `--ki-select-sm-label-font-size`: dimension used by the select component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-select-sm-label-line-height`: dimension used by the select component for the sm label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-select-sm-line-height`: dimension used by the select component for sm line height (caption-2, Input-cell 8016:286 sm, composed by Dropdown 12041:1595).
+- `--ki-select-sm-padding-inline`: dimension used by the select component for sm padding inline (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Space/md, 8px).
+- `--ki-select-sm-radius`: dimension used by the select component for sm radius (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Radius/small-component/sm).
+- `--ki-select-xl-font-size`: dimension used by the select component for xl font size: title-2 (Input-cell 8016:286 xl, composed by Dropdown 12041:1595).
+- `--ki-select-xl-height`: dimension used by the select component for xl height (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: 56px).
+- `--ki-select-xl-indicator-size`: dimension used by the select component for the xl indicator box (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: icon 24px).
+- `--ki-select-xl-label-font-size`: dimension used by the select component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-select-xl-label-line-height`: dimension used by the select component for the xl label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-select-xl-line-height`: dimension used by the select component for xl line height (title-2, Input-cell 8016:286 xl, composed by Dropdown 12041:1595).
+- `--ki-select-xl-padding-inline`: dimension used by the select component for xl padding inline (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Space/2xl, 14px).
+- `--ki-select-xl-radius`: dimension used by the select component for xl radius (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Radius/small-component/xl).
+- `--ki-select-xs-font-size`: dimension used by the select component for xs font size: caption-2 (Input-cell 8016:286 xs, composed by Dropdown 12041:1595). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-select-xs-height`: dimension used by the select component for xs height (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: 24px).
+- `--ki-select-xs-indicator-size`: dimension used by the select component for the xs indicator box (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: icon 14px).
+- `--ki-select-xs-label-font-size`: dimension used by the select component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-select-xs-label-line-height`: dimension used by the select component for the xs label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-select-xs-line-height`: dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595).
+- `--ki-select-xs-padding-inline`: dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px).
+- `--ki-select-xs-radius`: dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs).
 - `--ki-surface-hover-overlay-inverse`: semantic color for surface hover overlay inverse.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-line-height-para`: semantic dimension for typography line height para.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.

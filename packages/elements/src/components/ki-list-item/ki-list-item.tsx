@@ -1,4 +1,6 @@
-import { Component, Element, Host, State, h } from '@stencil/core';
+import { Component, Element, Host, Prop, State, h } from '@stencil/core';
+
+export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';
 
 function hasAssignedContent(slot: HTMLSlotElement | null, textSlot = false): boolean {
   if (!slot) {
@@ -41,6 +43,20 @@ function hasAssignedContent(slot: HTMLSlotElement | null, textSlot = false): boo
 })
 export class KiListItem {
   @Element() private readonly host!: HTMLElement;
+
+  /**
+   * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height
+   * (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and
+   * text. Slotted start and end content keeps the size its author gave it.
+   * An unrecognized value matches no style rule and keeps the medium metrics.
+   * When to use: give every row of one list the same size.
+   * When NOT to use: do not pick a smaller size to fit a dense region or a
+   * larger one for touch; declare `data-ki-density` on the region instead,
+   * which composes with every size.
+   *
+   * @default 'md'
+   */
+  @Prop({ reflect: true }) size: KiListItemSize = 'md';
 
   @State() private hasStart = false;
   @State() private hasPrimary = false;

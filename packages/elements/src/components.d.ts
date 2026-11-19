@@ -10,13 +10,20 @@ import { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
-import { KiInputType } from "./components/ki-input/ki-input";
+import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
+import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
+import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
+import { KiSelectSize } from "./components/ki-select/ki-select";
 import { KiStatusTone } from "./components/ki-status/ki-status";
+import { KiSwitchSize } from "./components/ki-switch/ki-switch";
+import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
+import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
@@ -26,13 +33,20 @@ export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
-export { KiInputType } from "./components/ki-input/ki-input";
+export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
+export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
+export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
+export { KiSelectSize } from "./components/ki-select/ki-select";
 export { KiStatusTone } from "./components/ki-status/ki-status";
+export { KiSwitchSize } from "./components/ki-switch/ki-switch";
+export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
+export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
@@ -154,7 +168,7 @@ export namespace Components {
      */
     interface KiBadge {
         /**
-          * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+          * Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in onmars, with 12px text at every size. An unrecognized value falls back to the `md` metrics the same way.
           * @default 'md'
          */
         "size": KiBadgeSize;
@@ -287,6 +301,11 @@ export namespace Components {
           * @default false
          */
         "required": boolean;
+        /**
+          * Token-backed size: the box is 18, 20 or 24px in onmars. `sm` also takes the smaller label (13/20, 8px away); `md` and `lg` keep the 15px label. The pointer target never drops under 24px. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size": KiCheckboxSize;
         /**
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
@@ -497,6 +516,11 @@ export namespace Components {
          */
         "required": boolean;
         /**
+          * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size": KiInputSize;
+        /**
           * Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
           * @default 'text'
          */
@@ -527,6 +551,11 @@ export namespace Components {
      * tabular row, navigation link or whole-item clickable control.
      */
     interface KiListItem {
+        /**
+          * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size": KiListItemSize;
     }
     /**
      * A declarative data option rendered by its owning `ki-select`.
@@ -685,6 +714,11 @@ export namespace Components {
          */
         "required": boolean;
         /**
+          * Token-backed size of every `ki-radio` the group holds: the circle is 18 or 20px in onmars, and `sm` takes the smaller option label (13/20, 8px away). The group decides for all its options; the group's own label, help and error keep their size. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around the group. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size": KiRadioGroupSize;
+        /**
           * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
           * @default ''
          */
@@ -772,6 +806,11 @@ export namespace Components {
          */
         "required": boolean;
         /**
+          * Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and indicator; the label and help text follow in three steps. The listbox and its options keep their size. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size": KiSelectSize;
+        /**
           * Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
           * @default ''
          */
@@ -845,6 +884,11 @@ export namespace Components {
          */
         "name"?: string;
         /**
+          * Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in onmars (`xl` is the design's mobile size), with its thumb. `sm` also takes the smaller label (13/20, 8px away). An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size": KiSwitchSize;
+        /**
           * Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
           * @default 'on'
          */
@@ -905,6 +949,11 @@ export namespace Components {
           * @default undefined
          */
         "label"?: string;
+        /**
+          * Token-backed strip size: every `ki-tab` it holds is 24, 32, 40, 48 or 56px tall in onmars, with its text, and the gap between tabs follows. The strip decides for all its tabs; a tab has no size of its own. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the controls around the strip. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size": KiTabsSize;
         /**
           * Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
           * @default ''
@@ -980,6 +1029,11 @@ export namespace Components {
           * @default 2
          */
         "rows": number;
+        /**
+          * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size": KiTextareaSize;
         /**
           * Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
           * @default ''
@@ -1948,7 +2002,7 @@ declare namespace LocalJSX {
      */
     interface KiBadge {
         /**
-          * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+          * Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in onmars, with 12px text at every size. An unrecognized value falls back to the `md` metrics the same way.
           * @default 'md'
          */
         "size"?: KiBadgeSize;
@@ -2089,6 +2143,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "required"?: boolean;
+        /**
+          * Token-backed size: the box is 18, 20 or 24px in onmars. `sm` also takes the smaller label (13/20, 8px away); `md` and `lg` keep the 15px label. The pointer target never drops under 24px. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size"?: KiCheckboxSize;
         /**
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
@@ -2299,6 +2358,11 @@ declare namespace LocalJSX {
          */
         "required"?: boolean;
         /**
+          * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size"?: KiInputSize;
+        /**
           * Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
           * @default 'text'
          */
@@ -2329,6 +2393,11 @@ declare namespace LocalJSX {
      * tabular row, navigation link or whole-item clickable control.
      */
     interface KiListItem {
+        /**
+          * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size"?: KiListItemSize;
     }
     /**
      * A declarative data option rendered by its owning `ki-select`.
@@ -2491,6 +2560,11 @@ declare namespace LocalJSX {
          */
         "required"?: boolean;
         /**
+          * Token-backed size of every `ki-radio` the group holds: the circle is 18 or 20px in onmars, and `sm` takes the smaller option label (13/20, 8px away). The group decides for all its options; the group's own label, help and error keep their size. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around the group. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size"?: KiRadioGroupSize;
+        /**
           * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
           * @default ''
          */
@@ -2582,6 +2656,11 @@ declare namespace LocalJSX {
          */
         "required"?: boolean;
         /**
+          * Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and indicator; the label and help text follow in three steps. The listbox and its options keep their size. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size"?: KiSelectSize;
+        /**
           * Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
           * @default ''
          */
@@ -2659,6 +2738,11 @@ declare namespace LocalJSX {
          */
         "name"?: string;
         /**
+          * Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in onmars (`xl` is the design's mobile size), with its thumb. `sm` also takes the smaller label (13/20, 8px away). An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size"?: KiSwitchSize;
+        /**
           * Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
           * @default 'on'
          */
@@ -2723,6 +2807,11 @@ declare namespace LocalJSX {
           * Fired once after a user-driven selection change from pointer or keyboard navigation. `detail.value` is the resolved selected value and `value` is already current when listeners run. Programmatic `value` writes and first-render fallback are silent.
          */
         "onKi-change"?: (event: KiTabsCustomEvent<{ value: string }>) => void;
+        /**
+          * Token-backed strip size: every `ki-tab` it holds is 24, 32, 40, 48 or 56px tall in onmars, with its text, and the gap between tabs follows. The strip decides for all its tabs; a tab has no size of its own. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the controls around the strip. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size"?: KiTabsSize;
         /**
           * Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
           * @default ''
@@ -2802,6 +2891,11 @@ declare namespace LocalJSX {
           * @default 2
          */
         "rows"?: number;
+        /**
+          * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+          * @default 'md'
+         */
+        "size"?: KiTextareaSize;
         /**
           * Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
           * @default ''
@@ -2984,6 +3078,7 @@ declare namespace LocalJSX {
     interface KiCheckboxAttributes {
         "checked": boolean;
         "indeterminate": boolean;
+        "size": KiCheckboxSize;
         "disabled": boolean;
         "required": boolean;
         "name": string;
@@ -3016,6 +3111,7 @@ declare namespace LocalJSX {
     }
     interface KiInputAttributes {
         "type": KiInputType;
+        "size": KiInputSize;
         "label": string;
         "labelHint": string;
         "placeholder": string;
@@ -3027,6 +3123,9 @@ declare namespace LocalJSX {
         "autocomplete": string;
         "helpText": string;
         "errorText": string;
+    }
+    interface KiListItemAttributes {
+        "size": KiListItemSize;
     }
     interface KiOptionAttributes {
         "value": string;
@@ -3051,6 +3150,7 @@ declare namespace LocalJSX {
         "name": string;
         "value": string;
         "label": string;
+        "size": KiRadioGroupSize;
         "labelHint": string;
         "required": boolean;
         "disabled": boolean;
@@ -3065,6 +3165,7 @@ declare namespace LocalJSX {
         "label": string;
         "labelHint": string;
         "placeholder": string;
+        "size": KiSelectSize;
         "name": string;
         "value": string;
         "disabled": boolean;
@@ -3079,6 +3180,7 @@ declare namespace LocalJSX {
     }
     interface KiSwitchAttributes {
         "checked": boolean;
+        "size": KiSwitchSize;
         "disabled": boolean;
         "name": string;
         "value": string;
@@ -3095,6 +3197,7 @@ declare namespace LocalJSX {
     interface KiTabsAttributes {
         "value": string;
         "label": string;
+        "size": KiTabsSize;
     }
     interface KiTextareaAttributes {
         "label": string;
@@ -3103,6 +3206,7 @@ declare namespace LocalJSX {
         "value": string;
         "name": string;
         "rows": number;
+        "size": KiTextareaSize;
         "required": boolean;
         "readonly": boolean;
         "disabled": boolean;
@@ -3146,7 +3250,7 @@ declare namespace LocalJSX {
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
         "ki-list": KiList;
-        "ki-list-item": KiListItem;
+        "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };

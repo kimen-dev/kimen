@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiInput } from '@kimen/elements/components
 
 export const KiInput: StencilVueComponent<JSX.KiInput, JSX.KiInput["value"]> = /*@__PURE__*/ defineContainer<JSX.KiInput, JSX.KiInput["value"]>('ki-input', defineKiInput, [
   'type',
+  'size',
   'label',
   'labelHint',
   'placeholder',

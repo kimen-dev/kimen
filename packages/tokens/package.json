@@ -34,7 +34,7 @@
     {
       "name": "onmars tokens stylesheet",
       "path": "dist/css/tokens.css",
-      "limit": "12 KB"
+      "limit": "12.4 KB"
     },
     {
       "name": "material3 tokens stylesheet",

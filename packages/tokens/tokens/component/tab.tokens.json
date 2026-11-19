@@ -149,6 +149,62 @@
           "$type": "shadow",
           "$description": "shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
         }
+      },
+      "xs": {
+        "min-block-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the tab component for xs min block size (Tab-nav-item 10048:1068 xs: 24px)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the tab component for xs font size (Tab-nav-item 10048:1068 xs: UI/caption-2). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the tab component for xs line height (Tab-nav-item 10048:1068 xs: UI/caption-2)."
+        }
+      },
+      "sm": {
+        "min-block-size": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the tab component for sm min block size (Tab-nav-item 10048:1068 sm: 32px)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the tab component for sm font size (Tab-nav-item 10048:1068 sm: UI/para)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.para}",
+          "$description": "dimension used by the tab component for sm line height (Tab-nav-item 10048:1068 sm: UI/para)."
+        }
+      },
+      "lg": {
+        "min-block-size": {
+          "$value": "{ki.space.14xl}",
+          "$description": "dimension used by the tab component for lg min block size (Tab-nav-item 10048:1068 lg: 48px)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the tab component for lg font size (Tab-nav-item 10048:1068 lg: UI/body-2)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-2}",
+          "$description": "dimension used by the tab component for lg line height (Tab-nav-item 10048:1068 lg: UI/body-2)."
+        }
+      },
+      "xl": {
+        "min-block-size": {
+          "$value": "{ki.space.16xl}",
+          "$description": "dimension used by the tab component for xl min block size (Tab-nav-item 10048:1068 xl: 56px)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.title-2}",
+          "$description": "dimension used by the tab component for xl font size (Tab-nav-item 10048:1068 xl: UI/title-2)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.title-2}",
+          "$description": "dimension used by the tab component for xl line height (Tab-nav-item 10048:1068 xl: UI/title-2)."
+        }
       }
     }
   }

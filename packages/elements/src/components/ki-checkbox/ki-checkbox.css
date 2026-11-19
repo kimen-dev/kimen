@@ -23,8 +23,31 @@
   --_ki-label-hint-fg: var(--ki-checkbox-label-hint-fg);
   --_ki-label-hint-gap: var(--ki-checkbox-label-hint-gap);
 
+  /* The size ramp (spec 050): medium is the unsized token family. */
+  --_ki-checkbox-control-size: var(--ki-checkbox-control-size);
+  --_ki-checkbox-min-target: var(--ki-checkbox-min-target);
+  --_ki-checkbox-gap: var(--ki-checkbox-gap);
+  --_ki-checkbox-label-font-size: var(--ki-checkbox-label-font-size);
+  --_ki-checkbox-label-line-height: var(--ki-checkbox-label-line-height);
+
   display: inline-block;
   font-family: var(--ki-typography-family-body);
+}
+
+/* Spec 050: sm takes the smaller box and the Checkbox-label sm pairing; lg a
+   larger box and cell with the medium label (D4). An unknown value matches no
+   rule and keeps medium. */
+:host([size="sm"]) {
+  --_ki-checkbox-control-size: var(--ki-checkbox-sm-control-size);
+  --_ki-checkbox-min-target: var(--ki-checkbox-sm-min-target);
+  --_ki-checkbox-gap: var(--ki-checkbox-sm-gap);
+  --_ki-checkbox-label-font-size: var(--ki-checkbox-sm-label-font-size);
+  --_ki-checkbox-label-line-height: var(--ki-checkbox-sm-label-line-height);
+}
+
+:host([size="lg"]) {
+  --_ki-checkbox-control-size: var(--ki-checkbox-lg-control-size);
+  --_ki-checkbox-min-target: var(--ki-checkbox-lg-min-target);
 }
 
 /* The HTML hidden attribute outranks the host's own display. */
@@ -136,11 +159,15 @@ label {
   position: relative;
   display: inline-flex;
   align-items: flex-start;
-  gap: var(--ki-checkbox-gap);
+  gap: var(--_ki-checkbox-gap);
+
+  /* The labelled row is the target (spec 045): never shorter than the min
+     target, whose 24px floor sits above the sm label line (spec 050). */
+  min-block-size: var(--_ki-checkbox-min-target);
   color: var(--ki-text-high-em);
-  font-size: var(--ki-checkbox-label-font-size);
+  font-size: var(--_ki-checkbox-label-font-size);
   font-weight: var(--ki-checkbox-label-font-weight);
-  line-height: var(--ki-checkbox-label-line-height);
+  line-height: var(--_ki-checkbox-label-line-height);
 }
 
 input {
@@ -153,13 +180,13 @@ input {
   /* The pointer target: never under the region's target minimum (spec 045
      A1-D3), which extends it without moving or growing the painted box. */
   inline-size: max(
-    var(--ki-checkbox-control-size),
-    var(--ki-checkbox-min-target),
+    var(--_ki-checkbox-control-size),
+    var(--_ki-checkbox-min-target),
     var(--ki-density-target-min)
   );
   block-size: max(
-    var(--ki-checkbox-control-size),
-    var(--ki-checkbox-min-target),
+    var(--_ki-checkbox-control-size),
+    var(--_ki-checkbox-min-target),
     var(--ki-density-target-min)
   );
   margin: 0;
@@ -173,10 +200,10 @@ input {
   display: inline-grid;
   place-items: center;
   flex: none;
-  inline-size: var(--ki-checkbox-control-size);
-  block-size: var(--ki-checkbox-control-size);
+  inline-size: var(--_ki-checkbox-control-size);
+  block-size: var(--_ki-checkbox-control-size);
   margin-block-start: calc(
-    (var(--ki-checkbox-label-line-height) - var(--ki-checkbox-control-size)) /
+    (var(--_ki-checkbox-label-line-height) - var(--_ki-checkbox-control-size)) /
     2
   );
   color: var(--_ki-checkbox-fg);
@@ -264,7 +291,7 @@ input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
 /* Help and error lines (spec 042) align with the label text, past the box. */
 [part="help"],
 [part="error"] {
-  padding-inline-start: calc(var(--ki-checkbox-control-size) + var(--ki-checkbox-gap));
+  padding-inline-start: calc(var(--_ki-checkbox-control-size) + var(--_ki-checkbox-gap));
 }
 
 /* Micro-motion (gated exactly like the pre-existing mark transition so the

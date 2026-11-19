@@ -1,7 +1,7 @@
 import { Component, Prop, h } from '@stencil/core';
 
 export type KiBadgeTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';
-export type KiBadgeSize = 'sm' | 'md';
+export type KiBadgeSize = 'xs' | 'sm' | 'md';
 
 /**
  * A static, non-interactive status pill.
@@ -33,8 +33,9 @@ export class KiBadge {
   @Prop({ reflect: true }) tone: KiBadgeTone = 'neutral';
 
   /**
-   * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value
-   * falls back to the `md` metrics the same way.
+   * Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in
+   * onmars, with 12px text at every size. An unrecognized value falls back to
+   * the `md` metrics the same way.
    */
   @Prop({ reflect: true }) size: KiBadgeSize = 'md';
 
