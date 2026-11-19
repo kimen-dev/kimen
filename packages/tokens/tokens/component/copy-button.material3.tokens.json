@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "copy-button": {
+      "text-color": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Material 3 text color used by the ki-copy-button component."
+      }
+    }
+  }
+}

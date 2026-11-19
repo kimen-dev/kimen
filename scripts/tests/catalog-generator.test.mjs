@@ -132,3 +132,30 @@ test('reports an opted-in tag missing from the Custom Elements Manifest', () => 
     /ki-probe: catalog opt-in has no manifest declaration/u,
   );
 });
+
+test('a catalog action projects only its selected public event', () => {
+  const manifest = manifestWith([]);
+  manifest.modules[0].declarations[0].events = [
+    { name: 'ki-success', description: 'Succeeded.' },
+    { name: 'ki-failure', description: 'Failed.' },
+  ];
+  const source = buildCatalog(manifest, {
+    ...catalogOptions,
+    catalogActions: new Map([['ki-probe', 'ki-success']]),
+  });
+  const json = source.slice(source.indexOf('{'), source.lastIndexOf('}') + 1);
+  assert.deepEqual(JSON.parse(json).components['ki-probe'].events, {
+    'ki-success': 'Succeeded.',
+  });
+});
+
+test('a catalog action must select a public event', () => {
+  assert.throws(
+    () =>
+      buildCatalog(manifestWith([]), {
+        ...catalogOptions,
+        catalogActions: new Map([['ki-probe', 'ki-missing']]),
+      }),
+    /ki-probe: catalog action ki-missing is not a declared event/u,
+  );
+});
