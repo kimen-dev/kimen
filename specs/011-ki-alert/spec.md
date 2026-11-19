@@ -132,7 +132,10 @@ positions.
   An alert without an icon therefore shows no tone colour, so the guidance
   asks for an icon on every non-neutral alert (FR-021). The alert never
   restyles slotted actions: a consumer gives a primary action its own
-  `tone`, as the master does for success and danger (S26).
+  `tone`, as the master does for success and danger (S26). S1 is amended to
+  match: the danger appearance is worn by the icon. In the onmars theme the
+  per-tone card tokens all resolve to the neutral card; a theme may still
+  tint the card per tone through them (material3 does).
 - **A1-D7 Preferences.** The layout follows the writing direction (S32).
   Forced colors keep the outer edge and the icon (S33). Reduced transparency
   (044) drops the shell blur and makes shell and card opaque while the card
@@ -360,9 +363,9 @@ Feature: Alert
   # Family: core behavior
   # S1
   Scenario: The alert presents its message with the tone's appearance
-    Given an alert with tone "danger" and the message "We could not save your changes"
+    Given an alert with tone "danger", an icon and the message "We could not save your changes"
     When the page renders
-    Then the message is visible with the danger tone appearance
+    Then the message is visible and its icon wears the danger tone appearance
 
   # S2
   Scenario: An optional heading introduces the message
@@ -728,11 +731,12 @@ Amendment A1 (decided 2026-11-19):
   actions are responses to this message, slotted as `size="sm"` buttons, and
   a response the person cannot skip belongs in `ki-dialog`. Every
   non-neutral alert should carry an icon: it is where the tone is drawn.
-- **FR-022** *(amends FR-001, FR-008)*: The tone MUST be drawn on the icon
-  alone: its frame takes the tone's base-em alpha fill and its glyph the
-  tone's high-em ink, while shell, card, heading, message and dismiss
-  control resolve to the same values in every tone. The alert MUST NOT
-  restyle slotted actions.
+- **FR-022** *(amends FR-001, FR-008)*: In the onmars theme the tone MUST be
+  drawn on the icon alone: its frame takes the tone's base-em alpha fill and
+  its glyph the tone's high-em ink, while shell, card, heading, message and
+  dismiss control resolve to the same values in every tone. The per-tone
+  card tokens stay, so another theme may tint the card per tone. The alert
+  MUST NOT restyle slotted actions.
 - **FR-023**: The message MUST keep an ink of 4.5:1 or more against the card
   in every tone, theme and scheme. Without an icon, the heading MUST leave
   room at its inline end for the dismiss control and never sit under it.
@@ -790,8 +794,8 @@ Amendment A1 (decided 2026-11-19):
   parts `card`, `icon`, `actions`; new component tokens for the shell
   (padding, gap, radius, fill, blur), the card (fill, elevation), the icon
   frame (size, radius, and fill and ink per tone) and the actions row (gap),
-  final names fixed at implementation; the per-tone surface tints of the
-  box stop painting and follow the deprecation path of spec 041. The existing structural tokens keep describing
+  final names fixed at implementation. The per-tone card tokens keep
+  painting the card; onmars resolves them all to the neutral card. The existing structural tokens keep describing
   the card, whose values their descriptions already cite; `--ki-alert-radius`
   changes value from 10px to 16px. Declared in `changes/api/` with the
   implementation.

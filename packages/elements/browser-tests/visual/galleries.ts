@@ -84,6 +84,9 @@ const avatarGroupMembers = [
 const iconButtonGlyph =
   '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M9 3h2v6h6v2h-6v6H9v-6H3V9h6z"></path></svg>';
 
+// The alert icon slot takes the same vector glyph.
+const alertGlyph = iconButtonGlyph.replace('<svg ', '<svg slot="icon" ');
+
 const iconButtonToneRow = (tone: string): string =>
   buttonVariants
     .map(
@@ -119,13 +122,16 @@ const tabsFixture = (value: string): string =>
   ].join('');
 
 const galleries = {
+  // The Alert master anatomy (spec 011 A1): the tone is drawn on the icon, so
+  // every tone carries one; the neutral alert shows the actions row and the
+  // danger one the iconless, heading-less form.
   'ki-alert': {
     focusFirst: true,
     html: [
-      '<ki-alert tone="neutral" dismissible dismiss-label="Dismiss" heading="Neutral heading">Neutral message body.</ki-alert>',
-      '<ki-alert tone="info" heading="Info heading">Informational message body.</ki-alert>',
-      '<ki-alert tone="success" heading="Success heading">Success message body.</ki-alert>',
-      '<ki-alert tone="warning" heading="Warning heading">Warning message body.</ki-alert>',
+      `<ki-alert tone="neutral" dismissible dismiss-label="Dismiss" heading="Neutral heading">${alertGlyph}Neutral message body.<button slot="actions" type="button">Later</button><button slot="actions" type="button">Review</button></ki-alert>`,
+      `<ki-alert tone="info" heading="Info heading">${alertGlyph}Informational message body.</ki-alert>`,
+      `<ki-alert tone="success" heading="Success heading">${alertGlyph}Success message body.</ki-alert>`,
+      `<ki-alert tone="warning" heading="Warning heading">${alertGlyph}Warning message body.</ki-alert>`,
       '<ki-alert tone="danger">Danger message without a heading.</ki-alert>',
     ].join(''),
   },

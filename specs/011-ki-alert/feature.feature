@@ -6,9 +6,9 @@ Feature: Alert
   # Family: core behavior
   # S1
   Scenario: The alert presents its message with the tone's appearance
-    Given an alert with tone "danger" and the message "We could not save your changes"
+    Given an alert with tone "danger", an icon and the message "We could not save your changes"
     When the page renders
-    Then the message is visible with the danger tone appearance
+    Then the message is visible and its icon wears the danger tone appearance
 
   # S2
   Scenario: An optional heading introduces the message
