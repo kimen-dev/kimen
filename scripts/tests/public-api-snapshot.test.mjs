@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/347-heading-font-family.json',
+      '../../changes/api/316-size-axes.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -592,11 +592,15 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // density is published as its own context. 1223 + 24 = 1247.
   // Issue #347 adds the shared heading family, the two component heading
   // families, and the dialog heading letter spacing. 1247 + 4 = 1251.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1251);
+  // Issue #316 (changes/api/316-size-axes) adds 193: the size axes of
+  // ki-input (36), ki-select (32), ki-textarea (28), ki-tabs (4), ki-tab (12),
+  // ki-list-item (27), ki-checkbox (7), ki-radio (6), ki-switch (36) and the
+  // xs ki-badge (5); medium keeps its unsized tokens. 1251 + 193 = 1444.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1444);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1251,
+    1444,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
