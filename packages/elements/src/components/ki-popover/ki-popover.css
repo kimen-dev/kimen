@@ -74,13 +74,16 @@
   pointer-events: none;
 }
 
-.popup[data-side="top"] .arrow,
-.popup[data-side="bottom"] .arrow {
+/* The diamond rotates physically. In RTL the painted diagonal reverses. */
+.arrow:dir(rtl) {
+  rotate: -45deg;
+}
+
+.popup:is([data-side="top"], [data-side="bottom"]) .arrow {
   inset-inline-start: var(--_ki-popover-arrow-along);
 }
 
-.popup[data-side="start"] .arrow,
-.popup[data-side="end"] .arrow {
+.popup:is([data-side="start"], [data-side="end"]) .arrow {
   inset-block-start: var(--_ki-popover-arrow-along);
 }
 
@@ -106,14 +109,6 @@
   inset-inline-start: var(--_ki-popover-arrow-out);
   border-block-end: var(--_ki-popover-border);
   border-inline-start: var(--_ki-popover-border);
-}
-
-/* The diamond rotates physically. In RTL the painted diagonal reverses. */
-.popup:dir(rtl)[data-side="top"] .arrow,
-.popup:dir(rtl)[data-side="bottom"] .arrow,
-.popup:dir(rtl)[data-side="start"] .arrow,
-.popup:dir(rtl)[data-side="end"] .arrow {
-  rotate: -45deg;
 }
 
 .status {

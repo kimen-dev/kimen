@@ -18,33 +18,24 @@ interface TriggerState {
 function captureTrigger(element: HTMLElement): TriggerState {
   return {
     element,
-    expanded: element.getAttribute('aria-expanded'),
-    hasPopup: element.getAttribute('aria-haspopup'),
+    expanded: element.ariaExpanded,
+    hasPopup: element.ariaHasPopup,
   };
 }
 
-function setAttribute(element: HTMLElement, name: string, value: string | null): void {
-  if (value === null) {
-    element.removeAttribute(name);
-  } else {
-    element.setAttribute(name, value);
-  }
-}
-
 function restoreTrigger(state: TriggerState): void {
-  setAttribute(state.element, 'aria-expanded', state.expanded);
-  setAttribute(state.element, 'aria-haspopup', state.hasPopup);
+  state.element.ariaExpanded = state.expanded;
+  state.element.ariaHasPopup = state.hasPopup;
 }
 
 /**
- * A non-modal surface anchored to a button. Both kinds use the native
- * popover top layer and support outside click and Escape dismissal.
+ * A non-modal popover anchored to a button.
  *
- * @whenToUse Present related filters, details, a small form, or supplemental text near a button.
- * @whenNotToUse Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.
- * @slot - Dialog content or supplemental text for the toggletip kind.
- * @part surface - The positioned and styled popover panel.
- * @part arrow - The optional decorative pointer on the trigger-facing edge.
+ * @whenToUse Show filters, details, a small form, or a text toggletip.
+ * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
+ * @slot - Dialog content or toggletip text.
+ * @part surface - The popover panel.
+ * @part arrow - The decorative arrow.
  */
 @Component({
   tag: 'ki-popover',
@@ -54,22 +45,22 @@ function restoreTrigger(state: TriggerState): void {
 export class KiPopover {
   @Element() private host!: HTMLElement;
 
-  /** Literal ID of the button in the same document or shadow tree. */
+  /** ID of the button in the same document or shadow tree. */
   @Prop() for?: string;
 
-  /** Preferred side and optional logical alignment. Flips when the opposite side has more room. */
+  /** Preferred side and logical alignment. Flips when room is limited. */
   @Prop() placement: KiPopoverPlacement = 'bottom-start';
 
-  /** Whether the popover is visible. Updates on activation and native dismissal. */
+  /** Visibility. Reflects activation and native dismissal. */
   @Prop({ mutable: true, reflect: true }) open = false;
 
-  /** Accessible name for the dialog kind. Give each dialog a meaningful name. */
+  /** Accessible name of a dialog popover. */
   @Prop() label: string | undefined = 'Popover';
 
-  /** Shows the decorative arrow pointing at the trigger. */
+  /** Shows the arrow toward the trigger. */
   @Prop() arrow = true;
 
-  /** Dialog content can contain controls. A toggletip announces supplemental text. */
+  /** Use dialog for controls or toggletip for supplemental text. */
   @Prop() kind: KiPopoverKind = 'dialog';
 
   /** Emitted when the popover opens. */
@@ -84,30 +75,29 @@ export class KiPopover {
   private popup: HTMLDivElement | undefined;
   private trigger: TriggerState | undefined;
   private control: TriggerState | undefined;
-  private treeObserver?: MutationObserver;
+  private readonly treeObserver = new MutationObserver(() => {
+    this.bindTrigger();
+  });
   private controlObserver?: MutationObserver;
+  private triggerListeners: AbortController | undefined;
   private dismissListeners: AbortController | undefined;
   private escape: KeyboardEvent | undefined;
-  private restoreOnClose = false;
   private pressedWhileOpen = false;
   private shown = false;
-  private loaded = false;
 
   connectedCallback(): void {
-    if (this.loaded) {
+    if (this.popup) {
       this.connect();
     }
   }
 
   componentDidLoad(): void {
-    this.loaded = true;
-    this.popup?.addEventListener('beforetoggle', this.handleBeforeToggle);
     this.popup?.addEventListener('toggle', this.syncVisibility);
     this.connect();
   }
 
   disconnectedCallback(): void {
-    this.treeObserver?.disconnect();
+    this.treeObserver.disconnect();
     this.unbindTrigger();
     this.stopDismissTracking();
     this.shown = false;
@@ -117,15 +107,14 @@ export class KiPopover {
 
   @Watch('for')
   updateAnchor(): void {
-    if (this.loaded && this.host.isConnected) {
+    if (this.popup?.isConnected) {
       this.bindTrigger();
-      this.updateOpen();
     }
   }
 
   @Watch('open')
   updateOpen(): void {
-    if (!this.loaded || !this.host.isConnected) {
+    if (!this.popup?.isConnected) {
       return;
     }
     if (this.open && this.trigger) {
@@ -153,13 +142,9 @@ export class KiPopover {
   }
 
   private connect(): void {
-    this.treeObserver = new MutationObserver(() => {
-      this.bindTrigger();
-    });
     this.treeObserver.observe(this.host.getRootNode(), {
       childList: true,
       subtree: true,
-      attributes: true,
       attributeFilter: ['id'],
     });
     this.bindTrigger();
@@ -179,9 +164,16 @@ export class KiPopover {
       return;
     }
     this.trigger = captureTrigger(anchor);
-    anchor.addEventListener('click', this.handleActivation);
-    anchor.addEventListener('pointerdown', this.handleTriggerPointer);
-    anchor.addEventListener('pointercancel', this.clearTriggerPointer);
+    this.triggerListeners = new AbortController();
+    const options = { signal: this.triggerListeners.signal };
+    anchor.addEventListener('click', this.handleActivation, options);
+    anchor.addEventListener(
+      'pointerdown',
+      () => {
+        this.pressedWhileOpen = this.shown;
+      },
+      options,
+    );
     this.observeControl(anchor);
     if (anchor.localName.includes('-') && !customElements.get(anchor.localName)) {
       void customElements.whenDefined(anchor.localName).then(() => {
@@ -199,7 +191,6 @@ export class KiPopover {
       this.controlObserver.observe(anchor.shadowRoot, {
         childList: true,
         subtree: true,
-        attributes: true,
         attributeFilter: ['tabindex'],
       });
     }
@@ -220,11 +211,8 @@ export class KiPopover {
 
   private unbindTrigger(): void {
     this.controlObserver?.disconnect();
+    this.triggerListeners?.abort();
     if (this.trigger) {
-      const { element } = this.trigger;
-      element.removeEventListener('click', this.handleActivation);
-      element.removeEventListener('pointerdown', this.handleTriggerPointer);
-      element.removeEventListener('pointercancel', this.clearTriggerPointer);
       restoreTrigger(this.trigger);
     }
     if (this.control) {
@@ -232,32 +220,24 @@ export class KiPopover {
     }
     this.trigger = undefined;
     this.control = undefined;
-    this.clearTriggerPointer();
+    this.pressedWhileOpen = false;
   }
 
   private updateTrigger(): void {
     for (const state of [this.trigger, this.control]) {
       if (state) {
-        setAttribute(state.element, 'aria-expanded', String(this.shown));
-        setAttribute(state.element, 'aria-haspopup', this.isToggletip ? state.hasPopup : 'dialog');
+        state.element.ariaExpanded = String(this.shown);
+        state.element.ariaHasPopup = this.isToggletip ? state.hasPopup : 'dialog';
       }
     }
   }
-
-  private handleTriggerPointer = (): void => {
-    this.pressedWhileOpen = this.shown;
-  };
-
-  private clearTriggerPointer = (): void => {
-    this.pressedWhileOpen = false;
-  };
 
   private handleActivation = (event: MouseEvent): void => {
     const trigger = this.control?.element ?? this.trigger?.element;
     // Some engines dismiss on pointerup before delivering a click to an
     // external trigger. That click still means close if the press began open.
     const dismiss = this.shown || (event.detail > 0 && this.pressedWhileOpen);
-    this.clearTriggerPointer();
+    this.pressedWhileOpen = false;
     if (event.defaultPrevented || trigger?.matches(':disabled, [aria-disabled="true"]')) {
       return;
     }
@@ -292,9 +272,7 @@ export class KiPopover {
           popup.style.setProperty('--_ki-popover-arrow-center', `${String(center)}px`);
         },
       }),
-      onDismiss: () => {
-        this.syncVisibility();
-      },
+      onDismiss: this.syncVisibility,
     });
     this.syncVisibility();
   }
@@ -312,15 +290,14 @@ export class KiPopover {
 
   private syncVisibility = (): void => {
     const visible = this.popup?.matches(':popover-open') === true;
-    if (this.shown === visible) {
-      if (this.open !== visible) {
-        this.open = visible;
-      }
-      return;
-    }
+    const changed = this.shown !== visible;
+    const restore = !visible && this.escape?.defaultPrevented === false;
     this.shown = visible;
     if (this.open !== visible) {
       this.open = visible;
+    }
+    if (!changed) {
+      return;
     }
     this.updateTrigger();
     this.updateAnnouncement();
@@ -331,7 +308,6 @@ export class KiPopover {
       }
       this.kiOpen.emit();
     } else {
-      const restore = this.restoreOnClose;
       this.stopDismissTracking();
       this.overlay.hide();
       if (restore && this.trigger?.element.isConnected) {
@@ -362,18 +338,10 @@ export class KiPopover {
     );
   }
 
-  private handleBeforeToggle = (event: Event): void => {
-    if ((event as ToggleEvent).newState === 'closed') {
-      this.restoreOnClose = this.escape?.defaultPrevented === false;
-      this.escape = undefined;
-    }
-  };
-
   private stopDismissTracking(): void {
     this.dismissListeners?.abort();
     this.dismissListeners = undefined;
     this.escape = undefined;
-    this.restoreOnClose = false;
   }
 
   render() {
@@ -390,7 +358,7 @@ export class KiPopover {
           this.popup = element;
         }}
       >
-        <div class="content" inert={toggletip} aria-hidden={toggletip ? 'true' : undefined}>
+        <div class="content" inert={toggletip}>
           <slot />
         </div>
         {this.arrow ? <span part="arrow" class="arrow" aria-hidden="true" /> : null}
