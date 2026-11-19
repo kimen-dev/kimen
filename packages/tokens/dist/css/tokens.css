@@ -1678,6 +1678,9 @@
   --ki-switch-glyph-width: var(--ki-space-md);
   --ki-switch-glyph-height: var(--ki-space-sm);
   --ki-switch-glyph-dash-height: var(--ki-space-xxs);
+  --ki-switch-glyph-checked: var(--ki-text-primary-on-primary-light);
+  --ki-switch-glyph-unchecked: var(--ki-text-none);
+  --ki-switch-glyph-disabled: var(--ki-text-base-em);
   --ki-switch-unchecked-rest-track: var(--ki-surface-disabled-med-em);
   --ki-switch-unchecked-rest-thumb: var(--ki-surface-special-light-s0-dark-s4);
   --ki-switch-unchecked-rest-border: var(--ki-outline-control);
