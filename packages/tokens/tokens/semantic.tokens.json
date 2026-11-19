@@ -1,6 +1,11 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$type": "other",
+        "$value": "none",
+        "$description": "Flat surfaces paint their color without a background image."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1100,6 +1105,11 @@
     },
     "effect": {
       "component": {
+        "no-backdrop-filter": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "Flat component surfaces leave the backdrop unfiltered."
+        },
         "backdrop-blur": {
           "$type": "dimension",
           "$value": "{ki.blur.24}",
@@ -1610,6 +1620,57 @@
       "activity-mark": {
         "$value": "{ki.radius.round}",
         "$description": "Round corners for rings and typing dots."
+      },
+      "feature-tile": {
+        "xs": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "Corner radius of an extra-small square feature tile."
+        },
+        "sm": {
+          "$value": "{ki.radius.component.sm}",
+          "$description": "Corner radius of a small square feature tile."
+        },
+        "md": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "Corner radius of a medium square feature tile."
+        },
+        "lg": {
+          "$value": "{ki.radius.component.lg}",
+          "$description": "Corner radius of a large square feature tile."
+        },
+        "xl": {
+          "$value": "{ki.radius.big-component.xs}",
+          "$description": "Corner radius of an extra-large square feature tile."
+        },
+        "circle": {
+          "$value": "{ki.radius.round}",
+          "$description": "Fully rounded corners of a circular feature tile."
+        }
+      }
+    },
+    "size": {
+      "feature-tile": {
+        "$type": "dimension",
+        "xs": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Extra-small feature tile edge, 24px at the default root size."
+        },
+        "sm": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Small feature tile edge, 32px at the default root size."
+        },
+        "md": {
+          "$value": "{ki.space.12xl}",
+          "$description": "Medium feature tile edge, 40px at the default root size."
+        },
+        "lg": {
+          "$value": "{ki.space.14xl}",
+          "$description": "Large feature tile edge, 48px at the default root size."
+        },
+        "xl": {
+          "$value": "{ki.space.18xl}",
+          "$description": "Extra-large feature tile edge, 64px at the default root size."
+        }
       }
     },
     "motion": {
