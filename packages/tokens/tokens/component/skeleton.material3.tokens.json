@@ -1,0 +1,62 @@
+{
+  "ki": {
+    "skeleton": {
+      "bg": {
+        "$value": "{ki.surface.s3}",
+        "$description": "Base fill of the decorative loading shapes."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the static fill. Defaults to none."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter behind a loading shape. Defaults to none."
+      },
+      "highlight": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Peak colour of the animated loading highlight."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Corner radius of text lines and rectangles."
+      },
+      "circle-radius": {
+        "$value": "{ki.placeholder.circle-radius}",
+        "$description": "Proportional corner radius of the circular shape."
+      },
+      "line-size": {
+        "$value": "{ki.placeholder.line-size}",
+        "$description": "Default height of each text line."
+      },
+      "line-gap": {
+        "$value": "{ki.spacing.inline}",
+        "$description": "Block-axis space between text lines."
+      },
+      "last-line-scale": {
+        "$value": "{ki.placeholder.last-line-scale}",
+        "$description": "Fraction of the usual line width occupied by the final line in multiline text."
+      },
+      "circle-size": {
+        "$value": "{ki.placeholder.circle-size}",
+        "$description": "Default diameter of the circle."
+      },
+      "rect-size": {
+        "$value": "{ki.placeholder.rect-size}",
+        "$description": "Default block size of the rectangle."
+      },
+      "shimmer-image": {
+        "$value": "{ki.placeholder.shimmer-image}",
+        "$description": "Image of the moving highlight. Use currentColor to inherit the highlight colour."
+      },
+      "shimmer-duration": {
+        "$value": "{ki.placeholder.shimmer-duration}",
+        "$description": "Duration of a shimmer sweep."
+      },
+      "shimmer-easing": {
+        "$value": "{ki.motion.easing.standard}",
+        "$description": "Easing of the shimmer sweep."
+      }
+    }
+  }
+}

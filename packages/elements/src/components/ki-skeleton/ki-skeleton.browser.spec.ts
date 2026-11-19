@@ -102,6 +102,12 @@ it('S2 sizes a circle and a rectangle, with axis props overriding size', async (
 
   const oneAxis = await paintedPart(skeleton({ shape: 'circle', 'inline-size': '48px' }));
   expect(dimensions(oneAxis)).toEqual([48, 48]);
+
+  const narrow = document.createElement('div');
+  narrow.style.inlineSize = '24px';
+  fixture.appendChild(narrow);
+  const constrained = await paintedPart(skeleton({ shape: 'circle', size: '40px' }, narrow));
+  expect(dimensions(constrained)).toEqual([24, 24]);
 });
 
 async function mountProjectRegion() {

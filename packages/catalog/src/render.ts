@@ -13,7 +13,7 @@
  * SSR/DSD is a deferred bet.
  */
 import { catalogData } from './generated/catalog.js';
-import { pinNative, writeNativeLayout } from './primitives.js';
+import { isNativePrimitive, pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
 import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
 import { renderableTagViolation } from './tag-grammar.js';
@@ -338,8 +338,23 @@ export function attachText(
   return parent.insertBefore(holder, before);
 }
 
-/** Writes one validated prop as an attribute: booleans by presence. */
-export function writeProp(element: Element, name: string, value: Scalar | undefined): void {
+/** Writes one validated prop as an attribute. */
+export function writeProp(
+  element: Element,
+  name: string,
+  value: Scalar | undefined,
+  constraint: CatalogPropConstraint | undefined,
+): void {
+  if (
+    constraint?.type === 'boolean' &&
+    constraint.default === true &&
+    !isNativePrimitive(element.localName)
+  ) {
+    // Stencil parses "false" explicitly. Reset a default-on prop with the
+    // true attribute, since removing it from a mounted element sets false.
+    element.setAttribute(name, value === false ? 'false' : '');
+    return;
+  }
   if (value === undefined || value === false) {
     element.removeAttribute(name);
   } else if (value === true) {
@@ -369,12 +384,13 @@ export function writeProps(
   element: Element,
   component: string,
   props: Readonly<Record<string, Scalar>>,
+  entry: CatalogEntry | undefined,
 ): void {
   if (writeNativeLayout(element, component, props)) {
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, name, value);
+    writeProp(element, name, value, ownEntry(entry?.props, name));
   }
 }
 
@@ -460,12 +476,13 @@ function buildNode(
 ): Element {
   const element = createNodeElement(doc, node.component);
   const props = node.props ?? {};
-  writeProps(element, node.component, props);
+  const entry = ownEntry(entries, node.component);
+  writeProps(element, node.component, props, entry);
   if (node.action !== undefined && onAction !== undefined) {
     const action = node.action;
     wireActivation(
       element,
-      ownEntry(entries, node.component),
+      entry,
       () => props,
       (data) => {
         onAction({ action, data, path });

@@ -7,7 +7,7 @@ import { parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement } from '../../../dist/components/ki-skeleton.js';
 
 const browserCommands = commands as unknown as {
-  emulateHoverCapability: (capability: 'none' | null) => Promise<boolean>;
+  emulateHoverCapability: (capability: 'hover' | 'none' | null) => Promise<boolean>;
 };
 
 afterEach(async () => {
@@ -16,6 +16,9 @@ afterEach(async () => {
 });
 
 it('S11 preserves explicit geometry in automatic coarse-pointer density', async (test) => {
+  await browserCommands.emulateHoverCapability('hover');
+  await expect.poll(() => matchMedia('(pointer: coarse)').matches).toBe(false);
+
   defineCustomElement();
   const fixture = document.createElement('main');
   fixture.innerHTML = `
