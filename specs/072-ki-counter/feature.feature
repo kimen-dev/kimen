@@ -25,6 +25,7 @@ Feature: ki-counter marks new items on a trigger
     Given an inbox link and an external counter targeting its ID
     When the link scrolls within its container
     Then the counter stays aligned to the link's block-start inline-end corner
+    And it hides when the link touches the scrollport edge with no visible area
 
   # S5
   Scenario: The notification button keeps its place in the tab order
@@ -56,3 +57,9 @@ Feature: ki-counter marks new items on a trigger
     Given a notification button with a slotted count
     When the notification button is shown in right-to-left layout
     Then the counter overlaps the block-start inline-end corner
+
+  # S10
+  Scenario: A numeric counter sits at the avatar's top-end corner
+    Given the team inbox avatar has a counter for 12 pending items
+    When the screen displays the avatar
+    Then the count overlaps the avatar's block-start inline-end corner

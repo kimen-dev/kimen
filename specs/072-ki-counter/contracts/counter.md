@@ -11,6 +11,7 @@
 The `indicator` part paints the count or dot. The element has no own slots,
 events, actions, keyboard stops, or form behavior. It is hidden from
 assistive technology and ignores pointer input. The icon button and avatar
-each accept one decorative counter in their named `counter` slot. The
-consumer supplies the meaningful accessible name through the host's
+each accept one decorative counter in their named `counter` slot. Avatar
+counts sit at block-start inline-end and avatar dots at block-end inline-end.
+The consumer supplies the meaningful accessible name through the host's
 existing `label` API and owns any page-level polite announcement.

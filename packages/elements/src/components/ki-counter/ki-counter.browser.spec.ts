@@ -98,11 +98,12 @@ it('S3: puts a digit-free success dot on the avatar corner', async () => {
 it('S4: follows a named link through ancestor scroll and hides when it disappears', async () => {
   mount(`<section style="block-size: 120px; overflow: auto">
     <div style="padding-block: 48px 120px">
-      <a id="inbox-link" href="#inbox">Inbox, 120 unread</a>
+      <a id="inbox-link" href="#inbox" style="display: block; inline-size: max-content; block-size: 20px">Inbox, 120 unread</a>
     </div>
   </section>
   <ki-counter for="inbox-link" value="120" data-testid="counter"></ki-counter>`);
   await expect.element(page.getByText('99+', { exact: true })).toBeVisible();
+  const scroller = host('section');
   const link = host('#inbox-link');
   const counter = host('ki-counter');
   const initial = counter.getBoundingClientRect();
@@ -110,13 +111,18 @@ it('S4: follows a named link through ancestor scroll and hides when it disappear
   expect(initial.right - link.getBoundingClientRect().right).toBeCloseTo(2);
   expect(initial.top - linkStart).toBeCloseTo(-2);
 
-  host('section').scrollTop = 24;
-  await expect.poll(() => counter.getBoundingClientRect().top).toBeCloseTo(initial.top - 24);
-  expect(counter.getBoundingClientRect().top - link.getBoundingClientRect().top).toBeCloseTo(-2);
+  scroller.scrollTop = 24;
+  expect(link.getBoundingClientRect().top).toBeCloseTo(linkStart - 24);
+  await expect
+    .poll(() => counter.getBoundingClientRect().top - link.getBoundingClientRect().top)
+    .toBeCloseTo(-2);
 
-  host('section').scrollTop = 100;
+  // Equal trailing padding and scrollport height leave the link touching
+  // the clip edge at the scroll limit, with no visible area.
+  scroller.scrollTop = scroller.scrollHeight;
+  expect(link.getBoundingClientRect().bottom - scroller.getBoundingClientRect().top).toBeCloseTo(0);
   await expect.element(page.getByTestId('counter')).not.toBeVisible();
-  host('section').scrollTop = 0;
+  scroller.scrollTop = 0;
   await expect.element(page.getByTestId('counter')).toBeVisible();
 
   link.style.visibility = 'hidden';
@@ -146,14 +152,17 @@ it('rebinds a missing trigger when its ID appears in the same tree', async () =>
 });
 
 it('S5: keeps activation and tab order on the native button', async () => {
-  mount(`<button type="button">Before</button>${notificationButton()}
-    <button type="button">After</button>`);
+  mount(`<button id="before" type="button" tabindex="0">Before</button>${notificationButton()}
+    <button type="button" tabindex="0">After</button>`);
+  const iconButton = host('ki-icon-button');
   const click = vi.fn();
-  host('ki-icon-button').addEventListener('click', click);
-  await page.getByRole('button', { name: 'Before' }).click();
+  iconButton.addEventListener('click', click);
+  await expect
+    .element(page.getByRole('button', { name: 'Notifications, 3 unread', exact: true }))
+    .toBeVisible();
+  host('#before').focus();
   await userEvent.keyboard('{Tab}');
-  const trigger = page.getByRole('button', { name: 'Notifications, 3 unread', exact: true });
-  await expect.element(trigger).toHaveFocus();
+  expect(iconButton.shadowRoot?.activeElement).toBe(notificationControl());
   await userEvent.keyboard('{Enter}');
   expect(click).toHaveBeenCalledTimes(1);
   await userEvent.keyboard('{Tab}');
@@ -162,6 +171,9 @@ it('S5: keeps activation and tab order on the native button', async () => {
 
 it('S6: exposes the complete host names and keeps the counters presentational', async () => {
   mount(`${notificationButton()}
+    <ki-icon-button label="Messages, 120 unread">
+      ${icon}<ki-counter slot="counter" value="120"></ki-counter>
+    </ki-icon-button>
     <ki-avatar label="Ana García, online" initials="AG">
       <ki-counter slot="counter" tone="success" dot></ki-counter>
     </ki-avatar>`);
@@ -171,9 +183,13 @@ it('S6: exposes the complete host names and keeps the counters presentational', 
   await expect
     .element(page.getByRole('img', { name: 'Ana García, online', exact: true }))
     .toBeVisible();
+  await expect
+    .element(page.getByRole('button', { name: 'Messages, 120 unread', exact: true }))
+    .toBeVisible();
+  await expect.element(page.getByText('99+', { exact: true })).toBeVisible();
   expect(
     [...fixture.querySelectorAll('ki-counter')].map((item) => item.getAttribute('aria-hidden')),
-  ).toEqual(['true', 'true']);
+  ).toEqual(['true', 'true', 'true']);
   await expectAccessible(fixture);
 });
 
@@ -218,6 +234,19 @@ it('S9: mirrors the count to the inline-end corner in RTL', async () => {
   expect(counter.right).toBeGreaterThan(button.left);
   expect(counter.top).toBeLessThanOrEqual(button.top);
   expect(counter.bottom).toBeGreaterThan(button.top);
+});
+
+it('S10: places a numeric counter at the top-end of an avatar', async () => {
+  mount(`<ki-avatar label="Team inbox, 12 pending" initials="TI">
+    <ki-counter slot="counter" value="12"></ki-counter>
+  </ki-avatar>`);
+  await expect.element(page.getByText('12', { exact: true })).toBeVisible();
+  const avatar = host('ki-avatar').getBoundingClientRect();
+  const counter = host('ki-counter').getBoundingClientRect();
+
+  expect(counter.top).toBeLessThan(avatar.top);
+  expect(counter.right).toBeGreaterThan(avatar.right);
+  expect(counter.bottom).toBeLessThan(avatar.top + avatar.height / 2);
 });
 
 it('updates its count without animations under reduced motion', async () => {

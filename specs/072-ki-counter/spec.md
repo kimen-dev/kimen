@@ -37,6 +37,7 @@ Feature: ki-counter marks new items on a trigger
     Given an inbox link and an external counter targeting its ID
     When the link scrolls within its container
     Then the counter stays aligned to the link's block-start inline-end corner
+    And it hides when the link touches the scrollport edge with no visible area
 
   # S5
   Scenario: The notification button keeps its place in the tab order
@@ -68,13 +69,19 @@ Feature: ki-counter marks new items on a trigger
     Given a notification button with a slotted count
     When the notification button is shown in right-to-left layout
     Then the counter overlaps the block-start inline-end corner
+
+  # S10
+  Scenario: A numeric counter sits at the avatar's top-end corner
+    Given the team inbox avatar has a counter for 12 pending items
+    When the screen displays the avatar
+    Then the count overlaps the avatar's block-start inline-end corner
 ```
 
 ### Scenario Family Coverage
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4 | |
+| Core behavior | S1, S2, S3, S4, S10 | |
 | Keyboard path | S5 | |
 | Assistive-tech outcome | S6, S7 | |
 | Form participation | — | The decorative counter holds no form value and has no controls. |
@@ -101,8 +108,8 @@ Feature: ki-counter marks new items on a trigger
 - A missing, non-finite or nonpositive value hides the numeral. Finite
   fractional values round down. A cap below one or an invalid cap uses 99.
   An unrecognized tone uses danger.
-- A dot takes precedence over `value`. Use the avatar's block-end corner for
-  its counter. Icon button and ID-linked counters use the block-start corner.
+- A dot takes precedence over `value`. Avatar dots use the block-end corner.
+  Avatar counts, icon button counters, and ID-linked counters use block-start.
 - Unslotted counters without `for` render inline for custom composition.
   An explicit `for` associates with a literal ID in the same document or
   shadow root. The indicator hides while the target is missing. Authors set
