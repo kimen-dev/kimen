@@ -87,3 +87,4 @@ None.
 - `--ki-image-fallback-icon-stroke-width`: Stroke width of the unavailable-image symbol.
 - `--ki-image-radius`: Corner radius of the default media frame.
 - `--ki-image-radius-md`: Corner radius of the medium media frame.
+- `--ki-typography-family-body`: semantic font family for typography family body.

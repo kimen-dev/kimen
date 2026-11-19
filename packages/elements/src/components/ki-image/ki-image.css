@@ -1,6 +1,7 @@
 :host {
   display: block;
   min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
 }
 
 :host([hidden]) {

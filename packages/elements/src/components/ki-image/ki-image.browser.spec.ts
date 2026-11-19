@@ -171,6 +171,9 @@ it('S6: keyboard traversal skips the frame', async () => {
   const image = makeImage({ src: hills, alt });
   const before = document.createElement('button');
   const after = document.createElement('button');
+  // WebKit on macOS skips native buttons without an explicit tab stop.
+  before.tabIndex = 0;
+  after.tabIndex = 0;
   before.textContent = 'Before';
   after.textContent = 'After';
   fixture.append(before, image, after);

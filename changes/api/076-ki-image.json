@@ -27,6 +27,7 @@
     "/packages/@kimen~1elements/components/ki-image/cssProperties/--ki-image-fallback-icon-stroke-width": "00bc3c3d0fc90b371e106881c2a4a28fb493050501e05082917afdb6f8fa4075",
     "/packages/@kimen~1elements/components/ki-image/cssProperties/--ki-image-radius": "73bfc6116766f0fa3622e08cbbed831cd720b9292f68a0629ae00bd0a335183c",
     "/packages/@kimen~1elements/components/ki-image/cssProperties/--ki-image-radius-md": "93571f9afde65535cf077628c86a638a3be0ad4fc5698149f2b08e31463dd0b2",
+    "/packages/@kimen~1elements/components/ki-image/cssProperties/--ki-typography-family-body": "9dc2a246d0c50e3774e07844f740e07aef585630b2df7c0d5bc0535a06954ae8",
     "/packages/@kimen~1elements/components/ki-image/description": "7d78f3a1b14fc5db4e98ab370f44a49b001349c6d2ab366749d1c9f05254a8c2",
     "/packages/@kimen~1elements/components/ki-image/events/ki-error": "c0a365e3f6afa733d382302e6bf5a254663e1f3e588ba9214dfcb70533edf893",
     "/packages/@kimen~1elements/components/ki-image/parts/caption": "7a5faf7ed913f4441850f562d8ee58cc27ac765fc72f579f73e8939940f041cd",
@@ -450,7 +451,7 @@
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Add ki-image and its tokens. The API gate classifies the generated loader namespace signature changes as major.",
+  "reason": "Add ki-image and its tokens, including host typography from the shared body token. The generated loader namespace changes require the major classification.",
   "release": "major",
   "schemaVersion": 2
 }

@@ -4594,6 +4594,10 @@
             {
               "name": "--ki-image-radius-md",
               "description": "Corner radius of the medium media frame."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
             }
           ]
         }
