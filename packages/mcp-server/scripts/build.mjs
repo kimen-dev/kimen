@@ -23,6 +23,9 @@ import { fileURLToPath } from 'node:url';
 
 import { build } from 'esbuild';
 
+const { stockSurfaceIconModules } = await import(
+  new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href
+);
 const here = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(here, '..');
 const manifestFile = resolve(packageRoot, '../elements/generated/custom-elements.json');
@@ -115,7 +118,13 @@ async function bundle() {
     absWorkingDir: packageRoot,
     banner: { js: '#!/usr/bin/env node' },
     bundle: true,
-    entryPoints: [resolve(packageRoot, 'src/main.ts')],
+    stdin: {
+      contents: [
+        ...stockSurfaceIconModules.map((file) => `import ${JSON.stringify(file)};`),
+        `import ${JSON.stringify(resolve(packageRoot, 'src/main.ts'))};`,
+      ].join('\n'),
+      resolveDir: packageRoot,
+    },
     format: 'esm',
     legalComments: 'eof',
     logLevel: 'warning',

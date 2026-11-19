@@ -40,6 +40,7 @@ const browserSpecPatterns = (suffix: string): string[] =>
 // and joins this setup by name, so new components never edit this list.
 const inputDeviceSpecs = [
   pointerCapabilitySpec,
+  'src/components/ki-icon/ki-icon.browser.spec.ts',
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
   ...browserSpecPatterns('*.pointer'),

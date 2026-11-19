@@ -196,13 +196,15 @@ const packageExports = ({ pkg, components = null }) => {
 // is NOT an alias: its types target (dist/types/components.d.ts) exposes
 // the full Components/JSX namespaces, so it is symbol-snapshotted like
 // any surface and the semver gate sees it (adversarial-review fix).
-const WRAPPER_RESOLUTION_SUBPATHS = new Set(['./components/*.js']);
+// The icon wildcard is recorded as a side-effect-only module export. Each
+// generated declaration is empty, so there are no symbols to snapshot.
+const WILDCARD_MODULE_SUBPATHS = new Set(['./components/*.js', './icons/*']);
 
 const moduleDefinitions = ({ pkg, components = null }) => {
   const entries = [];
   for (const [subpath, entry] of Object.entries(pkg.exports)) {
     if (components !== null && (subpath === './ki-*' || subpath.startsWith('./ki-'))) continue;
-    if (components !== null && WRAPPER_RESOLUTION_SUBPATHS.has(subpath)) {
+    if (components !== null && WILDCARD_MODULE_SUBPATHS.has(subpath)) {
       entries.push([
         subpath,
         {

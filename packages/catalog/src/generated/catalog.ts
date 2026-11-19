@@ -502,6 +502,36 @@ export const catalogData = {
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
     },
+    "ki-icon": {
+      "description": "A static Lucide glyph selected by name from the application's per-icon imports.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning."
+        },
+        "name": {
+          "type": "string",
+          "description": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+          "required": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "inherit",
+            "lg",
+            "md",
+            "sm"
+          ],
+          "description": "Glyph size. Inherit follows the surrounding text at 1em.",
+          "default": "inherit"
+        }
+      },
+      "slots": {},
+      "tag": "ki-icon",
+      "whenNotToUse": "make an icon interactive, accept arbitrary SVG or URLs, or\nreplace the accessible name of a control. Use the control's own label.",
+      "whenToUse": "show a named glyph next to text, or give a standalone meaningful\nglyph an accessible label. Import `@kimen/elements/icons/<name>` before\nmounting the component or rendering a guarded surface."
+    },
     "ki-icon-button": {
       "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
       "events": {},

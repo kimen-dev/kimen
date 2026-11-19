@@ -58,7 +58,7 @@ test('S1: packaging invokes publint once per publishable package and checks ever
 // scripts/lib/declaration-specifiers.mjs), so no entrypoint needs a rule
 // switched off. An exemption here is how unresolved types shipped unnoticed:
 // the checker ran, and was told not to look.
-test('packaging runs ATTW over every elements entrypoint with no rule exempted', async () => {
+test('packaging type-checks all elements and representative glyph entrypoints', async () => {
   const calls = [];
   await checkPackaging({
     workspaceRoot,
@@ -73,7 +73,11 @@ test('packaging runs ATTW over every elements entrypoint with no rule exempted',
   assert.equal(elementsAttw.length, 3);
   const entrypoints = elementsAttw.map(({ args }) => args.slice(args.indexOf('--entrypoints') + 1));
   assert.deepEqual(entrypoints.slice(0, 2), [['.'], ['./loader']]);
-  assert.ok(entrypoints[2].length > 0 && entrypoints[2].every((path) => path.startsWith('./ki-')));
+  assert.ok(entrypoints[2].some((path) => path.startsWith('./ki-')));
+  assert.deepEqual(
+    entrypoints[2].filter((path) => path.startsWith('./icons/')),
+    ['./icons/circle-check', './icons/alert-triangle'],
+  );
   for (const { args } of elementsAttw) {
     assert.equal(args.includes('--ignore-rules'), false, args.join(' '));
   }

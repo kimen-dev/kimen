@@ -511,6 +511,10 @@
         "$value": 1,
         "$description": "Identity multiplier: spacing at its authored size."
       },
+      "icon-stroke": {
+        "$value": 2,
+        "$description": "Lucide stroke width in units of its 24 by 24 viewBox."
+      },
       "compact": {
         "$value": 0.75,
         "$description": "Compact density spacing multiplier (spec 045): 16px -> 12px."

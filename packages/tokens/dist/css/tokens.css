@@ -199,6 +199,7 @@
   --ki-space-26xl:10rem;
   --ki-space-minus-md:-0.5rem;
   --ki-scale-unit:1;
+  --ki-scale-icon-stroke:2;
   --ki-scale-compact:0.75;
   --ki-radius-0:0px;
   --ki-radius-xxs:2px;
@@ -900,6 +901,10 @@
   --ki-typography-letter-spacing-lg:-0.02em;
   --ki-spacing-inline:var(--ki-space-md);
   --ki-spacing-block:var(--ki-space-xl);
+  --ki-glyph-size-sm:var(--ki-space-3xl);
+  --ki-glyph-size-md:var(--ki-space-5xl);
+  --ki-glyph-size-lg:var(--ki-space-7xl);
+  --ki-glyph-stroke-width:var(--ki-scale-icon-stroke);
   --ki-corner-control:var(--ki-radius-md);
   --ki-motion-duration-fast:var(--ki-duration-fast);
   --ki-motion-duration-short-1:var(--ki-duration-fast);
@@ -1467,6 +1472,10 @@
   --ki-icon-button-xl-size:var(--ki-space-16xl);
   --ki-icon-button-xl-icon-size:var(--ki-space-9xl);
   --ki-icon-button-xl-spinner-size:var(--ki-space-9xl);
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
   --ki-indicator-gap:var(--ki-space-sm);
   --ki-indicator-dot-inline-size:var(--ki-space-md);
   --ki-indicator-dot-block-size:var(--ki-space-md);

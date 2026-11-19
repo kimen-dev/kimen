@@ -1,0 +1,30 @@
+:host {
+  display: inline-flex;
+  font-family: var(--ki-typography-family-body);
+  vertical-align: middle;
+
+  --_ki-icon-size: 1em;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([size="sm"]) {
+  --_ki-icon-size: var(--ki-icon-size-sm);
+}
+
+:host([size="md"]) {
+  --_ki-icon-size: var(--ki-icon-size-md);
+}
+
+:host([size="lg"]) {
+  --_ki-icon-size: var(--ki-icon-size-lg);
+}
+
+svg {
+  display: block;
+  inline-size: var(--_ki-icon-size);
+  block-size: var(--_ki-icon-size);
+  stroke-width: var(--ki-icon-stroke-width);
+}

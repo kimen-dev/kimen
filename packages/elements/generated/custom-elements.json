@@ -3466,6 +3466,129 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-icon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiIcon",
+          "customElement": true,
+          "tagName": "ki-icon",
+          "description": "A static Lucide glyph selected by name from the application's per-icon imports.",
+          "whenToUse": "show a named glyph next to text, or give a standalone meaningful\nglyph an accessible label. Import `@kimen/elements/icons/<name>` before\nmounting the component or rendering a guarded surface.",
+          "whenNotToUse": "make an icon interactive, accept arbitrary SVG or URLs, or\nreplace the accessible name of a control. Use the control's own label.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+              "required": true
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"inherit\" | \"lg\" | \"md\" | \"sm\""
+              },
+              "default": "'inherit'",
+              "description": "Glyph size. Inherit follows the surrounding text at 1em."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+              "attribute": "name",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"inherit\" | \"lg\" | \"md\" | \"sm\""
+              },
+              "default": "'inherit'",
+              "description": "Glyph size. Inherit follows the surrounding text at 1em.",
+              "attribute": "size",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-icon-size-lg",
+              "description": "Large ki-icon with the surrounding text ink."
+            },
+            {
+              "name": "--ki-icon-size-md",
+              "description": "Medium ki-icon with the surrounding text ink."
+            },
+            {
+              "name": "--ki-icon-size-sm",
+              "description": "Small ki-icon with the surrounding text ink."
+            },
+            {
+              "name": "--ki-icon-stroke-width",
+              "description": "Lucide stroke width in viewBox units, scaled with the glyph."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiIcon",
+          "declaration": {
+            "name": "KiIcon",
+            "module": "dist/components/ki-icon.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-icon",
+          "declaration": {
+            "name": "KiIcon",
+            "module": "dist/components/ki-icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-icon-button.js",
       "declarations": [
         {

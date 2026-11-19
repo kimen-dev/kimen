@@ -136,7 +136,7 @@ test('complete inventory fails on missing token source, unknown group member, or
   });
 });
 
-test('safe package contract permits only root, loader, ki-* wildcard and wrapper-resolution targets', () => {
+test('safe package contract permits only the declared package targets', () => {
   const valid = {
     '.': { types: './dist/types/index.d.ts', import: './dist/index.js' },
     './loader': { types: './loader/index.d.ts', import: './loader/index.js' },
@@ -154,6 +154,10 @@ test('safe package contract permits only root, loader, ki-* wildcard and wrapper
       types: './dist/components/*.d.ts',
       import: './dist/components/*.js',
     },
+    './icons/*': {
+      types: './icons/*.d.ts',
+      import: './icons/*.js',
+    },
   };
 
   assert.doesNotThrow(() => validatePackageExportContract(valid));
@@ -164,6 +168,10 @@ test('safe package contract permits only root, loader, ki-* wildcard and wrapper
   assert.throws(
     () => validatePackageExportContract({ ...valid, './ki-*': './dist/*' }),
     /wildcard/iu,
+  );
+  assert.throws(
+    () => validatePackageExportContract({ ...valid, './icons/*': './dist/*' }),
+    /icon package export/iu,
   );
 });
 

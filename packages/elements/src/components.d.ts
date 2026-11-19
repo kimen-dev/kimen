@@ -13,6 +13,7 @@ import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./com
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
@@ -36,6 +37,7 @@ export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./com
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
@@ -365,6 +367,29 @@ export namespace Components {
           * @default 'horizontal'
          */
         "orientation": KiDividerOrientation;
+    }
+    /**
+     * A static Lucide glyph selected by name from the application's per-icon imports.
+     * @whenToUse show a named glyph next to text, or give a standalone meaningful
+     * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+     * mounting the component or rendering a guarded surface.
+     * @whenNotToUse make an icon interactive, accept arbitrary SVG or URLs, or
+     * replace the accessible name of a control. Use the control's own label.
+     */
+    interface KiIcon {
+        /**
+          * Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.
+         */
+        "label"?: string;
+        /**
+          * Lucide name made available by a per-icon import. An unavailable name draws no glyph.
+         */
+        "name": string;
+        /**
+          * Glyph size. Inherit follows the surrounding text at 1em.
+          * @default 'inherit'
+         */
+        "size": KiIconSize;
     }
     /**
      * A token-styled, icon-only action button with native button semantics and a
@@ -1390,6 +1415,20 @@ declare global {
         new (): HTMLKiDividerElement;
     };
     /**
+     * A static Lucide glyph selected by name from the application's per-icon imports.
+     * @whenToUse show a named glyph next to text, or give a standalone meaningful
+     * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+     * mounting the component or rendering a guarded surface.
+     * @whenNotToUse make an icon interactive, accept arbitrary SVG or URLs, or
+     * replace the accessible name of a control. Use the control's own label.
+     */
+    interface HTMLKiIconElement extends Components.KiIcon, HTMLStencilElement {
+    }
+    var HTMLKiIconElement: {
+        prototype: HTMLKiIconElement;
+        new (): HTMLKiIconElement;
+    };
+    /**
      * A token-styled, icon-only action button with native button semantics and a
      * mandatory accessible name.
      * @whenToUse a compact, widely understood action where space precludes a
@@ -1855,6 +1894,7 @@ declare global {
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
+        "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
         "ki-indicator": HTMLKiIndicatorElement;
         "ki-input": HTMLKiInputElement;
@@ -2203,6 +2243,29 @@ declare namespace LocalJSX {
           * @default 'horizontal'
          */
         "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * A static Lucide glyph selected by name from the application's per-icon imports.
+     * @whenToUse show a named glyph next to text, or give a standalone meaningful
+     * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+     * mounting the component or rendering a guarded surface.
+     * @whenNotToUse make an icon interactive, accept arbitrary SVG or URLs, or
+     * replace the accessible name of a control. Use the control's own label.
+     */
+    interface KiIcon {
+        /**
+          * Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.
+         */
+        "label"?: string;
+        /**
+          * Lucide name made available by a per-icon import. An unavailable name draws no glyph.
+         */
+        "name": string;
+        /**
+          * Glyph size. Inherit follows the surrounding text at 1em.
+          * @default 'inherit'
+         */
+        "size"?: KiIconSize;
     }
     /**
      * A token-styled, icon-only action button with native button semantics and a
@@ -3095,6 +3158,11 @@ declare namespace LocalJSX {
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
     }
+    interface KiIconAttributes {
+        "name": string;
+        "size": KiIconSize;
+        "label": string;
+    }
     interface KiIconButtonAttributes {
         "variant": KiIconButtonVariant;
         "tone": KiIconButtonTone;
@@ -3246,6 +3314,7 @@ declare namespace LocalJSX {
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
@@ -3398,6 +3467,15 @@ declare module "@stencil/core" {
              * (prefer white space).
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
+            /**
+             * A static Lucide glyph selected by name from the application's per-icon imports.
+             * @whenToUse show a named glyph next to text, or give a standalone meaningful
+             * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+             * mounting the component or rendering a guarded surface.
+             * @whenNotToUse make an icon interactive, accept arbitrary SVG or URLs, or
+             * replace the accessible name of a control. Use the control's own label.
+             */
+            "ki-icon": LocalJSX.IntrinsicElements["ki-icon"] & JSXBase.HTMLAttributes<HTMLKiIconElement>;
             /**
              * A token-styled, icon-only action button with native button semantics and a
              * mandatory accessible name.

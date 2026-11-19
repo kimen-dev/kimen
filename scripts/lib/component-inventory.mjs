@@ -21,6 +21,10 @@ const LOADER_TARGET = Object.freeze({
   types: './loader/index.d.ts',
   import: './loader/index.js',
 });
+const ICON_TARGET = Object.freeze({
+  types: './icons/*.d.ts',
+  import: './icons/*.js',
+});
 const compareText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 
 const frozenValue = (name, tag) => ({
@@ -552,7 +556,7 @@ export function resolveComponentSubpaths(packageExports, components) {
 }
 
 /**
- * Only the frozen facade, loader, safe component wildcard and the two
+ * The frozen facade, loader, safe component wildcard, per-icon modules and
  * generated-wrapper resolution subpaths are public. `./components` (the
  * single-export module) and `./components/*.js` (per-component custom
  * elements) exist for the spec 034 framework wrappers, whose generated
@@ -565,9 +569,14 @@ export function validatePackageExportContract(packageExports) {
     throw new TypeError('Package exports must be an object');
   }
   const keys = Object.keys(packageExports).sort(compareText);
-  const expectedKeys = ['.', './components', './components/*.js', './ki-*', './loader'].sort(
-    compareText,
-  );
+  const expectedKeys = [
+    '.',
+    './components',
+    './components/*.js',
+    './icons/*',
+    './ki-*',
+    './loader',
+  ];
   const unexpected = keys.filter((key) => !expectedKeys.includes(key));
   const missing = expectedKeys.filter((key) => !keys.includes(key));
   if (unexpected.length > 0) {
@@ -578,6 +587,7 @@ export function validatePackageExportContract(packageExports) {
   }
   assertExportTarget(packageExports['.'], ROOT_TARGET, 'Root package export');
   assertExportTarget(packageExports['./loader'], LOADER_TARGET, 'Loader package export');
+  assertExportTarget(packageExports['./icons/*'], ICON_TARGET, 'Icon package export');
   try {
     assertExportTarget(packageExports[COMPONENT_WILDCARD], WILDCARD_TARGET, 'Component wildcard');
   } catch (error) {

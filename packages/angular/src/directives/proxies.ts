@@ -15,6 +15,7 @@ import { defineCustomElement as defineKiCard } from '@kimen/elements/components/
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
+import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
 import { defineCustomElement as defineKiIndicator } from '@kimen/elements/components/ki-indicator.js';
 import { defineCustomElement as defineKiInput } from '@kimen/elements/components/ki-input.js';
@@ -264,6 +265,29 @@ export class KiDivider {
 
 
 export declare interface KiDivider extends Components.KiDivider {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiIcon,
+  inputs: ['label', 'name', 'size']
+})
+@Component({
+  selector: 'ki-icon',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label', { name: 'name', required: true }, 'size'],
+})
+export class KiIcon {
+  protected el: HTMLKiIconElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiIcon extends Components.KiIcon {}
 
 
 @ProxyCmp({

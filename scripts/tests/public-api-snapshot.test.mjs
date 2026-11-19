@@ -28,6 +28,7 @@ const elementsPackage = {
       types: './dist/components/ki-*.d.ts',
       import: './dist/components/ki-*.js',
     },
+    './icons/*': { types: './icons/*.d.ts', import: './icons/*.js' },
   },
 };
 
@@ -309,6 +310,11 @@ test('[S10] repository snapshot expands exports and inventories every public sur
       },
     },
     target: './dist/components/ki-button.js',
+  });
+  assert.deepEqual(elements.modules['./icons/*'], {
+    declaration: null,
+    symbols: {},
+    target: './icons/*.js',
   });
   assert.deepEqual(elements.modules['.'].symbols.KiButton.kinds, ['type', 'value']);
   assert.match(elements.modules['.'].symbols.KiButton.signature, /variant: KiButtonVariant/u);

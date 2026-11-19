@@ -2019,6 +2019,134 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-icon/ki-icon.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-icon",
+      "docs": "A static Lucide glyph selected by name from the application's per-icon imports.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show a named glyph next to text, or give a standalone meaningful\nglyph an accessible label. Import `@kimen/elements/icons/<name>` before\nmounting the component or rendering a guarded surface."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "make an icon interactive, accept arbitrary SVG or URLs, or\nreplace the accessible name of a control. Use the control's own label."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-icon examples\n\nImport the exact Lucide names used by your markup before you mount it.\n\n```js\nimport '@kimen/elements/icons/circle-check';\nimport '@kimen/elements/icons/triangle-alert';\nimport { defineCustomElement } from '@kimen/elements/ki-icon';\n\ndefineCustomElement();\n```\n\nA confirmation has adjacent text, so the glyph is decorative.\n\n```html\n<span style=\"color: var(--ki-text-success-high-em)\">\n  <ki-icon name=\"circle-check\"></ki-icon> Confirmed\n</span>\n```\n\nA standalone meaningful glyph takes its accessible name from the label.\n\n```html\n<ki-icon name=\"triangle-alert\" size=\"lg\" label=\"Warning\"></ki-icon>\n```\n\nFor a guarded catalog surface, import the glyph in the host and reference it\nby name. The icon has no slots or actions.\n\n```json\n{\n  \"type\": \"ki-icon\",\n  \"props\": { \"name\": \"triangle-alert\", \"size\": \"lg\", \"label\": \"Warning\" }\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": false,
+          "docs": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"inherit\" | \"lg\" | \"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiIconSize",
+            "resolved": "\"inherit\" | \"lg\" | \"md\" | \"sm\"",
+            "references": {
+              "KiIconSize": {
+                "location": "local",
+                "path": "src/components/ki-icon/ki-icon.tsx",
+                "id": "src/components/ki-icon/ki-icon.tsx::KiIconSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Glyph size. Inherit follows the surrounding text at 1em.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'inherit'"
+            }
+          ],
+          "default": "'inherit'",
+          "values": [
+            {
+              "value": "inherit",
+              "type": "string"
+            },
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
       "encapsulation": "shadow",
       "tag": "ki-icon-button",
@@ -6723,6 +6851,11 @@
       "declaration": "export type KiDividerOrientation = 'horizontal' | 'vertical';",
       "docstring": "",
       "path": "src/components/ki-divider/ki-divider.tsx"
+    },
+    "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
+      "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",
+      "docstring": "",
+      "path": "src/components/ki-icon/ki-icon.tsx"
     },
     "src/components/ki-icon-button/ki-icon-button.tsx::KiIconButtonVariant": {
       "declaration": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
