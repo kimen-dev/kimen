@@ -118,13 +118,13 @@ Feature: FeatureIcon decorates a heading with a tinted icon tile
 
 ## Scenario family coverage
 
-| Family | S-IDs |
-| --- | --- |
-| Core behavior | S1–S4, S13 |
-| Keyboard path | S5 |
-| Assistive-tech outcome | S6 |
-| Form participation | N/A. The tile is decorative and has no value, validation or submission behavior. |
-| Theming | S7–S12 |
+| Family | S-IDs | N/A justification |
+| --- | --- | --- |
+| Core behavior | S1, S2, S3, S4, S13 | |
+| Keyboard path | S5 | |
+| Assistive-tech outcome | S6 | |
+| Form participation | N/A | The tile is decorative and has no value, validation or submission behavior. |
+| Theming | S7, S8, S9, S10, S11, S12 | |
 
 ## Interpretations
 
