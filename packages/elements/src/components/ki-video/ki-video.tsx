@@ -1,4 +1,9 @@
 import { Component, Element, h, Prop, State } from '@stencil/core';
+import {
+  endKeyboardPress,
+  releaseKeyboardPress,
+  startKeyboardPress,
+} from '../../utils/keyboard-press';
 
 /**
  * A themed video surface: a calm poster facade with exactly one accessible
@@ -54,6 +59,12 @@ export class KiVideo {
 
   private frame: HTMLDivElement | undefined;
 
+  /**
+   * The consumer's own `tabindex` on each slotted media element (null: none),
+   * held while the facade keeps the media out of the Tab order.
+   */
+  private readonly authoredTabIndex = new WeakMap<HTMLVideoElement, string | null>();
+
   private readonly setFrameRef = (frame?: HTMLDivElement): void => {
     this.frame = frame;
   };
@@ -90,10 +101,27 @@ export class KiVideo {
     media.removeAttribute('autoplay');
     media.controls = false;
     media.removeAttribute('controls');
+    // Firefox keeps a <video> in the Tab order even without controls, so Tab
+    // would stop on the inert media behind the facade before reaching the
+    // play control (S6). It leaves the Tab order until activation, which
+    // gives back whatever tabindex the consumer wrote.
+    if (!this.authoredTabIndex.has(media)) {
+      this.authoredTabIndex.set(media, media.getAttribute('tabindex'));
+    }
+    media.setAttribute('tabindex', '-1');
     if (!media.paused) {
       media.pause();
     }
   };
+
+  private restoreMediaTabIndex(media: HTMLVideoElement): void {
+    const authored = this.authoredTabIndex.get(media);
+    if (authored === null || authored === undefined) {
+      media.removeAttribute('tabindex');
+    } else {
+      media.setAttribute('tabindex', authored);
+    }
+  }
 
   /**
    * First activation (pointer, or Enter/Space via native button semantics):
@@ -123,6 +151,7 @@ export class KiVideo {
     // everything else on the media element passes through untouched
     // (sources, poster, tracks, events — FR-005).
     media.controls = true;
+    this.restoreMediaTabIndex(media);
     // The facade button leaves the Tab order as it yields, and focus left on
     // it would fall to the document. The play button is this shadow root's
     // only focusable, so an active element here means the person activated
@@ -155,6 +184,9 @@ export class KiVideo {
           aria-label={this.label}
           tabIndex={this.playing ? -1 : 0}
           onClick={this.handleActivate}
+          onKeyDown={startKeyboardPress}
+          onKeyUp={releaseKeyboardPress}
+          onBlur={endKeyboardPress}
         >
           <span class="control" aria-hidden="true">
             {/* The MarsUI Placeholder_xl play vector (12089:6573): inset
