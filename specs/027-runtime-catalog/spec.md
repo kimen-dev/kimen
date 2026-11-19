@@ -55,9 +55,9 @@ the emitted spec mechanically against the catalog.
 1. **Given** the elements package's committed manifest, **When** the catalog
    is generated, **Then** it carries one entry per published custom element
    with tag, typed props, slots and events.
-2. **Given** ki-button's enum-documented `variant` attribute, **When** the
-   catalog is generated, **Then** the constraint is closed over exactly the
-   five documented values.
+2. **Given** the manifest marks `tertiary` as a deprecated button variant,
+   **When** the catalog is generated, **Then** the agent is offered the four
+   recommended variants and existing specs using `tertiary` still work.
 3. **Given** a manifest entry with when-to-use guidance, **When** the catalog
    is generated, **Then** the guidance appears verbatim in the entry.
 
@@ -186,10 +186,11 @@ Feature: Neutral runtime catalog
     Then the catalog carries one entry per published custom element with its tag, typed props, slots and events
 
   # S2
-  Scenario: Enum-documented attributes become closed constraints
-    Given the manifest documents ki-button's "variant" with five declared values
+  Scenario: The catalog offers supported enum values and preserves deprecated inputs
+    Given the manifest documents "tertiary" as a deprecated button variant
     When the catalog is generated
-    Then the catalog constrains "variant" to exactly "primary", "secondary", "tertiary", "quaternary" and "ghost"
+    Then the catalog offers exactly "primary", "secondary", "quaternary" and "ghost" for both button variants
+    And existing UI specs using "tertiary" still validate and render
 
   # S3
   Scenario: Usage guidance flows verbatim into the catalog
@@ -382,7 +383,8 @@ in specs 002–016.
   enum-typed attributes become closed value sets, booleans/strings/numbers
   become typed constraints, and entries reject props they do not declare
   (strict schemas — the "unknown props are rejected" invariant of Art. VIII
-  expressed as data).
+  expressed as data). Declared deprecated enum values stay valid for existing
+  specs and are excluded from the values offered to agents.
 - **FR-003**: When-to-use and when-NOT-to-use guidance MUST flow verbatim
   from the manifest into each catalog entry; an entry for a published
   component missing guidance fails generation (Art. I: build failure, not
