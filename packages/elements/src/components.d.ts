@@ -597,38 +597,37 @@ export namespace Components {
         "value"?: string;
     }
     /**
-     * A non-modal surface anchored to a button. Both kinds use the native
-     * popover top layer and support outside click and Escape dismissal.
-     * @whenToUse Present related filters, details, a small form, or supplemental text near a button.
-     * @whenNotToUse Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.
+     * A non-modal popover anchored to a button.
+     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
      */
     interface KiPopover {
         /**
-          * Shows the decorative arrow pointing at the trigger.
+          * Shows the arrow toward the trigger.
           * @default true
          */
         "arrow": boolean;
         /**
-          * Literal ID of the button in the same document or shadow tree.
+          * ID of the button in the same document or shadow tree.
          */
         "for"?: string;
         /**
-          * Dialog content can contain controls. A toggletip announces supplemental text.
+          * Use dialog for controls or toggletip for supplemental text.
           * @default 'dialog'
          */
         "kind": KiPopoverKind;
         /**
-          * Accessible name for the dialog kind. Give each dialog a meaningful name.
+          * Accessible name of a dialog popover.
           * @default 'Popover'
          */
         "label": string | undefined;
         /**
-          * Whether the popover is visible. Updates on activation and native dismissal.
+          * Visibility. Reflects activation and native dismissal.
           * @default false
          */
         "open": boolean;
         /**
-          * Preferred side and optional logical alignment. Flips when the opposite side has more room.
+          * Preferred side and logical alignment. Flips when room is limited.
           * @default 'bottom-start'
          */
         "placement": KiPopoverPlacement;
@@ -1483,10 +1482,9 @@ declare global {
         "ki-close": void;
     }
     /**
-     * A non-modal surface anchored to a button. Both kinds use the native
-     * popover top layer and support outside click and Escape dismissal.
-     * @whenToUse Present related filters, details, a small form, or supplemental text near a button.
-     * @whenNotToUse Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.
+     * A non-modal popover anchored to a button.
+     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
      */
     interface HTMLKiPopoverElement extends Components.KiPopover, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiPopoverElementEventMap>(type: K, listener: (this: HTMLKiPopoverElement, ev: KiPopoverCustomEvent<HTMLKiPopoverElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -2390,28 +2388,27 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
-     * A non-modal surface anchored to a button. Both kinds use the native
-     * popover top layer and support outside click and Escape dismissal.
-     * @whenToUse Present related filters, details, a small form, or supplemental text near a button.
-     * @whenNotToUse Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.
+     * A non-modal popover anchored to a button.
+     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
      */
     interface KiPopover {
         /**
-          * Shows the decorative arrow pointing at the trigger.
+          * Shows the arrow toward the trigger.
           * @default true
          */
         "arrow"?: boolean;
         /**
-          * Literal ID of the button in the same document or shadow tree.
+          * ID of the button in the same document or shadow tree.
          */
         "for"?: string;
         /**
-          * Dialog content can contain controls. A toggletip announces supplemental text.
+          * Use dialog for controls or toggletip for supplemental text.
           * @default 'dialog'
          */
         "kind"?: KiPopoverKind;
         /**
-          * Accessible name for the dialog kind. Give each dialog a meaningful name.
+          * Accessible name of a dialog popover.
           * @default 'Popover'
          */
         "label"?: string | undefined;
@@ -2424,12 +2421,12 @@ declare namespace LocalJSX {
          */
         "onKi-open"?: (event: KiPopoverCustomEvent<void>) => void;
         /**
-          * Whether the popover is visible. Updates on activation and native dismissal.
+          * Visibility. Reflects activation and native dismissal.
           * @default false
          */
         "open"?: boolean;
         /**
-          * Preferred side and optional logical alignment. Flips when the opposite side has more room.
+          * Preferred side and logical alignment. Flips when room is limited.
           * @default 'bottom-start'
          */
         "placement"?: KiPopoverPlacement;
@@ -3411,10 +3408,9 @@ declare module "@stencil/core" {
              */
             "ki-option": LocalJSX.IntrinsicElements["ki-option"] & JSXBase.HTMLAttributes<HTMLKiOptionElement>;
             /**
-             * A non-modal surface anchored to a button. Both kinds use the native
-             * popover top layer and support outside click and Escape dismissal.
-             * @whenToUse Present related filters, details, a small form, or supplemental text near a button.
-             * @whenNotToUse Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.
+             * A non-modal popover anchored to a button.
+             * @whenToUse Show filters, details, a small form, or a text toggletip.
+             * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
              */
             "ki-popover": LocalJSX.IntrinsicElements["ki-popover"] & JSXBase.HTMLAttributes<HTMLKiPopoverElement>;
             /**

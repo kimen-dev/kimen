@@ -5865,9 +5865,9 @@
           "name": "KiPopover",
           "customElement": true,
           "tagName": "ki-popover",
-          "description": "A non-modal surface anchored to a button. Both kinds use the native\npopover top layer and support outside click and Escape dismissal.",
-          "whenToUse": "Present related filters, details, a small form, or supplemental text near a button.",
-          "whenNotToUse": "Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.",
+          "description": "A non-modal popover anchored to a button.",
+          "whenToUse": "Show filters, details, a small form, or a text toggletip.",
+          "whenNotToUse": "Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.",
           "attributes": [
             {
               "name": "arrow",
@@ -5876,7 +5876,7 @@
                 "text": "boolean"
               },
               "default": "true",
-              "description": "Shows the decorative arrow pointing at the trigger."
+              "description": "Shows the arrow toward the trigger."
             },
             {
               "name": "for",
@@ -5884,7 +5884,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Literal ID of the button in the same document or shadow tree."
+              "description": "ID of the button in the same document or shadow tree."
             },
             {
               "name": "kind",
@@ -5893,7 +5893,7 @@
                 "text": "\"dialog\" | \"toggletip\""
               },
               "default": "'dialog'",
-              "description": "Dialog content can contain controls. A toggletip announces supplemental text."
+              "description": "Use dialog for controls or toggletip for supplemental text."
             },
             {
               "name": "label",
@@ -5902,7 +5902,7 @@
                 "text": "string | undefined"
               },
               "default": "'Popover'",
-              "description": "Accessible name for the dialog kind. Give each dialog a meaningful name."
+              "description": "Accessible name of a dialog popover."
             },
             {
               "name": "open",
@@ -5911,7 +5911,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Whether the popover is visible. Updates on activation and native dismissal."
+              "description": "Visibility. Reflects activation and native dismissal."
             },
             {
               "name": "placement",
@@ -5920,7 +5920,7 @@
                 "text": "\"bottom\" | \"bottom-end\" | \"bottom-start\" | \"end\" | \"end-end\" | \"end-start\" | \"start\" | \"start-end\" | \"start-start\" | \"top\" | \"top-end\" | \"top-start\""
               },
               "default": "'bottom-start'",
-              "description": "Preferred side and optional logical alignment. Flips when the opposite side has more room."
+              "description": "Preferred side and logical alignment. Flips when room is limited."
             }
           ],
           "members": [
@@ -5932,7 +5932,7 @@
                 "text": "boolean"
               },
               "default": "true",
-              "description": "Shows the decorative arrow pointing at the trigger.",
+              "description": "Shows the arrow toward the trigger.",
               "attribute": "arrow",
               "reflects": false
             },
@@ -5943,7 +5943,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Literal ID of the button in the same document or shadow tree.",
+              "description": "ID of the button in the same document or shadow tree.",
               "attribute": "for",
               "reflects": false
             },
@@ -5955,7 +5955,7 @@
                 "text": "\"dialog\" | \"toggletip\""
               },
               "default": "'dialog'",
-              "description": "Dialog content can contain controls. A toggletip announces supplemental text.",
+              "description": "Use dialog for controls or toggletip for supplemental text.",
               "attribute": "kind",
               "reflects": false
             },
@@ -5967,7 +5967,7 @@
                 "text": "string | undefined"
               },
               "default": "'Popover'",
-              "description": "Accessible name for the dialog kind. Give each dialog a meaningful name.",
+              "description": "Accessible name of a dialog popover.",
               "attribute": "label",
               "reflects": false
             },
@@ -5979,7 +5979,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Whether the popover is visible. Updates on activation and native dismissal.",
+              "description": "Visibility. Reflects activation and native dismissal.",
               "attribute": "open",
               "reflects": true
             },
@@ -5991,7 +5991,7 @@
                 "text": "\"bottom\" | \"bottom-end\" | \"bottom-start\" | \"end\" | \"end-end\" | \"end-start\" | \"start\" | \"start-end\" | \"start-start\" | \"top\" | \"top-end\" | \"top-start\""
               },
               "default": "'bottom-start'",
-              "description": "Preferred side and optional logical alignment. Flips when the opposite side has more room.",
+              "description": "Preferred side and logical alignment. Flips when room is limited.",
               "attribute": "placement",
               "reflects": false
             }
@@ -6015,17 +6015,17 @@
           "slots": [
             {
               "name": "",
-              "description": "Dialog content or supplemental text for the toggletip kind."
+              "description": "Dialog content or toggletip text."
             }
           ],
           "cssParts": [
             {
               "name": "arrow",
-              "description": "The optional decorative pointer on the trigger-facing edge."
+              "description": "The decorative arrow."
             },
             {
               "name": "surface",
-              "description": "The positioned and styled popover panel."
+              "description": "The popover panel."
             }
           ],
           "cssProperties": [

@@ -3432,27 +3432,27 @@
       "filePath": "src/components/ki-popover/ki-popover.tsx",
       "encapsulation": "shadow",
       "tag": "ki-popover",
-      "docs": "A non-modal surface anchored to a button. Both kinds use the native\npopover top layer and support outside click and Escape dismissal.",
+      "docs": "A non-modal popover anchored to a button.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "Present related filters, details, a small form, or supplemental text near a button."
+          "text": "Show filters, details, a small form, or a text toggletip."
         },
         {
           "name": "whenNotToUse",
-          "text": "Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint."
+          "text": "Use ki-dialog for required decisions and ki-tooltip for hover or focus hints."
         },
         {
           "name": "slot",
-          "text": "- Dialog content or supplemental text for the toggletip kind."
+          "text": "- Dialog content or toggletip text."
         },
         {
           "name": "part",
-          "text": "surface - The positioned and styled popover panel."
+          "text": "surface - The popover panel."
         },
         {
           "name": "part",
-          "text": "arrow - The optional decorative pointer on the trigger-facing edge."
+          "text": "arrow - The decorative arrow."
         }
       ],
       "usage": {
@@ -3470,7 +3470,7 @@
           "mutable": false,
           "attr": "arrow",
           "reflectToAttr": false,
-          "docs": "Shows the decorative arrow pointing at the trigger.",
+          "docs": "Shows the arrow toward the trigger.",
           "docsTags": [
             {
               "name": "default",
@@ -3499,7 +3499,7 @@
           "mutable": false,
           "attr": "for",
           "reflectToAttr": false,
-          "docs": "Literal ID of the button in the same document or shadow tree.",
+          "docs": "ID of the button in the same document or shadow tree.",
           "docsTags": [],
           "values": [
             {
@@ -3531,7 +3531,7 @@
           "mutable": false,
           "attr": "kind",
           "reflectToAttr": false,
-          "docs": "Dialog content can contain controls. A toggletip announces supplemental text.",
+          "docs": "Use dialog for controls or toggletip for supplemental text.",
           "docsTags": [
             {
               "name": "default",
@@ -3565,7 +3565,7 @@
           "mutable": false,
           "attr": "label",
           "reflectToAttr": false,
-          "docs": "Accessible name for the dialog kind. Give each dialog a meaningful name.",
+          "docs": "Accessible name of a dialog popover.",
           "docsTags": [
             {
               "name": "default",
@@ -3597,7 +3597,7 @@
           "mutable": true,
           "attr": "open",
           "reflectToAttr": true,
-          "docs": "Whether the popover is visible. Updates on activation and native dismissal.",
+          "docs": "Visibility. Reflects activation and native dismissal.",
           "docsTags": [
             {
               "name": "default",
@@ -3632,7 +3632,7 @@
           "mutable": false,
           "attr": "placement",
           "reflectToAttr": false,
-          "docs": "Preferred side and optional logical alignment. Flips when the opposite side has more room.",
+          "docs": "Preferred side and logical alignment. Flips when room is limited.",
           "docsTags": [
             {
               "name": "default",
@@ -3732,17 +3732,17 @@
       "slots": [
         {
           "name": "",
-          "docs": "Dialog content or supplemental text for the toggletip kind."
+          "docs": "Dialog content or toggletip text."
         }
       ],
       "parts": [
         {
           "name": "arrow",
-          "docs": "The optional decorative pointer on the trigger-facing edge."
+          "docs": "The decorative arrow."
         },
         {
           "name": "surface",
-          "docs": "The positioned and styled popover panel."
+          "docs": "The popover panel."
         }
       ],
       "states": [],

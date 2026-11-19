@@ -4,7 +4,7 @@
       "arrow": {
         "default": "true",
         "deprecatedSince": null,
-        "description": "Shows the decorative arrow pointing at the trigger.",
+        "description": "Shows the arrow toward the trigger.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -12,7 +12,7 @@
       "for": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Literal ID of the button in the same document or shadow tree.",
+        "description": "ID of the button in the same document or shadow tree.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -20,7 +20,7 @@
       "kind": {
         "default": "'dialog'",
         "deprecatedSince": null,
-        "description": "Dialog content can contain controls. A toggletip announces supplemental text.",
+        "description": "Use dialog for controls or toggletip for supplemental text.",
         "replacement": null,
         "required": false,
         "type": "\"dialog\" | \"toggletip\""
@@ -28,7 +28,7 @@
       "label": {
         "default": "'Popover'",
         "deprecatedSince": null,
-        "description": "Accessible name for the dialog kind. Give each dialog a meaningful name.",
+        "description": "Accessible name of a dialog popover.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -36,7 +36,7 @@
       "open": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Whether the popover is visible. Updates on activation and native dismissal.",
+        "description": "Visibility. Reflects activation and native dismissal.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -44,7 +44,7 @@
       "placement": {
         "default": "'bottom-start'",
         "deprecatedSince": null,
-        "description": "Preferred side and optional logical alignment. Flips when the opposite side has more room.",
+        "description": "Preferred side and logical alignment. Flips when room is limited.",
         "replacement": null,
         "required": false,
         "type": "\"bottom\" | \"bottom-end\" | \"bottom-start\" | \"end\" | \"end-end\" | \"end-start\" | \"start\" | \"start-end\" | \"start-start\" | \"top\" | \"top-end\" | \"top-start\""
@@ -180,7 +180,7 @@
         "type": null
       }
     },
-    "description": "A non-modal surface anchored to a button. Both kinds use the native\npopover top layer and support outside click and Escape dismissal.",
+    "description": "A non-modal popover anchored to a button.",
     "events": {
       "ki-close": {
         "default": null,
@@ -204,7 +204,7 @@
       "arrow": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The optional decorative pointer on the trigger-facing edge.",
+        "description": "The decorative arrow.",
         "replacement": null,
         "required": false,
         "type": null
@@ -212,7 +212,7 @@
       "surface": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The positioned and styled popover panel.",
+        "description": "The popover panel.",
         "replacement": null,
         "required": false,
         "type": null
@@ -222,7 +222,7 @@
       "arrow": {
         "default": "true",
         "deprecatedSince": null,
-        "description": "Shows the decorative arrow pointing at the trigger.",
+        "description": "Shows the arrow toward the trigger.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -230,7 +230,7 @@
       "for": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Literal ID of the button in the same document or shadow tree.",
+        "description": "ID of the button in the same document or shadow tree.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -238,7 +238,7 @@
       "kind": {
         "default": "'dialog'",
         "deprecatedSince": null,
-        "description": "Dialog content can contain controls. A toggletip announces supplemental text.",
+        "description": "Use dialog for controls or toggletip for supplemental text.",
         "replacement": null,
         "required": false,
         "type": "\"dialog\" | \"toggletip\""
@@ -246,7 +246,7 @@
       "label": {
         "default": "'Popover'",
         "deprecatedSince": null,
-        "description": "Accessible name for the dialog kind. Give each dialog a meaningful name.",
+        "description": "Accessible name of a dialog popover.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -254,7 +254,7 @@
       "open": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Whether the popover is visible. Updates on activation and native dismissal.",
+        "description": "Visibility. Reflects activation and native dismissal.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -262,7 +262,7 @@
       "placement": {
         "default": "'bottom-start'",
         "deprecatedSince": null,
-        "description": "Preferred side and optional logical alignment. Flips when the opposite side has more room.",
+        "description": "Preferred side and logical alignment. Flips when room is limited.",
         "replacement": null,
         "required": false,
         "type": "\"bottom\" | \"bottom-end\" | \"bottom-start\" | \"end\" | \"end-end\" | \"end-start\" | \"start\" | \"start-end\" | \"start-start\" | \"top\" | \"top-end\" | \"top-start\""
@@ -272,7 +272,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Dialog content or supplemental text for the toggletip kind.",
+        "description": "Dialog content or toggletip text.",
         "replacement": null,
         "required": false,
         "type": null

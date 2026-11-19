@@ -2002,10 +2002,10 @@ CSS custom properties: none
 
 ### ki-popover
 
-A non-modal surface anchored to a button. Both kinds use the native popover top layer and support outside click and Escape dismissal.
+A non-modal popover anchored to a button.
 
-When to use: Present related filters, details, a small form, or supplemental text near a button.
-When NOT to use: Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.
+When to use: Show filters, details, a small form, or a text toggletip.
+When NOT to use: Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
 
 Examples:
 
@@ -2030,19 +2030,19 @@ Use a toggletip to announce supplementary text and keep focus on the trigger.
 Use `open` to drive visibility and listen for `ki-open` and `ki-close` to observe it. In guarded catalog markup, bind actions to slotted controls. A trusted host can listen to the popover's two lifecycle events through the DOM.
 
 Attributes:
-- `arrow` (boolean, default true): Shows the decorative arrow pointing at the trigger.
-- `for` (string | undefined): Literal ID of the button in the same document or shadow tree.
-- `kind` ("dialog" | "toggletip", default 'dialog'): Dialog content can contain controls. A toggletip announces supplemental text.
-- `label` (string | undefined, default 'Popover'): Accessible name for the dialog kind. Give each dialog a meaningful name.
-- `open` (boolean, default false): Whether the popover is visible. Updates on activation and native dismissal.
-- `placement` ("bottom" | "bottom-end" | "bottom-start" | "end" | "end-end" | "end-start" | "start" | "start-end" | "start-start" | "top" | "top-end" | "top-start", default 'bottom-start'): Preferred side and optional logical alignment. Flips when the opposite side has more room.
+- `arrow` (boolean, default true): Shows the arrow toward the trigger.
+- `for` (string | undefined): ID of the button in the same document or shadow tree.
+- `kind` ("dialog" | "toggletip", default 'dialog'): Use dialog for controls or toggletip for supplemental text.
+- `label` (string | undefined, default 'Popover'): Accessible name of a dialog popover.
+- `open` (boolean, default false): Visibility. Reflects activation and native dismissal.
+- `placement` ("bottom" | "bottom-end" | "bottom-start" | "end" | "end-end" | "end-start" | "start" | "start-end" | "start-start" | "top" | "top-end" | "top-start", default 'bottom-start'): Preferred side and logical alignment. Flips when room is limited.
 
 Slots:
-- (default): Dialog content or supplemental text for the toggletip kind.
+- (default): Dialog content or toggletip text.
 
 Parts:
-- `arrow`: The optional decorative pointer on the trigger-facing edge.
-- `surface`: The positioned and styled popover panel.
+- `arrow`: The decorative arrow.
+- `surface`: The popover panel.
 
 Events:
 - `ki-close` (CustomEvent<void>): Emitted when the popover closes.

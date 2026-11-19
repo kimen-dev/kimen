@@ -775,7 +775,7 @@ export const catalogData = {
       "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
     "ki-popover": {
-      "description": "A non-modal surface anchored to a button. Both kinds use the native\npopover top layer and support outside click and Escape dismissal.",
+      "description": "A non-modal popover anchored to a button.",
       "events": {
         "ki-close": "Emitted when the popover closes.",
         "ki-open": "Emitted when the popover opens."
@@ -783,12 +783,12 @@ export const catalogData = {
       "props": {
         "arrow": {
           "type": "boolean",
-          "description": "Shows the decorative arrow pointing at the trigger.",
+          "description": "Shows the arrow toward the trigger.",
           "default": true
         },
         "for": {
           "type": "string",
-          "description": "Literal ID of the button in the same document or shadow tree."
+          "description": "ID of the button in the same document or shadow tree."
         },
         "kind": {
           "type": "enum",
@@ -796,17 +796,17 @@ export const catalogData = {
             "dialog",
             "toggletip"
           ],
-          "description": "Dialog content can contain controls. A toggletip announces supplemental text.",
+          "description": "Use dialog for controls or toggletip for supplemental text.",
           "default": "dialog"
         },
         "label": {
           "type": "string",
-          "description": "Accessible name for the dialog kind. Give each dialog a meaningful name.",
+          "description": "Accessible name of a dialog popover.",
           "default": "Popover"
         },
         "open": {
           "type": "boolean",
-          "description": "Whether the popover is visible. Updates on activation and native dismissal.",
+          "description": "Visibility. Reflects activation and native dismissal.",
           "default": false
         },
         "placement": {
@@ -825,16 +825,16 @@ export const catalogData = {
             "top-end",
             "top-start"
           ],
-          "description": "Preferred side and optional logical alignment. Flips when the opposite side has more room.",
+          "description": "Preferred side and logical alignment. Flips when room is limited.",
           "default": "bottom-start"
         }
       },
       "slots": {
-        "": "Dialog content or supplemental text for the toggletip kind."
+        "": "Dialog content or toggletip text."
       },
       "tag": "ki-popover",
-      "whenNotToUse": "Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.",
-      "whenToUse": "Present related filters, details, a small form, or supplemental text near a button."
+      "whenNotToUse": "Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.",
+      "whenToUse": "Show filters, details, a small form, or a text toggletip."
     },
     "ki-progress": {
       "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",
