@@ -9,6 +9,10 @@
         "icon-size": {
           "$value": "{ki.space.3xl}",
           "$description": "dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon)."
+        },
+        "spinner-size": {
+          "$value": "{ki.space.3xl}",
+          "$description": "dimension used by the icon button component for the xs loading spinner box (16px, the xs icon size; spec 046 D5: the spinner takes the place of the icon)."
         }
       },
       "sm": {
@@ -19,6 +23,10 @@
         "icon-size": {
           "$value": "{ki.space.4xl}",
           "$description": "dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px)."
+        },
+        "spinner-size": {
+          "$value": "{ki.space.4xl}",
+          "$description": "dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon)."
         }
       },
       "md": {
@@ -29,6 +37,10 @@
         "icon-size": {
           "$value": "{ki.space.5xl}",
           "$description": "dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3)."
+        },
+        "spinner-size": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon)."
         }
       },
       "lg": {
@@ -39,6 +51,10 @@
         "icon-size": {
           "$value": "{ki.space.7xl}",
           "$description": "dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px)."
+        },
+        "spinner-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the icon button component for the lg loading spinner box (24px, the lg icon size; spec 046 D5: the spinner takes the place of the icon)."
         }
       },
       "xl": {
@@ -49,6 +65,10 @@
         "icon-size": {
           "$value": "{ki.space.9xl}",
           "$description": "dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px)."
+        },
+        "spinner-size": {
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon)."
         }
       }
     }

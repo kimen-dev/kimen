@@ -16,14 +16,18 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
  *
  * @whenToUse trigger the single main action of a view, supporting actions
  * in descending hierarchy, or confirming/destructive actions through tone.
- * @whenNotToUse navigation, icon-only actions, persistent toggles, or
- * loading/progress semantics.
+ * While the action a button started is in progress, set `loading` on that
+ * button instead of disabling it.
+ * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+ * progress of a page or region (use ki-progress).
  *
  * @slot - Label content. This is the accessible name source.
  * @slot start - Leading icon or media. Follows writing direction.
  * @slot end - Trailing icon or media. Follows writing direction.
  * @part button - Internal native button.
  * @part label - Label wrapper around the default slot.
+ * @part spinner - Loading spinner drawn at the center of the button, in the
+ * button's foreground ink, rendered only while `loading` is in effect.
  */
 @Component({
   tag: 'ki-button',
@@ -91,12 +95,46 @@ export class KiButton {
 
   /**
    * Prevents activation, removes the button from keyboard reach, and exposes
-   * the unavailable state through the internal native button.
-   * When NOT to use: do not use disabled for pending/loading semantics.
+   * the unavailable state through the internal native button. Wins over
+   * `loading` when both are set.
+   * When NOT to use: do not use disabled for pending/loading semantics; use
+   * `loading`.
    *
    * @default false
    */
   @Prop({ reflect: true }) disabled = false;
+
+  /**
+   * Pending state of the action this button started (saving, sending).
+   * While set, every activation is blocked (pointer, Enter and Space) and the
+   * button neither submits nor resets its form, but it stays focusable, in
+   * the Tab order and at its width: the label stays laid out, transparent,
+   * and a spinner is drawn in its place. The internal native button is
+   * exposed with `aria-disabled="true"` and keeps its name, and
+   * `loadingLabel` is announced as a polite status message. `disabled`, and
+   * a disabled fieldset, win over it. The application sets it when the
+   * action starts and clears it when the action ends.
+   * When to use: while the work a click on this button started is running,
+   * so a second activation cannot repeat it.
+   * When NOT to use: for a button the person cannot use yet (use
+   * `disabled`), or for the progress of a page or region (use ki-progress).
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) loading = false;
+
+  /**
+   * Text of the polite status message announced while `loading` is set.
+   * Override for localization; the default English string is the button's
+   * only built-in user-visible text.
+   * When to use: provide a localized message whenever the document language
+   * is not English, or a more specific one ("Saving").
+   * When NOT to use: do not repeat the button's label here; the person
+   * already hears it on focus.
+   *
+   * @default 'Loading'
+   */
+  @Prop({ attribute: 'loading-label', reflect: true }) loadingLabel = 'Loading';
 
   @State() private formDisabled = false;
   private button: HTMLButtonElement | undefined;
@@ -104,6 +142,11 @@ export class KiButton {
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
+  }
+
+  /** Loading is in effect only on a button that is not disabled (046 D8). */
+  private get effectiveLoading(): boolean {
+    return this.loading && !this.effectiveDisabled;
   }
 
   connectedCallback(): void {
@@ -146,8 +189,12 @@ export class KiButton {
     }
   }
 
+  // A disabled native button never dispatches a real click, but an
+  // aria-disabled one (loading) does, for the pointer and for Enter/Space:
+  // cancel both, so no activation reaches the application and the form is
+  // never touched (046 D3).
   private readonly handleClick = (event: MouseEvent): void => {
-    if (this.effectiveDisabled) {
+    if (this.effectiveDisabled || this.effectiveLoading) {
       event.preventDefault();
       event.stopImmediatePropagation();
       return;
@@ -196,7 +243,12 @@ export class KiButton {
   }
 
   render() {
-    return (
+    const loading = this.effectiveLoading;
+    // The status region is rendered always, empty until the button loads: a
+    // polite region created together with its text is not announced (042
+    // D6). It sits outside the native button, so its text never joins the
+    // button's name (046 D7).
+    return [
       <button
         ref={(el) => {
           this.button = el;
@@ -205,6 +257,7 @@ export class KiButton {
         type="button"
         tabIndex={this.effectiveDisabled ? -1 : 0}
         disabled={this.effectiveDisabled}
+        aria-disabled={loading ? 'true' : undefined}
         onClick={this.handleClick}
         onKeyDown={startKeyboardPress}
         onKeyUp={releaseKeyboardPress}
@@ -215,7 +268,25 @@ export class KiButton {
           <slot />
         </span>
         <slot name="end" />
-      </button>
-    );
+        {loading ? (
+          // The circular ki-progress geometry (015): a 40-unit grid, a ring
+          // of radius 18 measured as 100 units, a non-scaling stroke.
+          <svg part="spinner" viewBox="0 0 40 40" aria-hidden="true">
+            <circle
+              cx="20"
+              cy="20"
+              r="18"
+              pathLength="100"
+              fill="none"
+              stroke="currentColor"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+        ) : null}
+      </button>,
+      <span class="status" role="status">
+        {loading ? this.loadingLabel : null}
+      </span>,
+    ];
   }
 }
