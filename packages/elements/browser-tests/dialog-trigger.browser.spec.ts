@@ -240,6 +240,20 @@ describe('dialog invoker commands', () => {
     },
   );
 
+  it('ignores a repeated open command until the previous command close settles', async () => {
+    const fixture = await mount(trigger + dialog);
+    const reasons = watchClose(fixture);
+    await openWithPointer();
+
+    buttonPart(fixture, '[slot="footer"]').click();
+    buttonPart(fixture).click();
+
+    await expect.poll(() => reasons).toEqual(['command']);
+    expect(dialogPart(fixture).open).toBe(false);
+    await openWithPointer();
+    expect(reasons).toEqual(['command']);
+  });
+
   it('keeps lookup in the invoker tree and follows a late target', async () => {
     const fixture = await mount(dialog);
     const region = document.createElement('section');

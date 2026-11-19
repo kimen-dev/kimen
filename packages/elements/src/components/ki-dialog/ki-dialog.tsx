@@ -213,6 +213,9 @@ export class KiDialog {
 
     if (
       this.open ||
+      // The native close event is queued. Let it finish the prior command
+      // before accepting a fresh open so it cannot consume the new opener.
+      this.pendingReason === 'command' ||
       hasDialogAncestor(this.host, false) ||
       (source instanceof HTMLElement && hasDialogAncestor(source, true))
     ) {
@@ -223,11 +226,12 @@ export class KiDialog {
   }
 
   private closeWithReason(reason: KiDialogCloseReason): void {
-    if (!this.open && !this.dialog?.open) {
+    const nativeOpen = this.dialog?.open === true;
+    if (!nativeOpen && (!this.open || this.pendingReason === 'command')) {
       return;
     }
 
-    this.pendingReason = reason;
+    this.pendingReason = nativeOpen ? reason : 'method';
     this.open = false;
     this.host.removeAttribute('open');
   }
