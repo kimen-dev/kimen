@@ -80,4 +80,4 @@ Feature: ki-empty-state explains an empty view
   Scenario: Touch density preserves the next action
     Given a coarse-pointer panel using touch density
     When a small empty state offers a "Clear filters" button
-    Then the button has a touch-sized target and responds to a tap
+    Then the button has a touch-sized target and can be activated
