@@ -12,6 +12,7 @@ import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { disableComponentEffectShadows } from './flat-effects';
 import { moveToNewParent } from './reconnect';
+import { resolvedShadowToken } from './resolved-token';
 
 type KiTooltipElement = HTMLElement & {
   label: string;
@@ -455,10 +456,11 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(style.borderTopStyle).toBe('solid');
     expect(style.borderBottomWidth).toBe('1px');
 
-    // e4 wrap elevation (deepest layer 0 32 32 -16) plus the secondary_default
-    // inner highlight (inset layer).
-    expect(style.boxShadow).toContain('0px 32px 32px -16px');
-    expect(getComputedStyle(tooltip, '::before').boxShadow).toContain('inset');
+    // The bubble and its inner highlight use separate theme shadows.
+    expect(style.boxShadow).toBe(resolvedShadowToken(tooltip, '--ki-tooltip-shadow'));
+    expect(getComputedStyle(tooltip, '::before').boxShadow).toBe(
+      resolvedShadowToken(tooltip, '--ki-effect-component-secondary-default-shadow'),
+    );
 
     // Caret-depth offset: 8px trigger-to-card distance (top placement).
     const triggerRect = trigger.getBoundingClientRect();
@@ -471,10 +473,14 @@ describe('ki-tooltip pointer path in a real browser', () => {
       style: { marginBlockStart: '160px', marginInlineStart: '160px' },
     });
     disableComponentEffectShadows(host);
+    host.style.setProperty('--ki-tooltip-shadow', 'var(--ki-elevation-e2)');
 
     await hoverTrigger(host, trigger);
 
-    expect(getComputedStyle(requireTooltip(host)).boxShadow).toContain('0px 32px 32px -16px');
+    const tooltip = requireTooltip(host);
+    expect(getComputedStyle(tooltip).boxShadow).toBe(
+      resolvedShadowToken(tooltip, '--ki-tooltip-shadow'),
+    );
   });
 
   it('S11 start placement renders on the right side under RTL', async () => {

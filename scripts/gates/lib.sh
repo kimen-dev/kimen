@@ -2,6 +2,15 @@
 # Sourced, never executed. Callers `set -uo pipefail` and cd to the repo root
 # BEFORE sourcing this file (all paths below are repo-root relative).
 
+# Nx task outputs and their SQLite index may be shared between worktrees.
+# Materialize ESLint's module-boundary graph in the current checkout's cache.
+kimen_use_worktree_nx_graph() {
+  if [ -n "${KIMEN_WORKTREE_CACHE_ROOT:-}" ]; then
+    export NX_WORKSPACE_DATA_DIRECTORY="$KIMEN_WORKTREE_CACHE_ROOT/nx/workspace-data"
+    export NX_CACHE_PROJECT_GRAPH=true
+  fi
+}
+
 # Resolve the active feature directory (specs/<###-feature-name>).
 # Priority:
 #   1. explicit argument (a feature dir, or any file inside one)

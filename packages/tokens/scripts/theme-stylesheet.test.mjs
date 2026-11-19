@@ -59,7 +59,7 @@ test('a disabled shadow emits a transparent list layer and retains aliases', asy
           $type: 'shadow',
           $value: ['none', { offsetX: 0, offsetY: '2px', color: '#ffffff' }],
         },
-        border: { $type: 'border', $value: 'none' },
+        'fixture-disabled-border': { $type: 'border', $value: 'none' },
       },
     },
   }).getPlatformTokens('css');
@@ -72,7 +72,7 @@ test('a disabled shadow emits a transparent list layer and retains aliases', asy
   assert.equal(declarations.get('--ki-legacy-flat').expression, 'none');
   assert.equal(declarations.get('--ki-legacy-shadow').expression, '0 0 #0000');
   assert.equal(declarations.get('--ki-composed-shadow').expression, '0 0 #0000, 0 2px 0 #ffffff');
-  assert.equal(declarations.get('--ki-border').expression, 'none');
+  assert.equal(declarations.get('--ki-fixture-disabled-border').expression, 'none');
 });
 
 test('the flat Material 3 video control emits a transparent shadow layer in both schemes', async () => {
@@ -383,14 +383,13 @@ test('S1 a deprecated declaration keeps its value and is annotated in both style
   assert.equal(base.replace(` ${ANNOTATION}`, ''), renderBaseStylesheet(declarations));
 });
 
-test('S1 the published sources mark the 96 deprecated component tokens and annotate them', async () => {
+test('S1 the published stylesheet annotates exactly the deprecated component tokens', async () => {
   const dictionary = await new StyleDictionary({
     ...lightConfig,
     log: { verbosity: 'silent' },
   }).getPlatformTokens('css');
   const deprecations = collectDeprecations(dictionary.allTokens);
 
-  assert.equal(deprecations.size, 96);
   const { reason, since, removal, replacement } = deprecations.get('--ki-input-focus-border') ?? {};
   assert.match(reason ?? '', /focus ring/u);
   assert.deepEqual(
@@ -406,7 +405,8 @@ test('S1 the published sources mark the 96 deprecated component tokens and annot
     css,
     new RegExp(`^  --ki-input-focus-border: [^;]+; ${ANNOTATION.replaceAll('*', '\\*')}$`, 'mu'),
   );
-  assert.equal(css.match(/\/\* deprecated since /gu)?.length, 96);
+  const annotated = [...css.matchAll(/^ {2}(--ki-[\w-]+): [^;]+; \/\* deprecated since /gmu)];
+  assert.deepEqual(annotated.map((match) => match[1]).sort(), [...deprecations.keys()].sort());
 });
 
 /** One composition's expressions, as build.mjs hands them to the renderer. */

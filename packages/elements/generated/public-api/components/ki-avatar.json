@@ -1,0 +1,358 @@
+{
+  "component": {
+    "attributes": {
+      "initials": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Initials rendered verbatim as the second fallback step — never derived\nfrom the label, never truncated (FR-003). Catalog guidance: one to two\ncharacters. With a label present the initials are presentational;\nassistive technology receives the label alone.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for the identity (\"Ana García\"). With a label the avatar\nis exposed as a named non-interactive image (role `img`) in every content\nmode — the portrait never carries a second alternative text of its own.\nWithout a label the avatar is decorative and contributes nothing to the\naccessibility tree; the identity must then live in adjacent visible text\n(FR-002).",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Size step over the shared scale; per-size metrics (box, initials font,\nfigure glyph) are per-theme component tokens, never hardcoded (FR-004).\nAn unrecognized value matches no style selector, so the avatar keeps the\ndefault medium metrics (fallback by CSS construction, FR-007).",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\""
+      },
+      "src": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Portrait URL, the first step of the fallback chain. When it fails to\nload — initially or at runtime — the avatar silently falls back to the\ninitials (or the generic figure) with no error, no layout change and no\nevent (FR-001). Loading policy follows the platform image defaults.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-avatar-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-border-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the avatar component for the surface border: Outline/base_em (Black/3 light, White/3 dark), the exact variable on Type=text variants.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the surface border (MarsUI 1px hairline on Type=text; applied to the token surface behind initials and figure, dropped under a loaded portrait — design-extraction decision 4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-lg-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-lg-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the lg generic-figure glyph (MarsUI Icon/User 24px, Space/7xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-lg-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the lg box (48px circle, Figma Space/14xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-md-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for md initials (MarsUI UI/Para: body_1 13px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-md-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the md generic-figure glyph (MarsUI Icon/User 20px, Space/5xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-md-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the md box (40px circle, Figma Space/12xl, node 10011:947).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the shape: Radius/radius_round bound to every avatar variant — the circle is a radius token, never an attribute (002 shape precedent, FR-005).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-sm-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for sm initials (MarsUI UI/Caption 2: 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-sm-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the sm generic-figure glyph (MarsUI Icon/User 18px, Space/4xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-sm-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the sm box (32px circle, Figma Space/10xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xl-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for xl initials (MarsUI UI/Title 2: 18px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xl-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the xl generic-figure glyph (MarsUI Icon/User 28px, Space/9xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xl-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the xl box (56px circle, Figma Space/16xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xs-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for xs initials (MarsUI UI/Caption 1: 10px, same step as xxs — verified on Type=text Size=xs 10108:6226).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xs-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the xs generic-figure glyph (MarsUI Icon/User 14px, same step as xxs — NOT the icon-button 16px ramp; verified on 10108:6230).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xs-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the xs box (24px circle, Figma Space/7xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xxs-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xxs-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-avatar-xxs-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A static identity visual that shows a person or entity at a glance through\na fallback chain: portrait, then initials, then a built-in generic figure.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "avatar": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The avatar box: size, shape, surface, border and typography.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The built-in generic person figure of the last fallback step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The portrait image when `src` is set and loads.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "initials": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The verbatim initials text of the second fallback step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "initials": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Initials rendered verbatim as the second fallback step — never derived\nfrom the label, never truncated (FR-003). Catalog guidance: one to two\ncharacters. With a label present the initials are presentational;\nassistive technology receives the label alone.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for the identity (\"Ana García\"). With a label the avatar\nis exposed as a named non-interactive image (role `img`) in every content\nmode — the portrait never carries a second alternative text of its own.\nWithout a label the avatar is decorative and contributes nothing to the\naccessibility tree; the identity must then live in adjacent visible text\n(FR-002).",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Size step over the shared scale; per-size metrics (box, initials font,\nfigure glyph) are per-theme component tokens, never hardcoded (FR-004).\nAn unrecognized value matches no style selector, so the avatar keeps the\ndefault medium metrics (fallback by CSS construction, FR-007).",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\""
+      },
+      "src": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Portrait URL, the first step of the fallback chain. When it fails to\nload — initially or at runtime — the avatar silently falls back to the\ninitials (or the generic figure) with no error, no layout change and no\nevent (FR-001). Loading policy follows the platform image defaults.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-avatar.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-avatar.d.ts",
+    "symbols": {
+      "KiAvatar": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiAvatar extends Components.KiAvatar, HTMLElement {\n}\nexport const KiAvatar: {\n    prototype: KiAvatar;\n    new (): KiAvatar;\n};"
+      },
+      "KiAvatarSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiAvatarSize = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-avatar.js"
+  }
+}

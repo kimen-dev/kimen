@@ -146,8 +146,42 @@ Human-readable docs live at the
 Every component ships with real-browser tests (three engines at release),
 zero axe-core violations (WCAG 2.2 AA + EN 301 549 target), a single-digit-KB
 size budget, tokens-only styling (no hardcoded visual values), and RTL support
-by construction. The whole repo is guarded by a deterministic gate suite that
-runs identically locally and in CI: `bash scripts/gates/gates-suite.sh`.
+by construction. Run `bash scripts/gates/gates-suite.sh` for full local checks
+before a pull request. CI requires visual and cross-filesystem checks as part
+of the quality and release gates.
+
+For a quicker local pass, run `bash scripts/gates/gates-suite.sh --affected`.
+Nx selects projects and their dependents from committed, staged, unstaged and
+untracked changes since the merge base with `origin/main`. It runs their builds,
+unit tests, size checks, Chromium tests and browser wrapper tests where those
+targets exist. Set `NX_BASE` to use a different base. Changes to shared inputs,
+such as root configuration or gate scripts, trigger the full suite. Affected
+runs provide local feedback only.
+
+On a non-Linux host the local browser suite reports how many visual specs it
+skips. Set `KIMEN_RUN_VISUALS=1` to run them with your host's baselines. The local
+cross-filesystem documentation test skips if `TMPDIR` does not point to a
+writable directory on a different filesystem. To exercise that boundary on
+macOS, run `bash scripts/gates/cross-device-tmpdir.sh -- bash scripts/gates/gates-suite.sh`.
+A local skip contributes no release evidence.
+
+### Share local caches across worktrees
+
+The default cache is private to each worktree under `reports/cache`. To share
+Nx task outputs, the pnpm store and Playwright binaries across local worktrees,
+set `KIMEN_CACHE_ROOT` to one private directory outside your home. For example,
+on macOS add `export KIMEN_CACHE_ROOT="/Users/Shared/kimen-cache-$UID"` to your
+shell startup file. The wrapper creates and validates the directory. It rejects
+symlink components and group- or world-writable cache directories. Nx project
+graph state, Vite state and gate evidence have separate worktree directories.
+
+Use the wrapper when provisioning the shared store and Chromium binaries. Run
+the install in each worktree when switching it to the shared store.
+
+```bash
+bash scripts/gates/cache-env.sh -- pnpm install --frozen-lockfile
+bash scripts/gates/cache-env.sh -- pnpm --filter @kimen/elements exec playwright install chromium
+```
 
 ## Governance
 

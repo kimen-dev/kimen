@@ -1,0 +1,143 @@
+{
+  "component": {
+    "attributes": {},
+    "cssProperties": {
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the list component for background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-divider-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the list component for item divider color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-divider-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for item divider width (no divider renders in any master variant; the color hook ki.list.item.divider-color stays so consumers can opt hairlines back in).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the list component for padding.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-distance-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Motion travel distance xs (2px): hover-lift offsets.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-medium-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "list": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "List surface that owns background, padding, item gap and\nbetween-item divider styling.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {},
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "`ki-list-item` children. Other children are unsupported.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-list.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-list.d.ts",
+    "symbols": {
+      "KiList": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiList extends Components.KiList, HTMLElement {\n}\nexport const KiList: {\n    prototype: KiList;\n    new (): KiList;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-list.js"
+  }
+}

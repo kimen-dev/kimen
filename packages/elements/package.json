@@ -20,7 +20,7 @@
     "NOTICE"
   ],
   "scripts": {
-    "build": "stencil build && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/build-surfaces.mjs",
+    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && stencil build && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/build-surfaces.mjs",
     "test": "vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.browser.config.ts",
@@ -45,6 +45,7 @@
           "!{projectRoot}/llms.txt",
           "!{projectRoot}/llms-full.txt",
           "!{projectRoot}/llms/**",
+          "!{projectRoot}/src/components.d.ts",
           "{workspaceRoot}/docs/genui-surfaces.json",
           "{workspaceRoot}/packages/catalog/package.json",
           "{workspaceRoot}/packages/catalog/src/index.ts",
@@ -64,6 +65,7 @@
           "{projectRoot}/llms.txt",
           "{projectRoot}/llms-full.txt",
           "{projectRoot}/llms",
+          "{projectRoot}/src/components.d.ts",
           "{workspaceRoot}/llms.txt",
           "{workspaceRoot}/llms-full.txt",
           "{workspaceRoot}/llms",

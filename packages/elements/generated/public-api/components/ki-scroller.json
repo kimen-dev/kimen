@@ -1,0 +1,215 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the scroll region (\"Release notes\", \"Chat\nmessages\"). Assistive technology receives a `region` with this name\nwhose slotted content keeps its own semantics (FR-006). Documented as\nrequired: a scroller without a label renders but exposes no accessible\nname and fails the accessibility audit (015-ki-progress precedent).\nThe label is never rendered visually.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "orientation": {
+        "default": "'vertical'",
+        "deprecatedSince": null,
+        "description": "Declared scroll axis, mapping the design source's `Type` axis:\n`vertical` (default) scrolls the block axis, `horizontal` the inline\naxis. One axis per instance; the cross axis clips. A structural axis,\nnever appearance — thickness, shape and colors of the indicator are\nper-theme `--ki-scroller-*` tokens. An unrecognized value matches no\nstyle selector and no `horizontal` code path, so the scroller keeps\nthe default vertical behavior (fallback by CSS construction plus a\nsingle strict comparison — no validation code, FR-002/FR-009).",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      }
+    },
+    "cssProperties": {
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the scroller component for the viewport focus ring glow (MarsUI Focus/primary 3px 20%-alpha halo, the ki-button double mechanism; completes the theming hook ki-scroller.css already consumes).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-gutter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-surface": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-thumb-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_6 (Black/5 light, White/5 dark), which reads 1.12:1 and 1.09:1 against the content surface. The thumb is the only mark that shows the scroll position, so it takes the first step of the same ramp that clears WCAG 1.4.11's 3:1. The scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-thumb-min-length": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-thumb-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-thumb-thickness": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-track-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scroller-track-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "viewport": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The scroll viewport: surface, focus ring and, as native\nscrollbar chrome styled from `--ki-scroller-*` tokens, the indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the scroll region (\"Release notes\", \"Chat\nmessages\"). Assistive technology receives a `region` with this name\nwhose slotted content keeps its own semantics (FR-006). Documented as\nrequired: a scroller without a label renders but exposes no accessible\nname and fails the accessibility audit (015-ki-progress precedent).\nThe label is never rendered visually.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "orientation": {
+        "default": "'vertical'",
+        "deprecatedSince": null,
+        "description": "Declared scroll axis, mapping the design source's `Type` axis:\n`vertical` (default) scrolls the block axis, `horizontal` the inline\naxis. One axis per instance; the cross axis clips. A structural axis,\nnever appearance — thickness, shape and colors of the indicator are\nper-theme `--ki-scroller-*` tokens. An unrecognized value matches no\nstyle selector and no `horizontal` code path, so the scroller keeps\nthe default vertical behavior (fallback by CSS construction plus a\nsingle strict comparison — no validation code, FR-002/FR-009).",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-scroller.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-scroller.d.ts",
+    "symbols": {
+      "KiScroller": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiScroller extends Components.KiScroller, HTMLElement {\n}\nexport const KiScroller: {\n    prototype: KiScroller;\n    new (): KiScroller;\n};"
+      },
+      "KiScrollerOrientation": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiScrollerOrientation = 'vertical' | 'horizontal';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-scroller.js"
+  }
+}

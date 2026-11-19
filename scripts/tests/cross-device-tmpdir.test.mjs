@@ -6,11 +6,11 @@
 // workflow (a tmpfs). A macOS checkout did not: its TMPDIR, under /var/folders,
 // shares the repository's APFS volume, so every local `gates-suite.sh` run
 // ended red on infra-tests for a reason that was not a result.
-// `scripts/gates/cross-device-tmpdir.sh` is the local counterpart of the CI
+// `scripts/gates/cross-device-tmpdir.sh` is an explicit local counterpart of the CI
 // step, and these cases hold its contract: the command gets a writable TMPDIR
 // across a filesystem boundary, its exit status is the wrapper's, nothing stays
 // mounted or on disk afterwards, a TMPDIR that already crosses a boundary is
-// kept, and the suite enters through it before it allocates the caches.
+// kept, and CI and the sandbox enter through it before allocating caches.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readdirSync, statSync } from 'node:fs';
@@ -49,22 +49,28 @@ function describe(result) {
 
 // Off macOS the wrapper only passes the caller's TMPDIR through, so a caller
 // whose TMPDIR shares the checkout's filesystem has nothing to measure here.
-function requireBoundaryReachable() {
-  if (process.platform === 'darwin') return;
-  assert.notEqual(
-    statSync(callerTemporary).dev,
-    repositoryDevice,
-    `blocked prerequisite, not a result: off macOS this case needs the caller to designate a TMPDIR on another filesystem, and ${callerTemporary} shares st_dev ${repositoryDevice} with the repository`,
-  );
+function requireBoundaryReachable(t) {
+  if (
+    callerTemporary &&
+    (process.platform === 'darwin' || statSync(callerTemporary).dev !== repositoryDevice)
+  ) {
+    return true;
+  }
+  const missing =
+    'CROSS-FILESYSTEM WRAPPER — set TMPDIR to a writable directory on another filesystem';
+  if (process.env.CI || process.env.KIMEN_SANDBOX === '1') {
+    assert.fail(`blocked prerequisite: ${missing}`);
+  }
+  t.skip(missing);
+  return false;
 }
 
 function scratchDirectories() {
   return readdirSync(callerTemporary).filter((name) => name.startsWith('kimen-cross-device.'));
 }
 
-test('the command runs with a writable TMPDIR on a filesystem other than the repository', () => {
-  assert.notEqual(callerTemporary, '', 'blocked prerequisite, not a result: TMPDIR is unset');
-  requireBoundaryReachable();
+test('the command runs with a writable TMPDIR on a filesystem other than the repository', (t) => {
+  if (!requireBoundaryReachable(t)) return;
 
   const result = runWrapper([process.execPath, '-e', probe]);
 
@@ -83,8 +89,8 @@ test("the command's exit status is the wrapper's", () => {
   assert.equal(result.status, 7, describe(result));
 });
 
-test('nothing stays mounted or on disk after the command', () => {
-  requireBoundaryReachable();
+test('nothing stays mounted or on disk after the command', (t) => {
+  if (!requireBoundaryReachable(t)) return;
   const before = scratchDirectories();
 
   const result = runWrapper([process.execPath, '-e', probe]);
@@ -99,8 +105,8 @@ test('nothing stays mounted or on disk after the command', () => {
   assert.deepEqual(scratchDirectories(), before, 'a scratch directory outlived the command');
 });
 
-test('a TMPDIR that already crosses a filesystem boundary is kept', () => {
-  requireBoundaryReachable();
+test('a TMPDIR that already crosses a filesystem boundary is kept', (t) => {
+  if (!requireBoundaryReachable(t)) return;
   const nested = `printf '%s\\n' "$TMPDIR"; bash "$1" -- sh -c 'printf "%s\\n" "$TMPDIR"'`;
 
   const result = runWrapper(['sh', '-c', nested, 'sh', wrapper]);
@@ -110,11 +116,11 @@ test('a TMPDIR that already crosses a filesystem boundary is kept', () => {
   assert.equal(inner, outer, 'the nested run replaced a TMPDIR that already crossed a boundary');
 });
 
-test('gates-suite designates the TMPDIR before it allocates the caches', async () => {
+test('gates-suite allocates local caches directly and retains the CI/sandbox TMPDIR wrapper', async () => {
   const suite = await readFile(join(repositoryRoot, 'scripts/gates/gates-suite.sh'), 'utf8');
 
   assert.match(
     suite,
-    /exec bash scripts\/gates\/cross-device-tmpdir\.sh -- bash scripts\/gates\/cache-env\.sh -- bash scripts\/gates\/gates-suite\.sh "\$@"/u,
+    /KIMEN_SANDBOX[^\n]+\n\s+exec bash scripts\/gates\/cross-device-tmpdir\.sh -- bash scripts\/gates\/cache-env\.sh -- bash scripts\/gates\/gates-suite\.sh "\$@"\n\s+fi\n\s+exec bash scripts\/gates\/cache-env\.sh -- bash scripts\/gates\/gates-suite\.sh "\$@"/u,
   );
 });

@@ -20,6 +20,7 @@ import { defineCustomElement } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { disableComponentEffectShadows } from './flat-effects';
+import { resolvedShadowToken } from './resolved-token';
 
 type KiVideoElement = HTMLElement & { label?: string };
 
@@ -310,12 +311,13 @@ describe('ki-video', () => {
     cleanup();
     const el = await mount(landmark(), { label: 'Play the product tour' });
     disableComponentEffectShadows(el);
+    el.style.setProperty('--ki-video-play-shadow', 'var(--ki-elevation-e2)');
     const control = el.shadowRoot?.querySelector<HTMLElement>('.control');
     if (!control) {
       throw new Error('ki-video did not render its glass container');
     }
-    const restShadow = getComputedStyle(control).boxShadow;
-    expect(restShadow).toContain('inset');
+    const restShadow = resolvedShadowToken(control, '--ki-video-play-shadow');
+    expect(getComputedStyle(control).boxShadow).toBe(restShadow);
 
     await userEvent.hover(playControlOf(el));
 
@@ -333,8 +335,8 @@ describe('ki-video', () => {
     if (!control) {
       throw new Error('ki-video did not render its glass container');
     }
-    const restShadow = getComputedStyle(control).boxShadow;
-    expect(restShadow).toContain('inset');
+    const restShadow = resolvedShadowToken(control, '--ki-video-play-shadow');
+    expect(getComputedStyle(control).boxShadow).toBe(restShadow);
 
     await userEvent.hover(playControlOf(el));
 
@@ -342,7 +344,9 @@ describe('ki-video', () => {
     expect(getComputedStyle(control).boxShadow).toBe(restShadow);
     const hoverLayer = getComputedStyle(control, '::before');
     expect(hoverLayer.opacity).toBe('0');
-    expect(hoverLayer.boxShadow).toContain('inset');
+    expect(hoverLayer.boxShadow).toBe(
+      resolvedShadowToken(control, '--ki-effect-component-primary-hover-shadow'),
+    );
     await userEvent.unhover(playControlOf(el));
   });
 

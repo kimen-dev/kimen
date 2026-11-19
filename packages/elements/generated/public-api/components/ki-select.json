@@ -1,0 +1,1248 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "error-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message shown in place of the help text once a `required` select is left\nwithout a choice, and its `validationMessage` (\"Choose a country\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the trigger, read with it as the combobox\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label and accessible-name source for the combobox trigger.\nWhen NOT to use: do not omit it; unlabeled selects are invalid usage.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "label-hint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short text shown after the label and read with it as part of the\ncombobox name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional fields of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions in it (use `help-text`), errors\n(use `error-text`), or a repeat of the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key used when a selected option contributes its value.\nWhen NOT to use: omit it when the select should not submit data.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "placeholder": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Text shown while no option is selected.\nWhen NOT to use: do not use it as a replacement for `label`.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires a non-empty submitted value. The platform validation message is\ndonated by a hidden native select.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is\n24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and\nindicator; the label and help text follow in three steps. The listbox\nand its options keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Live projection of the selected option value, or `\"\"` when unselected.\nAssigning it selects the first matching option silently; the attribute is\nthe reset/default declaration and is not updated by user commits.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-effect-component-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for glass components. Use none to turn the effect off.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-effect-component-secondary-default-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-elevation-e1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-danger": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-distance-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Motion travel distance sm (4px): small slide/settle offsets.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-distance-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Motion travel distance xs (2px): hover-lift offsets.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for disabled foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the option component for font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-highlight-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; purple is reserved for the selected tint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-highlight-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for highlight foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for hover background (MarsUI hover_overlay_inverse Black/3 wash over the glass panel — not a solid surface step).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the option component for min target (MarsUI Dropmenu row height Space/11xl 36px; comfortably above the 24px a11y floor).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the option component for padding inline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the option component for radius (MarsUI Radius/component/radius_lg 12px bound on Dropmenu rows).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the glass panel; only hover/selected paint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for selected background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-option-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the option component for selected foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-border-block-end-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for border block end width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-border-block-start-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for border block start width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-border-inline-end-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for border inline end width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-border-inline-start-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for border inline start width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for border width (MarsUI Input_cell strokeWeight 1px; the color stays ki.outline.control per the declared a11y deviation — only the 2px width was undocumented).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for disabled border (MarsUI Outline/base_em Black/3).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for disabled foreground (MarsUI disabled text Text/base_em Gray/400; disabled cells are exempt from the contrast sweep).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-disabled-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for disabled label foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-focus-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for focus background (MarsUI Dropdown focus fill Surface/Special/light-s0_dark-s4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-focus-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for focus border (MarsUI active is glow-only: the border stays the rest hairline while Focus/primary carries the emphasis — repointed from ki.outline.primary-high-em per the fidelity audit; material3 keeps the opaque primary border via its override).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-focus-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for focus foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-focus-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for focus label foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the select component for the trigger value (MarsUI UI/Body 1/medium: weight 600).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-hover-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for hover label foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-indicator-glyph-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the chevron glyph box inside the 18px indicator slot (MarsUI Dropdown chevron 8px border-box square drawn by [part=indicator]::before).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for indicator size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for label font size (MarsUI UI/Para/medium: body_1 13px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-label-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the select component for label font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-label-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for label gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-label-hint-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-label-hint-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for label line height (MarsUI line_height/para 20px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-label-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg font size: body-2 (Input-cell 8016:286 lg, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg height (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: 48px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the lg indicator box (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: icon 20px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the lg label line height (body-2, Input-label lg; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg line height (body-2, Input-cell 8016:286 lg, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg padding inline (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Space/xl, 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg radius (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Radius/small-component/lg).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the trigger value line height (MarsUI body_1 24px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-listbox-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the select listbox.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-listbox-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-listbox-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional CSS background image layered over the listbox fill. Use none for a solid fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-listbox-max-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-listbox-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for listbox offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-listbox-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for listbox padding (Dropmenu master Body: Space/md 8px on every side).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-listbox-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for listbox radius (Dropmenu master 12127:30113: Radius/big-component/xs 16px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-listbox-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for min target.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for padding inline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for placeholder foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for radius (MarsUI Radius/component/radius_md 10px; component ramp so personality modes reach it).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for rest background (MarsUI Dropdown rest fill Surface/Special/light-s0_dark-s2: white light, Dark/800 dark).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-rest-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the select component for rest label foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm font size: caption-2 (Input-cell 8016:286 sm, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm height (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the sm indicator box (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: icon 16px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the sm label line height (caption-2, Input-label sm; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm line height (caption-2, Input-cell 8016:286 sm, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm padding inline (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Space/md, 8px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm radius (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Radius/small-component/sm).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl font size: title-2 (Input-cell 8016:286 xl, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl height (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: 56px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xl indicator box (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: icon 24px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xl label line height (body-2, Input-label lg; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl line height (title-2, Input-cell 8016:286 xl, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl padding inline (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Space/2xl, 14px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl radius (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Radius/small-component/xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs font size: caption-2 (Input-cell 8016:286 xs, composed by Dropdown 12041:1595). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs height (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: 24px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xs indicator box (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: icon 14px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xs label line height (caption-2, Input-label sm; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-hover-overlay-inverse": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for surface hover overlay inverse.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-para": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height para.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
+    "events": {
+      "change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fired once after the user commits a different option, composed\nacross the shadow boundary and preceded by `input`; `value` is already\ncurrent when listeners run. When to use: react to the committed choice.\nWhen NOT to use: do not expect it for programmatic `value` writes, which\nare silent.",
+        "replacement": null,
+        "required": false,
+        "type": "Event"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Error line shown in place of the help text while the select is\ninvalid after the person chose or submitted; a polite live region, starting with\na decorative error symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Help line under the trigger, read as the combobox description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative dropdown indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label and accessible-name source.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label-hint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The `label-hint` text after the label text, inside the label and\npart of the accessible name of the combobox and its listbox; rendered only while a\nhint is set.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "listbox": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Popup listbox surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "option": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Mirrored option row rendered in this shadow root.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "trigger": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native button carrying the combobox role.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Displayed selection or placeholder.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "errorText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message shown in place of the help text once a `required` select is left\nwithout a choice, and its `validationMessage` (\"Choose a country\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the trigger, read with it as the combobox\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label and accessible-name source for the combobox trigger.\nWhen NOT to use: do not omit it; unlabeled selects are invalid usage.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "labelHint": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short text shown after the label and read with it as part of the\ncombobox name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional fields of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions in it (use `help-text`), errors\n(use `error-text`), or a repeat of the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key used when a selected option contributes its value.\nWhen NOT to use: omit it when the select should not submit data.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "placeholder": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Text shown while no option is selected.\nWhen NOT to use: do not use it as a replacement for `label`.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires a non-empty submitted value. The platform validation message is\ndonated by a hidden native select.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is\n24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and\nindicator; the label and help text follow in three steps. The listbox\nand its options keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Live projection of the selected option value, or `\"\"` when unselected.\nAssigning it selects the first matching option silently; the attribute is\nthe reset/default declaration and is not updated by user commits.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "`ki-option` data children. They do not paint; rows are mirrored.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-select.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-select.d.ts",
+    "symbols": {
+      "KiSelect": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSelect extends Components.KiSelect, HTMLElement {\n}\nexport const KiSelect: {\n    prototype: KiSelect;\n    new (): KiSelect;\n};"
+      },
+      "KiSelectSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-select.js"
+  }
+}

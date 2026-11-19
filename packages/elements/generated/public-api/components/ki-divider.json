@@ -1,0 +1,126 @@
+{
+  "component": {
+    "attributes": {
+      "orientation": {
+        "default": "'horizontal'",
+        "deprecatedSince": null,
+        "description": "Layout axis of the rule: `horizontal` spans the available inline size\nbetween stacked content; `vertical` stretches to the cross size its\nlayout context provides, between side-by-side content. A structural\naxis, never appearance — thickness, color, end caps and gutter are\nper-theme `--ki-divider-*` tokens. An unrecognized value matches no\nstyle selector, so the divider keeps the default horizontal rendering\n(fallback by CSS construction — no validation code).",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      }
+    },
+    "cssProperties": {
+      "--ki-divider-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the divider component for the rule: Outline/base_em (Black/3 light, White/3 dark), the exact variable bound to every Figma divider variant and the same semantic role ki-list uses for item dividers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-divider-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-divider-spacing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-divider-thickness": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard-decelerate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A static, decorative rule that visually separates adjacent content.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "divider": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The rule itself: thickness, color and end-cap radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "orientation": {
+        "default": "'horizontal'",
+        "deprecatedSince": null,
+        "description": "Layout axis of the rule: `horizontal` spans the available inline size\nbetween stacked content; `vertical` stretches to the cross size its\nlayout context provides, between side-by-side content. A structural\naxis, never appearance — thickness, color, end caps and gutter are\nper-theme `--ki-divider-*` tokens. An unrecognized value matches no\nstyle selector, so the divider keeps the default horizontal rendering\n(fallback by CSS construction — no validation code).",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-divider.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-divider.d.ts",
+    "symbols": {
+      "KiDivider": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiDivider extends Components.KiDivider, HTMLElement {\n}\nexport const KiDivider: {\n    prototype: KiDivider;\n    new (): KiDivider;\n};"
+      },
+      "KiDividerOrientation": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiDividerOrientation = 'horizontal' | 'vertical';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-divider.js"
+  }
+}

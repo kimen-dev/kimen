@@ -1,0 +1,79 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes this option unavailable. Disabled options cannot be selected, are\nskipped by keyboard highlight, and are exposed unavailable by the select.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Submission and selection value for this option. When omitted, the value\nfalls back to the trimmed option text, matching native `<option>` parity.\nWhen NOT to use: do not use this as selection state; set `ki-select.value`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {},
+    "description": "A declarative data option rendered by its owning `ki-select`.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes this option unavailable. Disabled options cannot be selected, are\nskipped by keyboard highlight, and are exposed unavailable by the select.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Submission and selection value for this option. When omitted, the value\nfalls back to the trimmed option text, matching native `<option>` parity.\nWhen NOT to use: do not use this as selection state; set `ki-select.value`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text label mirrored by the owning select.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-option.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-option.d.ts",
+    "symbols": {
+      "KiOption": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiOption extends Components.KiOption, HTMLElement {\n}\nexport const KiOption: {\n    prototype: KiOption;\n    new (): KiOption;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-option.js"
+  }
+}

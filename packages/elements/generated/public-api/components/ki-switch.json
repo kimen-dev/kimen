@@ -1,0 +1,992 @@
+{
+  "component": {
+    "attributes": {
+      "checked": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen to use: make a setting temporarily unavailable while preserving its\ncurrent state.\nWhen NOT to use: do not use disabled for pending or loading states.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the switch, read with it as its description: what\nturning it on changes.\nWhen NOT to use: do not repeat the label. A switch has no constraint of\nits own, so it takes no error text; an error the application sets with\n`setCustomValidity` shows in this line's place.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key contributed while the switch is on.\nWhen to use: include the immediate setting in native form data when on.\nWhen NOT to use: omit when no form entry should be submitted.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in\nonmars (`xl` is the design's mobile size), with its thumb. `sm` also takes\nthe smaller label (13/20, 8px away). An unrecognized value matches no\nstyle rule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen to use: submit a domain-specific value instead of the default `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-effect-small-dark-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for border width (MarsUI tracks are borderless; the 1px hairline in ki.outline.control is the declared WCAG 1.4.11 deviation at half the former weight, so the control stops reading as an outlined pill).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked active border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-active-thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked active thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-active-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked active track.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-disabled-thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked disabled thumb (MarsUI pointer keeps its light construction in every state including disabled).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-disabled-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked disabled track (MarsUI disabled track keeps the OFF rest fill surface/disabled_med_em; the disabled signal lives in the glyph in the master).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-hover-thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked hover thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-hover-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked hover track.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-rest-thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked rest thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-checked-rest-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for checked rest track.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-control-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the control footprint height (Toggle md: Space/9xl 28px). The well pads the track by half of (control-height - track-height) on every side.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-control-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the control footprint width (Toggle md 10023:1368: Space/14xl 48px). The well is centred in it; set it to the track width, with control-height, to drop the well.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for focus ring color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for focus ring offset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-focus-ring-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for focus ring width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-glyph-checked": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-glyph-dash-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-glyph-disabled": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-glyph-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-glyph-unchecked": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-glyph-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-control-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-control-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg min target (Toggle 10023:1125 lg cell height: 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-thumb-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg thumb inset (Toggle 10023:1125 lg binds Space/xxs, 2px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-thumb-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg thumb radius (Toggle 10023:1125 lg pointer binds Radius/small-component/xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-thumb-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg thumb height (Toggle 10023:1125 lg pointer: 20px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-thumb-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg thumb width (Toggle 10023:1125 lg pointer: 26px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-track-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg track height (Toggle 10023:1125 lg: 26px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-track-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg track radius (Toggle 10023:1125 lg binds Radius/small-component/sm).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-track-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg track width (Toggle 10023:1125 lg: 48px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-well-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for lg well radius (Toggle 10023:1125 lg Base binds Radius/small-component/md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-control-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm control height (Toggle 10023:1125 sm cell: 28px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-control-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm control width (Toggle 10023:1125 sm cell: 40px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the sm gap between control and label (Toggle_label 10101:3995 sm binds Space/md, 8px; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the sm label font size (Toggle_label 10101:3995 sm: UI/para 13/20; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the sm label line height (Toggle_label 10101:3995 sm: UI/para 13/20).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm min target (Toggle 10023:1125 sm cell height: 28px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-thumb-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm thumb inset (Toggle 10023:1125 sm binds Space/xxs, 2px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-thumb-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm thumb radius (Toggle 10023:1125 sm pointer binds Radius/small-component/xxs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-thumb-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm thumb height (Toggle 10023:1125 sm pointer: 14px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-thumb-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm thumb width (Toggle 10023:1125 sm pointer: 18px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-track-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm track height (Toggle 10023:1125 sm: 18px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-track-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm track radius (Toggle 10023:1125 sm binds Radius/small-component/xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-track-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm track width (Toggle 10023:1125 sm: 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-sm-well-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for sm well radius (Toggle 10023:1125 sm Base binds Radius/small-component/md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-thumb-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for thumb inset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-thumb-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-thumb-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for thumb size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-thumb-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-track-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for track height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-track-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for track radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-track-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for track width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked active border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-active-thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked active thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-active-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked active track (one step beyond hover; the master defines no pressed variant).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-disabled-thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked disabled thumb (MarsUI pointer keeps its light construction in every state including disabled).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-disabled-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked disabled track (MarsUI disabled track keeps the OFF rest fill surface/disabled_med_em; the disabled signal lives in the glyph in the master).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-hover-thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked hover thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-hover-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked hover track (Kimen-invented one-step ramp over the corrected rest fill; the master defines no hover variant).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-rest-thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked rest thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-unchecked-rest-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-well-bg-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for the bottom of the well gradient (Toggle md Base).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-well-bg-start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-well-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-control-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl control height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 40px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-control-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl control width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 64px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl min target (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell height: 40px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-thumb-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl thumb inset (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Space/xs, 4px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-thumb-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl thumb radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer binds Radius/small-component/xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-thumb-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl thumb height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 24px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-thumb-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl thumb width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-track-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl track height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-track-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl track radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Radius/small-component/md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-track-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl track width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 56px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-well-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the switch component for xl well radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) Base binds Radius/small-component/lg).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
+    "events": {
+      "change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "Event"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line that shows, in place of the help text, an error the\napplication set with `setCustomValidity` once the form is submitted; a polite\nlive region, starting with a decorative error symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Help line under the switch, read as its description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label wrapper around the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Traveling handle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "On/off channel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "checked": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen to use: make a setting temporarily unavailable while preserving its\ncurrent state.\nWhen NOT to use: do not use disabled for pending or loading states.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of help under the switch, read with it as its description: what\nturning it on changes.\nWhen NOT to use: do not repeat the label. A switch has no constraint of\nits own, so it takes no error text; an error the application sets with\n`setCustomValidity` shows in this line's place.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key contributed while the switch is on.\nWhen to use: include the immediate setting in native form data when on.\nWhen NOT to use: omit when no form entry should be submitted.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in\nonmars (`xl` is the design's mobile size), with its thumb. `sm` also takes\nthe smaller label (13/20, 8px away). An unrecognized value matches no\nstyle rule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen to use: submit a domain-specific value instead of the default `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label content. This is the accessible name source.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-switch.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-switch.d.ts",
+    "symbols": {
+      "KiSwitch": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSwitch extends Components.KiSwitch, HTMLElement {\n}\nexport const KiSwitch: {\n    prototype: KiSwitch;\n    new (): KiSwitch;\n};"
+      },
+      "KiSwitchSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-switch.js"
+  }
+}
