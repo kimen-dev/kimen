@@ -35,6 +35,7 @@ type Gallery = VisualGallery & { inlinePadding?: number };
 
 type VisualSuiteOptions = {
   scheme: Scheme;
+  themes?: readonly Theme[];
 } & (
   | { component: VisualComponent; define?: readonly (() => void)[] }
   | { name: string; gallery: Gallery; define: readonly (() => void)[] }
@@ -206,7 +207,7 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
   const gallery = 'gallery' in options ? options.gallery : fixtureFor(options.component).gallery;
   // The approved matrix: onmars light + dark for every component, material3
   // light only (alternate-theme contract at marginal cost).
-  const themes: readonly Theme[] = scheme === 'light' ? ['onmars', 'material3'] : ['onmars'];
+  const themes = options.themes ?? (scheme === 'light' ? ['onmars', 'material3'] : ['onmars']);
 
   describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {

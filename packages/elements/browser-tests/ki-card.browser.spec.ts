@@ -265,7 +265,7 @@ describe('ki-card in a real browser', () => {
       </ki-card>
     `;
     const control = await mount(markup(''));
-    const foreign = await mount(markup('variant="elevated"'));
+    const foreign = await mount(markup('variant="foreign"'));
     const appearance = (el: HTMLElement): Record<string, string> => {
       const style = getComputedStyle(cardPart(el));
       return {
