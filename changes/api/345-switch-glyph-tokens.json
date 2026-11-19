@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "6b38b21d4352fc4d7678d2a534a9d7a4eb1c9f71c0ae23f7e4495cc067cf54a4",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Issue #345 adds three switch thumb glyph color tokens: --ki-switch-glyph-checked, --ki-switch-glyph-unchecked and --ki-switch-glyph-disabled. Transparent hides the mark for that state. The enabled unchecked dash is transparent by default. The enabled checked ink and both disabled inks retain their existing rendering in onmars and Material 3. The switch documents the new component tokens; their semantic defaults remain published and continue to resolve through the token cascade. This declaration supersedes 347-heading-font-family and carries forward its cumulative MAJOR delta from 0.0.0.",
+  "release": "major",
+  "schemaVersion": 1
+}

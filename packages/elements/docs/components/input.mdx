@@ -50,6 +50,12 @@ The `start`/`end` slots hold icon or text affixes inside the field, and
 <ki-input label="Account ID" value="ACC-2041" readonly></ki-input>
 ```
 
+## Width
+
+By default, `ki-input` uses its content's preferred width and shrinks to fit
+the available space in its container. To choose a width, set `inline-size` on
+`ki-input` or size the layout column that contains it.
+
 ## Recipe: a form with native validation
 
 `required` participates in native constraint validation: an invalid

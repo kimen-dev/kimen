@@ -5,6 +5,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
+import { defineCustomElement as defineKiInput } from '../dist/components/ki-input.js';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
@@ -28,6 +29,7 @@ const browserCommands = commands as unknown as {
 beforeAll(() => {
   defineKiSelect();
   defineKiOption();
+  defineKiInput();
 });
 
 function cleanup(): void {
@@ -948,6 +950,117 @@ describe('ki-select in a real browser', () => {
       .poll(() => getComputedStyle(trigger(el)).backgroundImage)
       .toContain('linear-gradient');
     expect(getComputedStyle(trigger(el)).backgroundColor).toBe(restBg);
+  });
+});
+
+// The label is a sibling of the trigger, so it cannot inherit the trigger's
+// state: the select sets the label ink per state (the trigger ink matrix,
+// research D8 of 005: rest, hover, focus, disabled), and while the select is
+// disabled the help line dims with the label (spec 042 D9). Each expected ink
+// is read from the token it resolves to, so the assertions hold in any theme.
+describe('ki-select label ink follows the state of the select', () => {
+  const HELP = 'Where we send the parcel';
+
+  /** The colour `token` resolves to on this page. */
+  function tokenInk(token: string): string {
+    const probe = document.createElement('span');
+    probe.style.color = `var(${token})`;
+    main().append(probe);
+    const ink = getComputedStyle(probe).color;
+    probe.remove();
+    return ink;
+  }
+
+  function partInk(host: HTMLElement, part: string): string {
+    const element = host.shadowRoot?.querySelector(`[part="${part}"]`);
+    if (!element) {
+      throw new Error(`missing ${part} part`);
+    }
+    return getComputedStyle(element).color;
+  }
+
+  /** Rests the pointer on the button after the select, off every part of it. */
+  async function pointerAway(): Promise<void> {
+    const after = main().querySelector('#after');
+    if (!after) {
+      throw new Error('missing the button after the select');
+    }
+    await userEvent.hover(after);
+  }
+
+  it('S3 a disabled select dims its label and help line to the disabled ink the other fields use', async () => {
+    const el = await mountSelect(`disabled help-text="${HELP}"`);
+    const input = document.createElement('ki-input');
+    input.setAttribute('label', 'Email');
+    input.setAttribute('disabled', '');
+    main().append(input);
+    await customElements.whenDefined('ki-input');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await pointerAway();
+    const disabledInk = tokenInk('--ki-select-disabled-label-fg');
+    expect(disabledInk).not.toBe(tokenInk('--ki-select-rest-label-fg'));
+
+    expect(partInk(el, 'label')).toBe(disabledInk);
+    expect(partInk(el, 'help')).toBe(disabledInk);
+    expect(partInk(el, 'label')).toBe(partInk(input, 'label'));
+  });
+
+  it('S16 a disabled fieldset dims the label and help line, and enabling it restores them', async () => {
+    const { form, el } = await mountForm(`help-text="${HELP}"`);
+    await pointerAway();
+    const restLabel = partInk(el, 'label');
+    const restHelp = partInk(el, 'help');
+    expect(restLabel).toBe(tokenInk('--ki-select-rest-label-fg'));
+    const fieldset = document.createElement('fieldset');
+    fieldset.disabled = true;
+    while (form.firstChild) {
+      fieldset.append(form.firstChild);
+    }
+    form.append(fieldset);
+    const disabledInk = tokenInk('--ki-select-disabled-label-fg');
+    expect(disabledInk).not.toBe(restLabel);
+    expect(disabledInk).not.toBe(restHelp);
+
+    await expect.poll(() => partInk(el, 'label')).toBe(disabledInk);
+    expect(partInk(el, 'help')).toBe(disabledInk);
+
+    fieldset.disabled = false;
+
+    await expect.poll(() => partInk(el, 'label')).toBe(restLabel);
+    expect(partInk(el, 'help')).toBe(restHelp);
+  });
+
+  it('S17 hovering the trigger gives the label its hover ink, and a disabled select keeps its disabled ink', async () => {
+    const el = await mountSelect();
+    await pointerAway();
+    const restInk = tokenInk('--ki-select-rest-label-fg');
+    const hoverInk = tokenInk('--ki-select-hover-label-fg');
+    expect(hoverInk).not.toBe(restInk);
+    expect(partInk(el, 'label')).toBe(restInk);
+
+    await userEvent.hover(trigger(el));
+
+    await expect.poll(() => partInk(el, 'label')).toBe(hoverInk);
+    el.disabled = true;
+    await expect.poll(() => partInk(el, 'label')).toBe(tokenInk('--ki-select-disabled-label-fg'));
+    await pointerAway();
+  });
+
+  it('S6 reaching the trigger with the keyboard gives the label its focus ink until focus moves on', async () => {
+    const el = await mountSelect();
+    await pointerAway();
+    const restInk = tokenInk('--ki-select-rest-label-fg');
+    const focusInk = tokenInk('--ki-select-focus-label-fg');
+    expect(focusInk).not.toBe(restInk);
+    expect(partInk(el, 'label')).toBe(restInk);
+
+    await userEvent.tab();
+
+    expect(trigger(el).matches(':focus-visible')).toBe(true);
+    await expect.poll(() => partInk(el, 'label')).toBe(focusInk);
+    await userEvent.tab();
+    expect(document.activeElement?.id).toBe('after');
+    await expect.poll(() => partInk(el, 'label')).toBe(restInk);
   });
 });
 

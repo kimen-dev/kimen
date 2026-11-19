@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 317 semantic
-and 931 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 318 semantic
+and 937 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -375,6 +375,7 @@ every component at once.
 | `--ki-typography-family-base` | `Inter, system-ui, sans-serif` | Deprecated alias kept for pre-Fase-1 consumers; use ki.typography.family.body. |
 | `--ki-typography-family-body` | `Inter, system-ui, sans-serif` | semantic font family for typography family body. |
 | `--ki-typography-family-display` | `Inter, system-ui, sans-serif` | semantic font family for typography family display. |
+| `--ki-typography-family-heading` | `Inter, system-ui, sans-serif` | Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy. |
 | `--ki-typography-family-mono` | `'JetBrains Mono', ui-monospace, monospace` | semantic font family for typography family mono. |
 | `--ki-typography-family-serif` | `Merriweather, Georgia, serif` | semantic font family for typography family serif. |
 | `--ki-typography-letter-spacing-lg` | `-0.07em` | semantic dimension for typography letter spacing lg. |
@@ -457,6 +458,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-alert-focus-ring-width` | `0.125rem` | dimension used by the alert component for focus ring width. |
 | `--ki-alert-font-size` | `0.8125rem` | dimension used by the alert component for font size. |
 | `--ki-alert-gap` | `0.75rem` | dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px). |
+| `--ki-alert-heading-font-family` | `Inter, system-ui, sans-serif` | Font family for the alert heading. Override it to give alerts their own heading typeface. |
 | `--ki-alert-heading-font-size` | `0.9375rem` | dimension used by the alert component for heading font size. |
 | `--ki-alert-heading-font-weight` | `600` | font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading). |
 | `--ki-alert-icon-glyph-size` | `1.25rem` | dimension used by the alert component for the icon glyph inside the frame (MarsUI Alert master Feature-icon glyph 20px). |
@@ -956,8 +958,10 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-dialog-footer-padding-block-start` | `1.5rem` | dimension used by the dialog component for footer section padding block start (Modal-actions/CTAs 14158:28302: Space/7xl 24px, below the divider.) |
 | `--ki-dialog-footer-padding-inline` | `1.25rem` | dimension used by the dialog component for footer section padding inline (Modal-actions/CTAs: Space/5xl 20px.) |
 | `--ki-dialog-gap` | `0.75rem` | dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px). |
+| `--ki-dialog-heading-font-family` | `Inter, system-ui, sans-serif` | Font family for the dialog heading. Override it to give dialogs their own heading typeface. |
 | `--ki-dialog-heading-font-size` | `1.125rem` | dimension used by the dialog component for heading font size. |
 | `--ki-dialog-heading-font-weight` | `700` | font weight used by the dialog component for heading font weight. |
+| `--ki-dialog-heading-letter-spacing` | `0em` | Letter spacing for the dialog heading. Override it to tune tracking for the chosen heading typeface. |
 | `--ki-dialog-heading-line-height` | `1.5rem` | dimension used by the dialog component for heading line height. |
 | `--ki-dialog-heading-padding-block-end` | `1rem` | dimension used by the dialog component for heading section padding block end (Modal-header compact: Space/3xl 16px, above the divider.) |
 | `--ki-dialog-heading-padding-block-start` | `1rem` | dimension used by the dialog component for heading section padding block start (Modal-header compact 14156:25916: Space/3xl 16px.) |
@@ -1312,8 +1316,11 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-switch-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
 | `--ki-switch-focus-ring-width` | `0.125rem` | dimension used by the switch component for focus ring width. |
 | `--ki-switch-gap` | `0.75rem` | dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio). |
+| `--ki-switch-glyph-checked` | `#5f3993` | Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb. |
 | `--ki-switch-glyph-dash-height` | `0.125rem` | dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash). |
+| `--ki-switch-glyph-disabled` | `#c3c6cc` | Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs. |
 | `--ki-switch-glyph-height` | `0.375rem` | dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height). |
+| `--ki-switch-glyph-unchecked` | `rgba(255, 255, 255, 0)` | Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb. |
 | `--ki-switch-glyph-width` | `0.5rem` | dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb). |
 | `--ki-switch-min-target` | `1.75rem` | dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint). |
 | `--ki-switch-thumb-inset` | `0.125rem` | dimension used by the switch component for thumb inset. |
