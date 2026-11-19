@@ -1,0 +1,40 @@
+# OSV-Scanner configuration for .semgrep/requirements.txt, the hash-locked
+# Semgrep engine. The scanner reads the osv-scanner.toml next to each lockfile,
+# not the one at the repository root, so these entries live here.
+#
+# Each entry is a Medium advisory with no fix reachable inside the ranges
+# Semgrep declares, up to its latest release. The workflows only ever run
+# `semgrep scan` over this repository, with --metrics=off and without --trace.
+# When `effectiveUntil` passes the scan reports them again, so the decision is
+# revisited instead of becoming permanent: by then Semgrep may allow mcp 1.30
+# and opentelemetry-api 1.45, and the fix is regenerating the lock.
+
+[[IgnoredVulns]]
+id = "GHSA-5h93-6whr-6q8j"
+effectiveUntil = 2027-01-05T00:00:00Z
+reason = "mcp 1.29.0 (HTTP and SSE client transports follow cross-origin redirects with custom headers). Fixed in 1.30.0; Semgrep 1.185.0 pins mcp==1.29.0 and so does 1.186.0, the latest. Semgrep only serves MCP, under `semgrep mcp`, which no workflow runs; it never opens an MCP client connection."
+
+[[IgnoredVulns]]
+id = "GHSA-84m7-p3x7-pcfv"
+effectiveUntil = 2027-01-05T00:00:00Z
+reason = "mcp 1.29.0 (Streamable HTTP server never reclaims sessions, memory exhaustion). Fixed in 1.30.0; Semgrep 1.185.0 pins mcp==1.29.0 and so does 1.186.0, the latest. Only `semgrep mcp` starts that server, and no workflow runs it."
+
+[[IgnoredVulns]]
+id = "GHSA-rwrf-2pqf-9j8j"
+effectiveUntil = 2027-01-05T00:00:00Z
+reason = "mcp 1.29.0 (client fetches server-chosen $ref URLs while validating tool output schemas). Fixed in 1.30.0; Semgrep 1.185.0 pins mcp==1.29.0 and so does 1.186.0, the latest. Semgrep never acts as an MCP client; it only serves, under `semgrep mcp`, which no workflow runs."
+
+[[IgnoredVulns]]
+id = "GHSA-w4fh-qvv9-3v23"
+effectiveUntil = 2027-01-05T00:00:00Z
+reason = "mcp 1.29.0 (server bearer authentication accepts tokens issued for another resource server). Fixed in 1.30.0; Semgrep 1.185.0 pins mcp==1.29.0 and so does 1.186.0, the latest. Only `semgrep mcp` serves authenticated requests, and no workflow runs it."
+
+[[IgnoredVulns]]
+id = "GHSA-xcq7-p3pf-p88h"
+effectiveUntil = 2027-01-05T00:00:00Z
+reason = "opentelemetry-api 1.37.0 (quadratic-time parsing of an untrusted tracestate header). Fixed in 1.45.1; Semgrep 1.185.0 requires ~=1.37.0 and so does 1.186.0, the latest. Semgrep parses trace context only under --trace, from values it sets in its own environment, and no workflow passes --trace."
+
+[[IgnoredVulns]]
+id = "GHSA-mf5v-w3w3-f6cg"
+effectiveUntil = 2027-01-05T00:00:00Z
+reason = "opentelemetry-api 1.37.0 (quadratic-time parsing of an untrusted traceparent value). Fixed in 1.45.2; Semgrep 1.185.0 requires ~=1.37.0 and so does 1.186.0, the latest. Semgrep extracts a traceparent only under --trace, one it formats itself from its own environment, and no workflow passes --trace."
