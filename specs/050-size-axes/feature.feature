@@ -177,7 +177,7 @@ Feature: Size axes for fields, tabs, list rows and choice controls
     Given an onmars page with a ki-checkbox "Accept" and a ki-switch "Alerts" in the size "sm" inside a region
     When the region declares the density "touch"
     Then the checkbox box still measures 18px and the switch track 32 by 18 pixels
-    And a pointer anywhere in the 44 by 44 square centred on each control's target reaches it
+    And a pointer anywhere in the 44 by 44 square centred on each control reaches it
 
   # S16
   Scenario: On a touch screen a small field's text is at least 16 pixels and a large field keeps its own

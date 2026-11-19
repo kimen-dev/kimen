@@ -182,12 +182,18 @@
    moving or growing the painted track. */
 input {
   --_ki-switch-target-block: max(var(--_ki-switch-control-height), var(--ki-density-target-min));
+  --_ki-switch-target-inline: max(var(--_ki-switch-control-width), var(--ki-density-target-min));
 
   block-size: var(--_ki-switch-target-block);
   cursor: inherit;
-  inline-size: max(var(--_ki-switch-control-width), var(--ki-density-target-min));
+  inline-size: var(--_ki-switch-target-inline);
   inset-block-start: calc((100% - var(--_ki-switch-target-block)) / 2);
-  inset-inline-start: 0;
+
+  /* Centred on the control cell, and so on the track, on the inline axis too
+     (spec 045 A1-D3, issue 427): a target wider than the cell starts half
+     the difference before it, and may reach over the content before it in a
+     tight layout (A1's documented edge case). */
+  inset-inline-start: calc((var(--_ki-switch-control-width) - var(--_ki-switch-target-inline)) / 2);
   margin: 0;
   opacity: 0;
   position: absolute;
