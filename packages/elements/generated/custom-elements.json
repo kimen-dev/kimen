@@ -264,6 +264,10 @@
               "description": "dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px)."
             },
             {
+              "name": "--ki-alert-heading-font-family",
+              "description": "Font family for the alert heading. Override it to give alerts their own heading typeface."
+            },
+            {
               "name": "--ki-alert-heading-font-size",
               "description": "dimension used by the alert component for heading font size."
             },
@@ -3182,12 +3186,20 @@
               "description": "dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px)."
             },
             {
+              "name": "--ki-dialog-heading-font-family",
+              "description": "Font family for the dialog heading. Override it to give dialogs their own heading typeface."
+            },
+            {
               "name": "--ki-dialog-heading-font-size",
               "description": "dimension used by the dialog component for heading font size."
             },
             {
               "name": "--ki-dialog-heading-font-weight",
               "description": "font weight used by the dialog component for heading font weight."
+            },
+            {
+              "name": "--ki-dialog-heading-letter-spacing",
+              "description": "Letter spacing for the dialog heading. Override it to tune tracking for the chosen heading typeface."
             },
             {
               "name": "--ki-dialog-heading-line-height",
@@ -7448,12 +7460,24 @@
               "description": "dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio)."
             },
             {
+              "name": "--ki-switch-glyph-checked",
+              "description": "Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb."
+            },
+            {
               "name": "--ki-switch-glyph-dash-height",
               "description": "dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash)."
             },
             {
+              "name": "--ki-switch-glyph-disabled",
+              "description": "Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs."
+            },
+            {
               "name": "--ki-switch-glyph-height",
               "description": "dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height)."
+            },
+            {
+              "name": "--ki-switch-glyph-unchecked",
+              "description": "Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb."
             },
             {
               "name": "--ki-switch-glyph-width",
@@ -7552,20 +7576,12 @@
               "description": "dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md)."
             },
             {
-              "name": "--ki-text-base-em",
-              "description": "semantic color for text base em."
-            },
-            {
               "name": "--ki-text-danger-high-em",
               "description": "semantic color for text danger high em."
             },
             {
               "name": "--ki-text-high-em",
               "description": "semantic color for text high em."
-            },
-            {
-              "name": "--ki-text-primary-on-primary-light",
-              "description": "semantic color for text primary on primary light."
             },
             {
               "name": "--ki-text-supporting",
@@ -8960,6 +8976,10 @@
             {
               "name": "--ki-effect-component-primary-hover-shadow",
               "description": "MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            },
+            {
+              "name": "--ki-effect-video-hover-opacity",
+              "description": "Opacity of the added play-container shadow on hover. onmars shows the full primary hover effect over the resting shadow."
             },
             {
               "name": "--ki-motion-duration-fast",

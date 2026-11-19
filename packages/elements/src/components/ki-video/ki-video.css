@@ -78,6 +78,23 @@
   background: var(--ki-video-play-bg);
   box-shadow: var(--ki-video-play-shadow);
   backdrop-filter: blur(var(--ki-video-backdrop-blur));
+  isolation: isolate;
+  position: relative;
+}
+
+/* Match the glass container's border box so the added drop and inner
+ * highlight stay aligned while the main box keeps its own shadow. */
+.control::before {
+  position: absolute;
+  inset: calc(-1 * var(--ki-video-play-border-width));
+  border: inherit;
+  border-color: transparent;
+  border-radius: inherit;
+  box-shadow: var(--_ki-video-hover-shadow, none);
+  content: "";
+  opacity: var(--ki-effect-video-hover-opacity);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Glass lift (MarsUI Component_effect/primary_hover): hovering the facade
@@ -89,7 +106,8 @@
  * (pointer-capability contract). */
 @media (hover: hover) {
   [part="play"]:hover .control {
-    box-shadow: var(--ki-video-play-shadow), var(--ki-effect-component-primary-hover-shadow);
+    --_ki-video-hover-shadow: var(--ki-effect-component-primary-hover-shadow);
+
     transform: scale(1.02);
   }
 }
@@ -98,6 +116,8 @@
  * held (utils/keyboard-press.ts: Firefox never matches `:active` on a button
  * held from the keyboard). */
 [part="play"]:is(:active, [data-ki-pressed]) .control {
+  --_ki-video-hover-shadow: none;
+
   box-shadow: var(--ki-effect-component-primary-default-shadow);
   transform: scale(0.97);
 }
@@ -168,8 +188,13 @@
       transform var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
   }
 
+  .control::before {
+    transition: box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
   /* Soft press exits on the accelerate curve. */
-  [part="play"]:is(:active, [data-ki-pressed]) .control {
+  [part="play"]:is(:active, [data-ki-pressed]) .control,
+  [part="play"]:is(:active, [data-ki-pressed]) .control::before {
     transition-timing-function: var(--ki-motion-easing-standard-accelerate);
   }
 }

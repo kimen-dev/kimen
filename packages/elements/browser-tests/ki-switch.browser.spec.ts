@@ -140,6 +140,28 @@ function glyphOf(el: KiSwitchElement, kind: 'check' | 'dash'): SVGElement {
   return glyph as SVGElement;
 }
 
+function paintedGlyphColor(glyph: SVGElement): string {
+  const { color, opacity } = getComputedStyle(glyph);
+  return opacity === '0' ? 'rgba(0, 0, 0, 0)' : color;
+}
+
+const themeGlyphs = [
+  { attrs: 'checked', kind: 'check', token: '--ki-switch-glyph-checked', color: 'rgb(6, 47, 92)' },
+  { attrs: '', kind: 'dash', token: '--ki-switch-glyph-unchecked', color: 'rgb(53, 29, 80)' },
+  {
+    attrs: 'checked disabled',
+    kind: 'check',
+    token: '--ki-switch-glyph-disabled',
+    color: 'rgb(32, 66, 37)',
+  },
+  {
+    attrs: 'disabled',
+    kind: 'dash',
+    token: '--ki-switch-glyph-disabled',
+    color: 'rgb(32, 66, 37)',
+  },
+] as const;
+
 /** Resolves a token to its computed value through a probe element. */
 function baseOf(el: KiSwitchElement): HTMLElement {
   const base = el.shadowRoot?.querySelector('.base');
@@ -550,7 +572,12 @@ describe('ki-switch in a real browser', () => {
   it('S7 S9 shows the check glyph only when on and the dash only when off and disabled', async () => {
     const rest = await mount();
     expect(getComputedStyle(glyphOf(rest, 'check')).opacity).toBe('0');
-    expect(getComputedStyle(glyphOf(rest, 'dash')).opacity).toBe('0');
+    expect(
+      paintContrast(
+        paintedGlyphColor(glyphOf(rest, 'dash')),
+        getComputedStyle(thumbPart(rest)).backgroundColor,
+      ),
+    ).toBe(1);
 
     const on = await mount('checked');
     expect(getComputedStyle(glyphOf(on, 'check')).opacity).toBe('1');
@@ -573,6 +600,51 @@ describe('ki-switch in a real browser', () => {
     const disabledCheckInk = getComputedStyle(glyphOf(onDisabled, 'check')).color;
     expect(disabledCheckInk).toBe(disabledDashInk);
     expect(disabledCheckInk).not.toBe(enabledInk);
+  });
+
+  it.each(themeGlyphs)(
+    'S23 paints the $kind glyph with $token on a switch with "$attrs"',
+    async ({ attrs, kind, token, color }) => {
+      const el = await mount(attrs);
+      const theme = document.createElement('div');
+      theme.style.setProperty(token, color);
+      el.before(theme);
+      theme.append(el);
+      const glyph = glyphOf(el, kind);
+
+      await expect.poll(() => getComputedStyle(glyph).color).toBe(color);
+      await expect.poll(() => getComputedStyle(glyph).opacity).toBe('1');
+    },
+  );
+
+  it.each([
+    '--ki-switch-glyph-checked',
+    '--ki-switch-glyph-unchecked',
+    '--ki-switch-glyph-disabled',
+  ])('S24 hides only the glyphs controlled by %s', async (hiddenToken) => {
+    cleanup();
+    const theme = document.createElement('div');
+    for (const { token, color } of themeGlyphs) {
+      theme.style.setProperty(token, color);
+    }
+    theme.innerHTML = themeGlyphs
+      .map(({ attrs }) => `<ki-switch ${attrs}>Notifications</ki-switch>`)
+      .join('');
+    document.body.append(theme);
+    const switches = theme.querySelectorAll<KiSwitchElement>('ki-switch');
+    await Promise.all(Array.from(switches, waitForHydration));
+
+    theme.style.setProperty(hiddenToken, 'transparent');
+
+    await expect
+      .poll(() =>
+        themeGlyphs.map(({ kind }, index) =>
+          paintedGlyphColor(glyphOf(switches.item(index), kind)),
+        ),
+      )
+      .toEqual(
+        themeGlyphs.map(({ token, color }) => (token === hiddenToken ? 'rgba(0, 0, 0, 0)' : color)),
+      );
   });
 
   it('S16 mirrors label order and on-state thumb travel under RTL', async () => {
