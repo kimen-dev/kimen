@@ -20,10 +20,11 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "description": "Group non-major devDependency bumps into one PR",
+      "description": "Group non-major devDependency bumps into one PR. The slug names its branch: derived from the group name it kept the parentheses, which the docs preview deployment refuses in a branch name (scripts/tests/renovate-branch-names.test.mjs).",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "dev dependencies (non-major)",
+      "groupSlug": "dev-dependencies-non-major",
       "minimumReleaseAge": "7 days"
     },
     {
@@ -82,6 +83,13 @@
       "matchDepTypes": ["engines", "uses-with"],
       "rangeStrategy": "replace",
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "The Renovate config validator runs on the Node major Renovate itself supports (engines.node ^24.11.0, with engine-strict in .npmrc), not on the one the rest of CI runs: the node bump of #216 moved its workflow to 26 and the validator refused to start. Move this major by hand, with RENOVATE_VERSION in scripts/gates/check-renovate-config.sh.",
+      "matchFileNames": [".github/workflows/renovate-config.yml"],
+      "matchDepNames": ["node"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     },
     {
       "description": "Overrides keyed to one major line (`undici@7`, `postcss-selector-parser@6`, `minimatch@3`) hold that line on a patched version; Renovate reads each key as its own depName and proposes the next major, which would force every consumer of the old line onto a major it never declared (#218, #219). Bump inside the line only; drop the key by hand when nothing needs the old line any more.",
