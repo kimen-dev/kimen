@@ -56,6 +56,7 @@ methods, CSS custom properties and examples.
 - [ki-radio-group](llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
 - [ki-scroller](llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
 - [ki-select](llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
+- [ki-skeleton](llms/ki-skeleton.md): Reserve the expected layout of a card, list, or assistant reply while it loads.
 - [ki-status](llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.
 - [ki-switch](llms/ki-switch.md): binary settings whose change takes effect immediately, always with a slotted label.
 - [ki-tab](llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional `start` and `end` slot media.

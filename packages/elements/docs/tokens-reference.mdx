@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 334 semantic
-and 1146 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 344 semantic
+and 1160 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -50,6 +50,7 @@ every component at once.
 | `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
 | `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
 | `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
+| `--ki-effect-component-no-backdrop-filter` | `none` | No backdrop compositing behind a flat component. |
 | `--ki-effect-component-primary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow. |
 | `--ki-effect-component-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter. |
 | `--ki-effect-component-secondary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter. |
@@ -223,6 +224,19 @@ every component at once.
 | `--ki-overlay-med-em` | `rgba(0, 0, 0, 0.24)` | semantic color for overlay med em. |
 | `--ki-overlay-med-em-inverse` | `rgba(255, 255, 255, 0.03)` | semantic color for overlay med em inverse. |
 
+### `ki.placeholder`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-placeholder-circle-radius` | `50%` | Proportional radius that preserves round loading shapes across sizes. |
+| `--ki-placeholder-circle-size` | `2.5rem` | Default diameter of a loading avatar placeholder. |
+| `--ki-placeholder-last-line-scale` | `0.7` | Fraction of available inline space reserved by the final loading text line. |
+| `--ki-placeholder-line-size` | `0.75rem` | Block size reserved by one loading text line. |
+| `--ki-placeholder-radius` | `6px` | Corner radius shared by loading text lines and rectangular placeholders. |
+| `--ki-placeholder-rect-size` | `6rem` | Default block size of a loading media placeholder. |
+| `--ki-placeholder-shimmer-duration` | `1400ms` | Duration of one loading highlight sweep. |
+| `--ki-placeholder-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | A soft currentColor highlight that can sweep across a loading placeholder. |
+
 ### `ki.spacing`
 
 | Token | Value (onmars light) | Description |
@@ -332,6 +346,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
+| `--ki-surface-image-none` | `none` | No decorative image on a flat surface. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
@@ -1433,6 +1448,25 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-xs-line-height` | `1rem` | dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595). |
 | `--ki-select-xs-padding-inline` | `0.375rem` | dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px). |
 | `--ki-select-xs-radius` | `6px` | dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs). |
+
+### `ki-skeleton`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-skeleton-backdrop-filter` | `none` | Complete backdrop filter behind a loading shape. Defaults to none. |
+| `--ki-skeleton-bg` | `#ebe7e1` | Base fill of the decorative loading shapes. |
+| `--ki-skeleton-bg-image` | `none` | Optional image layered over the static fill. Defaults to none. |
+| `--ki-skeleton-circle-radius` | `50%` | Proportional corner radius of the circular shape. |
+| `--ki-skeleton-circle-size` | `2.5rem` | Default diameter of the circle. |
+| `--ki-skeleton-highlight` | `#f9f7f4` | Peak colour of the animated loading highlight. |
+| `--ki-skeleton-last-line-scale` | `0.7` | Fraction of the usual line width occupied by the final line in multiline text. |
+| `--ki-skeleton-line-gap` | `0.5rem` | Block-axis space between text lines. |
+| `--ki-skeleton-line-size` | `0.75rem` | Default height of each text line. |
+| `--ki-skeleton-radius` | `6px` | Corner radius of text lines and rectangles. |
+| `--ki-skeleton-rect-size` | `6rem` | Default block size of the rectangle. |
+| `--ki-skeleton-shimmer-duration` | `1400ms` | Duration of a shimmer sweep. |
+| `--ki-skeleton-shimmer-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the shimmer sweep. |
+| `--ki-skeleton-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | Image of the moving highlight. Use currentColor to inherit the highlight colour. |
 
 ### `ki-status`
 

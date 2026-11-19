@@ -24,6 +24,7 @@ export const DIRECTIVES = [
   d.KiRadioGroup,
   d.KiScroller,
   d.KiSelect,
+  d.KiSkeleton,
   d.KiStatus,
   d.KiSwitch,
   d.KiTab,

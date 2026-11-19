@@ -1005,6 +1005,50 @@ export const catalogData = {
       "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
       "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited."
     },
+    "ki-skeleton": {
+      "description": "Decorative placeholder shapes that reserve space for loading content.",
+      "events": {},
+      "props": {
+        "animated": {
+          "type": "boolean",
+          "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+          "default": true
+        },
+        "block-size": {
+          "type": "string",
+          "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape."
+        },
+        "inline-size": {
+          "type": "string",
+          "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space."
+        },
+        "lines": {
+          "type": "number",
+          "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 20
+        },
+        "shape": {
+          "type": "enum",
+          "values": [
+            "circle",
+            "rect",
+            "text"
+          ],
+          "description": "Match the placeholder to the expected text, avatar, or rectangular content.",
+          "default": "text"
+        },
+        "size": {
+          "type": "string",
+          "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence."
+        }
+      },
+      "slots": {},
+      "tag": "ki-skeleton",
+      "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
+      "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
+    },
     "ki-status": {
       "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",
       "events": {},
