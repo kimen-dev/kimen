@@ -84,6 +84,7 @@ None.
 
 - `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow.
 - `--ki-effect-component-primary-hover-shadow`: MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter.
+- `--ki-effect-video-hover-opacity`: Opacity of the added play-container shadow on hover. onmars shows the full primary hover effect over the resting shadow.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.

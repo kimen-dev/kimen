@@ -15,6 +15,7 @@
   --_ki-alert-border-width: var(--ki-alert-border-width);
   --_ki-alert-font-size: var(--ki-alert-font-size);
   --_ki-alert-line-height: var(--ki-alert-line-height);
+  --_ki-alert-heading-font-family: var(--ki-alert-heading-font-family);
   --_ki-alert-heading-font-size: var(--ki-alert-heading-font-size);
   --_ki-alert-heading-font-weight: var(--ki-alert-heading-font-weight);
   --_ki-alert-dismiss-fg: var(--ki-alert-dismiss-rest-fg);
@@ -23,7 +24,6 @@
   --_ki-alert-focus-ring-color: var(--ki-alert-focus-ring-color);
   --_ki-alert-focus-ring-width: var(--ki-alert-focus-ring-width);
   --_ki-alert-focus-ring-offset: var(--ki-alert-focus-ring-offset);
-  --_ki-alert-focus-ring-shadow: var(--ki-alert-focus-ring-shadow);
 
   display: block;
   font-family: var(--ki-typography-family-body);
@@ -195,6 +195,19 @@
   content: "";
 }
 
+/* The focus halo follows the chip's border box, independently of its shadow. */
+[part="dismiss"]::after {
+  position: absolute;
+  inset: calc(-1 * var(--ki-alert-dismiss-border-width));
+  border: inherit;
+  border-color: transparent;
+  border-radius: inherit;
+  box-shadow: var(--_ki-alert-dismiss-halo, none);
+  content: "";
+  pointer-events: none;
+  z-index: -1;
+}
+
 @media (hover: hover) {
   [part="dismiss"]:hover {
     --_ki-alert-dismiss-fg: var(--ki-alert-dismiss-hover-fg);
@@ -218,10 +231,8 @@
      stays as the WCAG 1.4.11-proof indicator: the soft ring alone is below
      3:1 against adjacent surfaces. The chip's resting effect pair stays
      underneath so focus never flattens the raised chrome. */
-  --_ki-alert-dismiss-focus-shadow:
-    var(--_ki-alert-focus-ring-shadow), var(--ki-effect-component-secondary-default-shadow);
+  --_ki-alert-dismiss-halo: var(--ki-alert-focus-ring-shadow);
 
-  box-shadow: var(--_ki-alert-dismiss-focus-shadow);
   outline: var(--_ki-alert-focus-ring-width) solid var(--_ki-alert-focus-ring-color);
   outline-offset: var(--_ki-alert-focus-ring-offset);
 }
@@ -248,6 +259,7 @@
 
 [part="heading"] {
   display: block;
+  font-family: var(--_ki-alert-heading-font-family);
   font-size: var(--_ki-alert-heading-font-size);
   font-weight: var(--_ki-alert-heading-font-weight);
   line-height: var(--_ki-alert-line-height);
@@ -274,6 +286,10 @@
       background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
       box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
       transform var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  [part="dismiss"]::after {
+    transition: box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
   }
 
   [part="dismiss"]:is(:active, [data-ki-pressed]) {

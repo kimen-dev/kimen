@@ -85,8 +85,10 @@ Open it with the `show()` method (and close with `close()`); the `ki-close` even
 - `--ki-dialog-footer-padding-block-start`: dimension used by the dialog component for footer section padding block start (Modal-actions/CTAs 14158:28302: Space/7xl 24px, below the divider.)
 - `--ki-dialog-footer-padding-inline`: dimension used by the dialog component for footer section padding inline (Modal-actions/CTAs: Space/5xl 20px.)
 - `--ki-dialog-gap`: dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px).
+- `--ki-dialog-heading-font-family`: Font family for the dialog heading. Override it to give dialogs their own heading typeface.
 - `--ki-dialog-heading-font-size`: dimension used by the dialog component for heading font size.
 - `--ki-dialog-heading-font-weight`: font weight used by the dialog component for heading font weight.
+- `--ki-dialog-heading-letter-spacing`: Letter spacing for the dialog heading. Override it to tune tracking for the chosen heading typeface.
 - `--ki-dialog-heading-line-height`: dimension used by the dialog component for heading line height.
 - `--ki-dialog-heading-padding-block-end`: dimension used by the dialog component for heading section padding block end (Modal-header compact: Space/3xl 16px, above the divider.)
 - `--ki-dialog-heading-padding-block-start`: dimension used by the dialog component for heading section padding block start (Modal-header compact 14156:25916: Space/3xl 16px.)

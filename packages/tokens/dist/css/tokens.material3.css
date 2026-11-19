@@ -252,6 +252,7 @@
   --ki-effect-component-primary-hover-shadow: var(--ki-foundation-material3-elevation-level-2);
   --ki-effect-component-secondary-default-shadow: var(--ki-foundation-material3-elevation-level-1);
   --ki-effect-component-secondary-hover-shadow: var(--ki-foundation-material3-elevation-level-2);
+  --ki-effect-video-hover-opacity: 0;
   --ki-motion-duration-fast: var(--ki-foundation-material3-motion-duration-short-2);
   --ki-motion-duration-short-1: var(--ki-foundation-material3-motion-duration-short-1);
   --ki-motion-duration-short-2: var(--ki-foundation-material3-motion-duration-short-2);
@@ -599,7 +600,7 @@
   --ki-video-play-bg: var(--ki-surface-primary-med-em);
   --ki-video-play-fg: var(--ki-text-primary-on-primary);
   --ki-video-play-border-color: var(--ki-outline-none);
-  --ki-video-play-shadow: none;
+  --ki-video-play-shadow: 0 0 #0000;
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {

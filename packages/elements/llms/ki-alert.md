@@ -127,6 +127,7 @@ None.
 - `--ki-alert-focus-ring-width`: dimension used by the alert component for focus ring width.
 - `--ki-alert-font-size`: dimension used by the alert component for font size.
 - `--ki-alert-gap`: dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px).
+- `--ki-alert-heading-font-family`: Font family for the alert heading. Override it to give alerts their own heading typeface.
 - `--ki-alert-heading-font-size`: dimension used by the alert component for heading font size.
 - `--ki-alert-heading-font-weight`: font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading).
 - `--ki-alert-icon-glyph-size`: dimension used by the alert component for the icon glyph inside the frame (MarsUI Alert master Feature-icon glyph 20px).

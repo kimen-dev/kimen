@@ -50,8 +50,10 @@
   --_ki-dialog-border: var(--ki-dialog-border);
   --_ki-dialog-shadow: var(--ki-dialog-shadow);
   --_ki-dialog-backdrop-bg: var(--ki-dialog-backdrop-bg);
+  --_ki-dialog-heading-font-family: var(--ki-dialog-heading-font-family);
   --_ki-dialog-heading-font-size: var(--ki-dialog-heading-font-size);
   --_ki-dialog-heading-font-weight: var(--ki-dialog-heading-font-weight);
+  --_ki-dialog-heading-letter-spacing: var(--ki-dialog-heading-letter-spacing);
   --_ki-dialog-heading-line-height: var(--ki-dialog-heading-line-height);
   --_ki-dialog-motion-duration: var(--ki-dialog-motion-duration);
   --_ki-dialog-motion-easing: var(--ki-dialog-motion-easing);
@@ -128,8 +130,10 @@
   padding-inline: var(--_ki-dialog-heading-padding-inline);
   border-block-end: var(--_ki-dialog-divider);
   color: inherit;
+  font-family: var(--_ki-dialog-heading-font-family);
   font-size: var(--_ki-dialog-heading-font-size);
   font-weight: var(--_ki-dialog-heading-font-weight);
+  letter-spacing: var(--_ki-dialog-heading-letter-spacing);
   line-height: var(--_ki-dialog-heading-line-height);
   text-align: center;
 }
