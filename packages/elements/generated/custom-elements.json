@@ -1288,8 +1288,8 @@
           "customElement": true,
           "tagName": "ki-button",
           "description": "A token-styled action button with native button semantics.",
-          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it.",
-          "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
+          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it.",
+          "whenNotToUse": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress).",
           "attributes": [
             {
               "name": "disabled",
@@ -1327,6 +1327,15 @@
               "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent."
             },
             {
+              "name": "selected",
+              "fieldName": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change."
+            },
+            {
               "name": "size",
               "fieldName": "size",
               "type": {
@@ -1336,13 +1345,22 @@
               "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls."
             },
             {
+              "name": "toggle",
+              "fieldName": "toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form."
+            },
+            {
               "name": "tone",
               "fieldName": "tone",
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
               "default": "'neutral'",
-              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
             },
             {
               "name": "type",
@@ -1351,7 +1369,7 @@
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
               "default": "'submit'",
-              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form. Toggle\nmode takes precedence over this property.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
             },
             {
               "name": "value",
@@ -1365,10 +1383,10 @@
               "name": "variant",
               "fieldName": "variant",
               "type": {
-                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "deprecatedValues": [
                 "tertiary"
               ]
@@ -1424,6 +1442,18 @@
             },
             {
               "kind": "field",
+              "name": "selected",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "privacy": "public",
               "type": {
@@ -1436,13 +1466,25 @@
             },
             {
               "kind": "field",
+              "name": "toggle",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
+              "attribute": "toggle",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "tone",
               "privacy": "public",
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
               "default": "'neutral'",
-              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
               "attribute": "tone",
               "reflects": true
             },
@@ -1454,7 +1496,7 @@
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
               "default": "'submit'",
-              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form. Toggle\nmode takes precedence over this property.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
               "attribute": "type",
               "reflects": true
             },
@@ -1474,10 +1516,10 @@
               "name": "variant",
               "privacy": "public",
               "type": {
-                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "attribute": "variant",
               "reflects": true,
               "deprecatedValues": [
@@ -1485,7 +1527,15 @@
               ]
             }
           ],
-          "events": [],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<{ selected: boolean }>"
+              },
+              "description": "Emitted after toggle activation with the new selected state."
+            }
+          ],
           "slots": [
             {
               "name": "",
@@ -1620,6 +1670,14 @@
               "description": "value used by the button component for ghost rest shadow."
             },
             {
+              "name": "--ki-button-ghost-selected-bg",
+              "description": "Background of the selected ghost button toggle."
+            },
+            {
+              "name": "--ki-button-ghost-selected-fg",
+              "description": "Foreground of the selected ghost button toggle."
+            },
+            {
               "name": "--ki-button-ghost-success-hover-bg",
               "description": "color used by the button component for ghost success hover background."
             },
@@ -1642,6 +1700,14 @@
             {
               "name": "--ki-button-ghost-success-rest-fg",
               "description": "color used by the button component for ghost success rest foreground."
+            },
+            {
+              "name": "--ki-button-ghost-unselected-bg",
+              "description": "Background of the unselected ghost button toggle."
+            },
+            {
+              "name": "--ki-button-ghost-unselected-fg",
+              "description": "Foreground of the unselected ghost button toggle."
             },
             {
               "name": "--ki-button-label-padding-inline",
@@ -1718,6 +1784,26 @@
             {
               "name": "--ki-button-md-spinner-size",
               "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-outline-rest-bg",
+              "description": "Background of the outline variant at rest."
+            },
+            {
+              "name": "--ki-button-outline-rest-border",
+              "description": "Visible outline of the outline variant at rest."
+            },
+            {
+              "name": "--ki-button-outline-rest-fg",
+              "description": "Foreground of the outline variant at rest."
+            },
+            {
+              "name": "--ki-button-outline-selected-bg",
+              "description": "Background of the selected outline button toggle."
+            },
+            {
+              "name": "--ki-button-outline-selected-fg",
+              "description": "Foreground of the selected outline button toggle."
             },
             {
               "name": "--ki-button-padding-block",
@@ -1808,6 +1894,14 @@
               "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
             },
             {
+              "name": "--ki-button-primary-selected-bg",
+              "description": "Background of the selected primary button toggle."
+            },
+            {
+              "name": "--ki-button-primary-selected-fg",
+              "description": "Foreground of the selected primary button toggle."
+            },
+            {
               "name": "--ki-button-primary-success-hover-bg",
               "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
@@ -1830,6 +1924,14 @@
             {
               "name": "--ki-button-primary-success-rest-fg",
               "description": "color used by the button component for primary success rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-unselected-bg",
+              "description": "Background of the unselected primary button toggle."
+            },
+            {
+              "name": "--ki-button-primary-unselected-fg",
+              "description": "Foreground of the unselected primary button toggle."
             },
             {
               "name": "--ki-button-quaternary-danger-hover-bg",
@@ -1904,6 +2006,14 @@
               "description": "value used by the button component for quaternary rest shadow."
             },
             {
+              "name": "--ki-button-quaternary-selected-bg",
+              "description": "Background of the selected quaternary button toggle."
+            },
+            {
+              "name": "--ki-button-quaternary-selected-fg",
+              "description": "Foreground of the selected quaternary button toggle."
+            },
+            {
               "name": "--ki-button-quaternary-success-hover-bg",
               "description": "color used by the button component for quaternary success hover background."
             },
@@ -1926,6 +2036,14 @@
             {
               "name": "--ki-button-quaternary-success-rest-fg",
               "description": "color used by the button component for quaternary success rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-unselected-bg",
+              "description": "Background of the unselected quaternary button toggle."
+            },
+            {
+              "name": "--ki-button-quaternary-unselected-fg",
+              "description": "Foreground of the unselected quaternary button toggle."
             },
             {
               "name": "--ki-button-secondary-active-overlay",
@@ -2012,6 +2130,14 @@
               "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
             },
             {
+              "name": "--ki-button-secondary-selected-bg",
+              "description": "Background of the selected secondary button toggle."
+            },
+            {
+              "name": "--ki-button-secondary-selected-fg",
+              "description": "Foreground of the selected secondary button toggle."
+            },
+            {
               "name": "--ki-button-secondary-success-hover-bg",
               "description": "color used by the button component for secondary success hover background."
             },
@@ -2034,6 +2160,14 @@
             {
               "name": "--ki-button-secondary-success-rest-fg",
               "description": "color used by the button component for secondary success rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-unselected-bg",
+              "description": "Background of the unselected secondary button toggle."
+            },
+            {
+              "name": "--ki-button-secondary-unselected-fg",
+              "description": "Foreground of the unselected secondary button toggle."
             },
             {
               "name": "--ki-button-sm-font-size",
@@ -2182,6 +2316,30 @@
             {
               "name": "--ki-button-tertiary-success-rest-fg",
               "description": "color used by the button component for tertiary success rest foreground."
+            },
+            {
+              "name": "--ki-button-toggle-backdrop-filter",
+              "description": "Complete backdrop filter for the toggle button."
+            },
+            {
+              "name": "--ki-button-toggle-bg-image",
+              "description": "Background image layer for the toggle button."
+            },
+            {
+              "name": "--ki-button-toggle-border",
+              "description": "Border color of the flat toggle button surface."
+            },
+            {
+              "name": "--ki-button-toggle-radius",
+              "description": "Rounded rectangle shape for an unselected text toggle button."
+            },
+            {
+              "name": "--ki-button-toggle-selected-radius",
+              "description": "Pill shape for a selected text toggle button."
+            },
+            {
+              "name": "--ki-button-toggle-shadow",
+              "description": "Resting shadow of the flat toggle button surface."
             },
             {
               "name": "--ki-button-xl-font-size",
@@ -3736,8 +3894,8 @@
           "customElement": true,
           "tagName": "ki-icon-button",
           "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
-          "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it.",
-          "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+          "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. Enable `toggle` for persistent actions such as\nBookmark. While the action it started is in progress, set `loading`.",
+          "whenNotToUse": "whenever a visible label fits (use ki-button),\nnavigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
           "attributes": [
             {
               "name": "disabled",
@@ -3776,6 +3934,15 @@
               "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus."
             },
             {
+              "name": "selected",
+              "fieldName": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change."
+            },
+            {
               "name": "size",
               "fieldName": "size",
               "type": {
@@ -3785,22 +3952,31 @@
               "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor."
             },
             {
+              "name": "toggle",
+              "fieldName": "toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states."
+            },
+            {
               "name": "tone",
               "fieldName": "tone",
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
               "default": "'neutral'",
-              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
             },
             {
               "name": "variant",
               "fieldName": "variant",
               "type": {
-                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "deprecatedValues": [
                 "tertiary"
               ]
@@ -3857,6 +4033,18 @@
             },
             {
               "kind": "field",
+              "name": "selected",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "privacy": "public",
               "type": {
@@ -3869,13 +4057,25 @@
             },
             {
               "kind": "field",
+              "name": "toggle",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
+              "attribute": "toggle",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "tone",
               "privacy": "public",
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
               "default": "'neutral'",
-              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
               "attribute": "tone",
               "reflects": true
             },
@@ -3884,10 +4084,10 @@
               "name": "variant",
               "privacy": "public",
               "type": {
-                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "attribute": "variant",
               "reflects": true,
               "deprecatedValues": [
@@ -3895,11 +4095,23 @@
               ]
             }
           ],
-          "events": [],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<{ selected: boolean }>"
+              },
+              "description": "Emitted after toggle activation with the new selected state."
+            }
+          ],
           "slots": [
             {
               "name": "",
               "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+            },
+            {
+              "name": "selected",
+              "description": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
             }
           ],
           "cssParts": [
@@ -4474,6 +4686,22 @@
               "description": "color used by the button component for tertiary success rest foreground."
             },
             {
+              "name": "--ki-button-toggle-backdrop-filter",
+              "description": "Complete backdrop filter for the toggle button."
+            },
+            {
+              "name": "--ki-button-toggle-bg-image",
+              "description": "Background image layer for the toggle button."
+            },
+            {
+              "name": "--ki-button-toggle-border",
+              "description": "Border color of the flat toggle button surface."
+            },
+            {
+              "name": "--ki-button-toggle-shadow",
+              "description": "Resting shadow of the flat toggle button surface."
+            },
+            {
               "name": "--ki-button-xl-radius",
               "description": "dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns)."
             },
@@ -4488,6 +4716,22 @@
             {
               "name": "--ki-density-target-min",
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-selected-bg",
+              "description": "Background of the selected ghost icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-ghost-selected-fg",
+              "description": "Foreground of the selected ghost icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-ghost-unselected-bg",
+              "description": "Background of the unselected ghost icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-ghost-unselected-fg",
+              "description": "Foreground of the unselected ghost icon button toggle."
             },
             {
               "name": "--ki-icon-button-lg-icon-size",
@@ -4514,6 +4758,74 @@
               "description": "dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon)."
             },
             {
+              "name": "--ki-icon-button-outline-rest-bg",
+              "description": "Background of the outline variant at rest."
+            },
+            {
+              "name": "--ki-icon-button-outline-rest-border",
+              "description": "Visible outline of the outline variant at rest."
+            },
+            {
+              "name": "--ki-icon-button-outline-rest-fg",
+              "description": "Foreground of the outline variant at rest."
+            },
+            {
+              "name": "--ki-icon-button-outline-selected-bg",
+              "description": "Background of the selected outline icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-outline-selected-fg",
+              "description": "Foreground of the selected outline icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-primary-selected-bg",
+              "description": "Background of the selected primary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-primary-selected-fg",
+              "description": "Foreground of the selected primary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-primary-unselected-bg",
+              "description": "Background of the unselected primary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-primary-unselected-fg",
+              "description": "Foreground of the unselected primary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-selected-bg",
+              "description": "Background of the selected quaternary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-selected-fg",
+              "description": "Foreground of the selected quaternary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-unselected-bg",
+              "description": "Background of the unselected quaternary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-unselected-fg",
+              "description": "Foreground of the unselected quaternary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-secondary-selected-bg",
+              "description": "Background of the selected secondary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-secondary-selected-fg",
+              "description": "Foreground of the selected secondary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-secondary-unselected-bg",
+              "description": "Background of the unselected secondary icon button toggle."
+            },
+            {
+              "name": "--ki-icon-button-secondary-unselected-fg",
+              "description": "Foreground of the unselected secondary icon button toggle."
+            },
+            {
               "name": "--ki-icon-button-sm-icon-size",
               "description": "dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px)."
             },
@@ -4524,6 +4836,14 @@
             {
               "name": "--ki-icon-button-sm-spinner-size",
               "description": "dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon)."
+            },
+            {
+              "name": "--ki-icon-button-toggle-radius",
+              "description": "Round shape for an unselected icon toggle button."
+            },
+            {
+              "name": "--ki-icon-button-toggle-selected-radius",
+              "description": "Rounded square shape for a selected icon toggle button."
             },
             {
               "name": "--ki-icon-button-xl-icon-size",

@@ -33,6 +33,14 @@
         "required": false,
         "type": "string"
       },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
@@ -41,10 +49,18 @@
         "required": false,
         "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
       },
+      "toggle": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "tone": {
         "default": "'neutral'",
         "deprecatedSince": null,
-        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
         "replacement": null,
         "required": false,
         "type": "\"danger\" | \"neutral\" | \"success\""
@@ -52,10 +68,10 @@
       "variant": {
         "default": "'secondary'",
         "deprecatedSince": null,
-        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
         "replacement": null,
         "required": false,
-        "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+        "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
       }
     },
     "cssProperties": {
@@ -1171,6 +1187,38 @@
         "required": false,
         "type": null
       },
+      "--ki-button-toggle-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the toggle button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-toggle-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background image layer for the toggle button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-toggle-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border color of the flat toggle button surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-toggle-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting shadow of the flat toggle button surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-xl-radius": {
         "default": null,
         "deprecatedSince": null,
@@ -1199,6 +1247,38 @@
         "default": null,
         "deprecatedSince": null,
         "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-ghost-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected ghost icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-ghost-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected ghost icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-ghost-unselected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the unselected ghost icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-ghost-unselected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the unselected ghost icon button toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1251,6 +1331,142 @@
         "required": false,
         "type": null
       },
+      "--ki-icon-button-outline-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the outline variant at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-outline-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible outline of the outline variant at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-outline-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the outline variant at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-outline-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected outline icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-outline-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected outline icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-primary-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected primary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-primary-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected primary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-primary-unselected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the unselected primary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-primary-unselected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the unselected primary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-quaternary-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected quaternary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-quaternary-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected quaternary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-quaternary-unselected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the unselected quaternary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-quaternary-unselected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the unselected quaternary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-secondary-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected secondary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-secondary-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected secondary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-secondary-unselected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the unselected secondary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-secondary-unselected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the unselected secondary icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-icon-button-sm-icon-size": {
         "default": null,
         "deprecatedSince": null,
@@ -1271,6 +1487,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-toggle-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Round shape for an unselected icon toggle button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-toggle-selected-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Rounded square shape for a selected icon toggle button.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1349,7 +1581,16 @@
       }
     },
     "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
-    "events": {},
+    "events": {
+      "ki-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted after toggle activation with the new selected state.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ selected: boolean }>"
+      }
+    },
     "methods": {},
     "parts": {
       "button": {
@@ -1410,6 +1651,14 @@
         "required": false,
         "type": "string"
       },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
@@ -1418,10 +1667,18 @@
         "required": false,
         "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
       },
+      "toggle": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "tone": {
         "default": "'neutral'",
         "deprecatedSince": null,
-        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
         "replacement": null,
         "required": false,
         "type": "\"danger\" | \"neutral\" | \"success\""
@@ -1429,10 +1686,10 @@
       "variant": {
         "default": "'secondary'",
         "deprecatedSince": null,
-        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
         "replacement": null,
         "required": false,
-        "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+        "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
       }
     },
     "slots": {
@@ -1440,6 +1697,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "selected": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1477,7 +1742,7 @@
         "kinds": [
           "type"
         ],
-        "signature": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';"
+        "signature": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost' | 'outline';"
       },
       "defineCustomElement": {
         "kinds": [

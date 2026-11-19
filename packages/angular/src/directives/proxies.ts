@@ -148,14 +148,14 @@ export declare interface KiBadge extends Components.KiBadge {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiButton,
-  inputs: ['disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant']
+  inputs: ['disabled', 'loading', 'loadingLabel', 'name', 'selected', 'size', 'toggle', 'tone', 'type', 'value', 'variant']
 })
 @Component({
   selector: 'ki-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant'],
+  inputs: ['disabled', 'loading', 'loadingLabel', 'name', 'selected', 'size', 'toggle', 'tone', 'type', 'value', 'variant'],
 })
 export class KiButton {
   protected el: HTMLKiButtonElement;
@@ -166,7 +166,12 @@ export class KiButton {
 }
 
 
-export declare interface KiButton extends Components.KiButton {}
+
+export declare interface KiButton extends Components.KiButton {
+  /**
+   * Emitted after toggle activation with the new selected state.
+   */
+}
 
 
 @ProxyCmp({
@@ -320,14 +325,14 @@ export declare interface KiIcon extends Components.KiIcon {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiIconButton,
-  inputs: ['disabled', 'label', 'loading', 'loadingLabel', 'size', 'tone', 'variant']
+  inputs: ['disabled', 'label', 'loading', 'loadingLabel', 'selected', 'size', 'toggle', 'tone', 'variant']
 })
 @Component({
   selector: 'ki-icon-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', { name: 'label', required: true }, 'loading', 'loadingLabel', 'size', 'tone', 'variant'],
+  inputs: ['disabled', { name: 'label', required: true }, 'loading', 'loadingLabel', 'selected', 'size', 'toggle', 'tone', 'variant'],
 })
 export class KiIconButton {
   protected el: HTMLKiIconButtonElement;
@@ -338,7 +343,12 @@ export class KiIconButton {
 }
 
 
-export declare interface KiIconButton extends Components.KiIconButton {}
+
+export declare interface KiIconButton extends Components.KiIconButton {
+  /**
+   * Emitted after toggle activation with the new selected state.
+   */
+}
 
 
 @ProxyCmp({

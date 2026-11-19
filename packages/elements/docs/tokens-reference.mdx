@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 393 semantic
-and 1241 component tokens. Values are the resolved **onmars light**
+and 1291 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -734,6 +734,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-ghost-neutral-rest-border` | `rgba(255, 255, 255, 0)` | color used by the button component for ghost neutral rest border. |
 | `--ki-button-ghost-neutral-rest-fg` | `#ad411c` | color used by the button component for ghost neutral rest foreground. |
 | `--ki-button-ghost-rest-shadow` | `none` | value used by the button component for ghost rest shadow. |
+| `--ki-button-ghost-selected-bg` | `#ad411c` | Background of the selected ghost button toggle. |
+| `--ki-button-ghost-selected-fg` | `#ffffff` | Foreground of the selected ghost button toggle. |
 | `--ki-button-ghost-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-bg. color used by the button component for ghost success active background. |
 | `--ki-button-ghost-success-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-border. color used by the button component for ghost success active border. |
 | `--ki-button-ghost-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-fg. color used by the button component for ghost success active foreground. |
@@ -746,6 +748,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-ghost-success-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the button component for ghost success rest background. |
 | `--ki-button-ghost-success-rest-border` | `rgba(255, 255, 255, 0)` | color used by the button component for ghost success rest border. |
 | `--ki-button-ghost-success-rest-fg` | `#2c6a2b` | color used by the button component for ghost success rest foreground. |
+| `--ki-button-ghost-unselected-bg` | `rgba(0, 0, 0, 0)` | Background of the unselected ghost button toggle. |
+| `--ki-button-ghost-unselected-fg` | `#181613` | Foreground of the unselected ghost button toggle. |
 | `--ki-button-label-padding-inline` | `0.25rem` | dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance). |
 | `--ki-button-lg-font-size` | `0.9375rem` | dimension used by the button component for lg font size. |
 | `--ki-button-lg-gap` | `0.375rem` | dimension used by the button component for lg gap. |
@@ -765,6 +769,11 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-md-padding-inline` | `0.625rem` | dimension used by the button component for md padding inline. |
 | `--ki-button-md-radius` | `10px` | dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns). |
 | `--ki-button-md-spinner-size` | `1.125rem` | dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
+| `--ki-button-outline-rest-bg` | `rgba(0, 0, 0, 0)` | Background of the outline variant at rest. |
+| `--ki-button-outline-rest-border` | `#86827b` | Visible outline of the outline variant at rest. |
+| `--ki-button-outline-rest-fg` | `#181613` | Foreground of the outline variant at rest. |
+| `--ki-button-outline-selected-bg` | `#000000` | Background of the selected outline button toggle. |
+| `--ki-button-outline-selected-fg` | `#ffffff` | Foreground of the selected outline button toggle. |
 | `--ki-button-padding-block` | `0.25rem` | dimension used by the button component for padding block (MarsUI: 4px in every size). |
 | `--ki-button-primary-active-overlay` | `rgba(255, 255, 255, 0.08)` | Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
 | `--ki-button-primary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-rest-shadow. shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest). |
@@ -797,6 +806,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-primary-neutral-rest-fg` | `#ffffff` | color used by the button component for primary neutral rest foreground. |
 | `--ki-button-primary-rest-border-bottom` | `rgba(0, 0, 0, 0)` | color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom). |
 | `--ki-button-primary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
+| `--ki-button-primary-selected-bg` | `#1d1a16` | Background of the selected primary button toggle. |
+| `--ki-button-primary-selected-fg` | `#ffffff` | Foreground of the selected primary button toggle. |
 | `--ki-button-primary-success-active-bg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-bg. color used by the button component for primary success active background. |
 | `--ki-button-primary-success-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-border. color used by the button component for primary success active border (MarsUI bevel top/inline edge). |
 | `--ki-button-primary-success-active-fg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-fg. color used by the button component for primary success active foreground. |
@@ -809,6 +820,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-primary-success-rest-bg` | `#2c6a2b` | color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 &lt; AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification). |
 | `--ki-button-primary-success-rest-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary success rest border (MarsUI bevel top/inline edge). |
 | `--ki-button-primary-success-rest-fg` | `#ffffff` | color used by the button component for primary success rest foreground. |
+| `--ki-button-primary-unselected-bg` | `#f3f0eb` | Background of the unselected primary button toggle. |
+| `--ki-button-primary-unselected-fg` | `#181613` | Foreground of the unselected primary button toggle. |
 | `--ki-button-quaternary-active-shadow` | `none` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-rest-shadow. value used by the button component for quaternary active shadow. |
 | `--ki-button-quaternary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-danger-rest-bg. color used by the button component for quaternary danger active background. |
 | `--ki-button-quaternary-danger-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-danger-rest-border. color used by the button component for quaternary danger active border (MarsUI quaternary is borderless in every state). |
@@ -837,6 +850,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-quaternary-neutral-rest-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-neutral-rest-fg` | `#5e5953` | color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis). |
 | `--ki-button-quaternary-rest-shadow` | `none` | value used by the button component for quaternary rest shadow. |
+| `--ki-button-quaternary-selected-bg` | `#0f0d0a` | Background of the selected quaternary button toggle. |
+| `--ki-button-quaternary-selected-fg` | `#ffffff` | Foreground of the selected quaternary button toggle. |
 | `--ki-button-quaternary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-bg. color used by the button component for quaternary success active background. |
 | `--ki-button-quaternary-success-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-border. color used by the button component for quaternary success active border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-fg. color used by the button component for quaternary success active foreground. |
@@ -849,6 +864,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-quaternary-success-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary success rest background. |
 | `--ki-button-quaternary-success-rest-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-success-rest-fg` | `#2c6a2b` | color used by the button component for quaternary success rest foreground. |
+| `--ki-button-quaternary-unselected-bg` | `rgba(0, 0, 0, 0)` | Background of the unselected quaternary button toggle. |
+| `--ki-button-quaternary-unselected-fg` | `#5e5953` | Foreground of the unselected quaternary button toggle. |
 | `--ki-button-secondary-active-overlay` | `rgba(0, 0, 0, 0.05)` | Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
 | `--ki-button-secondary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-rest-shadow. shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest). |
 | `--ki-button-secondary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-danger-rest-bg. color used by the button component for secondary danger active background. |
@@ -880,6 +897,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-secondary-neutral-rest-fg` | `#181613` | color used by the button component for secondary neutral rest foreground (MarsUI text/high_em). |
 | `--ki-button-secondary-rest-border-bottom` | `rgba(24, 22, 19, 0.14)` | color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom). |
 | `--ki-button-secondary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default). |
+| `--ki-button-secondary-selected-bg` | `#1d1a16` | Background of the selected secondary button toggle. |
+| `--ki-button-secondary-selected-fg` | `#ffffff` | Foreground of the selected secondary button toggle. |
 | `--ki-button-secondary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-bg. color used by the button component for secondary success active background. |
 | `--ki-button-secondary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-border. color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait). |
 | `--ki-button-secondary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-fg. color used by the button component for secondary success active foreground. |
@@ -892,6 +911,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-secondary-success-rest-bg` | `#f4faf3` | color used by the button component for secondary success rest background. |
 | `--ki-button-secondary-success-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait). |
 | `--ki-button-secondary-success-rest-fg` | `#2c6a2b` | color used by the button component for secondary success rest foreground. |
+| `--ki-button-secondary-unselected-bg` | `#f3f0eb` | Background of the unselected secondary button toggle. |
+| `--ki-button-secondary-unselected-fg` | `#181613` | Foreground of the unselected secondary button toggle. |
 | `--ki-button-sm-font-size` | `0.8125rem` | dimension used by the button component for sm font size. |
 | `--ki-button-sm-gap` | `0.375rem` | dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text). |
 | `--ki-button-sm-height` | `2rem` | dimension used by the button component for sm height. |
@@ -945,6 +966,12 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-tertiary-success-rest-bg` | `#f4faf3` | Tertiary alias of the secondary success rest background. |
 | `--ki-button-tertiary-success-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-rest-fg` | `#2c6a2b` | color used by the button component for tertiary success rest foreground. |
+| `--ki-button-toggle-backdrop-filter` | `none` | Complete backdrop filter for the toggle button. |
+| `--ki-button-toggle-bg-image` | `none` | Background image layer for the toggle button. |
+| `--ki-button-toggle-border` | `rgba(255, 255, 255, 0)` | Border color of the flat toggle button surface. |
+| `--ki-button-toggle-radius` | `10px` | Rounded rectangle shape for an unselected text toggle button. |
+| `--ki-button-toggle-selected-radius` | `1000px` | Pill shape for a selected text toggle button. |
+| `--ki-button-toggle-shadow` | `0 0 #0000` | Resting shadow of the flat toggle button surface. |
 | `--ki-button-xl-font-size` | `1.125rem` | dimension used by the button component for xl font size. |
 | `--ki-button-xl-gap` | `0.5rem` | dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px). |
 | `--ki-button-xl-height` | `3.5rem` | dimension used by the button component for xl height. |
@@ -1110,15 +1137,38 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-icon-button-ghost-selected-bg` | `#ad411c` | Background of the selected ghost icon button toggle. |
+| `--ki-icon-button-ghost-selected-fg` | `#ffffff` | Foreground of the selected ghost icon button toggle. |
+| `--ki-icon-button-ghost-unselected-bg` | `rgba(0, 0, 0, 0)` | Background of the unselected ghost icon button toggle. |
+| `--ki-icon-button-ghost-unselected-fg` | `#181613` | Foreground of the unselected ghost icon button toggle. |
 | `--ki-icon-button-lg-icon-size` | `1.5rem` | dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px). |
 | `--ki-icon-button-lg-size` | `3rem` | dimension used by the icon button component for lg box (48px square). |
 | `--ki-icon-button-lg-spinner-size` | `1.5rem` | dimension used by the icon button component for the lg loading spinner box (24px, the lg icon size; spec 046 D5: the spinner takes the place of the icon). |
 | `--ki-icon-button-md-icon-size` | `1.25rem` | dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3). |
 | `--ki-icon-button-md-size` | `2.5rem` | dimension used by the icon button component for md box (40px square, Figma node 10078:3129). |
 | `--ki-icon-button-md-spinner-size` | `1.25rem` | dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon). |
+| `--ki-icon-button-outline-rest-bg` | `rgba(0, 0, 0, 0)` | Background of the outline variant at rest. |
+| `--ki-icon-button-outline-rest-border` | `#86827b` | Visible outline of the outline variant at rest. |
+| `--ki-icon-button-outline-rest-fg` | `#181613` | Foreground of the outline variant at rest. |
+| `--ki-icon-button-outline-selected-bg` | `#000000` | Background of the selected outline icon button toggle. |
+| `--ki-icon-button-outline-selected-fg` | `#ffffff` | Foreground of the selected outline icon button toggle. |
+| `--ki-icon-button-primary-selected-bg` | `#1d1a16` | Background of the selected primary icon button toggle. |
+| `--ki-icon-button-primary-selected-fg` | `#ffffff` | Foreground of the selected primary icon button toggle. |
+| `--ki-icon-button-primary-unselected-bg` | `#f3f0eb` | Background of the unselected primary icon button toggle. |
+| `--ki-icon-button-primary-unselected-fg` | `#181613` | Foreground of the unselected primary icon button toggle. |
+| `--ki-icon-button-quaternary-selected-bg` | `#0f0d0a` | Background of the selected quaternary icon button toggle. |
+| `--ki-icon-button-quaternary-selected-fg` | `#ffffff` | Foreground of the selected quaternary icon button toggle. |
+| `--ki-icon-button-quaternary-unselected-bg` | `rgba(0, 0, 0, 0)` | Background of the unselected quaternary icon button toggle. |
+| `--ki-icon-button-quaternary-unselected-fg` | `#5e5953` | Foreground of the unselected quaternary icon button toggle. |
+| `--ki-icon-button-secondary-selected-bg` | `#1d1a16` | Background of the selected secondary icon button toggle. |
+| `--ki-icon-button-secondary-selected-fg` | `#ffffff` | Foreground of the selected secondary icon button toggle. |
+| `--ki-icon-button-secondary-unselected-bg` | `#f3f0eb` | Background of the unselected secondary icon button toggle. |
+| `--ki-icon-button-secondary-unselected-fg` | `#181613` | Foreground of the unselected secondary icon button toggle. |
 | `--ki-icon-button-sm-icon-size` | `1.125rem` | dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px). |
 | `--ki-icon-button-sm-size` | `2rem` | dimension used by the icon button component for sm box (32px square). |
 | `--ki-icon-button-sm-spinner-size` | `1.125rem` | dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon). |
+| `--ki-icon-button-toggle-radius` | `1000px` | Round shape for an unselected icon toggle button. |
+| `--ki-icon-button-toggle-selected-radius` | `10px` | Rounded square shape for a selected icon toggle button. |
 | `--ki-icon-button-xl-icon-size` | `1.75rem` | dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px). |
 | `--ki-icon-button-xl-size` | `3.5rem` | dimension used by the icon button component for xl box (56px square). |
 | `--ki-icon-button-xl-spinner-size` | `1.75rem` | dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon). |

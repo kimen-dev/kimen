@@ -33,6 +33,14 @@
         "required": false,
         "type": "string | undefined"
       },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
@@ -41,10 +49,18 @@
         "required": false,
         "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
       },
+      "toggle": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "tone": {
         "default": "'neutral'",
         "deprecatedSince": null,
-        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
         "replacement": null,
         "required": false,
         "type": "\"danger\" | \"neutral\" | \"success\""
@@ -52,7 +68,7 @@
       "type": {
         "default": "'submit'",
         "deprecatedSince": null,
-        "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+        "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form. Toggle\nmode takes precedence over this property.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
         "replacement": null,
         "required": false,
         "type": "\"button\" | \"reset\" | \"submit\""
@@ -68,10 +84,10 @@
       "variant": {
         "default": "'secondary'",
         "deprecatedSince": null,
-        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
         "replacement": null,
         "required": false,
-        "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+        "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
       }
     },
     "cssProperties": {
@@ -283,6 +299,22 @@
         "required": false,
         "type": null
       },
+      "--ki-button-ghost-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected ghost button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected ghost button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-ghost-success-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -327,6 +359,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for ghost success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-unselected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the unselected ghost button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-unselected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the unselected ghost button toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -479,6 +527,46 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-outline-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the outline variant at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-outline-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible outline of the outline variant at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-outline-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the outline variant at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-outline-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected outline button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-outline-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected outline button toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -659,6 +747,22 @@
         "required": false,
         "type": null
       },
+      "--ki-button-primary-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected primary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected primary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-primary-success-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -703,6 +807,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for primary success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-unselected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the unselected primary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-unselected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the unselected primary button toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -851,6 +971,22 @@
         "required": false,
         "type": null
       },
+      "--ki-button-quaternary-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected quaternary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected quaternary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-quaternary-success-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -895,6 +1031,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for quaternary success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-unselected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the unselected quaternary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-unselected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the unselected quaternary button toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1067,6 +1219,22 @@
         "required": false,
         "type": null
       },
+      "--ki-button-secondary-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the selected secondary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the selected secondary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-secondary-success-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -1111,6 +1279,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for secondary success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-unselected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the unselected secondary button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-unselected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the unselected secondary button toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1411,6 +1595,54 @@
         "required": false,
         "type": null
       },
+      "--ki-button-toggle-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the toggle button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-toggle-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background image layer for the toggle button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-toggle-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border color of the flat toggle button surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-toggle-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Rounded rectangle shape for an unselected text toggle button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-toggle-selected-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Pill shape for a selected text toggle button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-toggle-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting shadow of the flat toggle button surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-xl-font-size": {
         "default": null,
         "deprecatedSince": null,
@@ -1589,7 +1821,16 @@
       }
     },
     "description": "A token-styled action button with native button semantics.",
-    "events": {},
+    "events": {
+      "ki-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted after toggle activation with the new selected state.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ selected: boolean }>"
+      }
+    },
     "methods": {},
     "parts": {
       "button": {
@@ -1650,6 +1891,14 @@
         "required": false,
         "type": "string | undefined"
       },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
@@ -1658,10 +1907,18 @@
         "required": false,
         "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
       },
+      "toggle": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "tone": {
         "default": "'neutral'",
         "deprecatedSince": null,
-        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+        "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
         "replacement": null,
         "required": false,
         "type": "\"danger\" | \"neutral\" | \"success\""
@@ -1669,7 +1926,7 @@
       "type": {
         "default": "'submit'",
         "deprecatedSince": null,
-        "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+        "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form. Toggle\nmode takes precedence over this property.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
         "replacement": null,
         "required": false,
         "type": "\"button\" | \"reset\" | \"submit\""
@@ -1685,10 +1942,10 @@
       "variant": {
         "default": "'secondary'",
         "deprecatedSince": null,
-        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+        "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
         "replacement": null,
         "required": false,
-        "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+        "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
       }
     },
     "slots": {
@@ -1755,7 +2012,7 @@
         "kinds": [
           "type"
         ],
-        "signature": "export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';"
+        "signature": "export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost' | 'outline';"
       },
       "defineCustomElement": {
         "kinds": [

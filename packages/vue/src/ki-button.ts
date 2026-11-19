@@ -13,11 +13,16 @@ export const KiButton: StencilVueComponent<JSX.KiButton> = /*@__PURE__*/ defineC
   'variant',
   'tone',
   'size',
+  'toggle',
+  'selected',
   'type',
   'name',
   'value',
   'disabled',
   'loading',
-  'loadingLabel'
+  'loadingLabel',
+  'ki-change'
+], [
+  'ki-change'
 ]);
 

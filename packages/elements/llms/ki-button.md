@@ -5,13 +5,14 @@
 ## When to use
 
 trigger the single main action of a view, supporting actions
-in descending hierarchy, or confirming/destructive actions through tone.
+in descending hierarchy, confirming/destructive actions through tone, or
+persistent actions such as Bold with `toggle`.
 While the action a button started is in progress, set `loading` on that
 button instead of disabling it.
 
 ## When not to use
 
-navigation, icon-only actions, persistent toggles, or the
+navigation, icon-only actions, form values, or the
 progress of a page or region (use ki-progress).
 
 ## Examples
@@ -22,7 +23,7 @@ A standalone primary action:
 <ki-button variant="primary">Save</ki-button>
 ```
 
-`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type="button"`:
+In momentary mode `type` defaults to `submit`. Use `type="button"` for an independent action inside a form.
 
 ```html
 <form>
@@ -30,6 +31,20 @@ A standalone primary action:
   <ki-button variant="primary">Save changes</ki-button>
 </form>
 ```
+
+Use `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.
+
+```html
+<ki-button id="pin" variant="outline" toggle selected>Pin</ki-button>
+<script type="module">
+  const button = document.getElementById('pin');
+  button.addEventListener('ki-change', ({ detail: { selected } }) => {
+    console.log('Pinned', selected);
+  });
+</script>
+```
+
+Programmatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.
 
 Programmatic creation after registration; string attributes and properties are interchangeable:
 
@@ -71,11 +86,13 @@ While the action a button started is in progress, set `loading` on it instead of
 - `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
 - `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
+- `selected` (boolean, default false): Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
-- `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
-- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+- `toggle` (boolean, default false): Enables persistent press state for an action such as Bold. The native button exposes `aria-pressed` and each activation switches `selected`. Use the same label in both states. A toggle does not submit or reset a form.
+- `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. Toggle palettes are specific to the variant. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Toggle mode takes precedence over this property. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
 - `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
-- `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+- `variant` ("ghost" | "outline" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, `ghost` for accent text actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
 ## Slots
 
@@ -91,7 +108,7 @@ While the action a button started is in progress, set `loading` on it instead of
 
 ## Events
 
-None.
+- `ki-change` (CustomEvent<{ selected: boolean }>): Emitted after toggle activation with the new selected state.
 
 ## Methods
 
@@ -125,12 +142,16 @@ None.
 - `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border.
 - `--ki-button-ghost-neutral-rest-fg`: color used by the button component for ghost neutral rest foreground.
 - `--ki-button-ghost-rest-shadow`: value used by the button component for ghost rest shadow.
+- `--ki-button-ghost-selected-bg`: Background of the selected ghost button toggle.
+- `--ki-button-ghost-selected-fg`: Foreground of the selected ghost button toggle.
 - `--ki-button-ghost-success-hover-bg`: color used by the button component for ghost success hover background.
 - `--ki-button-ghost-success-hover-border`: color used by the button component for ghost success hover border.
 - `--ki-button-ghost-success-hover-fg`: color used by the button component for ghost success hover foreground.
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-ghost-unselected-bg`: Background of the unselected ghost button toggle.
+- `--ki-button-ghost-unselected-fg`: Foreground of the unselected ghost button toggle.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
 - `--ki-button-lg-gap`: dimension used by the button component for lg gap.
@@ -150,6 +171,11 @@ None.
 - `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
 - `--ki-button-md-radius`: dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).
 - `--ki-button-md-spinner-size`: dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-button-outline-rest-bg`: Background of the outline variant at rest.
+- `--ki-button-outline-rest-border`: Visible outline of the outline variant at rest.
+- `--ki-button-outline-rest-fg`: Foreground of the outline variant at rest.
+- `--ki-button-outline-selected-bg`: Background of the selected outline button toggle.
+- `--ki-button-outline-selected-fg`: Foreground of the selected outline button toggle.
 - `--ki-button-padding-block`: dimension used by the button component for padding block (MarsUI: 4px in every size).
 - `--ki-button-primary-active-overlay`: Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
@@ -172,12 +198,16 @@ None.
 - `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
 - `--ki-button-primary-rest-border-bottom`: color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom).
 - `--ki-button-primary-rest-shadow`: shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default).
+- `--ki-button-primary-selected-bg`: Background of the selected primary button toggle.
+- `--ki-button-primary-selected-fg`: Foreground of the selected primary button toggle.
 - `--ki-button-primary-success-hover-bg`: color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
 - `--ki-button-primary-success-hover-border`: color used by the button component for primary success hover border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-success-hover-fg`: color used by the button component for primary success hover foreground.
 - `--ki-button-primary-success-rest-bg`: color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).
 - `--ki-button-primary-success-rest-border`: color used by the button component for primary success rest border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-success-rest-fg`: color used by the button component for primary success rest foreground.
+- `--ki-button-primary-unselected-bg`: Background of the unselected primary button toggle.
+- `--ki-button-primary-unselected-fg`: Foreground of the unselected primary button toggle.
 - `--ki-button-quaternary-danger-hover-bg`: color used by the button component for quaternary danger hover background.
 - `--ki-button-quaternary-danger-hover-border`: color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-danger-hover-fg`: color used by the button component for quaternary danger hover foreground.
@@ -196,12 +226,16 @@ None.
 - `--ki-button-quaternary-neutral-rest-border`: color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
 - `--ki-button-quaternary-rest-shadow`: value used by the button component for quaternary rest shadow.
+- `--ki-button-quaternary-selected-bg`: Background of the selected quaternary button toggle.
+- `--ki-button-quaternary-selected-fg`: Foreground of the selected quaternary button toggle.
 - `--ki-button-quaternary-success-hover-bg`: color used by the button component for quaternary success hover background.
 - `--ki-button-quaternary-success-hover-border`: color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-success-hover-fg`: color used by the button component for quaternary success hover foreground.
 - `--ki-button-quaternary-success-rest-bg`: color used by the button component for quaternary success rest background.
 - `--ki-button-quaternary-success-rest-border`: color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-success-rest-fg`: color used by the button component for quaternary success rest foreground.
+- `--ki-button-quaternary-unselected-bg`: Background of the unselected quaternary button toggle.
+- `--ki-button-quaternary-unselected-fg`: Foreground of the unselected quaternary button toggle.
 - `--ki-button-secondary-active-overlay`: Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-button-secondary-danger-hover-bg`: color used by the button component for secondary danger hover background.
 - `--ki-button-secondary-danger-hover-border`: color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait).
@@ -223,12 +257,16 @@ None.
 - `--ki-button-secondary-neutral-rest-fg`: color used by the button component for secondary neutral rest foreground (MarsUI text/high_em).
 - `--ki-button-secondary-rest-border-bottom`: color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom).
 - `--ki-button-secondary-rest-shadow`: shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default).
+- `--ki-button-secondary-selected-bg`: Background of the selected secondary button toggle.
+- `--ki-button-secondary-selected-fg`: Foreground of the selected secondary button toggle.
 - `--ki-button-secondary-success-hover-bg`: color used by the button component for secondary success hover background.
 - `--ki-button-secondary-success-hover-border`: color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-hover-fg`: color used by the button component for secondary success hover foreground.
 - `--ki-button-secondary-success-rest-bg`: color used by the button component for secondary success rest background.
 - `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-rest-fg`: color used by the button component for secondary success rest foreground.
+- `--ki-button-secondary-unselected-bg`: Background of the unselected secondary button toggle.
+- `--ki-button-secondary-unselected-fg`: Foreground of the unselected secondary button toggle.
 - `--ki-button-sm-font-size`: dimension used by the button component for sm font size.
 - `--ki-button-sm-gap`: dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text).
 - `--ki-button-sm-height`: dimension used by the button component for sm height.
@@ -266,6 +304,12 @@ None.
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-toggle-backdrop-filter`: Complete backdrop filter for the toggle button.
+- `--ki-button-toggle-bg-image`: Background image layer for the toggle button.
+- `--ki-button-toggle-border`: Border color of the flat toggle button surface.
+- `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
+- `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button.
+- `--ki-button-toggle-shadow`: Resting shadow of the flat toggle button surface.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).
 - `--ki-button-xl-height`: dimension used by the button component for xl height.
