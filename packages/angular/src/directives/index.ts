@@ -25,6 +25,7 @@ export const DIRECTIVES = [
   d.KiScroller,
   d.KiSelect,
   d.KiSpinner,
+  d.KiStat,
   d.KiStatus,
   d.KiSwitch,
   d.KiTab,

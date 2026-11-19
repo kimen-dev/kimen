@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 350 semantic
-and 1191 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 352 semantic
+and 1215 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -61,6 +61,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
 | `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
+| `--ki-effect-component-backdrop-filter-none` | `none` | Complete no-op backdrop filter for flat component surfaces. |
 | `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
 | `--ki-effect-component-primary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow. |
 | `--ki-effect-component-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter. |
@@ -353,6 +354,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
+| `--ki-surface-image-none` | `none` | Flat surfaces carry no background image by default. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
@@ -1482,6 +1484,35 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-spinner-stroke` | `2px` | Stroke width of the small and medium rings. |
 | `--ki-spinner-stroke-lg` | `3px` | Stroke width of the large ring. |
 | `--ki-spinner-track` | `rgba(0, 0, 0, 0.48)` | Ink of the ring track. |
+
+### `ki-stat`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-stat-backdrop-filter` | `none` | Complete optional filter behind the metric surface. |
+| `--ki-stat-bg` | `#f9f7f4` | Raised surface of the metric card. |
+| `--ki-stat-bg-image` | `none` | Optional image layered over the metric surface. |
+| `--ki-stat-border` | `rgba(24, 22, 19, 0.1)` | Subtle metric card outline. |
+| `--ki-stat-border-width` | `1px` | Width of the metric card outline. |
+| `--ki-stat-delta-danger-fg` | `#c21a45` | Ink of an unfavorable comparison. |
+| `--ki-stat-delta-line-height` | `1rem` | Line height of the comparison. |
+| `--ki-stat-delta-neutral-fg` | `#5e5953` | Ink of an unchanged or ungraded comparison. |
+| `--ki-stat-delta-size` | `0.75rem` | Text size of the comparison. |
+| `--ki-stat-delta-success-fg` | `#2c6a2b` | Ink of a favorable comparison. |
+| `--ki-stat-emphasis-weight` | `700` | Weight of the main reading and comparison magnitude. |
+| `--ki-stat-gap` | `0.25rem` | Space between the reading and comparison or chart. |
+| `--ki-stat-label-fg` | `#5e5953` | Ink of the metric label and comparison period. |
+| `--ki-stat-label-line-height` | `1.5rem` | Line height of the metric label. |
+| `--ki-stat-label-size` | `0.8125rem` | Text size of the metric label. |
+| `--ki-stat-padding` | `0.75rem` | Insets around the metric and chart. |
+| `--ki-stat-radius` | `12px` | Corner radius of the metric card. |
+| `--ki-stat-trend-gap` | `0.125rem` | Space between the trend glyph and comparison magnitude. |
+| `--ki-stat-trend-size` | `1rem` | Size of the rising or falling trend glyph. |
+| `--ki-stat-value-fg` | `#181613` | Ink of the main reading. |
+| `--ki-stat-value-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the main reading. |
+| `--ki-stat-value-letter-spacing` | `-0.015em` | Spacing between digits in the main reading. |
+| `--ki-stat-value-line-height` | `1.75rem` | Line height of the main reading. |
+| `--ki-stat-value-size` | `1.375rem` | Size of the main reading. |
 
 ### `ki-status`
 

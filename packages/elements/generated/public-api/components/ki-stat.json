@@ -1,0 +1,463 @@
+{
+  "component": {
+    "attributes": {
+      "delta": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional finite change. Its sign determines the trend and its magnitude is displayed.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "delta-label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized comparison period, such as \"vs last week\".",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "direction": {
+        "default": "'higher-is-better'",
+        "deprecatedSince": null,
+        "description": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+        "replacement": null,
+        "required": false,
+        "type": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\""
+      },
+      "down-label": {
+        "default": "'down'",
+        "deprecatedSince": null,
+        "description": "Localized spoken direction for a negative delta.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized name of the metric, such as \"Median render time\".",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "unit": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Literal suffix for decimal readings, such as \"ms\".",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "up-label": {
+        "default": "'up'",
+        "deprecatedSince": null,
+        "description": "Localized spoken direction for a positive delta.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current finite reading.",
+        "replacement": null,
+        "required": true,
+        "type": "number"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete optional filter behind the metric surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised surface of the metric card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over the metric surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Subtle metric card outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the metric card outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-delta-danger-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of an unfavorable comparison.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-delta-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the comparison.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-delta-neutral-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of an unchanged or ungraded comparison.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-delta-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text size of the comparison.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-delta-success-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a favorable comparison.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-emphasis-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of the main reading and comparison magnitude.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the reading and comparison or chart.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the metric label and comparison period.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the metric label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-label-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text size of the metric label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Insets around the metric and chart.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the metric card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-trend-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the trend glyph and comparison magnitude.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-trend-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the rising or falling trend glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-value-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the main reading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-value-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the main reading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-value-letter-spacing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Spacing between digits in the main reading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-value-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the main reading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stat-value-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the main reading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A key metric with an optional comparison against a reference period.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "card": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The surface containing the metric and chart.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "comparison": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The optional row with delta and reference period.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "delta": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The trend glyph and formatted comparison magnitude.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The visible metric label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "reference": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The visible comparison period.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "trend": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The decorative rising or falling trend glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The formatted current reading and its unit.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "delta": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional finite change. Its sign determines the trend and its magnitude is displayed.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "deltaFormat": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Number-format options for the change. Defaults to format. Set this property to an Intl options object.",
+        "replacement": null,
+        "required": false,
+        "type": "NumberFormatOptions | undefined"
+      },
+      "deltaLabel": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized comparison period, such as \"vs last week\".",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "direction": {
+        "default": "'higher-is-better'",
+        "deprecatedSince": null,
+        "description": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+        "replacement": null,
+        "required": false,
+        "type": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\""
+      },
+      "downLabel": {
+        "default": "'down'",
+        "deprecatedSince": null,
+        "description": "Localized spoken direction for a negative delta.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "format": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Number-format options for the reading. Set this JavaScript property to an Intl options object.",
+        "replacement": null,
+        "required": false,
+        "type": "NumberFormatOptions | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized name of the metric, such as \"Median render time\".",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "unit": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Literal suffix for decimal readings, such as \"ms\".",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "upLabel": {
+        "default": "'up'",
+        "deprecatedSince": null,
+        "description": "Localized spoken direction for a positive delta.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current finite reading.",
+        "replacement": null,
+        "required": true,
+        "type": "number"
+      }
+    },
+    "slots": {
+      "chart": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-stat.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-stat.d.ts",
+    "symbols": {
+      "KiStat": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiStat extends Components.KiStat, HTMLElement {\n}\nexport const KiStat: {\n    prototype: KiStat;\n    new (): KiStat;\n};"
+      },
+      "KiStatDirection": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiStatDirection = 'higher-is-better' | 'lower-is-better' | 'neutral';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-stat.js"
+  }
+}

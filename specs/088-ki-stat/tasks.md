@@ -4,7 +4,7 @@
 - [x] Scaffold the component and commit the unit and browser tests first.
 - [x] Implement number and delta presentation, accessibility and chart projection.
 - [x] Wire theme tokens, inventory, galleries, stories and documentation.
-- [ ] Regenerate public surfaces and declare the API change.
+- [x] Regenerate public surfaces and declare the API change.
 - [ ] Run the local gates and write the PR description.
 - [ ] Integrator runs the three-browser matrix and dispatches Linux visual baselines.
 - [ ] Send the landed commit to re-sync the design-system card.

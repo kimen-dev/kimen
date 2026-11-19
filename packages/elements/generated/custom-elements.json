@@ -7981,6 +7981,368 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-stat.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiStat",
+          "customElement": true,
+          "tagName": "ki-stat",
+          "description": "A key metric with an optional comparison against a reference period.",
+          "whenToUse": "Summarize one numeric metric in a dashboard or report. Set\ndirection to lower-is-better for metrics such as latency and neutral for\nchanges that carry no favorable or unfavorable meaning.",
+          "whenNotToUse": "Present a sequence of readings or inspect multiple data\npoints. Use a chart or table with a text equivalent for that data.",
+          "attributes": [
+            {
+              "name": "delta",
+              "fieldName": "delta",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Optional finite change. Its sign determines the trend and its magnitude is displayed."
+            },
+            {
+              "name": "delta-label",
+              "fieldName": "deltaLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Localized comparison period, such as \"vs last week\"."
+            },
+            {
+              "name": "direction",
+              "fieldName": "direction",
+              "type": {
+                "text": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\""
+              },
+              "default": "'higher-is-better'",
+              "description": "Which direction is favorable for this metric. Use neutral to avoid a judgment."
+            },
+            {
+              "name": "down-label",
+              "fieldName": "downLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'down'",
+              "description": "Localized spoken direction for a negative delta."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized name of the metric, such as \"Median render time\".",
+              "required": true
+            },
+            {
+              "name": "unit",
+              "fieldName": "unit",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Literal suffix for decimal readings, such as \"ms\"."
+            },
+            {
+              "name": "up-label",
+              "fieldName": "upLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'up'",
+              "description": "Localized spoken direction for a positive delta."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Current finite reading.",
+              "required": true
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "delta",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Optional finite change. Its sign determines the trend and its magnitude is displayed.",
+              "attribute": "delta",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "deltaFormat",
+              "privacy": "public",
+              "type": {
+                "text": "NumberFormatOptions | undefined"
+              },
+              "description": "Number-format options for the change. Defaults to format. Set this property to an Intl options object.",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "deltaLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Localized comparison period, such as \"vs last week\".",
+              "attribute": "delta-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "direction",
+              "privacy": "public",
+              "type": {
+                "text": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\""
+              },
+              "default": "'higher-is-better'",
+              "description": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+              "attribute": "direction",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "downLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'down'",
+              "description": "Localized spoken direction for a negative delta.",
+              "attribute": "down-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "privacy": "public",
+              "type": {
+                "text": "NumberFormatOptions | undefined"
+              },
+              "description": "Number-format options for the reading. Set this JavaScript property to an Intl options object.",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized name of the metric, such as \"Median render time\".",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "unit",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Literal suffix for decimal readings, such as \"ms\".",
+              "attribute": "unit",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "upLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'up'",
+              "description": "Localized spoken direction for a positive delta.",
+              "attribute": "up-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "description": "Current finite reading.",
+              "attribute": "value",
+              "reflects": false,
+              "required": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "chart",
+              "description": "An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "card",
+              "description": "The surface containing the metric and chart."
+            },
+            {
+              "name": "comparison",
+              "description": "The optional row with delta and reference period."
+            },
+            {
+              "name": "delta",
+              "description": "The trend glyph and formatted comparison magnitude."
+            },
+            {
+              "name": "label",
+              "description": "The visible metric label."
+            },
+            {
+              "name": "reference",
+              "description": "The visible comparison period."
+            },
+            {
+              "name": "trend",
+              "description": "The decorative rising or falling trend glyph."
+            },
+            {
+              "name": "value",
+              "description": "The formatted current reading and its unit."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-stat-backdrop-filter",
+              "description": "Complete optional filter behind the metric surface."
+            },
+            {
+              "name": "--ki-stat-bg",
+              "description": "Raised surface of the metric card."
+            },
+            {
+              "name": "--ki-stat-bg-image",
+              "description": "Optional image layered over the metric surface."
+            },
+            {
+              "name": "--ki-stat-border",
+              "description": "Subtle metric card outline."
+            },
+            {
+              "name": "--ki-stat-border-width",
+              "description": "Width of the metric card outline."
+            },
+            {
+              "name": "--ki-stat-delta-danger-fg",
+              "description": "Ink of an unfavorable comparison."
+            },
+            {
+              "name": "--ki-stat-delta-line-height",
+              "description": "Line height of the comparison."
+            },
+            {
+              "name": "--ki-stat-delta-neutral-fg",
+              "description": "Ink of an unchanged or ungraded comparison."
+            },
+            {
+              "name": "--ki-stat-delta-size",
+              "description": "Text size of the comparison."
+            },
+            {
+              "name": "--ki-stat-delta-success-fg",
+              "description": "Ink of a favorable comparison."
+            },
+            {
+              "name": "--ki-stat-emphasis-weight",
+              "description": "Weight of the main reading and comparison magnitude."
+            },
+            {
+              "name": "--ki-stat-gap",
+              "description": "Space between the reading and comparison or chart."
+            },
+            {
+              "name": "--ki-stat-label-fg",
+              "description": "Ink of the metric label and comparison period."
+            },
+            {
+              "name": "--ki-stat-label-line-height",
+              "description": "Line height of the metric label."
+            },
+            {
+              "name": "--ki-stat-label-size",
+              "description": "Text size of the metric label."
+            },
+            {
+              "name": "--ki-stat-padding",
+              "description": "Insets around the metric and chart."
+            },
+            {
+              "name": "--ki-stat-radius",
+              "description": "Corner radius of the metric card."
+            },
+            {
+              "name": "--ki-stat-trend-gap",
+              "description": "Space between the trend glyph and comparison magnitude."
+            },
+            {
+              "name": "--ki-stat-trend-size",
+              "description": "Size of the rising or falling trend glyph."
+            },
+            {
+              "name": "--ki-stat-value-fg",
+              "description": "Ink of the main reading."
+            },
+            {
+              "name": "--ki-stat-value-font-family",
+              "description": "Typeface of the main reading."
+            },
+            {
+              "name": "--ki-stat-value-letter-spacing",
+              "description": "Spacing between digits in the main reading."
+            },
+            {
+              "name": "--ki-stat-value-line-height",
+              "description": "Line height of the main reading."
+            },
+            {
+              "name": "--ki-stat-value-size",
+              "description": "Size of the main reading."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiStat",
+          "declaration": {
+            "name": "KiStat",
+            "module": "dist/components/ki-stat.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-stat",
+          "declaration": {
+            "name": "KiStat",
+            "module": "dist/components/ki-stat.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-status.js",
       "declarations": [
         {

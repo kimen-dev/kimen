@@ -2142,9 +2142,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-stat"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-stat": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -4891,6 +4897,395 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-stat/ki-stat.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-stat",
+      "docs": "A key metric with an optional comparison against a reference period.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Summarize one numeric metric in a dashboard or report. Set\ndirection to lower-is-better for metrics such as latency and neutral for\nchanges that carry no favorable or unfavorable meaning."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Present a sequence of readings or inspect multiple data\npoints. Use a chart or table with a text equivalent for that data."
+        },
+        {
+          "name": "slot",
+          "text": "chart - An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+        },
+        {
+          "name": "part",
+          "text": "card - The surface containing the metric and chart."
+        },
+        {
+          "name": "part",
+          "text": "label - The visible metric label."
+        },
+        {
+          "name": "part",
+          "text": "value - The formatted current reading and its unit."
+        },
+        {
+          "name": "part",
+          "text": "comparison - The optional row with delta and reference period."
+        },
+        {
+          "name": "part",
+          "text": "delta - The trend glyph and formatted comparison magnitude."
+        },
+        {
+          "name": "part",
+          "text": "trend - The decorative rising or falling trend glyph."
+        },
+        {
+          "name": "part",
+          "text": "reference - The visible comparison period."
+        }
+      ],
+      "usage": {
+        "examples": "# Stat\n\nUse one stat for one key number. Choose the preference for the metric. Here,\nthe render time went down and the change is favorable.\n\n```html\n<ki-stat\n  label=\"Median render time\"\n  value=\"84\"\n  unit=\"ms\"\n  delta=\"-9\"\n  delta-label=\"vs last week\"\n  direction=\"lower-is-better\"\n></ki-stat>\n```\n\nFor a percentage comparison beside a count, set `deltaFormat` as a property.\nPercent formatting takes a fraction, so 0.12 reads as 12%.\n\n```html\n<ki-stat id=\"active-surfaces\" label=\"Active surfaces\" value=\"1284\" delta=\"0.12\" delta-label=\"vs last week\"></ki-stat>\n```\n\n```js\ndocument.querySelector('#active-surfaces').deltaFormat = { style: 'percent' };\n```\n\nWith no `delta`, the card shows the current value alone. For a trend that carries\nno judgment, use `direction=\"neutral\"`. For an informative sparkline, give the\nchart a text equivalent through its own HTML semantics.\n\n```html\n<ki-stat label=\"Sales\" value=\"750\">\n  <svg slot=\"chart\" role=\"img\" aria-label=\"Sales rose from 680 to 750 this week\" viewBox=\"0 0 80 20\" width=\"80\" height=\"20\">\n    <path d=\"M1 17 L13 11 L27 14 L39 4 L52 8 L67 5 L79 1\" fill=\"none\" stroke=\"currentColor\"></path>\n  </svg>\n</ki-stat>\n```\n"
+      },
+      "props": [
+        {
+          "name": "delta",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "delta",
+          "reflectToAttr": false,
+          "docs": "Optional finite change. Its sign determines the trend and its magnitude is displayed.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "deltaFormat",
+          "type": "NumberFormatOptions | undefined",
+          "complexType": {
+            "original": "Intl.NumberFormatOptions",
+            "resolved": "NumberFormatOptions | undefined",
+            "references": {
+              "Intl": {
+                "location": "global",
+                "id": "global::Intl"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Number-format options for the change. Defaults to format. Set this property to an Intl options object.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "NumberFormatOptions"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "deltaLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "delta-label",
+          "reflectToAttr": false,
+          "docs": "Localized comparison period, such as \"vs last week\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "direction",
+          "type": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\"",
+          "complexType": {
+            "original": "KiStatDirection",
+            "resolved": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\"",
+            "references": {
+              "KiStatDirection": {
+                "location": "local",
+                "path": "src/components/ki-stat/ki-stat.tsx",
+                "id": "src/components/ki-stat/ki-stat.tsx::KiStatDirection"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "direction",
+          "reflectToAttr": false,
+          "docs": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'higher-is-better'"
+            }
+          ],
+          "default": "'higher-is-better'",
+          "values": [
+            {
+              "value": "higher-is-better",
+              "type": "string"
+            },
+            {
+              "value": "lower-is-better",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "downLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "down-label",
+          "reflectToAttr": false,
+          "docs": "Localized spoken direction for a negative delta.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'down'"
+            }
+          ],
+          "default": "'down'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "format",
+          "type": "NumberFormatOptions | undefined",
+          "complexType": {
+            "original": "Intl.NumberFormatOptions",
+            "resolved": "NumberFormatOptions | undefined",
+            "references": {
+              "Intl": {
+                "location": "global",
+                "id": "global::Intl"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Number-format options for the reading. Set this JavaScript property to an Intl options object.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "NumberFormatOptions"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the metric, such as \"Median render time\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "unit",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "unit",
+          "reflectToAttr": false,
+          "docs": "Literal suffix for decimal readings, such as \"ms\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "upLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "up-label",
+          "reflectToAttr": false,
+          "docs": "Localized spoken direction for a positive delta.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'up'"
+            }
+          ],
+          "default": "'up'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current finite reading.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "chart",
+          "docs": "An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+        }
+      ],
+      "parts": [
+        {
+          "name": "card",
+          "docs": "The surface containing the metric and chart."
+        },
+        {
+          "name": "comparison",
+          "docs": "The optional row with delta and reference period."
+        },
+        {
+          "name": "delta",
+          "docs": "The trend glyph and formatted comparison magnitude."
+        },
+        {
+          "name": "label",
+          "docs": "The visible metric label."
+        },
+        {
+          "name": "reference",
+          "docs": "The visible comparison period."
+        },
+        {
+          "name": "trend",
+          "docs": "The decorative rising or falling trend glyph."
+        },
+        {
+          "name": "value",
+          "docs": "The formatted current reading and its unit."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-stat": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-status/ki-status.tsx",
       "encapsulation": "shadow",
       "tag": "ki-status",
@@ -7086,6 +7481,11 @@
       "declaration": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-select/ki-select.tsx"
+    },
+    "src/components/ki-stat/ki-stat.tsx::KiStatDirection": {
+      "declaration": "export type KiStatDirection = 'higher-is-better' | 'lower-is-better' | 'neutral';",
+      "docstring": "",
+      "path": "src/components/ki-stat/ki-stat.tsx"
     },
     "src/components/ki-status/ki-status.tsx::KiStatusTone": {
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
