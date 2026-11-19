@@ -29,6 +29,10 @@ A quiet mark identifies AI-generated content. Where a source explanation is avai
   as major. The gate classifies the changed `KiInput`, loader `Components`
   and loader `JSX` signatures as major.
 
+- **Agent's choice, pending founder confirmation.** Record the positive
+  marginal bundle bytes in the component inventory. The measurements compare
+  identical builds from the assigned base `4e5f36d` and this feature.
+
 ## Scenario family coverage
 
 | Family | Scenarios |

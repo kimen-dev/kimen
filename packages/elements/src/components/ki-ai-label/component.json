@@ -5,5 +5,20 @@
   "pointer": {
     "hoverWitness": false
   },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 12837,
+      "gzip": 3402,
+      "brotli": 2707
+    },
+    "mcpServer": {
+      "raw": 22098,
+      "gzip": 4894,
+      "brotli": 2972
+    },
+    "tokenStylesheets": {
+      "onmars": 208
+    }
+  }
 }
