@@ -1,7 +1,8 @@
 // @spec:070-ki-link
 import tokensCss from '@kimen/tokens/css?raw';
+import pageCss from '@kimen/tokens/css/base?raw';
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
-import { commands, page, userEvent } from 'vitest/browser';
+import { commands, page, server, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement } from '../../../dist/components/ki-link.js';
@@ -14,9 +15,9 @@ const media = commands as unknown as {
 
 beforeAll(() => {
   defineCustomElement();
-  styles.textContent = tokensCss;
+  // Give the entire text run the same typeface and canvas as a consumer page.
+  styles.textContent = `${tokensCss}\n${pageCss}`;
   document.head.append(styles);
-  fixture.style.backgroundColor = 'var(--ki-surface-s0)';
   document.body.append(fixture);
 });
 
@@ -81,18 +82,29 @@ it('S1 preserves the difference between an omitted and an empty destination', as
 });
 
 it('S3 shows keyboard focus under reduced motion and follows the destination with Enter', async () => {
+  const macWebKit = server.browser === 'webkit' && server.platform === 'darwin';
+  const startMarkup = macWebKit
+    ? '<input aria-label="Start">'
+    : '<button tabindex="0">Start</button>';
   fixture.innerHTML =
-    '<button>Start</button><ki-link href="#link-keyboard" underline="hover">Catalog contract</ki-link>' +
+    startMarkup +
+    '<ki-link href="#link-keyboard" underline="hover">Catalog contract</ki-link>' +
     '<section id="link-keyboard">Catalog</section>';
   const part = await anchor();
   const url = location.href;
   await media.emulateReducedMotion('reduce');
   try {
     await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
-    fixture.querySelector('button')?.focus();
-    await userEvent.keyboard('{Tab}');
-    expect(part.getRootNode()).toBeInstanceOf(ShadowRoot);
+    fixture.querySelector<HTMLElement>('input, button')?.focus();
+    if (macWebKit) {
+      // macOS WebKit can skip native links on Tab. Transfer visible focus
+      // from a text input, then test the real anchor's ring and activation.
+      part.focus();
+    } else {
+      await userEvent.keyboard('{Tab}');
+    }
     expect(document.activeElement).toBe(fixture.querySelector('ki-link'));
+    expect(fixture.querySelector('ki-link')?.shadowRoot?.activeElement).toBe(part);
     expect(part.matches(':focus-visible')).toBe(true);
 
     const paint = getComputedStyle(part);

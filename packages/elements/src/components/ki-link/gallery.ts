@@ -10,4 +10,6 @@ export default {
         '<ki-link href="#changelog" variant="neutral" underline="hover">Changelog</ki-link>',
     ),
   ].join(''),
+  // Keep the running-text sample inside the shared audit's mobile viewport.
+  width: 400,
 } satisfies VisualGallery;
