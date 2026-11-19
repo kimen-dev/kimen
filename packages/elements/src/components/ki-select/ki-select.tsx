@@ -9,6 +9,7 @@ import {
   State,
   Watch,
 } from '@stencil/core';
+import { isOutsideOverlay, setOverlayOpen } from '../../utils/anchored-overlay';
 import {
   booleanFromAttributePresence,
   observeAttributePresence,
@@ -316,7 +317,8 @@ export class KiSelect {
     );
     // Removal from the document hides a popover; a select moved while open
     // shows its list again where it lands.
-    this.syncPopover();
+    // Only an explicit opening arms outside-pointer dismiss.
+    setOverlayOpen(this.listboxElement, this.open);
     // disconnectedCallback released the options observer, and the options may
     // have changed while the select was out of the document: a select that is
     // moved (a keyed reorder, a drag between lists) connects again without
@@ -337,7 +339,7 @@ export class KiSelect {
 
   disconnectedCallback(): void {
     this.host.removeEventListener('focusout', this.handleFocusOut);
-    this.detachOutsideListener();
+    document.removeEventListener('pointerdown', this.handleOutsidePointerDown);
     this.mutationObserver?.disconnect();
     this.presenceObserver?.disconnect();
     this.presenceObserver = undefined;
@@ -463,7 +465,7 @@ export class KiSelect {
   };
 
   private readonly handleOutsidePointerDown = (event: PointerEvent): void => {
-    if (!event.composedPath().includes(this.host)) {
+    if (isOutsideOverlay(event, this.host)) {
       this.close();
     }
   };
@@ -624,7 +626,7 @@ export class KiSelect {
 
   private openWithHighlight(index: number): void {
     this.open = true;
-    this.syncPopover();
+    setOverlayOpen(this.listboxElement, this.open);
     this.highlightedIndex = index;
     document.addEventListener('pointerdown', this.handleOutsidePointerDown);
     requestAnimationFrame(() => {
@@ -634,31 +636,8 @@ export class KiSelect {
 
   private close(): void {
     this.open = false;
-    this.syncPopover();
+    setOverlayOpen(this.listboxElement, this.open);
     this.highlightedIndex = -1;
-    this.detachOutsideListener();
-  }
-
-  /**
-   * The list opens in the top layer, so no ancestor's overflow clips it and no
-   * stacking context paints over it. `open` stays the one source of truth:
-   * this only mirrors it into the popover. Shown while still `hidden`, the
-   * list appears once the render it schedules lifts the attribute.
-   */
-  private syncPopover(): void {
-    const listbox = this.listboxElement;
-    if (!listbox?.isConnected || typeof listbox.showPopover !== 'function') {
-      return;
-    }
-    const shown = listbox.matches(':popover-open');
-    if (this.open && !shown) {
-      listbox.showPopover();
-    } else if (!this.open && shown) {
-      listbox.hidePopover();
-    }
-  }
-
-  private detachOutsideListener(): void {
     document.removeEventListener('pointerdown', this.handleOutsidePointerDown);
   }
 
