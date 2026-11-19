@@ -1348,7 +1348,10 @@
                 "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent."
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "deprecatedValues": [
+                "tertiary"
+              ]
             }
           ],
           "members": [
@@ -1454,9 +1457,12 @@
                 "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "attribute": "variant",
-              "reflects": true
+              "reflects": true,
+              "deprecatedValues": [
+                "tertiary"
+              ]
             }
           ],
           "events": [],
@@ -2055,7 +2061,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-hover-bg",
-              "description": "color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "description": "Tertiary alias of the secondary danger hover background."
             },
             {
               "name": "--ki-button-tertiary-danger-hover-border",
@@ -2067,7 +2073,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-rest-bg",
-              "description": "color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "description": "Tertiary alias of the secondary danger rest background."
             },
             {
               "name": "--ki-button-tertiary-danger-rest-border",
@@ -2080,6 +2086,10 @@
             {
               "name": "--ki-button-tertiary-disabled-shadow",
               "description": "value used by the button component for tertiary disabled shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-hover-overlay",
+              "description": "Hover overlay for neutral tertiary buttons, shared with secondary by default."
             },
             {
               "name": "--ki-button-tertiary-hover-shadow",
@@ -2099,7 +2109,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-bg",
-              "description": "color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "description": "Tertiary alias of the secondary neutral hover background."
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-border",
@@ -2107,11 +2117,11 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-fg",
-              "description": "color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+              "description": "Tertiary alias of the secondary neutral hover foreground."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-bg",
-              "description": "color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "description": "Tertiary alias of the secondary neutral rest background."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-border",
@@ -2119,7 +2129,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-fg",
-              "description": "color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+              "description": "Tertiary alias of the secondary neutral rest foreground."
             },
             {
               "name": "--ki-button-tertiary-rest-border-bottom",
@@ -2131,7 +2141,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-hover-bg",
-              "description": "color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "description": "Tertiary alias of the secondary success hover background."
             },
             {
               "name": "--ki-button-tertiary-success-hover-border",
@@ -2143,7 +2153,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-rest-bg",
-              "description": "color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "description": "Tertiary alias of the secondary success rest background."
             },
             {
               "name": "--ki-button-tertiary-success-rest-border",
@@ -3459,7 +3469,10 @@
                 "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent."
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "deprecatedValues": [
+                "tertiary"
+              ]
             }
           ],
           "members": [
@@ -3543,9 +3556,12 @@
                 "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "attribute": "variant",
-              "reflects": true
+              "reflects": true,
+              "deprecatedValues": [
+                "tertiary"
+              ]
             }
           ],
           "events": [],
@@ -4024,7 +4040,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-hover-bg",
-              "description": "color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "description": "Tertiary alias of the secondary danger hover background."
             },
             {
               "name": "--ki-button-tertiary-danger-hover-border",
@@ -4036,7 +4052,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-rest-bg",
-              "description": "color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "description": "Tertiary alias of the secondary danger rest background."
             },
             {
               "name": "--ki-button-tertiary-danger-rest-border",
@@ -4049,6 +4065,10 @@
             {
               "name": "--ki-button-tertiary-disabled-shadow",
               "description": "value used by the button component for tertiary disabled shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-hover-overlay",
+              "description": "Hover overlay for neutral tertiary buttons, shared with secondary by default."
             },
             {
               "name": "--ki-button-tertiary-hover-shadow",
@@ -4068,7 +4088,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-bg",
-              "description": "color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "description": "Tertiary alias of the secondary neutral hover background."
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-border",
@@ -4076,11 +4096,11 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-fg",
-              "description": "color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+              "description": "Tertiary alias of the secondary neutral hover foreground."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-bg",
-              "description": "color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "description": "Tertiary alias of the secondary neutral rest background."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-border",
@@ -4088,7 +4108,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-fg",
-              "description": "color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+              "description": "Tertiary alias of the secondary neutral rest foreground."
             },
             {
               "name": "--ki-button-tertiary-rest-border-bottom",
@@ -4100,7 +4120,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-hover-bg",
-              "description": "color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+              "description": "Tertiary alias of the secondary success hover background."
             },
             {
               "name": "--ki-button-tertiary-success-hover-border",
@@ -4112,7 +4132,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-rest-bg",
-              "description": "color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+              "description": "Tertiary alias of the secondary success rest background."
             },
             {
               "name": "--ki-button-tertiary-success-rest-border",

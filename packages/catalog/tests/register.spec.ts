@@ -58,6 +58,13 @@ describe('createCatalog', () => {
                 slots: { '': ['Uptime 99.99%'] },
               },
             ],
+            footer: [
+              {
+                component: 'ki-button',
+                props: { variant: 'tertiary' },
+                slots: { '': ['View details'] },
+              },
+            ],
           },
         },
         version: 1,

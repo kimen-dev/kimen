@@ -1210,37 +1210,37 @@
   --ki-button-secondary-active-shadow:var(--ki-effect-component-secondary-default-shadow); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-secondary-rest-shadow */
   --ki-button-secondary-active-overlay:var(--ki-surface-pressed-overlay-inverse);
   --ki-button-secondary-disabled-shadow:none;
-  --ki-button-tertiary-neutral-rest-bg:var(--ki-surface-special-light-s0-dark-s2);
+  --ki-button-tertiary-neutral-rest-bg:var(--ki-surface-special-secondary-alpha-base);
   --ki-button-tertiary-neutral-rest-fg:var(--ki-text-high-em);
   --ki-button-tertiary-neutral-rest-border:var(--ki-outline-secondary-button-top);
   --ki-button-tertiary-neutral-hover-bg:var(--ki-surface-special-light-s2-dark-s3);
   --ki-button-tertiary-neutral-hover-fg:var(--ki-text-high-em);
   --ki-button-tertiary-neutral-hover-border:var(--ki-outline-secondary-button-top);
-  --ki-button-tertiary-neutral-active-bg:var(--ki-surface-special-light-s2-dark-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-rest-bg */
-  --ki-button-tertiary-neutral-active-fg:var(--ki-text-supporting); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-rest-fg */
+  --ki-button-tertiary-neutral-active-bg:var(--ki-surface-special-secondary-alpha-base); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-rest-bg */
+  --ki-button-tertiary-neutral-active-fg:var(--ki-text-high-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-rest-fg */
   --ki-button-tertiary-neutral-active-border:var(--ki-outline-secondary-button-top); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-rest-border */
   --ki-button-tertiary-neutral-disabled-bg:var(--ki-surface-disabled-low-em);
   --ki-button-tertiary-neutral-disabled-fg:var(--ki-text-muted);
   --ki-button-tertiary-neutral-disabled-border:var(--ki-outline-none);
-  --ki-button-tertiary-success-rest-bg:var(--ki-surface-special-light-s0-dark-s2);
+  --ki-button-tertiary-success-rest-bg:var(--ki-surface-success-base-em);
   --ki-button-tertiary-success-rest-fg:var(--ki-text-success-high-em);
   --ki-button-tertiary-success-rest-border:var(--ki-outline-secondary-button-top);
-  --ki-button-tertiary-success-hover-bg:var(--ki-surface-special-light-s1-dark-s2);
+  --ki-button-tertiary-success-hover-bg:var(--ki-surface-success-low-em);
   --ki-button-tertiary-success-hover-fg:var(--ki-text-success-high-em);
   --ki-button-tertiary-success-hover-border:var(--ki-outline-secondary-button-top);
-  --ki-button-tertiary-success-active-bg:var(--ki-surface-special-light-s2-dark-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-success-rest-bg */
+  --ki-button-tertiary-success-active-bg:var(--ki-surface-success-low-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-success-rest-bg */
   --ki-button-tertiary-success-active-fg:var(--ki-text-success-high-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-success-rest-fg */
   --ki-button-tertiary-success-active-border:var(--ki-outline-secondary-button-top); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-success-rest-border */
   --ki-button-tertiary-success-disabled-bg:var(--ki-surface-disabled-low-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-disabled-bg */
   --ki-button-tertiary-success-disabled-fg:var(--ki-text-muted); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-disabled-fg */
   --ki-button-tertiary-success-disabled-border:var(--ki-outline-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-disabled-border */
-  --ki-button-tertiary-danger-rest-bg:var(--ki-surface-special-light-s0-dark-s2);
+  --ki-button-tertiary-danger-rest-bg:var(--ki-surface-danger-base-em);
   --ki-button-tertiary-danger-rest-fg:var(--ki-text-danger-high-em);
   --ki-button-tertiary-danger-rest-border:var(--ki-outline-secondary-button-top);
-  --ki-button-tertiary-danger-hover-bg:var(--ki-surface-special-light-s1-dark-s2);
+  --ki-button-tertiary-danger-hover-bg:var(--ki-surface-danger-low-em);
   --ki-button-tertiary-danger-hover-fg:var(--ki-text-danger-high-em);
   --ki-button-tertiary-danger-hover-border:var(--ki-outline-secondary-button-top);
-  --ki-button-tertiary-danger-active-bg:var(--ki-surface-special-light-s2-dark-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-danger-rest-bg */
+  --ki-button-tertiary-danger-active-bg:var(--ki-surface-danger-low-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-danger-rest-bg */
   --ki-button-tertiary-danger-active-fg:var(--ki-text-danger-high-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-danger-rest-fg */
   --ki-button-tertiary-danger-active-border:var(--ki-outline-secondary-button-top); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-danger-rest-border */
   --ki-button-tertiary-danger-disabled-bg:var(--ki-surface-disabled-low-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-neutral-disabled-bg */
@@ -1249,6 +1249,7 @@
   --ki-button-tertiary-rest-shadow:var(--ki-effect-component-secondary-default-shadow);
   --ki-button-tertiary-rest-border-bottom:var(--ki-outline-secondary-button-bottom);
   --ki-button-tertiary-hover-shadow:var(--ki-effect-component-secondary-hover-shadow);
+  --ki-button-tertiary-hover-overlay:var(--ki-surface-hover-overlay-inverse);
   --ki-button-tertiary-active-shadow:var(--ki-effect-component-secondary-default-shadow); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-rest-shadow */
   --ki-button-tertiary-disabled-shadow:none;
   --ki-button-quaternary-neutral-rest-bg:var(--ki-transparent-inverse);

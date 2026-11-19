@@ -598,13 +598,14 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
   // Issue #342 adds ten full-filter tokens: two semantic and eight component.
   // 1264 + 10 = 1274.
+  // Issue #344 adds the tertiary hover overlay. 1274 + 1 = 1275.
   // Issue #341 adds the emphasized-out curve, two inverse tooltip colors,
-  // and the flat elevation role. 1274 + 4 = 1278.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1278);
+  // and the flat elevation role. 1275 + 4 = 1279.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1279);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1278,
+    1279,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),

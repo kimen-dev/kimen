@@ -11,6 +11,8 @@ import {
   type CatalogPropConstraint,
   catalogData,
   NATIVE_PRIMITIVE_TAGS,
+  renderUiSpec,
+  validateUiSpec,
 } from '../src/index.js';
 
 interface ManifestDeclaration {
@@ -69,16 +71,29 @@ describe('catalog derivation', () => {
     }
   });
 
-  it('S2 closes ki-button variant over exactly the five documented values', () => {
-    const variant = catalogData.components['ki-button'].props.variant;
+  it('S2 closes ki-button tone over exactly the three documented values', () => {
+    const tone = catalogData.components['ki-button'].props.tone;
+    expect(tone.type).toBe('enum');
+    expect([...tone.values].sort()).toEqual(['danger', 'neutral', 'success']);
+  });
+
+  it.each([
+    ['ki-button', 'S18'],
+    ['ki-icon-button', 'S17'],
+  ] as const)('S23 %s %s offers four variants and preserves specs using tertiary', (component) => {
+    const variant = catalogData.components[component].props.variant;
     expect(variant.type).toBe('enum');
-    expect([...variant.values].sort()).toEqual([
-      'ghost',
-      'primary',
-      'quaternary',
-      'secondary',
-      'tertiary',
-    ]);
+    expect([...variant.values].sort()).toEqual(['ghost', 'primary', 'quaternary', 'secondary']);
+
+    const props =
+      component === 'ki-icon-button'
+        ? { label: 'Close', variant: 'tertiary' }
+        : { variant: 'tertiary' };
+    const spec = { root: { component, props }, version: 1 };
+    expect(validateUiSpec(spec)).toEqual({ issues: [], ok: true });
+    const surface = document.createElement('div');
+    expect(renderUiSpec(spec, { surface }).ok).toBe(true);
+    expect(surface.firstElementChild?.getAttribute('variant')).toBe('tertiary');
   });
 
   it('S3 carries when-to-use and when-not-to-use guidance verbatim from the manifest', () => {

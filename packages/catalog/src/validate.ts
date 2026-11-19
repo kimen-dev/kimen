@@ -30,8 +30,10 @@ import { isUrlProp, urlViolation } from './url-policy.js';
 /** One prop constraint, exactly as narrow as the manifest documents. */
 export interface CatalogPropConstraint {
   readonly type: 'boolean' | 'enum' | 'number' | 'string';
-  /** Closed value set (present exactly when `type` is `enum`). */
+  /** Closed value set offered to authors (present exactly when `type` is `enum`). */
   readonly values?: readonly string[];
+  /** Deprecated enum values accepted when validating existing specs. */
+  readonly deprecatedValues?: readonly string[];
   /** Documented values of a deliberately open string union (agent guidance). */
   readonly documentedValues?: readonly string[];
   readonly default?: boolean | number | string;
@@ -471,6 +473,14 @@ function checkUrl(
   }
 }
 
+export function acceptsEnumValue(value: unknown, constraint: CatalogPropConstraint): boolean {
+  return (
+    typeof value === 'string' &&
+    (constraint.values?.includes(value) === true ||
+      constraint.deprecatedValues?.includes(value) === true)
+  );
+}
+
 function checkProp(
   component: string,
   name: string,
@@ -505,7 +515,7 @@ function checkProp(
     }
     case 'enum': {
       const values = constraint.values ?? [];
-      if (typeof value !== 'string' || !values.includes(value)) {
+      if (!acceptsEnumValue(value, constraint)) {
         issues.push({
           code: 'invalid-prop-type',
           message: `${component} prop "${name}" expects one of ${values

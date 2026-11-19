@@ -1,12 +1,12 @@
 {
   "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
   "baselineVersion": "0.0.0",
-  "candidateSha256": "8908471b950645ea6bb08ce45ac8a470752da91cd4b56ee3f462f2bf8729380a",
+  "candidateSha256": "4bc3b9fbeca8c50aab94f77c648958e0ab3475584470c799cf0a2e8d60a1a76c",
   "packages": [
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Issue #341 and spec 060 port Calma to onmars, changing its resolved palette, surface, type, motion and component tokens. It uses the merged solid background, complete backdrop filter and heading typography controls for the Calma defaults. Existing Material 3 token values stay byte-identical after resolution against main. Adds --ki-motion-easing-emphasized-out, --ki-surface-tooltip-inverse, --ki-text-tooltip-inverse and --ki-elevation-none. Deprecates --ki-motion-easing-spring in 0.1.0 for removal in 1.0.0 per spec 041 and moves the checkbox and radio CSS references to its replacement. This cumulative declaration supersedes 342-backdrop-filter-token and carries forward its declared changes and the earlier declarations it supersedes. In particular, #342 adds two semantic and eight component complete-filter tokens and retains seven deprecated lengths for migration with their legacy glass behavior. Material 3 retains its standard zero-radius filter. Calma and reduced transparency use none for the complete backdrop effects. The cumulative effective-value and API changes classify as MAJOR since baseline 0.0.0. No package is published.",
+  "reason": "Issue #341 and spec 060 port Calma to onmars, changing its resolved palette, surface, type, motion and component tokens. Calma uses the merged solid background, complete backdrop filter and heading typography controls. Existing Material 3 token values stay byte-identical after resolution against main. Adds --ki-motion-easing-emphasized-out, --ki-surface-tooltip-inverse, --ki-text-tooltip-inverse and --ki-elevation-none. Deprecates --ki-motion-easing-spring in 0.1.0 for removal in 1.0.0 per spec 041 and moves the checkbox and radio CSS references to its replacement. This declaration supersedes 344-button-hierarchy and carries its declared changes and those of earlier declarations. It retains the new --ki-button-tertiary-hover-overlay, the secondary defaults for the deprecated tertiary variant in onmars, the development-only warnings, and the distinct Material 3 tertiary style. The catalog recommends four roles and accepts the legacy variant. Issue #342 adds two semantic and eight component full-filter tokens and keeps seven deprecated lengths available with the legacy glass effects. Material 3 retains its standard zero-radius filter. Calma and reduced transparency use none for the complete backdrop effects. The cumulative effective-value and API changes classify as MAJOR since baseline 0.0.0. No package is published.",
   "release": "major",
   "schemaVersion": 1
 }

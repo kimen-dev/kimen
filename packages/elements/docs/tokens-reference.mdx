@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 330 semantic
-and 948 component tokens. Values are the resolved **onmars light**
+and 949 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -821,44 +821,45 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-spinner-duration` | `1600ms` | duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference. |
 | `--ki-button-spinner-stroke-width` | `0.125rem` | dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width). |
 | `--ki-button-tertiary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-rest-shadow. shadow used by the button component for tertiary active shadow (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-button-tertiary-danger-active-bg` | `#f3f0eb` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-bg. color used by the button component for tertiary danger active background (MarsUI defines no pressed state; one step beyond hover in both schemes). |
+| `--ki-button-tertiary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-bg. Tertiary alias of the secondary danger active background. |
 | `--ki-button-tertiary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-border. color used by the button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-danger-active-fg` | `#c21a45` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-fg. color used by the button component for tertiary danger active foreground. |
 | `--ki-button-tertiary-danger-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-bg. color used by the button component for tertiary danger disabled background. |
 | `--ki-button-tertiary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-border. color used by the button component for tertiary danger disabled border. |
 | `--ki-button-tertiary-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-fg. color used by the button component for tertiary danger disabled foreground. |
-| `--ki-button-tertiary-danger-hover-bg` | `#f9f7f4` | color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover). |
+| `--ki-button-tertiary-danger-hover-bg` | `#ffebec` | Tertiary alias of the secondary danger hover background. |
 | `--ki-button-tertiary-danger-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-danger-hover-fg` | `#c21a45` | color used by the button component for tertiary danger hover foreground. |
-| `--ki-button-tertiary-danger-rest-bg` | `#ffffff` | color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark). |
+| `--ki-button-tertiary-danger-rest-bg` | `#fff3f3` | Tertiary alias of the secondary danger rest background. |
 | `--ki-button-tertiary-danger-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-danger-rest-fg` | `#c21a45` | color used by the button component for tertiary danger rest foreground. |
 | `--ki-button-tertiary-disabled-shadow` | `none` | value used by the button component for tertiary disabled shadow. |
+| `--ki-button-tertiary-hover-overlay` | `rgba(0, 0, 0, 0.03)` | Hover overlay for neutral tertiary buttons, shared with secondary by default. |
 | `--ki-button-tertiary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover). |
-| `--ki-button-tertiary-neutral-active-bg` | `#f3f0eb` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-bg. color used by the button component for tertiary neutral active background (MarsUI defines no pressed state; one step beyond hover in both schemes). |
+| `--ki-button-tertiary-neutral-active-bg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-bg. Tertiary alias of the secondary neutral active background. |
 | `--ki-button-tertiary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-border. color used by the button component for tertiary neutral active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-button-tertiary-neutral-active-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-fg. color used by the button component for tertiary neutral active foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative). |
+| `--ki-button-tertiary-neutral-active-fg` | `#181613` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-fg. Tertiary alias of the secondary neutral active foreground. |
 | `--ki-button-tertiary-neutral-disabled-bg` | `#ebe7e1` | color used by the button component for tertiary neutral disabled background. |
 | `--ki-button-tertiary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for tertiary neutral disabled border. |
 | `--ki-button-tertiary-neutral-disabled-fg` | `#5e5953` | color used by the button component for tertiary neutral disabled foreground. |
-| `--ki-button-tertiary-neutral-hover-bg` | `#f3f0eb` | color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover). |
+| `--ki-button-tertiary-neutral-hover-bg` | `#f3f0eb` | Tertiary alias of the secondary neutral hover background. |
 | `--ki-button-tertiary-neutral-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-button-tertiary-neutral-hover-fg` | `#181613` | color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative). |
-| `--ki-button-tertiary-neutral-rest-bg` | `#ffffff` | color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark). |
+| `--ki-button-tertiary-neutral-hover-fg` | `#181613` | Tertiary alias of the secondary neutral hover foreground. |
+| `--ki-button-tertiary-neutral-rest-bg` | `#ffffff` | Tertiary alias of the secondary neutral rest background. |
 | `--ki-button-tertiary-neutral-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-button-tertiary-neutral-rest-fg` | `#181613` | color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative). |
+| `--ki-button-tertiary-neutral-rest-fg` | `#181613` | Tertiary alias of the secondary neutral rest foreground. |
 | `--ki-button-tertiary-rest-border-bottom` | `rgba(24, 22, 19, 0.14)` | color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary). |
 | `--ki-button-tertiary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override). |
-| `--ki-button-tertiary-success-active-bg` | `#f3f0eb` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-bg. color used by the button component for tertiary success active background (MarsUI defines no pressed state; one step beyond hover in both schemes). |
+| `--ki-button-tertiary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-bg. Tertiary alias of the secondary success active background. |
 | `--ki-button-tertiary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-border. color used by the button component for tertiary success active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-fg. color used by the button component for tertiary success active foreground. |
 | `--ki-button-tertiary-success-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-bg. color used by the button component for tertiary success disabled background. |
 | `--ki-button-tertiary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-border. color used by the button component for tertiary success disabled border. |
 | `--ki-button-tertiary-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-fg. color used by the button component for tertiary success disabled foreground. |
-| `--ki-button-tertiary-success-hover-bg` | `#f9f7f4` | color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover). |
+| `--ki-button-tertiary-success-hover-bg` | `#e3f6e2` | Tertiary alias of the secondary success hover background. |
 | `--ki-button-tertiary-success-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-hover-fg` | `#2c6a2b` | color used by the button component for tertiary success hover foreground. |
-| `--ki-button-tertiary-success-rest-bg` | `#ffffff` | color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark). |
+| `--ki-button-tertiary-success-rest-bg` | `#f4faf3` | Tertiary alias of the secondary success rest background. |
 | `--ki-button-tertiary-success-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-rest-fg` | `#2c6a2b` | color used by the button component for tertiary success rest foreground. |
 | `--ki-button-xl-font-size` | `1.125rem` | dimension used by the button component for xl font size. |

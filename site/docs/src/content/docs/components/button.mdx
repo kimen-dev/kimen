@@ -22,17 +22,20 @@ Onmars uses four visual roles. `secondary` is the default.
 | --- | --- |
 | `primary` | Filled button for the main action |
 | `secondary` | Outlined surface for supporting actions |
-| `tertiary` | Shares the outlined role with `secondary` |
 | `quaternary` | Neutral text for quiet actions |
 | `ghost` | Accent text for actions that need a little more emphasis |
 
 <Demo
   code={`<ki-button variant="primary">Primary</ki-button>
 <ki-button variant="secondary">Secondary</ki-button>
-<ki-button variant="tertiary">Tertiary</ki-button>
 <ki-button variant="quaternary">Quaternary</ki-button>
 <ki-button variant="ghost">Ghost</ki-button>`}
 />
+
+`tertiary` is deprecated. Use `secondary` for new buttons. Existing
+`tertiary` buttons share the `secondary` appearance in onmars and keep
+their legacy appearance in Material 3. Development builds warn when
+the deprecated variant is used.
 
 ### Tones
 
