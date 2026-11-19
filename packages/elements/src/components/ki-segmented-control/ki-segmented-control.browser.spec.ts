@@ -5,6 +5,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement as defineSegment } from '../../../dist/components/ki-segment.js';
 import { defineCustomElement as defineGroup } from '../../../dist/components/ki-segmented-control.js';
+import { defineCustomElement as defineTooltip } from '../../../dist/components/ki-tooltip.js';
 
 const media = commands as unknown as {
   ariaSnapshotByRole: (role: 'radiogroup', name: string) => Promise<string>;
@@ -54,8 +55,8 @@ async function mount(markup: string) {
 }
 
 function listenForChanges(control: HTMLElement) {
-  const listener = vi.fn<(event: CustomEvent<{ value: string }>) => void>();
-  control.addEventListener('ki-change', listener as EventListener);
+  const listener = vi.fn<(event: Event) => void>();
+  control.addEventListener('ki-change', listener);
   return listener;
 }
 
@@ -80,7 +81,7 @@ it('S2 applies a pointer choice once and ignores repeated and disabled activatio
   await expect.element(radio('Week')).not.toBeChecked();
   expect(control.value).toBe('month');
   expect(changes).toHaveBeenCalledTimes(1);
-  expect(changes.mock.calls[0]?.[0].detail).toEqual({ value: 'month' });
+  expect(changes.mock.calls[0]?.[0]).toMatchObject({ detail: { value: 'month' } });
 });
 
 it('S3 tabs in on the selection and out in one more step', async () => {
@@ -90,7 +91,7 @@ it('S3 tabs in on the selection and out in one more step', async () => {
   (page.getByRole('textbox', { name: 'Before' }).element() as HTMLInputElement).focus();
 
   await userEvent.keyboard('{Tab}');
-  await expect.element(radio('Week')).toHaveFocus();
+  await expect.poll(() => radio('Week').element().matches(':focus')).toBe(true);
   await userEvent.keyboard('{Tab}');
   await expect.element(page.getByRole('textbox', { name: 'After' })).toHaveFocus();
   expect(changes).not.toHaveBeenCalled();
@@ -106,10 +107,10 @@ it('S4 wraps arrow navigation past a disabled option while selecting and focusin
 
   await userEvent.keyboard('{ArrowRight}');
 
-  await expect.element(radio('Day')).toHaveFocus();
+  await expect.poll(() => radio('Day').element().matches(':focus')).toBe(true);
   await expect.element(radio('Day')).toBeChecked();
   expect(changes).toHaveBeenCalledTimes(1);
-  expect(changes.mock.calls[0]?.[0].detail).toEqual({ value: 'day' });
+  expect(changes.mock.calls[0]?.[0]).toMatchObject({ detail: { value: 'day' } });
 });
 
 it.each(['{Enter}', '[Space]'])('S4 activates a focused option with %s', async (key) => {
@@ -125,6 +126,7 @@ it.each(['{Enter}', '[Space]'])('S4 activates a focused option with %s', async (
 });
 
 it('S5 exposes named radios and a group, shows the icon tooltip and passes axe', async () => {
+  defineTooltip();
   await mount(`<ki-segmented-control label="View" value="board">
     <ki-segment value="list">List</ki-segment>
     <ki-segment value="board" aria-label="Board">
@@ -144,14 +146,16 @@ it('S5 exposes named radios and a group, shows the icon tooltip and passes axe',
 
   await userEvent.keyboard('{Escape}');
   await expect.element(page.getByRole('tooltip')).not.toBeInTheDocument();
-  await expect.element(board).toHaveFocus();
+  await expect.poll(() => board.element().matches(':focus')).toBe(true);
 });
 
 it('S6 contributes no form value and clicking a segment does not submit', async () => {
   await mount(`<form><label>Query<input name="query" value="forecast"></label>${group()}</form>`);
   const form = fixture.querySelector('form');
   if (!form) throw new Error('Missing form fixture');
-  const submit = vi.fn((event: Event) => { event.preventDefault(); });
+  const submit = vi.fn((event: Event) => {
+    event.preventDefault();
+  });
   form.addEventListener('submit', submit);
 
   await radio('Month').click();
@@ -233,7 +237,7 @@ it('S10 reverses horizontal arrow navigation in RTL', async () => {
 
   await userEvent.keyboard('{ArrowRight}');
 
-  await expect.element(radio('Day')).toHaveFocus();
+  await expect.poll(() => radio('Day').element().matches(':focus')).toBe(true);
   await expect.element(radio('Day')).toBeChecked();
 });
 

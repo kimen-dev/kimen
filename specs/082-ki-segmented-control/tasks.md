@@ -1,8 +1,8 @@
 # Tasks for ki-segmented-control
 
 - [x] Author the behavior contract.
-- [ ] Scaffold both tags and commit the browser and logic tests.
-- [ ] Implement accessible selection, theme tokens, stories and documentation.
+- [x] Scaffold both tags and commit the browser and logic tests.
+- [x] Implement accessible selection, theme tokens, stories and documentation.
 - [ ] Regenerate and verify public artifacts and run local checks.
 - [ ] Run the Chromium, Firefox and WebKit suites and generate Linux baselines in CI.
 - [ ] Re-sync the design-system card from the reviewed implementation commit.

@@ -1,0 +1,134 @@
+{
+  "ki": {
+    "segmented": {
+      "track-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Solid surface for the segment track."
+      },
+      "track-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the track surface."
+      },
+      "track-backdrop-filter": {
+        "$value": "{ki.effect.backdrop-filter-none}",
+        "$description": "Complete CSS backdrop filter behind the track."
+      },
+      "track-padding": {
+        "$value": "{ki.control.track-inset}",
+        "$description": "Inset between the track and its segments."
+      },
+      "track-gap": {
+        "$value": "{ki.control.track-inset}",
+        "$description": "Gap between adjacent segments."
+      },
+      "radius": {
+        "$value": "{ki.control.radius.track}",
+        "$description": "Corner radius of the control track."
+      },
+      "item-radius": {
+        "$value": "{ki.control.radius.item}",
+        "$description": "Corner radius of each segment."
+      },
+      "item-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Resting surface of an unselected segment, matching the track by default."
+      },
+      "item-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over an unselected segment surface."
+      },
+      "item-backdrop-filter": {
+        "$value": "{ki.effect.backdrop-filter-none}",
+        "$description": "Complete CSS backdrop filter behind an unselected segment."
+      },
+      "item-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Resting ink of an unselected segment, strengthened in contrast-more."
+      },
+      "item-disabled-fg": {
+        "$value": "{ki.text.low-em}",
+        "$description": "Ink of an unavailable segment."
+      },
+      "selected-bg": {
+        "$value": "{ki.surface.special.light-s0-dark-s4}",
+        "$description": "Raised selected surface, lighter than the track in both schemes."
+      },
+      "selected-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the selected segment."
+      },
+      "selected-backdrop-filter": {
+        "$value": "{ki.effect.backdrop-filter-none}",
+        "$description": "Complete CSS backdrop filter behind the selected segment."
+      },
+      "selected-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink of the selected segment."
+      },
+      "selected-shadow": {
+        "$value": "{ki.elevation.e1}",
+        "$description": "Elevation of the selected segment."
+      },
+      "selected-border-color": {
+        "$value": "{ki.outline.strong}",
+        "$description": "High-contrast selection boundary when elevation or surface differences are subtle."
+      },
+      "selected-border-width": {
+        "$value": "{ki.control.border-width}",
+        "$description": "Width of the selection boundary."
+      }
+    },
+    "segmented-control": {
+      "track-size-xs": {
+        "$value": "{ki.control.size.xs}",
+        "$description": "Extra-small track height before density adjustment."
+      },
+      "track-size-sm": {
+        "$value": "{ki.control.size.sm}",
+        "$description": "Small track height before density adjustment."
+      },
+      "track-size-md": {
+        "$value": "{ki.control.size.md}",
+        "$description": "Medium track height before density adjustment."
+      }
+    },
+    "segment": {
+      "padding-inline": {
+        "$value": "{ki.spacing.block}",
+        "$description": "Inline padding of a medium or small segment."
+      },
+      "padding-inline-xs": {
+        "$value": "{ki.spacing.inline}",
+        "$description": "Inline padding of an extra-small segment."
+      },
+      "icon-size": {
+        "$value": "{ki.glyph.size.sm}",
+        "$description": "Size of leading artwork."
+      },
+      "gap": {
+        "$value": "{ki.control.icon-gap}",
+        "$description": "Gap between the leading icon and label."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Text size of medium and small segments."
+      },
+      "font-size-xs": {
+        "$value": "{ki.typography.size.caption-2}",
+        "$description": "Text size of extra-small segments."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Line height of medium and small segments."
+      },
+      "line-height-xs": {
+        "$value": "{ki.typography.line-height.caption-2}",
+        "$description": "Line height of extra-small segments."
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "Font weight of segment labels."
+      }
+    }
+  }
+}

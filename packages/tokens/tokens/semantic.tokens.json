@@ -1,6 +1,11 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$type": "other",
+        "$value": "none",
+        "$description": "A solid surface without a background image."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1099,6 +1104,11 @@
       }
     },
     "effect": {
+      "backdrop-filter-none": {
+        "$type": "other",
+        "$value": "none",
+        "$description": "No filter behind a solid surface."
+      },
       "component": {
         "backdrop-blur": {
           "$type": "dimension",
@@ -1536,6 +1546,49 @@
       "block": {
         "$value": "{ki.space.xl}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
+      }
+    },
+    "control": {
+      "size": {
+        "$type": "dimension",
+        "xs": {
+          "$value": "{ki.space.9xl}",
+          "$description": "Extra-small control track height, 28 CSS px at the default root size."
+        },
+        "sm": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Small control track height, 32 CSS px at the default root size."
+        },
+        "md": {
+          "$value": "{ki.space.12xl}",
+          "$description": "Medium control track height, 40 CSS px at the default root size."
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "track": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "Corner radius of a track containing adjacent controls."
+        },
+        "item": {
+          "$value": "{ki.radius.component.sm}",
+          "$description": "Corner radius of an individual control inside a track."
+        }
+      },
+      "track-inset": {
+        "$type": "dimension",
+        "$value": "{ki.space.xxs}",
+        "$description": "Inset and spacing between adjacent controls inside a track."
+      },
+      "icon-gap": {
+        "$type": "dimension",
+        "$value": "{ki.space.sm}",
+        "$description": "Separation between a control label and its leading icon."
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Stroke width of the boundary of a compact control."
       }
     },
     "glyph": {

@@ -13,11 +13,11 @@ it('composes segment slots and relays the declared change from the group', () =>
       root: {
         component: 'ki-segmented-control',
         action: 'pick',
-        props: { label: 'View', value: 'list', size: 'sm', fullWidth: true },
+        props: { label: 'View', value: 'list', size: 'sm', 'full-width': true },
         slots: {
           '': [
             { component: 'ki-segment', props: { value: 'list' }, slots: { '': ['List'] } },
-            { component: 'ki-segment', props: { value: 'board', accessibleLabel: 'Board' } },
+            { component: 'ki-segment', props: { value: 'board', 'aria-label': 'Board' } },
           ],
         },
       },
@@ -34,6 +34,8 @@ it('composes segment slots and relays the declared change from the group', () =>
   const board = group?.querySelector('ki-segment:last-child');
   if (!group || !board) throw new Error('Missing segment composition');
 
+  expect(board.getAttribute('aria-label')).toBe('Board');
+
   board.dispatchEvent(new CustomEvent('ki-change', { bubbles: true, detail: { value: 'board' } }));
   expect(onAction).not.toHaveBeenCalled();
 
@@ -41,7 +43,7 @@ it('composes segment slots and relays the declared change from the group', () =>
   group.dispatchEvent(new CustomEvent('ki-change', { bubbles: true, detail: { value: 'board' } }));
   expect(onAction).toHaveBeenCalledExactlyOnceWith({
     action: 'pick',
-    data: { label: 'View', value: 'board', size: 'sm', fullWidth: true },
+    data: { label: 'View', value: 'board', size: 'sm', 'full-width': true },
     path: 'root',
   });
 });
