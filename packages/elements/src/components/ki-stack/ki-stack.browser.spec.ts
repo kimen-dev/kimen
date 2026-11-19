@@ -69,6 +69,14 @@ it('S2 gives a growing child the available space and wraps at the host width', a
   expect(bounds(stack.lastElementChild).top).toBe(bounds(stack.firstElementChild).bottom);
 });
 
+it('gives a growing column child room within a definite host block size', async () => {
+  const stack = mount(`<ki-stack style="block-size:120px" gap="zero">${tiles}</ki-stack>`);
+  stack.firstElementChild?.setAttribute('data-grow', '');
+
+  await expect.poll(() => bounds(stack.firstElementChild).height).toBe(88);
+  expect(bounds(stack.lastElementChild).bottom).toBe(bounds(stack).bottom);
+});
+
 it('aligns a row on the cross axis and distributes space on the main axis', async () => {
   const stack = mount(
     '<ki-stack style="inline-size:300px" direction="row" align="center" justify="between"><div style="block-size:50px">Tall</div><div style="block-size:20px">Short</div></ki-stack>',

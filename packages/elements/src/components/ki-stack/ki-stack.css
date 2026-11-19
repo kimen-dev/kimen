@@ -1,0 +1,65 @@
+:host {
+  --ki-stack-gap: var(--ki-layout-spacing-md);
+
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="stack"] {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: start;
+  gap: var(--ki-stack-gap);
+}
+
+slot {
+  display: contents;
+}
+
+:host([direction="row"]) [part="stack"] {
+  flex-direction: row;
+}
+
+:host([wrap]) [part="stack"] {
+  flex-wrap: wrap;
+}
+
+:host([align="start"]) [part="stack"] {
+  align-items: start;
+}
+
+:host([align="center"]) [part="stack"] {
+  align-items: center;
+}
+
+:host([align="end"]) [part="stack"] {
+  align-items: end;
+}
+
+:host([align="baseline"]) [part="stack"] {
+  align-items: baseline;
+}
+
+:host([justify="center"]) [part="stack"] {
+  justify-content: center;
+}
+
+:host([justify="end"]) [part="stack"] {
+  justify-content: end;
+}
+
+:host([justify="between"]) [part="stack"] {
+  justify-content: space-between;
+}
+
+::slotted([data-grow]) {
+  flex-grow: 1;
+}

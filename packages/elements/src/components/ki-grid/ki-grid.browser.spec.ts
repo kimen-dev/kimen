@@ -86,6 +86,14 @@ it('reflows immediately without motion when the user requests reduced motion', a
 
   grid.style.inlineSize = '16rem';
 
-  await expect.poll(() => item(grid, 1).top).toBeGreaterThan(item(grid, 0).top);
+  await expect.poll(() => item(grid, 0).width).toBe(256);
   expect(grid.getAnimations({ subtree: true })).toHaveLength(0);
+});
+
+it('keeps the track measurement out of a scrollport with mixed direction', async () => {
+  const grid = mount('dir="rtl" min-column="100rem" style="inline-size:10rem"');
+  await expect.poll(() => item(grid, 0).width).toBe(160);
+
+  expect(grid.scrollWidth).toBe(grid.clientWidth);
+  expect(fixture.scrollWidth).toBe(fixture.clientWidth);
 });

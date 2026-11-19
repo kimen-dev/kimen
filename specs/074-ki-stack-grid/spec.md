@@ -28,7 +28,7 @@ The public API and fallbacks are in [the layout contract](contracts/layout.md).
   cannot backfill gaps ahead of earlier items.
 - Agent's choice, pending founder confirmation. Use the non-negative spacing
   scale, from `zero` through `26xl`. Unknown gap steps and direction or
-  alignment values resolve to the documented defaults. Invalid column counts
+  alignment values resolve to the documented defaults. Invalid numeric column counts
   use auto-fill, and invalid minimums use the theme default.
 - Agent's choice, pending founder confirmation. In a stack, presence of
   `data-grow` gives a direct child one share of free space. A2UI maps matching
@@ -38,6 +38,9 @@ The public API and fallbacks are in [the layout contract](contracts/layout.md).
 - Agent's choice, pending founder confirmation. Keep both generated tag
   directories and their local docs as required by the discovery registry.
   The shared Layout page and token sources describe both tags.
+- Agent's choice, pending founder confirmation. Declare the API change as
+  major. The gate classifies additions to the loader's `Components` and
+  `JSX` namespace signatures as major.
 
 ## Gherkin
 

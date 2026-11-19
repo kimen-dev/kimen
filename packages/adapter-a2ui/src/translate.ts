@@ -394,6 +394,32 @@ const BUTTON_VARIANTS: Readonly<Record<string, string>> = {
   primary: 'primary',
 };
 
+const LAYOUT_ALIGN = new Set(['start', 'center', 'end', 'stretch', 'baseline']);
+const LAYOUT_JUSTIFY: ReadonlyMap<string, string> = new Map([
+  ['start', 'start'],
+  ['center', 'center'],
+  ['end', 'end'],
+  ['spaceBetween', 'between'],
+]);
+
+function layout(it: Instance, direction?: 'row'): UiSpecNode {
+  const align = it.literal('align');
+  const justify = LAYOUT_JUSTIFY.get(it.literal('justify') ?? '');
+  const items = it
+    .children('children')
+    .map((child) => (typeof child === 'string' ? node('ki-stack', {}, [child]) : child));
+
+  return node(
+    'ki-stack',
+    {
+      ...(direction === undefined ? {} : { direction }),
+      ...(align === undefined || !LAYOUT_ALIGN.has(align) ? {} : { align }),
+      ...(justify === undefined ? {} : { justify }),
+    },
+    items,
+  );
+}
+
 /** Per-type builders for every `mapped`, `inline` and `layout` basic-catalog type. */
 export const BUILDERS: Readonly<Record<string, Builder>> = {
   Button: (it) => {
@@ -449,7 +475,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       ),
     ];
   },
-  Column: (it) => it.children('children'),
+  Column: (it) => [layout(it)],
   Divider: (it) => {
     const axis = it.literal('axis');
     return [
@@ -470,7 +496,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         .map((group) => node('ki-list-item', {}, group)),
     ),
   ],
-  Row: (it) => it.children('children'),
+  Row: (it) => [layout(it, 'row')],
   Tabs: (it) => {
     const tabs = it.body['tabs'];
     if (!Array.isArray(tabs) || tabs.length === 0) {

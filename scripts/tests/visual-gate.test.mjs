@@ -22,7 +22,7 @@ const readmePath = join(browserTestsDirectory, 'README.md');
 const screenshotsDirectory = join(browserTestsDirectory, '__screenshots__');
 const baselinesWorkflowPath = join(repositoryRoot, '.github/workflows/visual-baselines.yml');
 
-const VISUAL_SPEC = /^ki-[a-z0-9-]+\.visual(?:\.dark)?\.browser\.spec\.ts$/u;
+const VISUAL_SPEC = /^ki-[a-z0-9-]+\.visual(?:(?:\.material3)?\.dark)?\.browser\.spec\.ts$/u;
 // The release matrix runs the whole browser suite, visual specs included, on
 // all three engines, and a capture compares only against the baseline of its
 // own engine: every engine needs its own committed set.
@@ -40,13 +40,19 @@ function parseArmedMarker(content) {
 }
 
 // Mirrors the harness matrix: light specs capture onmars + material3, dark
-// specs capture onmars only, and toMatchScreenshot names baselines
+// specs capture onmars or opt into Material 3 by filename. toMatchScreenshot names baselines
 // `<name>-<browser>-<platform>.png`.
 function expectedLinuxBaselines(specFileName, engine = 'chromium') {
-  const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
-  const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
+  const dark = specFileName.endsWith('.dark.browser.spec.ts');
+  const darkTheme = specFileName.endsWith('.visual.material3.dark.browser.spec.ts')
+    ? 'material3'
+    : 'onmars';
+  const component = specFileName.replace(
+    /\.visual(?:(?:\.material3)?\.dark)?\.browser\.spec\.ts$/u,
+    '',
+  );
   const captures = dark
-    ? [['onmars', 'dark']]
+    ? [[darkTheme, 'dark']]
     : [
         ['onmars', 'light'],
         ['material3', 'light'],
