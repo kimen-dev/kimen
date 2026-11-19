@@ -13,8 +13,8 @@
   --_ki-tooltip-max-inline-size: var(--ki-tooltip-max-inline-size);
   --_ki-tooltip-offset: var(--ki-tooltip-offset);
   --_ki-tooltip-bg: var(--ki-tooltip-bg);
-  --_ki-tooltip-bg-start: var(--ki-tooltip-bg-start);
-  --_ki-tooltip-bg-end: var(--ki-tooltip-bg-end);
+  --_ki-tooltip-arrow-bg-start: var(--ki-surface-image-tooltip-arrow-start, var(--_ki-tooltip-bg));
+  --_ki-tooltip-arrow-bg-end: var(--ki-surface-image-tooltip-arrow-end, var(--_ki-tooltip-bg));
   --_ki-tooltip-backdrop-blur: var(--ki-tooltip-backdrop-blur);
   --_ki-tooltip-fg: var(--ki-tooltip-fg);
   --_ki-tooltip-font-size: var(--ki-tooltip-font-size);
@@ -62,13 +62,8 @@
   padding-block: var(--_ki-tooltip-padding-block);
   padding-inline: var(--_ki-tooltip-padding-inline);
   border-radius: var(--_ki-tooltip-radius);
-
-  /* MarsUI glass card (Tooltip master 12089:7621): flat fallback first, then
-   * the master's vertical gradient Surface/special blur_base -> s0/s2 with the
-   * Blur/24 backdrop. material3 resolves both stops to its inverse bubble and
-   * the blur to 0, so the same paint stays theme-correct. */
-  background: var(--_ki-tooltip-bg);
-  background: linear-gradient(180deg, var(--_ki-tooltip-bg-start), var(--_ki-tooltip-bg-end));
+  background-color: var(--_ki-tooltip-bg);
+  background-image: var(--ki-tooltip-bg-image, none);
   backdrop-filter: blur(var(--_ki-tooltip-backdrop-blur));
 
   /* Bevel hairline: Outline/secondary_button_top on all four sides. */
@@ -181,19 +176,23 @@
 .placement-start > .arrow,
 .placement-end > .arrow {
   inset-block-start: calc(var(--_ki-tooltip-arrow-along) - var(--_ki-tooltip-cross-shift));
-  background: color-mix(in srgb, var(--_ki-tooltip-bg-start), var(--_ki-tooltip-bg-end));
+  background: color-mix(
+    in srgb,
+    var(--_ki-tooltip-arrow-bg-start),
+    var(--_ki-tooltip-arrow-bg-end)
+  );
 }
 
 /* Above the trigger: the arrow hangs from the bottom edge, in its colour. */
 .placement-top > .arrow {
   inset-block-end: var(--_ki-tooltip-arrow-out);
-  background: var(--_ki-tooltip-bg-end);
+  background: var(--_ki-tooltip-arrow-bg-end);
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
 
 .placement-bottom > .arrow {
   inset-block-start: var(--_ki-tooltip-arrow-out);
-  background: var(--_ki-tooltip-bg-start);
+  background: var(--_ki-tooltip-arrow-bg-start);
   clip-path: polygon(0 100%, 0 0, 100% 0);
 }
 
@@ -265,15 +264,8 @@
   display: none;
 }
 
-/* Forced colors (Windows Contrast themes): the user's palette replaces the
- * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
- * are dropped, and only system colours — that palette — can be named.
- *
- * The surface is a gradient over a fallback fill: the gradient is dropped
- * and takes the fallback with it, so the page shows through the tooltip.
- * It becomes an opaque Canvas surface with an edge of its own.
- * `thin` is the browser's own hairline: a theme may set a border token to
- * zero, never this. */
+/* The forced palette replaces the image with an opaque Canvas fill.
+ * The browser's thin border keeps the surface edge visible in that palette. */
 @media (forced-colors: active) {
   .tooltip {
     background: Canvas;

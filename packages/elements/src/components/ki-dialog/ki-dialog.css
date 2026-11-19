@@ -44,8 +44,6 @@
   --_ki-dialog-min-width: var(--ki-dialog-min-width);
   --_ki-dialog-max-width: var(--ki-dialog-max-width);
   --_ki-dialog-bg: var(--ki-dialog-bg);
-  --_ki-dialog-bg-start: var(--ki-dialog-bg-start);
-  --_ki-dialog-bg-end: var(--ki-dialog-bg-end);
   --_ki-dialog-backdrop-blur: var(--ki-dialog-backdrop-blur);
   --_ki-dialog-fg: var(--ki-dialog-fg);
   --_ki-dialog-border: var(--ki-dialog-border);
@@ -87,13 +85,8 @@
   overflow: hidden;
   color: var(--_ki-dialog-fg);
   font-family: var(--ki-typography-family-body);
-
-  /* MarsUI glass surface (Modal master 16414:19665): flat fallback first,
-   * then the master's vertical gradient Surface/Special blur_base -> s0/s2
-   * with the Blur/24 backdrop. material3 resolves both stops to its opaque
-   * surface and the blur to 0, so the same paint stays theme-correct. */
-  background: var(--_ki-dialog-bg);
-  background: linear-gradient(180deg, var(--_ki-dialog-bg-start), var(--_ki-dialog-bg-end));
+  background-color: var(--_ki-dialog-bg);
+  background-image: var(--ki-dialog-bg-image, none);
   backdrop-filter: blur(var(--_ki-dialog-backdrop-blur));
   border: var(--_ki-dialog-border);
   border-radius: var(--_ki-dialog-radius);
@@ -237,15 +230,8 @@ slot[name="footer"] {
   display: none;
 }
 
-/* Forced colors (Windows Contrast themes): the user's palette replaces the
- * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
- * are dropped, and only system colours — that palette — can be named.
- *
- * The surface is a gradient over a fallback fill: the gradient is dropped
- * and takes the fallback with it, so the page shows through the dialog.
- * It becomes an opaque Canvas surface with an edge of its own.
- * `thin` is the browser's own hairline: a theme may set a border token to
- * zero, never this. */
+/* The forced palette replaces the image with an opaque Canvas fill.
+ * The browser's thin border keeps the surface edge visible in that palette. */
 @media (forced-colors: active) {
   [part="dialog"] {
     background: Canvas;
