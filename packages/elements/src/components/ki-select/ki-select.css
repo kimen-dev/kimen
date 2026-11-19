@@ -197,7 +197,10 @@
   background-image: var(--ki-select-listbox-bg-image, none);
 
   /* MarsUI Dropmenu glass: White/80 panel + BACKGROUND_BLUR Blur/48 (24px). */
-  backdrop-filter: blur(var(--ki-select-listbox-backdrop-blur));
+  backdrop-filter: var(
+    --_ki-select-listbox-backdrop-filter,
+    var(--ki-select-listbox-backdrop-filter)
+  );
   border-radius: var(--ki-select-listbox-radius);
 
   /* MarsUI elevation ramp e3 (brief §5, medium floating surface) instead of
@@ -420,4 +423,21 @@
 [part="help"],
 [part="error"] {
   padding-inline: var(--ki-select-label-padding-inline);
+}
+
+/* Compatibility with the deprecated length while the full filter uses its default. */
+@container style(--ki-select-listbox-backdrop-filter: var(--_ki-listbox-backdrop-filter-default)) {
+  [part="listbox"] {
+    --_ki-select-listbox-backdrop-filter: var(--ki-effect-component-backdrop-filter);
+  }
+}
+
+@container style(
+  (--ki-select-listbox-backdrop-filter: var(--_ki-listbox-backdrop-filter-default)) and (
+    --ki-effect-component-backdrop-filter: var(--_ki-backdrop-filter-default)
+  )
+) {
+  [part="listbox"] {
+    --_ki-select-listbox-backdrop-filter: blur(var(--ki-select-listbox-backdrop-blur));
+  }
 }

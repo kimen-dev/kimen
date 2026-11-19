@@ -73,7 +73,20 @@
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
         "$type": "dimension",
-        "$description": "backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override)."
+        "$description": "backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override).",
+        "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
+        "$extensions": {
+          "dev.kimen.deprecation": {
+            "since": "0.1.0",
+            "removal": "1.0.0",
+            "replacement": "--ki-tooltip-backdrop-filter"
+          }
+        }
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.backdrop-filter}",
+        "$description": "Complete backdrop filter behind the tooltip bubble."
       },
       "fg": {
         "$value": "{ki.text.high-em}",

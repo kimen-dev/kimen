@@ -20,7 +20,20 @@
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
         "$type": "dimension",
-        "$description": "dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override."
+        "$description": "dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override.",
+        "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
+        "$extensions": {
+          "dev.kimen.deprecation": {
+            "since": "0.1.0",
+            "removal": "1.0.0",
+            "replacement": "--ki-video-backdrop-filter"
+          }
+        }
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.backdrop-filter}",
+        "$description": "Complete backdrop filter behind the video play scrim and glass control."
       },
       "play-size": {
         "$value": "{ki.space.16xl}",

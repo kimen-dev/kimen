@@ -49,6 +49,18 @@ deprecated token. In the table below, `{variant}` is `primary`, `secondary`,
 | `--ki-select-hover-bg` | `--ki-surface-hover-overlay-inverse` | On hover the trigger keeps its resting fill under the inverse hover overlay. |
 | `--ki-select-listbox-elevation` | `--ki-select-listbox-shadow` | The listbox shadow replaced the hand-composed elevation. |
 
+### Backdrop blur lengths
+
+For `*-backdrop-blur` tokens, change how you set and read the value.
+
+- Set `--ki-button-backdrop-filter: blur(8px)` in place of
+  `--ki-button-backdrop-blur: 8px`. Use `none` to turn off the effect.
+- Read the complete value with `backdrop-filter: var(--ki-button-backdrop-filter)`.
+
+The deprecated lengths still drive the built-in glass defaults during the
+transition. A different complete filter takes precedence, including the
+`none` used by reduced transparency.
+
 ### Dialog and tooltip background stops
 
 Combine the old `--ki-dialog-bg-start` and `--ki-dialog-bg-end` colors in one
@@ -82,6 +94,7 @@ The stylesheet comment, the reference row and the snapshot facet are generated
 from it. The build rejects a deprecation without its reason, its schedule or
 a replacement that is a live published token, one declared on a group or in a
 theme overlay, and direct reads of deprecated tokens in component CSS or DTCG
-aliases. Onmars v1 uses temporary theme CSS expressions to keep the stops
-working at the theme scope.
-The contract is `specs/041-token-deprecation`.
+aliases, apart from the temporary backdrop compatibility bridge. Onmars v1
+uses temporary theme CSS expressions to keep the stops working at the theme
+scope. The contracts are `specs/041-token-deprecation` and
+`specs/061-backdrop-filter-token`.

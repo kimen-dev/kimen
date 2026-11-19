@@ -15,7 +15,6 @@
   --_ki-tooltip-bg: var(--ki-tooltip-bg);
   --_ki-tooltip-arrow-bg-start: var(--ki-surface-image-tooltip-arrow-start, var(--_ki-tooltip-bg));
   --_ki-tooltip-arrow-bg-end: var(--ki-surface-image-tooltip-arrow-end, var(--_ki-tooltip-bg));
-  --_ki-tooltip-backdrop-blur: var(--ki-tooltip-backdrop-blur);
   --_ki-tooltip-fg: var(--ki-tooltip-fg);
   --_ki-tooltip-font-size: var(--ki-tooltip-font-size);
   --_ki-tooltip-font-weight: var(--ki-tooltip-font-weight);
@@ -64,7 +63,7 @@
   border-radius: var(--_ki-tooltip-radius);
   background-color: var(--_ki-tooltip-bg);
   background-image: var(--ki-tooltip-bg-image, none);
-  backdrop-filter: blur(var(--_ki-tooltip-backdrop-blur));
+  backdrop-filter: var(--_ki-tooltip-backdrop-filter, var(--ki-tooltip-backdrop-filter));
 
   /* Bevel hairline: Outline/secondary_button_top on all four sides. */
   border: var(--ki-tooltip-border-width) solid var(--ki-tooltip-border-color);
@@ -275,5 +274,12 @@
   /* On Canvas, the arrow is drawn in the text colour or it is not drawn. */
   .tooltip > .arrow {
     background: CanvasText;
+  }
+}
+
+/* Compatibility with the deprecated length while the full filter uses its default. */
+@container style(--ki-tooltip-backdrop-filter: var(--_ki-backdrop-filter-default)) {
+  [part="tooltip"] {
+    --_ki-tooltip-backdrop-filter: blur(var(--ki-tooltip-backdrop-blur));
   }
 }

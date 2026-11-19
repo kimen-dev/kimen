@@ -13,6 +13,32 @@ const LAYER_RANK = new Map(LAYERS.map((layer, index) => [layer, index]));
 const PUBLIC_LAYERS = new Set(['semantic', 'component']);
 const REFERENCE_PATTERN = /\{([^{}]+)\}/gu;
 const EXACT_REFERENCE_PATTERN = /^\{([^{}]+)\}$/u;
+const BLUR_REFERENCE_PATTERN = /^blur\(\{[^{}]+\}\)$/u;
+
+// Spec 061 keeps legacy length overrides readable until their scheduled
+// removal. Only the original consumer (including the shared button sheet)
+// can read them, and only inside the blur expression in the bridge.
+const LEGACY_BACKDROP_BLURS = {
+  'ki-alert': ['--ki-alert-shell-backdrop-blur', '--ki-effect-component-backdrop-blur'],
+  'ki-badge': ['--ki-effect-component-backdrop-blur'],
+  'ki-button': ['--ki-button-backdrop-blur'],
+  'ki-dialog': ['--ki-dialog-backdrop-blur'],
+  'ki-icon-button': ['--ki-button-backdrop-blur'],
+  'ki-select': ['--ki-select-listbox-backdrop-blur'],
+  'ki-tooltip': ['--ki-tooltip-backdrop-blur'],
+  'ki-video': ['--ki-video-backdrop-blur'],
+};
+
+export function isLegacyBackdropBlur(tag, cssName, contents, index) {
+  if (LEGACY_BACKDROP_BLURS[tag]?.includes(cssName) !== true) return false;
+
+  const start = Math.max(contents.lastIndexOf('{', index), contents.lastIndexOf(';', index)) + 1;
+  const prefix = contents.slice(start, index);
+  return (
+    /^\s*--_ki-[a-z0-9-]+-backdrop-filter:\s*blur\($/u.test(prefix) &&
+    contents.slice(index, index + cssName.length + 6) === `var(${cssName}))`
+  );
+}
 
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const compareText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
@@ -455,7 +481,12 @@ export const parseTokenComposition = ({ id, theme, scheme, sources }) => {
     }
 
     if (record.layer !== 'primitive') {
-      const literalPaths = disallowedLiteralPaths(record.value);
+      const literalPaths =
+        record.layer === 'semantic' &&
+        typeof record.value === 'string' &&
+        BLUR_REFERENCE_PATTERN.test(record.value)
+          ? []
+          : disallowedLiteralPaths(record.value);
       if (literalPaths.length > 0) {
         issues.push(
           issue({
@@ -482,7 +513,15 @@ export const parseTokenComposition = ({ id, theme, scheme, sources }) => {
             related: [reference],
           }),
         );
-      } else if (target.deprecation !== null && record.deprecation === null) {
+      } else if (
+        target.deprecation !== null &&
+        record.deprecation === null &&
+        !(
+          record.cssName === '--ki-effect-component-backdrop-filter' &&
+          target.deprecation.replacement === record.cssName &&
+          record.value === `blur({${target.path}})`
+        )
+      ) {
         issues.push(
           issue({
             code: 'deprecated-reference',
@@ -669,6 +708,7 @@ export const deriveConsumedPublicCssProperties = ({ inventory, cssByTag }) => {
         );
       }
       if (record.deprecation) {
+        if (isLegacyBackdropBlur(tag, cssName, contents, match.index)) continue;
         throw new Error(
           `${tag} reads ${cssName}, which is ${deprecationComment(record.deprecation)}.`,
         );
