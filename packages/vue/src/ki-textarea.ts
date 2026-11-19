@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiTextarea } from '@kimen/elements/compone
 
 export const KiTextarea: StencilVueComponent<JSX.KiTextarea, JSX.KiTextarea["value"]> = /*@__PURE__*/ defineContainer<JSX.KiTextarea, JSX.KiTextarea["value"]>('ki-textarea', defineKiTextarea, [
   'label',
+  'labelHint',
   'placeholder',
   'value',
   'name',

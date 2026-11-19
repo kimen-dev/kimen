@@ -265,6 +265,7 @@
   --ki-shadow-inner-secondary-hover: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-8);
   --ki-size-border-hairline: 1px;
   --ki-size-target-min: 24px;
+  --ki-size-target-touch: 44px;
   --ki-size-qr: 8rem;
   --ki-size-surface-xxs: 18rem;
   --ki-size-surface-xs: 20rem;
@@ -881,7 +882,6 @@
   --ki-typography-letter-spacing-lg: var(--ki-font-letter-spacing-lg);
   --ki-spacing-inline: var(--ki-space-md);
   --ki-spacing-block: var(--ki-space-xl);
-  --ki-density-target-min: var(--ki-size-target-min);
   --ki-corner-control: var(--ki-radius-md);
   --ki-motion-duration-fast: var(--ki-duration-fast);
   --ki-motion-duration-short-1: var(--ki-duration-fast);
@@ -1049,9 +1049,10 @@
   --ki-button-xs-padding-inline: var(--ki-space-sm);
   --ki-button-xs-gap: var(--ki-space-xs);
   --ki-button-xs-radius: var(--ki-radius-component-xs);
-  --ki-button-xs-font-size: var(--ki-typography-size-caption-1);
-  --ki-button-xs-line-height: var(--ki-typography-line-height-caption-1);
+  --ki-button-xs-font-size: var(--ki-typography-size-caption-2);
+  --ki-button-xs-line-height: var(--ki-typography-line-height-caption-2);
   --ki-button-xs-icon-size: var(--ki-space-2xl);
+  --ki-button-xs-spinner-size: var(--ki-space-2xl);
   --ki-button-xs-min-target: var(--ki-space-7xl);
   --ki-button-sm-height: var(--ki-space-10xl);
   --ki-button-sm-padding-inline: var(--ki-space-md);
@@ -1060,6 +1061,7 @@
   --ki-button-sm-font-size: var(--ki-typography-size-body-1);
   --ki-button-sm-line-height: var(--ki-typography-line-height-body-1);
   --ki-button-sm-icon-size: var(--ki-space-3xl);
+  --ki-button-sm-spinner-size: var(--ki-space-3xl);
   --ki-button-sm-min-target: var(--ki-space-7xl);
   --ki-button-md-height: var(--ki-space-12xl);
   --ki-button-md-padding-inline: var(--ki-space-lg);
@@ -1068,6 +1070,7 @@
   --ki-button-md-font-size: var(--ki-typography-size-body-1);
   --ki-button-md-line-height: var(--ki-typography-line-height-body-1);
   --ki-button-md-icon-size: var(--ki-space-4xl);
+  --ki-button-md-spinner-size: var(--ki-space-4xl);
   --ki-button-md-min-target: var(--ki-space-7xl);
   --ki-button-lg-height: var(--ki-space-14xl);
   --ki-button-lg-padding-inline: var(--ki-space-xl);
@@ -1076,6 +1079,7 @@
   --ki-button-lg-font-size: var(--ki-typography-size-body-2);
   --ki-button-lg-line-height: var(--ki-typography-line-height-body-2);
   --ki-button-lg-icon-size: var(--ki-space-5xl);
+  --ki-button-lg-spinner-size: var(--ki-space-5xl);
   --ki-button-lg-min-target: var(--ki-space-7xl);
   --ki-button-xl-height: var(--ki-space-16xl);
   --ki-button-xl-padding-inline: var(--ki-space-2xl);
@@ -1084,6 +1088,7 @@
   --ki-button-xl-font-size: var(--ki-typography-size-title-2);
   --ki-button-xl-line-height: var(--ki-typography-line-height-title-2);
   --ki-button-xl-icon-size: var(--ki-space-7xl);
+  --ki-button-xl-spinner-size: var(--ki-space-7xl);
   --ki-button-xl-min-target: var(--ki-space-7xl);
   --ki-button-font-family: var(--ki-typography-family-body);
   --ki-button-font-weight: var(--ki-typography-weight-body-medium);
@@ -1094,6 +1099,8 @@
   --ki-button-focus-ring-width: var(--ki-focus-ring-width);
   --ki-button-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-button-focus-ring-shadow: var(--ki-focus-primary);
+  --ki-button-spinner-stroke-width: var(--ki-space-xxs);
+  --ki-button-spinner-duration: var(--ki-foundation-migrated-component-progress-progress-indeterminate-duration);
   --ki-button-primary-neutral-rest-bg: var(--ki-surface-primary-med-em);
   --ki-button-primary-neutral-rest-fg: var(--ki-text-primary-on-primary);
   --ki-button-primary-neutral-rest-border: var(--ki-outline-primary-button-top);
@@ -1323,6 +1330,8 @@
   --ki-checkbox-label-font-size: var(--ki-typography-size-body-2);
   --ki-checkbox-label-font-weight: var(--ki-typography-weight-body-normal);
   --ki-checkbox-label-line-height: var(--ki-typography-line-height-body-2);
+  --ki-checkbox-label-hint-fg: var(--ki-text-supporting);
+  --ki-checkbox-label-hint-gap: var(--ki-space-xs);
   --ki-checkbox-unchecked-rest-bg: var(--ki-surface-s0);
   --ki-checkbox-unchecked-rest-fg: var(--ki-text-high-em);
   --ki-checkbox-unchecked-rest-border: var(--ki-outline-control);
@@ -1404,14 +1413,19 @@
   --ki-divider-spacing: var(--ki-space-md);
   --ki-icon-button-xs-size: var(--ki-space-7xl);
   --ki-icon-button-xs-icon-size: var(--ki-space-3xl);
+  --ki-icon-button-xs-spinner-size: var(--ki-space-3xl);
   --ki-icon-button-sm-size: var(--ki-space-10xl);
   --ki-icon-button-sm-icon-size: var(--ki-space-4xl);
+  --ki-icon-button-sm-spinner-size: var(--ki-space-4xl);
   --ki-icon-button-md-size: var(--ki-space-12xl);
   --ki-icon-button-md-icon-size: var(--ki-space-5xl);
+  --ki-icon-button-md-spinner-size: var(--ki-space-5xl);
   --ki-icon-button-lg-size: var(--ki-space-14xl);
   --ki-icon-button-lg-icon-size: var(--ki-space-7xl);
+  --ki-icon-button-lg-spinner-size: var(--ki-space-7xl);
   --ki-icon-button-xl-size: var(--ki-space-16xl);
   --ki-icon-button-xl-icon-size: var(--ki-space-9xl);
+  --ki-icon-button-xl-spinner-size: var(--ki-space-9xl);
   --ki-indicator-gap: var(--ki-space-sm);
   --ki-indicator-dot-inline-size: var(--ki-space-md);
   --ki-indicator-dot-block-size: var(--ki-space-md);
@@ -1433,11 +1447,14 @@
   --ki-input-radius: var(--ki-radius-component-md);
   --ki-input-icon-size: var(--ki-space-4xl);
   --ki-input-font-size: var(--ki-typography-size-body-1);
+  --ki-input-font-size-touch: var(--ki-space-3xl);
   --ki-input-font-weight: var(--ki-typography-weight-body-normal);
   --ki-input-line-height: var(--ki-typography-line-height-body-1);
   --ki-input-label-font-size: var(--ki-typography-size-body-1);
   --ki-input-label-font-weight: var(--ki-typography-weight-body-medium);
   --ki-input-label-line-height: var(--ki-typography-line-height-para);
+  --ki-input-label-hint-fg: var(--ki-text-supporting);
+  --ki-input-label-hint-gap: var(--ki-space-xs);
   --ki-input-border-width: var(--ki-size-border-hairline);
   --ki-input-border-block-start-width: var(--ki-input-border-width);
   --ki-input-border-block-end-width: var(--ki-input-border-width);
@@ -1529,6 +1546,8 @@
   --ki-radio-group-label-font-size: var(--ki-typography-size-body-1);
   --ki-radio-group-label-font-weight: var(--ki-typography-weight-body-medium);
   --ki-radio-group-label-line-height: var(--ki-typography-line-height-para);
+  --ki-radio-group-label-hint-fg: var(--ki-text-supporting);
+  --ki-radio-group-label-hint-gap: var(--ki-space-xs);
   --ki-radio-control-size: var(--ki-space-5xl);
   --ki-radio-dot-size: var(--ki-space-md);
   --ki-radio-dot-shadow: var(--ki-effect-small-dark-shadow);
@@ -1600,6 +1619,8 @@
   --ki-select-label-font-size: var(--ki-typography-size-body-1);
   --ki-select-label-font-weight: var(--ki-typography-weight-body-medium);
   --ki-select-label-line-height: var(--ki-typography-line-height-para);
+  --ki-select-label-hint-fg: var(--ki-text-supporting);
+  --ki-select-label-hint-gap: var(--ki-space-xs);
   --ki-select-rest-bg: var(--ki-surface-special-light-s0-dark-s2);
   --ki-select-rest-fg: var(--ki-text-high-em);
   --ki-select-rest-border: var(--ki-outline-control);
@@ -1733,11 +1754,14 @@
   --ki-textarea-radius: var(--ki-radius-component-md);
   --ki-textarea-min-target: var(--ki-space-7xl);
   --ki-textarea-font-size: var(--ki-typography-size-body-1);
+  --ki-textarea-font-size-touch: var(--ki-space-3xl);
   --ki-textarea-font-weight: var(--ki-typography-weight-body-normal);
   --ki-textarea-line-height: var(--ki-typography-line-height-body-1);
   --ki-textarea-label-font-size: var(--ki-typography-size-body-1);
   --ki-textarea-label-font-weight: var(--ki-typography-weight-body-medium);
   --ki-textarea-label-line-height: var(--ki-typography-line-height-para);
+  --ki-textarea-label-hint-fg: var(--ki-text-supporting);
+  --ki-textarea-label-hint-gap: var(--ki-space-xs);
   --ki-textarea-border-width: var(--ki-size-border-hairline);
   --ki-textarea-border-block-start-width: var(--ki-textarea-border-width);
   --ki-textarea-border-block-end-width: var(--ki-textarea-border-width);
@@ -1820,16 +1844,25 @@
 :root {
   --ki-density-control-offset: var(--ki-space-zero);
   --ki-density-space-scale: var(--ki-scale-unit);
+  --ki-density-target-min: var(--ki-size-target-min);
 }
 
 [data-ki-density='compact'] {
   --ki-density-control-offset: var(--ki-space-minus-md);
   --ki-density-space-scale: var(--ki-scale-compact);
+  --ki-density-target-min: var(--ki-size-target-min);
+}
+
+[data-ki-density='touch'] {
+  --ki-density-control-offset: var(--ki-space-xs);
+  --ki-density-space-scale: var(--ki-scale-unit);
+  --ki-density-target-min: var(--ki-size-target-touch);
 }
 
 [data-ki-density='default'] {
   --ki-density-control-offset: var(--ki-space-zero);
   --ki-density-space-scale: var(--ki-scale-unit);
+  --ki-density-target-min: var(--ki-size-target-min);
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {

@@ -56,6 +56,7 @@ Boolean attributes use presence semantics — omit `checked` to express unchecke
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the checkbox, read with it as its description: what checking it means or commits to. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `indeterminate` (boolean, default false): Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+- `label-hint` (string | undefined): Short text shown after the slotted label and read with it as part of the checkbox name, so people know before submitting whether they must check it: "(required)" on a consent the form cannot do without, "(optional)" on one it can, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what checking it commits to in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
 - `required` (boolean, default false): Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
 - `value` (string | undefined): Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
@@ -70,6 +71,7 @@ Boolean attributes use presence semantics — omit `checked` to express unchecke
 - `error`: Error line shown in place of the help text while the checkbox is invalid after the person toggled it or submitted; a polite live region, starting with a decorative error symbol.
 - `help`: Help line under the checkbox, read as its description.
 - `label`: Label wrapper around the default slot.
+- `label-hint`: The `label-hint` text after the slotted label, inside the label wrapper and part of the accessible name; rendered only while a hint is set.
 
 ## Events
 
@@ -117,6 +119,8 @@ None.
 - `--ki-checkbox-invalid-fg`: color used by the checkbox component for invalid foreground.
 - `--ki-checkbox-label-font-size`: dimension used by the checkbox component for label font size (MarsUI md pairing: body_2 15px for the 20px box).
 - `--ki-checkbox-label-font-weight`: font weight used by the checkbox component for label font weight.
+- `--ki-checkbox-label-hint-fg`: color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
+- `--ki-checkbox-label-hint-gap`: dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-checkbox-label-line-height`: dimension used by the checkbox component for label line height (MarsUI body_2 24px).
 - `--ki-checkbox-min-target`: dimension used by the checkbox component for min target.
 - `--ki-checkbox-radius`: dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap).
@@ -132,6 +136,7 @@ None.
 - `--ki-checkbox-unchecked-rest-bg`: color used by the checkbox component for unchecked rest background.
 - `--ki-checkbox-unchecked-rest-border`: color used by the checkbox component for unchecked rest border.
 - `--ki-checkbox-unchecked-rest-fg`: color used by the checkbox component for unchecked rest foreground.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.

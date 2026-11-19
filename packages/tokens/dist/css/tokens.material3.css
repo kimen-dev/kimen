@@ -427,6 +427,7 @@
   --ki-input-gap: var(--ki-space-sm);
   --ki-input-radius: var(--ki-radius-component-xs);
   --ki-input-icon-size: var(--ki-space-5xl);
+  --ki-input-font-size-touch: var(--ki-typography-size-body-2);
   --ki-input-label-font-size: var(--ki-typography-size-caption-2);
   --ki-input-label-font-weight: var(--ki-typography-weight-body-normal);
   --ki-input-label-line-height: var(--ki-typography-line-height-caption-2);
@@ -562,6 +563,7 @@
   --ki-tabs-divider-color: var(--ki-outline-med-em);
   --ki-textarea-padding-block: var(--ki-space-xl);
   --ki-textarea-radius: var(--ki-radius-component-xs);
+  --ki-textarea-font-size-touch: var(--ki-typography-size-body-2);
   --ki-textarea-label-font-size: var(--ki-typography-size-caption-2);
   --ki-textarea-label-line-height: var(--ki-typography-line-height-caption-2);
   --ki-textarea-border-width: var(--ki-space-xxs);

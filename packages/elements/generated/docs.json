@@ -813,11 +813,11 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone."
+          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
         },
         {
           "name": "whenNotToUse",
-          "text": "navigation, icon-only actions, persistent toggles, or\nloading/progress semantics."
+          "text": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress)."
         },
         {
           "name": "slot",
@@ -838,10 +838,14 @@
         {
           "name": "part",
           "text": "label - Label wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "spinner - Loading spinner drawn at the center of the button, in the\nbutton's foreground ink, rendered only while `loading` is in effect."
         }
       ],
       "usage": {
-        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n"
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
       },
       "props": [
         {
@@ -855,7 +859,7 @@
           "mutable": false,
           "attr": "disabled",
           "reflectToAttr": true,
-          "docs": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+          "docs": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button. Wins over\n`loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
           "docsTags": [
             {
               "name": "default",
@@ -866,6 +870,64 @@
           "values": [
             {
               "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading",
+          "reflectToAttr": true,
+          "docs": "Pending state of the action this button started (saving, sending).\nWhile set, every activation is blocked (pointer, Enter and Space) and the\nbutton neither submits nor resets its form, but it stays focusable, in\nthe Tab order and at its width: the label stays laid out, transparent,\nand a spinner is drawn in its place. The internal native button is\nexposed with `aria-disabled=\"true\"` and keeps its name, and\n`loadingLabel` is announced as a polite status message. `disabled`, and\na disabled fieldset, win over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this button started is running,\nso a second activation cannot repeat it.\nWhen NOT to use: for a button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loadingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading-label",
+          "reflectToAttr": true,
+          "docs": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the button's\nonly built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Saving\").\nWhen NOT to use: do not repeat the button's label here; the person\nalready hears it on focus.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Loading'"
+            }
+          ],
+          "default": "'Loading'",
+          "values": [
+            {
+              "type": "string"
             }
           ],
           "optional": false,
@@ -1144,6 +1206,10 @@
         {
           "name": "label",
           "docs": "Label wrapper around the default slot."
+        },
+        {
+          "name": "spinner",
+          "docs": "Loading spinner drawn at the center of the button, in the\nbutton's foreground ink, rendered only while `loading` is in effect."
         }
       ],
       "states": [],
@@ -1288,6 +1354,10 @@
         {
           "name": "part",
           "text": "label - Label wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "label-hint - The `label-hint` text after the slotted label, inside the label\nwrapper and part of the accessible name; rendered only while a hint is set."
         },
         {
           "name": "event",
@@ -1438,6 +1508,32 @@
           "setter": false
         },
         {
+          "name": "labelHint",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hint",
+          "reflectToAttr": true,
+          "docs": "Short text shown after the slotted label and read with it as part of the\ncheckbox name, so people know before submitting whether they must check\nit: \"(required)\" on a consent the form cannot do without, \"(optional)\"\non one it can, in the page's own language. It changes no validation; set\n`required` for that, and keep the two consistent.\nWhen NOT to use: do not put what checking it commits to in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "name",
           "type": "string | undefined",
           "complexType": {
@@ -1551,6 +1647,10 @@
         {
           "name": "label",
           "docs": "Label wrapper around the default slot."
+        },
+        {
+          "name": "label-hint",
+          "docs": "The `label-hint` text after the slotted label, inside the label\nwrapper and part of the accessible name; rendered only while a hint is set."
         }
       ],
       "states": [],
@@ -1874,7 +1974,7 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability."
+          "text": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
         },
         {
           "name": "whenNotToUse",
@@ -1891,10 +1991,14 @@
         {
           "name": "part",
           "text": "icon - Icon wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "spinner - Loading spinner drawn in place of the icon, in the button's\nforeground ink, rendered only while `loading` is in effect."
         }
       ],
       "usage": {
-        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n"
+        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
       },
       "props": [
         {
@@ -1908,7 +2012,7 @@
           "mutable": false,
           "attr": "disabled",
           "reflectToAttr": true,
-          "docs": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+          "docs": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
           "docsTags": [
             {
               "name": "default",
@@ -1946,6 +2050,64 @@
           ],
           "optional": false,
           "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading",
+          "reflectToAttr": true,
+          "docs": "Pending state of the action this icon button started (refreshing,\nsending). While set, every activation is blocked (pointer, Enter and\nSpace), but the icon button stays focusable, in the Tab order and at its\nsize: the icon stays laid out, transparent, and a spinner is drawn in its\nplace. The internal native button is exposed with `aria-disabled=\"true\"`\nand keeps its `label`, and `loadingLabel` is announced as a polite status\nmessage. `disabled` wins over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this icon button started is\nrunning, so a second activation cannot repeat it.\nWhen NOT to use: for an icon button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loadingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading-label",
+          "reflectToAttr": true,
+          "docs": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Loading'"
+            }
+          ],
+          "default": "'Loading'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
           "getter": false,
           "setter": false
         },
@@ -2116,6 +2278,10 @@
         {
           "name": "icon",
           "docs": "Icon wrapper around the default slot."
+        },
+        {
+          "name": "spinner",
+          "docs": "Loading spinner drawn in place of the icon, in the button's\nforeground ink, rendered only while `loading` is in effect."
         }
       ],
       "states": [],
@@ -2323,6 +2489,10 @@
           "text": "label - Visible label that provides the accessible name."
         },
         {
+          "name": "part",
+          "text": "label-hint - The `label-hint` text after the label text, inside the label and\npart of the accessible name; rendered only while a hint is set."
+        },
+        {
           "name": "event",
           "text": "change - Fired when the user commits an edited value (native text-field\ntiming, such as on blur), composed across the shadow boundary; `value` is\nalready current when listeners run. When to use: react to a committed\nvalue. When NOT to use: do not use it for per-keystroke updates; the native\n`input` event carries those."
         }
@@ -2458,6 +2628,32 @@
           ],
           "optional": false,
           "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelHint",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hint",
+          "reflectToAttr": true,
+          "docs": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
           "getter": false,
           "setter": false
         },
@@ -2697,6 +2893,10 @@
         {
           "name": "label",
           "docs": "Visible label that provides the accessible name."
+        },
+        {
+          "name": "label-hint",
+          "docs": "The `label-hint` text after the label text, inside the label and\npart of the accessible name; rendered only while a hint is set."
         }
       ],
       "states": [],
@@ -3382,6 +3582,10 @@
         },
         {
           "name": "part",
+          "text": "label-hint - The `label-hint` text after the group label text, inside the label\nand part of the radiogroup's accessible name; rendered only while a hint is set."
+        },
+        {
+          "name": "part",
           "text": "help - Help line under the options, read as the radiogroup description."
         },
         {
@@ -3502,6 +3706,32 @@
           "setter": false
         },
         {
+          "name": "labelHint",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hint",
+          "reflectToAttr": true,
+          "docs": "Short text shown after the group label and read with it as part of the\nradiogroup name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional questions of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put what the choice decides in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "name",
           "type": "string | undefined",
           "complexType": {
@@ -3608,6 +3838,10 @@
         {
           "name": "label",
           "docs": "Visible group label and accessible-name source."
+        },
+        {
+          "name": "label-hint",
+          "docs": "The `label-hint` text after the group label text, inside the label\nand part of the radiogroup's accessible name; rendered only while a hint is set."
         }
       ],
       "states": [],
@@ -3751,6 +3985,10 @@
         },
         {
           "name": "part",
+          "text": "label-hint - The `label-hint` text after the label text, inside the label and\npart of the accessible name of the combobox and its listbox; rendered only while a\nhint is set."
+        },
+        {
+          "name": "part",
           "text": "trigger - Native button carrying the combobox role."
         },
         {
@@ -3887,6 +4125,32 @@
           ],
           "optional": false,
           "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelHint",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hint",
+          "reflectToAttr": true,
+          "docs": "Short text shown after the label and read with it as part of the\ncombobox name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional fields of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions in it (use `help-text`), errors\n(use `error-text`), or a repeat of the label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
           "getter": false,
           "setter": false
         },
@@ -4036,6 +4300,10 @@
         {
           "name": "label",
           "docs": "Visible label and accessible-name source."
+        },
+        {
+          "name": "label-hint",
+          "docs": "The `label-hint` text after the label text, inside the label and\npart of the accessible name of the combobox and its listbox; rendered only while a\nhint is set."
         },
         {
           "name": "listbox",
@@ -4849,6 +5117,10 @@
           "text": "label - Rendered visible label and accessible-name source."
         },
         {
+          "name": "part",
+          "text": "label-hint - The `label-hint` text after the label text, inside the label and\npart of the accessible name; rendered only while a hint is set."
+        },
+        {
           "name": "event",
           "text": "change - Fired when the user commits an edited value (on blur, with native\ntextarea timing), composed across the shadow boundary; `value` is already\ncurrent when listeners run. When to use: react to a committed value. When\nNOT to use: do not use it for per-keystroke updates; the native `input`\nevent carries those."
         }
@@ -4984,6 +5256,32 @@
           ],
           "optional": false,
           "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelHint",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hint",
+          "reflectToAttr": true,
+          "docs": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
           "getter": false,
           "setter": false
         },
@@ -5183,6 +5481,10 @@
         {
           "name": "label",
           "docs": "Rendered visible label and accessible-name source."
+        },
+        {
+          "name": "label-hint",
+          "docs": "The `label-hint` text after the label text, inside the label and\npart of the accessible name; rendered only while a hint is set."
         },
         {
           "name": "textarea",
