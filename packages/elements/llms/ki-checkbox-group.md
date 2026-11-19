@@ -43,8 +43,11 @@ a distinct value when you need to select it independently from JavaScript.
 ## Read and update selection
 
 ```js
-import '@kimen/elements/ki-checkbox';
-import '@kimen/elements/ki-checkbox-group';
+import { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';
+import { defineCustomElement as defineCheckboxGroup } from '@kimen/elements/ki-checkbox-group';
+
+defineCheckbox();
+defineCheckboxGroup();
 
 const group = document.querySelector('#regions');
 group.value = ['eu', 'apac'];
