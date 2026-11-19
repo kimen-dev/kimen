@@ -218,4 +218,22 @@ input:active:checked:not([disabled], [data-ki-group-disabled]) ~ [part="control"
   [part="control"]::before {
     background: CanvasText;
   }
+
+  /* The palette repaints ring, dot and label in CanvasText whatever the
+     state; a disabled option says it in GrayText, as a native disabled radio
+     does. */
+  :host([disabled]) [part="control"],
+  :host([data-ki-group-disabled]) [part="control"] {
+    border-color: GrayText;
+  }
+
+  :host([disabled]) [part="control"]::before,
+  :host([data-ki-group-disabled]) [part="control"]::before {
+    background: GrayText;
+  }
+
+  :host([disabled]) [part="label"],
+  :host([data-ki-group-disabled]) [part="label"] {
+    color: GrayText;
+  }
 }

@@ -221,6 +221,25 @@ async function holdWithKeyboard(
   }
 }
 
+/**
+ * Reassigns the component radius scale where the theme declares it, the way a
+ * Figma radius mode (Round, Flat, Pointed) reassigns `Radius/small-component`.
+ * Declared on the root: a token that aliases the scale resolves it there.
+ */
+async function withComponentRadii(value: string, run: () => Promise<void>): Promise<void> {
+  const steps = ['xs', 'sm', 'md', 'lg', 'xl'];
+  for (const step of steps) {
+    document.documentElement.style.setProperty(`--ki-radius-component-${step}`, value);
+  }
+  try {
+    await run();
+  } finally {
+    for (const step of steps) {
+      document.documentElement.style.removeProperty(`--ki-radius-component-${step}`);
+    }
+  }
+}
+
 describe('ki-button in a real browser', () => {
   it('S1 dispatches one activation for a real click', async () => {
     cleanup();
@@ -455,6 +474,52 @@ describe('ki-button in a real browser', () => {
     }
 
     await expectAccessible(document.body);
+  });
+
+  // Button master 8003:300: icon-to-text is the root gap plus Text_wrap's
+  // inline padding, per size: xs 0 + 4, sm 2 + 4, md 2 + 4, lg 2 + 4, xl 2 + 6.
+  it.each([
+    ['xs', 4],
+    ['sm', 6],
+    ['md', 6],
+    ['lg', 6],
+    ['xl', 8],
+  ] as const)('size %s puts the label text %ipx from its start icon', async (size, distance) => {
+    cleanup();
+    ensureTokens();
+    const el = document.createElement('ki-button') as KiButtonElement;
+    el.setAttribute('size', size);
+    const icon = document.createElement('span');
+    icon.slot = 'start';
+    icon.style.display = 'inline-block';
+    icon.style.inlineSize = '1em';
+    icon.style.blockSize = '1em';
+    el.append(icon, 'Save');
+    document.body.append(el);
+    await customElements.whenDefined('ki-button');
+    await expect.poll(() => el.shadowRoot?.querySelector('[part="label"]')).not.toBeNull();
+    await waitForStyles();
+    const label = requireButton(el).querySelector('[part="label"]');
+    if (!label) {
+      throw new Error('ki-button did not render a label part');
+    }
+
+    const textStart =
+      label.getBoundingClientRect().left +
+      Number.parseFloat(getComputedStyle(label).paddingInlineStart);
+    expect(textStart - icon.getBoundingClientRect().right).toBeCloseTo(distance, 0);
+  });
+
+  it('takes every size radius from the component radius scale, so a radius mode reaches it', async () => {
+    cleanup();
+    ensureTokens();
+    await withComponentRadii('3px', async () => {
+      for (const size of sizes) {
+        const el = await mount('Save', { size });
+        await waitForStyles();
+        expect(getComputedStyle(requireButton(el)).borderTopLeftRadius, size).toBe('3px');
+      }
+    });
   });
 
   it('label Text_wrap padding: Space/xs inline padding with the composite gap preserved (Figma 8003:300 md anatomy)', async () => {

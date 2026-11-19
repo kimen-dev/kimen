@@ -409,6 +409,10 @@ export class KiTooltip {
             }}
             style={tooltipStyle}
           >
+            {/* The arrow of the Tooltip master, pointing at the trigger:
+                drawing only, so it is hidden from assistive technology and
+                adds nothing to the tooltip's text. */}
+            <span class="arrow" aria-hidden="true" />
             {this.normalizedLabel}
           </div>
         ) : null}

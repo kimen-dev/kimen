@@ -624,4 +624,19 @@ describe('ki-textarea in a real browser', () => {
     expect(styles.paddingInlineStart).toBe('2px');
     expect(styles.paddingInlineEnd).toBe('2px');
   });
+
+  // Pixel-fidelity pin (MarsUI Input-cell textarea md 8018:176, not
+  // scenario-traced): the text sits Space/md (8px) from the block edges, and
+  // Space/lg + Text_wrap Space/xxs (10 + 2 = 12px) from the inline edges.
+  it('pins the Input-cell textarea padding: 8px block, 12px inline', async () => {
+    cleanup();
+    const el = await mount();
+    await waitForStyles();
+    const styles = getComputedStyle(innerTextarea(el));
+
+    expect(styles.paddingBlockStart).toBe('8px');
+    expect(styles.paddingBlockEnd).toBe('8px');
+    expect(styles.paddingInlineStart).toBe('12px');
+    expect(styles.paddingInlineEnd).toBe('12px');
+  });
 });

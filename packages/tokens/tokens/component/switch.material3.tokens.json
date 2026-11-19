@@ -118,6 +118,26 @@
       },
       "thumb-width": {
         "$value": "{ki.space.7xl}"
+      },
+      "gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Material 3 dimension used by the switch component for the gap between the control and its label."
+      },
+      "control-width": {
+        "$value": "{ki.space.15xl}",
+        "$description": "Material 3 switch has no well: the control footprint is the 52dp track itself."
+      },
+      "control-height": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Material 3 switch has no well: the control footprint is the 32dp track itself."
+      },
+      "well-bg-start": {
+        "$value": "{ki.color.transparent.black}",
+        "$description": "Material 3 switch has no well."
+      },
+      "well-bg-end": {
+        "$value": "{ki.color.transparent.black}",
+        "$description": "Material 3 switch has no well."
       }
     }
   }

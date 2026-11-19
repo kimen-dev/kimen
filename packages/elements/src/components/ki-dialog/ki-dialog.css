@@ -4,6 +4,43 @@
   --_ki-dialog-radius: var(--ki-dialog-radius);
   --_ki-dialog-padding: calc(var(--ki-dialog-padding) * var(--ki-density-space-scale));
   --_ki-dialog-gap: calc(var(--ki-dialog-gap) * var(--ki-density-space-scale));
+  --_ki-dialog-heading-padding-block-start: calc(
+    var(--ki-dialog-heading-padding-block-start) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-heading-padding-block-end: calc(
+    var(--ki-dialog-heading-padding-block-end) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-heading-padding-inline: calc(
+    var(--ki-dialog-heading-padding-inline) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-body-padding-block-start: calc(
+    var(--ki-dialog-body-padding-block-start) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-body-padding-block-end: calc(
+    var(--ki-dialog-body-padding-block-end) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-body-padding-inline: calc(
+    var(--ki-dialog-body-padding-inline) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-footer-padding-block-start: calc(
+    var(--ki-dialog-footer-padding-block-start) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-footer-padding-block-end: calc(
+    var(--ki-dialog-footer-padding-block-end) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-footer-padding-inline: calc(
+    var(--ki-dialog-footer-padding-inline) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-dialog-divider: var(--ki-dialog-divider-width) solid var(--ki-dialog-divider-color);
   --_ki-dialog-min-width: var(--ki-dialog-min-width);
   --_ki-dialog-max-width: var(--ki-dialog-max-width);
   --_ki-dialog-bg: var(--ki-dialog-bg);
@@ -40,7 +77,11 @@
   min-inline-size: min(var(--_ki-dialog-min-width), calc(100% - var(--_ki-dialog-padding)));
   max-inline-size: min(var(--_ki-dialog-max-width), calc(100% - var(--_ki-dialog-padding)));
   max-block-size: calc(100% - var(--_ki-dialog-padding));
-  padding: var(--_ki-dialog-padding);
+
+  /* No padding of its own: the heading, body and footer sections pad
+     themselves (Modal master compact 16414:19665: Modal-header, Body and
+     Modal-actions), so the dividers between them run edge to edge. */
+  padding: 0;
   overflow: hidden;
   color: var(--_ki-dialog-fg);
   font-family: var(--ki-typography-family-body);
@@ -59,7 +100,6 @@
   /* Layout lives on the base rule so the exit fade (display held open by
    * allow-discrete) never reflows to flex defaults mid-transition. */
   flex-direction: column;
-  gap: var(--_ki-dialog-gap);
 }
 
 [part="dialog"][open] {
@@ -84,6 +124,10 @@
  * both center (Modal_header / body placeholder, node 16414:19665). */
 [part="heading"] {
   margin: 0;
+  padding-block: var(--_ki-dialog-heading-padding-block-start)
+    var(--_ki-dialog-heading-padding-block-end);
+  padding-inline: var(--_ki-dialog-heading-padding-inline);
+  border-block-end: var(--_ki-dialog-divider);
   color: inherit;
   font-size: var(--_ki-dialog-heading-font-size);
   font-weight: var(--_ki-dialog-heading-font-weight);
@@ -95,6 +139,8 @@
  * slotted content (semantic typography tokens; no dialog-local pair exists). */
 [part="body"] {
   min-block-size: 0;
+  padding-block: var(--_ki-dialog-body-padding-block-start) var(--_ki-dialog-body-padding-block-end);
+  padding-inline: var(--_ki-dialog-body-padding-inline);
   overflow-block: auto;
   color: inherit;
   font-size: var(--ki-typography-size-body-1);
@@ -103,17 +149,23 @@
   text-align: center;
 }
 
-/* The body is a Tab stop only while its content overflows (WCAG 2.1.1): the
- * same double indicator as the surface — the opaque outline plus the MarsUI
- * Focus/primary ring — drawn inside the dialog padding, never clipped. */
+/* The body is a Tab stop only while its content overflows (WCAG 2.1.1). It
+ * runs edge to edge between the dividers, and the surface clips its
+ * overflow, so the opaque indicator is drawn inside the body's own box. */
 [part="body"]:focus-visible {
   outline: var(--ki-dialog-focus-ring-width) solid var(--ki-dialog-focus-ring-color);
-  outline-offset: var(--ki-dialog-focus-ring-offset);
-  box-shadow: var(--ki-focus-primary);
+  outline-offset: calc(
+    -1 *
+    (var(--ki-dialog-focus-ring-width) + var(--ki-dialog-focus-ring-offset))
+  );
 }
 
 [part="footer"] {
   display: block;
+  padding-block: var(--_ki-dialog-footer-padding-block-start)
+    var(--_ki-dialog-footer-padding-block-end);
+  padding-inline: var(--_ki-dialog-footer-padding-inline);
+  border-block-start: var(--_ki-dialog-divider);
   text-align: end;
 }
 

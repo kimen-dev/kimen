@@ -718,7 +718,7 @@
   --ki-text-base: var(--ki-text-high-em);
   --ki-text-muted: var(--ki-text-med-em);
   --ki-text-supporting: var(--ki-text-med-em);
-  --ki-text-danger: var(--ki-text-danger-med-em);
+  --ki-text-danger: var(--ki-text-danger-high-em);
   --ki-text-primary-on-danger: var(--ki-color-white-100);
   --ki-outline-high-em: light-dark(var(--ki-color-black-12), var(--ki-color-white-12));
   --ki-outline-strong: light-dark(var(--ki-color-black-48), var(--ki-color-white-48));
@@ -1029,15 +1029,15 @@
   --ki-button-xs-height: var(--ki-space-7xl);
   --ki-button-xs-padding-inline: var(--ki-space-sm);
   --ki-button-xs-gap: var(--ki-space-xs);
-  --ki-button-xs-radius: var(--ki-radius-sm);
+  --ki-button-xs-radius: var(--ki-radius-component-xs);
   --ki-button-xs-font-size: var(--ki-typography-size-caption-1);
   --ki-button-xs-line-height: var(--ki-typography-line-height-caption-1);
   --ki-button-xs-icon-size: var(--ki-space-2xl);
   --ki-button-xs-min-target: var(--ki-space-7xl);
   --ki-button-sm-height: var(--ki-space-10xl);
   --ki-button-sm-padding-inline: var(--ki-space-md);
-  --ki-button-sm-gap: var(--ki-space-xs);
-  --ki-button-sm-radius: var(--ki-radius-md);
+  --ki-button-sm-gap: var(--ki-space-sm);
+  --ki-button-sm-radius: var(--ki-radius-component-sm);
   --ki-button-sm-font-size: var(--ki-typography-size-body-1);
   --ki-button-sm-line-height: var(--ki-typography-line-height-body-1);
   --ki-button-sm-icon-size: var(--ki-space-3xl);
@@ -1045,7 +1045,7 @@
   --ki-button-md-height: var(--ki-space-12xl);
   --ki-button-md-padding-inline: var(--ki-space-lg);
   --ki-button-md-gap: var(--ki-space-sm);
-  --ki-button-md-radius: var(--ki-radius-lg);
+  --ki-button-md-radius: var(--ki-radius-component-md);
   --ki-button-md-font-size: var(--ki-typography-size-body-1);
   --ki-button-md-line-height: var(--ki-typography-line-height-body-1);
   --ki-button-md-icon-size: var(--ki-space-4xl);
@@ -1053,7 +1053,7 @@
   --ki-button-lg-height: var(--ki-space-14xl);
   --ki-button-lg-padding-inline: var(--ki-space-xl);
   --ki-button-lg-gap: var(--ki-space-sm);
-  --ki-button-lg-radius: var(--ki-radius-xl);
+  --ki-button-lg-radius: var(--ki-radius-component-lg);
   --ki-button-lg-font-size: var(--ki-typography-size-body-2);
   --ki-button-lg-line-height: var(--ki-typography-line-height-body-2);
   --ki-button-lg-icon-size: var(--ki-space-5xl);
@@ -1061,7 +1061,7 @@
   --ki-button-xl-height: var(--ki-space-16xl);
   --ki-button-xl-padding-inline: var(--ki-space-2xl);
   --ki-button-xl-gap: var(--ki-space-md);
-  --ki-button-xl-radius: var(--ki-radius-2xl);
+  --ki-button-xl-radius: var(--ki-radius-component-xl);
   --ki-button-xl-font-size: var(--ki-typography-size-title-2);
   --ki-button-xl-line-height: var(--ki-typography-line-height-title-2);
   --ki-button-xl-icon-size: var(--ki-space-7xl);
@@ -1349,7 +1349,7 @@
   --ki-checkbox-focus-ring-shadow: var(--ki-focus-primary);
   --ki-dialog-radius: var(--ki-radius-big-component-sm);
   --ki-dialog-padding: var(--ki-space-7xl);
-  --ki-dialog-gap: var(--ki-space-5xl);
+  --ki-dialog-gap: var(--ki-space-xl);
   --ki-dialog-min-width: var(--ki-size-surface-sm);
   --ki-dialog-max-width: var(--ki-size-surface-md);
   --ki-dialog-bg: var(--ki-surface-special-light-s0-dark-s2);
@@ -1363,6 +1363,17 @@
   --ki-dialog-heading-font-size: var(--ki-typography-size-title-2);
   --ki-dialog-heading-font-weight: var(--ki-typography-weight-body-semibold);
   --ki-dialog-heading-line-height: var(--ki-typography-line-height-title-2);
+  --ki-dialog-heading-padding-block-start: var(--ki-space-3xl);
+  --ki-dialog-heading-padding-block-end: var(--ki-space-3xl);
+  --ki-dialog-heading-padding-inline: var(--ki-space-5xl);
+  --ki-dialog-body-padding-block-start: var(--ki-space-5xl);
+  --ki-dialog-body-padding-block-end: var(--ki-space-5xl);
+  --ki-dialog-body-padding-inline: var(--ki-space-5xl);
+  --ki-dialog-footer-padding-block-start: var(--ki-space-7xl);
+  --ki-dialog-footer-padding-block-end: var(--ki-space-7xl);
+  --ki-dialog-footer-padding-inline: var(--ki-space-5xl);
+  --ki-dialog-divider-width: var(--ki-size-border-hairline);
+  --ki-dialog-divider-color: var(--ki-outline-base-em);
   --ki-dialog-focus-ring-color: var(--ki-focus-ring-color);
   --ki-dialog-focus-ring-width: var(--ki-focus-ring-width);
   --ki-dialog-focus-ring-offset: var(--ki-focus-ring-offset);
@@ -1589,10 +1600,10 @@
   --ki-select-placeholder-fg: var(--ki-text-supporting);
   --ki-select-listbox-bg: var(--ki-surface-special-blur-base-light);
   --ki-select-listbox-backdrop-blur: var(--ki-blur-48);
-  --ki-select-listbox-radius: var(--ki-radius-big-component-sm);
+  --ki-select-listbox-radius: var(--ki-radius-big-component-xs);
   --ki-select-listbox-elevation: var(--ki-elevation-shadow-med); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-shadow */
   --ki-select-listbox-shadow: var(--ki-elevation-e3);
-  --ki-select-listbox-padding: var(--ki-space-xl);
+  --ki-select-listbox-padding: var(--ki-space-md);
   --ki-select-listbox-max-block-size: var(--ki-size-surface-xs);
   --ki-select-listbox-offset: var(--ki-space-xs);
   --ki-select-focus-ring-color: var(--ki-focus-ring-color);
@@ -1611,12 +1622,17 @@
   --ki-status-warning-color: var(--ki-text-warning-high-em);
   --ki-switch-track-width: var(--ki-space-12xl);
   --ki-switch-track-height: var(--ki-space-6xl);
+  --ki-switch-control-width: var(--ki-space-14xl);
+  --ki-switch-control-height: var(--ki-space-9xl);
   --ki-switch-thumb-size: var(--ki-space-4xl);
   --ki-switch-thumb-width: var(--ki-space-6xl);
   --ki-switch-thumb-inset: var(--ki-space-xxs);
-  --ki-switch-gap: var(--ki-space-md);
+  --ki-switch-gap: var(--ki-space-xl);
   --ki-switch-track-radius: var(--ki-radius-md);
-  --ki-switch-thumb-radius: var(--ki-radius-round);
+  --ki-switch-well-radius: var(--ki-radius-component-md);
+  --ki-switch-well-bg-start: var(--ki-surface-s3);
+  --ki-switch-well-bg-end: var(--ki-surface-s1);
+  --ki-switch-thumb-radius: var(--ki-radius-component-xs);
   --ki-switch-border-width: var(--ki-size-border-hairline);
   --ki-switch-min-target: var(--ki-space-9xl);
   --ki-switch-glyph-width: var(--ki-space-md);
@@ -1692,7 +1708,7 @@
   --ki-tabs-divider-width: var(--ki-space-zero);
   --ki-tabs-divider-color: var(--ki-outline-low-em);
   --ki-textarea-padding-inline: var(--ki-space-xl);
-  --ki-textarea-padding-block: var(--ki-space-xl);
+  --ki-textarea-padding-block: var(--ki-space-md);
   --ki-textarea-label-gap: var(--ki-space-xs);
   --ki-textarea-label-padding-inline: var(--ki-space-xxs);
   --ki-textarea-radius: var(--ki-radius-component-md);
@@ -1748,6 +1764,8 @@
   --ki-tooltip-padding-block: var(--ki-space-xl);
   --ki-tooltip-max-inline-size: var(--ki-size-surface-xxs);
   --ki-tooltip-offset: var(--ki-space-md);
+  --ki-tooltip-arrow-size: var(--ki-space-md);
+  --ki-tooltip-arrow-radius: var(--ki-radius-xxs);
   --ki-tooltip-bg: var(--ki-surface-special-light-s0-dark-s2);
   --ki-tooltip-border-width: var(--ki-size-border-hairline);
   --ki-tooltip-border-color: var(--ki-outline-secondary-button-top);
@@ -1842,6 +1860,7 @@
     --ki-card-border-color: var(--ki-outline-strong);
     --ki-card-border-width: var(--ki-size-border-hairline);
     --ki-dialog-border: var(--ki-size-border-hairline) solid var(--ki-outline-strong);
+    --ki-dialog-divider-color: var(--ki-outline-strong);
     --ki-divider-color: var(--ki-outline-strong);
     --ki-indicator-dot-color: var(--ki-outline-strong);
     --ki-list-item-divider-color: var(--ki-outline-strong);
@@ -1866,6 +1885,7 @@
   --ki-card-border-color: var(--ki-outline-strong);
   --ki-card-border-width: var(--ki-size-border-hairline);
   --ki-dialog-border: var(--ki-size-border-hairline) solid var(--ki-outline-strong);
+  --ki-dialog-divider-color: var(--ki-outline-strong);
   --ki-divider-color: var(--ki-outline-strong);
   --ki-indicator-dot-color: var(--ki-outline-strong);
   --ki-list-item-divider-color: var(--ki-outline-strong);

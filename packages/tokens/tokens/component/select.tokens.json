@@ -176,8 +176,8 @@
           "$description": "backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override)."
         },
         "radius": {
-          "$value": "{ki.radius.big-component.sm}",
-          "$description": "dimension used by the select component for listbox radius (MarsUI Radius/big_component/radius_sm 20px bound on the Dropmenu panel)."
+          "$value": "{ki.radius.big-component.xs}",
+          "$description": "dimension used by the select component for listbox radius (Dropmenu master 12127:30113: Radius/big-component/xs 16px)."
         },
         "elevation": {
           "$value": "{ki.elevation.shadow-med}",
@@ -197,8 +197,8 @@
           "$description": "shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus)."
         },
         "padding": {
-          "$value": "{ki.space.xl}",
-          "$description": "dimension used by the select component for listbox padding (MarsUI Dropmenu content inset Space/xl 12px)."
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the select component for listbox padding (Dropmenu master Body: Space/md 8px on every side)."
         },
         "max-block-size": {
           "$value": "{ki.size.surface.xs}",

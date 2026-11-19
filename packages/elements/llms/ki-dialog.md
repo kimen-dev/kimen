@@ -71,20 +71,31 @@ Open it with the `show()` method (and close with `close()`); the `ki-close` even
 - `--ki-dialog-bg`: color used by the dialog component for background (flat fallback of the MarsUI glass gradient: Surface/Special/light-s0_dark-s2; components paint the gradient from ki.dialog.bg-start to ki.dialog.bg-end).
 - `--ki-dialog-bg-end`: color used by the dialog component for the glass gradient end (MarsUI Surface/Special/light-s0_dark-s2: white light / Dark/800 dark).
 - `--ki-dialog-bg-start`: color used by the dialog component for the glass gradient start (MarsUI Surface/Special/blur_base_light White/80; dark resolves rgba(36,36,36,0.8)). Paint background: linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end)).
+- `--ki-dialog-body-padding-block-end`: dimension used by the dialog component for body section padding block end (Modal compact Body: Space/5xl 20px.)
+- `--ki-dialog-body-padding-block-start`: dimension used by the dialog component for body section padding block start (Modal compact Body 16414:19668: Space/5xl 20px.)
+- `--ki-dialog-body-padding-inline`: dimension used by the dialog component for body section padding inline (Modal compact Body: Space/5xl 20px.)
 - `--ki-dialog-border`: border used by the dialog component for border (MarsUI 1px solid Outline/base_em Black/3 light / White/3 dark; retires the migrated Black/5 foundation reference).
+- `--ki-dialog-divider-color`: color used by the dialog component for the dividers under the heading and above the footer (Outline/base-em).
+- `--ki-dialog-divider-width`: dimension used by the dialog component for the dividers under the heading and above the footer (Modal-header and Modal-actions 1px strokes). Zero removes them.
 - `--ki-dialog-fg`: color used by the dialog component for foreground.
 - `--ki-dialog-focus-ring-color`: color used by the dialog component for focus ring color.
 - `--ki-dialog-focus-ring-offset`: dimension used by the dialog component for focus ring offset.
 - `--ki-dialog-focus-ring-width`: dimension used by the dialog component for focus ring width.
-- `--ki-dialog-gap`: dimension used by the dialog component for gap.
+- `--ki-dialog-footer-padding-block-end`: dimension used by the dialog component for footer section padding block end (Modal-actions/CTAs: Space/7xl 24px.)
+- `--ki-dialog-footer-padding-block-start`: dimension used by the dialog component for footer section padding block start (Modal-actions/CTAs 14158:28302: Space/7xl 24px, below the divider.)
+- `--ki-dialog-footer-padding-inline`: dimension used by the dialog component for footer section padding inline (Modal-actions/CTAs: Space/5xl 20px.)
+- `--ki-dialog-gap`: dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px).
 - `--ki-dialog-heading-font-size`: dimension used by the dialog component for heading font size.
 - `--ki-dialog-heading-font-weight`: font weight used by the dialog component for heading font weight.
 - `--ki-dialog-heading-line-height`: dimension used by the dialog component for heading line height.
+- `--ki-dialog-heading-padding-block-end`: dimension used by the dialog component for heading section padding block end (Modal-header compact: Space/3xl 16px, above the divider.)
+- `--ki-dialog-heading-padding-block-start`: dimension used by the dialog component for heading section padding block start (Modal-header compact 14156:25916: Space/3xl 16px.)
+- `--ki-dialog-heading-padding-inline`: dimension used by the dialog component for heading section padding inline (Modal-header compact: Space/5xl 20px.)
 - `--ki-dialog-max-width`: dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale).
 - `--ki-dialog-min-width`: dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale).
 - `--ki-dialog-motion-duration`: duration used by the dialog component for the enter transition (MarsUI moderate step 240ms; retires the migrated 0ms token that disabled the @starting-style fade).
 - `--ki-dialog-motion-easing`: easing used by the dialog component for the enter transition (MarsUI decelerate curve; retires the migrated linear pair).
-- `--ki-dialog-padding`: dimension used by the dialog component for padding.
+- `--ki-dialog-padding`: dimension used by the dialog component for the room it keeps from the viewport edges when its width or height is clamped. Each section pads itself (heading, body and footer padding tokens).
 - `--ki-dialog-radius`: dimension used by the dialog component for radius (MarsUI compact Modal master 16414:19665: Radius/big_component/radius_sm 20px; the large variant anchors 24px big_component/radius_md).
 - `--ki-dialog-shadow`: Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3).
 - `--ki-focus-primary`: MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components.

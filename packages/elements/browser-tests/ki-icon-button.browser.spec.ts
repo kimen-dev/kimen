@@ -289,6 +289,25 @@ async function holdWithKeyboard(
   }
 }
 
+/**
+ * Reassigns the component radius scale where the theme declares it, the way a
+ * Figma radius mode (Round, Flat, Pointed) reassigns `Radius/small-component`.
+ * Declared on the root: a token that aliases the scale resolves it there.
+ */
+async function withComponentRadii(value: string, run: () => Promise<void>): Promise<void> {
+  const steps = ['xs', 'sm', 'md', 'lg', 'xl'];
+  for (const step of steps) {
+    document.documentElement.style.setProperty(`--ki-radius-component-${step}`, value);
+  }
+  try {
+    await run();
+  } finally {
+    for (const step of steps) {
+      document.documentElement.style.removeProperty(`--ki-radius-component-${step}`);
+    }
+  }
+}
+
 describe('ki-icon-button in a real browser', () => {
   it('S1 dispatches one activation for a real click', async () => {
     cleanup();
@@ -392,6 +411,18 @@ describe('ki-icon-button in a real browser', () => {
     const button = requireButton(el);
 
     expect(button).toHaveProperty('disabled', true);
+  });
+
+  it('takes every size radius from the component radius scale, so a radius mode reaches it', async () => {
+    cleanup();
+    ensureTokens();
+    await withComponentRadii('3px', async () => {
+      for (const size of sizes) {
+        const el = await mount('Close', { size });
+        await waitForStyles();
+        expect(getComputedStyle(requireButton(el)).borderTopLeftRadius, size).toBe('3px');
+      }
+    });
   });
 
   it('S8 S12 S13 forwards a host aria-description onto the inner button and follows its change and removal', async () => {

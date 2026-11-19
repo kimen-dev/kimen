@@ -279,3 +279,19 @@ input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
     transform: scale(0.92);
   }
 }
+
+/* Forced colors (Windows Contrast themes): the palette repaints the box edge,
+   the mark (currentColor) and the label in CanvasText whatever the state. A
+   disabled checkbox says it in GrayText, as a native disabled checkbox does. */
+@media (forced-colors: active) {
+  :host([disabled]) [part="control"],
+  :host(:state(fieldset-disabled)) [part="control"] {
+    border-color: GrayText;
+    color: GrayText;
+  }
+
+  :host([disabled]) [part="label"],
+  :host(:state(fieldset-disabled)) [part="label"] {
+    color: GrayText;
+  }
+}

@@ -130,6 +130,13 @@
           "style": "solid"
         },
         "$description": "The dialog edge at 3:1 or more against the page, in every theme."
+      },
+      "divider": {
+        "color": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "The dividers under the dialog heading and above its footer, where a theme draws them, at 3:1 or more."
+        }
       }
     }
   }

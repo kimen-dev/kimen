@@ -135,8 +135,8 @@ None.
 - `--ki-select-listbox-bg`: color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with backdrop-filter blur(var(--ki-select-listbox-backdrop-blur))).
 - `--ki-select-listbox-max-block-size`: dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale).
 - `--ki-select-listbox-offset`: dimension used by the select component for listbox offset.
-- `--ki-select-listbox-padding`: dimension used by the select component for listbox padding (MarsUI Dropmenu content inset Space/xl 12px).
-- `--ki-select-listbox-radius`: dimension used by the select component for listbox radius (MarsUI Radius/big_component/radius_sm 20px bound on the Dropmenu panel).
+- `--ki-select-listbox-padding`: dimension used by the select component for listbox padding (Dropmenu master Body: Space/md 8px on every side).
+- `--ki-select-listbox-radius`: dimension used by the select component for listbox radius (Dropmenu master 12127:30113: Radius/big-component/xs 16px).
 - `--ki-select-listbox-shadow`: shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus).
 - `--ki-select-min-target`: dimension used by the select component for min target.
 - `--ki-select-padding-inline`: dimension used by the select component for padding inline.

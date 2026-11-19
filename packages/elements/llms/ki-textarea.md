@@ -132,7 +132,7 @@ None.
 - `--ki-textarea-label-padding-inline`: dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input).
 - `--ki-textarea-line-height`: dimension used by the textarea component for line height.
 - `--ki-textarea-min-target`: dimension used by the textarea component for min target.
-- `--ki-textarea-padding-block`: dimension used by the textarea component for padding block (MarsUI 96px md textarea: 12px ink inset).
+- `--ki-textarea-padding-block`: dimension used by the textarea component for padding block (Input-cell textarea md 8018:176: Space/md 8px).
 - `--ki-textarea-padding-inline`: dimension used by the textarea component for padding inline (MarsUI 96px md textarea: 12px ink inset).
 - `--ki-textarea-radius`: dimension used by the textarea component for radius (MarsUI Radius/component/radius_md 10px for the md size; component ramp so personality modes reach it).
 - `--ki-textarea-readonly-bg`: color used by the textarea component for readonly background.
