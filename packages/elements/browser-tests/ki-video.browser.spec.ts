@@ -280,7 +280,7 @@ describe('ki-video', () => {
     if (!control) {
       throw new Error('ki-video did not render its glass container');
     }
-    const rest = getComputedStyle(control).boxShadow;
+    const rest = getComputedStyle(control, '::before').boxShadow;
     expect(getComputedStyle(control).transform).toBe('none');
 
     await userEvent.hover(playControlOf(el));
@@ -290,7 +290,7 @@ describe('ki-video', () => {
     // box-shadow/transform only, so layout never moves; the transition
     // itself is gated by prefers-reduced-motion (motion tokens).
     await waitUntil(
-      () => getComputedStyle(control).boxShadow !== rest,
+      () => getComputedStyle(control, '::before').boxShadow !== rest,
       'hover did not lift the glass container',
     );
     await waitUntil(
@@ -321,6 +321,7 @@ describe('ki-video', () => {
 
     await expect.poll(() => getComputedStyle(control).transform).toMatch(/^matrix\(1\.02/u);
     expect(getComputedStyle(control).boxShadow).toBe(restShadow);
+    expect(getComputedStyle(control, '::before').boxShadow).toBe('none');
     await userEvent.unhover(playControlOf(el));
   });
 
@@ -340,7 +341,8 @@ describe('ki-video', () => {
     await expect.poll(() => getComputedStyle(control).transform).toMatch(/^matrix\(1\.02/u);
     expect(getComputedStyle(control).boxShadow).toBe(restShadow);
     const hoverLayer = getComputedStyle(control, '::before');
-    expect(hoverLayer.opacity === '0' || hoverLayer.boxShadow === 'none').toBe(true);
+    expect(hoverLayer.opacity).toBe('0');
+    expect(hoverLayer.boxShadow).toContain('inset');
     await userEvent.unhover(playControlOf(el));
   });
 

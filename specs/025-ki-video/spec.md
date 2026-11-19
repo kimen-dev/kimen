@@ -430,6 +430,9 @@ Feature: Video
 
 ## Assumptions
 
+- Issue #349 (agent's choice, pending founder confirmation). The existing token
+  contract check verifies the compiled shadow lists across all theme contexts.
+  Normalization applies to DTCG shadow values and keeps unrelated CSS keywords.
 - Issue #349 (agent's choice, pending founder confirmation). The video hover
   effect gets its own opacity token. onmars keeps the existing hover effect
   and Material 3 keeps its flat hover. The shared primary hover shadow still

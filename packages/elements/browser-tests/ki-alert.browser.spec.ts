@@ -462,7 +462,9 @@ describe('ki-alert in a real browser', () => {
 
     const button = part(el, 'dismiss');
     expect(button.matches(':focus-visible')).toBe(true);
-    await expect.poll(() => getComputedStyle(button).boxShadow).toMatch(/0px 0px 0px 3px/u);
+    await expect
+      .poll(() => getComputedStyle(button, '::after').boxShadow)
+      .toMatch(/0px 0px 0px 3px/u);
   });
 
   it('S7 keyboard activation with Enter and Space dismisses exactly once each', async () => {

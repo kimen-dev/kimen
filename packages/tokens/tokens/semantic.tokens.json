@@ -1163,6 +1163,11 @@
           }
         }
       },
+      "video-hover-opacity": {
+        "$type": "number",
+        "$value": "{ki.scale.unit}",
+        "$description": "Opacity of the added play-container shadow on hover. onmars shows the full primary hover effect over the resting shadow."
+      },
       "small-dark-shadow": {
         "$type": "shadow",
         "$value": {

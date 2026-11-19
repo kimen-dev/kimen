@@ -458,7 +458,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     // e4 wrap elevation (deepest layer 0 32 32 -16) plus the secondary_default
     // inner highlight (inset layer).
     expect(style.boxShadow).toContain('0px 32px 32px -16px');
-    expect(style.boxShadow).toContain('inset');
+    expect(getComputedStyle(tooltip, '::before').boxShadow).toContain('inset');
 
     // Caret-depth offset: 8px trigger-to-card distance (top placement).
     const triggerRect = trigger.getBoundingClientRect();

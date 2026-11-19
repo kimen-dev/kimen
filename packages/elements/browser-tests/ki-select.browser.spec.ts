@@ -699,7 +699,9 @@ describe('ki-select in a real browser', () => {
 
     const button = trigger(el);
     expect(button.matches(':focus-visible')).toBe(true);
-    await expect.poll(() => getComputedStyle(button).boxShadow).toMatch(/0px 0px 0px 3px/u);
+    await expect
+      .poll(() => getComputedStyle(button, '::before').boxShadow)
+      .toMatch(/0px 0px 0px 3px/u);
   });
 
   it('S14 keeps the invalid ring with component effect shadows disabled (#349)', async () => {
@@ -710,7 +712,7 @@ describe('ki-select in a real browser', () => {
 
     await expect.element(trigger(el)).toHaveAttribute('aria-invalid', 'true');
     await expect
-      .poll(() => getComputedStyle(trigger(el)).boxShadow)
+      .poll(() => getComputedStyle(trigger(el), '::before').boxShadow)
       .toContain('rgba(240, 81, 73, 0.2)');
   });
 
@@ -732,7 +734,7 @@ describe('ki-select in a real browser', () => {
     // (danger-500 at 20% light) composes over the secondary_default rest
     // elevation. Poll: box-shadow is motion-gated (120ms transition).
     await expect
-      .poll(() => getComputedStyle(trigger(el)).boxShadow)
+      .poll(() => getComputedStyle(trigger(el), '::before').boxShadow)
       .toContain('rgba(240, 81, 73, 0.2)');
 
     trigger(el).click();
