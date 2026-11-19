@@ -12,6 +12,7 @@ import { defineCustomElement } from '../dist/components/ki-card.js';
 import { expectAccessible, parkPointer } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { moveToNewParent } from './reconnect';
+import { resolvedShadowToken } from './resolved-token';
 
 const STYLE_ID = 'ki-card-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-card-browser-material3-token-style';
@@ -653,13 +654,12 @@ describe('ki-card in a real browser', () => {
   it('lifts the flat resting surface to e2 while hovered', async () => {
     cleanup();
     const el = await mount('<ki-card>Storage is almost full</ki-card>');
-    // Pointer position persists across spec files in this page: park it on a
-    // probe below the card first so the resting read is hover-free.
-    const probe = document.createElement('button');
-    probe.textContent = 'probe';
-    probe.style.boxShadow = 'var(--ki-elevation-e2)';
-    document.body.append(probe);
-    await userEvent.hover(probe);
+    // Pointer position persists across spec files in this page: park it
+    // below the card so both resting reads are hover-free.
+    const parkingTarget = document.createElement('button');
+    parkingTarget.textContent = 'probe';
+    document.body.append(parkingTarget);
+    await userEvent.hover(parkingTarget);
     await nextFrame();
     await settleMotion();
     const resting = getComputedStyle(cardPart(el)).boxShadow;
@@ -668,12 +668,15 @@ describe('ki-card in a real browser', () => {
     await userEvent.hover(el);
     await nextFrame();
     await settleMotion();
-    const lifted = getComputedStyle(cardPart(el)).boxShadow;
-    expect(lifted).toBe(getComputedStyle(probe).boxShadow);
+    const card = cardPart(el);
+    const lifted = getComputedStyle(card).boxShadow;
+    // A neutral probe serializes the token without native button appearance,
+    // which reports no box shadow in WebKit.
+    expect(lifted).toBe(resolvedShadowToken(card, '--ki-elevation-e2'));
     expect(lifted, 'hover must lift the card off its resting elevation').not.toBe(resting);
 
-    await userEvent.hover(probe);
-    await expect.poll(() => getComputedStyle(cardPart(el)).boxShadow).toBe(resting);
-    probe.remove();
+    await userEvent.hover(parkingTarget);
+    await expect.poll(() => getComputedStyle(card).boxShadow).toBe(resting);
+    parkingTarget.remove();
   });
 });

@@ -192,11 +192,11 @@ slot[name="media"]::slotted(video) {
     box-shadow: var(--ki-elevation-e2);
   }
 
-  [part="card"][data-clickable]:hover {
+  :host(:hover) [part="card"][data-clickable] {
     box-shadow: var(--ki-card-hover-shadow);
   }
 
-  [part="card"][data-clickable]:hover::before {
+  :host(:hover) [part="card"][data-clickable]::before {
     position: absolute;
     z-index: -2;
     inset: 0;

@@ -2,7 +2,7 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
-import { commands, page, userEvent } from 'vitest/browser';
+import { commands, page, server, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineButton } from '../dist/components/ki-button.js';
 import { defineCustomElement as defineCard } from '../dist/components/ki-card.js';
 import { expectAccessible, parkPointer } from './axe';
@@ -15,6 +15,8 @@ const browserCommands = commands as unknown as {
 const title = 'Search index rebuild';
 const copy = 'Rebuild starts at midnight';
 const link = 'href="#incident-42"';
+const beforeButton = '<button type="button" tabindex="0">Before</button>';
+const afterButton = '<button type="button" tabindex="0">After</button>';
 
 beforeAll(async () => {
   defineCard();
@@ -82,6 +84,24 @@ function focusBefore(): void {
   const before = page.getByRole('button', { name: 'Before' }).element();
   if (!(before instanceof HTMLButtonElement)) throw new Error('Focus sentinel did not render');
   before.focus();
+  expect(document.activeElement).toBe(before);
+}
+
+async function tabToTitle(
+  card: HTMLElement,
+  role: 'link' | 'button',
+  shift = false,
+): Promise<void> {
+  const control = page.getByRole(role, { name: title, exact: true }).element();
+  if (!(control instanceof HTMLElement)) throw new Error('Card title control did not render');
+  await userEvent.tab({ shift });
+  // WebKit can omit native links and buttons from Tab under platform keyboard
+  // settings. Keep keyboard modality for the ring and test the native key
+  // behavior by focusing the title directly if WebKit skips that stop.
+  if (server.browser === 'webkit' && card.shadowRoot?.activeElement !== control) {
+    control.focus();
+  }
+  expect(card.shadowRoot?.activeElement).toBe(control);
 }
 
 it('S1 follows the native destination when supporting text is clicked', async () => {
@@ -124,13 +144,12 @@ it('S3 allows a real pointer drag to select supporting text without activation',
 
 it('S4 tabs once to the title and each inner control, with a whole-card focus ring', async () => {
   const card = await mount(link, {
-    before: '<button type="button">Before</button>',
-    footer: '<button slot="footer" type="button">Bookmark</button>',
-    after: '<button type="button">After</button>',
+    before: beforeButton,
+    footer: '<button slot="footer" type="button" tabindex="0">Bookmark</button>',
+    after: afterButton,
   });
   focusBefore();
-  await userEvent.tab();
-  await expect.element(page.getByRole('link', { name: title, exact: true })).toHaveFocus();
+  await tabToTitle(card, 'link');
   expect(getComputedStyle(surface(card)).outlineStyle).toBe('solid');
   expect(parseFloat(getComputedStyle(surface(card)).outlineWidth)).toBeGreaterThan(0);
   await userEvent.tab();
@@ -139,18 +158,18 @@ it('S4 tabs once to the title and each inner control, with a whole-card focus ri
   await userEvent.tab();
   await expect.element(page.getByRole('button', { name: 'After' })).toHaveFocus();
   await userEvent.tab({ shift: true });
-  await userEvent.tab({ shift: true });
+  await expect.element(page.getByRole('button', { name: 'Bookmark' })).toHaveFocus();
+  await tabToTitle(card, 'link', true);
   await userEvent.keyboard('{Enter}');
   await expect.poll(() => location.hash).toBe('#incident-42');
 });
 
 it.each(['{Enter}', '[Space]'])('S5 activates a focused title button with %s once', async (key) => {
-  await mount('interactive', { before: '<button type="button">Before</button>' });
+  const card = await mount('interactive', { before: beforeButton, after: afterButton });
   const activate = vi.fn();
   document.querySelector('main')?.addEventListener('ki-activate', activate);
   focusBefore();
-  await userEvent.tab();
-  await expect.element(page.getByRole('button', { name: title })).toHaveFocus();
+  await tabToTitle(card, 'button');
   await userEvent.keyboard(key);
   expect(activate).toHaveBeenCalledTimes(1);
 });
@@ -211,9 +230,11 @@ it.each([
     probe.style.boxShadow = `var(--ki-${shadow})`;
     const appearance = getComputedStyle(probe);
     await expect
-      .poll(() => getComputedStyle(surface(card)).backgroundColor)
-      .toBe(appearance.backgroundColor);
-    await expect.poll(() => getComputedStyle(surface(card)).boxShadow).toBe(appearance.boxShadow);
+      .poll(() => getComputedStyle(surface(card)).backgroundColor === appearance.backgroundColor)
+      .toBe(true);
+    await expect
+      .poll(() => getComputedStyle(surface(card)).boxShadow === appearance.boxShadow)
+      .toBe(true);
     if (variant === 'outlined') {
       expect(parseFloat(getComputedStyle(surface(card)).borderInlineStartWidth)).toBeGreaterThan(0);
     } else if (variant !== 'default') {
@@ -236,10 +257,9 @@ it('S9 retains the border and full-card keyboard outline in forced colours', asy
       skip('This engine does not emulate forced colours');
     }
     expect(matchMedia('(forced-colors: active)').matches).toBe(true);
-    const card = await mount(link, { before: '<button type="button">Before</button>' });
+    const card = await mount(link, { before: beforeButton, after: afterButton });
     focusBefore();
-    await userEvent.tab();
-    await expect.element(page.getByRole('link', { name: title })).toHaveFocus();
+    await tabToTitle(card, 'link');
     const styles = getComputedStyle(surface(card));
     expect(styles.borderInlineStartStyle).toBe('solid');
     expect(parseFloat(styles.borderInlineStartWidth)).toBeGreaterThan(0);
@@ -295,8 +315,8 @@ it('S13 chooses href over interactive', async () => {
 it('S14 leaves a titleless action card out of the tab order', async () => {
   await mount('interactive', {
     heading: '',
-    before: '<button type="button">Before</button>',
-    after: '<button type="button">After</button>',
+    before: beforeButton,
+    after: afterButton,
   });
   focusBefore();
   await userEvent.tab();

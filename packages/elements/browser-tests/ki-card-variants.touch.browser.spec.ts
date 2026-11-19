@@ -51,11 +51,16 @@ it('S12 activates a coarse-pointer tap on the body without retaining hover feedb
   const styles = getComputedStyle(surface);
   expect(parseFloat(styles.minBlockSize)).toBeGreaterThanOrEqual(44);
   expect(parseFloat(styles.minInlineSize)).toBeGreaterThanOrEqual(44);
-  const resting = styles.boxShadow;
+  const hoverPaint = () => ({
+    shadow: getComputedStyle(surface).boxShadow,
+    overlay: getComputedStyle(surface, '::before').backgroundColor,
+  });
+  const resting = hoverPaint();
   const activate = vi.fn();
   card.addEventListener('ki-activate', activate);
   await browserCommands.tapWithCoarsePointer('#touch-copy');
   await expect.poll(() => activate.mock.calls.length).toBe(1);
+  expect(hoverPaint()).toEqual(resting);
   await userEvent.hover(page.getByText('Rebuild starts at midnight'));
-  expect(getComputedStyle(surface).boxShadow).toBe(resting);
+  expect(hoverPaint()).toEqual(resting);
 });
