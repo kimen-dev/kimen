@@ -693,6 +693,10 @@
   --ki-textarea-sm-radius:var(--ki-radius-component-xs);
   --ki-textarea-lg-radius:var(--ki-radius-component-xs);
   --ki-textarea-xl-radius:var(--ki-radius-component-xs);
+  --ki-toast-bg:var(--ki-surface-s2);
+  --ki-toast-border:var(--ki-outline-none);
+  --ki-toast-shadow:var(--ki-elevation-e3);
+  --ki-toast-radius:var(--ki-radius-component-xxs);
   --ki-tooltip-radius:var(--ki-radius-component-xs);
   --ki-tooltip-padding-inline:var(--ki-space-md);
   --ki-tooltip-padding-block:var(--ki-space-xs);

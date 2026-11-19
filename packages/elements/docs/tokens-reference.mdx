@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 334 semantic
-and 1146 component tokens. Values are the resolved **onmars light**
+and 1168 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1698,6 +1698,38 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-xs-padding-block` | `0.5rem` | dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px). |
 | `--ki-textarea-xs-padding-inline` | `0.375rem` | dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px). |
 | `--ki-textarea-xs-radius` | `6px` | dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs). |
+
+### `ki-toast`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-toast-backdrop-filter` | `none` | filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342). |
+| `--ki-toast-bg` | `#f9f7f4` | color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself). |
+| `--ki-toast-bg-image` | `none` | image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6). |
+| `--ki-toast-border` | `rgba(24, 22, 19, 0.1)` | color used by the toast component for its hairline edge (issue #353). |
+| `--ki-toast-border-width` | `1px` | dimension used by the toast component for its hairline edge. |
+| `--ki-toast-danger-icon` | `#c21a45` | color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353). |
+| `--ki-toast-fg` | `#181613` | color used by the toast component for the heading ink (issue #353). |
+| `--ki-toast-gap` | `0.75rem` | dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px). |
+| `--ki-toast-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface. |
+| `--ki-toast-icon-size` | `1.25rem` | dimension used by the toast component for the tone icon. |
+| `--ki-toast-info-icon` | `#085268` | color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353). |
+| `--ki-toast-message-fg` | `#5e5953` | color used by the toast component for the message ink (issue #353). |
+| `--ki-toast-neutral-icon` | `#181613` | color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353). |
+| `--ki-toast-padding` | `0.75rem` | dimension used by the toast component for its padding (issue #353: 12px). |
+| `--ki-toast-radius` | `16px` | dimension used by the toast component for its corners (issue #353: 16px). |
+| `--ki-toast-shadow` | `0 4px 12px 0 rgba(24, 22, 19, 0.07), 0 20px 44px 0 rgba(24, 22, 19, 0.12), 0 18px 40px 0 transparent` | shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6). |
+| `--ki-toast-success-icon` | `#2c6a2b` | color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353). |
+| `--ki-toast-warning-icon` | `#945b05` | color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353). |
+| `--ki-toast-width` | `22.5rem` | dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem). |
+
+### `ki-toaster`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-toaster-gap` | `0.75rem` | dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014). |
+| `--ki-toaster-inset-block` | `1rem` | dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014). |
+| `--ki-toaster-inset-inline` | `1rem` | dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014). |
 
 ### `ki-tooltip`
 

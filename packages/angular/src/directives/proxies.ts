@@ -34,6 +34,8 @@ import { defineCustomElement as defineKiTab } from '@kimen/elements/components/k
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/ki-tabs.js';
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
+import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
+import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
 @ProxyCmp({
@@ -707,6 +709,64 @@ export class KiTextarea {
 
 
 export declare interface KiTextarea extends Components.KiTextarea {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiToast,
+  inputs: ['dismissLabel', 'dismissed', 'dismissible', 'duration', 'heading', 'queued', 'tone']
+})
+@Component({
+  selector: 'ki-toast',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['dismissLabel', 'dismissed', 'dismissible', 'duration', 'heading', 'queued', 'tone'],
+})
+export class KiToast {
+  protected el: HTMLKiToastElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiToast extends Components.KiToast {
+  /**
+   * Fired once when the toast leaves because its time ran out
+(`reason: "timeout"`), the person used the dismiss button (`"button"`),
+pressed Escape inside it (`"escape"`) or activated its action
+(`"action"`), after it is hidden and focus has been handed on. Not
+cancelable. When to use: remove the element, or record that the message
+was seen. When NOT to use: do not expect it for programmatic `dismissed`
+changes.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiToaster,
+  inputs: ['label', 'max', 'placement'],
+  methods: ['show']
+})
+@Component({
+  selector: 'ki-toaster',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label', 'max', 'placement'],
+})
+export class KiToaster {
+  protected el: HTMLKiToasterElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiToaster extends Components.KiToaster {}
 
 
 @ProxyCmp({

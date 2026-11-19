@@ -826,6 +826,10 @@
         "$value": "8rem",
         "$description": "QR symbol edge: the Figma master's 128x128 symbol frame (nodes 12019:6059 / 16158:27560), as a dedicated surface size decoupled from ki.space (DNA brief section 3). Replaces the interim 120px ki.space.24xl declaration."
       },
+      "toast": {
+        "$value": "22.5rem",
+        "$description": "Width of a toast (issue #353, spec 049): one size of its own, between the surface steps xs (20rem) and sm (24rem)."
+      },
       "surface": {
         "xxs": {
           "$value": "18rem",
