@@ -366,6 +366,8 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
         message: 'selected, active and plain options paint the same',
       })
       .toBe(3);
+    // Read the settled highlight fill after the row's background transition.
+    await Promise.all(active.getAnimations().map((animation) => animation.finished));
     expect(
       parseColor(getComputedStyle(active).color).ink,
       'the label of the active option is the colour of the backplate drawn behind it',

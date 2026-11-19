@@ -168,7 +168,11 @@
 .placement-start > .arrow,
 .placement-end > .arrow {
   inset-block-start: calc(var(--_ki-tooltip-arrow-along) - var(--_ki-tooltip-cross-shift));
-  background: color-mix(in srgb, var(--_ki-tooltip-arrow-bg-start), var(--_ki-tooltip-arrow-bg-end));
+  background: color-mix(
+    in srgb,
+    var(--_ki-tooltip-arrow-bg-start),
+    var(--_ki-tooltip-arrow-bg-end)
+  );
 }
 
 /* Above the trigger: the arrow hangs from the bottom edge, in its colour. */

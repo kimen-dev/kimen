@@ -669,6 +669,9 @@ describe('ki-tooltip pointer path in a real browser', () => {
     document.body.append(spacer, host);
     await expect.poll(() => isTooltipShown(host)).toBe(false);
 
+    // WebKit can keep the old host in the pointer's hit-test path across
+    // removal. Move through the spacer to make the return a fresh entry.
+    await userEvent.hover(spacer);
     await userEvent.hover(trigger);
     await expect.poll(() => isTooltipShown(host)).toBe(true);
     await userEvent.unhover(trigger);
