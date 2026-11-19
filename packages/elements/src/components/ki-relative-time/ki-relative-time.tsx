@@ -49,7 +49,9 @@ export class KiRelativeTime {
     if (!this.sync || this.updateAt === undefined || !this.host.isConnected) return;
 
     const delay = Math.min(MAX_TIMEOUT, Math.max(0, this.updateAt - Date.now()));
-    this.timer = window.setTimeout(() => { forceUpdate(this.host); }, delay);
+    this.timer = window.setTimeout(() => {
+      forceUpdate(this.host);
+    }, delay);
   }
 
   render() {
