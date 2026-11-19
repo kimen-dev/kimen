@@ -40,20 +40,14 @@ function parseArmedMarker(content) {
 }
 
 // Mirrors the harness matrix: light specs capture onmars + material3, dark
-// specs capture onmars only, and toMatchScreenshot names baselines
+// specs capture onmars, with a material3 dark capture for Note. Baselines are
 // `<name>-<browser>-<platform>.png`.
 function expectedLinuxBaselines(specFileName, engine = 'chromium') {
   const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
-  const captures = dark
-    ? [['onmars', 'dark']]
-    : [
-        ['onmars', 'light'],
-        ['material3', 'light'],
-      ];
-  return captures.map(
-    ([theme, scheme]) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
-  );
+  const scheme = dark ? 'dark' : 'light';
+  const themes = !dark || component === 'ki-note' ? ['onmars', 'material3'] : ['onmars'];
+  return themes.map((theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`);
 }
 
 function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines = ENGINES) {
@@ -101,6 +95,10 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-note.visual.dark.browser.spec.ts'), [
+    'ki-note-onmars-dark-gallery-chromium-linux.png',
+    'ki-note-material3-dark-gallery-chromium-linux.png',
   ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',

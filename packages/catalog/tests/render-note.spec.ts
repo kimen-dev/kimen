@@ -15,10 +15,10 @@ describe('ki-note catalog integration', () => {
     const note = catalog.components['ki-note'];
     expect(note?.props).toMatchObject({
       icon: { default: true, type: 'boolean' },
-      size: { default: 'md', values: ['sm', 'md'] },
+      size: { default: 'md', values: ['md', 'sm'] },
       tone: {
         default: 'neutral',
-        values: ['neutral', 'primary', 'info', 'success', 'warning', 'danger'],
+        values: ['danger', 'info', 'neutral', 'primary', 'success', 'warning'],
       },
     });
     expect(Object.keys(note?.slots ?? {})).toEqual(['', 'icon']);

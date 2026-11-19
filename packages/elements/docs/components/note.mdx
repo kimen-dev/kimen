@@ -1,0 +1,18 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Usage/Note" />
+
+# Note placement
+
+Set the explanation close to the thing it describes. For example, put this
+note beside billing settings so workspace members know who can edit them.
+
+```html
+<ki-note size="sm">Only workspace owners can change billing details.</ki-note>
+```
+
+Keep static explanations in the reading order. Use `ki-alert` when a change
+or result needs an announcement. Use the field's `help-text` for field
+guidance.
+
+[See the Note props and appearance options](?path=/docs/docs-components-ki-note--docs).

@@ -1,6 +1,11 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$type": "other",
+        "$value": "none",
+        "$description": "An unadorned surface has no background image."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1117,6 +1122,11 @@
           "$type": "other",
           "$value": "blur({ki.effect.component.backdrop-blur})",
           "$description": "Complete backdrop filter for glass components. Use none to turn the effect off."
+        },
+        "no-backdrop-filter": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "An unadorned surface applies no backdrop filter."
         },
         "listbox-backdrop-filter": {
           "$type": "other",

@@ -319,14 +319,26 @@ export function attachText(
   return parent.insertBefore(holder, before);
 }
 
-/** Writes one validated prop as an attribute: booleans by presence. */
-export function writeProp(element: Element, name: string, value: Scalar | undefined): void {
-  if (value === undefined || value === false) {
+/** Writes one validated prop as an attribute. */
+export function writeProp(
+  element: Element,
+  component: string,
+  name: string,
+  value: Scalar | undefined,
+): void {
+  if (value === undefined) {
     element.removeAttribute(name);
-  } else if (value === true) {
-    element.setAttribute(name, '');
+  } else if (value === false) {
+    // Built-in Stencil props that default to true require an explicit false.
+    // Registered components continue to use boolean attribute presence.
+    const entry = ownEntry(builtInCatalog.components, component);
+    if (ownEntry(entry?.props, name)?.default === true) {
+      element.setAttribute(name, 'false');
+    } else {
+      element.removeAttribute(name);
+    }
   } else {
-    element.setAttribute(name, String(value));
+    element.setAttribute(name, value === true ? '' : String(value));
   }
 }
 
@@ -355,7 +367,7 @@ export function writeProps(
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, name, value);
+    writeProp(element, component, name, value);
   }
 }
 
@@ -427,7 +439,7 @@ export function wireActivation(
 
 /**
  * Builds one validated node into a detached element (FR-004): props become
- * attributes (booleans as presence), text children become inert text nodes
+ * attributes, text children become inert text nodes
  * (never `innerHTML`), and a bound action wires exactly one activation
  * listener — derived from the catalog entry (FR-003) — onto the renderer's
  * single channel. No spec string is ever evaluated.

@@ -24,6 +24,7 @@ and the field's `help-text` for field guidance.
   use the neutral and medium defaults, following the shipped badge.
 - **Agent's choice, pending founder confirmation.** Turning the icon off hides
   custom and built-in icons. The icon slot is decorative and cannot add a tab stop.
+  HTML uses `icon="false"`. Removing the attribute restores the default.
 - **Agent's choice, pending founder confirmation.** The host follows the available
   width. The reference gallery constrains its own row width.
 - **Agent's choice, pending founder confirmation.** The base color tokens style
@@ -31,6 +32,8 @@ and the field's `help-text` for field guidance.
   defaults use the same high-emphasis text ink.
 - **Agent's choice, pending founder confirmation.** The note retains its compact
   dimensions with coarse input and uses a system-color border in forced colors.
+  Separate block and inline padding tokens and the gap follow Kimen's container
+  density scale.
 
 ## Behavior contract
 

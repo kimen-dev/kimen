@@ -1156,7 +1156,11 @@ function evaluateContext(theme, scheme, declarations) {
   // cell background over the page surface before measuring.
   const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
 
-  for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+  const icons = swept.flatMap(({ surface }) => {
+    const ink = surface.replace(/-bg$/u, '-icon');
+    return declarations.has(ink) ? [{ text: ink, surface, minRatio: NON_TEXT_MIN_RATIO }] : [];
+  });
+  for (const pair of [...CONTRAST_PAIRS, ...swept, ...icons]) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
     const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
