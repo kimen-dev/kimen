@@ -25,16 +25,17 @@ import onmarsCss from '@kimen/tokens/css?raw';
 import interWoff2Url from './fonts/InterVariable.woff2?url';
 import robotoWoff2Url from './fonts/RobotoVariable.woff2?url';
 import { visualGalleries } from './galleries';
-import type { VisualComponent } from './galleries';
+import type { VisualComponent, VisualGallery } from './galleries';
 
 type Scheme = 'dark' | 'light';
 type Theme = 'material3' | 'onmars';
 
-interface VisualSuiteOptions {
-  component: VisualComponent;
+type Gallery = VisualGallery & { inlinePadding?: number };
+
+type VisualSuiteOptions = {
   define: readonly (() => void)[];
   scheme: Scheme;
-}
+} & ({ component: VisualComponent } | { name: string; gallery: Gallery });
 
 const browserCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
@@ -156,7 +157,7 @@ async function waitForShadowRender(wrapper: HTMLElement): Promise<void> {
   await nextFrame();
 }
 
-async function mountGallery(component: VisualComponent, theme: Theme): Promise<HTMLElement> {
+async function mountGallery(gallery: Gallery, theme: Theme): Promise<HTMLElement> {
   document.body.replaceChildren();
   // Deterministic geometry: zero margin plus a wrapper as wide as the
   // viewport (page.viewport uses gallery.width) pins static content at
@@ -172,7 +173,6 @@ async function mountGallery(component: VisualComponent, theme: Theme): Promise<H
     injectStylesheet(material3Css, MATERIAL3_STYLE_ID);
     document.documentElement.setAttribute('data-ki-theme', 'material3');
   }
-  const gallery = visualGalleries[component];
   const wrapper = document.createElement('div');
   wrapper.style.cssText = [
     'display:flex',
@@ -181,7 +181,8 @@ async function mountGallery(component: VisualComponent, theme: Theme): Promise<H
     'box-sizing:border-box',
     `inline-size:${String(gallery.width ?? 640)}px`,
     ...(gallery.minHeight === undefined ? [] : [`min-block-size:${String(gallery.minHeight)}px`]),
-    'padding:24px',
+    'padding-block:24px',
+    `padding-inline:${String(gallery.inlinePadding ?? 24)}px`,
     'background:var(--ki-surface-s0)',
     'color:var(--ki-text-high-em)',
     'font-family:var(--ki-font-family-body)',
@@ -198,19 +199,21 @@ async function mountGallery(component: VisualComponent, theme: Theme): Promise<H
 }
 
 export function runVisualSuite(options: VisualSuiteOptions): void {
-  const { component, define, scheme } = options;
+  const { define, scheme } = options;
+  const name = 'name' in options ? options.name : options.component;
+  const gallery = 'gallery' in options ? options.gallery : visualGalleries[options.component];
   // The approved matrix: onmars light + dark for every component, material3
   // light only (alternate-theme contract at marginal cost).
   const themes: readonly Theme[] = scheme === 'light' ? ['onmars', 'material3'] : ['onmars'];
 
-  describe(`${component} visual gallery [${scheme}]`, () => {
+  describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {
       for (const defineElement of define) {
         defineElement();
       }
       await browserCommands.emulateColorScheme(scheme);
       await browserCommands.emulateReducedMotion('reduce');
-      await page.viewport(visualGalleries[component].width ?? 640, VIEWPORT_HEIGHT);
+      await page.viewport(gallery.width ?? 640, VIEWPORT_HEIGHT);
       await ensureFixtureFonts();
     });
 
@@ -229,7 +232,7 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
       it(`${theme} ${scheme} state gallery matches the platform baseline`, {
         timeout: VISUAL_TEST_TIMEOUT_MS,
       }, async (testContext) => {
-        const screenshotName = `${component}-${theme}-${scheme}-gallery`;
+        const screenshotName = `${name}-${theme}-${scheme}-gallery`;
         // Two-step arming (bootstrap deadlock breaker): while visual/ARMED
         // reads `false`, a missing platform baseline is a LOUD SKIP instead
         // of a red, so the harness can land before the founder-dispatched
@@ -245,8 +248,8 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
           testContext.skip(notice);
         }
         await browserCommands.resetPointer();
-        const wrapper = await mountGallery(component, theme);
-        if (visualGalleries[component].focusFirst === true) {
+        const wrapper = await mountGallery(gallery, theme);
+        if (gallery.focusFirst === true) {
           // Deterministic focus: keyboard Tab lands wherever the iframe's
           // previous focus state sends it, which varied between CI runs and
           // flipped the focus ring in and out of the baseline (116px drift
