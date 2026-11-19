@@ -57,6 +57,8 @@ const { code, lang = 'html', layout = 'row', live = true } = Astro.props;
   import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/ki-tab-panel';
   import { defineCustomElement as defineKiTabs } from '@kimen/elements/ki-tabs';
   import { defineCustomElement as defineKiTextarea } from '@kimen/elements/ki-textarea';
+  import { defineCustomElement as defineKiToast } from '@kimen/elements/ki-toast';
+  import { defineCustomElement as defineKiToaster } from '@kimen/elements/ki-toaster';
   import { defineCustomElement as defineKiTooltip } from '@kimen/elements/ki-tooltip';
   import { defineCustomElement as defineKiVideo } from '@kimen/elements/ki-video';
 
@@ -87,6 +89,8 @@ const { code, lang = 'html', layout = 'row', live = true } = Astro.props;
   defineKiTabPanel();
   defineKiTabs();
   defineKiTextarea();
+  defineKiToast();
+  defineKiToaster();
   defineKiTooltip();
   defineKiVideo();
 </script>

@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "c125bf6b67348842f9b164f9a0006ca096d13519375aa92e9d84b452d3ed0259",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "ki-toast and ki-toaster (spec 049, issue #353), cumulative since baseline 0.0.0 and superseding declaration 344-button-hierarchy (its deltas, and those of every declaration it supersedes, remain as declared there). Additive surface: two new elements. ki-toast: props tone, heading, duration, dismissible, dismiss-label, dismissed and the output-only queued; event ki-dismiss with detail { reason: 'timeout' | 'button' | 'escape' | 'action' }; slots default and action; parts toast, icon, heading, message, action and dismiss. ki-toaster: props placement, max and label; method show(); the default slot; part stack. New exported types KiToastTone, KiToastDismissDetail, KiToasterPlacement and KiToastShowOptions. Twenty-two component tokens are added: 19 --ki-toast-* (bg, bg-image, backdrop-filter, fg, message-fg, border, border-width, shadow, radius, padding, gap, width, the heading font family (reading the shared heading family of #347), icon-size and the icon ink of each of the five tones) and 3 --ki-toaster-* (inset-block, inset-inline, gap): 1275 + 22 = 1297 public tokens. A primitive size, ki.size.toast (22.5rem), backs --ki-toast-width; material3 overrides the toast fill, border, radius and elevation. ki-alert and ki-dialog change documentation only: their when-not-to-use guidance now names ki-toast. The onmars tokens stylesheet budget rises to 12 kB (founder decision). The generated React wrappers read every event type from @kimen/elements/components instead of the frozen package root. No token, prop, event, part or slot is removed or renamed. The gate classifies every module symbol signature change as MAJOR, so this candidate is declared major; the cumulative delta since 0.0.0 was already MAJOR. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

@@ -31,5 +31,7 @@ export { KiTab } from './ki-tab.js';
 export { KiTabPanel } from './ki-tab-panel.js';
 export { KiTabs } from './ki-tabs.js';
 export { KiTextarea } from './ki-textarea.js';
+export { KiToast } from './ki-toast.js';
+export { KiToaster } from './ki-toaster.js';
 export { KiTooltip } from './ki-tooltip.js';
 export { KiVideo } from './ki-video.js';

@@ -164,7 +164,7 @@ export const catalogData = {
         },
         "dismissible": {
           "type": "boolean",
-          "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+          "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`.",
           "default": false
         },
         "heading": {
@@ -190,7 +190,7 @@ export const catalogData = {
         "icon": "Optional decorative glyph shown in a round frame at the top of\nthe card, in the tone's colors. Hidden from assistive technology: it never\ncarries meaning the heading and message lack. When to use: give every\nnon-neutral alert an icon. When NOT to use: never as the only cue for the\nmessage."
       },
       "tag": "ki-alert",
-      "whenNotToUse": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
+      "whenNotToUse": "transient confirmations that expire on their own belong to\n`ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to\nanother element belong to `ki-badge`; blocking decisions belong to\n`ki-dialog`; inline field-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
       "whenToUse": "show a persistent inline message about the state of a page or\nsection, such as a failed save, completed operation, or service notice, that\nremains until the condition is resolved or the person dismisses it. Express\nseverity with `tone`, never custom styling."
     },
     "ki-avatar": {
@@ -469,7 +469,7 @@ export const catalogData = {
         "footer": "Dialog actions; applications wire every action to `close()`."
       },
       "tag": "ki-dialog",
-      "whenNotToUse": "non-blocking feedback (`ki-alert`, future `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
+      "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
       "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action."
     },
     "ki-divider": {
@@ -1120,6 +1120,96 @@ export const catalogData = {
       "tag": "ki-textarea",
       "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
       "whenToUse": "free-form text longer than one line, such as comments,\ndescriptions, messages, delivery notes, or addresses when paired with a\nmatching `autocomplete` purpose."
+    },
+    "ki-toast": {
+      "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
+      "events": {
+        "ki-dismiss": "Fired once when the toast leaves because its time ran out\n(`reason: \"timeout\"`), the person used the dismiss button (`\"button\"`),\npressed Escape inside it (`\"escape\"`) or activated its action\n(`\"action\"`), after it is hidden and focus has been handed on. Not\ncancelable. When to use: remove the element, or record that the message\nwas seen. When NOT to use: do not expect it for programmatic `dismissed`\nchanges."
+      },
+      "props": {
+        "dismiss-label": {
+          "type": "string",
+          "description": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot.",
+          "default": "Dismiss"
+        },
+        "dismissed": {
+          "type": "boolean",
+          "description": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person.",
+          "default": false
+        },
+        "dismissible": {
+          "type": "boolean",
+          "description": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person.",
+          "default": true
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+          "minimum": 0
+        },
+        "heading": {
+          "type": "string",
+          "description": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure."
+        },
+        "queued": {
+          "type": "boolean",
+          "description": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it.",
+          "default": false
+        },
+        "tone": {
+          "type": "string",
+          "documentedValues": [
+            "danger",
+            "info",
+            "neutral",
+            "success",
+            "warning"
+          ],
+          "description": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Message text. It lives inside the live-region boundary.",
+        "action": "At most one action, as a `ki-button size=\"sm\" variant=\"ghost\"`.\nIts own click handler runs, then the toast leaves (`reason: \"action\"`). A\ntoast holding an action never leaves on its own. When NOT to use: a response\nthe person cannot skip belongs in `ki-dialog`."
+      },
+      "tag": "ki-toast",
+      "whenNotToUse": "anything the person must read or act on to continue belongs\nto `ki-dialog`; form validation belongs to the field's error text; a lasting\ncondition of the page belongs to `ki-alert`, which stays inline.\n\nAssistive technology note: a toast announces as it appears, so append it\nwhen the event happens; a toast present at initial page load is exposed with\nits role but its announcement is not guaranteed. The heading and the message\nare the whole announcement: the icon, the action and the dismiss button\nstay outside the live region.",
+      "whenToUse": "confirm an action that happened elsewhere on screen (\"Changes\nsaved\", \"Link copied\"), report a background result (\"Export ready\"), or\noffer a quick undo. Raise it into a `ki-toaster`, in markup or with its\n`show()` method; express urgency with `tone`."
+    },
+    "ki-toaster": {
+      "description": "The one place toasts appear: it paints its `ki-toast` children in the top\nlayer at a corner of the viewport, stacks them in arrival order, shows the\nnewest few and queues the older ones, without covering the page beside\nthem.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+          "default": "Notifications"
+        },
+        "max": {
+          "type": "number",
+          "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A value below 1 or not a\nwhole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+          "default": 3,
+          "minimum": 1
+        },
+        "placement": {
+          "type": "string",
+          "documentedValues": [
+            "bottom-center",
+            "bottom-end",
+            "top-center",
+            "top-end"
+          ],
+          "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+          "default": "bottom-end"
+        }
+      },
+      "slots": {
+        "": "The `ki-toast` elements, in arrival order. Other children are not\ncounted, queued or placed."
+      },
+      "tag": "ki-toaster",
+      "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
+      "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
     },
     "ki-tooltip": {
       "description": "A transient, text-only description bubble for one slotted trigger.",

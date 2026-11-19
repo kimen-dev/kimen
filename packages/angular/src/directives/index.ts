@@ -29,6 +29,8 @@ export const DIRECTIVES = [
   d.KiTabPanel,
   d.KiTabs,
   d.KiTextarea,
+  d.KiToast,
+  d.KiToaster,
   d.KiTooltip,
   d.KiVideo
 ];

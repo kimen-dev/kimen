@@ -30,7 +30,7 @@
               "dismissible": {
                 "default": "false",
                 "deprecatedSince": null,
-                "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+                "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`.",
                 "replacement": null,
                 "required": false,
                 "type": "boolean"
@@ -704,7 +704,7 @@
               "dismissible": {
                 "default": "false",
                 "deprecatedSince": null,
-                "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+                "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`.",
                 "replacement": null,
                 "required": false,
                 "type": "boolean"
@@ -12581,6 +12581,576 @@
             },
             "slots": {}
           },
+          "ki-toast": {
+            "attributes": {
+              "dismiss-label": {
+                "default": "'Dismiss'",
+                "deprecatedSince": null,
+                "description": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot.",
+                "replacement": null,
+                "required": false,
+                "type": "string"
+              },
+              "dismissed": {
+                "default": "false",
+                "deprecatedSince": null,
+                "description": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person.",
+                "replacement": null,
+                "required": false,
+                "type": "boolean"
+              },
+              "dismissible": {
+                "default": "true",
+                "deprecatedSince": null,
+                "description": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person.",
+                "replacement": null,
+                "required": false,
+                "type": "boolean"
+              },
+              "duration": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+                "replacement": null,
+                "required": false,
+                "type": "number | undefined"
+              },
+              "heading": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure.",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              },
+              "queued": {
+                "default": "false",
+                "deprecatedSince": null,
+                "description": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it.",
+                "replacement": null,
+                "required": false,
+                "type": "boolean"
+              },
+              "tone": {
+                "default": "'neutral'",
+                "deprecatedSince": null,
+                "description": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`.",
+                "replacement": null,
+                "required": false,
+                "type": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
+              }
+            },
+            "cssProperties": {
+              "--ki-density-space-scale": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-motion-distance-sm": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Motion travel distance sm (4px): small slide/settle offsets.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-motion-duration-medium-1": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-motion-easing-out": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Decelerating interaction transition easing curve.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-backdrop-filter": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-bg": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-bg-image": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-border": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for its hairline edge (issue #353).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-border-width": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toast component for its hairline edge.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-danger-icon": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-fg": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for the heading ink (issue #353).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-gap": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-heading-font-family": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-icon-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toast component for the tone icon.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-info-icon": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-message-fg": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for the message ink (issue #353).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-neutral-icon": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-padding": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toast component for its padding (issue #353: 12px).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toast component for its corners (issue #353: 16px).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-shadow": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-success-icon": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-warning-icon": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toast-width": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-line-height-body-2": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic dimension for typography line height body 2.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-line-height-para": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic dimension for typography line height para.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-size-body-1": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic dimension for typography size body 1.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-size-body-2": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic dimension for typography size body 2.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-weight-body-semibold": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font weight for typography weight body semibold.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
+            "events": {
+              "ki-dismiss": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Fired once when the toast leaves because its time ran out\n(`reason: \"timeout\"`), the person used the dismiss button (`\"button\"`),\npressed Escape inside it (`\"escape\"`) or activated its action\n(`\"action\"`), after it is hidden and focus has been handed on. Not\ncancelable. When to use: remove the element, or record that the message\nwas seen. When NOT to use: do not expect it for programmatic `dismissed`\nchanges.",
+                "replacement": null,
+                "required": false,
+                "type": "CustomEvent<KiToastDismissDetail>"
+              }
+            },
+            "methods": {},
+            "parts": {
+              "action": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Wrapper around the `action` slot, rendered only when it holds content.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "dismiss": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The dismiss `ki-icon-button`, rendered only when `dismissible`.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "heading": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Optional bold first line, rendered only when non-empty.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "icon": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The tone icon, drawn by the component in the tone's ink.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "message": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Message wrapper around the default slot.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "toast": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The flat surface: fill, image, edge, radius, padding,\nelevation and backdrop filter.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "properties": {
+              "dismissLabel": {
+                "default": "'Dismiss'",
+                "deprecatedSince": null,
+                "description": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot.",
+                "replacement": null,
+                "required": false,
+                "type": "string"
+              },
+              "dismissed": {
+                "default": "false",
+                "deprecatedSince": null,
+                "description": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person.",
+                "replacement": null,
+                "required": false,
+                "type": "boolean"
+              },
+              "dismissible": {
+                "default": "true",
+                "deprecatedSince": null,
+                "description": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person.",
+                "replacement": null,
+                "required": false,
+                "type": "boolean"
+              },
+              "duration": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+                "replacement": null,
+                "required": false,
+                "type": "number | undefined"
+              },
+              "heading": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure.",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              },
+              "queued": {
+                "default": "false",
+                "deprecatedSince": null,
+                "description": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it.",
+                "replacement": null,
+                "required": false,
+                "type": "boolean"
+              },
+              "tone": {
+                "default": "'neutral'",
+                "deprecatedSince": null,
+                "description": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`.",
+                "replacement": null,
+                "required": false,
+                "type": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
+              }
+            },
+            "slots": {
+              "": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Message text. It lives inside the live-region boundary.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "action": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "At most one action, as a `ki-button size=\"sm\" variant=\"ghost\"`.\nIts own click handler runs, then the toast leaves (`reason: \"action\"`). A\ntoast holding an action never leaves on its own. When NOT to use: a response\nthe person cannot skip belongs in `ki-dialog`.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            }
+          },
+          "ki-toaster": {
+            "attributes": {
+              "label": {
+                "default": "'Notifications'",
+                "deprecatedSince": null,
+                "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+                "replacement": null,
+                "required": false,
+                "type": "string"
+              },
+              "max": {
+                "default": "3",
+                "deprecatedSince": null,
+                "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A value below 1 or not a\nwhole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+                "replacement": null,
+                "required": false,
+                "type": "number"
+              },
+              "placement": {
+                "default": "'bottom-end'",
+                "deprecatedSince": null,
+                "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+                "replacement": null,
+                "required": false,
+                "type": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}"
+              }
+            },
+            "cssProperties": {
+              "--ki-toast-width": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toaster-gap": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toaster-inset-block": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-toaster-inset-inline": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "description": "The one place toasts appear: it paints its `ki-toast` children in the top\nlayer at a corner of the viewport, stacks them in arrival order, shows the\nnewest few and queues the older ones, without covering the page beside\nthem.",
+            "events": {},
+            "methods": {
+              "show": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Raises a toast: creates a `ki-toast` from `tone`, `title` (its heading),\n`message`, `duration`, `dismissible` and `action` (a ghost\n`ki-button size=\"sm\"` in its `action` slot that calls `onClick`), appends\nit to the toaster and resolves with it. Once the toast has left it is\nremoved from the page. The toaster does not bundle `ki-toast` or\n`ki-button`: define them, as for toasts written in markup.\nWhen to use: raise a toast from script without writing its markup.\nWhen NOT to use: a toast written in markup stays the page's own: append\nit instead, and it is never removed.",
+                "parameters": [
+                  {
+                    "default": null,
+                    "name": "options",
+                    "optional": false,
+                    "rest": false,
+                    "type": "KiToastShowOptions"
+                  }
+                ],
+                "replacement": null,
+                "required": false,
+                "signature": "show(options: KiToastShowOptions) => Promise<HTMLElement>",
+                "type": "Promise<HTMLElement>"
+              }
+            },
+            "parts": {
+              "stack": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The stack in the top layer: placement, edge distance, gap\nbetween toasts and width.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "properties": {
+              "label": {
+                "default": "'Notifications'",
+                "deprecatedSince": null,
+                "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+                "replacement": null,
+                "required": false,
+                "type": "string"
+              },
+              "max": {
+                "default": "3",
+                "deprecatedSince": null,
+                "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A value below 1 or not a\nwhole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+                "replacement": null,
+                "required": false,
+                "type": "number"
+              },
+              "placement": {
+                "default": "'bottom-end'",
+                "deprecatedSince": null,
+                "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+                "replacement": null,
+                "required": false,
+                "type": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}"
+              }
+            },
+            "slots": {
+              "": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The `ki-toast` elements, in arrival order. Other children are not\ncounted, queued or placed.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            }
+          },
           "ki-tooltip": {
             "attributes": {
               "label": {
@@ -13267,6 +13837,16 @@
             "replacement": null,
             "target": "./dist/components/ki-textarea.js"
           },
+          "./ki-toast": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/components/ki-toast.js"
+          },
+          "./ki-toaster": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/components/ki-toaster.js"
+          },
           "./ki-tooltip": {
             "deprecatedSince": null,
             "replacement": null,
@@ -13527,13 +14107,13 @@
                 "kinds": [
                   "namespace"
                 ],
-                "signature": "export namespace Components {\n    interface KiAlert {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"heading\"?: string;\n        \"tone\": KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\": KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\": KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\": KiBadgeSize;\n        \"tone\": KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n        \"name\"?: string;\n        \"size\": KiButtonSize;\n        \"tone\": KiButtonTone;\n        \"type\": KiButtonType;\n        \"value\"?: string;\n        \"variant\": KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"indeterminate\": boolean;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"close\": () => Promise<void>;\n        \"closeOnBackdrop\": boolean;\n        \"heading\": string;\n        \"open\": boolean;\n        \"show\": () => Promise<void>;\n    }\n    interface KiDivider {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n        \"size\": KiIconButtonSize;\n        \"tone\": KiIconButtonTone;\n        \"variant\": KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\": string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"type\": KiInputType;\n        \"value\": string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\": boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\": boolean;\n        \"label\": string;\n        \"max\": number;\n        \"shape\": KiProgressShape;\n        \"value\": number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\": boolean;\n        \"value\": string;\n    }\n    interface KiRadioGroup {\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiScroller {\n        \"label\": string;\n        \"orientation\": KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\": string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\": boolean;\n        \"tone\": KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"helpText\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\": boolean;\n        \"selected\": boolean;\n        \"value\": string;\n    }\n    interface KiTabPanel {\n        \"value\": string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"value\": string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"rows\": number;\n        \"value\": string;\n    }\n    interface KiTooltip {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\": string;\n    }\n}"
+                "signature": "export namespace Components {\n    interface KiAlert {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"heading\"?: string;\n        \"tone\": KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\": KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\": KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\": KiBadgeSize;\n        \"tone\": KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n        \"name\"?: string;\n        \"size\": KiButtonSize;\n        \"tone\": KiButtonTone;\n        \"type\": KiButtonType;\n        \"value\"?: string;\n        \"variant\": KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"indeterminate\": boolean;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"close\": () => Promise<void>;\n        \"closeOnBackdrop\": boolean;\n        \"heading\": string;\n        \"open\": boolean;\n        \"show\": () => Promise<void>;\n    }\n    interface KiDivider {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n        \"size\": KiIconButtonSize;\n        \"tone\": KiIconButtonTone;\n        \"variant\": KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\": string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"type\": KiInputType;\n        \"value\": string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\": boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\": boolean;\n        \"label\": string;\n        \"max\": number;\n        \"shape\": KiProgressShape;\n        \"value\": number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\": boolean;\n        \"value\": string;\n    }\n    interface KiRadioGroup {\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiScroller {\n        \"label\": string;\n        \"orientation\": KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\": string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\": boolean;\n        \"tone\": KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"helpText\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\": boolean;\n        \"selected\": boolean;\n        \"value\": string;\n    }\n    interface KiTabPanel {\n        \"value\": string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"value\": string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"rows\": number;\n        \"value\": string;\n    }\n    interface KiToast {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"duration\"?: number;\n        \"heading\"?: string;\n        \"queued\": boolean;\n        \"tone\": KiToastTone | (string & {});\n    }\n    interface KiToaster {\n        \"label\": string;\n        \"max\": number;\n        \"placement\": KiToasterPlacement | (string & {});\n        \"show\": (options: KiToastShowOptions) => Promise<HTMLElement>;\n    }\n    interface KiTooltip {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\": string;\n    }\n}"
               },
               "JSX": {
                 "kinds": [
                   "namespace"
                 ],
-                "signature": "declare namespace LocalJSX {\n    type OneOf<K extends string, PropT, AttrT = PropT> = {\n        [P in K]: PropT;\n    } & {\n        [P in `attr:${K}`]?: never;\n    } | {\n        [P in `attr:${K}`]: AttrT;\n    } & {\n        [P in K]?: never;\n    };\n    interface KiAlert {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiAlertCustomEvent<null>) => void;\n        \"tone\"?: KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\"?: KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\"?: KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\"?: KiBadgeSize;\n        \"tone\"?: KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"loading\"?: boolean;\n        \"loadingLabel\"?: string;\n        \"name\"?: string;\n        \"size\"?: KiButtonSize;\n        \"tone\"?: KiButtonTone;\n        \"type\"?: KiButtonType;\n        \"value\"?: string;\n        \"variant\"?: KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"indeterminate\"?: boolean;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"closeOnBackdrop\"?: boolean;\n        \"heading\": string;\n        \"onKi-close\"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;\n        \"open\"?: boolean;\n    }\n    interface KiDivider {\n        \"orientation\"?: KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\"?: boolean;\n        \"label\": string;\n        \"loading\"?: boolean;\n        \"loadingLabel\"?: string;\n        \"size\"?: KiIconButtonSize;\n        \"tone\"?: KiIconButtonTone;\n        \"variant\"?: KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\": string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"type\"?: KiInputType;\n        \"value\"?: string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\"?: boolean;\n        \"label\": string;\n        \"max\"?: number;\n        \"shape\"?: KiProgressShape;\n        \"value\"?: number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiRadioGroup {\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiScroller {\n        \"label\": string;\n        \"orientation\"?: KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\"?: boolean;\n        \"tone\"?: KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\"?: boolean;\n        \"selected\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiTabPanel {\n        \"value\"?: string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"onKi-change\"?: (event: KiTabsCustomEvent<{\n            value: string;\n        }>) => void;\n        \"value\"?: string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"rows\"?: number;\n        \"value\"?: string;\n    }\n    interface KiTooltip {\n        \"label\"?: string;\n        \"placement\"?: KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\": string;\n    }\n    interface KiAlertAttributes {\n        \"tone\": KiAlertTone | (string & {});\n        \"heading\": string;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n    }\n    interface KiAvatarAttributes {\n        \"label\": string;\n        \"src\": string;\n        \"initials\": string;\n        \"size\": KiAvatarSize;\n    }\n    interface KiAvatarGroupAttributes {\n        \"max\": number;\n        \"size\": KiAvatarSize;\n    }\n    interface KiBadgeAttributes {\n        \"tone\": KiBadgeTone;\n        \"size\": KiBadgeSize;\n    }\n    interface KiButtonAttributes {\n        \"variant\": KiButtonVariant;\n        \"tone\": KiButtonTone;\n        \"size\": KiButtonSize;\n        \"type\": KiButtonType;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n    }\n    interface KiCheckboxAttributes {\n        \"checked\": boolean;\n        \"indeterminate\": boolean;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"name\": string;\n        \"value\": string;\n        \"labelHint\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiDialogAttributes {\n        \"open\": boolean;\n        \"heading\": string;\n        \"closeOnBackdrop\": boolean;\n    }\n    interface KiDividerAttributes {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButtonAttributes {\n        \"variant\": KiIconButtonVariant;\n        \"tone\": KiIconButtonTone;\n        \"size\": KiIconButtonSize;\n        \"label\": string;\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n    }\n    interface KiIndicatorAttributes {\n        \"count\": number;\n        \"current\": number;\n        \"label\": string;\n    }\n    interface KiInputAttributes {\n        \"type\": KiInputType;\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiOptionAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiProgressAttributes {\n        \"value\": number;\n        \"max\": number;\n        \"indeterminate\": boolean;\n        \"shape\": KiProgressShape;\n        \"label\": string;\n    }\n    interface KiQrAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiRadioAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiRadioGroupAttributes {\n        \"name\": string;\n        \"value\": string;\n        \"label\": string;\n        \"labelHint\": string;\n        \"required\": boolean;\n        \"disabled\": boolean;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiScrollerAttributes {\n        \"orientation\": KiScrollerOrientation;\n        \"label\": string;\n    }\n    interface KiSelectAttributes {\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiStatusAttributes {\n        \"tone\": KiStatusTone;\n        \"ring\": boolean;\n        \"label\": string;\n    }\n    interface KiSwitchAttributes {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\": string;\n        \"value\": string;\n        \"helpText\": string;\n    }\n    interface KiTabAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n        \"selected\": boolean;\n    }\n    interface KiTabPanelAttributes {\n        \"value\": string;\n    }\n    interface KiTabsAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiTextareaAttributes {\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"rows\": number;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiTooltipAttributes {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideoAttributes {\n        \"label\": string;\n    }\n    interface IntrinsicElements {\n        \"ki-alert\": Omit<KiAlert, keyof KiAlertAttributes> & {\n            [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K];\n        };\n        \"ki-avatar\": Omit<KiAvatar, keyof KiAvatarAttributes> & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K];\n        };\n        \"ki-avatar-group\": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K];\n        };\n        \"ki-badge\": Omit<KiBadge, keyof KiBadgeAttributes> & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K];\n        };\n        \"ki-button\": Omit<KiButton, keyof KiButtonAttributes> & {\n            [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K];\n        };\n        \"ki-card\": KiCard;\n        \"ki-checkbox\": Omit<KiCheckbox, keyof KiCheckboxAttributes> & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K];\n        };\n        \"ki-dialog\": Omit<KiDialog, keyof KiDialogAttributes> & {\n            [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K];\n        } & OneOf<\"heading\", KiDialog[\"heading\"], KiDialogAttributes[\"heading\"]>;\n        \"ki-divider\": Omit<KiDivider, keyof KiDividerAttributes> & {\n            [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K];\n        };\n        \"ki-icon-button\": Omit<KiIconButton, keyof KiIconButtonAttributes> & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K];\n        } & OneOf<\"label\", KiIconButton[\"label\"], KiIconButtonAttributes[\"label\"]>;\n        \"ki-indicator\": Omit<KiIndicator, keyof KiIndicatorAttributes> & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K];\n        } & OneOf<\"label\", KiIndicator[\"label\"], KiIndicatorAttributes[\"label\"]>;\n        \"ki-input\": Omit<KiInput, keyof KiInputAttributes> & {\n            [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K];\n        } & OneOf<\"label\", KiInput[\"label\"], KiInputAttributes[\"label\"]>;\n        \"ki-list\": KiList;\n        \"ki-list-item\": KiListItem;\n        \"ki-option\": Omit<KiOption, keyof KiOptionAttributes> & {\n            [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K];\n        };\n        \"ki-progress\": Omit<KiProgress, keyof KiProgressAttributes> & {\n            [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K];\n        } & OneOf<\"label\", KiProgress[\"label\"], KiProgressAttributes[\"label\"]>;\n        \"ki-qr\": Omit<KiQr, keyof KiQrAttributes> & {\n            [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K];\n        };\n        \"ki-radio\": Omit<KiRadio, keyof KiRadioAttributes> & {\n            [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K];\n        };\n        \"ki-radio-group\": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K];\n        } & OneOf<\"label\", KiRadioGroup[\"label\"], KiRadioGroupAttributes[\"label\"]>;\n        \"ki-scroller\": Omit<KiScroller, keyof KiScrollerAttributes> & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K];\n        } & OneOf<\"label\", KiScroller[\"label\"], KiScrollerAttributes[\"label\"]>;\n        \"ki-select\": Omit<KiSelect, keyof KiSelectAttributes> & {\n            [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K];\n        } & OneOf<\"label\", KiSelect[\"label\"], KiSelectAttributes[\"label\"]>;\n        \"ki-status\": Omit<KiStatus, keyof KiStatusAttributes> & {\n            [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K];\n        };\n        \"ki-switch\": Omit<KiSwitch, keyof KiSwitchAttributes> & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K];\n        };\n        \"ki-tab\": Omit<KiTab, keyof KiTabAttributes> & {\n            [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K];\n        };\n        \"ki-tab-panel\": Omit<KiTabPanel, keyof KiTabPanelAttributes> & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K];\n        };\n        \"ki-tabs\": Omit<KiTabs, keyof KiTabsAttributes> & {\n            [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K];\n        };\n        \"ki-textarea\": Omit<KiTextarea, keyof KiTextareaAttributes> & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K];\n        } & OneOf<\"label\", KiTextarea[\"label\"], KiTextareaAttributes[\"label\"]>;\n        \"ki-tooltip\": Omit<KiTooltip, keyof KiTooltipAttributes> & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K];\n        };\n        \"ki-video\": Omit<KiVideo, keyof KiVideoAttributes> & {\n            [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K];\n        } & OneOf<\"label\", KiVideo[\"label\"], KiVideoAttributes[\"label\"]>;\n    }\n}"
+                "signature": "declare namespace LocalJSX {\n    type OneOf<K extends string, PropT, AttrT = PropT> = {\n        [P in K]: PropT;\n    } & {\n        [P in `attr:${K}`]?: never;\n    } | {\n        [P in `attr:${K}`]: AttrT;\n    } & {\n        [P in K]?: never;\n    };\n    interface KiAlert {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiAlertCustomEvent<null>) => void;\n        \"tone\"?: KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\"?: KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\"?: KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\"?: KiBadgeSize;\n        \"tone\"?: KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"loading\"?: boolean;\n        \"loadingLabel\"?: string;\n        \"name\"?: string;\n        \"size\"?: KiButtonSize;\n        \"tone\"?: KiButtonTone;\n        \"type\"?: KiButtonType;\n        \"value\"?: string;\n        \"variant\"?: KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"indeterminate\"?: boolean;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"closeOnBackdrop\"?: boolean;\n        \"heading\": string;\n        \"onKi-close\"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;\n        \"open\"?: boolean;\n    }\n    interface KiDivider {\n        \"orientation\"?: KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\"?: boolean;\n        \"label\": string;\n        \"loading\"?: boolean;\n        \"loadingLabel\"?: string;\n        \"size\"?: KiIconButtonSize;\n        \"tone\"?: KiIconButtonTone;\n        \"variant\"?: KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\": string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"type\"?: KiInputType;\n        \"value\"?: string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\"?: boolean;\n        \"label\": string;\n        \"max\"?: number;\n        \"shape\"?: KiProgressShape;\n        \"value\"?: number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiRadioGroup {\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiScroller {\n        \"label\": string;\n        \"orientation\"?: KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\"?: boolean;\n        \"tone\"?: KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\"?: boolean;\n        \"selected\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiTabPanel {\n        \"value\"?: string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"onKi-change\"?: (event: KiTabsCustomEvent<{\n            value: string;\n        }>) => void;\n        \"value\"?: string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"rows\"?: number;\n        \"value\"?: string;\n    }\n    interface KiToast {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"duration\"?: number;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiToastCustomEvent<KiToastDismissDetail>) => void;\n        \"queued\"?: boolean;\n        \"tone\"?: KiToastTone | (string & {});\n    }\n    interface KiToaster {\n        \"label\"?: string;\n        \"max\"?: number;\n        \"placement\"?: KiToasterPlacement | (string & {});\n    }\n    interface KiTooltip {\n        \"label\"?: string;\n        \"placement\"?: KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\": string;\n    }\n    interface KiAlertAttributes {\n        \"tone\": KiAlertTone | (string & {});\n        \"heading\": string;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n    }\n    interface KiAvatarAttributes {\n        \"label\": string;\n        \"src\": string;\n        \"initials\": string;\n        \"size\": KiAvatarSize;\n    }\n    interface KiAvatarGroupAttributes {\n        \"max\": number;\n        \"size\": KiAvatarSize;\n    }\n    interface KiBadgeAttributes {\n        \"tone\": KiBadgeTone;\n        \"size\": KiBadgeSize;\n    }\n    interface KiButtonAttributes {\n        \"variant\": KiButtonVariant;\n        \"tone\": KiButtonTone;\n        \"size\": KiButtonSize;\n        \"type\": KiButtonType;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n    }\n    interface KiCheckboxAttributes {\n        \"checked\": boolean;\n        \"indeterminate\": boolean;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"name\": string;\n        \"value\": string;\n        \"labelHint\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiDialogAttributes {\n        \"open\": boolean;\n        \"heading\": string;\n        \"closeOnBackdrop\": boolean;\n    }\n    interface KiDividerAttributes {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButtonAttributes {\n        \"variant\": KiIconButtonVariant;\n        \"tone\": KiIconButtonTone;\n        \"size\": KiIconButtonSize;\n        \"label\": string;\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n    }\n    interface KiIndicatorAttributes {\n        \"count\": number;\n        \"current\": number;\n        \"label\": string;\n    }\n    interface KiInputAttributes {\n        \"type\": KiInputType;\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiOptionAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiProgressAttributes {\n        \"value\": number;\n        \"max\": number;\n        \"indeterminate\": boolean;\n        \"shape\": KiProgressShape;\n        \"label\": string;\n    }\n    interface KiQrAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiRadioAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiRadioGroupAttributes {\n        \"name\": string;\n        \"value\": string;\n        \"label\": string;\n        \"labelHint\": string;\n        \"required\": boolean;\n        \"disabled\": boolean;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiScrollerAttributes {\n        \"orientation\": KiScrollerOrientation;\n        \"label\": string;\n    }\n    interface KiSelectAttributes {\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiStatusAttributes {\n        \"tone\": KiStatusTone;\n        \"ring\": boolean;\n        \"label\": string;\n    }\n    interface KiSwitchAttributes {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\": string;\n        \"value\": string;\n        \"helpText\": string;\n    }\n    interface KiTabAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n        \"selected\": boolean;\n    }\n    interface KiTabPanelAttributes {\n        \"value\": string;\n    }\n    interface KiTabsAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiTextareaAttributes {\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"rows\": number;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiToastAttributes {\n        \"tone\": KiToastTone | (string & {});\n        \"heading\": string;\n        \"duration\": number;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"queued\": boolean;\n    }\n    interface KiToasterAttributes {\n        \"placement\": KiToasterPlacement | (string & {});\n        \"max\": number;\n        \"label\": string;\n    }\n    interface KiTooltipAttributes {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideoAttributes {\n        \"label\": string;\n    }\n    interface IntrinsicElements {\n        \"ki-alert\": Omit<KiAlert, keyof KiAlertAttributes> & {\n            [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K];\n        };\n        \"ki-avatar\": Omit<KiAvatar, keyof KiAvatarAttributes> & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K];\n        };\n        \"ki-avatar-group\": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K];\n        };\n        \"ki-badge\": Omit<KiBadge, keyof KiBadgeAttributes> & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K];\n        };\n        \"ki-button\": Omit<KiButton, keyof KiButtonAttributes> & {\n            [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K];\n        };\n        \"ki-card\": KiCard;\n        \"ki-checkbox\": Omit<KiCheckbox, keyof KiCheckboxAttributes> & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K];\n        };\n        \"ki-dialog\": Omit<KiDialog, keyof KiDialogAttributes> & {\n            [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K];\n        } & OneOf<\"heading\", KiDialog[\"heading\"], KiDialogAttributes[\"heading\"]>;\n        \"ki-divider\": Omit<KiDivider, keyof KiDividerAttributes> & {\n            [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K];\n        };\n        \"ki-icon-button\": Omit<KiIconButton, keyof KiIconButtonAttributes> & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K];\n        } & OneOf<\"label\", KiIconButton[\"label\"], KiIconButtonAttributes[\"label\"]>;\n        \"ki-indicator\": Omit<KiIndicator, keyof KiIndicatorAttributes> & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K];\n        } & OneOf<\"label\", KiIndicator[\"label\"], KiIndicatorAttributes[\"label\"]>;\n        \"ki-input\": Omit<KiInput, keyof KiInputAttributes> & {\n            [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K];\n        } & OneOf<\"label\", KiInput[\"label\"], KiInputAttributes[\"label\"]>;\n        \"ki-list\": KiList;\n        \"ki-list-item\": KiListItem;\n        \"ki-option\": Omit<KiOption, keyof KiOptionAttributes> & {\n            [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K];\n        };\n        \"ki-progress\": Omit<KiProgress, keyof KiProgressAttributes> & {\n            [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K];\n        } & OneOf<\"label\", KiProgress[\"label\"], KiProgressAttributes[\"label\"]>;\n        \"ki-qr\": Omit<KiQr, keyof KiQrAttributes> & {\n            [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K];\n        };\n        \"ki-radio\": Omit<KiRadio, keyof KiRadioAttributes> & {\n            [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K];\n        };\n        \"ki-radio-group\": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K];\n        } & OneOf<\"label\", KiRadioGroup[\"label\"], KiRadioGroupAttributes[\"label\"]>;\n        \"ki-scroller\": Omit<KiScroller, keyof KiScrollerAttributes> & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K];\n        } & OneOf<\"label\", KiScroller[\"label\"], KiScrollerAttributes[\"label\"]>;\n        \"ki-select\": Omit<KiSelect, keyof KiSelectAttributes> & {\n            [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K];\n        } & OneOf<\"label\", KiSelect[\"label\"], KiSelectAttributes[\"label\"]>;\n        \"ki-status\": Omit<KiStatus, keyof KiStatusAttributes> & {\n            [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K];\n        };\n        \"ki-switch\": Omit<KiSwitch, keyof KiSwitchAttributes> & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K];\n        };\n        \"ki-tab\": Omit<KiTab, keyof KiTabAttributes> & {\n            [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K];\n        };\n        \"ki-tab-panel\": Omit<KiTabPanel, keyof KiTabPanelAttributes> & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K];\n        };\n        \"ki-tabs\": Omit<KiTabs, keyof KiTabsAttributes> & {\n            [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K];\n        };\n        \"ki-textarea\": Omit<KiTextarea, keyof KiTextareaAttributes> & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K];\n        } & OneOf<\"label\", KiTextarea[\"label\"], KiTextareaAttributes[\"label\"]>;\n        \"ki-toast\": Omit<KiToast, keyof KiToastAttributes> & {\n            [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K];\n        } & {\n            [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K];\n        } & {\n            [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K];\n        };\n        \"ki-toaster\": Omit<KiToaster, keyof KiToasterAttributes> & {\n            [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K];\n        } & {\n            [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K];\n        } & {\n            [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K];\n        };\n        \"ki-tooltip\": Omit<KiTooltip, keyof KiTooltipAttributes> & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K];\n        };\n        \"ki-video\": Omit<KiVideo, keyof KiVideoAttributes> & {\n            [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K];\n        } & OneOf<\"label\", KiVideo[\"label\"], KiVideoAttributes[\"label\"]>;\n    }\n}"
               },
               "KiAlertCustomEvent": {
                 "kinds": [
@@ -13660,6 +14240,36 @@
                   "type"
                 ],
                 "signature": "interface KiTabsCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiTabsElement;\n}"
+              },
+              "KiToastCustomEvent": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiToastCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiToastElement;\n}"
+              },
+              "KiToastDismissDetail": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiToastDismissDetail {\n    reason: 'timeout' | 'button' | 'escape' | 'action';\n}"
+              },
+              "KiToastShowOptions": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiToastShowOptions {\n    action?: {\n        label: string;\n        onClick?: (event: MouseEvent) => void;\n    };\n    dismissible?: boolean;\n    duration?: number;\n    message: string;\n    title?: string;\n    tone?: string;\n}"
+              },
+              "KiToastTone": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';"
+              },
+              "KiToasterPlacement": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiToasterPlacement = 'top-center' | 'top-end' | 'bottom-center' | 'bottom-end';"
               },
               "KiTooltipPlacement": {
                 "kinds": [
@@ -14296,6 +14906,44 @@
             },
             "target": "./dist/components/ki-textarea.js"
           },
+          "./ki-toast": {
+            "declaration": "./dist/components/ki-toast.d.ts",
+            "symbols": {
+              "KiToast": {
+                "kinds": [
+                  "type",
+                  "value"
+                ],
+                "signature": "interface KiToast extends Components.KiToast, HTMLElement {\n}\nexport const KiToast: {\n    prototype: KiToast;\n    new (): KiToast;\n};"
+              },
+              "defineCustomElement": {
+                "kinds": [
+                  "value"
+                ],
+                "signature": "export const defineCustomElement: () => void;"
+              }
+            },
+            "target": "./dist/components/ki-toast.js"
+          },
+          "./ki-toaster": {
+            "declaration": "./dist/components/ki-toaster.d.ts",
+            "symbols": {
+              "KiToaster": {
+                "kinds": [
+                  "type",
+                  "value"
+                ],
+                "signature": "interface KiToaster extends Components.KiToaster, HTMLElement {\n}\nexport const KiToaster: {\n    prototype: KiToaster;\n    new (): KiToaster;\n};"
+              },
+              "defineCustomElement": {
+                "kinds": [
+                  "value"
+                ],
+                "signature": "export const defineCustomElement: () => void;"
+              }
+            },
+            "target": "./dist/components/ki-toaster.js"
+          },
           "./ki-tooltip": {
             "declaration": "./dist/components/ki-tooltip.d.ts",
             "symbols": {
@@ -14347,7 +14995,7 @@
                 "kinds": [
                   "namespace"
                 ],
-                "signature": "export namespace Components {\n    interface KiAlert {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"heading\"?: string;\n        \"tone\": KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\": KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\": KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\": KiBadgeSize;\n        \"tone\": KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n        \"name\"?: string;\n        \"size\": KiButtonSize;\n        \"tone\": KiButtonTone;\n        \"type\": KiButtonType;\n        \"value\"?: string;\n        \"variant\": KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"indeterminate\": boolean;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"close\": () => Promise<void>;\n        \"closeOnBackdrop\": boolean;\n        \"heading\": string;\n        \"open\": boolean;\n        \"show\": () => Promise<void>;\n    }\n    interface KiDivider {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n        \"size\": KiIconButtonSize;\n        \"tone\": KiIconButtonTone;\n        \"variant\": KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\": string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"type\": KiInputType;\n        \"value\": string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\": boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\": boolean;\n        \"label\": string;\n        \"max\": number;\n        \"shape\": KiProgressShape;\n        \"value\": number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\": boolean;\n        \"value\": string;\n    }\n    interface KiRadioGroup {\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiScroller {\n        \"label\": string;\n        \"orientation\": KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\": string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\": boolean;\n        \"tone\": KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"helpText\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\": boolean;\n        \"selected\": boolean;\n        \"value\": string;\n    }\n    interface KiTabPanel {\n        \"value\": string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"value\": string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"rows\": number;\n        \"value\": string;\n    }\n    interface KiTooltip {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\": string;\n    }\n}"
+                "signature": "export namespace Components {\n    interface KiAlert {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"heading\"?: string;\n        \"tone\": KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\": KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\": KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\": KiBadgeSize;\n        \"tone\": KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n        \"name\"?: string;\n        \"size\": KiButtonSize;\n        \"tone\": KiButtonTone;\n        \"type\": KiButtonType;\n        \"value\"?: string;\n        \"variant\": KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"indeterminate\": boolean;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"close\": () => Promise<void>;\n        \"closeOnBackdrop\": boolean;\n        \"heading\": string;\n        \"open\": boolean;\n        \"show\": () => Promise<void>;\n    }\n    interface KiDivider {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n        \"size\": KiIconButtonSize;\n        \"tone\": KiIconButtonTone;\n        \"variant\": KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\": string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"type\": KiInputType;\n        \"value\": string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\": boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\": boolean;\n        \"label\": string;\n        \"max\": number;\n        \"shape\": KiProgressShape;\n        \"value\": number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\": boolean;\n        \"value\": string;\n    }\n    interface KiRadioGroup {\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiScroller {\n        \"label\": string;\n        \"orientation\": KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\": string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\": boolean;\n        \"tone\": KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"helpText\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\": boolean;\n        \"selected\": boolean;\n        \"value\": string;\n    }\n    interface KiTabPanel {\n        \"value\": string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"value\": string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"errorText\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"rows\": number;\n        \"value\": string;\n    }\n    interface KiToast {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"duration\"?: number;\n        \"heading\"?: string;\n        \"queued\": boolean;\n        \"tone\": KiToastTone | (string & {});\n    }\n    interface KiToaster {\n        \"label\": string;\n        \"max\": number;\n        \"placement\": KiToasterPlacement | (string & {});\n        \"show\": (options: KiToastShowOptions) => Promise<HTMLElement>;\n    }\n    interface KiTooltip {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\": string;\n    }\n}"
               },
               "CustomElementsDefineOptions": {
                 "kinds": [
@@ -14359,7 +15007,7 @@
                 "kinds": [
                   "namespace"
                 ],
-                "signature": "declare namespace LocalJSX {\n    type OneOf<K extends string, PropT, AttrT = PropT> = {\n        [P in K]: PropT;\n    } & {\n        [P in `attr:${K}`]?: never;\n    } | {\n        [P in `attr:${K}`]: AttrT;\n    } & {\n        [P in K]?: never;\n    };\n    interface KiAlert {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiAlertCustomEvent<null>) => void;\n        \"tone\"?: KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\"?: KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\"?: KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\"?: KiBadgeSize;\n        \"tone\"?: KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"loading\"?: boolean;\n        \"loadingLabel\"?: string;\n        \"name\"?: string;\n        \"size\"?: KiButtonSize;\n        \"tone\"?: KiButtonTone;\n        \"type\"?: KiButtonType;\n        \"value\"?: string;\n        \"variant\"?: KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"indeterminate\"?: boolean;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"closeOnBackdrop\"?: boolean;\n        \"heading\": string;\n        \"onKi-close\"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;\n        \"open\"?: boolean;\n    }\n    interface KiDivider {\n        \"orientation\"?: KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\"?: boolean;\n        \"label\": string;\n        \"loading\"?: boolean;\n        \"loadingLabel\"?: string;\n        \"size\"?: KiIconButtonSize;\n        \"tone\"?: KiIconButtonTone;\n        \"variant\"?: KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\": string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"type\"?: KiInputType;\n        \"value\"?: string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\"?: boolean;\n        \"label\": string;\n        \"max\"?: number;\n        \"shape\"?: KiProgressShape;\n        \"value\"?: number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiRadioGroup {\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiScroller {\n        \"label\": string;\n        \"orientation\"?: KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\"?: boolean;\n        \"tone\"?: KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\"?: boolean;\n        \"selected\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiTabPanel {\n        \"value\"?: string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"onKi-change\"?: (event: KiTabsCustomEvent<{\n            value: string;\n        }>) => void;\n        \"value\"?: string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"rows\"?: number;\n        \"value\"?: string;\n    }\n    interface KiTooltip {\n        \"label\"?: string;\n        \"placement\"?: KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\": string;\n    }\n    interface KiAlertAttributes {\n        \"tone\": KiAlertTone | (string & {});\n        \"heading\": string;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n    }\n    interface KiAvatarAttributes {\n        \"label\": string;\n        \"src\": string;\n        \"initials\": string;\n        \"size\": KiAvatarSize;\n    }\n    interface KiAvatarGroupAttributes {\n        \"max\": number;\n        \"size\": KiAvatarSize;\n    }\n    interface KiBadgeAttributes {\n        \"tone\": KiBadgeTone;\n        \"size\": KiBadgeSize;\n    }\n    interface KiButtonAttributes {\n        \"variant\": KiButtonVariant;\n        \"tone\": KiButtonTone;\n        \"size\": KiButtonSize;\n        \"type\": KiButtonType;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n    }\n    interface KiCheckboxAttributes {\n        \"checked\": boolean;\n        \"indeterminate\": boolean;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"name\": string;\n        \"value\": string;\n        \"labelHint\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiDialogAttributes {\n        \"open\": boolean;\n        \"heading\": string;\n        \"closeOnBackdrop\": boolean;\n    }\n    interface KiDividerAttributes {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButtonAttributes {\n        \"variant\": KiIconButtonVariant;\n        \"tone\": KiIconButtonTone;\n        \"size\": KiIconButtonSize;\n        \"label\": string;\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n    }\n    interface KiIndicatorAttributes {\n        \"count\": number;\n        \"current\": number;\n        \"label\": string;\n    }\n    interface KiInputAttributes {\n        \"type\": KiInputType;\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiOptionAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiProgressAttributes {\n        \"value\": number;\n        \"max\": number;\n        \"indeterminate\": boolean;\n        \"shape\": KiProgressShape;\n        \"label\": string;\n    }\n    interface KiQrAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiRadioAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiRadioGroupAttributes {\n        \"name\": string;\n        \"value\": string;\n        \"label\": string;\n        \"labelHint\": string;\n        \"required\": boolean;\n        \"disabled\": boolean;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiScrollerAttributes {\n        \"orientation\": KiScrollerOrientation;\n        \"label\": string;\n    }\n    interface KiSelectAttributes {\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiStatusAttributes {\n        \"tone\": KiStatusTone;\n        \"ring\": boolean;\n        \"label\": string;\n    }\n    interface KiSwitchAttributes {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\": string;\n        \"value\": string;\n        \"helpText\": string;\n    }\n    interface KiTabAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n        \"selected\": boolean;\n    }\n    interface KiTabPanelAttributes {\n        \"value\": string;\n    }\n    interface KiTabsAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiTextareaAttributes {\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"rows\": number;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiTooltipAttributes {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideoAttributes {\n        \"label\": string;\n    }\n    interface IntrinsicElements {\n        \"ki-alert\": Omit<KiAlert, keyof KiAlertAttributes> & {\n            [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K];\n        };\n        \"ki-avatar\": Omit<KiAvatar, keyof KiAvatarAttributes> & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K];\n        };\n        \"ki-avatar-group\": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K];\n        };\n        \"ki-badge\": Omit<KiBadge, keyof KiBadgeAttributes> & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K];\n        };\n        \"ki-button\": Omit<KiButton, keyof KiButtonAttributes> & {\n            [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K];\n        };\n        \"ki-card\": KiCard;\n        \"ki-checkbox\": Omit<KiCheckbox, keyof KiCheckboxAttributes> & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K];\n        };\n        \"ki-dialog\": Omit<KiDialog, keyof KiDialogAttributes> & {\n            [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K];\n        } & OneOf<\"heading\", KiDialog[\"heading\"], KiDialogAttributes[\"heading\"]>;\n        \"ki-divider\": Omit<KiDivider, keyof KiDividerAttributes> & {\n            [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K];\n        };\n        \"ki-icon-button\": Omit<KiIconButton, keyof KiIconButtonAttributes> & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K];\n        } & OneOf<\"label\", KiIconButton[\"label\"], KiIconButtonAttributes[\"label\"]>;\n        \"ki-indicator\": Omit<KiIndicator, keyof KiIndicatorAttributes> & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K];\n        } & OneOf<\"label\", KiIndicator[\"label\"], KiIndicatorAttributes[\"label\"]>;\n        \"ki-input\": Omit<KiInput, keyof KiInputAttributes> & {\n            [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K];\n        } & OneOf<\"label\", KiInput[\"label\"], KiInputAttributes[\"label\"]>;\n        \"ki-list\": KiList;\n        \"ki-list-item\": KiListItem;\n        \"ki-option\": Omit<KiOption, keyof KiOptionAttributes> & {\n            [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K];\n        };\n        \"ki-progress\": Omit<KiProgress, keyof KiProgressAttributes> & {\n            [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K];\n        } & OneOf<\"label\", KiProgress[\"label\"], KiProgressAttributes[\"label\"]>;\n        \"ki-qr\": Omit<KiQr, keyof KiQrAttributes> & {\n            [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K];\n        };\n        \"ki-radio\": Omit<KiRadio, keyof KiRadioAttributes> & {\n            [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K];\n        };\n        \"ki-radio-group\": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K];\n        } & OneOf<\"label\", KiRadioGroup[\"label\"], KiRadioGroupAttributes[\"label\"]>;\n        \"ki-scroller\": Omit<KiScroller, keyof KiScrollerAttributes> & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K];\n        } & OneOf<\"label\", KiScroller[\"label\"], KiScrollerAttributes[\"label\"]>;\n        \"ki-select\": Omit<KiSelect, keyof KiSelectAttributes> & {\n            [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K];\n        } & OneOf<\"label\", KiSelect[\"label\"], KiSelectAttributes[\"label\"]>;\n        \"ki-status\": Omit<KiStatus, keyof KiStatusAttributes> & {\n            [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K];\n        };\n        \"ki-switch\": Omit<KiSwitch, keyof KiSwitchAttributes> & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K];\n        };\n        \"ki-tab\": Omit<KiTab, keyof KiTabAttributes> & {\n            [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K];\n        };\n        \"ki-tab-panel\": Omit<KiTabPanel, keyof KiTabPanelAttributes> & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K];\n        };\n        \"ki-tabs\": Omit<KiTabs, keyof KiTabsAttributes> & {\n            [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K];\n        };\n        \"ki-textarea\": Omit<KiTextarea, keyof KiTextareaAttributes> & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K];\n        } & OneOf<\"label\", KiTextarea[\"label\"], KiTextareaAttributes[\"label\"]>;\n        \"ki-tooltip\": Omit<KiTooltip, keyof KiTooltipAttributes> & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K];\n        };\n        \"ki-video\": Omit<KiVideo, keyof KiVideoAttributes> & {\n            [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K];\n        } & OneOf<\"label\", KiVideo[\"label\"], KiVideoAttributes[\"label\"]>;\n    }\n}"
+                "signature": "declare namespace LocalJSX {\n    type OneOf<K extends string, PropT, AttrT = PropT> = {\n        [P in K]: PropT;\n    } & {\n        [P in `attr:${K}`]?: never;\n    } | {\n        [P in `attr:${K}`]: AttrT;\n    } & {\n        [P in K]?: never;\n    };\n    interface KiAlert {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiAlertCustomEvent<null>) => void;\n        \"tone\"?: KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\"?: KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\"?: KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\"?: KiBadgeSize;\n        \"tone\"?: KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"loading\"?: boolean;\n        \"loadingLabel\"?: string;\n        \"name\"?: string;\n        \"size\"?: KiButtonSize;\n        \"tone\"?: KiButtonTone;\n        \"type\"?: KiButtonType;\n        \"value\"?: string;\n        \"variant\"?: KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"indeterminate\"?: boolean;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"closeOnBackdrop\"?: boolean;\n        \"heading\": string;\n        \"onKi-close\"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;\n        \"open\"?: boolean;\n    }\n    interface KiDivider {\n        \"orientation\"?: KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\"?: boolean;\n        \"label\": string;\n        \"loading\"?: boolean;\n        \"loadingLabel\"?: string;\n        \"size\"?: KiIconButtonSize;\n        \"tone\"?: KiIconButtonTone;\n        \"variant\"?: KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\": string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"type\"?: KiInputType;\n        \"value\"?: string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\"?: boolean;\n        \"label\": string;\n        \"max\"?: number;\n        \"shape\"?: KiProgressShape;\n        \"value\"?: number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiRadioGroup {\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiScroller {\n        \"label\": string;\n        \"orientation\"?: KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\"?: boolean;\n        \"tone\"?: KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\"?: boolean;\n        \"selected\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiTabPanel {\n        \"value\"?: string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"onKi-change\"?: (event: KiTabsCustomEvent<{\n            value: string;\n        }>) => void;\n        \"value\"?: string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"errorText\"?: string;\n        \"form\"?: string;\n        \"helpText\"?: string;\n        \"label\": string;\n        \"labelHint\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"rows\"?: number;\n        \"value\"?: string;\n    }\n    interface KiToast {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"duration\"?: number;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiToastCustomEvent<KiToastDismissDetail>) => void;\n        \"queued\"?: boolean;\n        \"tone\"?: KiToastTone | (string & {});\n    }\n    interface KiToaster {\n        \"label\"?: string;\n        \"max\"?: number;\n        \"placement\"?: KiToasterPlacement | (string & {});\n    }\n    interface KiTooltip {\n        \"label\"?: string;\n        \"placement\"?: KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\": string;\n    }\n    interface KiAlertAttributes {\n        \"tone\": KiAlertTone | (string & {});\n        \"heading\": string;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n    }\n    interface KiAvatarAttributes {\n        \"label\": string;\n        \"src\": string;\n        \"initials\": string;\n        \"size\": KiAvatarSize;\n    }\n    interface KiAvatarGroupAttributes {\n        \"max\": number;\n        \"size\": KiAvatarSize;\n    }\n    interface KiBadgeAttributes {\n        \"tone\": KiBadgeTone;\n        \"size\": KiBadgeSize;\n    }\n    interface KiButtonAttributes {\n        \"variant\": KiButtonVariant;\n        \"tone\": KiButtonTone;\n        \"size\": KiButtonSize;\n        \"type\": KiButtonType;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n    }\n    interface KiCheckboxAttributes {\n        \"checked\": boolean;\n        \"indeterminate\": boolean;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"name\": string;\n        \"value\": string;\n        \"labelHint\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiDialogAttributes {\n        \"open\": boolean;\n        \"heading\": string;\n        \"closeOnBackdrop\": boolean;\n    }\n    interface KiDividerAttributes {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButtonAttributes {\n        \"variant\": KiIconButtonVariant;\n        \"tone\": KiIconButtonTone;\n        \"size\": KiIconButtonSize;\n        \"label\": string;\n        \"disabled\": boolean;\n        \"loading\": boolean;\n        \"loadingLabel\": string;\n    }\n    interface KiIndicatorAttributes {\n        \"count\": number;\n        \"current\": number;\n        \"label\": string;\n    }\n    interface KiInputAttributes {\n        \"type\": KiInputType;\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiOptionAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiProgressAttributes {\n        \"value\": number;\n        \"max\": number;\n        \"indeterminate\": boolean;\n        \"shape\": KiProgressShape;\n        \"label\": string;\n    }\n    interface KiQrAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiRadioAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiRadioGroupAttributes {\n        \"name\": string;\n        \"value\": string;\n        \"label\": string;\n        \"labelHint\": string;\n        \"required\": boolean;\n        \"disabled\": boolean;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiScrollerAttributes {\n        \"orientation\": KiScrollerOrientation;\n        \"label\": string;\n    }\n    interface KiSelectAttributes {\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiStatusAttributes {\n        \"tone\": KiStatusTone;\n        \"ring\": boolean;\n        \"label\": string;\n    }\n    interface KiSwitchAttributes {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\": string;\n        \"value\": string;\n        \"helpText\": string;\n    }\n    interface KiTabAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n        \"selected\": boolean;\n    }\n    interface KiTabPanelAttributes {\n        \"value\": string;\n    }\n    interface KiTabsAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiTextareaAttributes {\n        \"label\": string;\n        \"labelHint\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"rows\": number;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n        \"helpText\": string;\n        \"errorText\": string;\n    }\n    interface KiToastAttributes {\n        \"tone\": KiToastTone | (string & {});\n        \"heading\": string;\n        \"duration\": number;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"queued\": boolean;\n    }\n    interface KiToasterAttributes {\n        \"placement\": KiToasterPlacement | (string & {});\n        \"max\": number;\n        \"label\": string;\n    }\n    interface KiTooltipAttributes {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideoAttributes {\n        \"label\": string;\n    }\n    interface IntrinsicElements {\n        \"ki-alert\": Omit<KiAlert, keyof KiAlertAttributes> & {\n            [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K];\n        };\n        \"ki-avatar\": Omit<KiAvatar, keyof KiAvatarAttributes> & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K];\n        };\n        \"ki-avatar-group\": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K];\n        };\n        \"ki-badge\": Omit<KiBadge, keyof KiBadgeAttributes> & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K];\n        };\n        \"ki-button\": Omit<KiButton, keyof KiButtonAttributes> & {\n            [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K];\n        };\n        \"ki-card\": KiCard;\n        \"ki-checkbox\": Omit<KiCheckbox, keyof KiCheckboxAttributes> & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K];\n        };\n        \"ki-dialog\": Omit<KiDialog, keyof KiDialogAttributes> & {\n            [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K];\n        } & OneOf<\"heading\", KiDialog[\"heading\"], KiDialogAttributes[\"heading\"]>;\n        \"ki-divider\": Omit<KiDivider, keyof KiDividerAttributes> & {\n            [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K];\n        };\n        \"ki-icon-button\": Omit<KiIconButton, keyof KiIconButtonAttributes> & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K];\n        } & OneOf<\"label\", KiIconButton[\"label\"], KiIconButtonAttributes[\"label\"]>;\n        \"ki-indicator\": Omit<KiIndicator, keyof KiIndicatorAttributes> & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K];\n        } & OneOf<\"label\", KiIndicator[\"label\"], KiIndicatorAttributes[\"label\"]>;\n        \"ki-input\": Omit<KiInput, keyof KiInputAttributes> & {\n            [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K];\n        } & OneOf<\"label\", KiInput[\"label\"], KiInputAttributes[\"label\"]>;\n        \"ki-list\": KiList;\n        \"ki-list-item\": KiListItem;\n        \"ki-option\": Omit<KiOption, keyof KiOptionAttributes> & {\n            [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K];\n        };\n        \"ki-progress\": Omit<KiProgress, keyof KiProgressAttributes> & {\n            [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K];\n        } & OneOf<\"label\", KiProgress[\"label\"], KiProgressAttributes[\"label\"]>;\n        \"ki-qr\": Omit<KiQr, keyof KiQrAttributes> & {\n            [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K];\n        };\n        \"ki-radio\": Omit<KiRadio, keyof KiRadioAttributes> & {\n            [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K];\n        };\n        \"ki-radio-group\": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K];\n        } & OneOf<\"label\", KiRadioGroup[\"label\"], KiRadioGroupAttributes[\"label\"]>;\n        \"ki-scroller\": Omit<KiScroller, keyof KiScrollerAttributes> & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K];\n        } & OneOf<\"label\", KiScroller[\"label\"], KiScrollerAttributes[\"label\"]>;\n        \"ki-select\": Omit<KiSelect, keyof KiSelectAttributes> & {\n            [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K];\n        } & OneOf<\"label\", KiSelect[\"label\"], KiSelectAttributes[\"label\"]>;\n        \"ki-status\": Omit<KiStatus, keyof KiStatusAttributes> & {\n            [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K];\n        };\n        \"ki-switch\": Omit<KiSwitch, keyof KiSwitchAttributes> & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K];\n        };\n        \"ki-tab\": Omit<KiTab, keyof KiTabAttributes> & {\n            [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K];\n        };\n        \"ki-tab-panel\": Omit<KiTabPanel, keyof KiTabPanelAttributes> & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K];\n        };\n        \"ki-tabs\": Omit<KiTabs, keyof KiTabsAttributes> & {\n            [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K];\n        };\n        \"ki-textarea\": Omit<KiTextarea, keyof KiTextareaAttributes> & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K];\n        } & OneOf<\"label\", KiTextarea[\"label\"], KiTextareaAttributes[\"label\"]>;\n        \"ki-toast\": Omit<KiToast, keyof KiToastAttributes> & {\n            [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K];\n        } & {\n            [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K];\n        } & {\n            [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K];\n        };\n        \"ki-toaster\": Omit<KiToaster, keyof KiToasterAttributes> & {\n            [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K];\n        } & {\n            [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K];\n        } & {\n            [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K];\n        };\n        \"ki-tooltip\": Omit<KiTooltip, keyof KiTooltipAttributes> & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K];\n        };\n        \"ki-video\": Omit<KiVideo, keyof KiVideoAttributes> & {\n            [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K];\n        } & OneOf<\"label\", KiVideo[\"label\"], KiVideoAttributes[\"label\"]>;\n    }\n}"
               },
               "KiAlertCustomEvent": {
                 "kinds": [
@@ -14486,6 +15134,36 @@
                   "type"
                 ],
                 "signature": "interface KiTabsCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiTabsElement;\n}"
+              },
+              "KiToastCustomEvent": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiToastCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiToastElement;\n}"
+              },
+              "KiToastDismissDetail": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiToastDismissDetail {\n    reason: 'timeout' | 'button' | 'escape' | 'action';\n}"
+              },
+              "KiToastShowOptions": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiToastShowOptions {\n    action?: {\n        label: string;\n        onClick?: (event: MouseEvent) => void;\n    };\n    dismissible?: boolean;\n    duration?: number;\n    message: string;\n    title?: string;\n    tone?: string;\n}"
+              },
+              "KiToastTone": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';"
+              },
+              "KiToasterPlacement": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiToasterPlacement = 'top-center' | 'top-end' | 'bottom-center' | 'bottom-end';"
               },
               "KiTooltipPlacement": {
                 "kinds": [
@@ -15899,6 +16577,28 @@
                 "--ki-textarea-rest-fg": "#ffffff",
                 "--ki-textarea-rest-label-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-rest-placeholder-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#151515",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f19997",
+                "--ki-toast-fg": "#ffffff",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-neutral-icon": "#ffffff",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),0 32px 32px -16px rgba(0,0,0,0.08)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "12px",
@@ -17176,6 +17876,28 @@
                 "--ki-textarea-rest-fg": "#0a0c11",
                 "--ki-textarea-rest-label-fg": "#5b616d",
                 "--ki-textarea-rest-placeholder-fg": "#5b616d",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f9f9fa",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#cd2118",
+                "--ki-toast-fg": "#0a0c11",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#5b616d",
+                "--ki-toast-neutral-icon": "#0a0c11",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),0 32px 32px -16px rgba(0,0,0,0.03)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "12px",
@@ -18453,6 +19175,28 @@
                 "--ki-textarea-rest-fg": "#ffffff",
                 "--ki-textarea-rest-label-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-rest-placeholder-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#151515",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f19997",
+                "--ki-toast-fg": "#ffffff",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-neutral-icon": "#ffffff",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),0 32px 32px -16px rgba(0,0,0,0.08)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -19730,6 +20474,28 @@
                 "--ki-textarea-rest-fg": "#0a0c11",
                 "--ki-textarea-rest-label-fg": "rgba(0,0,0,0.72)",
                 "--ki-textarea-rest-placeholder-fg": "rgba(0,0,0,0.72)",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f9f9fa",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#cd2118",
+                "--ki-toast-fg": "#0a0c11",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#5b616d",
+                "--ki-toast-neutral-icon": "#0a0c11",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),0 32px 32px -16px rgba(0,0,0,0.03)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -21007,6 +21773,28 @@
                 "--ki-textarea-rest-fg": "#ffffff",
                 "--ki-textarea-rest-label-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-rest-placeholder-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#151515",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f19997",
+                "--ki-toast-fg": "#ffffff",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-neutral-icon": "#ffffff",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),0 32px 32px -16px rgba(0,0,0,0.08)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "12px",
@@ -22284,6 +23072,28 @@
                 "--ki-textarea-rest-fg": "#0a0c11",
                 "--ki-textarea-rest-label-fg": "#5b616d",
                 "--ki-textarea-rest-placeholder-fg": "#5b616d",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f9f9fa",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#cd2118",
+                "--ki-toast-fg": "#0a0c11",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#5b616d",
+                "--ki-toast-neutral-icon": "#0a0c11",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),0 32px 32px -16px rgba(0,0,0,0.03)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "12px",
@@ -23561,6 +24371,28 @@
                 "--ki-textarea-rest-fg": "#ffffff",
                 "--ki-textarea-rest-label-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-rest-placeholder-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#151515",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f19997",
+                "--ki-toast-fg": "#ffffff",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-neutral-icon": "#ffffff",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),0 32px 32px -16px rgba(0,0,0,0.08)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -24838,6 +25670,28 @@
                 "--ki-textarea-rest-fg": "#0a0c11",
                 "--ki-textarea-rest-label-fg": "#5b616d",
                 "--ki-textarea-rest-placeholder-fg": "#5b616d",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f9f9fa",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#cd2118",
+                "--ki-toast-fg": "#0a0c11",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#5b616d",
+                "--ki-toast-neutral-icon": "#0a0c11",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),0 32px 32px -16px rgba(0,0,0,0.03)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -26115,6 +26969,28 @@
                 "--ki-textarea-rest-fg": "#ffffff",
                 "--ki-textarea-rest-label-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-rest-placeholder-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#151515",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f19997",
+                "--ki-toast-fg": "#ffffff",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-neutral-icon": "#ffffff",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),0 32px 32px -16px rgba(0,0,0,0.08)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "12px",
@@ -27392,6 +28268,28 @@
                 "--ki-textarea-rest-fg": "#0a0c11",
                 "--ki-textarea-rest-label-fg": "#5b616d",
                 "--ki-textarea-rest-placeholder-fg": "#5b616d",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f9f9fa",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0.05)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#cd2118",
+                "--ki-toast-fg": "#0a0c11",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Inter,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#5b616d",
+                "--ki-toast-neutral-icon": "#0a0c11",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "16px",
+                "--ki-toast-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),0 32px 32px -16px rgba(0,0,0,0.03)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0.5rem",
                 "--ki-tooltip-backdrop-blur": "12px",
@@ -28678,6 +29576,28 @@
                 "--ki-textarea-rest-fg": "#e6e0e9",
                 "--ki-textarea-rest-label-fg": "#cac4d0",
                 "--ki-textarea-rest-placeholder-fg": "#cac4d0",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#211f26",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f2b8b5",
+                "--ki-toast-fg": "#e6e0e9",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "#cac4d0",
+                "--ki-toast-neutral-icon": "#e6e0e9",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -29955,6 +30875,28 @@
                 "--ki-textarea-rest-fg": "#1d1b20",
                 "--ki-textarea-rest-label-fg": "#49454f",
                 "--ki-textarea-rest-placeholder-fg": "#49454f",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f3edf7",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#8c1d18",
+                "--ki-toast-fg": "#1d1b20",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#49454f",
+                "--ki-toast-neutral-icon": "#1d1b20",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -31232,6 +32174,28 @@
                 "--ki-textarea-rest-fg": "#e6e0e9",
                 "--ki-textarea-rest-label-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-rest-placeholder-fg": "rgba(255,255,255,0.72)",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#211f26",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f2b8b5",
+                "--ki-toast-fg": "#e6e0e9",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "#cac4d0",
+                "--ki-toast-neutral-icon": "#e6e0e9",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -32509,6 +33473,28 @@
                 "--ki-textarea-rest-fg": "#1d1b20",
                 "--ki-textarea-rest-label-fg": "rgba(0,0,0,0.72)",
                 "--ki-textarea-rest-placeholder-fg": "rgba(0,0,0,0.72)",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f3edf7",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#8c1d18",
+                "--ki-toast-fg": "#1d1b20",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#49454f",
+                "--ki-toast-neutral-icon": "#1d1b20",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -33786,6 +34772,28 @@
                 "--ki-textarea-rest-fg": "#e6e0e9",
                 "--ki-textarea-rest-label-fg": "#cac4d0",
                 "--ki-textarea-rest-placeholder-fg": "#cac4d0",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#211f26",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f2b8b5",
+                "--ki-toast-fg": "#e6e0e9",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "#cac4d0",
+                "--ki-toast-neutral-icon": "#e6e0e9",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -35063,6 +36071,28 @@
                 "--ki-textarea-rest-fg": "#1d1b20",
                 "--ki-textarea-rest-label-fg": "#49454f",
                 "--ki-textarea-rest-placeholder-fg": "#49454f",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f3edf7",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#8c1d18",
+                "--ki-toast-fg": "#1d1b20",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#49454f",
+                "--ki-toast-neutral-icon": "#1d1b20",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -36340,6 +37370,28 @@
                 "--ki-textarea-rest-fg": "#e6e0e9",
                 "--ki-textarea-rest-label-fg": "#cac4d0",
                 "--ki-textarea-rest-placeholder-fg": "#cac4d0",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#211f26",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f2b8b5",
+                "--ki-toast-fg": "#e6e0e9",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "#cac4d0",
+                "--ki-toast-neutral-icon": "#e6e0e9",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -37617,6 +38669,28 @@
                 "--ki-textarea-rest-fg": "#1d1b20",
                 "--ki-textarea-rest-label-fg": "#49454f",
                 "--ki-textarea-rest-placeholder-fg": "#49454f",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f3edf7",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#8c1d18",
+                "--ki-toast-fg": "#1d1b20",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#49454f",
+                "--ki-toast-neutral-icon": "#1d1b20",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -38894,6 +39968,28 @@
                 "--ki-textarea-rest-fg": "#e6e0e9",
                 "--ki-textarea-rest-label-fg": "#cac4d0",
                 "--ki-textarea-rest-placeholder-fg": "#cac4d0",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#211f26",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(0,0,0,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#f2b8b5",
+                "--ki-toast-fg": "#e6e0e9",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#71d5f4",
+                "--ki-toast-message-fg": "#cac4d0",
+                "--ki-toast-neutral-icon": "#e6e0e9",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#9cda9b",
+                "--ki-toast-warning-icon": "#fbcb84",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -40171,6 +41267,28 @@
                 "--ki-textarea-rest-fg": "#1d1b20",
                 "--ki-textarea-rest-label-fg": "#49454f",
                 "--ki-textarea-rest-placeholder-fg": "#49454f",
+                "--ki-toast-backdrop-filter": "none",
+                "--ki-toast-bg": "#f3edf7",
+                "--ki-toast-bg-image": "none",
+                "--ki-toast-border": "rgba(255,255,255,0)",
+                "--ki-toast-border-width": "1px",
+                "--ki-toast-danger-icon": "#8c1d18",
+                "--ki-toast-fg": "#1d1b20",
+                "--ki-toast-gap": "0.75rem",
+                "--ki-toast-heading-font-family": "Roboto,system-ui,sans-serif",
+                "--ki-toast-icon-size": "1.25rem",
+                "--ki-toast-info-icon": "#085268",
+                "--ki-toast-message-fg": "#49454f",
+                "--ki-toast-neutral-icon": "#1d1b20",
+                "--ki-toast-padding": "0.75rem",
+                "--ki-toast-radius": "4px",
+                "--ki-toast-shadow": "0 1px 3px 0 rgba(0,0,0,0.3),0 4px 8px 3px rgba(0,0,0,0.15)",
+                "--ki-toast-success-icon": "#2c6a2b",
+                "--ki-toast-warning-icon": "#945b05",
+                "--ki-toast-width": "22.5rem",
+                "--ki-toaster-gap": "0.75rem",
+                "--ki-toaster-inset-block": "1rem",
+                "--ki-toaster-inset-inline": "1rem",
                 "--ki-tooltip-arrow-radius": "2px",
                 "--ki-tooltip-arrow-size": "0",
                 "--ki-tooltip-backdrop-blur": "0",
@@ -50532,6 +51650,215 @@
             "required": false,
             "type": null
           },
+          "--ki-toast-backdrop-filter": {
+            "default": "none",
+            "deprecatedSince": null,
+            "description": "filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toast-bg": {
+            "default": "#f9f9fa",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-bg-image": {
+            "default": "none",
+            "deprecatedSince": null,
+            "description": "image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toast-border": {
+            "default": "#0000000d",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for its hairline edge (issue #353).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-border-width": {
+            "default": "1px",
+            "deprecatedSince": null,
+            "description": "dimension used by the toast component for its hairline edge.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toast-danger-icon": {
+            "default": "#cd2118",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-fg": {
+            "default": "#0a0c11",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for the heading ink (issue #353).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-gap": {
+            "default": "0.75rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toast-heading-font-family": {
+            "default": [
+              "Inter",
+              "system-ui",
+              "sans-serif"
+            ],
+            "deprecatedSince": null,
+            "description": "Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toast-icon-size": {
+            "default": "1.25rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the toast component for the tone icon.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toast-info-icon": {
+            "default": "#085268",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-message-fg": {
+            "default": "#5b616d",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for the message ink (issue #353).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-neutral-icon": {
+            "default": "#0a0c11",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-padding": {
+            "default": "0.75rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the toast component for its padding (issue #353: 12px).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toast-radius": {
+            "default": "16px",
+            "deprecatedSince": null,
+            "description": "dimension used by the toast component for its corners (issue #353: 16px).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toast-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              },
+              {
+                "blur": "32px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "32px",
+                "spread": "-16px"
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-toast-success-icon": {
+            "default": "#2c6a2b",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-warning-icon": {
+            "default": "#945b05",
+            "deprecatedSince": null,
+            "description": "color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-toast-width": {
+            "default": "22.5rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toaster-gap": {
+            "default": "0.75rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toaster-inset-block": {
+            "default": "1rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-toaster-inset-inline": {
+            "default": "1rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
           "--ki-tooltip-arrow-radius": {
             "default": "2px",
             "deprecatedSince": null,
@@ -51407,5 +52734,5 @@
       }
     }
   },
-  "surfaceSha256": "76afa703df075eda142b390bf0528b34d369095320611f3ab680bd782a7a7739"
+  "surfaceSha256": "c125bf6b67348842f9b164f9a0006ca096d13519375aa92e9d84b452d3ed0259"
 }

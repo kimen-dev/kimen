@@ -1,0 +1,63 @@
+---
+title: ki-toast
+description: A short, transient message about something the person just did, shown without blocking the page.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A short, transient message about something the person just did, shown
+without blocking the page. It leaves on its own after its time, which stops
+while the person points at the toaster, works inside it or is away from the
+page. Raise it into a [`ki-toaster`](../toaster/).
+
+<Demo
+  layout="block"
+  code={`<ki-toast tone="success" heading="Changes saved" duration="0">
+  Workspace settings are up to date.
+</ki-toast>`}
+/>
+
+## Examples
+
+### Tones
+
+`tone` picks the icon and its ink, and the live-region urgency; the surface
+stays the same.
+
+<Demo
+  layout="block"
+  code={`<ki-toast tone="info" duration="0">Sync complete.</ki-toast>
+<ki-toast tone="warning" duration="0">Storage is almost full.</ki-toast>
+<ki-toast tone="danger" heading="Upload failed">The file is larger than 20 MB.</ki-toast>`}
+/>
+
+### Action
+
+One ghost `ki-button size="sm"`: its click runs, then the toast leaves. A
+toast with an action never leaves on its own.
+
+<Demo
+  layout="block"
+  code={`<ki-toast heading="Message archived">
+  The conversation moved to your archive.
+  <ki-button slot="action" variant="ghost" size="sm">Undo</ki-button>
+</ki-toast>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-toast" />
+
+## Accessibility
+
+`danger` toasts expose `role="alert"`, every other tone `role="status"`; no
+toast moves focus. Only the heading and the message are announced. The time
+stops while the pointer rests on the toaster, while focus is inside it or
+while the page is hidden (WCAG 2.2.1); Escape dismisses a focused toast.
+`dismiss-label` is the only built-in word: localize it whenever the document
+language is not English.
+
+## Workshop
+
+[Open ki-toast in Storybook](/storybook/?path=/docs/docs-components-ki-toast--docs)

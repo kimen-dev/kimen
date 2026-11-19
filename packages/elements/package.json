@@ -20,7 +20,7 @@
     "NOTICE"
   ],
   "scripts": {
-    "build": "stencil build && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/build-surfaces.mjs",
+    "build": "stencil build && node scripts/normalize-angular-proxies.mjs && node scripts/normalize-react-wrappers.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/build-surfaces.mjs",
     "test": "vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.browser.config.ts",

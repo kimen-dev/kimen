@@ -13,7 +13,7 @@
           "tagName": "ki-alert",
           "description": "A persistent inline status message with token-backed tone semantics.",
           "whenToUse": "show a persistent inline message about the state of a page or\nsection, such as a failed save, completed operation, or service notice, that\nremains until the condition is resolved or the person dismisses it. Express\nseverity with `tone`, never custom styling.",
-          "whenNotToUse": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
+          "whenNotToUse": "transient confirmations that expire on their own belong to\n`ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to\nanother element belong to `ki-badge`; blocking decisions belong to\n`ki-dialog`; inline field-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
           "attributes": [
             {
               "name": "dismiss-label",
@@ -40,7 +40,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior."
+              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`."
             },
             {
               "name": "heading",
@@ -93,7 +93,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`.",
               "attribute": "dismissible",
               "reflects": true
             },
@@ -2973,7 +2973,7 @@
           "tagName": "ki-dialog",
           "description": "A modal dialog for one interrupting decision or short focused task.",
           "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action.",
-          "whenNotToUse": "non-blocking feedback (`ki-alert`, future `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
+          "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
           "attributes": [
             {
               "name": "close-on-backdrop",
@@ -8716,6 +8716,511 @@
           "declaration": {
             "name": "KiTextarea",
             "module": "dist/components/ki-textarea.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-toast.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiToast",
+          "customElement": true,
+          "tagName": "ki-toast",
+          "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
+          "whenToUse": "confirm an action that happened elsewhere on screen (\"Changes\nsaved\", \"Link copied\"), report a background result (\"Export ready\"), or\noffer a quick undo. Raise it into a `ki-toaster`, in markup or with its\n`show()` method; express urgency with `tone`.",
+          "whenNotToUse": "anything the person must read or act on to continue belongs\nto `ki-dialog`; form validation belongs to the field's error text; a lasting\ncondition of the page belongs to `ki-alert`, which stays inline.\n\nAssistive technology note: a toast announces as it appears, so append it\nwhen the event happens; a toast present at initial page load is exposed with\nits role but its announcement is not guaranteed. The heading and the message\nare the whole announcement: the icon, the action and the dismiss button\nstay outside the live region.",
+          "attributes": [
+            {
+              "name": "dismiss-label",
+              "fieldName": "dismissLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Dismiss'",
+              "description": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot."
+            },
+            {
+              "name": "dismissed",
+              "fieldName": "dismissed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person."
+            },
+            {
+              "name": "dismissible",
+              "fieldName": "dismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person."
+            },
+            {
+              "name": "duration",
+              "fieldName": "duration",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+              "minimum": 0
+            },
+            {
+              "name": "heading",
+              "fieldName": "heading",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure."
+            },
+            {
+              "name": "queued",
+              "fieldName": "queued",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
+              },
+              "default": "'neutral'",
+              "description": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dismissLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Dismiss'",
+              "description": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot.",
+              "attribute": "dismiss-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "dismissed",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person.",
+              "attribute": "dismissed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "dismissible",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person.",
+              "attribute": "dismissible",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "duration",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+              "attribute": "duration",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure.",
+              "attribute": "heading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "queued",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it.",
+              "attribute": "queued",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
+              },
+              "default": "'neutral'",
+              "description": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`.",
+              "attribute": "tone",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-dismiss",
+              "type": {
+                "text": "CustomEvent<KiToastDismissDetail>"
+              },
+              "description": "Fired once when the toast leaves because its time ran out\n(`reason: \"timeout\"`), the person used the dismiss button (`\"button\"`),\npressed Escape inside it (`\"escape\"`) or activated its action\n(`\"action\"`), after it is hidden and focus has been handed on. Not\ncancelable. When to use: remove the element, or record that the message\nwas seen. When NOT to use: do not expect it for programmatic `dismissed`\nchanges."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Message text. It lives inside the live-region boundary."
+            },
+            {
+              "name": "action",
+              "description": "At most one action, as a `ki-button size=\"sm\" variant=\"ghost\"`.\nIts own click handler runs, then the toast leaves (`reason: \"action\"`). A\ntoast holding an action never leaves on its own. When NOT to use: a response\nthe person cannot skip belongs in `ki-dialog`."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "action",
+              "description": "Wrapper around the `action` slot, rendered only when it holds content."
+            },
+            {
+              "name": "dismiss",
+              "description": "The dismiss `ki-icon-button`, rendered only when `dismissible`."
+            },
+            {
+              "name": "heading",
+              "description": "Optional bold first line, rendered only when non-empty."
+            },
+            {
+              "name": "icon",
+              "description": "The tone icon, drawn by the component in the tone's ink."
+            },
+            {
+              "name": "message",
+              "description": "Message wrapper around the default slot."
+            },
+            {
+              "name": "toast",
+              "description": "The flat surface: fill, image, edge, radius, padding,\nelevation and backdrop filter."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-motion-distance-sm",
+              "description": "Motion travel distance sm (4px): small slide/settle offsets."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-toast-backdrop-filter",
+              "description": "filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342)."
+            },
+            {
+              "name": "--ki-toast-bg",
+              "description": "color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself)."
+            },
+            {
+              "name": "--ki-toast-bg-image",
+              "description": "image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6)."
+            },
+            {
+              "name": "--ki-toast-border",
+              "description": "color used by the toast component for its hairline edge (issue #353)."
+            },
+            {
+              "name": "--ki-toast-border-width",
+              "description": "dimension used by the toast component for its hairline edge."
+            },
+            {
+              "name": "--ki-toast-danger-icon",
+              "description": "color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-fg",
+              "description": "color used by the toast component for the heading ink (issue #353)."
+            },
+            {
+              "name": "--ki-toast-gap",
+              "description": "dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px)."
+            },
+            {
+              "name": "--ki-toast-heading-font-family",
+              "description": "Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface."
+            },
+            {
+              "name": "--ki-toast-icon-size",
+              "description": "dimension used by the toast component for the tone icon."
+            },
+            {
+              "name": "--ki-toast-info-icon",
+              "description": "color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-message-fg",
+              "description": "color used by the toast component for the message ink (issue #353)."
+            },
+            {
+              "name": "--ki-toast-neutral-icon",
+              "description": "color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-padding",
+              "description": "dimension used by the toast component for its padding (issue #353: 12px)."
+            },
+            {
+              "name": "--ki-toast-radius",
+              "description": "dimension used by the toast component for its corners (issue #353: 16px)."
+            },
+            {
+              "name": "--ki-toast-shadow",
+              "description": "shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6)."
+            },
+            {
+              "name": "--ki-toast-success-icon",
+              "description": "color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-warning-icon",
+              "description": "color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-width",
+              "description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-2",
+              "description": "semantic dimension for typography line height body 2."
+            },
+            {
+              "name": "--ki-typography-line-height-para",
+              "description": "semantic dimension for typography line height para."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-body-2",
+              "description": "semantic dimension for typography size body 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiToast",
+          "declaration": {
+            "name": "KiToast",
+            "module": "dist/components/ki-toast.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-toast",
+          "declaration": {
+            "name": "KiToast",
+            "module": "dist/components/ki-toast.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-toaster.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiToaster",
+          "customElement": true,
+          "tagName": "ki-toaster",
+          "description": "The one place toasts appear: it paints its `ki-toast` children in the top\nlayer at a corner of the viewport, stacks them in arrival order, shows the\nnewest few and queues the older ones, without covering the page beside\nthem.",
+          "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`.",
+          "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Notifications'",
+              "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here."
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A value below 1 or not a\nwhole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+              "minimum": 1
+            },
+            {
+              "name": "placement",
+              "fieldName": "placement",
+              "type": {
+                "text": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}"
+              },
+              "default": "'bottom-end'",
+              "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Notifications'",
+              "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A value below 1 or not a\nwhole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+              "attribute": "max",
+              "reflects": true,
+              "minimum": 1
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "privacy": "public",
+              "type": {
+                "text": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}"
+              },
+              "default": "'bottom-end'",
+              "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+              "attribute": "placement",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "privacy": "public",
+              "description": "Raises a toast: creates a `ki-toast` from `tone`, `title` (its heading),\n`message`, `duration`, `dismissible` and `action` (a ghost\n`ki-button size=\"sm\"` in its `action` slot that calls `onClick`), appends\nit to the toaster and resolves with it. Once the toast has left it is\nremoved from the page. The toaster does not bundle `ki-toast` or\n`ki-button`: define them, as for toasts written in markup.\nWhen to use: raise a toast from script without writing its markup.\nWhen NOT to use: a toast written in markup stays the page's own: append\nit instead, and it is never removed.",
+              "return": {
+                "type": {
+                  "text": "Promise<HTMLElement>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "KiToastShowOptions"
+                  },
+                  "description": "",
+                  "optional": false,
+                  "rest": false
+                }
+              ],
+              "signature": "show(options: KiToastShowOptions) => Promise<HTMLElement>"
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The `ki-toast` elements, in arrival order. Other children are not\ncounted, queued or placed."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "stack",
+              "description": "The stack in the top layer: placement, edge distance, gap\nbetween toasts and width."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-toast-width",
+              "description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem)."
+            },
+            {
+              "name": "--ki-toaster-gap",
+              "description": "dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014)."
+            },
+            {
+              "name": "--ki-toaster-inset-block",
+              "description": "dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014)."
+            },
+            {
+              "name": "--ki-toaster-inset-inline",
+              "description": "dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiToaster",
+          "declaration": {
+            "name": "KiToaster",
+            "module": "dist/components/ki-toaster.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-toaster",
+          "declaration": {
+            "name": "KiToaster",
+            "module": "dist/components/ki-toaster.js"
           }
         }
       ]

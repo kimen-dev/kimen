@@ -37,10 +37,11 @@ test('packaging invokes publint once per publishable package and derives one ATT
   const componentAttw = calls.find(
     ({ args }) => args[1] === 'attw' && args.includes('./ki-tooltip'),
   );
-  // 29 direct component subpaths after Fase N wave 1 adds ki-divider,
+  // 31 direct component subpaths after Fase N wave 1 adds ki-divider,
   // ki-status, ki-icon-button and the ki-avatar + ki-avatar-group pair,
-  // and wave 2 adds ki-scroller, ki-indicator, ki-video and ki-qr.
-  assert.equal(componentAttw.args.filter((argument) => argument.startsWith('./ki-')).length, 29);
+  // wave 2 adds ki-scroller, ki-indicator, ki-video and ki-qr, and spec 049
+  // adds the ki-toast + ki-toaster pair.
+  assert.equal(componentAttw.args.filter((argument) => argument.startsWith('./ki-')).length, 31);
 });
 
 // The elements build names every file its declarations import (see

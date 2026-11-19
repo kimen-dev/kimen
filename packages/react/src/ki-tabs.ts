@@ -11,7 +11,7 @@ import React from 'react';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import type { Components } from '@kimen/elements/components';
 import { KiTabs as KiTabsElement, defineCustomElement as defineKiTabs } from '@kimen/elements/components/ki-tabs.js';
-import type { KiTabsCustomEvent } from '@kimen/elements';
+import type { KiTabsCustomEvent } from '@kimen/elements/components';
 import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
 export type KiTabsEvents = {

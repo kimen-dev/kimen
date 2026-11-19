@@ -31,6 +31,8 @@ import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js
 import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
 import { defineCustomElement as defineKiTextarea } from '../dist/components/ki-textarea.js';
+import { defineCustomElement as defineKiToast } from '../dist/components/ki-toast.js';
+import { defineCustomElement as defineKiToaster } from '../dist/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '../dist/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
 import { visualGalleries } from './visual/galleries';
@@ -64,6 +66,8 @@ const defineAll: readonly (() => void)[] = [
   defineKiTabPanel,
   defineKiTabs,
   defineKiTextarea,
+  defineKiToast,
+  defineKiToaster,
   defineKiTooltip,
   defineKiVideo,
 ];

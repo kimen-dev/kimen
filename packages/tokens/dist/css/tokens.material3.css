@@ -583,6 +583,10 @@
   --ki-textarea-invalid-bg: var(--ki-surface-danger-base-em);
   --ki-textarea-invalid-label-fg: var(--ki-text-danger-high-em);
   --ki-textarea-invalid-ring: 0 0 0 0 var(--ki-color-transparent-black);
+  --ki-toast-bg: var(--ki-surface-s2);
+  --ki-toast-border: var(--ki-outline-none);
+  --ki-toast-shadow: var(--ki-elevation-e3);
+  --ki-toast-radius: var(--ki-radius-component-xxs);
   --ki-tooltip-radius: var(--ki-radius-component-xs);
   --ki-tooltip-padding-inline: var(--ki-space-md);
   --ki-tooltip-padding-block: var(--ki-space-xs);

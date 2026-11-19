@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/344-button-hierarchy.json',
+      '../../changes/api/049-ki-toast.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -520,11 +520,12 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // glass control, scrim, backdrop blur, focus ring, motion) — and ki-qr
   // (spec 026-ki-qr): 7 --ki-qr-* component token leaves (size, ink, tile,
   // quiet zone and the shape axis). 29 components in total.
+  // Spec 049 adds ki-toast and ki-toaster: 31 components in total.
   assert.equal(result.release, 'major');
   assert.equal(result.decision, 'passed');
   assert.deepEqual(result.removals, []);
   assert.deepEqual(result.newRootSymbols, []);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 29);
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 31);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].rootSymbols).length, 32);
   // The pressed state layer (changes/api/010) adds three more:
   // --ki-surface-pressed-overlay-inverse, the darkening mirror of
@@ -599,11 +600,16 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // Issue #342 adds ten full-filter tokens: two semantic and eight component.
   // 1264 + 10 = 1274.
   // Issue #344 adds the tertiary hover overlay. 1274 + 1 = 1275.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1275);
+  // ki-toast and ki-toaster (changes/api/049-ki-toast) add twenty-two:
+  // 19 --ki-toast-* (the flat surface's fill, image, backdrop filter, edge,
+  // elevation, radius, padding, gap and width, the heading typeface, the
+  // heading and message ink, the icon size and an icon ink per tone) and 3
+  // --ki-toaster-* (the two edge distances and the gap). 1275 + 22 = 1297.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1297);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1275,
+    1297,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),

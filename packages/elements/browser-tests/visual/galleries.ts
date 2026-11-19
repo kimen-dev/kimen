@@ -474,6 +474,36 @@ const galleries = {
       ),
     ].join(''),
   },
+  // The onmars v2 toast (spec 049, issue #353): one flat raised surface,
+  // the tone in the icon alone, an action and the dismiss button. Every
+  // toast waits (duration 0): a toast that leaves on its own cannot be
+  // captured deterministically.
+  'ki-toast': {
+    focusFirst: true,
+    html: [
+      '<div style="display:grid;gap:12px;">',
+      '<ki-toast tone="neutral" duration="0" heading="Changes saved">Workspace settings are up to date.<button slot="action" type="button">Undo</button></ki-toast>',
+      '<ki-toast tone="info" duration="0" heading="Export ready">Your file is in your downloads.</ki-toast>',
+      '<ki-toast tone="success" duration="0">Link copied.</ki-toast>',
+      '<ki-toast tone="warning" duration="0" heading="Storage almost full">1 GB left.</ki-toast>',
+      '<ki-toast tone="danger" heading="Upload failed">The file is larger than 20 MB.</ki-toast>',
+      '<ki-toast duration="0" dismissible="false">Not dismissible.</ki-toast>',
+      '</div>',
+    ].join(''),
+  },
+  // The toaster paints its stack in the top layer against the viewport, so
+  // the gallery places it at the top end, over the capture, and keeps the
+  // capture tall enough for two toasts; the oldest waits in the queue.
+  'ki-toaster': {
+    html: [
+      '<ki-toaster placement="top-end" max="2">',
+      '<ki-toast duration="0">Queued message.</ki-toast>',
+      '<ki-toast tone="success" duration="0" heading="Changes saved">Workspace settings are up to date.</ki-toast>',
+      '<ki-toast tone="info" duration="0">Sync complete.<button slot="action" type="button">View</button></ki-toast>',
+      '</ki-toaster>',
+    ].join(''),
+    minHeight: 280,
+  },
   'ki-tooltip': {
     // Rest state only: the tooltip surfaces after a focus/hover delay, and
     // that timing is not deterministic under the stabilization loop. The
