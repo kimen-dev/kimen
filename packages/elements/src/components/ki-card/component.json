@@ -5,5 +5,12 @@
   "pointer": {
     "hoverWitness": false
   },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 5505,
+      "gzip": 1592,
+      "brotli": 1311
+    }
+  }
 }
