@@ -706,3 +706,11 @@ test("more contrast thickens every component's focus ring, whichever theme overr
     failures.join('\n'),
   );
 });
+
+test('transparent link ink is checked on raised page surfaces', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root { --ki-link-bg: transparent; --ki-link-fg: #707070; }`,
+  );
+  assert.ok(failures.some((failure) => failure.includes('--ki-link-bg over --ki-surface-s2')));
+});

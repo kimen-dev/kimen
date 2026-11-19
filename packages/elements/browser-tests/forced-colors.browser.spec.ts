@@ -255,6 +255,24 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     document.documentElement.setAttribute('data-ki-theme', theme);
   });
 
+  it('ki-link keeps its underline and focus ring visible', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<button>Start</button><p>Read the <ki-link href="/catalog">catalog contract</ki-link>.</p>',
+    );
+    const link = await partOf(fixture, 'ki-link', '[part="link"]');
+    const paint = getComputedStyle(link);
+    expect(paint.textDecorationLine).toBe('underline');
+    expect(inkOnCanvas(paint.textDecorationColor)).not.toBeNull();
+
+    fixture.querySelector('button')?.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(link.matches(':focus-visible')).toBe(true);
+    expect(paint.outlineStyle).toBe('solid');
+    expect(Number.parseFloat(paint.outlineWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(paint.outlineColor)).not.toBeNull();
+  });
+
   it('ki-radio paints the dot of the checked option and none on the others', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
