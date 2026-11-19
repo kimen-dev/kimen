@@ -3,6 +3,18 @@
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
+case "$#:${1:-}" in
+  0:) ;;
+  1:--affected)
+    if [ -n "${CI:-}" ] || [ "${KIMEN_SANDBOX:-}" = '1' ]; then
+      echo 'gates-suite: --affected is local-only; run the full suite here' >&2
+      exit 1
+    fi
+    exec bash scripts/gates/gates-affected.sh
+    ;;
+  *) echo 'gates-suite: usage: gates-suite.sh [--affected]' >&2; exit 1 ;;
+esac
+
 # Allocate every writable tool cache before Nx or Playwright can consult
 # mutable user/global state. cache-env marks the one permitted re-entry.
 # First designate a TMPDIR on its own filesystem, as the CI workflow does: the

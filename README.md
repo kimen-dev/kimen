@@ -149,6 +149,14 @@ size budget, tokens-only styling (no hardcoded visual values), and RTL support
 by construction. Run `bash scripts/gates/gates-suite.sh` for full local checks
 before a pull request. CI requires visual validation.
 
+For a quicker local pass, run `bash scripts/gates/gates-suite.sh --affected`.
+Nx selects projects and their dependents from committed, staged, unstaged and
+untracked changes since the merge base with `origin/main`. It runs their builds,
+unit tests, size checks, Chromium tests and browser wrapper tests where those
+targets exist. Set `NX_BASE` to use a different base. Changes to shared inputs,
+such as root configuration or gate scripts, trigger the full suite. Affected
+runs provide local feedback only.
+
 On a non-Linux host the local browser suite reports how many visual specs it
 skips. Set `KIMEN_RUN_VISUALS=1` to run them with your host's baselines.
 
