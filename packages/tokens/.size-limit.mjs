@@ -6,7 +6,7 @@ export default [
   {
     name: 'onmars tokens stylesheet',
     path: 'dist/css/tokens.css',
-    limit: '11.6 KB',
+    limit: '12.4 KB',
   },
   {
     name: 'material3 tokens stylesheet',

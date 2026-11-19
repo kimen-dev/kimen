@@ -13,6 +13,7 @@ export const KiSelect: StencilVueComponent<JSX.KiSelect, JSX.KiSelect["value"]> 
   'label',
   'labelHint',
   'placeholder',
+  'size',
   'name',
   'value',
   'disabled',

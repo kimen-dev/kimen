@@ -266,9 +266,10 @@ export const catalogData = {
           "type": "enum",
           "values": [
             "md",
-            "sm"
+            "sm",
+            "xs"
           ],
-          "description": "Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value\nfalls back to the `md` metrics the same way.",
+          "description": "Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in\nonmars, with 12px text at every size. An unrecognized value falls back to\nthe `md` metrics the same way.",
           "default": "md"
         },
         "tone": {
@@ -429,6 +430,16 @@ export const catalogData = {
           "type": "boolean",
           "description": "Requires the checkbox to be checked before form submission can proceed.\nThe invalid appearance appears after a blocked submission attempt or an\ninvalidating user toggle, never on initial render.\nWhen NOT to use: do not use required to express group-level rules; compose\nthose at the form/application layer.",
           "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm"
+          ],
+          "description": "Token-backed size: the box is 18, 20 or 24px in onmars. `sm` also takes\nthe smaller label (13/20, 8px away); `md` and `lg` keep the 15px label.\nThe pointer target never drops under 24px. An unrecognized value matches\nno style rule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "default": "md"
         },
         "value": {
           "type": "string",
@@ -636,6 +647,18 @@ export const catalogData = {
           "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
           "default": false
         },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Token-backed field size (`--ki-input-{size}-*` tokens): the field box is\n24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and\nicon box; the label and help text follow in three steps. An unrecognized\nvalue matches no style rule and keeps the medium metrics.\nWhen to use: match the size of the buttons and fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "default": "md"
+        },
         "type": {
           "type": "enum",
           "values": [
@@ -677,7 +700,19 @@ export const catalogData = {
     "ki-list-item": {
       "description": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
       "events": {},
-      "props": {},
+      "props": {
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl"
+          ],
+          "description": "Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height\n(48, 56, 64 or 72px with a secondary line in onmars), padding, gap and\ntext. Slotted start and end content keeps the size its author gave it.\nAn unrecognized value matches no style rule and keeps the medium metrics.\nWhen to use: give every row of one list the same size.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "default": "md"
+        }
+      },
       "slots": {
         "": "Primary text line.",
         "end": "Trailing media, meta text or a slotted control.",
@@ -825,6 +860,15 @@ export const catalogData = {
           "description": "Requires one selected option for form submission. The group uses platform\n`valueMissing` from its internal native radio inputs.\nWhen NOT to use: do not use required when no answer is acceptable.",
           "default": false
         },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Token-backed size of every `ki-radio` the group holds: the circle is 18\nor 20px in onmars, and `sm` takes the smaller option label (13/20, 8px\naway). The group decides for all its options; the group's own label,\nhelp and error keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around the group.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "default": "md"
+        },
         "value": {
           "type": "string",
           "description": "Projection of the current selection. The initial attribute selects the\nfirst matching option; unmatched values leave the group unselected and\noperable. Assigning the property updates selection silently.\nWhen NOT to use: never author selection on `ki-radio`; set this value.",
@@ -906,6 +950,18 @@ export const catalogData = {
           "description": "Requires a non-empty submitted value. The platform validation message is\ndonated by a hidden native select.",
           "default": false
         },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is\n24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and\nindicator; the label and help text follow in three steps. The listbox\nand its options keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "default": "md"
+        },
         "value": {
           "type": "string",
           "description": "Live projection of the selected option value, or `\"\"` when unselected.\nAssigning it selects the first matching option silently; the attribute is\nthe reset/default declaration and is not updated by user commits.",
@@ -973,6 +1029,17 @@ export const catalogData = {
         "name": {
           "type": "string",
           "description": "Form-data key contributed while the switch is on.\nWhen to use: include the immediate setting in native form data when on.\nWhen NOT to use: omit when no form entry should be submitted."
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl"
+          ],
+          "description": "Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in\nonmars (`xl` is the design's mobile size), with its thumb. `sm` also takes\nthe smaller label (13/20, 8px away). An unrecognized value matches no\nstyle rule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "default": "md"
         },
         "value": {
           "type": "string",
@@ -1042,6 +1109,18 @@ export const catalogData = {
           "type": "string",
           "description": "Accessible name for the tablist. Always provide one when multiple tab\ngroups may appear in a view. When NOT to use: do not use `label` as a\nvisible heading; render visible context in surrounding content."
         },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Token-backed strip size: every `ki-tab` it holds is 24, 32, 40, 48 or\n56px tall in onmars, with its text, and the gap between tabs follows.\nThe strip decides for all its tabs; a tab has no size of its own. An\nunrecognized value matches no style rule and keeps the medium metrics.\nWhen to use: match the size of the controls around the strip.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "default": "md"
+        },
         "value": {
           "type": "string",
           "description": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent.",
@@ -1109,6 +1188,18 @@ export const catalogData = {
           "type": "number",
           "description": "Visible line count. Invalid, non-numeric, zero, or negative values fall\nback to 2; no auto-grow or user resize handle exists in v1.\nWhen to use: set the stable multiline height needed by the layout. When\nNOT to use: do not use rows as a responsive size axis.",
           "default": 2
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Token-backed field size (`--ki-textarea-{size}-*` tokens): padding,\nradius and text; the label and help text follow in three steps. The\nheight stays `rows` lines. An unrecognized value matches no style rule\nand keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+          "default": "md"
         },
         "value": {
           "type": "string",

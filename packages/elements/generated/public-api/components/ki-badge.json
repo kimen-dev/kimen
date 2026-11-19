@@ -4,10 +4,10 @@
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
-        "description": "Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value\nfalls back to the `md` metrics the same way.",
+        "description": "Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in\nonmars, with 12px text at every size. An unrecognized value falls back to\nthe `md` metrics the same way.",
         "replacement": null,
         "required": false,
-        "type": "\"md\" | \"sm\""
+        "type": "\"md\" | \"sm\" | \"xs\""
       },
       "tone": {
         "default": "'neutral'",
@@ -259,6 +259,46 @@
         "required": false,
         "type": null
       },
+      "--ki-badge-xs-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the badge component for xs font size (Tag 10106:4651 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-badge-xs-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the badge component for xs height (Tag 10106:4651 xs: 20px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-badge-xs-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the badge component for xs line height (caption_2 16px, the same height as caption_1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-badge-xs-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the badge component for xs padding inline (Tag 10106:4651 xs: Space/xs plus the Text_wrap Space/xxs, 6px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-badge-xs-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the badge component for xs radius (Tag 10106:4651 xs binds Radius/small-component/xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-effect-component-secondary-default-shadow": {
         "default": null,
         "deprecatedSince": null,
@@ -309,10 +349,10 @@
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
-        "description": "Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value\nfalls back to the `md` metrics the same way.",
+        "description": "Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in\nonmars, with 12px text at every size. An unrecognized value falls back to\nthe `md` metrics the same way.",
         "replacement": null,
         "required": false,
-        "type": "\"md\" | \"sm\""
+        "type": "\"md\" | \"sm\" | \"xs\""
       },
       "tone": {
         "default": "'neutral'",
@@ -353,7 +393,7 @@
         "kinds": [
           "type"
         ],
-        "signature": "export type KiBadgeSize = 'sm' | 'md';"
+        "signature": "export type KiBadgeSize = 'xs' | 'sm' | 'md';"
       },
       "KiBadgeTone": {
         "kinds": [

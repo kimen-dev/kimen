@@ -57,6 +57,14 @@
         "required": false,
         "type": "boolean"
       },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed size of every `ki-radio` the group holds: the circle is 18\nor 20px in onmars, and `sm` takes the smaller option label (13/20, 8px\naway). The group decides for all its options; the group's own label,\nhelp and error keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around the group.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
       "value": {
         "default": "''",
         "deprecatedSince": null,
@@ -111,6 +119,54 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-sm-control-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for the sm circle (Radio 10053:1943 sm: 18px in a 20px cell).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-sm-dot-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for the sm dot (Radio 10053:1943 sm: 8px, as at md).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-sm-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for the sm gap between control and label (Radio-label 10100:3931 sm binds Space/md, 8px; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-sm-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for the sm label font size (Radio-label 10100:3931 sm: UI/para 13/20; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-sm-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for the sm label line height (Radio-label 10100:3931 sm: UI/para 13/20).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-sm-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell.",
         "replacement": null,
         "required": false,
         "type": null
@@ -283,6 +339,14 @@
         "required": false,
         "type": "boolean"
       },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed size of every `ki-radio` the group holds: the circle is 18\nor 20px in onmars, and `sm` takes the smaller option label (13/20, 8px\naway). The group decides for all its options; the group's own label,\nhelp and error keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around the group.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
       "value": {
         "default": "''",
         "deprecatedSince": null,
@@ -317,6 +381,12 @@
           "value"
         ],
         "signature": "interface KiRadioGroup extends Components.KiRadioGroup, HTMLElement {\n}\nexport const KiRadioGroup: {\n    prototype: KiRadioGroup;\n    new (): KiRadioGroup;\n};"
+      },
+      "KiRadioGroupSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiRadioGroupSize = 'sm' | 'md';"
       },
       "defineCustomElement": {
         "kinds": [

@@ -89,6 +89,14 @@
         "required": false,
         "type": "number"
       },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed field size (`--ki-textarea-{size}-*` tokens): padding,\nradius and text; the label and help text follow in three steps. The\nheight stays `rows` lines. An unrecognized value matches no style rule\nand keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
       "value": {
         "default": "''",
         "deprecatedSince": null,
@@ -451,6 +459,62 @@
         "required": false,
         "type": null
       },
+      "--ki-textarea-lg-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for lg font size: body-2 (Input-cell 8016:286 Type=textarea lg).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-lg-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-lg-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for the lg label line height (body-2, Input-label lg; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-lg-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for lg line height (body-2, Input-cell 8016:286 Type=textarea lg).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-lg-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for lg padding block (Input-cell 8016:286 Type=textarea lg binds Space/lg, 10px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-lg-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for lg padding inline (Input-cell 8016:286 Type=textarea lg binds Space/xl, 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-lg-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for lg radius (Input-cell 8016:286 Type=textarea lg binds Radius/small-component/lg).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-textarea-line-height": {
         "default": null,
         "deprecatedSince": null,
@@ -571,6 +635,174 @@
         "required": false,
         "type": null
       },
+      "--ki-textarea-sm-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for sm font size: caption-2 (Input-cell 8016:286 Type=textarea sm).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-sm-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-sm-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for the sm label line height (caption-2, Input-label sm; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-sm-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for sm line height (caption-2, Input-cell 8016:286 Type=textarea sm).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-sm-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for sm padding block (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-sm-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for sm padding inline (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-sm-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for sm radius (Input-cell 8016:286 Type=textarea sm binds Radius/small-component/sm).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xl-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xl font size: title-2 (Input-cell 8016:286 Type=textarea xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xl-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xl-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for the xl label line height (body-2, Input-label lg; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xl-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xl line height (title-2, Input-cell 8016:286 Type=textarea xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xl-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xl padding block (Input-cell 8016:286 Type=textarea xl binds Space/xl, 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xl-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xl padding inline (Input-cell 8016:286 Type=textarea xl binds Space/2xl, 14px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xl-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xl radius (Input-cell 8016:286 Type=textarea xl binds Radius/small-component/xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xs-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xs font size: caption-2 (Input-cell 8016:286 Type=textarea xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xs-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xs-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for the xs label line height (caption-2, Input-label sm; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xs-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xs line height (caption-2, Input-cell 8016:286 Type=textarea xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xs-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xs-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-textarea-xs-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-typography-family-body": {
         "default": null,
         "deprecatedSince": null,
@@ -579,10 +811,26 @@
         "required": false,
         "type": null
       },
+      "--ki-typography-line-height-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-typography-line-height-caption-2": {
         "default": null,
         "deprecatedSince": null,
         "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
         "replacement": null,
         "required": false,
         "type": null
@@ -755,6 +1003,14 @@
         "required": false,
         "type": "number"
       },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed field size (`--ki-textarea-{size}-*` tokens): padding,\nradius and text; the label and help text follow in three steps. The\nheight stays `rows` lines. An unrecognized value matches no style rule\nand keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
       "value": {
         "default": "''",
         "deprecatedSince": null,
@@ -780,6 +1036,12 @@
           "value"
         ],
         "signature": "interface KiTextarea extends Components.KiTextarea, HTMLElement {\n}\nexport const KiTextarea: {\n    prototype: KiTextarea;\n    new (): KiTextarea;\n};"
+      },
+      "KiTextareaSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
       },
       "defineCustomElement": {
         "kinds": [

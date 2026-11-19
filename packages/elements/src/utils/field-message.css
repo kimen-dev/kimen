@@ -5,9 +5,11 @@
  * under its own disabled ink by setting --_ki-field-help-fg. */
 [part="help"],
 [part="error"] {
-  font-size: var(--ki-typography-size-caption-2);
+  /* A sized field (spec 050 D4) sets the two private properties; without
+     them the lines keep caption-2. */
+  font-size: var(--_ki-field-message-font-size, var(--ki-typography-size-caption-2));
   font-weight: var(--ki-typography-weight-body-normal);
-  line-height: var(--ki-typography-line-height-caption-2);
+  line-height: var(--_ki-field-message-line-height, var(--ki-typography-line-height-caption-2));
 }
 
 /* The help ink is the supporting-text role (an alias of --ki-text-med-em),
@@ -36,6 +38,6 @@
    it, so the symbol scales with the caption line and needs no gap token. */
 .field-error-glyph {
   flex: none;
-  block-size: var(--ki-typography-line-height-caption-2);
+  block-size: var(--_ki-field-message-line-height, var(--ki-typography-line-height-caption-2));
   aspect-ratio: 9 / 8;
 }

@@ -66,6 +66,7 @@ Read-only and disabled are distinct states — `readonly` stays focusable, selec
 - `readonly` (boolean, default false): Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
 - `required` (boolean, default false): Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
 - `rows` (number, default 2): Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
 
 ## Slots
@@ -135,6 +136,13 @@ None.
 - `--ki-textarea-label-hint-gap`: dimension used by the textarea component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-textarea-label-line-height`: dimension used by the textarea component for label line height (MarsUI line_height/para 20px).
 - `--ki-textarea-label-padding-inline`: dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input).
+- `--ki-textarea-lg-font-size`: dimension used by the textarea component for lg font size: body-2 (Input-cell 8016:286 Type=textarea lg).
+- `--ki-textarea-lg-label-font-size`: dimension used by the textarea component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-textarea-lg-label-line-height`: dimension used by the textarea component for the lg label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-textarea-lg-line-height`: dimension used by the textarea component for lg line height (body-2, Input-cell 8016:286 Type=textarea lg).
+- `--ki-textarea-lg-padding-block`: dimension used by the textarea component for lg padding block (Input-cell 8016:286 Type=textarea lg binds Space/lg, 10px).
+- `--ki-textarea-lg-padding-inline`: dimension used by the textarea component for lg padding inline (Input-cell 8016:286 Type=textarea lg binds Space/xl, 12px).
+- `--ki-textarea-lg-radius`: dimension used by the textarea component for lg radius (Input-cell 8016:286 Type=textarea lg binds Radius/small-component/lg).
 - `--ki-textarea-line-height`: dimension used by the textarea component for line height.
 - `--ki-textarea-min-target`: dimension used by the textarea component for min target.
 - `--ki-textarea-padding-block`: dimension used by the textarea component for padding block (Input-cell textarea md 8018:176: Space/md 8px).
@@ -150,7 +158,30 @@ None.
 - `--ki-textarea-rest-fg`: color used by the textarea component for rest foreground.
 - `--ki-textarea-rest-label-fg`: color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
 - `--ki-textarea-rest-placeholder-fg`: color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
+- `--ki-textarea-sm-font-size`: dimension used by the textarea component for sm font size: caption-2 (Input-cell 8016:286 Type=textarea sm).
+- `--ki-textarea-sm-label-font-size`: dimension used by the textarea component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-textarea-sm-label-line-height`: dimension used by the textarea component for the sm label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-textarea-sm-line-height`: dimension used by the textarea component for sm line height (caption-2, Input-cell 8016:286 Type=textarea sm).
+- `--ki-textarea-sm-padding-block`: dimension used by the textarea component for sm padding block (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px).
+- `--ki-textarea-sm-padding-inline`: dimension used by the textarea component for sm padding inline (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px).
+- `--ki-textarea-sm-radius`: dimension used by the textarea component for sm radius (Input-cell 8016:286 Type=textarea sm binds Radius/small-component/sm).
+- `--ki-textarea-xl-font-size`: dimension used by the textarea component for xl font size: title-2 (Input-cell 8016:286 Type=textarea xl).
+- `--ki-textarea-xl-label-font-size`: dimension used by the textarea component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
+- `--ki-textarea-xl-label-line-height`: dimension used by the textarea component for the xl label line height (body-2, Input-label lg; spec 050 D4).
+- `--ki-textarea-xl-line-height`: dimension used by the textarea component for xl line height (title-2, Input-cell 8016:286 Type=textarea xl).
+- `--ki-textarea-xl-padding-block`: dimension used by the textarea component for xl padding block (Input-cell 8016:286 Type=textarea xl binds Space/xl, 12px).
+- `--ki-textarea-xl-padding-inline`: dimension used by the textarea component for xl padding inline (Input-cell 8016:286 Type=textarea xl binds Space/2xl, 14px).
+- `--ki-textarea-xl-radius`: dimension used by the textarea component for xl radius (Input-cell 8016:286 Type=textarea xl binds Radius/small-component/xl).
+- `--ki-textarea-xs-font-size`: dimension used by the textarea component for xs font size: caption-2 (Input-cell 8016:286 Type=textarea xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
+- `--ki-textarea-xs-label-font-size`: dimension used by the textarea component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
+- `--ki-textarea-xs-label-line-height`: dimension used by the textarea component for the xs label line height (caption-2, Input-label sm; spec 050 D4).
+- `--ki-textarea-xs-line-height`: dimension used by the textarea component for xs line height (caption-2, Input-cell 8016:286 Type=textarea xs).
+- `--ki-textarea-xs-padding-block`: dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px).
+- `--ki-textarea-xs-padding-inline`: dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px).
+- `--ki-textarea-xs-radius`: dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.

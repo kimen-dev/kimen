@@ -4,18 +4,25 @@
   --_ki-tab-fg: var(--ki-tab-unselected-rest-fg);
   --_ki-tab-bg: var(--ki-tab-unselected-rest-bg);
 
+  /* The size ramp (spec 050). The strip decides the size: ki-tabs sets these
+     on its slotted tabs, the ki-avatar-group pattern. Medium is the unsized
+     token family. */
+  --_ki-tab-min-block-size: var(--ki-tab-min-block-size);
+  --_ki-tab-font-size: var(--ki-tab-font-size);
+  --_ki-tab-line-height: var(--ki-tab-line-height);
+
   box-sizing: border-box;
   display: inline-flex;
   position: relative;
   min-block-size: max(
     var(--ki-density-target-min),
-    calc(var(--ki-tab-min-block-size) + var(--ki-density-control-offset))
+    calc(var(--_ki-tab-min-block-size) + var(--ki-density-control-offset))
   );
   color: var(--_ki-tab-fg);
   font-family: var(--ki-typography-family-body);
-  font-size: var(--ki-tab-font-size);
+  font-size: var(--_ki-tab-font-size);
   font-weight: var(--ki-tab-font-weight);
-  line-height: var(--ki-tab-line-height);
+  line-height: var(--_ki-tab-line-height);
   background: var(--_ki-tab-bg);
   border-radius: var(--ki-tab-radius);
   cursor: pointer;
@@ -78,7 +85,7 @@
   justify-content: center;
   min-block-size: max(
     var(--ki-density-target-min),
-    calc(var(--ki-tab-min-block-size) + var(--ki-density-control-offset))
+    calc(var(--_ki-tab-min-block-size) + var(--ki-density-control-offset))
   );
 
   /* MarsUI Tab_nav_item (10048:1266): padding-top 0, padding-bottom 8

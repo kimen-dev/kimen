@@ -65,6 +65,14 @@
         "required": false,
         "type": "boolean"
       },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is\n24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and\nindicator; the label and help text follow in three steps. The listbox\nand its options keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
       "value": {
         "default": "''",
         "deprecatedSince": null,
@@ -547,6 +555,70 @@
         "required": false,
         "type": null
       },
+      "--ki-select-lg-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg font size: body-2 (Input-cell 8016:286 lg, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg height (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: 48px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the lg indicator box (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: icon 20px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the lg label line height (body-2, Input-label lg; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg line height (body-2, Input-cell 8016:286 lg, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg padding inline (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Space/xl, 12px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-lg-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for lg radius (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Radius/small-component/lg).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-select-line-height": {
         "default": null,
         "deprecatedSince": null,
@@ -683,6 +755,198 @@
         "required": false,
         "type": null
       },
+      "--ki-select-sm-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm font size: caption-2 (Input-cell 8016:286 sm, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm height (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: 32px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the sm indicator box (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: icon 16px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the sm label line height (caption-2, Input-label sm; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm line height (caption-2, Input-cell 8016:286 sm, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm padding inline (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Space/md, 8px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-sm-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for sm radius (Input-cell 8016:286 sm, composed by Dropdown 12041:1595: Radius/small-component/sm).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl font size: title-2 (Input-cell 8016:286 xl, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl height (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: 56px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xl indicator box (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: icon 24px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xl label line height (body-2, Input-label lg; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl line height (title-2, Input-cell 8016:286 xl, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl padding inline (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Space/2xl, 14px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xl-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xl radius (Input-cell 8016:286 xl, composed by Dropdown 12041:1595: Radius/small-component/xl).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs font size: caption-2 (Input-cell 8016:286 xs, composed by Dropdown 12041:1595). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs height (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: 24px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xs indicator box (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: icon 14px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for the xs label line height (caption-2, Input-label sm; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-xs-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-surface-hover-overlay-inverse": {
         "default": null,
         "deprecatedSince": null,
@@ -715,6 +979,14 @@
         "required": false,
         "type": null
       },
+      "--ki-typography-line-height-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-typography-line-height-caption-2": {
         "default": null,
         "deprecatedSince": null,
@@ -727,6 +999,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "semantic dimension for typography line height para.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
         "replacement": null,
         "required": false,
         "type": null
@@ -907,6 +1187,14 @@
         "required": false,
         "type": "boolean"
       },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed trigger size (`--ki-select-{size}-*` tokens): the trigger is\n24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and\nindicator; the label and help text follow in three steps. The listbox\nand its options keep their size. An unrecognized value matches no style\nrule and keeps the medium metrics.\nWhen to use: match the size of the fields around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
       "value": {
         "default": "''",
         "deprecatedSince": null,
@@ -941,6 +1229,12 @@
           "value"
         ],
         "signature": "interface KiSelect extends Components.KiSelect, HTMLElement {\n}\nexport const KiSelect: {\n    prototype: KiSelect;\n    new (): KiSelect;\n};"
+      },
+      "KiSelectSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
       },
       "defineCustomElement": {
         "kinds": [

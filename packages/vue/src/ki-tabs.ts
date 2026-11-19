@@ -12,6 +12,7 @@ import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/
 export const KiTabs: StencilVueComponent<JSX.KiTabs> = /*@__PURE__*/ defineContainer<JSX.KiTabs>('ki-tabs', defineKiTabs, [
   'value',
   'label',
+  'size',
   'ki-change'
 ], [
   'ki-change'

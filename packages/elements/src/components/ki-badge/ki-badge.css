@@ -75,6 +75,15 @@
   --_ki-badge-backdrop-filter: initial;
 }
 
+/* Spec 050: xs, the Tag 10106:4651 xs metrics with the 12px text floor (D7). */
+:host([size="xs"]) {
+  --_ki-badge-height: var(--ki-badge-xs-height);
+  --_ki-badge-padding-inline: var(--ki-badge-xs-padding-inline);
+  --_ki-badge-radius: var(--ki-badge-xs-radius);
+  --_ki-badge-font-size: var(--ki-badge-xs-font-size);
+  --_ki-badge-line-height: var(--ki-badge-xs-line-height);
+}
+
 :host([size="sm"]) {
   --_ki-badge-height: var(--ki-badge-sm-height);
   --_ki-badge-padding-inline: var(--ki-badge-sm-padding-inline);

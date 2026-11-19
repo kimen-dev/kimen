@@ -65,6 +65,14 @@
         "required": false,
         "type": "boolean"
       },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed size: the box is 18, 20 or 24px in onmars. `sm` also takes\nthe smaller label (13/20, 8px away); `md` and `lg` keep the 15px label.\nThe pointer target never drops under 24px. An unrecognized value matches\nno style rule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\""
+      },
       "value": {
         "default": null,
         "deprecatedSince": null,
@@ -387,6 +395,22 @@
         "required": false,
         "type": null
       },
+      "--ki-checkbox-lg-control-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for the lg box (Checkbox 10030:982 lg: 24px in a 28px cell).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-lg-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for the lg min target (Checkbox 10030:982 lg cell: 28px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-checkbox-min-target": {
         "default": null,
         "deprecatedSince": null,
@@ -399,6 +423,46 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-sm-control-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for the sm box (Checkbox 10030:982 sm: 18px in a 20px cell).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-sm-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for the sm gap between control and label (Checkbox-label 10095:3846 sm binds Space/md, 8px; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-sm-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for the sm label font size (Checkbox-label 10095:3846 sm: UI/para 13/20; spec 050 D4).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-sm-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for the sm label line height (Checkbox-label 10095:3846 sm: UI/para 13/20).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-checkbox-sm-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the checkbox component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell.",
         "replacement": null,
         "required": false,
         "type": null
@@ -739,6 +803,14 @@
         "required": false,
         "type": "boolean"
       },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Token-backed size: the box is 18, 20 or 24px in onmars. `sm` also takes\nthe smaller label (13/20, 8px away); `md` and `lg` keep the 15px label.\nThe pointer target never drops under 24px. An unrecognized value matches\nno style rule and keeps the medium metrics.\nWhen to use: match the size of the text and controls around it.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\""
+      },
       "value": {
         "default": null,
         "deprecatedSince": null,
@@ -773,6 +845,12 @@
           "value"
         ],
         "signature": "interface KiCheckbox extends Components.KiCheckbox, HTMLElement {\n}\nexport const KiCheckbox: {\n    prototype: KiCheckbox;\n    new (): KiCheckbox;\n};"
+      },
+      "KiCheckboxSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';"
       },
       "defineCustomElement": {
         "kinds": [

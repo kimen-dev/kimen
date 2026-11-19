@@ -272,6 +272,158 @@
           "$type": "shadow",
           "$description": "shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
         }
+      },
+      "xs": {
+        "height": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the input component for xs height (Input-cell 8016:286 xs: 24px; consumed as min-block-size, spec 050)."
+        },
+        "padding-inline": {
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the input component for xs padding inline (Input-cell 8016:286 xs binds Space/sm, 6px)."
+        },
+        "text-padding-inline": {
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the input component for the xs inline padding of the native control (Input-cell 8016:286 xs Text_wrap binds Space/xxs, 2px; medium uses the gap token)."
+        },
+        "radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the input component for xs radius (Input-cell 8016:286 xs binds Radius/small-component/xs)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the input component for xs font size: caption-2 (Input-cell 8016:286 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the input component for xs line height (caption-2, Input-cell 8016:286 xs)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.2xl}",
+          "$description": "dimension used by the input component for the xs icon box (Input-cell 8016:286 xs icon 14px)."
+        },
+        "label-font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the input component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4)."
+        },
+        "label-line-height": {
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the input component for the xs label line height (caption-2, Input-label sm; spec 050 D4)."
+        }
+      },
+      "sm": {
+        "height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the input component for sm height (Input-cell 8016:286 sm: 32px; consumed as min-block-size, spec 050)."
+        },
+        "padding-inline": {
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the input component for sm padding inline (Input-cell 8016:286 sm binds Space/md, 8px)."
+        },
+        "text-padding-inline": {
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the input component for the sm inline padding of the native control (Input-cell 8016:286 sm Text_wrap binds Space/xs, 4px; medium uses the gap token)."
+        },
+        "radius": {
+          "$value": "{ki.radius.component.sm}",
+          "$description": "dimension used by the input component for sm radius (Input-cell 8016:286 sm binds Radius/small-component/sm)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the input component for sm font size: caption-2 (Input-cell 8016:286 sm)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the input component for sm line height (caption-2, Input-cell 8016:286 sm)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.3xl}",
+          "$description": "dimension used by the input component for the sm icon box (Input-cell 8016:286 sm icon 16px)."
+        },
+        "label-font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the input component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4)."
+        },
+        "label-line-height": {
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the input component for the sm label line height (caption-2, Input-label sm; spec 050 D4)."
+        }
+      },
+      "lg": {
+        "height": {
+          "$value": "{ki.space.14xl}",
+          "$description": "dimension used by the input component for lg height (Input-cell 8016:286 lg: 48px; consumed as min-block-size, spec 050)."
+        },
+        "padding-inline": {
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the input component for lg padding inline (Input-cell 8016:286 lg binds Space/xl, 12px)."
+        },
+        "text-padding-inline": {
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token)."
+        },
+        "radius": {
+          "$value": "{ki.radius.component.lg}",
+          "$description": "dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the input component for lg font size: body-2 (Input-cell 8016:286 lg)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-2}",
+          "$description": "dimension used by the input component for lg line height (body-2, Input-cell 8016:286 lg)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the input component for the lg icon box (Input-cell 8016:286 lg icon 20px)."
+        },
+        "label-font-size": {
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the input component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4)."
+        },
+        "label-line-height": {
+          "$value": "{ki.typography.line-height.body-2}",
+          "$description": "dimension used by the input component for the lg label line height (body-2, Input-label lg; spec 050 D4)."
+        }
+      },
+      "xl": {
+        "height": {
+          "$value": "{ki.space.16xl}",
+          "$description": "dimension used by the input component for xl height (Input-cell 8016:286 xl: 56px; consumed as min-block-size, spec 050)."
+        },
+        "padding-inline": {
+          "$value": "{ki.space.2xl}",
+          "$description": "dimension used by the input component for xl padding inline (Input-cell 8016:286 xl binds Space/2xl, 14px)."
+        },
+        "text-padding-inline": {
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the input component for the xl inline padding of the native control (Input-cell 8016:286 xl Text_wrap binds Space/sm, 6px; medium uses the gap token)."
+        },
+        "radius": {
+          "$value": "{ki.radius.component.xl}",
+          "$description": "dimension used by the input component for xl radius (Input-cell 8016:286 xl binds Radius/small-component/xl)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.title-2}",
+          "$description": "dimension used by the input component for xl font size: title-2 (Input-cell 8016:286 xl)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.title-2}",
+          "$description": "dimension used by the input component for xl line height (title-2, Input-cell 8016:286 xl)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the input component for the xl icon box (Input-cell 8016:286 xl icon 24px)."
+        },
+        "label-font-size": {
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the input component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4)."
+        },
+        "label-line-height": {
+          "$value": "{ki.typography.line-height.body-2}",
+          "$description": "dimension used by the input component for the xl label line height (body-2, Input-label lg; spec 050 D4)."
+        }
       }
     }
   }
