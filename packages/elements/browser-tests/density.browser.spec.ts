@@ -103,12 +103,31 @@ function flatParent(node: Element): Element | null {
   return root instanceof ShadowRoot ? root.host : null;
 }
 
+/**
+ * The slot that a text node of `host` painted under (x, y) is assigned to. A
+ * hit test names elements, never text, so a pointer over slotted text (a
+ * button's label) is reported as the host itself; the text's slot is where
+ * that pointer lands in the shadow tree.
+ */
+function slottedTextAt(host: Element, x: number, y: number): Element | null {
+  const range = document.createRange();
+  for (const node of host.childNodes) {
+    if (!(node instanceof Text) || node.assignedSlot === null) continue;
+    range.selectNodeContents(node);
+    const under = [...range.getClientRects()].some(
+      (rect) => x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom,
+    );
+    if (under) return node.assignedSlot;
+  }
+  return null;
+}
+
 /** The deepest element a pointer at (x, y) lands on, open shadow trees included. */
 function hitAt(x: number, y: number): Element | null {
   let hit = document.elementFromPoint(x, y);
   while (hit?.shadowRoot) {
     const inner = hit.shadowRoot.elementFromPoint(x, y);
-    if (inner === null || inner === hit) break;
+    if (inner === null || inner === hit) return slottedTextAt(hit, x, y) ?? hit;
     hit = inner;
   }
   return hit;
