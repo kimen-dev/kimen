@@ -1,0 +1,22 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-spinner" />
+
+# ki-spinner
+
+A compact status for an indeterminate inline wait.
+
+```html
+<ki-spinner size="sm" label="Saving changes…" show-label></ki-spinner>
+<ki-spinner variant="dots" label="Assistant is thinking"></ki-spinner>
+```
+
+Supply a localized `label` for both variants. Mount the spinner when the wait
+starts. `show-label` displays the same text next to the graphic. Reduced motion
+slows the ring and keeps the three dots still.
+
+The ring has `sm`, `md`, and `lg` sizes (16, 20, and 32 px at the default root
+font size). The dots use a fixed size. Customize the ring with
+`--ki-spinner-size`, `--ki-spinner-stroke`, `--ki-spinner-track`, and
+`--ki-spinner-indicator`. Keep 3:1 contrast between the track, indicator,
+and their surrounding surface when overriding colors.

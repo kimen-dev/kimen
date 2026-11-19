@@ -36,10 +36,13 @@ supplies a localized, task-specific label for both variants.
   inserted after the status region has had a chance to render. Mount the
   spinner when activity starts. Announcement delivery follows the assistive
   technology's polite queue.
-- **Agent's choice, pending founder confirmation.** The ring uses the strong outline for its track, high-emphasis primary for its
-  onmars indicator, and inverse white for its Material 3 indicator. These
-  aliases preserve 3:1 between the two marks and against the inline surface.
-  The dots pulse in size to keep their ink legible throughout the cycle.
+- **Agent's choice, pending founder confirmation.** The ring uses the strong
+  outline for its track, high-emphasis primary for its onmars indicator, and
+  inverse white for its Material 3 indicator. These aliases preserve 3:1
+  between the two marks and against the inline surface.
+- **Agent's choice, pending founder confirmation.** The dots pulse in size to
+  keep their ink legible throughout the cycle. In forced colors, a dotted
+  track and solid arc distinguish the ring marks even in a single ink.
 
 ## Scenario family coverage
 
@@ -125,7 +128,7 @@ Feature: ki-spinner shows indeterminate inline activity
 
   # S10
   Scenario: A coarse pointer preserves inline ring dimensions
-    Given a coarse-pointer page
+    Given a coarse-pointer page using touch density
     When a small spinner appears
     Then the ring measures 16 pixels across
 

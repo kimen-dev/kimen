@@ -15,9 +15,11 @@ it('registers a passive Spinner with four properties and a required label', () =
   expect(entry?.props).toMatchObject({
     label: { required: true, type: 'string' },
     'show-label': { default: false, type: 'boolean' },
-    size: { default: 'md', type: 'enum', values: ['sm', 'md', 'lg'] },
-    variant: { default: 'ring', type: 'enum', values: ['ring', 'dots'] },
+    size: { default: 'md', type: 'enum' },
+    variant: { default: 'ring', type: 'enum' },
   });
+  expect([...(entry?.props['size']?.values ?? [])].sort()).toEqual(['lg', 'md', 'sm']);
+  expect([...(entry?.props['variant']?.values ?? [])].sort()).toEqual(['dots', 'ring']);
   expect(entry?.slots).toEqual({});
   expect(entry?.events).toEqual({});
 });

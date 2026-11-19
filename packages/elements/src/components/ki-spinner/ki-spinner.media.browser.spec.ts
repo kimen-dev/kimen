@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { commands, page } from 'vitest/browser';
 
 import { parkPointer } from '../../../browser-tests/axe';
+import { settleFrames } from '../../../browser-tests/visual/fixtures';
 import { defineCustomElement } from '../../../dist/components/ki-spinner.js';
 
 const browser = commands as unknown as {
@@ -70,19 +71,26 @@ it('S8 slows the ring and holds all three dots still under reduced motion', asyn
 it('S11 keeps the ring segment and all three dots visible in forced colors', async (context) => {
   const { ring, dots } = await mountVariants();
   await browser.emulateForcedColors('active');
-  if (!matchMedia('(forced-colors: active)').matches && !navigator.userAgent.includes('Chrome/')) {
-    context.skip('The browser cannot emulate forced colors');
+  const canvas = document.createElement('span');
+  const witnessColor = 'rgb(1, 2, 3)';
+  canvas.style.backgroundColor = witnessColor;
+  fixture.append(canvas);
+  await settleFrames(2);
+  const paletteApplied = () =>
+    matchMedia('(forced-colors: active)').matches &&
+    getComputedStyle(canvas).backgroundColor !== witnessColor;
+  if (!paletteApplied() && !navigator.userAgent.includes('Chrome/')) {
+    context.skip('The browser cannot apply a forced palette under emulation');
   }
-  await expect.poll(() => matchMedia('(forced-colors: active)').matches).toBe(true);
+  await expect.poll(paletteApplied).toBe(true);
 
+  const canvasColor = getComputedStyle(canvas).backgroundColor;
   const style = getComputedStyle(ring);
   expect(style.borderBlockStartStyle).toBe('solid');
   expect(style.borderInlineStartStyle).toBe('dotted');
   expect(Number.parseFloat(style.borderInlineStartWidth)).toBeGreaterThan(0);
-  const canvas = document.createElement('span');
-  canvas.style.backgroundColor = 'Canvas';
-  fixture.append(canvas);
-  const canvasColor = getComputedStyle(canvas).backgroundColor;
+  expect(style.borderBlockStartColor).not.toBe(canvasColor);
+  expect(style.borderInlineStartColor).not.toBe(canvasColor);
   for (const dot of dots.children) {
     const paint = getComputedStyle(dot).backgroundColor;
     expect(paint).not.toBe(canvasColor);

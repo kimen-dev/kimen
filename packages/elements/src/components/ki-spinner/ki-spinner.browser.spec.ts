@@ -1,11 +1,16 @@
 // @spec:071-ki-spinner
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement } from '../../../dist/components/ki-spinner.js';
 
+const browser = commands as unknown as {
+  accessibilityTree: () => Promise<
+    { role: string; name: string; live: unknown; text: string }[] | null
+  >;
+};
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
 const saving = 'Saving changes';
@@ -122,6 +127,13 @@ it('S5 inserts the message once into an already present polite status', async ()
     await expect.element(status(saving)).toBeInTheDocument();
     expect(page.getByRole('status').all()).toHaveLength(1);
     expect(messages).toEqual(['', saving]);
+
+    const tree = await browser.accessibilityTree();
+    if (tree !== null) {
+      expect(tree.filter((node) => node.role === 'status' && node.name === saving)).toEqual([
+        expect.objectContaining({ live: 'polite', text: saving }),
+      ]);
+    }
   } finally {
     observer.disconnect();
   }

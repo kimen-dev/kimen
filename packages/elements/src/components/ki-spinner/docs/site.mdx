@@ -1,0 +1,42 @@
+---
+title: ki-spinner
+description: Indicate indeterminate inline activity with a ring or typing dots.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a spinner for a brief wait beside the affected content. Choose a ring for
+work such as saving or running a tool. Use typing dots for an assistant that is
+thinking. Use [ki-progress](../progress/) for page-level work or a task with a
+known completed fraction.
+
+## Ring
+
+The ring defaults to medium (20 px). Use `size="sm"` for 16 px or `size="lg"`
+for 32 px at the default root font size. Set `show-label` to show the activity
+name next to the ring.
+
+<Demo code={`<ki-spinner size="sm" label="Saving changes…" show-label></ki-spinner>`} />
+
+## Typing dots
+
+Typing dots keep the same dimensions at every size.
+
+<Demo code={`<ki-spinner variant="dots" label="Assistant is thinking" show-label></ki-spinner>`} />
+
+## Accessibility
+
+Set a localized `label` describing the activity. The label names the polite
+status region in both variants. Insert the spinner at the start of an operation
+to deliver the status update, then remove it when the operation ends. With
+reduced motion, the ring rotates more slowly and the three dots stay still.
+The spinner adds no tab stop.
+
+## API reference
+
+<CemApi tag="ki-spinner" />
+
+## Workshop
+
+[Open ki-spinner in Storybook](/storybook/?path=/docs/docs-components-ki-spinner--docs)

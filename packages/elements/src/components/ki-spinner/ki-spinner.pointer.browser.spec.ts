@@ -37,6 +37,7 @@ it('S10 preserves small ring dimensions under a coarse pointer', async (context)
   }
   await expect.poll(() => matchMedia('(pointer: coarse)').matches).toBe(true);
 
+  fixture.setAttribute('data-ki-density', 'touch');
   fixture.innerHTML = '<ki-spinner label="Saving changes" size="sm"></ki-spinner>';
   await expect.element(page.getByRole('status', { name: 'Saving changes' })).toBeInTheDocument();
   const ring = fixture.firstElementChild?.shadowRoot?.querySelector('[part="ring"]');

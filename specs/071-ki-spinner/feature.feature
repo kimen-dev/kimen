@@ -69,7 +69,7 @@ Feature: ki-spinner shows indeterminate inline activity
 
   # S10
   Scenario: A coarse pointer preserves inline ring dimensions
-    Given a coarse-pointer page
+    Given a coarse-pointer page using touch density
     When a small spinner appears
     Then the ring measures 16 pixels across
 
