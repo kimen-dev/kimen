@@ -5772,6 +5772,662 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-menu.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMenu",
+          "customElement": true,
+          "tagName": "ki-menu",
+          "description": "A popup of actions opened by a button in the same document or shadow root.",
+          "whenToUse": "row actions, account commands, split buttons, and overflow actions.",
+          "whenNotToUse": "form values, navigation destinations, or long action lists.",
+          "attributes": [
+            {
+              "name": "anchor",
+              "fieldName": "anchor",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Literal ID of the menu button in the same document or containing shadow root."
+            },
+            {
+              "name": "filter-label",
+              "fieldName": "filterLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name and placeholder of the filter. Omit to hide the field."
+            },
+            {
+              "name": "filter-results-label",
+              "fieldName": "filterResultsLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Matching actions: {count}'",
+              "description": "Polite results message. The menu substitutes the number of matches for `{count}`."
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the popup is open. Reflected when the user opens or dismisses it."
+            },
+            {
+              "name": "placement",
+              "fieldName": "placement",
+              "type": {
+                "text": "\"bottom-end\" | \"bottom-start\" | \"top-end\" | \"top-start\""
+              },
+              "default": "'bottom-start'",
+              "description": "Preferred side and logical alignment. Flips when the opposite side has more room."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "anchor",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Literal ID of the menu button in the same document or containing shadow root.",
+              "attribute": "anchor",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "filterLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name and placeholder of the filter. Omit to hide the field.",
+              "attribute": "filter-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "filterResultsLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Matching actions: {count}'",
+              "description": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+              "attribute": "filter-results-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "privacy": "public",
+              "type": {
+                "text": "\"bottom-end\" | \"bottom-start\" | \"top-end\" | \"top-start\""
+              },
+              "default": "'bottom-start'",
+              "description": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+              "attribute": "placement",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-select",
+              "type": {
+                "text": "CustomEvent<KiMenuSelectDetail>"
+              },
+              "description": "Reports the selected action and, for a checkbox or radio, its new checked state."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Place ki-menu-item, ki-menu-group, and ki-divider here."
+            },
+            {
+              "name": "header",
+              "description": "Informational content above the actions, such as account details."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "filter",
+              "description": "The filter field."
+            },
+            {
+              "name": "header",
+              "description": "The informational header."
+            },
+            {
+              "name": "menu",
+              "description": "The named menu containing the actions."
+            },
+            {
+              "name": "popup",
+              "description": "The anchored surface."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-menu-backdrop-filter",
+              "description": "Complete backdrop filter applied to the popup."
+            },
+            {
+              "name": "--ki-menu-bg",
+              "description": "Base fill of the popup surface."
+            },
+            {
+              "name": "--ki-menu-bg-image",
+              "description": "Optional image composited over the popup fill."
+            },
+            {
+              "name": "--ki-menu-border",
+              "description": "Popup edge and the filter divider."
+            },
+            {
+              "name": "--ki-menu-border-width",
+              "description": "Thickness of menu border and dividers."
+            },
+            {
+              "name": "--ki-menu-fg",
+              "description": "Text over the popup surface."
+            },
+            {
+              "name": "--ki-menu-filter-icon-size",
+              "description": "Size of the search icon."
+            },
+            {
+              "name": "--ki-menu-focus-color",
+              "description": "Color of a visible keyboard focus outline."
+            },
+            {
+              "name": "--ki-menu-focus-width",
+              "description": "Width of a visible keyboard focus outline."
+            },
+            {
+              "name": "--ki-menu-font-family",
+              "description": "Family for action labels and the filter."
+            },
+            {
+              "name": "--ki-menu-font-size",
+              "description": "Text size for action labels and the filter."
+            },
+            {
+              "name": "--ki-menu-gap",
+              "description": "Inline space between the parts of a row."
+            },
+            {
+              "name": "--ki-menu-inline-padding",
+              "description": "Start and end inset of an action, group label, or filter."
+            },
+            {
+              "name": "--ki-menu-item-height",
+              "description": "Default action row minimum height."
+            },
+            {
+              "name": "--ki-menu-item-radius",
+              "description": "Action row corner radius."
+            },
+            {
+              "name": "--ki-menu-line-height",
+              "description": "Line height for action labels and the filter."
+            },
+            {
+              "name": "--ki-menu-max-block-size",
+              "description": "Maximum popup height, bounded by the viewport."
+            },
+            {
+              "name": "--ki-menu-max-inline-size",
+              "description": "Maximum popup width, bounded by the viewport."
+            },
+            {
+              "name": "--ki-menu-meta-fg",
+              "description": "Foreground for shortcut hints and the filter placeholder."
+            },
+            {
+              "name": "--ki-menu-min-inline-size",
+              "description": "Default minimum popup width, bounded by the viewport."
+            },
+            {
+              "name": "--ki-menu-padding",
+              "description": "Space inside the popup."
+            },
+            {
+              "name": "--ki-menu-radius",
+              "description": "Popup corner radius."
+            },
+            {
+              "name": "--ki-menu-shadow",
+              "description": "Popup elevation shadow."
+            },
+            {
+              "name": "--ki-menu-touch-target",
+              "description": "Minimum action and filter height for coarse pointers."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMenu",
+          "declaration": {
+            "name": "KiMenu",
+            "module": "dist/components/ki-menu.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-menu",
+          "declaration": {
+            "name": "KiMenu",
+            "module": "dist/components/ki-menu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-menu-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMenuGroup",
+          "customElement": true,
+          "tagName": "ki-menu-group",
+          "description": "A named group of related actions in a ki-menu.",
+          "whenToUse": "name a set of related actions or scope exclusive radio items in a menu.",
+          "whenNotToUse": "standalone sections or nested menus.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Visible and accessible group name."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Visible and accessible group name.",
+              "attribute": "label",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The ki-menu-item and ki-divider children of the group."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "label",
+              "description": "The visible group name."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-menu-font-family",
+              "description": "Family for action labels and the filter."
+            },
+            {
+              "name": "--ki-menu-group-fg",
+              "description": "Foreground for group labels."
+            },
+            {
+              "name": "--ki-menu-group-label-weight",
+              "description": "Weight of group labels."
+            },
+            {
+              "name": "--ki-menu-inline-padding",
+              "description": "Start and end inset of an action, group label, or filter."
+            },
+            {
+              "name": "--ki-menu-meta-font-size",
+              "description": "Size of metadata and group labels."
+            },
+            {
+              "name": "--ki-menu-meta-line-height",
+              "description": "Line height of metadata and group labels."
+            },
+            {
+              "name": "--ki-menu-padding",
+              "description": "Space inside the popup."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMenuGroup",
+          "declaration": {
+            "name": "KiMenuGroup",
+            "module": "dist/components/ki-menu-group.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-menu-group",
+          "declaration": {
+            "name": "KiMenuGroup",
+            "module": "dist/components/ki-menu-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-menu-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMenuItem",
+          "customElement": true,
+          "tagName": "ki-menu-item",
+          "description": "A pointer and keyboard action within a ki-menu.",
+          "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu.",
+          "whenNotToUse": "standalone controls, navigational links, or form options.",
+          "attributes": [
+            {
+              "name": "checked",
+              "fieldName": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Checked state for checkbox and radio actions."
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled actions remain discoverable via menu navigation."
+            },
+            {
+              "name": "shortcut",
+              "fieldName": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Display-only keyboard shortcut. Applications own shortcut registration."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"neutral\""
+              },
+              "default": "'neutral'",
+              "description": "Apply the danger tone to a destructive action."
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "\"checkbox\" | \"item\" | \"radio\""
+              },
+              "default": "'item'",
+              "description": "Action role. A checkbox stays open. A radio selects one action within its group."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Action identifier reported by the parent menu."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "checked",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Checked state for checkbox and radio actions.",
+              "attribute": "checked",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled actions remain discoverable via menu navigation.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcut",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Display-only keyboard shortcut. Applications own shortcut registration.",
+              "attribute": "shortcut",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"neutral\""
+              },
+              "default": "'neutral'",
+              "description": "Apply the danger tone to a destructive action.",
+              "attribute": "tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "type": {
+                "text": "\"checkbox\" | \"item\" | \"radio\""
+              },
+              "default": "'item'",
+              "description": "Action role. A checkbox stays open. A radio selects one action within its group.",
+              "attribute": "type",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Action identifier reported by the parent menu.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The action's visible label."
+            },
+            {
+              "name": "start",
+              "description": "One decorative icon or avatar before the label."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "check",
+              "description": "The indicator of a checked action."
+            },
+            {
+              "name": "item",
+              "description": "The focusable action row."
+            },
+            {
+              "name": "shortcut",
+              "description": "The display-only shortcut hint."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-menu-focus-color",
+              "description": "Color of a visible keyboard focus outline."
+            },
+            {
+              "name": "--ki-menu-focus-width",
+              "description": "Width of a visible keyboard focus outline."
+            },
+            {
+              "name": "--ki-menu-gap",
+              "description": "Inline space between the parts of a row."
+            },
+            {
+              "name": "--ki-menu-inline-padding",
+              "description": "Start and end inset of an action, group label, or filter."
+            },
+            {
+              "name": "--ki-menu-item-danger-fg",
+              "description": "Foreground for destructive actions."
+            },
+            {
+              "name": "--ki-menu-item-danger-hover-fg",
+              "description": "Foreground for hovered or keyboard-focused destructive actions."
+            },
+            {
+              "name": "--ki-menu-item-disabled-fg",
+              "description": "Muted ink of disabled actions."
+            },
+            {
+              "name": "--ki-menu-item-fg",
+              "description": "Foreground for resting actions."
+            },
+            {
+              "name": "--ki-menu-item-height",
+              "description": "Default action row minimum height."
+            },
+            {
+              "name": "--ki-menu-item-hover-bg",
+              "description": "Background behind hovered or keyboard-focused actions."
+            },
+            {
+              "name": "--ki-menu-item-hover-fg",
+              "description": "Foreground for hovered or keyboard-focused actions."
+            },
+            {
+              "name": "--ki-menu-item-icon-size",
+              "description": "Size of an action glyph and the check indicator."
+            },
+            {
+              "name": "--ki-menu-item-padding",
+              "description": "Vertical inset used when an action wraps."
+            },
+            {
+              "name": "--ki-menu-item-radius",
+              "description": "Action row corner radius."
+            },
+            {
+              "name": "--ki-menu-meta-fg",
+              "description": "Foreground for shortcut hints and the filter placeholder."
+            },
+            {
+              "name": "--ki-menu-meta-font-size",
+              "description": "Size of metadata and group labels."
+            },
+            {
+              "name": "--ki-menu-meta-hover-fg",
+              "description": "Foreground for shortcut hints on a hovered or focused action."
+            },
+            {
+              "name": "--ki-menu-touch-target",
+              "description": "Minimum action and filter height for coarse pointers."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMenuItem",
+          "declaration": {
+            "name": "KiMenuItem",
+            "module": "dist/components/ki-menu-item.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-menu-item",
+          "declaration": {
+            "name": "KiMenuItem",
+            "module": "dist/components/ki-menu-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-option.js",
       "declarations": [
         {

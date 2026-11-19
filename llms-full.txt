@@ -1941,6 +1941,232 @@ CSS custom properties:
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
+### ki-menu
+
+A popup of actions opened by a button in the same document or shadow root.
+
+When to use: row actions, account commands, split buttons, and overflow actions.
+When NOT to use: form values, navigation destinations, or long action lists.
+
+Examples:
+
+# Menu examples
+
+## Row actions
+
+Register `ki-button`, `ki-menu`, `ki-menu-item`, `ki-menu-group`, and
+`ki-divider` when using the elements individually.
+
+```html
+<ki-button id="row-actions" type="button">Actions</ki-button>
+<ki-menu id="row-menu" anchor="row-actions" filter-label="Filter actions">
+  <ki-menu-group label="Edit">
+    <ki-menu-item value="rename" shortcut="F2">Rename</ki-menu-item>
+    <ki-menu-item value="duplicate">Duplicate</ki-menu-item>
+    <ki-menu-item value="move" disabled>Move to…</ki-menu-item>
+    <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+  </ki-menu-group>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="delete" tone="danger">Delete</ki-menu-item>
+</ki-menu>
+```
+
+```js
+const menu = document.getElementById('row-menu');
+menu.addEventListener('ki-select', ({ detail: { value, checked } }) => {
+  dispatchRowAction(value, checked);
+});
+```
+
+A plain action emits its value and closes the popup. A checkbox also emits its
+new checked state and keeps the popup open. A radio selection emits
+`checked: true`, clears its peer radios and closes the popup. Place independent
+radio sets in distinct groups.
+
+## Account menu
+
+```html
+<button id="account" type="button" aria-label="Account for Ana García">AG</button>
+<ki-menu anchor="account" placement="bottom-end">
+  <p slot="header">Ana García<br />ana@example.com</p>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="profile">Profile</ki-menu-item>
+  <ki-menu-item value="sign-out">Sign out</ki-menu-item>
+</ki-menu>
+```
+
+Give a glyph-only trigger an accessible name. Keep header content informational
+and put actions in `ki-menu-item`. A `start` slot can hold a decorative SVG or
+avatar. The application owns the shortcuts displayed by `shortcut`.
+
+With a filter, supply `filter-label` and optionally localize
+`filter-results-label`, retaining `{count}` where the number should appear.
+
+# When to use Menu
+
+Use Menu for commands on the same object, account actions, split buttons and
+overflow actions. Keep destructive actions at the end after a divider. Pick
+a select for a form value, links for navigation, or a dialog or page for
+long action lists.
+
+Supply a host-authored trigger with an ID in the same DOM tree. Bind the
+catalog action on the menu's declared `ki-select` event. Application DOM
+listeners can read the selected item's `value` and optional `checked` from
+the event detail.
+
+Attributes:
+- `anchor` (string, default ''): Literal ID of the menu button in the same document or containing shadow root.
+- `filter-label` (string, default ''): Accessible name and placeholder of the filter. Omit to hide the field.
+- `filter-results-label` (string, default 'Matching actions: {count}'): Polite results message. The menu substitutes the number of matches for `{count}`.
+- `open` (boolean, default false): Whether the popup is open. Reflected when the user opens or dismisses it.
+- `placement` ("bottom-end" | "bottom-start" | "top-end" | "top-start", default 'bottom-start'): Preferred side and logical alignment. Flips when the opposite side has more room.
+
+Slots:
+- (default): Place ki-menu-item, ki-menu-group, and ki-divider here.
+- `header`: Informational content above the actions, such as account details.
+
+Parts:
+- `filter`: The filter field.
+- `header`: The informational header.
+- `menu`: The named menu containing the actions.
+- `popup`: The anchored surface.
+
+Events:
+- `ki-select` (CustomEvent<KiMenuSelectDetail>): Reports the selected action and, for a checkbox or radio, its new checked state.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-menu-backdrop-filter`: Complete backdrop filter applied to the popup.
+- `--ki-menu-bg`: Base fill of the popup surface.
+- `--ki-menu-bg-image`: Optional image composited over the popup fill.
+- `--ki-menu-border`: Popup edge and the filter divider.
+- `--ki-menu-border-width`: Thickness of menu border and dividers.
+- `--ki-menu-fg`: Text over the popup surface.
+- `--ki-menu-filter-icon-size`: Size of the search icon.
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-font-size`: Text size for action labels and the filter.
+- `--ki-menu-gap`: Inline space between the parts of a row.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-height`: Default action row minimum height.
+- `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-line-height`: Line height for action labels and the filter.
+- `--ki-menu-max-block-size`: Maximum popup height, bounded by the viewport.
+- `--ki-menu-max-inline-size`: Maximum popup width, bounded by the viewport.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
+- `--ki-menu-min-inline-size`: Default minimum popup width, bounded by the viewport.
+- `--ki-menu-padding`: Space inside the popup.
+- `--ki-menu-radius`: Popup corner radius.
+- `--ki-menu-shadow`: Popup elevation shadow.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
+
+### ki-menu-group
+
+A named group of related actions in a ki-menu.
+
+When to use: name a set of related actions or scope exclusive radio items in a menu.
+When NOT to use: standalone sections or nested menus.
+
+Examples:
+
+# Menu group
+
+Provide a group label and place menu items or dividers in its default slot. A group scopes its own exclusive radio selection.
+
+```html
+<ki-menu anchor="actions">
+  <ki-menu-group label="Edit"><ki-menu-item value="rename">Rename</ki-menu-item></ki-menu-group>
+</ki-menu>
+```
+
+Attributes:
+- `label` (string, default ''): Visible and accessible group name.
+
+Slots:
+- (default): The ki-menu-item and ki-divider children of the group.
+
+Parts:
+- `label`: The visible group name.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-group-fg`: Foreground for group labels.
+- `--ki-menu-group-label-weight`: Weight of group labels.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-line-height`: Line height of metadata and group labels.
+- `--ki-menu-padding`: Space inside the popup.
+
+### ki-menu-item
+
+A pointer and keyboard action within a ki-menu.
+
+When to use: a command, independent checkbox action, or exclusive radio action in a menu.
+When NOT to use: standalone controls, navigational links, or form options.
+
+Examples:
+
+# Menu item
+
+Give each item a value and a visible label. Use `type="checkbox"` for independent toggles or `type="radio"` for exclusive choices. Set `disabled` to keep an unavailable action discoverable by keyboard.
+
+```html
+<ki-menu anchor="actions">
+  <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+</ki-menu>
+```
+
+Attributes:
+- `checked` (boolean, default false): Checked state for checkbox and radio actions.
+- `disabled` (boolean, default false): Disabled actions remain discoverable via menu navigation.
+- `shortcut` (string, default ''): Display-only keyboard shortcut. Applications own shortcut registration.
+- `tone` ("danger" | "neutral", default 'neutral'): Apply the danger tone to a destructive action.
+- `type` ("checkbox" | "item" | "radio", default 'item'): Action role. A checkbox stays open. A radio selects one action within its group.
+- `value` (string, default ''): Action identifier reported by the parent menu.
+
+Slots:
+- (default): The action's visible label.
+- `start`: One decorative icon or avatar before the label.
+
+Parts:
+- `check`: The indicator of a checked action.
+- `item`: The focusable action row.
+- `shortcut`: The display-only shortcut hint.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-gap`: Inline space between the parts of a row.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-danger-fg`: Foreground for destructive actions.
+- `--ki-menu-item-danger-hover-fg`: Foreground for hovered or keyboard-focused destructive actions.
+- `--ki-menu-item-disabled-fg`: Muted ink of disabled actions.
+- `--ki-menu-item-fg`: Foreground for resting actions.
+- `--ki-menu-item-height`: Default action row minimum height.
+- `--ki-menu-item-hover-bg`: Background behind hovered or keyboard-focused actions.
+- `--ki-menu-item-hover-fg`: Foreground for hovered or keyboard-focused actions.
+- `--ki-menu-item-icon-size`: Size of an action glyph and the check indicator.
+- `--ki-menu-item-padding`: Vertical inset used when an action wraps.
+- `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-hover-fg`: Foreground for shortcut hints on a hovered or focused action.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
+
 ### ki-option
 
 A declarative data option rendered by its owning `ki-select`.

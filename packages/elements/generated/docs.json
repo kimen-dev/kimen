@@ -3334,6 +3334,641 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-menu/ki-menu.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-menu",
+      "docs": "A popup of actions opened by a button in the same document or shadow root.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "row actions, account commands, split buttons, and overflow actions."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "form values, navigation destinations, or long action lists."
+        },
+        {
+          "name": "slot",
+          "text": "- Place ki-menu-item, ki-menu-group, and ki-divider here."
+        },
+        {
+          "name": "slot",
+          "text": "header - Informational content above the actions, such as account details."
+        },
+        {
+          "name": "part",
+          "text": "popup - The anchored surface."
+        },
+        {
+          "name": "part",
+          "text": "menu - The named menu containing the actions."
+        },
+        {
+          "name": "part",
+          "text": "header - The informational header."
+        },
+        {
+          "name": "part",
+          "text": "filter - The filter field."
+        }
+      ],
+      "usage": {
+        "examples": "# Menu examples\n\n## Row actions\n\nRegister `ki-button`, `ki-menu`, `ki-menu-item`, `ki-menu-group`, and\n`ki-divider` when using the elements individually.\n\n```html\n<ki-button id=\"row-actions\" type=\"button\">Actions</ki-button>\n<ki-menu id=\"row-menu\" anchor=\"row-actions\" filter-label=\"Filter actions\">\n  <ki-menu-group label=\"Edit\">\n    <ki-menu-item value=\"rename\" shortcut=\"F2\">Rename</ki-menu-item>\n    <ki-menu-item value=\"duplicate\">Duplicate</ki-menu-item>\n    <ki-menu-item value=\"move\" disabled>Move to…</ki-menu-item>\n    <ki-menu-item value=\"pin\" type=\"checkbox\" checked>Pin to sidebar</ki-menu-item>\n  </ki-menu-group>\n  <ki-divider></ki-divider>\n  <ki-menu-item value=\"delete\" tone=\"danger\">Delete</ki-menu-item>\n</ki-menu>\n```\n\n```js\nconst menu = document.getElementById('row-menu');\nmenu.addEventListener('ki-select', ({ detail: { value, checked } }) => {\n  dispatchRowAction(value, checked);\n});\n```\n\nA plain action emits its value and closes the popup. A checkbox also emits its\nnew checked state and keeps the popup open. A radio selection emits\n`checked: true`, clears its peer radios and closes the popup. Place independent\nradio sets in distinct groups.\n\n## Account menu\n\n```html\n<button id=\"account\" type=\"button\" aria-label=\"Account for Ana García\">AG</button>\n<ki-menu anchor=\"account\" placement=\"bottom-end\">\n  <p slot=\"header\">Ana García<br />ana@example.com</p>\n  <ki-divider></ki-divider>\n  <ki-menu-item value=\"profile\">Profile</ki-menu-item>\n  <ki-menu-item value=\"sign-out\">Sign out</ki-menu-item>\n</ki-menu>\n```\n\nGive a glyph-only trigger an accessible name. Keep header content informational\nand put actions in `ki-menu-item`. A `start` slot can hold a decorative SVG or\navatar. The application owns the shortcuts displayed by `shortcut`.\n\nWith a filter, supply `filter-label` and optionally localize\n`filter-results-label`, retaining `{count}` where the number should appear.\n",
+        "when-to-use": "# When to use Menu\n\nUse Menu for commands on the same object, account actions, split buttons and\noverflow actions. Keep destructive actions at the end after a divider. Pick\na select for a form value, links for navigation, or a dialog or page for\nlong action lists.\n\nSupply a host-authored trigger with an ID in the same DOM tree. Bind the\ncatalog action on the menu's declared `ki-select` event. Application DOM\nlisteners can read the selected item's `value` and optional `checked` from\nthe event detail.\n"
+      },
+      "props": [
+        {
+          "name": "anchor",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "anchor",
+          "reflectToAttr": false,
+          "docs": "Literal ID of the menu button in the same document or containing shadow root.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "filterLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "filter-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name and placeholder of the filter. Omit to hide the field.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "filterResultsLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "filter-results-label",
+          "reflectToAttr": false,
+          "docs": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Matching actions: {count}'"
+            }
+          ],
+          "default": "'Matching actions: {count}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placement",
+          "type": "\"bottom-end\" | \"bottom-start\" | \"top-end\" | \"top-start\"",
+          "complexType": {
+            "original": "KiMenuPlacement",
+            "resolved": "\"bottom-end\" | \"bottom-start\" | \"top-end\" | \"top-start\"",
+            "references": {
+              "KiMenuPlacement": {
+                "location": "local",
+                "path": "src/components/ki-menu/ki-menu.tsx",
+                "id": "src/components/ki-menu/ki-menu.tsx::KiMenuPlacement"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "placement",
+          "reflectToAttr": false,
+          "docs": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'bottom-start'"
+            }
+          ],
+          "default": "'bottom-start'",
+          "values": [
+            {
+              "value": "bottom-end",
+              "type": "string"
+            },
+            {
+              "value": "bottom-start",
+              "type": "string"
+            },
+            {
+              "value": "top-end",
+              "type": "string"
+            },
+            {
+              "value": "top-start",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-select",
+          "detail": "KiMenuSelectDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiMenuSelectDetail",
+            "resolved": "KiMenuSelectDetail",
+            "references": {
+              "KiMenuSelectDetail": {
+                "location": "local",
+                "path": "src/components/ki-menu/ki-menu.tsx",
+                "id": "src/components/ki-menu/ki-menu.tsx::KiMenuSelectDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Reports the selected action and, for a checkbox or radio, its new checked state.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Place ki-menu-item, ki-menu-group, and ki-divider here."
+        },
+        {
+          "name": "header",
+          "docs": "Informational content above the actions, such as account details."
+        }
+      ],
+      "parts": [
+        {
+          "name": "filter",
+          "docs": "The filter field."
+        },
+        {
+          "name": "header",
+          "docs": "The informational header."
+        },
+        {
+          "name": "menu",
+          "docs": "The named menu containing the actions."
+        },
+        {
+          "name": "popup",
+          "docs": "The anchored surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-menu-group/ki-menu-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-menu-group",
+      "docs": "A named group of related actions in a ki-menu.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "name a set of related actions or scope exclusive radio items in a menu."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "standalone sections or nested menus."
+        },
+        {
+          "name": "slot",
+          "text": "- The ki-menu-item and ki-divider children of the group."
+        },
+        {
+          "name": "part",
+          "text": "label - The visible group name."
+        }
+      ],
+      "usage": {
+        "examples": "# Menu group\n\nProvide a group label and place menu items or dividers in its default slot. A group scopes its own exclusive radio selection.\n\n```html\n<ki-menu anchor=\"actions\">\n  <ki-menu-group label=\"Edit\"><ki-menu-item value=\"rename\">Rename</ki-menu-item></ki-menu-group>\n</ki-menu>\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible group name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The ki-menu-item and ki-divider children of the group."
+        }
+      ],
+      "parts": [
+        {
+          "name": "label",
+          "docs": "The visible group name."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-menu-item/ki-menu-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-menu-item",
+      "docs": "A pointer and keyboard action within a ki-menu.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "a command, independent checkbox action, or exclusive radio action in a menu."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "standalone controls, navigational links, or form options."
+        },
+        {
+          "name": "slot",
+          "text": "- The action's visible label."
+        },
+        {
+          "name": "slot",
+          "text": "start - One decorative icon or avatar before the label."
+        },
+        {
+          "name": "part",
+          "text": "item - The focusable action row."
+        },
+        {
+          "name": "part",
+          "text": "shortcut - The display-only shortcut hint."
+        },
+        {
+          "name": "part",
+          "text": "check - The indicator of a checked action."
+        }
+      ],
+      "usage": {
+        "examples": "# Menu item\n\nGive each item a value and a visible label. Use `type=\"checkbox\"` for independent toggles or `type=\"radio\"` for exclusive choices. Set `disabled` to keep an unavailable action discoverable by keyboard.\n\n```html\n<ki-menu anchor=\"actions\">\n  <ki-menu-item value=\"pin\" type=\"checkbox\" checked>Pin to sidebar</ki-menu-item>\n</ki-menu>\n```\n"
+      },
+      "props": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "checked",
+          "reflectToAttr": true,
+          "docs": "Checked state for checkbox and radio actions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disabled actions remain discoverable via menu navigation.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "shortcut",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "shortcut",
+          "reflectToAttr": false,
+          "docs": "Display-only keyboard shortcut. Applications own shortcut registration.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"neutral\"",
+          "complexType": {
+            "original": "KiMenuItemTone",
+            "resolved": "\"danger\" | \"neutral\"",
+            "references": {
+              "KiMenuItemTone": {
+                "location": "local",
+                "path": "src/components/ki-menu-item/ki-menu-item.tsx",
+                "id": "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Apply the danger tone to a destructive action.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "type",
+          "type": "\"checkbox\" | \"item\" | \"radio\"",
+          "complexType": {
+            "original": "KiMenuItemType",
+            "resolved": "\"checkbox\" | \"item\" | \"radio\"",
+            "references": {
+              "KiMenuItemType": {
+                "location": "local",
+                "path": "src/components/ki-menu-item/ki-menu-item.tsx",
+                "id": "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemType"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "type",
+          "reflectToAttr": false,
+          "docs": "Action role. A checkbox stays open. A radio selects one action within its group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'item'"
+            }
+          ],
+          "default": "'item'",
+          "values": [
+            {
+              "value": "checkbox",
+              "type": "string"
+            },
+            {
+              "value": "item",
+              "type": "string"
+            },
+            {
+              "value": "radio",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Action identifier reported by the parent menu.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [
+        {
+          "event": "click",
+          "capture": true,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The action's visible label."
+        },
+        {
+          "name": "start",
+          "docs": "One decorative icon or avatar before the label."
+        }
+      ],
+      "parts": [
+        {
+          "name": "check",
+          "docs": "The indicator of a checked action."
+        },
+        {
+          "name": "item",
+          "docs": "The focusable action row."
+        },
+        {
+          "name": "shortcut",
+          "docs": "The display-only shortcut hint."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-option/ki-option.tsx",
       "encapsulation": "shadow",
       "tag": "ki-option",
@@ -6318,6 +6953,26 @@
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
+    },
+    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemType": {
+      "declaration": "export type KiMenuItemType = 'item' | 'checkbox' | 'radio';",
+      "docstring": "",
+      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
+    },
+    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemTone": {
+      "declaration": "export type KiMenuItemTone = 'neutral' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
+    },
+    "src/components/ki-menu/ki-menu.tsx::KiMenuPlacement": {
+      "declaration": "export type KiMenuPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';",
+      "docstring": "",
+      "path": "src/components/ki-menu/ki-menu.tsx"
+    },
+    "src/components/ki-menu/ki-menu.tsx::KiMenuSelectDetail": {
+      "declaration": "export interface KiMenuSelectDetail {\n  value: string;\n  checked?: boolean;\n}",
+      "docstring": "",
+      "path": "src/components/ki-menu/ki-menu.tsx"
     },
     "src/components/ki-progress/ki-progress.tsx::KiProgressShape": {
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",

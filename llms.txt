@@ -57,6 +57,9 @@ methods, CSS custom properties and examples.
 - [ki-input](https://kimen.dev/llms/ki-input.md): collect one line of free text from a person, always with a visible `label`; choose the `type` and `autocomplete` that match the entry purpose.
 - [ki-list](https://kimen.dev/llms/ki-list.md): settings, contacts, results or activity feeds where each item composes leading media, primary text, optional secondary text and trailing meta or a slotted control.
 - [ki-list-item](https://kimen.dev/llms/ki-list-item.md): only as a child of `ki-list`, for one read-only entry in a similar vertical collection.
+- [ki-menu](https://kimen.dev/llms/ki-menu.md): row actions, account commands, split buttons, and overflow actions.
+- [ki-menu-group](https://kimen.dev/llms/ki-menu-group.md): name a set of related actions or scope exclusive radio items in a menu.
+- [ki-menu-item](https://kimen.dev/llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-option](https://kimen.dev/llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-progress](https://kimen.dev/llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
 - [ki-qr](https://kimen.dev/llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.

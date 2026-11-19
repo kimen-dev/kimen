@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 334 semantic
-and 1146 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 347 semantic
+and 1189 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -50,6 +50,7 @@ every component at once.
 | `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
 | `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
 | `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
+| `--ki-effect-component-menu-backdrop-filter` | `none` | Optional complete backdrop filter for a raised action menu. |
 | `--ki-effect-component-primary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow. |
 | `--ki-effect-component-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter. |
 | `--ki-effect-component-secondary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter. |
@@ -131,6 +132,22 @@ every component at once.
 | `--ki-inverse-white-alpha-88` | `rgba(0, 0, 0, 0.88)` | semantic color for inverse white alpha 88. |
 | `--ki-inverse-white-alpha-9` | `rgba(0, 0, 0, 0.08)` | semantic color for inverse white alpha 9. |
 | `--ki-inverse-white-alpha-solid` | `#000000` | semantic color for inverse white alpha solid. |
+
+### `ki.menu-layout`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-menu-layout-block-max` | `40rem` | Block limit of a scrolling menu before the viewport is considered. |
+| `--ki-menu-layout-edge-width` | `1px` | Width of the menu perimeter and its internal separators. |
+| `--ki-menu-layout-inline-max` | `20rem` | Inline limit of the menu before the viewport is considered. |
+| `--ki-menu-layout-inline-min` | `14rem` | Lower inline bound for anchored action menus. |
+| `--ki-menu-layout-inline-space` | `0.5rem` | Horizontal breathing room within a menu action. |
+| `--ki-menu-layout-row-block-padding` | `0.125rem` | Minimum edge space for a wrapped action label. |
+| `--ki-menu-layout-row-min` | `2rem` | Minimum size of a default menu action row. |
+| `--ki-menu-layout-row-radius` | `8px` | Rounding of action rows within a menu. |
+| `--ki-menu-layout-surface-padding` | `0.25rem` | Inset from the perimeter of the action menu. |
+| `--ki-menu-layout-surface-radius` | `12px` | Rounding of the raised menu surface. |
+| `--ki-menu-layout-touch-row-min` | `44px` | Target size in a menu opened on a touch screen. |
 
 ### `ki.motion`
 
@@ -332,6 +349,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
+| `--ki-surface-image-menu` | `none` | Optional image over a raised action menu. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
@@ -1222,6 +1240,54 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-list-item-xl-secondary-font-size` | `0.8125rem` | dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para). |
 | `--ki-list-item-xl-secondary-line-height` | `1.25rem` | dimension used by the list component for xl secondary line height (List 10063:2066 xl). |
 | `--ki-list-padding` | `0rem` | dimension used by the list component for padding. |
+
+### `ki-menu`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-menu-backdrop-filter` | `none` | Complete backdrop filter applied to the popup. |
+| `--ki-menu-bg` | `#f9f7f4` | Base fill of the popup surface. |
+| `--ki-menu-bg-image` | `none` | Optional image composited over the popup fill. |
+| `--ki-menu-border` | `rgba(24, 22, 19, 0.1)` | Popup edge and the filter divider. |
+| `--ki-menu-border-width` | `1px` | Thickness of menu border and dividers. |
+| `--ki-menu-fg` | `#181613` | Text over the popup surface. |
+| `--ki-menu-filter-icon-size` | `1.25rem` | Size of the search icon. |
+| `--ki-menu-focus-color` | `#bb4e2a` | Color of a visible keyboard focus outline. |
+| `--ki-menu-focus-width` | `0.125rem` | Width of a visible keyboard focus outline. |
+| `--ki-menu-font-family` | `'Instrument Sans', system-ui, sans-serif` | Family for action labels and the filter. |
+| `--ki-menu-font-size` | `0.8125rem` | Text size for action labels and the filter. |
+| `--ki-menu-gap` | `0.5rem` | Inline space between the parts of a row. |
+| `--ki-menu-group-bg` | `#f9f7f4` | Background behind group labels. |
+| `--ki-menu-group-fg` | `#5e5953` | Foreground for group labels. |
+| `--ki-menu-group-label-weight` | `600` | Weight of group labels. |
+| `--ki-menu-inline-padding` | `0.5rem` | Start and end inset of an action, group label, or filter. |
+| `--ki-menu-item-bg` | `#f9f7f4` | Background behind resting actions. |
+| `--ki-menu-item-danger-bg` | `#f9f7f4` | Background behind destructive actions. |
+| `--ki-menu-item-danger-fg` | `#c21a45` | Foreground for destructive actions. |
+| `--ki-menu-item-danger-hover-bg` | `#ebe7e1` | Background behind hovered or keyboard-focused destructive actions. |
+| `--ki-menu-item-danger-hover-fg` | `#c21a45` | Foreground for hovered or keyboard-focused destructive actions. |
+| `--ki-menu-item-disabled-fg` | `#cbc7bf` | Muted ink of disabled actions. |
+| `--ki-menu-item-fg` | `#181613` | Foreground for resting actions. |
+| `--ki-menu-item-height` | `2rem` | Default action row minimum height. |
+| `--ki-menu-item-hover-bg` | `#ebe7e1` | Background behind hovered or keyboard-focused actions. |
+| `--ki-menu-item-hover-fg` | `#181613` | Foreground for hovered or keyboard-focused actions. |
+| `--ki-menu-item-icon-size` | `1rem` | Size of an action glyph and the check indicator. |
+| `--ki-menu-item-padding` | `0.125rem` | Vertical inset used when an action wraps. |
+| `--ki-menu-item-radius` | `8px` | Action row corner radius. |
+| `--ki-menu-line-height` | `1.5rem` | Line height for action labels and the filter. |
+| `--ki-menu-max-block-size` | `40rem` | Maximum popup height, bounded by the viewport. |
+| `--ki-menu-max-inline-size` | `20rem` | Maximum popup width, bounded by the viewport. |
+| `--ki-menu-meta-bg` | `#f9f7f4` | Background behind shortcut hints and the filter placeholder. |
+| `--ki-menu-meta-fg` | `#5e5953` | Foreground for shortcut hints and the filter placeholder. |
+| `--ki-menu-meta-font-size` | `0.75rem` | Size of metadata and group labels. |
+| `--ki-menu-meta-hover-bg` | `#ebe7e1` | Background behind shortcut hints on a hovered or focused action. |
+| `--ki-menu-meta-hover-fg` | `#5e5953` | Foreground for shortcut hints on a hovered or focused action. |
+| `--ki-menu-meta-line-height` | `1rem` | Line height of metadata and group labels. |
+| `--ki-menu-min-inline-size` | `14rem` | Default minimum popup width, bounded by the viewport. |
+| `--ki-menu-padding` | `0.25rem` | Space inside the popup. |
+| `--ki-menu-radius` | `12px` | Popup corner radius. |
+| `--ki-menu-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Popup elevation shadow. |
+| `--ki-menu-touch-target` | `44px` | Minimum action and filter height for coarse pointers. |
 
 ### `ki-option`
 
