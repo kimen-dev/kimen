@@ -54,6 +54,15 @@ describe('renderUiSpec — only catalog components render', () => {
     expect(button?.textContent).toBe('Pay now');
   });
 
+  it('renders explicit false for a Kimen boolean that defaults to true', () => {
+    const result = renderUiSpec(
+      { version: 1, root: { component: 'ki-popover', props: { arrow: false } } },
+      { surface },
+    );
+    expect(result.ok).toBe(true);
+    expect(surface.querySelector('ki-popover')?.getAttribute('arrow')).toBe('false');
+  });
+
   it.each(['script', 'iframe', 'ki-not-in-catalog'])(
     'S2 never renders a component type "%s" outside the catalog',
     (type) => {
