@@ -24,6 +24,7 @@ import onmarsCss from '@kimen/tokens/css?raw';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { commands, page } from 'vitest/browser';
 import { defineAllComponents } from '../all-components';
+import captureMatrix from './capture-matrix.json';
 import robotoWoff2Url from './fonts/RobotoVariable.woff2?url';
 import type { VisualComponent, VisualGallery } from './galleries';
 import { fixtureFor } from './galleries';
@@ -35,7 +36,6 @@ type Gallery = VisualGallery & { inlinePadding?: number };
 
 type VisualSuiteOptions = {
   scheme: Scheme;
-  themes?: readonly Theme[];
 } & (
   | { component: VisualComponent; define?: readonly (() => void)[] }
   | { name: string; gallery: Gallery; define: readonly (() => void)[] }
@@ -205,10 +205,11 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
   const { define, scheme } = options;
   const name = 'name' in options ? options.name : options.component;
   const gallery = 'gallery' in options ? options.gallery : fixtureFor(options.component).gallery;
-  // The approved matrix: onmars light + dark for every component, material3
-  // light only (alternate-theme contract at marginal cost).
+  // Both themes run in light. The baseline audit uses the same dark-theme selection.
   const themes: readonly Theme[] =
-    options.themes ?? (scheme === 'light' ? ['onmars', 'material3'] : ['onmars']);
+    scheme === 'light' || captureMatrix.material3Dark.includes(name)
+      ? ['onmars', 'material3']
+      : ['onmars'];
 
   describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {

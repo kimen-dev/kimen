@@ -11,6 +11,9 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import captureMatrix from '../../packages/elements/browser-tests/visual/capture-matrix.json' with {
+  type: 'json',
+};
 import { discoverComponents } from '../lib/component-inventory.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -39,21 +42,14 @@ function parseArmedMarker(content) {
   return value === 'true';
 }
 
-// Mirrors the harness matrix: light specs capture onmars + material3, dark
-// specs capture onmars only, and toMatchScreenshot names baselines
-// `<name>-<browser>-<platform>.png`.
+// Uses the harness's dark-theme selection and screenshot naming convention.
 function expectedLinuxBaselines(specFileName, engine = 'chromium') {
   const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
-  const captures = dark
-    ? [['onmars', 'dark']]
-    : [
-        ['onmars', 'light'],
-        ['material3', 'light'],
-      ];
-  return captures.map(
-    ([theme, scheme]) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
-  );
+  const scheme = dark ? 'dark' : 'light';
+  const themes =
+    !dark || captureMatrix.material3Dark.includes(component) ? ['onmars', 'material3'] : ['onmars'];
+  return themes.map((theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`);
 }
 
 function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines = ENGINES) {
@@ -106,6 +102,12 @@ test('the expected baseline names mirror the harness capture matrix', () => {
     'ki-button-onmars-light-gallery-webkit-linux.png',
     'ki-button-material3-light-gallery-webkit-linux.png',
   ]);
+  for (const component of ['ki-chip', 'ki-chip-group']) {
+    assert.deepEqual(expectedLinuxBaselines(`${component}.visual.dark.browser.spec.ts`), [
+      `${component}-onmars-dark-gallery-chromium-linux.png`,
+      `${component}-material3-dark-gallery-chromium-linux.png`,
+    ]);
+  }
 });
 
 test('a deleted linux baseline is detected by the armed audit', () => {
