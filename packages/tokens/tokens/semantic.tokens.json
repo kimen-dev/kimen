@@ -1189,6 +1189,11 @@
           }
         }
       },
+      "video-hover-opacity": {
+        "$type": "number",
+        "$value": "{ki.scale.unit}",
+        "$description": "Opacity of the added play-container shadow on hover. onmars shows the full primary hover effect over the resting shadow."
+      },
       "small-dark-shadow": {
         "$type": "shadow",
         "$value": {
@@ -1264,6 +1269,10 @@
         "body": {
           "$value": "{ki.font.family.body}",
           "$description": "semantic font family for typography family body."
+        },
+        "heading": {
+          "$value": "{ki.typography.family.body}",
+          "$description": "Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy."
         },
         "serif": {
           "$value": "{ki.font.family.serif}",

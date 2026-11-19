@@ -77,6 +77,10 @@ for them as dismissal events.
 | `--ki-alert-success-fg`     | Success tone text color             |
 | `--ki-alert-radius`         | Alert corner radius                 |
 | `--ki-alert-padding-inline` | Horizontal padding                  |
+| `--ki-alert-heading-font-family` | Heading typeface               |
+
+The heading typeface defaults to `--ki-typography-family-heading`, which
+themes can set on a theme root to style alert and dialog headings together.
 
 Each tone has its own `--ki-alert-{tone}-{bg|border|fg}` triplet. Shadow
 parts: `::part(alert)` (outer surface), `::part(heading)` (rendered only

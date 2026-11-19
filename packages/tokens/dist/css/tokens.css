@@ -829,6 +829,7 @@
   --ki-effect-component-primary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-hover);
   --ki-effect-component-secondary-default-shadow: 0 var(--ki-shadow-effect-y) var(--ki-shadow-effect-blur) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-default);
   --ki-effect-component-secondary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-hover);
+  --ki-effect-video-hover-opacity: var(--ki-scale-unit);
   --ki-effect-small-dark-shadow: 0 var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow-dark);
   --ki-focus-primary: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-primary-base-em-alpha);
   --ki-focus-gray: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-med-em);
@@ -839,6 +840,7 @@
   --ki-transparent-inverse: light-dark(var(--ki-color-transparent-white), var(--ki-color-transparent-black));
   --ki-typography-family-display: var(--ki-font-family-display);
   --ki-typography-family-body: var(--ki-font-family-body);
+  --ki-typography-family-heading: var(--ki-typography-family-body);
   --ki-typography-family-serif: var(--ki-font-family-serif);
   --ki-typography-family-mono: var(--ki-font-family-mono);
   --ki-typography-family-base: var(--ki-font-family-body);
@@ -927,6 +929,7 @@
   --ki-alert-font-size: var(--ki-typography-size-body-1);
   --ki-alert-line-height: var(--ki-typography-line-height-body-1);
   --ki-alert-message-line-height: var(--ki-typography-line-height-para);
+  --ki-alert-heading-font-family: var(--ki-typography-family-heading);
   --ki-alert-heading-font-size: var(--ki-typography-size-body-2);
   --ki-alert-heading-font-weight: var(--ki-typography-weight-body-medium);
   --ki-alert-dismiss-size: var(--ki-space-7xl);
@@ -1399,8 +1402,10 @@
   --ki-dialog-border: var(--ki-border-hairline-base-em);
   --ki-dialog-shadow: var(--ki-elevation-e4);
   --ki-dialog-backdrop-bg: var(--ki-overlay-high-em);
+  --ki-dialog-heading-font-family: var(--ki-typography-family-heading);
   --ki-dialog-heading-font-size: var(--ki-typography-size-title-2);
   --ki-dialog-heading-font-weight: var(--ki-typography-weight-body-semibold);
+  --ki-dialog-heading-letter-spacing: var(--ki-typography-letter-spacing-none);
   --ki-dialog-heading-line-height: var(--ki-typography-line-height-title-2);
   --ki-dialog-heading-padding-block-start: var(--ki-space-3xl);
   --ki-dialog-heading-padding-block-end: var(--ki-space-3xl);
@@ -1690,6 +1695,9 @@
   --ki-switch-glyph-width: var(--ki-space-md);
   --ki-switch-glyph-height: var(--ki-space-sm);
   --ki-switch-glyph-dash-height: var(--ki-space-xxs);
+  --ki-switch-glyph-checked: var(--ki-text-primary-on-primary-light);
+  --ki-switch-glyph-unchecked: var(--ki-text-none);
+  --ki-switch-glyph-disabled: var(--ki-text-base-em);
   --ki-switch-unchecked-rest-track: var(--ki-surface-disabled-med-em);
   --ki-switch-unchecked-rest-thumb: var(--ki-surface-special-light-s0-dark-s4);
   --ki-switch-unchecked-rest-border: var(--ki-outline-control);

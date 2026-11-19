@@ -92,7 +92,14 @@ dismissal:
 | `--ki-dialog-radius`                         | Dialog corner radius              |
 | `--ki-dialog-backdrop-bg`                    | Backdrop scrim color              |
 | `--ki-dialog-shadow`                         | Dialog elevation shadow           |
+| `--ki-dialog-heading-font-family`            | Heading typeface                  |
+| `--ki-dialog-heading-letter-spacing`         | Heading letter spacing            |
 | `--ki-dialog-motion-duration` / `-easing`    | Open/close transition             |
+
+The heading typeface defaults to `--ki-typography-family-heading`, which
+themes can set on a theme root to style dialog and alert headings together.
+Heading letter spacing defaults to `--ki-typography-letter-spacing-none` (zero
+tracking).
 
 Shadow parts: `::part(dialog)` (native dialog surface), `::part(heading)`
 (visible h2 title, rendered only when `heading` is non-empty),

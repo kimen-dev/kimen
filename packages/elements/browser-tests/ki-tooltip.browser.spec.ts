@@ -10,6 +10,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { disableComponentEffectShadows } from './flat-effects';
 import { moveToNewParent } from './reconnect';
 
 type KiTooltipElement = HTMLElement & {
@@ -457,12 +458,23 @@ describe('ki-tooltip pointer path in a real browser', () => {
     // e4 wrap elevation (deepest layer 0 32 32 -16) plus the secondary_default
     // inner highlight (inset layer).
     expect(style.boxShadow).toContain('0px 32px 32px -16px');
-    expect(style.boxShadow).toContain('inset');
+    expect(getComputedStyle(tooltip, '::before').boxShadow).toContain('inset');
 
     // Caret-depth offset: 8px trigger-to-card distance (top placement).
     const triggerRect = trigger.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
     expect(Math.round(triggerRect.top - tooltipRect.bottom)).toBe(8);
+  });
+
+  it('S9 keeps the bubble elevation with component effect shadows disabled (#349)', async () => {
+    const { host, trigger } = await mount({
+      style: { marginBlockStart: '160px', marginInlineStart: '160px' },
+    });
+    disableComponentEffectShadows(host);
+
+    await hoverTrigger(host, trigger);
+
+    expect(getComputedStyle(requireTooltip(host)).boxShadow).toContain('0px 32px 32px -16px');
   });
 
   it('S11 start placement renders on the right side under RTL', async () => {

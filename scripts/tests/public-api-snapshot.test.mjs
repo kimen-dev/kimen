@@ -590,13 +590,17 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // label hint ink and gap of the five field controls (ten), and the
   // touch-screen text size of ki-input and ki-textarea (two). The touch
   // density is published as its own context. 1223 + 24 = 1247.
+  // Issue #347 adds the shared heading family, the two component heading
+  // families, and the dialog heading letter spacing. 1247 + 4 = 1251.
+  // Issue #345 adds three switch glyph colors. 1251 + 3 = 1254.
+  // Issue #349 adds the video hover shadow opacity. 1254 + 1 = 1255.
   // Issue #343 adds three component image tokens and six semantic tokens for
-  // images, tooltip arrow colors and transparent backing. 1247 + 9 = 1256.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1256);
+  // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1264);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1256,
+    1264,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
