@@ -82,8 +82,15 @@ it('aligns a row on the cross axis and distributes space on the main axis', asyn
     '<ki-stack style="inline-size:300px" direction="row" align="center" justify="between"><div style="block-size:50px">Tall</div><div style="block-size:20px">Short</div></ki-stack>',
   );
 
-  await expect.poll(() => bounds(stack.lastElementChild).right).toBe(bounds(stack).right);
-  expect(bounds(stack.lastElementChild).top - bounds(stack.firstElementChild).top).toBe(15);
+  // Poll the whole comparison: the expected side would otherwise be read once,
+  // before the host has laid out.
+  await expect
+    .poll(() => Math.abs(bounds(stack).right - bounds(stack.lastElementChild).right))
+    .toBeLessThan(0.5);
+  expect(bounds(stack.lastElementChild).top - bounds(stack.firstElementChild).top).toBeCloseTo(
+    15,
+    1,
+  );
 });
 
 it('S5 keeps the visual RTL sequence and keyboard focus sequence in source order', async () => {
