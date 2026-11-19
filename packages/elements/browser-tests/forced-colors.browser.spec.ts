@@ -465,6 +465,29 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(edgeOf(surface), 'the dialog has no edge against the page').not.toBeNull();
   });
 
+  it('ki-menu preserves its popup boundary, focus ring and checkmark', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(`
+      <button id="menu-actions" type="button">Actions</button>
+      <ki-menu anchor="menu-actions">
+        <ki-menu-item type="checkbox" value="pin" checked>Pin to sidebar</ki-menu-item>
+      </ki-menu>
+    `);
+    const trigger = fixture.querySelector('button');
+    if (!trigger) throw new Error('Missing trigger');
+    await expect.poll(() => trigger.getAttribute('aria-expanded')).toBe('false');
+    trigger.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const surface = await partOf(fixture, 'ki-menu', '[part="popup"]');
+    const row = await partOf(fixture, 'ki-menu-item', '[part="item"]');
+    const check = await partOf(fixture, 'ki-menu-item', '[part="check"]');
+
+    expect(isOpaqueCanvas(surface)).toBe(true);
+    expect(edgeOf(surface)).not.toBeNull();
+    expect(getComputedStyle(row).outlineStyle).toBe('solid');
+    expect(parseColor(getComputedStyle(check).color).ink).not.toBe(fillOf(surface));
+  });
+
   it('S5 ki-tooltip is an opaque surface with an edge', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(

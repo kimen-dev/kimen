@@ -35,6 +35,7 @@ const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts'
 const inputDeviceSpecs = [
   pointerCapabilitySpec,
   'src/components/ki-icon/ki-icon.browser.spec.ts',
+  'src/components/ki-menu/ki-menu.pointer.browser.spec.ts',
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
 ];
