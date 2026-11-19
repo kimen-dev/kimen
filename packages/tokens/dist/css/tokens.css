@@ -912,7 +912,7 @@
   --ki-alert-padding-block: var(--ki-space-xl);
   --ki-alert-gap: var(--ki-space-xl);
   --ki-alert-text-gap: var(--ki-space-xs);
-  --ki-alert-radius: var(--ki-radius-component-md);
+  --ki-alert-radius: var(--ki-radius-big-component-xs);
   --ki-alert-border-width: var(--ki-space-zero);
   --ki-alert-font-size: var(--ki-typography-size-body-1);
   --ki-alert-line-height: var(--ki-typography-line-height-body-1);
@@ -921,21 +921,31 @@
   --ki-alert-heading-font-weight: var(--ki-typography-weight-body-medium);
   --ki-alert-dismiss-size: var(--ki-space-7xl);
   --ki-alert-dismiss-icon-size: var(--ki-space-3xl);
-  --ki-alert-neutral-bg: var(--ki-surface-s1);
+  --ki-alert-neutral-bg: var(--ki-surface-special-light-s0-dark-s2);
   --ki-alert-neutral-fg: var(--ki-text-high-em);
   --ki-alert-neutral-border: var(--ki-outline-none);
-  --ki-alert-success-bg: var(--ki-surface-success-tint);
-  --ki-alert-success-fg: var(--ki-text-success-high-em);
+  --ki-alert-neutral-icon-bg: var(--ki-surface-primary-base-em-alpha);
+  --ki-alert-neutral-icon-fg: var(--ki-text-primary-high-em);
+  --ki-alert-success-bg: var(--ki-surface-special-light-s0-dark-s2);
+  --ki-alert-success-fg: var(--ki-text-high-em);
   --ki-alert-success-border: var(--ki-outline-none);
-  --ki-alert-danger-bg: var(--ki-surface-danger-tint);
-  --ki-alert-danger-fg: var(--ki-text-danger-high-em);
+  --ki-alert-success-icon-bg: var(--ki-surface-success-tint);
+  --ki-alert-success-icon-fg: var(--ki-text-success-high-em);
+  --ki-alert-danger-bg: var(--ki-surface-special-light-s0-dark-s2);
+  --ki-alert-danger-fg: var(--ki-text-high-em);
   --ki-alert-danger-border: var(--ki-outline-none);
-  --ki-alert-info-bg: var(--ki-surface-info-tint);
-  --ki-alert-info-fg: var(--ki-text-info-high-em);
+  --ki-alert-danger-icon-bg: var(--ki-surface-danger-tint);
+  --ki-alert-danger-icon-fg: var(--ki-text-danger-high-em);
+  --ki-alert-info-bg: var(--ki-surface-special-light-s0-dark-s2);
+  --ki-alert-info-fg: var(--ki-text-high-em);
   --ki-alert-info-border: var(--ki-outline-none);
-  --ki-alert-warning-bg: var(--ki-surface-warning-tint);
-  --ki-alert-warning-fg: var(--ki-text-warning-high-em);
+  --ki-alert-info-icon-bg: var(--ki-surface-info-tint);
+  --ki-alert-info-icon-fg: var(--ki-text-info-high-em);
+  --ki-alert-warning-bg: var(--ki-surface-special-light-s0-dark-s2);
+  --ki-alert-warning-fg: var(--ki-text-high-em);
   --ki-alert-warning-border: var(--ki-outline-none);
+  --ki-alert-warning-icon-bg: var(--ki-surface-warning-tint);
+  --ki-alert-warning-icon-fg: var(--ki-text-warning-high-em);
   --ki-alert-dismiss-border-width: var(--ki-size-border-hairline);
   --ki-alert-dismiss-radius: var(--ki-radius-round);
   --ki-alert-dismiss-rest-fg: var(--ki-text-high-em);
@@ -946,6 +956,15 @@
   --ki-alert-focus-ring-width: var(--ki-focus-ring-width);
   --ki-alert-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-alert-focus-ring-shadow: var(--ki-focus-primary);
+  --ki-alert-shell-padding: var(--ki-space-xl);
+  --ki-alert-shell-radius: var(--ki-radius-big-component-lg);
+  --ki-alert-shell-bg: var(--ki-inverse-white-alpha-3);
+  --ki-alert-shell-backdrop-blur: var(--ki-effect-component-backdrop-blur);
+  --ki-alert-card-shadow: var(--ki-elevation-e5);
+  --ki-alert-icon-size: var(--ki-space-10xl);
+  --ki-alert-icon-radius: var(--ki-radius-round);
+  --ki-alert-icon-glyph-size: var(--ki-space-5xl);
+  --ki-alert-actions-gap: var(--ki-space-xl);
   --ki-avatar-group-xxs-overlap: var(--ki-space-md);
   --ki-avatar-group-xxs-counter-padding-inline: var(--ki-space-md);
   --ki-avatar-group-xxs-counter-font-size: var(--ki-typography-size-caption-1);
@@ -1825,6 +1844,8 @@
     --ki-surface-warning-tint: var(--ki-surface-warning-base-em);
     --ki-surface-danger-tint: var(--ki-surface-danger-base-em);
     --ki-effect-component-backdrop-blur: var(--ki-blur-none);
+    --ki-alert-neutral-icon-bg: var(--ki-surface-primary-base-em);
+    --ki-alert-shell-bg: var(--ki-surface-s1);
     --ki-select-listbox-backdrop-blur: var(--ki-blur-none);
   }
 }
@@ -1841,6 +1862,8 @@
   --ki-surface-warning-tint: var(--ki-surface-warning-base-em);
   --ki-surface-danger-tint: var(--ki-surface-danger-base-em);
   --ki-effect-component-backdrop-blur: var(--ki-blur-none);
+  --ki-alert-neutral-icon-bg: var(--ki-surface-primary-base-em);
+  --ki-alert-shell-bg: var(--ki-surface-s1);
   --ki-select-listbox-backdrop-blur: var(--ki-blur-none);
 }
 

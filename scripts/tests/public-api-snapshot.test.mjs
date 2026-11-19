@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/cross-engine-components.json',
+      '../../changes/api/011-ki-alert-anatomy.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -580,11 +580,15 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // the switch control footprint and Base well (five), the dialog heading,
   // body and footer section paddings (nine) and its divider width and colour
   // (two), and the tooltip arrow size and tip radius (two). 1186 + 18 = 1204.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1204);
+  // The ki-alert anatomy (changes/api/011-ki-alert-anatomy) adds nineteen:
+  // the shell padding, radius, wash and blur, the card elevation, the icon
+  // frame size, radius and glyph size, the actions gap, and an icon fill and
+  // ink for each of the five tones. 1204 + 19 = 1223.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1223);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1204,
+    1223,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),

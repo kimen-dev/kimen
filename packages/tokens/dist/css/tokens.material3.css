@@ -275,16 +275,18 @@
   --ki-alert-neutral-bg: var(--ki-surface-s2);
   --ki-alert-neutral-border: var(--ki-outline-med-em);
   --ki-alert-success-bg: var(--ki-surface-s1);
-  --ki-alert-success-fg: var(--ki-text-high-em);
   --ki-alert-success-border: var(--ki-outline-med-em);
   --ki-alert-danger-bg: var(--ki-surface-danger-low-em);
+  --ki-alert-danger-fg: var(--ki-text-danger-high-em);
   --ki-alert-danger-border: var(--ki-outline-danger-high-em);
   --ki-alert-info-bg: var(--ki-surface-s3);
-  --ki-alert-info-fg: var(--ki-text-high-em);
   --ki-alert-info-border: var(--ki-outline-med-em);
   --ki-alert-warning-bg: var(--ki-surface-s4);
-  --ki-alert-warning-fg: var(--ki-text-high-em);
   --ki-alert-warning-border: var(--ki-outline-high-em);
+  --ki-alert-shell-padding: var(--ki-space-zero);
+  --ki-alert-shell-radius: var(--ki-radius-component-lg);
+  --ki-alert-shell-bg: var(--ki-color-transparent-black);
+  --ki-alert-card-shadow: 0 0 0 0 var(--ki-color-transparent-black);
   --ki-avatar-group-counter-border-color: var(--ki-outline-none);
   --ki-avatar-group-counter-shadow: 0 0 0 0 var(--ki-color-transparent-black);
   --ki-avatar-border-color: var(--ki-outline-none);
@@ -602,6 +604,7 @@
     --ki-surface-special-blur-base-light: var(--ki-surface-special-light-s0-dark-s3);
     --ki-surface-special-blur-base-dark: var(--ki-surface-special-light-s0-dark-s3);
     --ki-surface-special-secondary-alpha-base: var(--ki-surface-special-light-s2-dark-s3);
+    --ki-alert-shell-bg: var(--ki-surface-s1);
   }
 }
 
@@ -611,6 +614,7 @@
   --ki-surface-special-blur-base-light: var(--ki-surface-special-light-s0-dark-s3);
   --ki-surface-special-blur-base-dark: var(--ki-surface-special-light-s0-dark-s3);
   --ki-surface-special-secondary-alpha-base: var(--ki-surface-special-light-s2-dark-s3);
+  --ki-alert-shell-bg: var(--ki-surface-s1);
 }
 
 @media (prefers-contrast: more) {

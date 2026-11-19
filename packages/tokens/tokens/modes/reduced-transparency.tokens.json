@@ -55,6 +55,22 @@
           "$description": "No backdrop blur behind the opaque listbox."
         }
       }
+    },
+    "alert": {
+      "shell": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s1}",
+          "$description": "Alert shell wash (inverse-white alpha 3) as the opaque s1 step it reads as over the page; its blur already drops through the semantic backdrop blur."
+        }
+      },
+      "neutral": {
+        "icon-bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-base-em}",
+          "$description": "Neutral alert icon frame (primary-base-em-alpha) as the opaque primary-base-em surface of the same tone and emphasis, as the tone tints become their base-em surfaces."
+        }
+      }
     }
   }
 }

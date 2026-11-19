@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "dc52ce988ef80f757ba2498fcf74980a82463d0fb75962ba22df3d9f9e98f158",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "ki-alert takes the MarsUI Alert master anatomy (spec 011 amendment A1), cumulative since baseline 0.0.0 and superseding declaration cross-engine-components (its deltas, and those of every declaration it supersedes, remain as declared there). Additive surface: ki-alert gains the slots icon and actions and the parts card, icon and actions; the alert part stays the outermost element, now a shell around the card. Nineteen component tokens are added: --ki-alert-shell-{padding,radius,bg,backdrop-blur}, --ki-alert-card-shadow, --ki-alert-icon-{size,radius,glyph-size}, --ki-alert-actions-gap and --ki-alert-<tone>-icon-{bg,fg} for the five tones (1204 + 19 = 1223 public tokens); the reduced-transparency mode gains opaque values for --ki-alert-shell-bg and --ki-alert-neutral-icon-bg. No token, prop, event, part or slot is removed or renamed. Value changes: --ki-alert-radius moves from 10px (radius.component.md) to 16px (radius.big-component.xs), the card radius of the master; in onmars every --ki-alert-<tone>-bg resolves to surface.special.light-s0-dark-s2 and every --ki-alert-<tone>-fg to text.high-em, because the tone is now drawn on the icon alone (FR-022); material3 keeps its per-tone card tints and flattens shell and card into one box through its own overrides. Behaviour: when the application sets dismissed while focus is inside the alert, on the dismiss control or a slotted action, focus moves on as user dismissal does (FR-019); ki-dismiss still fires only for the dismiss control. The class signature of KiAlert changes (componentWillLoad and a dismissed watcher), and the gate classifies every module symbol signature change as MAJOR, so this candidate is declared major; the cumulative delta since 0.0.0 was already MAJOR. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

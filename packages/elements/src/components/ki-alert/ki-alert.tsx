@@ -1,4 +1,4 @@
-import { Component, Element, Event, type EventEmitter, h, Prop } from '@stencil/core';
+import { Component, Element, Event, type EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -25,10 +25,27 @@ import { type KiAlertTone, liveExposureForTone } from './ki-alert.tone.js';
  * page load are exposed with their role but platform announcement is not
  * guaranteed.
  *
+ * Every non-neutral alert should carry an icon: in the onmars theme the tone
+ * is drawn on the icon alone.
+ *
  * @slot - Message body. It lives inside the live-region boundary.
- * @part alert - Outer alert surface: tone background, border, radius, and padding.
+ * @slot icon - Optional decorative glyph shown in a round frame at the top of
+ * the card, in the tone's colors. Hidden from assistive technology: it never
+ * carries meaning the heading and message lack. When to use: give every
+ * non-neutral alert an icon. When NOT to use: never as the only cue for the
+ * message.
+ * @slot actions - Optional responses to this message, in a row at the bottom
+ * of the card, outside the live region. Slot `size="sm"` buttons. The alert
+ * never activates them and an action does not dismiss the alert; the
+ * application does, by setting `dismissed`. When NOT to use: a response the
+ * person cannot skip belongs in `ki-dialog`.
+ * @part alert - Outer shell around the card: padding, radius, wash and blur.
+ * @part card - Card holding the icon, text, actions and dismiss control: tone
+ * background, border, radius, padding and elevation.
+ * @part icon - Round frame around the `icon` slot, rendered only when it holds content.
  * @part heading - Optional emphasized heading, rendered only when non-empty.
  * @part message - Message body wrapper around the default slot.
+ * @part actions - Row around the `actions` slot, rendered only when it holds content.
  * @part dismiss - Native dismiss button, rendered only when dismissible.
  */
 @Component({
@@ -116,13 +133,42 @@ export class KiAlert {
   @Event({ eventName: 'ki-dismiss', bubbles: true, composed: true, cancelable: false })
   private readonly kiDismiss!: EventEmitter<null>;
 
-  private readonly handleDismiss = (): void => {
-    const focusTarget = resolveDismissFocusTarget(this.host);
+  @State() private hasIcon = false;
 
-    this.dismissed = true;
+  @State() private hasActions = false;
+
+  /**
+   * However the alert stops displaying — the dismiss control or the
+   * application setting `dismissed` from a slotted action — focus inside it
+   * is handed on before the subtree goes (FR-019). The watcher runs when the
+   * property changes, before the re-render hides the host.
+   */
+  @Watch('dismissed')
+  protected dismissedChanged(dismissed: boolean): void {
+    if (!dismissed) {
+      return;
+    }
+    const focusTarget = resolveDismissFocusTarget(this.host);
     if (focusTarget) {
       focusThroughShadow(focusTarget);
     }
+  }
+
+  componentWillLoad(): void {
+    // Children parsed before the element upgraded are already assigned; the
+    // slotchange listeners below catch the ones that arrive later.
+    this.hasIcon = this.host.querySelector(':scope > [slot="icon"]') !== null;
+    this.hasActions = this.host.querySelector(':scope > [slot="actions"]') !== null;
+  }
+
+  private readonly syncSlotState = (): void => {
+    const root = this.host.shadowRoot;
+    this.hasIcon = slotHoldsContent(root?.querySelector('slot[name="icon"]'));
+    this.hasActions = slotHoldsContent(root?.querySelector('slot[name="actions"]'));
+  };
+
+  private readonly handleDismiss = (): void => {
+    this.dismissed = true;
     this.kiDismiss.emit(null);
   };
 
@@ -133,34 +179,56 @@ export class KiAlert {
 
     const heading = this.heading?.trim();
 
+    // DOM order is reading order (FR-018): text, then the dismiss control in
+    // the card's top corner, then the actions at its bottom.
     return (
       <div part="alert">
-        <div class="live" role={liveExposureForTone(this.tone)}>
-          {heading ? <strong part="heading">{heading}</strong> : null}
-          <div part="message">
-            <slot />
+        <div part="card" class={{ 'has-icon': this.hasIcon, 'has-actions': this.hasActions }}>
+          <span part="icon" aria-hidden="true">
+            <slot name="icon" onSlotchange={this.syncSlotState} />
+          </span>
+          <div class="live" role={liveExposureForTone(this.tone)}>
+            {heading ? <strong part="heading">{heading}</strong> : null}
+            <div part="message">
+              <slot />
+            </div>
+          </div>
+          {this.dismissible ? (
+            <button
+              type="button"
+              tabIndex={0}
+              part="dismiss"
+              aria-label={this.dismissLabel}
+              onClick={this.handleDismiss}
+              onKeyDown={startKeyboardPress}
+              onKeyUp={releaseKeyboardPress}
+              onBlur={endKeyboardPress}
+            >
+              <svg aria-hidden="true" viewBox="0 0 16 16">
+                <path
+                  fill="currentColor"
+                  d="M3.3 2.3 8 7l4.7-4.7 1 1L9 8l4.7 4.7-1 1L8 9l-4.7 4.7-1-1L7 8 2.3 3.3z"
+                />
+              </svg>
+            </button>
+          ) : null}
+          <div part="actions">
+            <slot name="actions" onSlotchange={this.syncSlotState} />
           </div>
         </div>
-        {this.dismissible ? (
-          <button
-            type="button"
-            tabIndex={0}
-            part="dismiss"
-            aria-label={this.dismissLabel}
-            onClick={this.handleDismiss}
-            onKeyDown={startKeyboardPress}
-            onKeyUp={releaseKeyboardPress}
-            onBlur={endKeyboardPress}
-          >
-            <svg aria-hidden="true" viewBox="0 0 16 16">
-              <path
-                fill="currentColor"
-                d="M3.3 2.3 8 7l4.7-4.7 1 1L9 8l4.7 4.7-1 1L8 9l-4.7 4.7-1-1L7 8 2.3 3.3z"
-              />
-            </svg>
-          </button>
-        ) : null}
       </div>
     );
   }
+}
+
+/** A slot holding only whitespace counts as empty. */
+function slotHoldsContent(slot: HTMLSlotElement | null | undefined): boolean {
+  return (
+    slot?.assignedNodes({ flatten: true }).some((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        return true;
+      }
+      return (node.textContent ?? '').trim().length > 0;
+    }) ?? false
+  );
 }

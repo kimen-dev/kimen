@@ -103,6 +103,33 @@
       },
       "border-width": {
         "$value": "{ki.space.xxs}"
+      },
+      "shell": {
+        "padding": {
+          "$value": "{ki.space.zero}",
+          "$description": "Material 3 has no frame around the alert: the shell takes no padding, so the card is the one container."
+        },
+        "radius": {
+          "$value": "{ki.radius.component.lg}",
+          "$description": "Material 3 shell radius matches the 12dp card it no longer frames."
+        },
+        "bg": {
+          "$value": "{ki.color.transparent.black}",
+          "$description": "Material 3 shell paints nothing: the card is the one container."
+        }
+      },
+      "card": {
+        "shadow": {
+          "$value": {
+            "color": "{ki.color.transparent.black}",
+            "offsetX": 0,
+            "offsetY": 0,
+            "blur": 0,
+            "spread": 0
+          },
+          "$type": "shadow",
+          "$description": "Material 3 alert card is flat (container elevation level0), so the shadow is transparent and the alert reads as one box."
+        }
       }
     }
   }

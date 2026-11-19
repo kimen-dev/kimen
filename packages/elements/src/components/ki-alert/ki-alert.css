@@ -4,6 +4,10 @@
   --_ki-alert-bg: var(--ki-alert-neutral-bg);
   --_ki-alert-fg: var(--ki-alert-neutral-fg);
   --_ki-alert-border: var(--ki-alert-neutral-border);
+  --_ki-alert-icon-bg: var(--ki-alert-neutral-icon-bg);
+  --_ki-alert-icon-fg: var(--ki-alert-neutral-icon-fg);
+  --_ki-alert-shell-padding: calc(var(--ki-alert-shell-padding) * var(--ki-density-space-scale));
+  --_ki-alert-actions-gap: calc(var(--ki-alert-actions-gap) * var(--ki-density-space-scale));
   --_ki-alert-padding-inline: calc(var(--ki-alert-padding-inline) * var(--ki-density-space-scale));
   --_ki-alert-padding-block: calc(var(--ki-alert-padding-block) * var(--ki-density-space-scale));
   --_ki-alert-gap: calc(var(--ki-alert-gap) * var(--ki-density-space-scale));
@@ -33,40 +37,106 @@
   --_ki-alert-bg: var(--ki-alert-success-bg);
   --_ki-alert-fg: var(--ki-alert-success-fg);
   --_ki-alert-border: var(--ki-alert-success-border);
+  --_ki-alert-icon-bg: var(--ki-alert-success-icon-bg);
+  --_ki-alert-icon-fg: var(--ki-alert-success-icon-fg);
 }
 
 :host([tone="danger"]) {
   --_ki-alert-bg: var(--ki-alert-danger-bg);
   --_ki-alert-fg: var(--ki-alert-danger-fg);
   --_ki-alert-border: var(--ki-alert-danger-border);
+  --_ki-alert-icon-bg: var(--ki-alert-danger-icon-bg);
+  --_ki-alert-icon-fg: var(--ki-alert-danger-icon-fg);
 }
 
 :host([tone="info"]) {
   --_ki-alert-bg: var(--ki-alert-info-bg);
   --_ki-alert-fg: var(--ki-alert-info-fg);
   --_ki-alert-border: var(--ki-alert-info-border);
+  --_ki-alert-icon-bg: var(--ki-alert-info-icon-bg);
+  --_ki-alert-icon-fg: var(--ki-alert-info-icon-fg);
 }
 
 :host([tone="warning"]) {
   --_ki-alert-bg: var(--ki-alert-warning-bg);
   --_ki-alert-fg: var(--ki-alert-warning-fg);
   --_ki-alert-border: var(--ki-alert-warning-border);
+  --_ki-alert-icon-bg: var(--ki-alert-warning-icon-bg);
+  --_ki-alert-icon-fg: var(--ki-alert-warning-icon-fg);
 }
 
+/* MarsUI Alert master (12074:6202): a washed, blurred shell around an
+ * elevated card. A theme flattens the two into one box through tokens alone
+ * (no shell padding, fill or blur; no card elevation). Stencil does not
+ * autoprefix: the -webkit- alias ships explicitly for Safari. */
 [part="alert"] {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--_ki-alert-gap);
+  display: block;
   box-sizing: border-box;
   inline-size: 100%;
+  padding: var(--_ki-alert-shell-padding);
+  border-radius: var(--ki-alert-shell-radius);
+  background: var(--ki-alert-shell-bg);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(var(--ki-alert-shell-backdrop-blur));
+  backdrop-filter: blur(var(--ki-alert-shell-backdrop-blur));
+}
+
+/* The card stacks the icon frame, the text and the actions row, 12px apart;
+ * the dismiss control sits in its top inline-end corner, outside the stack. */
+[part="card"] {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--_ki-alert-gap);
+  box-sizing: border-box;
   padding-block: var(--_ki-alert-padding-block);
   padding-inline: var(--_ki-alert-padding-inline);
   border: var(--_ki-alert-border-width) solid var(--_ki-alert-border);
   border-radius: var(--_ki-alert-radius);
   background: var(--_ki-alert-bg);
+  box-shadow: var(--ki-alert-card-shadow);
   color: var(--_ki-alert-fg);
   font-size: var(--_ki-alert-font-size);
   line-height: var(--_ki-alert-line-height);
+}
+
+/* The tone is drawn here (FR-022): a round frame in the tone's base-em alpha
+ * fill, the glyph in its high-em ink. Presentational: aria-hidden in the
+ * template. With nothing slotted it takes no space, gap included. */
+[part="icon"] {
+  display: none;
+  place-items: center;
+  align-self: flex-start;
+  box-sizing: border-box;
+  inline-size: var(--ki-alert-icon-size);
+  block-size: var(--ki-alert-icon-size);
+  border-radius: var(--ki-alert-icon-radius);
+  background: var(--_ki-alert-icon-bg);
+  color: var(--_ki-alert-icon-fg);
+}
+
+.has-icon > [part="icon"] {
+  display: inline-grid;
+}
+
+[part="icon"] ::slotted(*) {
+  inline-size: var(--ki-alert-icon-glyph-size);
+  block-size: var(--ki-alert-icon-glyph-size);
+}
+
+/* Responses to the message, in source order from the inline start; long
+ * labels wrap the row instead of overflowing the card. Outside the live
+ * region; the alert never restyles them. */
+[part="actions"] {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--_ki-alert-actions-gap);
+}
+
+.has-actions > [part="actions"] {
+  display: flex;
 }
 
 /* MarsUI Alert master close button (12074:6202): a raised 24px circular chip
@@ -76,8 +146,10 @@
  * secondary ki-button. Stencil does not autoprefix: the -webkit- alias ships
  * explicitly for Safari. */
 [part="dismiss"] {
+  position: absolute;
+  inset-block-start: var(--_ki-alert-padding-block);
+  inset-inline-end: var(--_ki-alert-padding-inline);
   display: inline-grid;
-  flex: 0 0 auto;
   place-items: center;
   box-sizing: border-box;
   min-inline-size: var(--_ki-alert-dismiss-size);
@@ -137,11 +209,17 @@
 
 .live {
   display: grid;
-  flex: 1 1 auto;
 
   /* MarsUI Text_wrap: heading→description stack gap is Space/xs (4px), not
    * the outer 12px card gap. */
   gap: var(--ki-alert-text-gap);
+}
+
+/* Without an icon the text takes the card's first line, which it shares with
+ * the dismiss control: it leaves the control's size plus the card gap free at
+ * its inline end (FR-023). With an icon, the control shares the icon's row. */
+:host([dismissible]) [part="card"]:not(.has-icon) > .live {
+  padding-inline-end: calc(var(--_ki-alert-dismiss-size) + var(--_ki-alert-gap));
 }
 
 [part="heading"] {
@@ -200,12 +278,16 @@
  * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
  * are dropped, and only system colours — that palette — can be named.
  *
- * The alert is told from the page by its tone fill alone, and a forced
- * palette removes it. It gets an edge.
+ * The alert is told from the page by its fills and elevation alone, and a
+ * forced palette removes them. Its outer edge is drawn instead.
  * `thin` is the browser's own hairline: a theme may set a border token to
- * zero, never this. */
+ * zero, never this. The icon keeps its glyph in the forced text color. */
 @media (forced-colors: active) {
   [part="alert"] {
     border: thin solid CanvasText;
+  }
+
+  [part="icon"] {
+    color: CanvasText;
   }
 }

@@ -46,6 +46,8 @@ export namespace Components {
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
      * guaranteed.
+     * Every non-neutral alert should carry an icon: in the onmars theme the tone
+     * is drawn on the icon alone.
      */
     interface KiAlert {
         /**
@@ -1013,6 +1015,8 @@ declare global {
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
      * guaranteed.
+     * Every non-neutral alert should carry an icon: in the onmars theme the tone
+     * is drawn on the icon alone.
      */
     interface HTMLKiAlertElement extends Components.KiAlert, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiAlertElementEventMap>(type: K, listener: (this: HTMLKiAlertElement, ev: KiAlertCustomEvent<HTMLKiAlertElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1631,6 +1635,8 @@ declare namespace LocalJSX {
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
      * guaranteed.
+     * Every non-neutral alert should carry an icon: in the onmars theme the tone
+     * is drawn on the icon alone.
      */
     interface KiAlert {
         /**
@@ -2810,6 +2816,8 @@ declare module "@stencil/core" {
              * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
              * page load are exposed with their role but platform announcement is not
              * guaranteed.
+             * Every non-neutral alert should carry an icon: in the onmars theme the tone
+             * is drawn on the icon alone.
              */
             "ki-alert": LocalJSX.IntrinsicElements["ki-alert"] & JSXBase.HTMLAttributes<HTMLKiAlertElement>;
             /**
