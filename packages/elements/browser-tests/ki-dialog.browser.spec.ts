@@ -96,7 +96,19 @@ async function mountDialog(
     () => Boolean(el.shadowRoot?.querySelector('dialog')),
     'ki-dialog rendered shadow anatomy',
   );
+  // The footer region shows its actions one render after the dialog loads.
+  // Until then they cannot take focus, so a test that opens the dialog and
+  // presses Tab at once would race that render. The enter transition used to
+  // hide the race; under reduced motion there is none, and nothing may rest
+  // on it.
+  await waitFor(() => footerSettled(el), 'ki-dialog footer region matches its actions');
   return el;
+}
+
+/** The footer region is shown exactly when the dialog has footer actions. */
+function footerSettled(el: KiDialogElement): boolean {
+  const footer = el.shadowRoot?.querySelector<HTMLElement>('[part="footer"]');
+  return footer?.hidden === !el.querySelector('[slot="footer"]');
 }
 
 function internalDialog(el: KiDialogElement): HTMLDialogElement {
@@ -1061,7 +1073,8 @@ describe('ki-dialog boolean presence in a real browser', () => {
 
     expect(el.open).toBe(true);
     expect(internalDialog(el).matches(':modal')).toBe(true);
-    expect(el.getAttribute('open')).toBe('');
+    // Normalized when the dialog next renders, after the native open above.
+    await expect.poll(() => el.getAttribute('open')).toBe('');
     await el.close();
   });
 
@@ -1073,8 +1086,9 @@ describe('ki-dialog boolean presence in a real browser', () => {
 
     expect(el.open).toBe(true);
     expect(internalDialog(el).matches(':modal')).toBe(true);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('open')).toBe('');
+    // Presence is normalized: the host attribute stays, with an empty value,
+    // once the dialog next renders (after the native open above).
+    await expect.poll(() => el.getAttribute('open')).toBe('');
     await el.close();
   });
 });
