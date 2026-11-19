@@ -29,9 +29,16 @@ const LEGACY_BACKDROP_BLURS = {
   'ki-video': ['--ki-video-backdrop-blur'],
 };
 
-export const isLegacyBackdropBlur = (tag, cssName, contents, index) =>
-  LEGACY_BACKDROP_BLURS[tag]?.includes(cssName) &&
-  contents.slice(index - 5, index + cssName.length + 6) === `blur(var(${cssName}))`;
+export function isLegacyBackdropBlur(tag, cssName, contents, index) {
+  if (LEGACY_BACKDROP_BLURS[tag]?.includes(cssName) !== true) return false;
+
+  const start = Math.max(contents.lastIndexOf('{', index), contents.lastIndexOf(';', index)) + 1;
+  const prefix = contents.slice(start, index);
+  return (
+    /^\s*--_ki-[a-z0-9-]+-backdrop-filter:\s*blur\($/u.test(prefix) &&
+    contents.slice(index, index + cssName.length + 6) === `var(${cssName}))`
+  );
+}
 
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const compareText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
@@ -475,7 +482,9 @@ export const parseTokenComposition = ({ id, theme, scheme, sources }) => {
 
     if (record.layer !== 'primitive') {
       const literalPaths =
-        record.layer === 'semantic' && BLUR_REFERENCE_PATTERN.test(record.value)
+        record.layer === 'semantic' &&
+        typeof record.value === 'string' &&
+        BLUR_REFERENCE_PATTERN.test(record.value)
           ? []
           : disallowedLiteralPaths(record.value);
       if (literalPaths.length > 0) {

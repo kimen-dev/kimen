@@ -15,12 +15,12 @@ import {
 test('legacy backdrop blur reads are restricted to their original filter consumers', () => {
   const name = '--ki-button-backdrop-blur';
   const bridge = `button { --_ki-button-backdrop-filter: blur(var(${name})); }`;
-  const unrelatedValue = `button { inline-size: var(${name}); }`;
+  const directFilter = `button { backdrop-filter: blur(var(${name})); }`;
 
   assert.equal(isLegacyBackdropBlur('ki-button', name, bridge, bridge.indexOf('var(')), true);
   assert.equal(isLegacyBackdropBlur('ki-dialog', name, bridge, bridge.indexOf('var(')), false);
   assert.equal(
-    isLegacyBackdropBlur('ki-button', name, unrelatedValue, unrelatedValue.indexOf('var(')),
+    isLegacyBackdropBlur('ki-button', name, directFilter, directFilter.indexOf('var(')),
     false,
   );
 });
