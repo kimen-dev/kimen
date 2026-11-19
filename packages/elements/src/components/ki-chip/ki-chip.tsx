@@ -108,7 +108,7 @@ export class KiChip {
     }
   };
 
-  private readonly remove = (): void => {
+  private readonly requestRemoval = (): void => {
     if (this.disabled) {
       return;
     }
@@ -159,7 +159,7 @@ export class KiChip {
       !event.shiftKey
     ) {
       event.preventDefault();
-      this.remove();
+      this.requestRemoval();
       return;
     }
     startKeyboardPress(event);
@@ -238,7 +238,7 @@ export class KiChip {
                 disabled={this.disabled}
                 aria-labelledby="remove-label label"
                 aria-keyshortcuts={shortcuts}
-                onClick={this.remove}
+                onClick={this.requestRemoval}
                 onKeyDown={this.removeKey}
                 onKeyUp={releaseKeyboardPress}
                 onBlur={endKeyboardPress}

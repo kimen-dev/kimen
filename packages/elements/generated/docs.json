@@ -2305,12 +2305,12 @@
         {
           "event": "dragover",
           "capture": false,
-          "passive": true
+          "passive": false
         },
         {
           "event": "drop",
           "capture": false,
-          "passive": true
+          "passive": false
         },
         {
           "event": "dragend",

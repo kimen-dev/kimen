@@ -188,7 +188,7 @@ export class KiChipGroup {
     event.dataTransfer.setData('application/x-kimen-chip', 'move');
   }
 
-  @Listen('dragover')
+  @Listen('dragover', { passive: false })
   protected handleDragOver(event: DragEvent): void {
     if (this.dragged && this.eventChip(event)) {
       event.preventDefault();
@@ -198,7 +198,7 @@ export class KiChipGroup {
     }
   }
 
-  @Listen('drop')
+  @Listen('drop', { passive: false })
   protected handleDrop(event: DragEvent): void {
     const source = this.dragged;
     const target = this.eventChip(event);
