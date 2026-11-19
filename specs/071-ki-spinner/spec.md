@@ -43,13 +43,13 @@ supplies a localized, task-specific label for both variants.
 
 ## Scenario family coverage
 
-| Family | Coverage |
-| --- | --- |
-| Core | S1, S2, S3 |
-| Keyboard | S4 |
-| Assistive technology | S5, S6 |
-| Form participation | N/A. A spinner reports activity and is never a form control. |
-| Theming | S7, S8, S9, S10, S11 |
+| Family | Scenarios | Justification when N/A |
+| --- | --- | --- |
+| Core behavior | S1, S2, S3 | |
+| Keyboard path | S4 | |
+| Assistive-tech outcome | S5, S6 | |
+| Form participation | | N/A. A spinner reports activity and is never a form control. |
+| Theming | S7, S8, S9, S10, S11 | |
 
 ## Gherkin Scenarios
 

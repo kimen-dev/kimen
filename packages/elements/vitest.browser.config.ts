@@ -36,6 +36,7 @@ const inputDeviceSpecs = [
   pointerCapabilitySpec,
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
+  'src/components/ki-spinner/ki-spinner.pointer.browser.spec.ts',
 ];
 const browserSpecPatterns = (suffix: string): string[] =>
   ['browser-tests', 'src/components/ki-*'].map(
