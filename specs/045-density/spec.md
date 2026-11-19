@@ -192,6 +192,12 @@ declaration on an element outranks what the root passes down.
   painted later receives it; a radio group or a toolbar at its default
   spacing is such a case. Spacing touch controls apart is the page's
   decision; the targets themselves never shrink.
+- The extended target is centred on the painted control on both axes
+  (issue #427, the founder's decision of 2026-11-19): a checkbox, a radio or
+  an sm switch reaches half the difference between the target and the
+  control past the control's inline-start edge too, up to 13px for an 18px
+  box, and so may lie over the content before it in a tight layout. Inside
+  an ancestor that does not clip its overflow the target stays whole.
 - A control flush against an ancestor that clips its overflow (a card's
   media, a scroll container) loses the part of its target outside it.
 - A mouse resting over the extended target hovers the control: the target

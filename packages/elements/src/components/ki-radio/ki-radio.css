@@ -85,23 +85,26 @@ label {
 }
 
 input {
+  --_ki-radio-target: max(
+    var(--_ki-radio-control-size),
+    var(--_ki-radio-min-target),
+    var(--ki-density-target-min)
+  );
+
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: 0;
+
+  /* Centred on the painted circle on the inline axis too (spec 045 A1-D3,
+     issue 427): the target starts half the difference before the circle,
+     so in a tight layout it may reach over the content before it (A1's
+     documented edge case). Logical, so it holds in both writing directions. */
+  inset-inline-start: calc((var(--_ki-radio-control-size) - var(--_ki-radio-target)) / 2);
   box-sizing: border-box;
 
   /* The pointer target: never under the region's target minimum (spec 045
      A1-D3), which extends it without moving or growing the painted circle. */
-  inline-size: max(
-    var(--_ki-radio-control-size),
-    var(--_ki-radio-min-target),
-    var(--ki-density-target-min)
-  );
-  block-size: max(
-    var(--_ki-radio-control-size),
-    var(--_ki-radio-min-target),
-    var(--ki-density-target-min)
-  );
+  inline-size: var(--_ki-radio-target);
+  block-size: var(--_ki-radio-target);
   margin: 0;
   opacity: 0;
   transform: translateY(-50%);
