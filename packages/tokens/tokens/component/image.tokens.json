@@ -22,11 +22,11 @@
         "$description": "Optional background image over the media fill."
       },
       "fallback-backdrop-filter": {
-        "$value": "{ki.effect.no-backdrop-filter}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete filter applied behind the media surface."
       },
       "fallback-icon-size": {
-        "$value": "{ki.glyph.media-size}",
+        "$value": "{ki.glyph.size.md}",
         "$description": "Inline and block size of the unavailable-image symbol."
       },
       "fallback-icon-stroke-width": {

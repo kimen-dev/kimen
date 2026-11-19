@@ -5,9 +5,9 @@
 //
 //   one <style>   the default token stylesheet and the page contract
 //                 (@kimen/tokens), minified
-//   one <script>  every catalog component definition (@kimen/elements), the
-//                 guarded renderer and its validator (@kimen/catalog) and the
-//                 host bridge (this package)
+//   one <script>  every catalog component definition and the selected glyphs
+//                 (@kimen/elements), the guarded renderer and its validator
+//                 (@kimen/catalog) and the host bridge (this package)
 //
 // and its content policy names exactly those two elements by digest: nothing
 // else in the document can run or style, and nothing is fetchable.
@@ -40,6 +40,9 @@ const tokenStylesheets = ['tokens.css', 'base.css'].map((file) =>
   resolve(packageRoot, '../tokens/dist/css', file),
 );
 const catalogDist = dirname(fileURLToPath(import.meta.resolve('@kimen/catalog')));
+const { stockSurfaceIconModules } = await import(
+  new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href
+);
 
 // The registered set IS the catalog (FR-011, Art. I): every component the
 // guarded renderer may render gets its definition, and nothing is hand-listed.
@@ -62,6 +65,7 @@ const componentModules = tags.map((tag) => {
 const VALIDATOR_CONFIG = 'kimen-surface:validator-config';
 const entry = [
   `import ${JSON.stringify(VALIDATOR_CONFIG)};`,
+  ...stockSurfaceIconModules.map((file) => `import ${JSON.stringify(file)};`),
   ...componentModules.map(
     (file, index) =>
       `import { defineCustomElement as define${index} } from ${JSON.stringify(file)};`,

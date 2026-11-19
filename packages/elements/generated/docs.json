@@ -17,7 +17,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone."
+          "text": "transient confirmations that expire on their own belong to\n`ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to\nanother element belong to `ki-badge`; blocking decisions belong to\n`ki-dialog`; inline field-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone."
         },
         {
           "name": "slot",
@@ -133,7 +133,7 @@
           "mutable": false,
           "attr": "dismissible",
           "reflectToAttr": true,
-          "docs": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+          "docs": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`.",
           "docsTags": [
             {
               "name": "default",
@@ -314,7 +314,11 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), for presence/verification adornments overlaid on the corner\n(a future overlay concern shared with the nav badge), or unlabeled when no\nadjacent text names the identity."
+          "text": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), or unlabeled when no adjacent text names the identity.\nUse the counter slot for a decorative count or presence dot."
+        },
+        {
+          "name": "slot",
+          "text": "counter - Decorative ki-counter. Counts sit at block-start inline-end\nand dots at block-end inline-end. Include its meaning in the avatar label."
         },
         {
           "name": "part",
@@ -495,7 +499,12 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
+      "slots": [
+        {
+          "name": "counter",
+          "docs": "Decorative ki-counter. Counts sit at block-start inline-end\nand dots at block-end inline-end. Include its meaning in the avatar label."
+        }
+      ],
       "parts": [
         {
           "name": "avatar",
@@ -676,7 +685,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (a future, separate concern)."
+          "text": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (use ki-counter)."
         },
         {
           "name": "slot",
@@ -1711,6 +1720,214 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-counter/ki-counter.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-counter",
+      "docs": "A decorative count or dot over a trigger or avatar.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics."
+        },
+        {
+          "name": "part",
+          "text": "indicator - Painted pill or dot, including the surrounding ring."
+        }
+      ],
+      "usage": {
+        "examples": "# Notification count and presence\n\nProvide the actual count or presence in the host's label. The visible counter\nis decorative, so a label can expose the full count even if the pill says\n`99+`.\n\n```html\n<ki-icon-button variant=\"secondary\" label=\"Notifications, 3 unread\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\">\n    <path d=\"M6 17h12l-2-3V9a4 4 0 0 0-8 0v5l-2 3Zm4 3h4\" stroke-width=\"2\" />\n  </svg>\n  <ki-counter slot=\"counter\" value=\"3\"></ki-counter>\n</ki-icon-button>\n\n<ki-avatar initials=\"AG\" label=\"Ana García, online\">\n  <ki-counter slot=\"counter\" tone=\"success\" dot></ki-counter>\n</ki-avatar>\n```\n\nThe `for` attribute attaches the indicator to a trigger ID in the same\ndocument or shadow root. Set the trigger's accessible name directly.\n\n```html\n<a id=\"inbox-link\" href=\"/inbox\" aria-label=\"Inbox, 120 unread\">Inbox</a>\n<ki-counter for=\"inbox-link\" value=\"120\" max=\"99\"></ki-counter>\n<p id=\"inbox-updates\" role=\"status\"></p>\n```\n\nFor an important count update, update the trigger name and the counter, then\nwrite one localized announcement to the pre-existing status region.\n"
+      },
+      "props": [
+        {
+          "name": "dot",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "dot",
+          "reflectToAttr": true,
+          "docs": "Show a dot independently of the count, including when the value is zero.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "for",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "for",
+          "reflectToAttr": true,
+          "docs": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": false,
+          "docs": "Largest count displayed in full. Higher values display the cap with a\nplus sign. Fractional caps round down; invalid caps use 99.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "99"
+            }
+          ],
+          "default": "99",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\"",
+          "complexType": {
+            "original": "KiCounterTone",
+            "resolved": "\"danger\" | \"neutral\" | \"primary\" | \"success\"",
+            "references": {
+              "KiCounterTone": {
+                "location": "local",
+                "path": "src/components/ki-counter/ki-counter.tsx",
+                "id": "src/components/ki-counter/ki-counter.tsx::KiCounterTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Semantic palette of the pill or dot. An unknown tone uses danger.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'danger'"
+            }
+          ],
+          "default": "'danger'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Count of unread or pending items. Finite values are rounded down.\nValues below one and non-finite values hide the count.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "indicator",
+          "docs": "Painted pill or dot, including the surrounding ring."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
       "encapsulation": "shadow",
       "tag": "ki-dialog",
@@ -1722,7 +1939,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "non-blocking feedback (`ki-alert`, future `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers."
+          "text": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers."
         },
         {
           "name": "slot",
@@ -2019,6 +2236,412 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-grid/ki-grid.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-grid",
+      "docs": "A passive responsive grid for content items.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "lay out items on responsive tracks with consistent token spacing."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for page shells, painted grouping (use ki-card), or a data grid."
+        },
+        {
+          "name": "slot",
+          "text": "- The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit."
+        },
+        {
+          "name": "part",
+          "text": "grid - The grid layout containing the slotted content."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode."
+        }
+      ],
+      "usage": {
+        "examples": "# Grid examples\n\nAn automatic grid fills its available space with tracks at least as wide as\n`min-column` where room allows. Here the summary takes two tracks when\npossible.\n\n```html\n<ki-grid min-column=\"8rem\" gap=\"xl\">\n  <ki-card data-span=\"2\">Overview</ki-card>\n  <ki-card>Orders</ki-card>\n  <ki-card>Inventory</ki-card>\n  <ki-card>Customers</ki-card>\n</ki-grid>\n```\n\nFor a fixed count, set `columns`. The grid switches to one column when its\nown available inline size drops below 30rem.\n\n```html\n<ki-grid columns=\"3\" gap=\"sm\">\n  <ki-card>Orders</ki-card>\n  <ki-card>Inventory</ki-card>\n  <ki-card>Customers</ki-card>\n</ki-grid>\n```\n"
+      },
+      "props": [
+        {
+          "name": "columns",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "columns",
+          "reflectToAttr": false,
+          "docs": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "gap",
+          "type": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\"",
+          "complexType": {
+            "original": "KiLayoutGap",
+            "resolved": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\"",
+            "references": {
+              "KiLayoutGap": {
+                "location": "import",
+                "path": "../../utils/layout-gap",
+                "id": "src/utils/layout-gap.ts::KiLayoutGap",
+                "referenceLocation": "KiLayoutGap"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "gap",
+          "reflectToAttr": false,
+          "docs": "Kimen spacing step, xl by default. Unsupported values keep the default gap.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'xl'"
+            }
+          ],
+          "default": "'xl'",
+          "values": [
+            {
+              "value": "10xl",
+              "type": "string"
+            },
+            {
+              "value": "11xl",
+              "type": "string"
+            },
+            {
+              "value": "12xl",
+              "type": "string"
+            },
+            {
+              "value": "13xl",
+              "type": "string"
+            },
+            {
+              "value": "14xl",
+              "type": "string"
+            },
+            {
+              "value": "15xl",
+              "type": "string"
+            },
+            {
+              "value": "16xl",
+              "type": "string"
+            },
+            {
+              "value": "17xl",
+              "type": "string"
+            },
+            {
+              "value": "18xl",
+              "type": "string"
+            },
+            {
+              "value": "19xl",
+              "type": "string"
+            },
+            {
+              "value": "20xl",
+              "type": "string"
+            },
+            {
+              "value": "21xl",
+              "type": "string"
+            },
+            {
+              "value": "22xl",
+              "type": "string"
+            },
+            {
+              "value": "23xl",
+              "type": "string"
+            },
+            {
+              "value": "24xl",
+              "type": "string"
+            },
+            {
+              "value": "25xl",
+              "type": "string"
+            },
+            {
+              "value": "26xl",
+              "type": "string"
+            },
+            {
+              "value": "2xl",
+              "type": "string"
+            },
+            {
+              "value": "3xl",
+              "type": "string"
+            },
+            {
+              "value": "4xl",
+              "type": "string"
+            },
+            {
+              "value": "5xl",
+              "type": "string"
+            },
+            {
+              "value": "6xl",
+              "type": "string"
+            },
+            {
+              "value": "7xl",
+              "type": "string"
+            },
+            {
+              "value": "8xl",
+              "type": "string"
+            },
+            {
+              "value": "9xl",
+              "type": "string"
+            },
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            },
+            {
+              "value": "xxs",
+              "type": "string"
+            },
+            {
+              "value": "zero",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minColumn",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min-column",
+          "reflectToAttr": false,
+          "docs": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'15rem'"
+            }
+          ],
+          "default": "'15rem'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit."
+        }
+      ],
+      "parts": [
+        {
+          "name": "grid",
+          "docs": "The grid layout containing the slotted content."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-icon/ki-icon.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-icon",
+      "docs": "A static Lucide glyph selected by name from the application's per-icon imports.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show a named glyph next to text, or give a standalone meaningful\nglyph an accessible label. Import `@kimen/elements/icons/<name>` before\nmounting the component or rendering a guarded surface."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "make an icon interactive, accept arbitrary SVG or URLs, or\nreplace the accessible name of a control. Use the control's own label."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-icon examples\n\nImport the exact Lucide names used by your markup before you mount it.\n\n```js\nimport '@kimen/elements/icons/circle-check';\nimport '@kimen/elements/icons/triangle-alert';\nimport { defineCustomElement } from '@kimen/elements/ki-icon';\n\ndefineCustomElement();\n```\n\nA confirmation has adjacent text, so the glyph is decorative.\n\n```html\n<span style=\"color: var(--ki-text-success-high-em)\">\n  <ki-icon name=\"circle-check\"></ki-icon> Confirmed\n</span>\n```\n\nA standalone meaningful glyph takes its accessible name from the label.\n\n```html\n<ki-icon name=\"triangle-alert\" size=\"lg\" label=\"Warning\"></ki-icon>\n```\n\nFor a guarded catalog surface, import the glyph in the host and reference it\nby name. The icon has no slots or actions.\n\n```json\n{\n  \"type\": \"ki-icon\",\n  \"props\": { \"name\": \"triangle-alert\", \"size\": \"lg\", \"label\": \"Warning\" }\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": false,
+          "docs": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"inherit\" | \"lg\" | \"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiIconSize",
+            "resolved": "\"inherit\" | \"lg\" | \"md\" | \"sm\"",
+            "references": {
+              "KiIconSize": {
+                "location": "local",
+                "path": "src/components/ki-icon/ki-icon.tsx",
+                "id": "src/components/ki-icon/ki-icon.tsx::KiIconSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Glyph size. Inherit follows the surrounding text at 1em.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'inherit'"
+            }
+          ],
+          "default": "'inherit'",
+          "values": [
+            {
+              "value": "inherit",
+              "type": "string"
+            },
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
       "encapsulation": "shadow",
       "tag": "ki-icon-button",
@@ -2035,6 +2658,10 @@
         {
           "name": "slot",
           "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+        },
+        {
+          "name": "slot",
+          "text": "counter - Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
         },
         {
           "name": "part",
@@ -2324,6 +2951,10 @@
         {
           "name": "",
           "docs": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+        },
+        {
+          "name": "counter",
+          "docs": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
         }
       ],
       "parts": [
@@ -2341,9 +2972,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-toast"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-toast": [
+          "ki-icon-button"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-image/ki-image.tsx",
@@ -3402,6 +4039,299 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-link/ki-link.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-link",
+      "docs": "A native navigation link with Kimen ink, underline, and focus styles.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "perform an action on the current page. Use ki-button variant=\"ghost\" for that."
+        },
+        {
+          "name": "slot",
+          "text": "- Descriptive link text. Use phrasing content without nested interactive controls."
+        },
+        {
+          "name": "part",
+          "text": "link - The native anchor that renders the link and receives focus."
+        }
+      ],
+      "usage": {
+        "examples": "## Read a related page\n\n```html\n<p>Read the <ki-link href=\"/docs/catalog\">catalog contract</ki-link> before adding a component.</p>\n```\n\n## Open an external resource\n\n```html\n<ki-link href=\"https://github.com/kimen-dev/kimen\" external>Source on GitHub</ki-link>\n```\n\n## Link from standalone navigation\n\n```html\n<nav aria-label=\"Resources\">\n  <ki-link href=\"/docs\" underline=\"hover\">Documentation</ki-link>\n  <ki-link href=\"/changelog\" variant=\"neutral\" underline=\"hover\">Changelog</ki-link>\n</nav>\n```\n\n## Navigate from a guarded surface\n\nSupply `href` and the default text slot. The surface URL policy applies.\nLeave the action binding unset for native navigation.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-link\",\n    \"props\": { \"href\": \"/docs/catalog\" },\n    \"slots\": { \"\": [\"Catalog contract\"] }\n  }\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "download",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "download",
+          "reflectToAttr": false,
+          "docs": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "external",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "external",
+          "reflectToAttr": false,
+          "docs": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "externalLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "external-label",
+          "reflectToAttr": false,
+          "docs": "Localizable text appended to the accessible name in external mode.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'(opens in a new tab)'"
+            }
+          ],
+          "default": "'(opens in a new tab)'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "rel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "rel",
+          "reflectToAttr": false,
+          "docs": "Space-separated native link relationships. External links always include noopener.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "target",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "target",
+          "reflectToAttr": false,
+          "docs": "Native browsing-context name. External links use _blank.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "underline",
+          "type": "\"always\" | \"hover\"",
+          "complexType": {
+            "original": "KiLinkUnderline",
+            "resolved": "\"always\" | \"hover\"",
+            "references": {
+              "KiLinkUnderline": {
+                "location": "local",
+                "path": "src/components/ki-link/ki-link.tsx",
+                "id": "src/components/ki-link/ki-link.tsx::KiLinkUnderline"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "underline",
+          "reflectToAttr": true,
+          "docs": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'always'"
+            }
+          ],
+          "default": "'always'",
+          "values": [
+            {
+              "value": "always",
+              "type": "string"
+            },
+            {
+              "value": "hover",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"neutral\" | \"primary\"",
+          "complexType": {
+            "original": "KiLinkVariant",
+            "resolved": "\"neutral\" | \"primary\"",
+            "references": {
+              "KiLinkVariant": {
+                "location": "local",
+                "path": "src/components/ki-link/ki-link.tsx",
+                "id": "src/components/ki-link/ki-link.tsx::KiLinkVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Ink role. Primary uses accent ink and neutral uses body ink.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'primary'"
+            }
+          ],
+          "default": "'primary'",
+          "values": [
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "primary",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Descriptive link text. Use phrasing content without nested interactive controls."
+        }
+      ],
+      "parts": [
+        {
+          "name": "link",
+          "docs": "The native anchor that renders the link and receives focus."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-list/ki-list.tsx",
       "encapsulation": "shadow",
       "tag": "ki-list",
@@ -3587,6 +4517,205 @@
         {
           "name": "start",
           "docs": "Leading region wrapper."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-note/ki-note.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-note",
+      "docs": "A compact, static explanation beside a control or inside a card.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance."
+        },
+        {
+          "name": "slot",
+          "text": "- Short explanatory text that carries the full meaning."
+        },
+        {
+          "name": "slot",
+          "text": "icon - A decorative glyph that replaces the tone's built-in icon."
+        },
+        {
+          "name": "part",
+          "text": "note - The surface, including the tint, typography and spacing."
+        },
+        {
+          "name": "part",
+          "text": "icon - The decorative icon frame."
+        },
+        {
+          "name": "part",
+          "text": "message - The explanatory text."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-note usage\n\nPlace one or two lines of static context beside a control or inside a card.\nUse `ki-alert` for results that need announcing, Toast for transient\nconfirmations and the field's `help-text` for field guidance.\n\n```html\n<ki-note>Only workspace owners can change billing details.</ki-note>\n<ki-note tone=\"warning\" size=\"sm\">Changing the slug breaks existing links.</ki-note>\n<ki-note tone=\"info\" icon=\"false\">This link is visible to everyone in the workspace.</ki-note>\n```\n\n## Decorative icon replacement\n\n```html\n<ki-note tone=\"info\">\n  <svg slot=\"icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n    <path d=\"M12 3v18M3 12h18\"></path>\n  </svg>\n  Adding a billing contact gives them access to invoices.\n</ki-note>\n```\n\nThe words convey the message by themselves. The decorative icon is hidden\nfrom assistive technology and adds no tab stop. Start warnings with the\nconsequence.\n"
+      },
+      "props": [
+        {
+          "name": "icon",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "icon",
+          "reflectToAttr": false,
+          "docs": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiNoteSize",
+            "resolved": "\"md\" | \"sm\"",
+            "references": {
+              "KiNoteSize": {
+                "location": "local",
+                "path": "src/components/ki-note/ki-note.tsx",
+                "id": "src/components/ki-note/ki-note.tsx::KiNoteSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Uses caption text at sm and body text at md. Unknown values use md.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
+          "complexType": {
+            "original": "KiNoteTone",
+            "resolved": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
+            "references": {
+              "KiNoteTone": {
+                "location": "import",
+                "path": "./ki-note.icons",
+                "id": "src/components/ki-note/ki-note.icons.ts::KiNoteTone",
+                "referenceLocation": "KiNoteTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Selects the background tint and decorative icon. Unknown values use neutral.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "info",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "value": "warning",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Short explanatory text that carries the full meaning."
+        },
+        {
+          "name": "icon",
+          "docs": "A decorative glyph that replaces the tone's built-in icon."
+        }
+      ],
+      "parts": [
+        {
+          "name": "icon",
+          "docs": "The decorative icon frame."
+        },
+        {
+          "name": "message",
+          "docs": "The explanatory text."
+        },
+        {
+          "name": "note",
+          "docs": "The surface, including the tint, typography and spacing."
         }
       ],
       "states": [],
@@ -4966,6 +6095,569 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-spinner/ki-spinner.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-spinner",
+      "docs": "A compact status for an indeterminate wait.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show brief inline activity such as saving a change or running a\ntool. Choose typing dots for an assistant that is thinking. Set a localized\nlabel that names the activity and mount the spinner when the wait starts."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "use ki-progress for page-level work or a known fraction of\na task. Use ki-alert for persistent notices."
+        },
+        {
+          "name": "part",
+          "text": "ring - Rotating ring with a track and indicator, in the ring variant."
+        },
+        {
+          "name": "part",
+          "text": "dots - Group of three animated dots, in the dots variant."
+        },
+        {
+          "name": "part",
+          "text": "label - Activity text, adjacent to the graphic when show-label is set."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-spinner examples\n\n## Inline save status\n\nInsert the spinner when the save begins. Remove it when the save ends.\n\n```html\n<ki-spinner size=\"sm\" label=\"Saving changes…\" show-label></ki-spinner>\n```\n\n## Assistant status\n\nUse a visually hidden label when the surrounding UI already describes the\nactivity.\n\n```html\n<ki-spinner variant=\"dots\" label=\"Assistant is thinking\"></ki-spinner>\n```\n\n## Custom-elements entry point\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-spinner';\n\ndefineCustomElement();\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-label",
+          "reflectToAttr": false,
+          "docs": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\"",
+          "complexType": {
+            "original": "'sm' | 'md' | 'lg'",
+            "resolved": "\"lg\" | \"md\" | \"sm\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"dots\" | \"ring\"",
+          "complexType": {
+            "original": "'ring' | 'dots'",
+            "resolved": "\"dots\" | \"ring\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": false,
+          "docs": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'ring'"
+            }
+          ],
+          "default": "'ring'",
+          "values": [
+            {
+              "value": "dots",
+              "type": "string"
+            },
+            {
+              "value": "ring",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "dots",
+          "docs": "Group of three animated dots, in the dots variant."
+        },
+        {
+          "name": "label",
+          "docs": "Activity text, adjacent to the graphic when show-label is set."
+        },
+        {
+          "name": "ring",
+          "docs": "Rotating ring with a track and indicator, in the ring variant."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-stack/ki-stack.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-stack",
+      "docs": "A passive flex layout for content on one axis.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for page shells, painted grouping (use ki-card), or tabular data."
+        },
+        {
+          "name": "slot",
+          "text": "- The content in reading order. A direct child with data-grow takes a share of free space."
+        },
+        {
+          "name": "part",
+          "text": "stack - The flex layout containing the slotted content."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step."
+        }
+      ],
+      "usage": {
+        "examples": "# Stack examples\n\nA vertical sequence uses the default direction and the medium spacing step.\n\n```html\n<ki-stack>\n  <h2>Account</h2>\n  <p>Review the settings for your workspace.</p>\n  <ki-button variant=\"secondary\">Edit settings</ki-button>\n</ki-stack>\n```\n\nA toolbar keeps its source order with a horizontal axis, wrapping and a\ngrowing label. Place `data-grow` on a direct child to give it a share of the\navailable free space.\n\n```html\n<ki-stack direction=\"row\" gap=\"sm\" justify=\"between\" align=\"center\" wrap>\n  <strong data-grow>Order summary</strong>\n  <ki-button variant=\"secondary\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save</ki-button>\n</ki-stack>\n```\n"
+      },
+      "props": [
+        {
+          "name": "align",
+          "type": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\"",
+          "complexType": {
+            "original": "KiStackAlign",
+            "resolved": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\"",
+            "references": {
+              "KiStackAlign": {
+                "location": "local",
+                "path": "src/components/ki-stack/ki-stack.tsx",
+                "id": "src/components/ki-stack/ki-stack.tsx::KiStackAlign"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "align",
+          "reflectToAttr": true,
+          "docs": "Cross-axis alignment, stretch by default.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'stretch'"
+            }
+          ],
+          "default": "'stretch'",
+          "values": [
+            {
+              "value": "baseline",
+              "type": "string"
+            },
+            {
+              "value": "center",
+              "type": "string"
+            },
+            {
+              "value": "end",
+              "type": "string"
+            },
+            {
+              "value": "start",
+              "type": "string"
+            },
+            {
+              "value": "stretch",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "direction",
+          "type": "\"column\" | \"row\"",
+          "complexType": {
+            "original": "KiStackDirection",
+            "resolved": "\"column\" | \"row\"",
+            "references": {
+              "KiStackDirection": {
+                "location": "local",
+                "path": "src/components/ki-stack/ki-stack.tsx",
+                "id": "src/components/ki-stack/ki-stack.tsx::KiStackDirection"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "direction",
+          "reflectToAttr": true,
+          "docs": "Main axis, column by default.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'column'"
+            }
+          ],
+          "default": "'column'",
+          "values": [
+            {
+              "value": "column",
+              "type": "string"
+            },
+            {
+              "value": "row",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "gap",
+          "type": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\"",
+          "complexType": {
+            "original": "KiLayoutGap",
+            "resolved": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\"",
+            "references": {
+              "KiLayoutGap": {
+                "location": "import",
+                "path": "../../utils/layout-gap",
+                "id": "src/utils/layout-gap.ts::KiLayoutGap",
+                "referenceLocation": "KiLayoutGap"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "gap",
+          "reflectToAttr": false,
+          "docs": "Kimen spacing step, md by default. Unsupported values keep the default gap.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "10xl",
+              "type": "string"
+            },
+            {
+              "value": "11xl",
+              "type": "string"
+            },
+            {
+              "value": "12xl",
+              "type": "string"
+            },
+            {
+              "value": "13xl",
+              "type": "string"
+            },
+            {
+              "value": "14xl",
+              "type": "string"
+            },
+            {
+              "value": "15xl",
+              "type": "string"
+            },
+            {
+              "value": "16xl",
+              "type": "string"
+            },
+            {
+              "value": "17xl",
+              "type": "string"
+            },
+            {
+              "value": "18xl",
+              "type": "string"
+            },
+            {
+              "value": "19xl",
+              "type": "string"
+            },
+            {
+              "value": "20xl",
+              "type": "string"
+            },
+            {
+              "value": "21xl",
+              "type": "string"
+            },
+            {
+              "value": "22xl",
+              "type": "string"
+            },
+            {
+              "value": "23xl",
+              "type": "string"
+            },
+            {
+              "value": "24xl",
+              "type": "string"
+            },
+            {
+              "value": "25xl",
+              "type": "string"
+            },
+            {
+              "value": "26xl",
+              "type": "string"
+            },
+            {
+              "value": "2xl",
+              "type": "string"
+            },
+            {
+              "value": "3xl",
+              "type": "string"
+            },
+            {
+              "value": "4xl",
+              "type": "string"
+            },
+            {
+              "value": "5xl",
+              "type": "string"
+            },
+            {
+              "value": "6xl",
+              "type": "string"
+            },
+            {
+              "value": "7xl",
+              "type": "string"
+            },
+            {
+              "value": "8xl",
+              "type": "string"
+            },
+            {
+              "value": "9xl",
+              "type": "string"
+            },
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            },
+            {
+              "value": "xxs",
+              "type": "string"
+            },
+            {
+              "value": "zero",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "justify",
+          "type": "\"between\" | \"center\" | \"end\" | \"start\"",
+          "complexType": {
+            "original": "KiStackJustify",
+            "resolved": "\"between\" | \"center\" | \"end\" | \"start\"",
+            "references": {
+              "KiStackJustify": {
+                "location": "local",
+                "path": "src/components/ki-stack/ki-stack.tsx",
+                "id": "src/components/ki-stack/ki-stack.tsx::KiStackJustify"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "justify",
+          "reflectToAttr": true,
+          "docs": "Main-axis distribution, start by default. Use between to distribute spare space.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'start'"
+            }
+          ],
+          "default": "'start'",
+          "values": [
+            {
+              "value": "between",
+              "type": "string"
+            },
+            {
+              "value": "center",
+              "type": "string"
+            },
+            {
+              "value": "end",
+              "type": "string"
+            },
+            {
+              "value": "start",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "wrap",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "wrap",
+          "reflectToAttr": true,
+          "docs": "Allow items to continue on a new line. Defaults to false.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The content in reading order. A direct child with data-grow takes a share of free space."
+        }
+      ],
+      "parts": [
+        {
+          "name": "stack",
+          "docs": "The flex layout containing the slotted content."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-status/ki-status.tsx",
       "encapsulation": "shadow",
       "tag": "ki-status",
@@ -6287,6 +7979,568 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-toast/ki-toast.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-toast",
+      "docs": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "confirm an action that happened elsewhere on screen (\"Changes\nsaved\", \"Link copied\"), report a background result (\"Export ready\"), or\noffer a quick undo. Raise it into a `ki-toaster`, in markup or with its\n`show()` method; express urgency with `tone`."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "anything the person must read or act on to continue belongs\nto `ki-dialog`; form validation belongs to the field's error text; a lasting\ncondition of the page belongs to `ki-alert`, which stays inline.\n\nAssistive technology note: a toast announces as it appears, so append it\nwhen the event happens; a toast present at initial page load is exposed with\nits role but its announcement is not guaranteed. The heading and the message\nare the whole announcement: the icon, the action and the dismiss button\nstay outside the live region."
+        },
+        {
+          "name": "slot",
+          "text": "- Message text. It lives inside the live-region boundary."
+        },
+        {
+          "name": "slot",
+          "text": "action - At most one action, as a `ki-button size=\"sm\" variant=\"ghost\"`.\nIts own click handler runs, then the toast leaves (`reason: \"action\"`). A\ntoast holding an action never leaves on its own. When NOT to use: a response\nthe person cannot skip belongs in `ki-dialog`."
+        },
+        {
+          "name": "part",
+          "text": "toast - The flat surface: fill, image, edge, radius, padding,\nelevation and backdrop filter."
+        },
+        {
+          "name": "part",
+          "text": "icon - The tone icon, drawn by the component in the tone's ink."
+        },
+        {
+          "name": "part",
+          "text": "heading - Optional bold first line, rendered only when non-empty."
+        },
+        {
+          "name": "part",
+          "text": "message - Message wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "action - Wrapper around the `action` slot, rendered only when it holds content."
+        },
+        {
+          "name": "part",
+          "text": "dismiss - The dismiss `ki-icon-button`, rendered only when `dismissible`."
+        }
+      ],
+      "usage": {
+        "examples": "Put a toast in a `ki-toaster` when something happens; it announces itself as it appears and leaves on its own after 5 seconds. `tone` picks the icon and its ink and the live-region urgency: `danger` exposes `role=\"alert\"`, every other value `role=\"status\"`:\n\n```html\n<ki-toaster>\n  <ki-toast tone=\"success\" heading=\"Changes saved\">Workspace settings are up to date.</ki-toast>\n</ki-toaster>\n```\n\n`duration` (milliseconds) changes the time; `0` keeps the toast until it is dismissed. A toast in the `danger` tone, or holding an action, never leaves on its own, whatever its `duration`. The time stops while the pointer rests on the toaster, while focus is inside it, or while the page is hidden:\n\n```html\n<ki-toast duration=\"8000\">The export is ready in your downloads.</ki-toast>\n<ki-toast tone=\"danger\" heading=\"Upload failed\">The file is larger than 20 MB.</ki-toast>\n```\n\nThe `action` slot takes one ghost `ki-button size=\"sm\"`. Its own click handler runs, then the toast leaves:\n\n```html\n<ki-toast heading=\"Message archived\">\n  The conversation moved to your archive.\n  <ki-button slot=\"action\" variant=\"ghost\" size=\"sm\">Undo</ki-button>\n</ki-toast>\n```\n\n`ki-dismiss` says why the toast left: `detail.reason` is `\"timeout\"`, `\"button\"`, `\"escape\"` or `\"action\"`. `dismissible=\"false\"` drops the dismiss button (Escape still works on a focused toast); `dismiss-label` is the component's only built-in word, so localize it whenever the document language is not English:\n\n```html\n<ki-toast lang=\"es\" dismiss-label=\"Descartar\">Borrador guardado.</ki-toast>\n```\n"
+      },
+      "props": [
+        {
+          "name": "dismissLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "dismiss-label",
+          "reflectToAttr": true,
+          "docs": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Dismiss'"
+            }
+          ],
+          "default": "'Dismiss'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "dismissed",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "dismissed",
+          "reflectToAttr": true,
+          "docs": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "dismissible",
+          "reflectToAttr": true,
+          "docs": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "duration",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "duration",
+          "reflectToAttr": false,
+          "docs": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "heading",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading",
+          "reflectToAttr": true,
+          "docs": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "queued",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "queued",
+          "reflectToAttr": true,
+          "docs": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}",
+          "complexType": {
+            "original": "KiToastTone | (string & {})",
+            "resolved": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}",
+            "references": {
+              "KiToastTone": {
+                "location": "import",
+                "path": "./ki-toast.timing.js",
+                "id": "src/components/ki-toast/ki-toast.timing.ts::KiToastTone",
+                "referenceLocation": "KiToastTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "info",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "value": "warning",
+              "type": "string"
+            },
+            {
+              "type": "string & {}"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-dismiss",
+          "detail": "KiToastDismissDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiToastDismissDetail",
+            "resolved": "KiToastDismissDetail",
+            "references": {
+              "KiToastDismissDetail": {
+                "location": "import",
+                "path": "./ki-toast.timing.js",
+                "id": "src/components/ki-toast/ki-toast.timing.ts::KiToastDismissDetail",
+                "referenceLocation": "KiToastDismissDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fired once when the toast leaves because its time ran out\n(`reason: \"timeout\"`), the person used the dismiss button (`\"button\"`),\npressed Escape inside it (`\"escape\"`) or activated its action\n(`\"action\"`), after it is hidden and focus has been handed on. Not\ncancelable. When to use: remove the element, or record that the message\nwas seen. When NOT to use: do not expect it for programmatic `dismissed`\nchanges.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Message text. It lives inside the live-region boundary."
+        },
+        {
+          "name": "action",
+          "docs": "At most one action, as a `ki-button size=\"sm\" variant=\"ghost\"`.\nIts own click handler runs, then the toast leaves (`reason: \"action\"`). A\ntoast holding an action never leaves on its own. When NOT to use: a response\nthe person cannot skip belongs in `ki-dialog`."
+        }
+      ],
+      "parts": [
+        {
+          "name": "action",
+          "docs": "Wrapper around the `action` slot, rendered only when it holds content."
+        },
+        {
+          "name": "dismiss",
+          "docs": "The dismiss `ki-icon-button`, rendered only when `dismissible`."
+        },
+        {
+          "name": "heading",
+          "docs": "Optional bold first line, rendered only when non-empty."
+        },
+        {
+          "name": "icon",
+          "docs": "The tone icon, drawn by the component in the tone's ink."
+        },
+        {
+          "name": "message",
+          "docs": "Message wrapper around the default slot."
+        },
+        {
+          "name": "toast",
+          "docs": "The flat surface: fill, image, edge, radius, padding,\nelevation and backdrop filter."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon-button"
+      ],
+      "dependencyGraph": {
+        "ki-toast": [
+          "ki-icon-button"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-toaster/ki-toaster.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-toaster",
+      "docs": "The one place toasts appear: it paints its `ki-toast` children in the top\nlayer at a corner of the viewport, stacks them in arrival order, shows the\nnewest few and queues the older ones, without covering the page beside\nthem.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing."
+        },
+        {
+          "name": "slot",
+          "text": "- The `ki-toast` elements, in arrival order. Other children are not\ncounted, queued or placed."
+        },
+        {
+          "name": "part",
+          "text": "stack - The stack in the top layer: placement, edge distance, gap\nbetween toasts and width."
+        }
+      ],
+      "usage": {
+        "examples": "Place one toaster per page (or one inside a modal `ki-dialog`). It paints its stack in the top layer, stacks toasts from the top down in arrival order and shows the newest three; older ones wait their turn:\n\n```html\n<ki-toaster></ki-toaster>\n<script>\n  document.querySelector('ki-toaster').show({\n    tone: 'success',\n    title: 'Changes saved',\n    message: 'Workspace settings are up to date.',\n    action: { label: 'Undo', onClick: undo },\n  });\n</script>\n```\n\n`show()` creates the toast, appends it, and removes it once it has left; its action renders as a ghost `ki-button size=\"sm\"`. The toaster does not bundle either element, so define `ki-toast` and `ki-button` too. Toasts can also be written in markup inside the toaster; those stay the page's own and are never removed.\n\n`placement` picks the corner — `top-center`, `top-end`, `bottom-center` or `bottom-end` (the default); `end` follows the writing direction, and a narrow touch screen always uses the bottom center. `max` sets how many toasts show at once:\n\n```html\n<ki-toaster placement=\"top-center\" max=\"2\"></ki-toaster>\n```\n\nWhile it shows toasts the toaster is a group named by `label` (`Notifications` by default); F6 moves focus into it, and Escape on a toast returns focus to where it was. Localize the name whenever the document language is not English:\n\n```html\n<ki-toaster lang=\"es\" label=\"Avisos\"></ki-toaster>\n```\n\nThe distance from the viewport edges and the gap between toasts are tokens:\n\n```css\n:root {\n  --ki-toaster-inset-block: 24px;\n  --ki-toaster-inset-inline: 24px;\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Notifications'"
+            }
+          ],
+          "default": "'Notifications'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": true,
+          "docs": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A toast holding focus keeps\nits place until focus leaves the toaster; the oldest other one waits\ninstead. A value below 1 or not a whole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "3"
+            },
+            {
+              "name": "minimum",
+              "text": "1"
+            }
+          ],
+          "default": "3",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placement",
+          "type": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}",
+          "complexType": {
+            "original": "KiToasterPlacement | (string & {})",
+            "resolved": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}",
+            "references": {
+              "KiToasterPlacement": {
+                "location": "import",
+                "path": "./ki-toaster.queue.js",
+                "id": "src/components/ki-toaster/ki-toaster.queue.ts::KiToasterPlacement",
+                "referenceLocation": "KiToasterPlacement"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "placement",
+          "reflectToAttr": true,
+          "docs": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'bottom-end'"
+            }
+          ],
+          "default": "'bottom-end'",
+          "values": [
+            {
+              "value": "bottom-center",
+              "type": "string"
+            },
+            {
+              "value": "bottom-end",
+              "type": "string"
+            },
+            {
+              "value": "top-center",
+              "type": "string"
+            },
+            {
+              "value": "top-end",
+              "type": "string"
+            },
+            {
+              "type": "string & {}"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "show",
+          "returns": {
+            "type": "Promise<HTMLElement>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "(options: KiToastShowOptions) => Promise<HTMLElement>",
+            "parameters": [
+              {
+                "name": "options",
+                "type": "KiToastShowOptions",
+                "docs": ""
+              }
+            ],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              },
+              "HTMLElement": {
+                "location": "global",
+                "id": "global::HTMLElement"
+              },
+              "KiToastShowOptions": {
+                "location": "import",
+                "path": "./ki-toaster.show.js",
+                "id": "src/components/ki-toaster/ki-toaster.show.ts::KiToastShowOptions",
+                "referenceLocation": "KiToastShowOptions"
+              }
+            },
+            "return": "Promise<HTMLElement>"
+          },
+          "signature": "show(options: KiToastShowOptions) => Promise<HTMLElement>",
+          "parameters": [
+            {
+              "name": "options",
+              "type": "KiToastShowOptions",
+              "docs": ""
+            }
+          ],
+          "docs": "Raises a toast: creates a `ki-toast` from `tone`, `title` (its heading),\n`message`, `duration`, `dismissible` and `action` (a ghost\n`ki-button size=\"sm\"` in its `action` slot that calls `onClick`), appends\nit to the toaster and resolves with it. Once the toast has left it is\nremoved from the page. The toaster does not bundle `ki-toast` or\n`ki-button`: define them, as for toasts written in markup.\nWhen to use: raise a toast from script without writing its markup.\nWhen NOT to use: a toast written in markup stays the page's own: append\nit instead, and it is never removed.",
+          "docsTags": []
+        }
+      ],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The `ki-toast` elements, in arrival order. Other children are not\ncounted, queued or placed."
+        }
+      ],
+      "parts": [
+        {
+          "name": "stack",
+          "docs": "The stack in the top layer: placement, edge distance, gap\nbetween toasts and width."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-tooltip/ki-tooltip.tsx",
       "encapsulation": "shadow",
       "tag": "ki-tooltip",
@@ -6535,6 +8789,11 @@
       "docstring": "",
       "path": "src/components/ki-checkbox/ki-checkbox.tsx"
     },
+    "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
+      "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
+      "docstring": "",
+      "path": "src/components/ki-counter/ki-counter.tsx"
+    },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
       "declaration": "export interface KiDialogCloseDetail {\n  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */\n  reason: KiDialogCloseReason;\n}",
       "docstring": "Event payload for the post-close `ki-close` notification.",
@@ -6544,6 +8803,11 @@
       "declaration": "export type KiDividerOrientation = 'horizontal' | 'vertical';",
       "docstring": "",
       "path": "src/components/ki-divider/ki-divider.tsx"
+    },
+    "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
+      "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",
+      "docstring": "",
+      "path": "src/components/ki-icon/ki-icon.tsx"
     },
     "src/components/ki-icon-button/ki-icon-button.tsx::KiIconButtonVariant": {
       "declaration": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
@@ -6590,10 +8854,30 @@
       "docstring": "",
       "path": "src/components/ki-input/ki-input.tsx"
     },
+    "src/components/ki-link/ki-link.tsx::KiLinkVariant": {
+      "declaration": "export type KiLinkVariant = 'primary' | 'neutral';",
+      "docstring": "",
+      "path": "src/components/ki-link/ki-link.tsx"
+    },
+    "src/components/ki-link/ki-link.tsx::KiLinkUnderline": {
+      "declaration": "export type KiLinkUnderline = 'always' | 'hover';",
+      "docstring": "",
+      "path": "src/components/ki-link/ki-link.tsx"
+    },
     "src/components/ki-list-item/ki-list-item.tsx::KiListItemSize": {
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
+    },
+    "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
+      "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-note/ki-note.icons.ts"
+    },
+    "src/components/ki-note/ki-note.tsx::KiNoteSize": {
+      "declaration": "export type KiNoteSize = 'sm' | 'md';",
+      "docstring": "",
+      "path": "src/components/ki-note/ki-note.tsx"
     },
     "src/components/ki-progress/ki-progress.tsx::KiProgressShape": {
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",
@@ -6614,6 +8898,26 @@
       "declaration": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-select/ki-select.tsx"
+    },
+    "src/components/ki-stack/ki-stack.tsx::KiStackDirection": {
+      "declaration": "export type KiStackDirection = 'column' | 'row';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
+    },
+    "src/utils/layout-gap.ts::KiLayoutGap": {
+      "declaration": "\"xxs\" | \"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\" | \"zero\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\"",
+      "docstring": "",
+      "path": "src/utils/layout-gap.ts"
+    },
+    "src/components/ki-stack/ki-stack.tsx::KiStackAlign": {
+      "declaration": "export type KiStackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
+    },
+    "src/components/ki-stack/ki-stack.tsx::KiStackJustify": {
+      "declaration": "export type KiStackJustify = 'start' | 'center' | 'end' | 'between';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
     },
     "src/components/ki-status/ki-status.tsx::KiStatusTone": {
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
@@ -6644,6 +8948,26 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
+    },
+    "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
+      "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-toast/ki-toast.timing.ts"
+    },
+    "src/components/ki-toast/ki-toast.timing.ts::KiToastDismissDetail": {
+      "declaration": "export interface KiToastDismissDetail {\n  reason: 'timeout' | 'button' | 'escape' | 'action';\n}",
+      "docstring": "Why a toast left, carried by `ki-dismiss` (issue #353).",
+      "path": "src/components/ki-toast/ki-toast.timing.ts"
+    },
+    "src/components/ki-toaster/ki-toaster.queue.ts::KiToasterPlacement": {
+      "declaration": "export type KiToasterPlacement = 'top-center' | 'top-end' | 'bottom-center' | 'bottom-end';",
+      "docstring": "",
+      "path": "src/components/ki-toaster/ki-toaster.queue.ts"
+    },
+    "src/components/ki-toaster/ki-toaster.show.ts::KiToastShowOptions": {
+      "declaration": "export interface KiToastShowOptions {\n  /** One action, rendered as a ghost `ki-button size=\"sm\"`; its click calls `onClick`. */\n  action?: { label: string; onClick?: (event: MouseEvent) => void };\n  /** Shows the dismiss button; `true` by default. */\n  dismissible?: boolean;\n  /** Milliseconds before the toast leaves on its own; see `ki-toast`'s `duration`. */\n  duration?: number;\n  /** The message text. */\n  message: string;\n  /** The optional bold first line. */\n  title?: string;\n  /** `neutral` (default), `info`, `success`, `warning` or `danger`. */\n  tone?: string;\n}",
+      "docstring": "What `show()` turns into a toast (spec 049 FR-018).",
+      "path": "src/components/ki-toaster/ki-toaster.show.ts"
     }
   }
 }

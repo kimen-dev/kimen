@@ -29,6 +29,14 @@ import { acceptsEnumValue, ownEntry, toPlainData, validatePlainData } from './va
 
 const builtInCatalog: Catalog = catalogData;
 
+// The elements package's per-icon modules populate this realm-local map.
+// Using the shared key lets the catalog check availability without relying
+// on a component bundle or importing glyphs on the host's behalf.
+const iconRegistryKey = Symbol.for('kimen.icon-registry.v1');
+const realm = globalThis as typeof globalThis & {
+  [iconRegistryKey]?: ReadonlyMap<string, string>;
+};
+
 /** One scalar prop value of the neutral format. */
 type Scalar = boolean | number | string;
 
@@ -143,8 +151,8 @@ export function declaredEvents(entry: CatalogEntry | undefined): readonly string
 /**
  * Renderer-native guards over the already-catalog-validated tree (plain,
  * safe data): node-count and depth budgets, the tag grammar, the activation
- * event and the prop-name guards. Catalog membership, prop types and limits,
- * the URL policy, actions and slots were already enforced upstream.
+ * event, icon availability and the prop-name guards. Catalog membership,
+ * prop types and limits, URL policy, actions and slots were enforced upstream.
  */
 export function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardState): void {
   state.nodes += 1;
@@ -183,6 +191,17 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
       rule: 'invalid-tag',
       value: node.component,
     });
+  }
+  if (node.component === 'ki-icon') {
+    const name = ownEntry(node.props, 'name');
+    if (typeof name !== 'string' || realm[iconRegistryKey]?.has(name) !== true) {
+      state.diagnostics.push({
+        message: 'ki-icon requires a name imported by this surface',
+        path: `${path}.props.name`,
+        rule: 'unavailable-icon',
+        value: typeof name === 'string' ? name : undefined,
+      });
+    }
   }
   // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
   // activation event. An entry declaring several gives the spec no way to
@@ -319,14 +338,26 @@ export function attachText(
   return parent.insertBefore(holder, before);
 }
 
-/** Writes one validated prop as an attribute: booleans by presence. */
-export function writeProp(element: Element, name: string, value: Scalar | undefined): void {
-  if (value === undefined || value === false) {
+/** Writes one validated prop as an attribute. */
+export function writeProp(
+  element: Element,
+  component: string,
+  name: string,
+  value: Scalar | undefined,
+): void {
+  if (value === undefined) {
     element.removeAttribute(name);
-  } else if (value === true) {
-    element.setAttribute(name, '');
+  } else if (value === false) {
+    // Built-in Stencil props that default to true require an explicit false.
+    // Registered components continue to use boolean attribute presence.
+    const entry = ownEntry(builtInCatalog.components, component);
+    if (ownEntry(entry?.props, name)?.default === true) {
+      element.setAttribute(name, 'false');
+    } else {
+      element.removeAttribute(name);
+    }
   } else {
-    element.setAttribute(name, String(value));
+    element.setAttribute(name, value === true ? '' : String(value));
   }
 }
 
@@ -355,7 +386,7 @@ export function writeProps(
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, name, value);
+    writeProp(element, component, name, value);
   }
 }
 
@@ -427,7 +458,7 @@ export function wireActivation(
 
 /**
  * Builds one validated node into a detached element (FR-004): props become
- * attributes (booleans as presence), text children become inert text nodes
+ * attributes, text children become inert text nodes
  * (never `innerHTML`), and a bound action wires exactly one activation
  * listener — derived from the catalog entry (FR-003) — onto the renderer's
  * single channel. No spec string is ever evaluated.
@@ -594,10 +625,10 @@ export type PreflightOptions = Omit<RenderOptions, 'onAction' | 'surface'>;
  * The guarded renderer's verdict on an untrusted UI spec, without a DOM
  * (spec 038 FR-014): exactly the preparation `renderUiSpec` runs before its
  * first attach — purity wall, version gate, payload budget, catalog
- * validation, then the renderer-native depth, node-count, tag, activation
- * and prop-name guards. A DOM-less boundary (an MCP server) reports as valid
- * only what the renderer will paint. Pure data processing: nothing is
- * rendered, and the input is never mutated.
+ * validation, then the renderer-native depth, node-count, tag, activation,
+ * icon availability and prop-name guards. Icon availability reflects the
+ * glyphs imported in this realm. Nothing is rendered, and the input is
+ * never mutated.
  */
 export function preflightUiSpec(input: unknown, options: PreflightOptions = {}): RenderResult {
   const prepared = prepare(

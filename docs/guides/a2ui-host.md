@@ -138,8 +138,8 @@ until it arrives, components are buffered and nothing renders.
 ```
 
 The adapter translates the tree into one neutral spec — `Card` becomes
-`ki-card`, `Column` contributes its children in order (the catalog has no
-layout element yet), `TextField` with `longText` becomes `ki-textarea`,
+`ki-card`, `Column` becomes `ki-stack` and `Row` becomes `ki-stack direction="row"`.
+Both stacks keep their children in order. `TextField` with `longText` becomes `ki-textarea`,
 `Button` becomes `ki-button` with its child text as label, `Text` becomes inert
 text in the parent's slot — and hands it to the guarded renderer. A property
 the basic catalog does not declare for the type rejects the message

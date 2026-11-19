@@ -410,6 +410,8 @@ it('runs package lint and every exact ATTW surface from the source inventory', a
         '--entrypoints',
         './ki-alert',
         './ki-button',
+        './icons/circle-check',
+        './icons/alert-triangle',
       ],
       '/workspace',
     ],

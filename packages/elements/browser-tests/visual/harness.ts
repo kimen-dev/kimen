@@ -27,12 +27,15 @@ import { defineAllComponents } from '../all-components';
 import robotoWoff2Url from './fonts/RobotoVariable.woff2?url';
 import type { VisualComponent, VisualGallery } from './galleries';
 import { fixtureFor } from './galleries';
-import { type VisualScheme, type VisualTheme, visualThemes } from './matrix';
+import { visualGalleryThemes } from './theme-matrix';
+
+type Scheme = 'dark' | 'light';
+type Theme = 'material3' | 'onmars';
 
 type Gallery = VisualGallery & { inlinePadding?: number };
 
 type VisualSuiteOptions = {
-  scheme: VisualScheme;
+  scheme: Scheme;
 } & (
   | { component: VisualComponent; define?: readonly (() => void)[] }
   | { name: string; gallery: Gallery; define: readonly (() => void)[] }
@@ -156,7 +159,7 @@ async function waitForShadowRender(wrapper: HTMLElement): Promise<void> {
   await nextFrame();
 }
 
-export async function mountGallery(gallery: Gallery, theme: VisualTheme): Promise<HTMLElement> {
+export async function mountGallery(gallery: Gallery, theme: Theme): Promise<HTMLElement> {
   await ensureFixtureFonts();
   document.body.replaceChildren();
   // Deterministic geometry: zero margin plus a wrapper as wide as the
@@ -202,7 +205,7 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
   const { define, scheme } = options;
   const name = 'name' in options ? options.name : options.component;
   const gallery = 'gallery' in options ? options.gallery : fixtureFor(options.component).gallery;
-  const themes = visualThemes(name, scheme);
+  const themes = visualGalleryThemes(name, scheme);
 
   describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {
