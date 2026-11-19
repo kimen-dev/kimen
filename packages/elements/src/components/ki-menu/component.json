@@ -1,0 +1,6 @@
+{
+  "barePage": { "keyboardPressed": false },
+  "pointer": { "hoverWitness": false },
+  "catalog": true,
+  "budgetGroup": { "members": ["ki-menu", "ki-menu-item", "ki-menu-group"] }
+}

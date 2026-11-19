@@ -5,7 +5,9 @@ import { page } from 'vitest/browser';
 import { parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement } from '../../../dist/components/ki-menu-group.js';
 
-beforeAll(() => { defineCustomElement(); });
+beforeAll(() => {
+  defineCustomElement();
+});
 afterEach(async () => {
   document.body.replaceChildren();
   await parkPointer();

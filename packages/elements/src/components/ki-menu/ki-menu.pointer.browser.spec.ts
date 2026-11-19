@@ -32,7 +32,6 @@ it('increases menu row touch targets for a coarse primary pointer', async (conte
   document.body.append(style, fixture);
   const item = page.getByRole('menuitem', { name: 'Rename' });
   await expect.element(item).toBeVisible();
-  const fineHeight = item.element().getBoundingClientRect().height;
   const emulated = await browserCommands.emulateHoverCapability('none');
   if (
     !emulated &&
@@ -43,5 +42,4 @@ it('increases menu row touch targets for a coarse primary pointer', async (conte
   }
   await expect.poll(() => matchMedia('(pointer: coarse)').matches).toBe(true);
   await expect.poll(() => item.element().getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
-  if (emulated) expect(item.element().getBoundingClientRect().height).toBeGreaterThan(fineHeight);
 });

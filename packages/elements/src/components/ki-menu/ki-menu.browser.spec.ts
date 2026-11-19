@@ -84,7 +84,7 @@ async function openMenu() {
 
 async function expectClosed(menu: HTMLElement) {
   await expect.element(trigger()).toHaveAttribute('aria-expanded', 'false');
-  expect(menu.hasAttribute('open')).toBe(false);
+  await expect.element(menu).not.toHaveAttribute('open');
   await expect.element(popup()).not.toBeInTheDocument();
 }
 
@@ -93,7 +93,7 @@ it('S1 selects the action once, closes and returns focus', async () => {
   await openMenu();
   await action('Rename').click();
   await expectClosed(menu);
-  await expect.element(trigger()).toHaveFocus();
+  await expect.poll(() => trigger().query()?.matches(':focus')).toBe(true);
   expect(events).toEqual([{ value: 'rename' }]);
 });
 
@@ -127,7 +127,7 @@ it('S4 dismisses outside without taking focus from the clicked control', async (
   const after = page.getByRole('textbox', { name: 'After' });
   await after.click();
   await expectClosed(menu);
-  await expect.element(after).toHaveFocus();
+  await expect.poll(() => after.query()?.matches(':focus')).toBe(true);
 });
 
 it.each([
@@ -140,8 +140,8 @@ it.each([
   await expect.element(trigger()).toHaveAttribute('aria-expanded', 'false');
   (trigger().element() as HTMLElement).focus();
   await userEvent.keyboard(key);
-  await expect.element(action(label)).toHaveFocus();
-  expect(menu.hasAttribute('open')).toBe(true);
+  await expect.poll(() => action(label).query()?.matches(':focus')).toBe(true);
+  await expect.element(menu).toHaveAttribute('open');
 });
 
 it.each([
@@ -155,14 +155,14 @@ it.each([
   await openMenu();
   if (setup) await userEvent.keyboard(setup);
   await userEvent.keyboard(key);
-  await expect.element(action(label)).toHaveFocus();
+  await expect.poll(() => action(label).query()?.matches(':focus')).toBe(true);
 });
 
 it('S6 type-ahead finds the next label by initial', async () => {
   mount();
   await openMenu();
   await userEvent.keyboard('p');
-  await expect.element(checkbox()).toHaveFocus();
+  await expect.poll(() => checkbox().query()?.matches(':focus')).toBe(true);
 });
 
 it.each(['{Enter}', ' '])('S7 %s activates the focused action', async (key) => {
@@ -178,7 +178,7 @@ it('S8 Escape closes and focuses the trigger', async () => {
   await openMenu();
   await userEvent.keyboard('{End}{Escape}');
   await expectClosed(menu);
-  await expect.element(trigger()).toHaveFocus();
+  await expect.poll(() => trigger().query()?.matches(':focus')).toBe(true);
 });
 
 it.each([
@@ -189,13 +189,15 @@ it.each([
   await openMenu();
   await userEvent.tab({ shift });
   await expectClosed(menu);
-  await expect.element(page.getByRole('textbox', { name: label })).toHaveFocus();
+  await expect
+    .poll(() => page.getByRole('textbox', { name: label }).query()?.matches(':focus'))
+    .toBe(true);
 });
 
 it('S10 starts in the filter when present', async () => {
   mount('filter-label="Filter actions"');
   await openMenu();
-  await expect.element(filter()).toHaveFocus();
+  await expect.poll(() => filter().query()?.matches(':focus')).toBe(true);
 });
 
 it('S11 filters by label and updates the polite status, including zero results', async () => {
@@ -206,7 +208,7 @@ it('S11 filters by label and updates the polite status, including zero results',
   await expect.element(action('Rename')).not.toBeInTheDocument();
   await expect.element(page.getByRole('group', { name: 'View' })).not.toBeInTheDocument();
   await expect.element(page.getByRole('separator')).not.toBeInTheDocument();
-  const status = page.getByRole('status');
+  const status = page.getByRole('status').filter({ hasText: 'Matching actions:' });
   await expect.element(status).toHaveAttribute('aria-live', 'polite');
   await expect.element(status).toHaveTextContent('Matching actions: 1');
   await filter().fill('unknown');
@@ -222,7 +224,7 @@ it('S12 Down moves from the filter into the results', async () => {
   await openMenu();
   await filter().fill('PIN');
   await userEvent.keyboard('{ArrowDown}');
-  await expect.element(checkbox()).toHaveFocus();
+  await expect.poll(() => checkbox().query()?.matches(':focus')).toBe(true);
 });
 
 it('S13 disabled actions remain focusable and inert under keyboard and click', async () => {
@@ -230,10 +232,18 @@ it('S13 disabled actions remain focusable and inert under keyboard and click', a
   await openMenu();
   await userEvent.keyboard('{ArrowDown}');
   const disabled = action('Move to…');
-  await expect.element(disabled).toHaveFocus();
+  await expect.poll(() => disabled.query()?.matches(':focus')).toBe(true);
   await expect.element(disabled).toHaveAttribute('aria-disabled', 'true');
   await userEvent.keyboard('{Enter} ');
+  const disabledHost = fixture.querySelector<HTMLElement>('ki-menu-item[disabled]');
+  if (!disabledHost) throw new Error('Missing disabled item');
+  let observedClicks = 0;
+  disabledHost.addEventListener('click', () => {
+    observedClicks += 1;
+  });
   (disabled.element() as HTMLButtonElement).click();
+  disabledHost.click();
+  expect(observedClicks).toBe(0);
   expect(events).toEqual([]);
   await expect.element(popup()).toBeVisible();
 });
@@ -277,7 +287,10 @@ it('S16 flips above a trigger near the bottom of the viewport', async () => {
 
 it('S17 bottom-start aligns to the right edge in RTL', async () => {
   fixture.dir = 'rtl';
-  mount('', '<button id="actions" type="button" style="margin-inline-start:2rem">Actions</button>');
+  mount(
+    '',
+    '<button id="actions" type="button" style="position:fixed;inset-inline-start:2rem;inset-block-start:2rem">Actions</button>',
+  );
   await openMenu();
   const menuRect = fixture
     .querySelector('ki-menu')
@@ -298,5 +311,5 @@ it('binds a trigger in the same containing shadow root', async () => {
   await expect.element(button).toHaveAttribute('aria-expanded', 'false');
   await button.click();
   await expect.element(page.getByRole('menu', { name: 'More actions' })).toBeVisible();
-  await expect.element(action('Rename')).toHaveFocus();
+  await expect.poll(() => action('Rename').query()?.matches(':focus')).toBe(true);
 });

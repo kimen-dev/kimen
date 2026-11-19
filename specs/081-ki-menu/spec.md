@@ -9,13 +9,13 @@ or page for a long action list.
 
 ## Scenario family coverage
 
-| Family | Coverage |
-| --- | --- |
-| Core behavior | S1–S4, S16 |
-| Keyboard | S5–S10, S12 |
-| Assistive technology | S11, S13–S14 |
-| Form participation | N/A. Menu actions report events and do not represent form values. |
-| Theming | S15, S17. Visual coverage also exercises four theme and scheme combinations. |
+| Family | Scenarios | N/A justification |
+| --- | --- | --- |
+| Core behavior | S1, S2, S3, S4, S16 | |
+| Keyboard path | S5, S6, S7, S8, S9, S10, S12 | |
+| Assistive-tech outcome | S11, S13, S14 | |
+| Form participation | N/A | Menu actions report events and do not represent form values. |
+| Theming | S15, S17 | |
 
 ## Interpretations
 
@@ -23,7 +23,8 @@ or page for a long action list.
 - **Agent's choice, pending founder confirmation.** The filter matches a case-insensitive substring of the label, clears on close, and hides empty groups and redundant dividers. The overridable `filter-results-label` uses a `{count}` placeholder.
 - **Agent's choice, pending founder confirmation.** The menu uses the trigger's accessible label or label text for its name unless the consumer supplies `aria-label`. The filter and header sit outside the menu's composite role.
 - **Agent's choice, pending founder confirmation.** Outside-pointer dismissal preserves the destination of the click. Tab and Shift+Tab continue from the trigger in its own tab order.
-- **Agent's choice, pending founder confirmation.** The reference's 14rem minimum width is bounded by the viewport. Fine-pointer rows start at 2rem and grow with coarse-pointer or explicit comfortable density. The menu has no opening animation.
+- **Agent's choice, pending founder confirmation.** Setting `open` directly displays the popup without requesting focus. Opening from the trigger moves focus into it.
+- **Agent's choice, pending founder confirmation.** The reference's 14rem minimum width is bounded by the viewport. Fine-pointer rows start at 2rem and grow with coarse-pointer or explicit touch density. The menu uses a native manual popover and measured anchor geometry with flip and viewport clamping. It has no opening animation. Supporting text follows the contrast mode’s supporting-ink role.
 
 ## Gherkin
 

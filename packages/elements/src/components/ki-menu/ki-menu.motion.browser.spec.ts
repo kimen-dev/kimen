@@ -1,12 +1,17 @@
 import tokensCss from '@kimen/tokens/css?raw';
-import { afterEach, beforeAll, expect, it } from 'vitest';
-import { page } from 'vitest/browser';
+import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
+import { commands, page } from 'vitest/browser';
 
 import { parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement as defineItem } from '../../../dist/components/ki-menu-item.js';
 import { defineCustomElement as defineMenu } from '../../../dist/components/ki-menu.js';
 
-beforeAll(() => {
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (preference: 'reduce' | 'no-preference') => Promise<void>;
+};
+
+beforeAll(async () => {
+  await browserCommands.emulateReducedMotion('reduce');
   defineItem();
   defineMenu();
 });
@@ -14,6 +19,10 @@ beforeAll(() => {
 afterEach(async () => {
   document.body.replaceChildren();
   await parkPointer();
+});
+
+afterAll(async () => {
+  await browserCommands.emulateReducedMotion('no-preference');
 });
 
 it('opens with focus and without animation when reduced motion is requested', async () => {
@@ -30,7 +39,7 @@ it('opens with focus and without animation when reduced motion is requested', as
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
   await trigger.click();
   const action = page.getByRole('menuitem', { name: 'Rename' });
-  await expect.element(action).toHaveFocus();
+  await expect.poll(() => action.query()?.matches(':focus')).toBe(true);
   const popup = fixture.querySelector('ki-menu')?.shadowRoot?.querySelector('[part="popup"]');
   expect(popup?.getAnimations({ subtree: true })).toEqual([]);
 });

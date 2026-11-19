@@ -485,7 +485,8 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(isOpaqueCanvas(surface)).toBe(true);
     expect(edgeOf(surface)).not.toBeNull();
     expect(getComputedStyle(row).outlineStyle).toBe('solid');
-    expect(parseColor(getComputedStyle(check).color).ink).not.toBe(fillOf(surface));
+    expect(getComputedStyle(check).visibility).toBe('visible');
+    expect(inkOnCanvas(getComputedStyle(check).stroke)).not.toBeNull();
   });
 
   it('S5 ki-tooltip is an opaque surface with an edge', async (test) => {

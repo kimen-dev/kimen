@@ -20,6 +20,10 @@
       "tooltip": {
         "$value": "{ki.foundation.onmars-v1.tooltip-bg-image}",
         "$description": "Theme image layered over a tooltip surface."
+      },
+      "menu": {
+        "$value": "none",
+        "$description": "Optional image over a raised action menu."
       }
     },
     "surface": {
@@ -1218,6 +1222,11 @@
               "$description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with --ki-effect-component-backdrop-filter."
             }
           }
+        },
+        "menu-backdrop-filter": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "Optional complete backdrop filter for a raised action menu."
         }
       },
       "video-hover-opacity": {
@@ -1721,6 +1730,52 @@
           "$value": "{ki.space.md}",
           "$description": "Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise)."
         }
+      }
+    },
+    "menu-layout": {
+      "inline-min": {
+        "$value": "{ki.size.menu-inline-min}",
+        "$description": "Lower inline bound for anchored action menus."
+      },
+      "edge-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of the menu perimeter and its internal separators."
+      },
+      "surface-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Rounding of the raised menu surface."
+      },
+      "row-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Rounding of action rows within a menu."
+      },
+      "inline-max": {
+        "$value": "{ki.size.surface.xs}",
+        "$description": "Inline limit of the menu before the viewport is considered."
+      },
+      "block-max": {
+        "$value": "{ki.size.surface.lg}",
+        "$description": "Block limit of a scrolling menu before the viewport is considered."
+      },
+      "touch-row-min": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Target size in a menu opened on a touch screen."
+      },
+      "row-min": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Minimum size of a default menu action row."
+      },
+      "inline-space": {
+        "$value": "{ki.space.md}",
+        "$description": "Horizontal breathing room within a menu action."
+      },
+      "surface-padding": {
+        "$value": "{ki.space.xs}",
+        "$description": "Inset from the perimeter of the action menu."
+      },
+      "row-block-padding": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Minimum edge space for a wrapped action label."
       }
     }
   }
