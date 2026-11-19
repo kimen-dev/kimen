@@ -141,13 +141,14 @@ function reachesAt(target: Element, x: number, y: number): boolean {
 }
 
 /**
- * The edges of the `side` x `side` square centred on `target` at which a
- * pointer misses it, measured as the spec 045 touch sweep does. Empty: the
- * target reaches `side` CSS px across both axes, whatever the control paints.
+ * The edges of the `side` x `side` square centred on the painted `control` at
+ * which a pointer misses `target`, the element it activates, measured as the
+ * spec 045 touch sweep does (issue #427). Empty: the target reaches `side` CSS
+ * px across both axes around what the person aims at.
  */
-function missesAcross(target: Element, side: number): string[] {
-  target.scrollIntoView({ block: 'center', inline: 'center' });
-  const box = target.getBoundingClientRect();
+function missesAround(control: Element, target: Element, side: number): string[] {
+  control.scrollIntoView({ block: 'center', inline: 'center' });
+  const box = control.getBoundingClientRect();
   const [x, y] = [box.left + box.width / 2, box.top + box.height / 2];
   const half = side / 2 - 0.5;
   const edges: [string, number, number][] = [
@@ -410,7 +411,8 @@ describe('050 size axes: density and themes', () => {
     expect(boxOf(part(checkbox, 'control'))).toBe('18 x 18');
     expect(boxOf(part(toggle, 'track'))).toBe('32 x 18');
     for (const host of [checkbox, toggle]) {
-      expect(missesAcross(activationTargetOf(host), 44), host.localName).toEqual([]);
+      const control = host.localName === 'ki-switch' ? part(host, 'track') : part(host, 'control');
+      expect(missesAround(control, activationTargetOf(host), 44), host.localName).toEqual([]);
     }
   });
 

@@ -163,9 +163,9 @@ function reachesAt(target: Element, x: number, y: number): boolean {
  * pointer misses it. Empty: the target reaches `side` CSS px across both axes
  * through its centre, whatever it paints.
  */
-function missesAcross(target: Element, side: number): string[] {
-  target.scrollIntoView({ block: 'center', inline: 'center' });
-  const box = target.getBoundingClientRect();
+function missesAcross(target: Element, side: number, centre: Element = target): string[] {
+  centre.scrollIntoView({ block: 'center', inline: 'center' });
+  const box = centre.getBoundingClientRect();
   const [x, y] = [box.left + box.width / 2, box.top + box.height / 2];
   const half = side / 2 - 0.5;
   const edges: [string, number, number][] = [
@@ -175,6 +175,25 @@ function missesAcross(target: Element, side: number): string[] {
     ['right', x + half, y],
   ];
   return edges.filter(([, px, py]) => !reachesAt(target, px, py)).map(([edge]) => edge);
+}
+
+/**
+ * What a person aims at: the painted control of a choice control (the box, the
+ * circle, the switch track), whose 44 x 44 target is centred on it (spec 045
+ * A1-D3, issue #427); any other target is itself what is painted.
+ */
+function paintedControlOf(target: HTMLElement): HTMLElement {
+  const root = target.getRootNode();
+  const owner = root instanceof ShadowRoot ? root.host : target;
+  switch (owner.localName) {
+    case 'ki-checkbox':
+    case 'ki-radio':
+      return findDeep(owner, byPart('control'));
+    case 'ki-switch':
+      return findDeep(owner, byPart('track'));
+    default:
+      return target;
+  }
 }
 
 /** What a pointer has to reach: a text field's target is its field box. */
@@ -457,8 +476,10 @@ describe('045 touch density (Amendment A1)', () => {
     expect(painted(host(fixture, 'section'))).toEqual(painted(host(fixture, '#outside')));
   });
 
-  describe.each(THEMES)('S16: every interactive target reaches 44 by 44 in %s', (theme) => {
-    it(`S16: a pointer reaches every interactive target across 44 by 44 pixels in a touch ${theme} region`, async () => {
+  describe.each(
+    THEMES.flatMap((theme) => (['ltr', 'rtl'] as const).map((dir) => [theme, dir] as const)),
+  )('S16: every interactive target reaches 44 by 44 in %s %s', (theme, dir) => {
+    it(`S16: a pointer reaches every interactive target across 44 by 44 pixels in a touch ${theme} ${dir} region`, async () => {
       // One component per cell, so no target is measured through the target
       // of its neighbour.
       const cells = [
@@ -466,7 +487,7 @@ describe('045 touch density (Amendment A1)', () => {
         '<ki-alert dismissible heading="Saved">Done</ki-alert>',
       ].map((component) => `<div style="padding-block: 24px">${component}</div>`);
       const fixture = await mount(
-        `<section data-ki-theme="${theme}" data-ki-density="touch">${cells.join('')}</section>`,
+        `<section dir="${dir}" data-ki-theme="${theme}" data-ki-density="touch">${cells.join('')}</section>`,
       );
       const targets = targetsOf(fixture).map(touchTargetOf);
       expect(targets.length).toBeGreaterThan(15);
@@ -475,8 +496,14 @@ describe('045 touch density (Amendment A1)', () => {
         .map((target) => {
           const root = target.getRootNode();
           const owner = root instanceof ShadowRoot ? root.host : target;
-          const name = `${owner.localName}[${owner.getAttribute('size') ?? ''}] ${target.localName}`;
-          return { name, misses: missesAcross(target, TOUCH_TARGET_MIN) };
+          const size = owner.closest('[size]')?.getAttribute('size') ?? '';
+          const name = `${owner.localName}[${size}] ${target.localName}`;
+          // The square is centred on what the person sees, not on the hit box
+          // (issue #427): a target that grows towards one side fails here.
+          return {
+            name,
+            misses: missesAcross(target, TOUCH_TARGET_MIN, paintedControlOf(target)),
+          };
         })
         .filter(({ misses }) => misses.length > 0);
       expect(unreachable).toEqual([]);
