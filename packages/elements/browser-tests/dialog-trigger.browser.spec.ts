@@ -81,6 +81,14 @@ async function openWithPointer(): Promise<void> {
   await expect.element(page.getByRole('dialog', { name: 'Delete project?' })).toBeVisible();
 }
 
+async function expectRestoredOpener(fixture: HTMLElement): Promise<void> {
+  const opener = page.getByRole('button', { name: 'Delete project…', expanded: false });
+  await expect.element(opener).toBeVisible();
+  // Vitest's toHaveFocus compares against Document.activeElement, which is
+  // the ki-button host when the native button holds focus in its shadow root.
+  await expect.poll(() => buttonPart(fixture).matches(':focus')).toBe(true);
+}
+
 describe('dialog invoker commands', () => {
   it.each(['browser', 'fallback'])(
     'S1 opens by pointer with the %s command event',
@@ -200,8 +208,7 @@ describe('dialog invoker commands', () => {
     await openWithPointer();
     await userEvent.keyboard('{Escape}');
     await expect.poll(() => reasons).toEqual(['escape']);
-    const opener = page.getByRole('button', { name: 'Delete project…', expanded: false });
-    await expect.element(opener).toHaveFocus();
+    await expectRestoredOpener(fixture);
   });
 
   it('S8 refuses a second modal invoked from the open one', async () => {
@@ -226,16 +233,16 @@ describe('dialog invoker commands', () => {
       await openWithPointer();
       const cancel = page.getByRole('button', { name: 'Cancel' });
       if (input === 'keyboard') {
-        await expect.element(cancel).toHaveFocus();
+        await expect
+          .poll(() => buttonPart(fixture, '[slot="footer"]').matches(':focus'))
+          .toBe(true);
         await userEvent.keyboard(' ');
       } else {
         await cancel.click();
       }
 
       await expect.poll(() => reasons).toEqual(['command']);
-      await expect
-        .element(page.getByRole('button', { name: 'Delete project…', expanded: false }))
-        .toHaveFocus();
+      await expectRestoredOpener(fixture);
       expect(dialogPart(fixture).open).toBe(false);
     },
   );
