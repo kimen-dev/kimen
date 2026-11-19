@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "f257051a8d750a2742849555a1b8c4ec547a193c2e6c625290c169e2678e6bda",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Adds the optional @kimen/tokens stylesheet exports ./css/onmars-fonts.css and ./css/material3-fonts.css (issue #346, spec 064-theme-fonts). The stylesheets declare font faces outside the effective token surface. Cumulative since baseline 0.0.0 and superseding 344-button-hierarchy. Carries forward its four recommended button roles, legacy tertiary DOM and TypeScript acceptance with a development-only deprecation warning, twelve onmars tertiary defaults backed by secondary references, and the new tertiary hover overlay with a transparent Material 3 override. Material 3 keeps its existing tertiary values, and additive catalog metadata preserves legacy tertiary UI specs. All earlier declared changes are carried forward. The cumulative release remains major.",
+  "release": "major",
+  "schemaVersion": 1
+}

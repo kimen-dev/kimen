@@ -599,9 +599,16 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // Issue #342 adds ten full-filter tokens: two semantic and eight component.
   // 1264 + 10 = 1274.
   // Issue #344 adds the tertiary hover overlay. 1274 + 1 = 1275.
+  // Issue #346 adds two font stylesheet exports outside the effective token
+  // surface. The token total and deprecation count stay at main's totals.
+  const tokenPackage = candidate.surface.packages['@kimen/tokens'];
+  for (const subpath of ['./css/onmars-fonts.css', './css/material3-fonts.css']) {
+    assert.equal(tokenPackage.exports[subpath].target, subpath);
+    assert.equal(Object.hasOwn(tokenPackage.stylesheets, subpath), false);
+  }
   // Issue #341 adds the emphasized-out curve, two inverse tooltip colors,
   // and the flat elevation role. 1275 + 4 = 1279.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1279);
+  assert.equal(Object.keys(tokenPackage.tokens).length, 1279);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
