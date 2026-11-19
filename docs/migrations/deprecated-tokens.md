@@ -36,10 +36,9 @@ reaches the removal version while still shipping the token.
 
 ## What to change
 
-Replace each deprecated name with its replacement wherever you set or read
-it. The renames are mechanical: a search and replace over the *Deprecated
-tokens* table is enough. The original 0.1.0 deprecations follow the rules below, where `{variant}` is `primary`, `secondary`, `tertiary`, `quaternary` or
-`ghost`:
+For the original deprecations below, replace each name wherever you set or
+read it. The table uses `{variant}` for `primary`, `secondary`, `tertiary`,
+`quaternary`, or `ghost`.
 
 | Deprecated | Use instead | Why |
 | --- | --- | --- |
@@ -52,9 +51,11 @@ tokens* table is enough. The original 0.1.0 deprecations follow the rules below,
 
 ### Backdrop blur lengths
 
-For `*-backdrop-blur` tokens, change both the name and value. For example,
-replace `--ki-button-backdrop-blur: 8px` with
-`--ki-button-backdrop-filter: blur(8px)`. Use `none` to turn off the effect.
+For `*-backdrop-blur` tokens, change how you set and read the value.
+
+- Set `--ki-button-backdrop-filter: blur(8px)` in place of
+  `--ki-button-backdrop-blur: 8px`. Use `none` to turn off the effect.
+- Read the complete value with `backdrop-filter: var(--ki-button-backdrop-filter)`.
 
 The deprecated lengths still drive the built-in glass defaults during the
 transition. A different complete filter takes precedence, including the
