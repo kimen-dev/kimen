@@ -2567,8 +2567,11 @@ CSS custom properties:
 - `--ki-switch-focus-ring-shadow`: shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-switch-focus-ring-width`: dimension used by the switch component for focus ring width.
 - `--ki-switch-gap`: dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio).
+- `--ki-switch-glyph-checked`: Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb.
 - `--ki-switch-glyph-dash-height`: dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash).
+- `--ki-switch-glyph-disabled`: Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs.
 - `--ki-switch-glyph-height`: dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height).
+- `--ki-switch-glyph-unchecked`: Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb.
 - `--ki-switch-glyph-width`: dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb).
 - `--ki-switch-min-target`: dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint).
 - `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset.
@@ -2593,10 +2596,8 @@ CSS custom properties:
 - `--ki-switch-well-bg-end`: color used by the switch component for the bottom of the well gradient (Toggle md Base).
 - `--ki-switch-well-bg-start`: color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well.
 - `--ki-switch-well-radius`: dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md).
-- `--ki-text-base-em`: semantic color for text base em.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
-- `--ki-text-primary-on-primary-light`: semantic color for text primary on primary light.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 - `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.

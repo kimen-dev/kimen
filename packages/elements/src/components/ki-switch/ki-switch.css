@@ -7,8 +7,10 @@
 
   /* Thumb glyph inks (master 10023:1125): ON check = Text/primary_on_primary_light
      (Brand/600 light, brand-300 dark); disabled marks = Text/base_em
-     (Gray/400 light, White/32 dark). */
-  --_ki-switch-glyph: var(--ki-text-primary-on-primary-light);
+     (Gray/400 light, White/32 dark); OFF rest shows nothing. Each is a public
+     token (--ki-switch-glyph-checked, -unchecked, -disabled) a theme can
+     recolour or set to transparent (spec 008 S23, S24). */
+  --_ki-switch-glyph: var(--ki-switch-glyph-unchecked);
 
   /* Thumb travel: the thumb is statically anchored at the unchecked inset and
      TRANSLATED to the checked position (transform, not inset — animating
@@ -49,6 +51,7 @@
   --_ki-switch-track: var(--ki-switch-checked-rest-track);
   --_ki-switch-thumb: var(--ki-switch-checked-rest-thumb);
   --_ki-switch-border: var(--ki-switch-checked-rest-border);
+  --_ki-switch-glyph: var(--ki-switch-glyph-checked);
   --_ki-switch-thumb-anchor: 100%;
 }
 
@@ -74,7 +77,7 @@
   --_ki-switch-track: var(--ki-switch-unchecked-disabled-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-disabled-thumb);
   --_ki-switch-border: var(--ki-switch-unchecked-disabled-border);
-  --_ki-switch-glyph: var(--ki-text-base-em);
+  --_ki-switch-glyph: var(--ki-switch-glyph-disabled);
 }
 
 :host([checked]:disabled) {
@@ -202,9 +205,11 @@ input {
   translate: var(--_ki-switch-travel) 0;
 }
 
-/* Thumb state glyphs (master): ON shows the check, OFF+disabled shows the
-   dash, OFF rest shows nothing. Vectors adapted from the Figma pointer
-   exports (filled rounded paths, currentColor). */
+/* Thumb state glyphs (master): ON shows the check, OFF shows the dash, whose
+   ink is transparent at rest and Text/base_em when disabled, so only the
+   disabled dash shows by default. The state picks the shape; the
+   --ki-switch-glyph-* tokens pick the ink. Vectors adapted from the Figma
+   pointer exports (filled rounded paths, currentColor). */
 .glyph {
   block-size: var(--ki-switch-glyph-height);
   color: var(--_ki-switch-glyph);
@@ -217,11 +222,8 @@ input {
   block-size: var(--ki-switch-glyph-dash-height);
 }
 
-:host([checked]) .glyph-check {
-  opacity: 1;
-}
-
-:host(:disabled:not([checked])) .glyph-dash {
+:host([checked]) .glyph-check,
+:host(:not([checked])) .glyph-dash {
   opacity: 1;
 }
 
@@ -286,6 +288,11 @@ input:active:not(:disabled) ~ [part="track"] {
     transition: opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
   }
 
+  .glyph-dash {
+    /* Fade the dash when its color goes from transparent to disabled. */
+    transition-property: color, opacity;
+  }
+
   input:active:not(:disabled) ~ [part="track"] [part="thumb"] {
     scale: 1.15 1;
   }
@@ -318,6 +325,10 @@ input:active:not(:disabled) ~ [part="track"] {
 
   .glyph {
     color: Canvas;
+  }
+
+  :host(:not([checked], :disabled)) .glyph-dash {
+    opacity: 0;
   }
 
   /* The palette repaints the track edge, thumb and label in CanvasText

@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 317 semantic
-and 934 component tokens. Values are the resolved **onmars light**
+and 937 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1315,8 +1315,11 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-switch-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
 | `--ki-switch-focus-ring-width` | `0.125rem` | dimension used by the switch component for focus ring width. |
 | `--ki-switch-gap` | `0.75rem` | dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio). |
+| `--ki-switch-glyph-checked` | `#5f3993` | Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb. |
 | `--ki-switch-glyph-dash-height` | `0.125rem` | dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash). |
+| `--ki-switch-glyph-disabled` | `#c3c6cc` | Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs. |
 | `--ki-switch-glyph-height` | `0.375rem` | dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height). |
+| `--ki-switch-glyph-unchecked` | `rgba(255, 255, 255, 0)` | Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb. |
 | `--ki-switch-glyph-width` | `0.5rem` | dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb). |
 | `--ki-switch-min-target` | `1.75rem` | dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint). |
 | `--ki-switch-thumb-inset` | `0.125rem` | dimension used by the switch component for thumb inset. |

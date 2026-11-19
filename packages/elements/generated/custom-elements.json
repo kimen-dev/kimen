@@ -7440,12 +7440,24 @@
               "description": "dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio)."
             },
             {
+              "name": "--ki-switch-glyph-checked",
+              "description": "Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb."
+            },
+            {
               "name": "--ki-switch-glyph-dash-height",
               "description": "dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash)."
             },
             {
+              "name": "--ki-switch-glyph-disabled",
+              "description": "Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs."
+            },
+            {
               "name": "--ki-switch-glyph-height",
               "description": "dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height)."
+            },
+            {
+              "name": "--ki-switch-glyph-unchecked",
+              "description": "Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb."
             },
             {
               "name": "--ki-switch-glyph-width",
@@ -7544,20 +7556,12 @@
               "description": "dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md)."
             },
             {
-              "name": "--ki-text-base-em",
-              "description": "semantic color for text base em."
-            },
-            {
               "name": "--ki-text-danger-high-em",
               "description": "semantic color for text danger high em."
             },
             {
               "name": "--ki-text-high-em",
               "description": "semantic color for text high em."
-            },
-            {
-              "name": "--ki-text-primary-on-primary-light",
-              "description": "semantic color for text primary on primary light."
             },
             {
               "name": "--ki-text-supporting",
