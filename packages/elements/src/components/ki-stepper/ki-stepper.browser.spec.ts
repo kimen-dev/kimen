@@ -35,8 +35,10 @@ function list() {
   return page.getByRole('list', { name: label });
 }
 
-function accountLink(): HTMLAnchorElement {
-  const link = page.getByRole('link', { name: /Account/ }).element();
+async function accountLink(): Promise<HTMLAnchorElement> {
+  const account = page.getByRole('link', { name: /Account/ });
+  await expect.element(account).toBeVisible();
+  const link = account.element();
   if (!(link instanceof HTMLAnchorElement)) {
     throw new Error('Account did not render as a native link');
   }
@@ -59,7 +61,7 @@ afterEach(async () => {
   fixture.replaceChildren();
   fixture.style.inlineSize = '';
   fixture.removeAttribute('dir');
-  fixture.style.removeProperty('--ki-surface-primary-med-em');
+  document.documentElement.style.removeProperty('--ki-surface-primary-med-em');
   history.replaceState(history.state, '', initialUrl);
   await parkPointer();
 });
@@ -81,10 +83,7 @@ it('S1 stacks the four markers and displays a vertical description', async () =>
   expect(markers).toHaveLength(4);
   expect(positions).toEqual([...new Set(positions)].sort((a, b) => a - b));
   expect(
-    markers.map(
-      (marker) =>
-        marker.querySelector('ki-icon')?.getAttribute('name') ?? marker.textContent.trim(),
-    ),
+    markers.map((marker) => marker.querySelector('ki-icon')?.name ?? marker.textContent.trim()),
   ).toEqual(['check', '2', '3', 'circle-alert']);
 });
 
@@ -94,7 +93,8 @@ it('S2 compacts at the available width and expands the same list', async () => {
   await expect.element(list()).toBeVisible();
 
   fixture.style.inlineSize = '18rem';
-  const summary = page.getByRole('button', { name: 'Step 3 of 4' });
+  const summary = page.getByRole('button', { name: /^Step 3 of 4/ });
+  await expect.element(summary).toHaveAccessibleName('Step 3 of 4, Setup progress');
   await expect.element(summary).toHaveAttribute('aria-expanded', 'false');
   await expect.element(list()).not.toBeInTheDocument();
 
@@ -108,12 +108,12 @@ it('S2 compacts at the available width and expands the same list', async () => {
 it('S3 recalculates the compact position after a direct step is inserted', async () => {
   fixture.style.inlineSize = '18rem';
   const host = mount(steps.replace('<ki-step state="done">Workspace</ki-step>', ''));
-  await expect.element(page.getByRole('button', { name: 'Step 2 of 3' })).toBeVisible();
+  await expect.element(page.getByRole('button', { name: /^Step 2 of 3/ })).toBeVisible();
 
   const step = document.createElement('ki-step');
   step.textContent = 'Workspace';
   host.insertBefore(step, host.querySelector('[state="current"]'));
-  await expect.element(page.getByRole('button', { name: 'Step 3 of 4' })).toBeVisible();
+  await expect.element(page.getByRole('button', { name: /^Step 3 of 4/ })).toBeVisible();
 });
 
 it('S4 tabs to the completed link, skips the current destination, and navigates on Enter', async () => {
@@ -128,7 +128,7 @@ it('S4 tabs to the completed link, skips the current destination, and navigates 
     '<button type="button" tabindex="0" id="stepper-account">Next</button>',
   );
   await expect.element(list()).toBeVisible();
-  const account = accountLink();
+  const account = await accountLink();
   const previous = fixture.querySelector<HTMLButtonElement>('button');
   const next = fixture.querySelector('#stepper-account');
   previous?.focus();
@@ -146,7 +146,7 @@ it('S4 tabs to the completed link, skips the current destination, and navigates 
 it('S5 reveals the ordered list with Space and tabs to the completed link', async () => {
   fixture.style.inlineSize = '18rem';
   const host = mount();
-  const summary = page.getByRole('button', { name: 'Step 3 of 4' });
+  const summary = page.getByRole('button', { name: /^Step 3 of 4/ });
   await expect.element(summary).toBeVisible();
   const button = summary.element() as HTMLButtonElement;
   button.tabIndex = 0;
@@ -155,7 +155,7 @@ it('S5 reveals the ordered list with Space and tabs to the completed link', asyn
 
   await expect.element(summary).toHaveAttribute('aria-expanded', 'true');
   await expect.element(list()).toBeVisible();
-  const account = accountLink();
+  const account = await accountLink();
   await userEvent.keyboard('{Tab}');
   expect(host.shadowRoot?.activeElement).toBe(account);
 });
@@ -180,12 +180,15 @@ it('S6 exposes named, ordered list items with textual states and one current ite
 });
 
 it('S7 repaints the completed marker after a semantic theme override', async () => {
-  fixture.style.setProperty('--ki-surface-primary-med-em', 'navy');
   const host = mount(steps, 'orientation="vertical"');
   await expect.element(list()).toBeVisible();
   const marker = host.shadowRoot?.querySelector('[part="marker"]');
-  expect(marker && getComputedStyle(marker).backgroundColor).toBe('rgb(0, 0, 128)');
-  fixture.style.removeProperty('--ki-surface-primary-med-em');
+  if (!marker) throw new Error('The completed marker did not render');
+  expect(getComputedStyle(marker).backgroundColor).not.toBe('rgb(0, 0, 128)');
+
+  document.documentElement.style.setProperty('--ki-surface-primary-med-em', 'navy');
+
+  await expect.poll(() => getComputedStyle(marker).backgroundColor).toBe('rgb(0, 0, 128)');
 });
 
 it('S8 keeps the horizontal sequence in RTL reading order', async () => {
@@ -207,5 +210,22 @@ it('S12 displays a localized total and omits hidden or unrelated children', asyn
     '<ki-step state="done">Account</ki-step><span>Ignore</span><ki-step hidden>Draft</ki-step><ki-step>Review</ki-step>',
     'summary-label="Paso {current} de {total}" count-label="Pasos ({total})"',
   );
-  await expect.element(page.getByRole('button', { name: 'Pasos (2)' })).toBeVisible();
+  await expect.element(page.getByRole('button', { name: /^Pasos \(2\)/ })).toBeVisible();
+});
+
+it('S2 keeps a focused completed link reachable when the horizontal list narrows', async () => {
+  fixture.style.inlineSize = '24rem';
+  const host = mount();
+  await expect.element(list()).toBeVisible();
+  const account = await accountLink();
+  account.focus();
+  await expect.poll(() => host.shadowRoot?.activeElement).toBe(account);
+
+  fixture.style.inlineSize = '18rem';
+  const summary = page.getByRole('button', { name: /^Step 3 of 4/ });
+  await expect.element(summary).toHaveAttribute('aria-expanded', 'true');
+  expect(host.shadowRoot?.activeElement).toBe(account);
+
+  (summary.element() as HTMLButtonElement).focus();
+  await expect.element(summary).toHaveAttribute('aria-expanded', 'false');
 });

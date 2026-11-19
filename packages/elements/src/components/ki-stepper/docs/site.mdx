@@ -1,0 +1,34 @@
+---
+title: ki-stepper
+description: Show progress through named, ordered steps.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a Stepper for onboarding, checkout or other tasks with named stages.
+Provide a localized `label` and put the steps in task order. Your application
+updates the current step and any completed or failed steps.
+
+<Demo code={`<ki-stepper label="Setup progress">
+  <ki-step state="done" href="#account">Account</ki-step>
+  <ki-step state="current">Invite team</ki-step>
+  <ki-step>Review</ki-step>
+</ki-stepper>`} />
+
+Horizontal layout adapts to the stepper's available inline size. Below 22rem
+the current position appears in a disclosure that opens the ordered list.
+Use `orientation="vertical"` to keep the list stacked and expanded at every
+width. Each step can carry a short description.
+
+## Accessibility
+
+The list uses native ordered-list semantics. The current item has
+`aria-current="step"`, and the text equivalent of each state accompanies the
+label. Completed steps with an `href` use native links. Keep label content
+passive. Localize the state-label and summary properties for your page's
+language.
+
+## API reference
+
+<CemApi tag="ki-stepper" />

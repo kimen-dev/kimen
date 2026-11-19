@@ -22,7 +22,9 @@ authoring API.
 
 - Agent's choice, pending founder confirmation. Horizontal layout compacts
   below 22rem of available inline size. The summary opens the same list
-  vertically so completed links and descriptions remain available.
+  vertically so completed links and descriptions remain available. It includes
+  the task name for assistive technology and keeps focused links visible during
+  a resize.
 - Agent's choice, pending founder confirmation. Count visible direct steps in
   authored order. Use the first current step when more than one is marked
   current and present the others as upcoming. Use the total alone when no step
@@ -38,6 +40,9 @@ authoring API.
 - Agent's choice, pending founder confirmation. Keep links native. The catalog
   uses its existing URL policy for `href` and neither component declares an
   action event.
+- Agent's choice, pending founder confirmation. Declare the public API change
+  as major because the gate classifies additions to the loader Components and
+  JSX namespaces as major.
 
 ## Gherkin
 

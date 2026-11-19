@@ -560,10 +560,12 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     const errorMark = glyph(error);
     if (!checkMark || !errorMark) throw new Error('The Stepper glyphs did not render');
     expect(getComputedStyle(checkMark).stroke).not.toBe(getComputedStyle(done).backgroundColor);
-    expect(getComputedStyle(errorMark).stroke).not.toBe(getComputedStyle(error).backgroundColor);
+    expect(inkOnCanvas(getComputedStyle(errorMark).stroke)).not.toBeNull();
     expect(edgeOf(current)).not.toBeNull();
     expect(edgeOf(upcoming)).not.toBeNull();
-    expect(paintOf(current)).not.toBe(paintOf(upcoming));
+    expect(getComputedStyle(current).borderBlockStartStyle).not.toBe(
+      getComputedStyle(upcoming).borderBlockStartStyle,
+    );
   });
 
   it.for([
