@@ -16,7 +16,7 @@ interface Group extends HTMLElement {
 
 const media = commands as unknown as {
   emulateForcedColors: (mode: 'active' | null) => Promise<void>;
-  emulateReducedMotion: (mode: 'reduce' | null) => Promise<void>;
+  emulateReducedMotion: (mode: 'reduce' | 'no-preference') => Promise<void>;
 };
 
 beforeAll(() => {
@@ -275,7 +275,7 @@ it('S11 applies property selections and grouped checkbox edits silently', async 
   const { form, group } = await mount();
   const changes: Event[] = [];
   group.addEventListener('ki-change', (event) => changes.push(event));
-  const americas = group.querySelector('ki-checkbox[value="am"]');
+  const americas = group.querySelector<HTMLKiCheckboxElement>('ki-checkbox[value="am"]');
   if (!americas) throw new Error('Americas did not mount');
 
   group.value = ['am', 'apac'];
@@ -295,6 +295,17 @@ it('S11 applies property selections and grouped checkbox edits silently', async 
     ['regions', 'apac'],
   ]);
   expect(changes).toEqual([]);
+});
+
+it('S11 an explicit empty selection overrides authored checked options', async () => {
+  const { form, group } = await mount({
+    choices: options.replace('value="eu"', 'value="eu" checked'),
+    initial: [],
+  });
+
+  await expect.element(option('Europe')).not.toBeChecked();
+  expect(group.value).toEqual([]);
+  expect([...new FormData(form)]).toEqual([]);
 });
 
 it('S5 a checkbox moved out of a disabled group regains standalone form behavior', async () => {
@@ -332,12 +343,17 @@ it('S4 keeps its label, options and error visible under a forced palette', async
     });
     form.requestSubmit();
     await expect.element(groupRole()).toBeVisible();
-    await expect.element(page.getByText('Choose at least one region.')).toBeVisible();
+    const error = page.getByText('Choose at least one region.');
+    await expect.element(error).toBeVisible();
     const control = group
       .querySelector('ki-checkbox')
       ?.shadowRoot?.querySelector('[part="control"]');
     if (!control) throw new Error('Europe did not render a control');
-    expect(getComputedStyle(control).borderInlineStartStyle).toBe('solid');
+    const canvas = getComputedStyle(witness).backgroundColor;
+    const border = getComputedStyle(control);
+    expect(border.borderInlineStartStyle).toBe('solid');
+    expect(border.borderInlineStartColor).not.toBe(canvas);
+    expect(getComputedStyle(error.element()).color).not.toBe(canvas);
   } finally {
     await media.emulateForcedColors(null);
   }
@@ -356,6 +372,6 @@ it('S1 updates selection with no checkbox motion under reduced motion', async ()
     expect(getComputedStyle(mark).transitionDuration).toBe('0s');
     expect(group.value).toEqual(['eu']);
   } finally {
-    await media.emulateReducedMotion(null);
+    await media.emulateReducedMotion('no-preference');
   }
 });

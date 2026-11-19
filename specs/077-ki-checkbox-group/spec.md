@@ -28,17 +28,22 @@ option and the shared field-message presentation for help and errors.
 - **Agent's choice, pending founder confirmation.** The group owns submission,
   constraints and reset for its direct options. A checked individually disabled
   option remains selected and contributes its value. Omitted option values use
-  the checkbox default `on`. Reset restores the initial selection.
+  the checkbox default `on`. A property assignment checks every option with a
+  matching value. Reset restores initial checked options or the initial
+  property selection.
 - **Agent's choice, pending founder confirmation.** Errors replace help after
   leaving the whole group or a validation attempt. With no authored error text,
   the browser supplies the text. Nonnegative whole-number limits are supported.
   Minimum validation takes precedence when both bounds reject a selection.
+  The custom-elements build exposes the synchronous validity interface used
+  by the radio group.
 - **Agent's choice, pending founder confirmation.** Horizontal options wrap
   and follow the page direction. The label is required and names the group.
 - **Agent's choice, pending founder confirmation.** The catalog and A2UI encode
   initial selections through checked child options. The group value array and
   event detail are available through the component's JavaScript API. Adapter
   bindings remain server-to-UI and use the existing declared-action boundary.
+  An unlabeled multiple-selection picker keeps the accessible fallback.
 
 ## Gherkin
 

@@ -1,18 +1,24 @@
 export function checkboxGroupConstraint(
-  _count: number,
-  _min?: number,
-  _max?: number,
+  count: number,
+  min?: number,
+  max?: number,
 ): 'valueMissing' | 'rangeOverflow' | undefined {
-  throw new Error(
-    `Pending checkbox group constraints for ${String(_count)}, ${String(_min)} and ${String(_max)}`,
-  );
+  if (isCount(min) && count < min) return 'valueMissing';
+  if (isCount(max) && count > max) return 'rangeOverflow';
+  return undefined;
+}
+
+function isCount(bound: number | undefined): bound is number {
+  return bound !== undefined && Number.isInteger(bound) && bound >= 0;
 }
 
 export function checkboxGroupFormValue(
-  _name: string | undefined,
-  _values: readonly string[],
+  name: string | undefined,
+  values: readonly string[],
 ): FormData | null {
-  throw new Error(
-    `Pending checkbox group form data for ${String(_name)} with ${String(_values.length)} values`,
-  );
+  if (!name || values.length === 0) return null;
+
+  const data = new FormData();
+  for (const value of values) data.append(name, value);
+  return data;
 }

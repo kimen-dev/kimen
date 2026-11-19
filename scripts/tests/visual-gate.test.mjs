@@ -39,34 +39,33 @@ function parseArmedMarker(content) {
   return value === 'true';
 }
 
-// Mirrors the harness matrix: light specs capture onmars + material3, dark
-// specs capture onmars only, and toMatchScreenshot names baselines
+// Mirrors the harness matrix, including the per-spec Material 3 dark opt-in.
+// toMatchScreenshot names baselines
 // `<name>-<browser>-<platform>.png`.
-function expectedLinuxBaselines(specFileName, engine = 'chromium') {
+function expectedLinuxBaselines(specFileName, engine = 'chromium', material3Dark = false) {
   const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
-  const captures = dark
-    ? [['onmars', 'dark']]
-    : [
-        ['onmars', 'light'],
-        ['material3', 'light'],
-      ];
-  return captures.map(
-    ([theme, scheme]) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
-  );
+  const scheme = dark ? 'dark' : 'light';
+  const themes = !dark || material3Dark ? ['onmars', 'material3'] : ['onmars'];
+  return themes.map((theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`);
 }
 
-function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines = ENGINES) {
+function missingLinuxBaselines(
+  specFileNames,
+  existingBaselinesBySpec,
+  engines = ENGINES,
+  material3DarkSpecs = new Set(),
+) {
   return engines.flatMap((engine) =>
     specFileNames.flatMap((spec) =>
-      expectedLinuxBaselines(spec, engine)
+      expectedLinuxBaselines(spec, engine, material3DarkSpecs.has(spec))
         .filter((baseline) => !(existingBaselinesBySpec.get(spec)?.has(baseline) ?? false))
         .map((baseline) => `${spec}/${baseline}`),
     ),
   );
 }
 
-async function visualSpecFiles() {
+async function visualSpecEntries() {
   const entries = await Promise.all([
     readdir(browserTestsDirectory, { withFileTypes: true }),
     readdir(componentsDirectory, { recursive: true, withFileTypes: true }),
@@ -74,7 +73,7 @@ async function visualSpecFiles() {
   const specs = entries.flat().filter((entry) => entry.isFile() && VISUAL_SPEC.test(entry.name));
   const names = specs.map(({ name }) => name);
   assert.equal(new Set(names).size, names.length, 'visual spec filenames must be unique');
-  return names.toSorted();
+  return specs;
 }
 
 async function committedLinuxBaselines(specFileNames) {
@@ -102,6 +101,13 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
   ]);
+  assert.deepEqual(
+    expectedLinuxBaselines('ki-checkbox-group.visual.dark.browser.spec.ts', 'webkit', true),
+    [
+      'ki-checkbox-group-onmars-dark-gallery-webkit-linux.png',
+      'ki-checkbox-group-material3-dark-gallery-webkit-linux.png',
+    ],
+  );
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',
     'ki-button-material3-light-gallery-webkit-linux.png',
@@ -157,7 +163,8 @@ test('the baselines workflow regenerates every engine the release matrix checks'
 
 test('an armed visual gate keeps every committed linux baseline', async () => {
   const armed = parseArmedMarker(await readFile(armedMarkerPath, 'utf8'));
-  const specs = await visualSpecFiles();
+  const entries = await visualSpecEntries();
+  const specs = entries.map(({ name }) => name).toSorted();
 
   assert.ok(specs.length > 0, 'no visual specs found next to the harness');
   if (!armed) {
@@ -165,7 +172,19 @@ test('an armed visual gate keeps every committed linux baseline', async () => {
     // companion test below pins the documented path OUT of this state.
     return;
   }
-  const missing = missingLinuxBaselines(specs, await committedLinuxBaselines(specs));
+  const darkEntries = entries.filter(({ name }) => name.endsWith('.visual.dark.browser.spec.ts'));
+  const darkSpecs = await Promise.all(
+    darkEntries.map(async ({ name, parentPath }) => {
+      const source = await readFile(join(parentPath, name), 'utf8');
+      return /\bmaterial3Dark:\s*true\b/u.test(source) ? [name] : [];
+    }),
+  );
+  const missing = missingLinuxBaselines(
+    specs,
+    await committedLinuxBaselines(specs),
+    ENGINES,
+    new Set(darkSpecs.flat()),
+  );
   assert.deepEqual(
     missing,
     [],
@@ -176,9 +195,9 @@ test('an armed visual gate keeps every committed linux baseline', async () => {
 test('every discovered component has a light and dark visual spec', async () => {
   const [components, specFiles] = await Promise.all([
     discoverComponents({ workspaceRoot: repositoryRoot }),
-    visualSpecFiles(),
+    visualSpecEntries(),
   ]);
-  const specs = new Set(specFiles);
+  const specs = new Set(specFiles.map(({ name }) => name));
   const missing = components.flatMap(({ tag }) =>
     [`${tag}.visual.browser.spec.ts`, `${tag}.visual.dark.browser.spec.ts`].filter(
       (spec) => !specs.has(spec),

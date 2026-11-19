@@ -64,3 +64,39 @@ it.each([
     ]);
   },
 );
+
+it('S12 falls back for a multiple-selection picker without an accessible group label', () => {
+  const surface = document.createElement('div');
+  const degradations: string[] = [];
+  const adapter = createA2uiAdapter({
+    surface,
+    onDegradation: ({ reason }) => degradations.push(reason),
+  });
+  const version = '1.0';
+  const surfaceId = 'unlabeled';
+  expect(
+    adapter.apply({
+      version,
+      createSurface: { surfaceId, catalogId: A2UI_V1_BASIC_CATALOG_IDS[0] },
+    }).ok,
+  ).toBe(true);
+
+  const result = adapter.apply({
+    version,
+    updateComponents: {
+      surfaceId,
+      components: [
+        {
+          id: 'root',
+          component: 'ChoicePicker',
+          variant: 'multipleSelection',
+          options: [{ value: 'eu', label: 'Europe' }],
+        },
+      ],
+    },
+  });
+
+  expect(result.ok).toBe(true);
+  expect(degradations).toEqual(['unsupported-variant']);
+  expect(surface.querySelector('ki-checkbox-group')).toBeNull();
+});
