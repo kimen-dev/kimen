@@ -113,6 +113,38 @@ test('@spec:018-project-integrity-hardening S6 prerelease permits the runner apt
   }
 });
 
+// The Semgrep scan is a gate inside `gates-suite.sh`, and a hosted runner has
+// no `semgrep` on PATH: the job that runs the suite has to install the engine
+// first. ci.yml did; this workflow, which only runs at release, did not, so
+// the first dry run after the gate was added stopped two minutes in. The
+// version is the one the gate itself demands, so the two cannot drift apart.
+test('@spec:018-project-integrity-hardening S6 release validation installs the Semgrep engine its core gate requires', async () => {
+  const [gate, ciWorkflow, securityWorkflow] = await Promise.all(
+    [
+      '../gates/semgrep-scan.sh',
+      '../../.github/workflows/ci.yml',
+      '../../.github/workflows/security.yml',
+    ].map((path) => readFile(new URL(path, import.meta.url), 'utf8')),
+  );
+  const pinned = /^SEMGREP_VERSION='([0-9]+\.[0-9]+\.[0-9]+)'$/m.exec(gate);
+  assert.ok(pinned, 'semgrep-scan.sh must pin one exact Semgrep version');
+  const install = `run: pipx install semgrep==${pinned[1]}`;
+
+  const job = readJob(releaseWorkflow, 'validate-core');
+  const installIndex = job.indexOf(install);
+  const suiteIndex = job.indexOf('run: bash scripts/gates/gates-suite.sh');
+  assert.notEqual(suiteIndex, -1, 'validate-core must run the gate suite');
+  assert.notEqual(installIndex, -1, `validate-core must run "${install}"`);
+  assert.ok(installIndex < suiteIndex, 'Semgrep must be installed before the gate suite runs');
+  // pipx downloads from PyPI, and this job blocks every undeclared host.
+  assert.match(job, /^ {12}pypi\.org:443$/m);
+  assert.match(job, /^ {12}files\.pythonhosted\.org:443$/m);
+
+  // Every workflow that installs the engine installs that same version.
+  assert.ok(ciWorkflow.includes(install), `ci.yml must run "${install}"`);
+  assert.ok(securityWorkflow.includes(install), `security.yml must run "${install}"`);
+});
+
 test('@spec:018-project-integrity-hardening S8 release validation proves the packaging contract before the candidate is built', () => {
   const validateCore = readJob(releaseWorkflow, 'validate-core');
   const coreGate = 'bash scripts/gates/gates-suite.sh';
