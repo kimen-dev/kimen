@@ -143,6 +143,25 @@ observe default rendering.
   resolve through the semantic layer cascade (missing theme stylesheet falls
   back to onmars, per the 001 contract).
 
+## Amendment A1: a 12px floor for the extra-small label *(decided 2026-11-19)*
+
+Issue #321. The extra-small label resolved to `caption-1`, 10px in every
+brand mode, as the Figma `Button` master (8003:300) draws it. WCAG sets no
+minimum font size, but 10px text is hard to read for many people and is
+below what most platforms treat as a floor for informative text.
+
+- **Decision**: `--ki-button-xs-font-size` and `--ki-button-xs-line-height`
+  resolve to `caption-2` (12px; label-medium in material3), which still fits
+  the 24px extra-small button. This deliberately departs from the Figma
+  master; the design source should follow.
+- **Decision**: the initials of the `xxs` and `xs` avatars and the "+N"
+  counter of the `xxs` and `xs` avatar groups keep `caption-1` (10px), as
+  Figma draws them. They are not the accessible name (each avatar carries a
+  `label`, the group its own count), and they are short codes inside 20px and
+  24px circles rather than text to read.
+- **FR-A1-001**: an extra-small button's label MUST render at 12px or more in
+  every shipped theme (S15).
+
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
 ```gherkin
@@ -240,6 +259,17 @@ Feature: Button
     Given a right-to-left document with icons in the start and end slots
     When the page renders
     Then the start content leads and the end content trails the label
+
+  # S15
+  Scenario Outline: An extra-small button's label is at least 12 pixels
+    Given a <theme> page with an extra-small button labeled "Undo"
+    When the page renders
+    Then the label measures at least 12 CSS pixels
+
+    Examples:
+      | theme     |
+      | onmars    |
+      | material3 |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -250,7 +280,7 @@ Feature: Button
 | Keyboard path | S3, S4 | |
 | Assistive-tech outcome | S5, S6, S14 | |
 | Form participation | S7, S8, S12 | |
-| Theming | S9, S10, S13 | |
+| Theming | S9, S10, S13, S15 | |
 
 ## Requirements *(mandatory)*
 

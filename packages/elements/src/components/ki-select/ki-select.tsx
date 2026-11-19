@@ -21,6 +21,7 @@ import {
   fieldText,
   fieldValidationMessage,
 } from '../../utils/field-message';
+import { LabelHint } from '../../utils/label-hint';
 import {
   normalizeBooleanPresence,
   optionLabelText,
@@ -62,6 +63,9 @@ type RosterOption = SelectOptionRecord & {
  *
  * @slot - `ki-option` data children. They do not paint; rows are mirrored.
  * @part label - Visible label and accessible-name source.
+ * @part label-hint - The `label-hint` text after the label text, inside the label and
+ * part of the accessible name of the combobox and its listbox; rendered only while a
+ * hint is set.
  * @part trigger - Native button carrying the combobox role.
  * @part value - Displayed selection or placeholder.
  * @part indicator - Decorative dropdown indicator.
@@ -79,7 +83,7 @@ type RosterOption = SelectOptionRecord & {
  */
 @Component({
   tag: 'ki-select',
-  styleUrls: ['../../utils/field-message.css', 'ki-select.css'],
+  styleUrls: ['../../utils/field-message.css', '../../utils/label-hint.css', 'ki-select.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -92,6 +96,17 @@ export class KiSelect {
    * When NOT to use: do not omit it; unlabeled selects are invalid usage.
    */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * Short text shown after the label and read with it as part of the
+   * combobox name, so people know before submitting whether to choose:
+   * "(optional)" on the few optional fields of a mostly required form, or
+   * "(required)" the other way round, in the page's own language. It changes
+   * no validation; set `required` for that, and keep the two consistent.
+   * When NOT to use: do not put instructions in it (use `help-text`), errors
+   * (use `error-text`), or a repeat of the label.
+   */
+  @Prop({ reflect: true }) labelHint?: string;
 
   /**
    * Text shown while no option is selected.
@@ -730,6 +745,7 @@ export class KiSelect {
       <Host>
         <label id={this.labelId} part="label" htmlFor={this.triggerId}>
           {this.label}
+          <LabelHint hint={fieldText(this.labelHint)} />
         </label>
         <button
           ref={this.setTriggerRef}

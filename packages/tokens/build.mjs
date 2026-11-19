@@ -28,6 +28,7 @@ import {
   combineSchemes,
   compositionDeclarations,
   DENSITIES,
+  densityRules,
   layeredOverrides,
   MODES,
   renderBaseStylesheet,
@@ -123,7 +124,7 @@ for (const { mode, declarations } of [...baseModes, ...material3Modes]) {
     label: mode.name,
   });
 }
-const densities = [];
+const levels = [];
 for (const level of DENSITIES) {
   const declarations = layeredOverrides({
     target: await theme('onmars', undefined, (config) => withDensity(config, level)),
@@ -136,17 +137,9 @@ for (const level of DENSITIES) {
       );
     }
   }
-  densities.push({ level, declarations });
+  levels.push({ level, declarations });
 }
-densities.push({
-  level: 'default',
-  declarations: new Map(
-    [...new Set(densities.flatMap(({ declarations }) => [...declarations.keys()]))].map((name) => [
-      name,
-      onmars.get(name),
-    ]),
-  ),
-});
+const densities = densityRules(levels, onmars);
 
 await writeFile(
   new URL('tokens.css', dist),

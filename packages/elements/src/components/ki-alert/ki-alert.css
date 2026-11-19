@@ -169,6 +169,21 @@
   backdrop-filter: blur(var(--ki-effect-component-backdrop-blur));
   color: var(--_ki-alert-dismiss-fg);
   font: inherit;
+
+  /* Its pointer target paints behind the glyph, in its own stacking context. */
+  isolation: isolate;
+}
+
+/* The pointer target (spec 045 A1-D3): at least --ki-density-target-min
+   across both axes, centred on the control, painting nothing and taking no
+   space. Under touch's 44px minimum it extends the 24px chip's target; it
+   stays inside the card's 12px corner inset. */
+[part="dismiss"]::before {
+  position: absolute;
+  inset-block: calc((100% - var(--ki-density-target-min)) / 2);
+  inset-inline: calc((100% - var(--ki-density-target-min)) / 2);
+  z-index: -1;
+  content: "";
 }
 
 @media (hover: hover) {

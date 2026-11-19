@@ -1,6 +1,10 @@
 {
   "ki": {
     "textarea": {
+      "font-size-touch": {
+        "$value": "{ki.typography.size.body-2}",
+        "$description": "Material 3 dimension used by the textarea component for the text a person types under a coarse primary pointer: body-large, 16px (spec 048)."
+      },
       "radius": {
         "$value": "{ki.radius.component.xs}",
         "$description": "M3 text-field container shape: md.sys.shape.corner.extra-small (4dp) via the material3 radius scale."

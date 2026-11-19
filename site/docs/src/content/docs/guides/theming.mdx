@@ -159,6 +159,37 @@ sizes) and `--ki-density-space-scale` (multiplies padding and gaps).
 [data-ki-density='compact'] { --ki-density-control-offset: -4px; }
 ```
 
+For touch-first surfaces — a kiosk, a mobile layout — declare `touch`
+instead:
+
+```html
+<section data-ki-density="touch">…</section>
+```
+
+Touch is one +4px step (medium controls 40 → 44px, material3 fields
+48 → 52px) with 44 × 44 CSS px pointer targets (WCAG 2.5.5, Apple's HIG).
+Checkboxes, radios, switches, icon buttons and the alert's dismiss control
+keep their painted size and their place: their target extends invisibly
+around them instead. Text, icons and container spacing do not change. Touch
+and compact nest in each other like any density, and `--ki-density-target-min`
+sets the target (`48px` for Material's 48dp).
+
+Kimen never switches to touch by itself. To follow the pointer, put the
+touch values on the page root in your own stylesheet:
+
+```css
+@media (pointer: coarse) {
+  :root {
+    --ki-density-control-offset: var(--ki-space-xs);
+    --ki-density-space-scale: var(--ki-scale-unit);
+    --ki-density-target-min: var(--ki-size-target-touch);
+  }
+}
+```
+
+Leave room between small touch controls: an extended target reserves no
+space, so two controls closer than 44px centre to centre share the overlap.
+
 ## Surfaces
 
 The semantic surface scale in the current scheme — each swatch reads its

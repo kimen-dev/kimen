@@ -408,6 +408,10 @@
               "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
             },
             {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
               "name": "--ki-effect-component-backdrop-blur",
               "description": "MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate)."
             },
@@ -1260,8 +1264,8 @@
           "customElement": true,
           "tagName": "ki-button",
           "description": "A token-styled action button with native button semantics.",
-          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.",
-          "whenNotToUse": "navigation, icon-only actions, persistent toggles, or\nloading/progress semantics.",
+          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it.",
+          "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
           "attributes": [
             {
               "name": "disabled",
@@ -1270,7 +1274,25 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics."
+              "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button. Wins over\n`loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`."
+            },
+            {
+              "name": "loading",
+              "fieldName": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pending state of the action this button started (saving, sending).\nWhile set, every activation is blocked (pointer, Enter and Space) and the\nbutton neither submits nor resets its form, but it stays focusable, in\nthe Tab order and at its width: the label stays laid out, transparent,\nand a spinner is drawn in its place. The internal native button is\nexposed with `aria-disabled=\"true\"` and keeps its name, and\n`loadingLabel` is announced as a polite status message. `disabled`, and\na disabled fieldset, win over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this button started is running,\nso a second activation cannot repeat it.\nWhen NOT to use: for a button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress)."
+            },
+            {
+              "name": "loading-label",
+              "fieldName": "loadingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'",
+              "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the button's\nonly built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Saving\").\nWhen NOT to use: do not repeat the button's label here; the person\nalready hears it on focus."
             },
             {
               "name": "name",
@@ -1334,8 +1356,32 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+              "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button. Wins over\n`loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
               "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pending state of the action this button started (saving, sending).\nWhile set, every activation is blocked (pointer, Enter and Space) and the\nbutton neither submits nor resets its form, but it stays focusable, in\nthe Tab order and at its width: the label stays laid out, transparent,\nand a spinner is drawn in its place. The internal native button is\nexposed with `aria-disabled=\"true\"` and keeps its name, and\n`loadingLabel` is announced as a polite status message. `disabled`, and\na disabled fieldset, win over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this button started is running,\nso a second activation cannot repeat it.\nWhen NOT to use: for a button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress).",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loadingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'",
+              "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the button's\nonly built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Saving\").\nWhen NOT to use: do not repeat the button's label here; the person\nalready hears it on focus.",
+              "attribute": "loading-label",
               "reflects": true
             },
             {
@@ -1432,6 +1478,10 @@
             {
               "name": "label",
               "description": "Label wrapper around the default slot."
+            },
+            {
+              "name": "spinner",
+              "description": "Loading spinner drawn at the center of the button, in the\nbutton's foreground ink, rendered only while `loading` is in effect."
             }
           ],
           "cssProperties": [
@@ -1600,6 +1650,10 @@
               "description": "dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns)."
             },
             {
+              "name": "--ki-button-lg-spinner-size",
+              "description": "dimension used by the button component for the lg loading spinner box (20px, the lg icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
               "name": "--ki-button-md-font-size",
               "description": "dimension used by the button component for md font size."
             },
@@ -1630,6 +1684,10 @@
             {
               "name": "--ki-button-md-radius",
               "description": "dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-md-spinner-size",
+              "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
             },
             {
               "name": "--ki-button-padding-block",
@@ -1980,6 +2038,18 @@
               "description": "dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns)."
             },
             {
+              "name": "--ki-button-sm-spinner-size",
+              "description": "dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-spinner-duration",
+              "description": "duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference."
+            },
+            {
+              "name": "--ki-button-spinner-stroke-width",
+              "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
+            },
+            {
               "name": "--ki-button-tertiary-danger-hover-bg",
               "description": "color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
@@ -2112,8 +2182,12 @@
               "description": "dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns)."
             },
             {
+              "name": "--ki-button-xl-spinner-size",
+              "description": "dimension used by the button component for the xl loading spinner box (24px, the xl icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
               "name": "--ki-button-xs-font-size",
-              "description": "dimension used by the button component for xs font size (MarsUI caption_1 10px)."
+              "description": "dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px."
             },
             {
               "name": "--ki-button-xs-gap",
@@ -2129,7 +2203,7 @@
             },
             {
               "name": "--ki-button-xs-line-height",
-              "description": "dimension used by the button component for xs line height (MarsUI caption_1 16px)."
+              "description": "dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1)."
             },
             {
               "name": "--ki-button-xs-min-target",
@@ -2144,12 +2218,16 @@
               "description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
             },
             {
+              "name": "--ki-button-xs-spinner-size",
+              "description": "dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
               "name": "--ki-density-control-offset",
               "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
             },
             {
               "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-motion-duration-fast",
@@ -2400,6 +2478,14 @@
               "description": "Presentation-only mixed state. It renders the dash mark, is forwarded to\nthe internal native input for mixed assistive-technology exposure, and\nnever changes the submitted value. Any user toggle clears it and removes\nthe reflected attribute.\nWhen NOT to use: do not submit or persist `indeterminate` as a third\nvalue; model data remains binary through `checked`."
             },
             {
+              "name": "label-hint",
+              "fieldName": "labelHint",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the slotted label and read with it as part of the\ncheckbox name, so people know before submitting whether they must check\nit: \"(required)\" on a consent the form cannot do without, \"(optional)\"\non one it can, in the page's own language. It changes no validation; set\n`required` for that, and keep the two consistent.\nWhen NOT to use: do not put what checking it commits to in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+            },
+            {
               "name": "name",
               "fieldName": "name",
               "type": {
@@ -2486,6 +2572,17 @@
             },
             {
               "kind": "field",
+              "name": "labelHint",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the slotted label and read with it as part of the\ncheckbox name, so people know before submitting whether they must check\nit: \"(required)\" on a consent the form cannot do without, \"(optional)\"\non one it can, in the page's own language. It changes no validation; set\n`required` for that, and keep the two consistent.\nWhen NOT to use: do not put what checking it commits to in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+              "attribute": "label-hint",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "name",
               "privacy": "public",
               "type": {
@@ -2550,6 +2647,10 @@
             {
               "name": "label",
               "description": "Label wrapper around the default slot."
+            },
+            {
+              "name": "label-hint",
+              "description": "The `label-hint` text after the slotted label, inside the label\nwrapper and part of the accessible name; rendered only while a hint is set."
             }
           ],
           "cssProperties": [
@@ -2698,6 +2799,14 @@
               "description": "font weight used by the checkbox component for label font weight."
             },
             {
+              "name": "--ki-checkbox-label-hint-fg",
+              "description": "color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text)."
+            },
+            {
+              "name": "--ki-checkbox-label-hint-gap",
+              "description": "dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px)."
+            },
+            {
               "name": "--ki-checkbox-label-line-height",
               "description": "dimension used by the checkbox component for label line height (MarsUI body_2 24px)."
             },
@@ -2756,6 +2865,10 @@
             {
               "name": "--ki-checkbox-unchecked-rest-fg",
               "description": "color used by the checkbox component for unchecked rest foreground."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-effect-component-primary-default-shadow",
@@ -3274,7 +3387,7 @@
           "customElement": true,
           "tagName": "ki-icon-button",
           "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
-          "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability.",
+          "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it.",
           "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
           "attributes": [
             {
@@ -3284,7 +3397,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics."
+              "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`."
             },
             {
               "name": "label",
@@ -3294,6 +3407,24 @@
               },
               "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
               "required": true
+            },
+            {
+              "name": "loading",
+              "fieldName": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pending state of the action this icon button started (refreshing,\nsending). While set, every activation is blocked (pointer, Enter and\nSpace), but the icon button stays focusable, in the Tab order and at its\nsize: the icon stays laid out, transparent, and a spinner is drawn in its\nplace. The internal native button is exposed with `aria-disabled=\"true\"`\nand keeps its `label`, and `loadingLabel` is announced as a polite status\nmessage. `disabled` wins over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this icon button started is\nrunning, so a second activation cannot repeat it.\nWhen NOT to use: for an icon button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress)."
+            },
+            {
+              "name": "loading-label",
+              "fieldName": "loadingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'",
+              "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus."
             },
             {
               "name": "size",
@@ -3332,7 +3463,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+              "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
               "attribute": "disabled",
               "reflects": true
             },
@@ -3347,6 +3478,30 @@
               "attribute": "label",
               "reflects": true,
               "required": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pending state of the action this icon button started (refreshing,\nsending). While set, every activation is blocked (pointer, Enter and\nSpace), but the icon button stays focusable, in the Tab order and at its\nsize: the icon stays laid out, transparent, and a spinner is drawn in its\nplace. The internal native button is exposed with `aria-disabled=\"true\"`\nand keeps its `label`, and `loadingLabel` is announced as a polite status\nmessage. `disabled` wins over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this icon button started is\nrunning, so a second activation cannot repeat it.\nWhen NOT to use: for an icon button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress).",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loadingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'",
+              "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
+              "attribute": "loading-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3400,6 +3555,10 @@
             {
               "name": "icon",
               "description": "Icon wrapper around the default slot."
+            },
+            {
+              "name": "spinner",
+              "description": "Loading spinner drawn in place of the icon, in the button's\nforeground ink, rendered only while `loading` is in effect."
             }
           ],
           "cssProperties": [
@@ -3848,6 +4007,14 @@
               "description": "dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns)."
             },
             {
+              "name": "--ki-button-spinner-duration",
+              "description": "duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference."
+            },
+            {
+              "name": "--ki-button-spinner-stroke-width",
+              "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
+            },
+            {
               "name": "--ki-button-tertiary-danger-hover-bg",
               "description": "color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
@@ -3961,7 +4128,7 @@
             },
             {
               "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-icon-button-lg-icon-size",
@@ -3972,12 +4139,20 @@
               "description": "dimension used by the icon button component for lg box (48px square)."
             },
             {
+              "name": "--ki-icon-button-lg-spinner-size",
+              "description": "dimension used by the icon button component for the lg loading spinner box (24px, the lg icon size; spec 046 D5: the spinner takes the place of the icon)."
+            },
+            {
               "name": "--ki-icon-button-md-icon-size",
               "description": "dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3)."
             },
             {
               "name": "--ki-icon-button-md-size",
               "description": "dimension used by the icon button component for md box (40px square, Figma node 10078:3129)."
+            },
+            {
+              "name": "--ki-icon-button-md-spinner-size",
+              "description": "dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon)."
             },
             {
               "name": "--ki-icon-button-sm-icon-size",
@@ -3988,6 +4163,10 @@
               "description": "dimension used by the icon button component for sm box (32px square)."
             },
             {
+              "name": "--ki-icon-button-sm-spinner-size",
+              "description": "dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon)."
+            },
+            {
               "name": "--ki-icon-button-xl-icon-size",
               "description": "dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px)."
             },
@@ -3996,12 +4175,20 @@
               "description": "dimension used by the icon button component for xl box (56px square)."
             },
             {
+              "name": "--ki-icon-button-xl-spinner-size",
+              "description": "dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon)."
+            },
+            {
               "name": "--ki-icon-button-xs-icon-size",
               "description": "dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon)."
             },
             {
               "name": "--ki-icon-button-xs-size",
               "description": "dimension used by the icon button component for xs box (24px square, Figma Space/7xl)."
+            },
+            {
+              "name": "--ki-icon-button-xs-spinner-size",
+              "description": "dimension used by the icon button component for the xs loading spinner box (16px, the xs icon size; spec 046 D5: the spinner takes the place of the icon)."
             },
             {
               "name": "--ki-motion-duration-fast",
@@ -4275,6 +4462,14 @@
               "required": true
             },
             {
+              "name": "label-hint",
+              "fieldName": "labelHint",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+            },
+            {
               "name": "name",
               "fieldName": "name",
               "type": {
@@ -4387,6 +4582,17 @@
             },
             {
               "kind": "field",
+              "name": "labelHint",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+              "attribute": "label-hint",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "name",
               "privacy": "public",
               "type": {
@@ -4495,6 +4701,10 @@
             {
               "name": "label",
               "description": "Visible label that provides the accessible name."
+            },
+            {
+              "name": "label-hint",
+              "description": "The `label-hint` text after the label text, inside the label and\npart of the accessible name; rendered only while a hint is set."
             }
           ],
           "cssProperties": [
@@ -4504,7 +4714,7 @@
             },
             {
               "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-input-border-block-end-width",
@@ -4579,6 +4789,10 @@
               "description": "dimension used by the input component for font size."
             },
             {
+              "name": "--ki-input-font-size-touch",
+              "description": "dimension used by the input component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step."
+            },
+            {
               "name": "--ki-input-font-weight",
               "description": "font weight used by the input component for font weight."
             },
@@ -4649,6 +4863,14 @@
             {
               "name": "--ki-input-label-gap",
               "description": "dimension used by the input component for label gap."
+            },
+            {
+              "name": "--ki-input-label-hint-fg",
+              "description": "color used by the input component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text)."
+            },
+            {
+              "name": "--ki-input-label-hint-gap",
+              "description": "dimension used by the input component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px)."
             },
             {
               "name": "--ki-input-label-line-height",
@@ -4924,7 +5146,7 @@
             },
             {
               "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-inverse-white-alpha-3",
@@ -5524,6 +5746,10 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
               "name": "--ki-effect-component-primary-default-shadow",
               "description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow."
             },
@@ -5785,6 +6011,14 @@
               "required": true
             },
             {
+              "name": "label-hint",
+              "fieldName": "labelHint",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the group label and read with it as part of the\nradiogroup name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional questions of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put what the choice decides in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+            },
+            {
               "name": "name",
               "fieldName": "name",
               "type": {
@@ -5860,6 +6094,17 @@
             },
             {
               "kind": "field",
+              "name": "labelHint",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the group label and read with it as part of the\nradiogroup name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional questions of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put what the choice decides in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+              "attribute": "label-hint",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "name",
               "privacy": "public",
               "type": {
@@ -5921,6 +6166,10 @@
             {
               "name": "label",
               "description": "Visible group label and accessible-name source."
+            },
+            {
+              "name": "label-hint",
+              "description": "The `label-hint` text after the group label text, inside the label\nand part of the radiogroup's accessible name; rendered only while a hint is set."
             }
           ],
           "cssProperties": [
@@ -5935,6 +6184,14 @@
             {
               "name": "--ki-radio-group-label-font-weight",
               "description": "font weight used by the radio group component for label font weight."
+            },
+            {
+              "name": "--ki-radio-group-label-hint-fg",
+              "description": "color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text)."
+            },
+            {
+              "name": "--ki-radio-group-label-hint-gap",
+              "description": "dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px)."
             },
             {
               "name": "--ki-radio-group-label-line-height",
@@ -6196,6 +6453,14 @@
               "required": true
             },
             {
+              "name": "label-hint",
+              "fieldName": "labelHint",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the label and read with it as part of the\ncombobox name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional fields of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions in it (use `help-text`), errors\n(use `error-text`), or a repeat of the label."
+            },
+            {
               "name": "name",
               "fieldName": "name",
               "type": {
@@ -6280,6 +6545,17 @@
             },
             {
               "kind": "field",
+              "name": "labelHint",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the label and read with it as part of the\ncombobox name, so people know before submitting whether to choose:\n\"(optional)\" on the few optional fields of a mostly required form, or\n\"(required)\" the other way round, in the page's own language. It changes\nno validation; set `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions in it (use `help-text`), errors\n(use `error-text`), or a repeat of the label.",
+              "attribute": "label-hint",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "name",
               "privacy": "public",
               "type": {
@@ -6359,6 +6635,10 @@
               "description": "Visible label and accessible-name source."
             },
             {
+              "name": "label-hint",
+              "description": "The `label-hint` text after the label text, inside the label and\npart of the accessible name of the combobox and its listbox; rendered only while a\nhint is set."
+            },
+            {
               "name": "listbox",
               "description": "Popup listbox surface."
             },
@@ -6386,7 +6666,7 @@
             },
             {
               "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-effect-component-secondary-default-shadow",
@@ -6591,6 +6871,14 @@
             {
               "name": "--ki-select-label-gap",
               "description": "dimension used by the select component for label gap."
+            },
+            {
+              "name": "--ki-select-label-hint-fg",
+              "description": "color used by the select component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text)."
+            },
+            {
+              "name": "--ki-select-label-hint-gap",
+              "description": "dimension used by the select component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px)."
             },
             {
               "name": "--ki-select-label-line-height",
@@ -7040,6 +7328,10 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
               "name": "--ki-effect-small-dark-shadow",
               "description": "MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters."
             },
@@ -7416,7 +7708,7 @@
             },
             {
               "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-motion-distance-xs",
@@ -7877,6 +8169,14 @@
               "required": true
             },
             {
+              "name": "label-hint",
+              "fieldName": "labelHint",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+            },
+            {
               "name": "name",
               "fieldName": "name",
               "type": {
@@ -7989,6 +8289,17 @@
             },
             {
               "kind": "field",
+              "name": "labelHint",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
+              "attribute": "label-hint",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "name",
               "privacy": "public",
               "type": {
@@ -8086,6 +8397,10 @@
               "description": "Rendered visible label and accessible-name source."
             },
             {
+              "name": "label-hint",
+              "description": "The `label-hint` text after the label text, inside the label and\npart of the accessible name; rendered only while a hint is set."
+            },
+            {
               "name": "textarea",
               "description": "Internal native multiline control."
             }
@@ -8097,7 +8412,7 @@
             },
             {
               "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-motion-duration-fast",
@@ -8188,6 +8503,10 @@
               "description": "dimension used by the textarea component for font size."
             },
             {
+              "name": "--ki-textarea-font-size-touch",
+              "description": "dimension used by the textarea component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step."
+            },
+            {
               "name": "--ki-textarea-font-weight",
               "description": "font weight used by the textarea component for font weight."
             },
@@ -8246,6 +8565,14 @@
             {
               "name": "--ki-textarea-label-gap",
               "description": "dimension used by the textarea component for label gap."
+            },
+            {
+              "name": "--ki-textarea-label-hint-fg",
+              "description": "color used by the textarea component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text)."
+            },
+            {
+              "name": "--ki-textarea-label-hint-gap",
+              "description": "dimension used by the textarea component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px)."
             },
             {
               "name": "--ki-textarea-label-line-height",

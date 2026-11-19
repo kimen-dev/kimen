@@ -201,6 +201,7 @@ CSS custom properties:
 - `--ki-alert-warning-icon-bg`: color used by the alert component for the warning icon frame (MarsUI Alert master Feature-icon Surface/warning-base-em-alpha at 12%).
 - `--ki-alert-warning-icon-fg`: color used by the alert component for the warning icon glyph (MarsUI Alert master Feature-icon glyph Text/warning-high-em).
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-effect-component-backdrop-blur`: MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
@@ -510,8 +511,10 @@ A token-styled action button with native button semantics.
 
 When to use: trigger the single main action of a view, supporting actions
 in descending hierarchy, or confirming/destructive actions through tone.
-When NOT to use: navigation, icon-only actions, persistent toggles, or
-loading/progress semantics.
+While the action a button started is in progress, set `loading` on that
+button instead of disabling it.
+When NOT to use: navigation, icon-only actions, persistent toggles, or the
+progress of a page or region (use ki-progress).
 
 Examples:
 
@@ -543,8 +546,31 @@ saveButton.textContent = 'Save';
 document.body.append(saveButton);
 ```
 
+While the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default "Loading") as a polite status message. Clear it when the action ends:
+
+```html
+<form id="profile">
+  <ki-button variant="primary" loading-label="Saving">Save changes</ki-button>
+</form>
+<script type="module">
+  const form = document.getElementById('profile');
+  const save = form.querySelector('ki-button');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    save.loading = true;
+    try {
+      await fetch('/profile', { method: 'POST', body: new FormData(form) });
+    } finally {
+      save.loading = false;
+    }
+  });
+</script>
+```
+
 Attributes:
-- `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+- `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
+- `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
+- `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
 - `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
@@ -560,6 +586,7 @@ Slots:
 Parts:
 - `button`: Internal native button.
 - `label`: Label wrapper around the default slot.
+- `spinner`: Loading spinner drawn at the center of the button, in the button's foreground ink, rendered only while `loading` is in effect.
 
 Events: none
 
@@ -607,6 +634,7 @@ CSS custom properties:
 - `--ki-button-lg-min-target`: dimension used by the button component for lg min target.
 - `--ki-button-lg-padding-inline`: dimension used by the button component for lg padding inline.
 - `--ki-button-lg-radius`: dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns).
+- `--ki-button-lg-spinner-size`: dimension used by the button component for the lg loading spinner box (20px, the lg icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
 - `--ki-button-md-font-size`: dimension used by the button component for md font size.
 - `--ki-button-md-gap`: dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px).
 - `--ki-button-md-height`: dimension used by the button component for md height.
@@ -615,6 +643,7 @@ CSS custom properties:
 - `--ki-button-md-min-target`: dimension used by the button component for md min target.
 - `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
 - `--ki-button-md-radius`: dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).
+- `--ki-button-md-spinner-size`: dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
 - `--ki-button-padding-block`: dimension used by the button component for padding block (MarsUI: 4px in every size).
 - `--ki-button-primary-active-overlay`: Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
@@ -702,6 +731,9 @@ CSS custom properties:
 - `--ki-button-sm-min-target`: dimension used by the button component for sm min target.
 - `--ki-button-sm-padding-inline`: dimension used by the button component for sm padding inline.
 - `--ki-button-sm-radius`: dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns).
+- `--ki-button-sm-spinner-size`: dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-button-spinner-duration`: duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference.
+- `--ki-button-spinner-stroke-width`: dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width).
 - `--ki-button-tertiary-danger-hover-bg`: color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
 - `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground.
@@ -735,16 +767,18 @@ CSS custom properties:
 - `--ki-button-xl-min-target`: dimension used by the button component for xl min target.
 - `--ki-button-xl-padding-inline`: dimension used by the button component for xl padding inline (MarsUI 14px).
 - `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
-- `--ki-button-xs-font-size`: dimension used by the button component for xs font size (MarsUI caption_1 10px).
+- `--ki-button-xl-spinner-size`: dimension used by the button component for the xl loading spinner box (24px, the xl icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-button-xs-font-size`: dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px.
 - `--ki-button-xs-gap`: dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px).
 - `--ki-button-xs-height`: dimension used by the button component for xs height.
 - `--ki-button-xs-icon-size`: dimension used by the button component for xs icon size (MarsUI 14px).
-- `--ki-button-xs-line-height`: dimension used by the button component for xs line height (MarsUI caption_1 16px).
+- `--ki-button-xs-line-height`: dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1).
 - `--ki-button-xs-min-target`: dimension used by the button component for xs min target.
 - `--ki-button-xs-padding-inline`: dimension used by the button component for xs padding inline.
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
+- `--ki-button-xs-spinner-size`: dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
@@ -888,6 +922,7 @@ Attributes:
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the checkbox, read with it as its description: what checking it means or commits to. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `indeterminate` (boolean, default false): Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+- `label-hint` (string | undefined): Short text shown after the slotted label and read with it as part of the checkbox name, so people know before submitting whether they must check it: "(required)" on a consent the form cannot do without, "(optional)" on one it can, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what checking it commits to in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
 - `required` (boolean, default false): Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
 - `value` (string | undefined): Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
@@ -900,6 +935,7 @@ Parts:
 - `error`: Error line shown in place of the help text while the checkbox is invalid after the person toggled it or submitted; a polite live region, starting with a decorative error symbol.
 - `help`: Help line under the checkbox, read as its description.
 - `label`: Label wrapper around the default slot.
+- `label-hint`: The `label-hint` text after the slotted label, inside the label wrapper and part of the accessible name; rendered only while a hint is set.
 
 Events:
 - `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
@@ -943,6 +979,8 @@ CSS custom properties:
 - `--ki-checkbox-invalid-fg`: color used by the checkbox component for invalid foreground.
 - `--ki-checkbox-label-font-size`: dimension used by the checkbox component for label font size (MarsUI md pairing: body_2 15px for the 20px box).
 - `--ki-checkbox-label-font-weight`: font weight used by the checkbox component for label font weight.
+- `--ki-checkbox-label-hint-fg`: color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
+- `--ki-checkbox-label-hint-gap`: dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-checkbox-label-line-height`: dimension used by the checkbox component for label line height (MarsUI body_2 24px).
 - `--ki-checkbox-min-target`: dimension used by the checkbox component for min target.
 - `--ki-checkbox-radius`: dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap).
@@ -958,6 +996,7 @@ CSS custom properties:
 - `--ki-checkbox-unchecked-rest-bg`: color used by the checkbox component for unchecked rest background.
 - `--ki-checkbox-unchecked-rest-border`: color used by the checkbox component for unchecked rest border.
 - `--ki-checkbox-unchecked-rest-fg`: color used by the checkbox component for unchecked rest foreground.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
@@ -1141,7 +1180,8 @@ A token-styled, icon-only action button with native button semantics and a manda
 When to use: a compact, widely understood action where space precludes a
 visible label: toolbars, card and dialog corners (close), media transport,
 data-row actions. Always supply `label`; usually pair with ki-tooltip for
-sighted discoverability.
+sighted discoverability. While the action it started is in progress, set
+`loading` instead of disabling it.
 When NOT to use: whenever a visible label fits (use ki-button), toggling
 state (a future toggle icon button), navigation (use a link), or form
 submit/reset (ki-icon-button is not form-associated; use ki-button, whose
@@ -1189,9 +1229,19 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 </ki-tooltip>
 ```
 
+While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
+
+```html
+<ki-icon-button label="Refresh" loading loading-label="Refreshing">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2" stroke="currentColor" stroke-width="2" fill="none" /></svg>
+</ki-icon-button>
+```
+
 Attributes:
-- `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+- `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+- `loading` (boolean, default false): Pending state of the action this icon button started (refreshing, sending). While set, every activation is blocked (pointer, Enter and Space), but the icon button stays focusable, in the Tab order and at its size: the icon stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its `label`, and `loadingLabel` is announced as a polite status message. `disabled` wins over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this icon button started is running, so a second activation cannot repeat it. When NOT to use: for an icon button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
+- `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the icon button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Refreshing"). When NOT to use: do not repeat `label` here; the person already hears it on focus.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
@@ -1202,6 +1252,7 @@ Slots:
 Parts:
 - `button`: Internal native button.
 - `icon`: Icon wrapper around the default slot.
+- `spinner`: Loading spinner drawn in place of the icon, in the button's foreground ink, rendered only while `loading` is in effect.
 
 Events: none
 
@@ -1319,6 +1370,8 @@ CSS custom properties:
 - `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-rest-fg`: color used by the button component for secondary success rest foreground.
 - `--ki-button-sm-radius`: dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns).
+- `--ki-button-spinner-duration`: duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference.
+- `--ki-button-spinner-stroke-width`: dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width).
 - `--ki-button-tertiary-danger-hover-bg`: color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
 - `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground.
@@ -1347,17 +1400,22 @@ CSS custom properties:
 - `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-icon-button-lg-icon-size`: dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px).
 - `--ki-icon-button-lg-size`: dimension used by the icon button component for lg box (48px square).
+- `--ki-icon-button-lg-spinner-size`: dimension used by the icon button component for the lg loading spinner box (24px, the lg icon size; spec 046 D5: the spinner takes the place of the icon).
 - `--ki-icon-button-md-icon-size`: dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3).
 - `--ki-icon-button-md-size`: dimension used by the icon button component for md box (40px square, Figma node 10078:3129).
+- `--ki-icon-button-md-spinner-size`: dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon).
 - `--ki-icon-button-sm-icon-size`: dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px).
 - `--ki-icon-button-sm-size`: dimension used by the icon button component for sm box (32px square).
+- `--ki-icon-button-sm-spinner-size`: dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon).
 - `--ki-icon-button-xl-icon-size`: dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px).
 - `--ki-icon-button-xl-size`: dimension used by the icon button component for xl box (56px square).
+- `--ki-icon-button-xl-spinner-size`: dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon).
 - `--ki-icon-button-xs-icon-size`: dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon).
 - `--ki-icon-button-xs-size`: dimension used by the icon button component for xs box (24px square, Figma Space/7xl).
+- `--ki-icon-button-xs-spinner-size`: dimension used by the icon button component for the xs loading spinner box (16px, the xs icon size; spec 046 D5: the spinner takes the place of the icon).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
@@ -1474,6 +1532,7 @@ Attributes:
 - `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the field, read with it as its description: the format expected, or why the answer is asked. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+- `label-hint` (string | undefined): Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
 - `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
 - `readonly` (boolean, default false): Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
@@ -1491,6 +1550,7 @@ Parts:
 - `help`: Help line under the field, read as the field's description.
 - `input`: Internal native input that owns entry text, caret and selection.
 - `label`: Visible label that provides the accessible name.
+- `label-hint`: The `label-hint` text after the label text, inside the label and part of the accessible name; rendered only while a hint is set.
 
 Events:
 - `change` (Event): Fired when the user commits an edited value (native text-field timing, such as on blur), composed across the shadow boundary; `value` is already current when listeners run. When to use: react to a committed value. When NOT to use: do not use it for per-keystroke updates; the native `input` event carries those.
@@ -1499,7 +1559,7 @@ Methods: none
 
 CSS custom properties:
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-input-border-block-end-width`: dimension used by the input component for border block end width.
 - `--ki-input-border-block-start-width`: dimension used by the input component for border block start width.
 - `--ki-input-border-inline-end-width`: dimension used by the input component for border inline end width.
@@ -1518,6 +1578,7 @@ CSS custom properties:
 - `--ki-input-focus-ring-shadow`: shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-input-focus-ring-width`: dimension used by the input component for focus ring width.
 - `--ki-input-font-size`: dimension used by the input component for font size.
+- `--ki-input-font-size-touch`: dimension used by the input component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step.
 - `--ki-input-font-weight`: font weight used by the input component for font weight.
 - `--ki-input-gap`: dimension used by the input component for gap.
 - `--ki-input-height`: dimension used by the input component for height (MarsUI Input_field md cell: min-height 40px; consume as min-block-size so the field can grow).
@@ -1536,6 +1597,8 @@ CSS custom properties:
 - `--ki-input-label-font-size`: dimension used by the input component for label font size (MarsUI UI/Para/medium: body_1 13px).
 - `--ki-input-label-font-weight`: font weight used by the input component for label font weight.
 - `--ki-input-label-gap`: dimension used by the input component for label gap.
+- `--ki-input-label-hint-fg`: color used by the input component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
+- `--ki-input-label-hint-gap`: dimension used by the input component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-input-label-line-height`: dimension used by the input component for label line height (MarsUI line_height/para 20px).
 - `--ki-input-label-padding-inline`: dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius).
 - `--ki-input-line-height`: dimension used by the input component for line height.
@@ -1705,7 +1768,7 @@ Methods: none
 CSS custom properties:
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-inverse-white-alpha-3`: semantic color for inverse white alpha 3.
 - `--ki-inverse-white-alpha-6`: semantic color for inverse white alpha 6.
 - `--ki-list-item-gap`: dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).
@@ -1980,6 +2043,7 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-spring`: Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language).
@@ -2077,6 +2141,7 @@ Attributes:
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the options, read with the group as its description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+- `label-hint` (string | undefined): Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
 - `required` (boolean, default false): Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
 - `value` (string, default ''): Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
@@ -2088,6 +2153,7 @@ Parts:
 - `error`: Error line shown in place of the help text while the group is invalid after the person submitted; a polite live region, starting with a decorative error symbol.
 - `help`: Help line under the options, read as the radiogroup description.
 - `label`: Visible group label and accessible-name source.
+- `label-hint`: The `label-hint` text after the group label text, inside the label and part of the radiogroup's accessible name; rendered only while a hint is set.
 
 Events:
 - `change` (Event): Fired once after the user selects a different radio, composed across the shadow boundary; `value` is already current when listeners run. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
@@ -2098,6 +2164,8 @@ CSS custom properties:
 - `--ki-radio-group-gap`: dimension used by the radio group component for gap.
 - `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size.
 - `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight.
+- `--ki-radio-group-label-hint-fg`: color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
+- `--ki-radio-group-label-hint-gap`: dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
@@ -2230,6 +2298,7 @@ Attributes:
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the trigger, read with it as the combobox description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
+- `label-hint` (string | undefined): Short text shown after the label and read with it as part of the combobox name, so people know before submitting whether to choose: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
 - `placeholder` (string, default ''): Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
 - `required` (boolean, default false): Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
@@ -2243,6 +2312,7 @@ Parts:
 - `help`: Help line under the trigger, read as the combobox description.
 - `indicator`: Decorative dropdown indicator.
 - `label`: Visible label and accessible-name source.
+- `label-hint`: The `label-hint` text after the label text, inside the label and part of the accessible name of the combobox and its listbox; rendered only while a hint is set.
 - `listbox`: Popup listbox surface.
 - `option`: Mirrored option row rendered in this shadow root.
 - `trigger`: Native button carrying the combobox role.
@@ -2256,7 +2326,7 @@ Methods: none
 CSS custom properties:
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-elevation-e1`: MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow.
 - `--ki-focus-danger`: MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation.
@@ -2308,6 +2378,8 @@ CSS custom properties:
 - `--ki-select-label-font-size`: dimension used by the select component for label font size (MarsUI UI/Para/medium: body_1 13px).
 - `--ki-select-label-font-weight`: font weight used by the select component for label font weight.
 - `--ki-select-label-gap`: dimension used by the select component for label gap.
+- `--ki-select-label-hint-fg`: color used by the select component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
+- `--ki-select-label-hint-gap`: dimension used by the select component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-select-label-line-height`: dimension used by the select component for label line height (MarsUI line_height/para 20px).
 - `--ki-select-label-padding-inline`: dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea).
 - `--ki-select-line-height`: dimension used by the select component for the trigger value line height (MarsUI body_1 24px).
@@ -2467,6 +2539,7 @@ Events:
 Methods: none
 
 CSS custom properties:
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-effect-small-dark-shadow`: MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
@@ -2597,7 +2670,7 @@ Methods: none
 
 CSS custom properties:
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-motion-distance-xs`: Motion travel distance xs (2px): hover-lift offsets.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
@@ -2818,6 +2891,7 @@ Attributes:
 - `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the field, read with it as its description: what to write, or how long. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
+- `label-hint` (string | undefined): Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
 - `placeholder` (string | undefined): Hint shown while the textarea is empty. When to use: add an example or short formatting hint. When NOT to use: do not use placeholder as the accessible name or required instruction.
 - `readonly` (boolean, default false): Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
@@ -2832,6 +2906,7 @@ Parts:
 - `field`: The enclosure wrapper.
 - `help`: Help line under the field, read as the field's description.
 - `label`: Rendered visible label and accessible-name source.
+- `label-hint`: The `label-hint` text after the label text, inside the label and part of the accessible name; rendered only while a hint is set.
 - `textarea`: Internal native multiline control.
 
 Events:
@@ -2841,7 +2916,7 @@ Methods: none
 
 CSS custom properties:
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
@@ -2864,6 +2939,7 @@ CSS custom properties:
 - `--ki-textarea-focus-ring-shadow`: shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-textarea-focus-ring-width`: dimension used by the textarea component for focus ring width.
 - `--ki-textarea-font-size`: dimension used by the textarea component for font size.
+- `--ki-textarea-font-size-touch`: dimension used by the textarea component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step.
 - `--ki-textarea-font-weight`: font weight used by the textarea component for font weight.
 - `--ki-textarea-hover-bg`: color used by the textarea component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token).
 - `--ki-textarea-hover-border`: color used by the textarea component for hover border.
@@ -2879,6 +2955,8 @@ CSS custom properties:
 - `--ki-textarea-label-font-size`: dimension used by the textarea component for label font size (MarsUI UI/Para/medium: body_1 13px).
 - `--ki-textarea-label-font-weight`: font weight used by the textarea component for label font weight.
 - `--ki-textarea-label-gap`: dimension used by the textarea component for label gap.
+- `--ki-textarea-label-hint-fg`: color used by the textarea component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
+- `--ki-textarea-label-hint-gap`: dimension used by the textarea component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-textarea-label-line-height`: dimension used by the textarea component for label line height (MarsUI line_height/para 20px).
 - `--ki-textarea-label-padding-inline`: dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input).
 - `--ki-textarea-line-height`: dimension used by the textarea component for line height.

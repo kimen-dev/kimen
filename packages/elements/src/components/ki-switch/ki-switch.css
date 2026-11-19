@@ -110,11 +110,16 @@
   padding-inline-start: calc(var(--ki-switch-control-width) + var(--ki-switch-gap));
 }
 
+/* The pointer target: the control's box, never under the region's target
+   minimum (spec 045 A1-D3), which extends it, centred on the row, without
+   moving or growing the painted track. */
 input {
-  block-size: var(--ki-switch-control-height);
+  --_ki-switch-target-block: max(var(--ki-switch-control-height), var(--ki-density-target-min));
+
+  block-size: var(--_ki-switch-target-block);
   cursor: inherit;
-  inline-size: var(--ki-switch-control-width);
-  inset-block-start: calc((100% - var(--ki-switch-control-height)) / 2);
+  inline-size: max(var(--ki-switch-control-width), var(--ki-density-target-min));
+  inset-block-start: calc((100% - var(--_ki-switch-target-block)) / 2);
   inset-inline-start: 0;
   margin: 0;
   opacity: 0;

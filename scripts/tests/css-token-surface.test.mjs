@@ -398,7 +398,8 @@ test('[S10] modes follow the token rule in contract order, each with its exact s
 });
 
 // Density (spec 045): the document-inherited tokens in one :root rule after
-// the token rule, then one rule per level, published as the compact contexts.
+// the token rule, then one rule per level, published as the compact and touch
+// contexts (touch: 045 Amendment A1).
 const densityRules = `
 :root {
   --ki-zero: 0px;
@@ -408,6 +409,10 @@ const densityRules = `
   --ki-zero: -8px;
 }
 
+[data-ki-density='touch'] {
+  --ki-zero: 4px;
+}
+
 [data-ki-density='default'] {
   --ki-zero: 0px;
 }
@@ -415,17 +420,20 @@ const densityRules = `
 const densityTokenRule = tokenRule.replace('  --ki-zero: 0px;\n', '');
 const withDensity = `${schemeContract}${densityTokenRule}${densityRules}`;
 
-test('[S10] document-inherited tokens and density levels publish the compact contexts', () => {
+test('[S10] document-inherited tokens and density levels publish the compact and touch contexts', () => {
   const { contexts } = build(withDensity)['./css'];
   assert.deepEqual(Object.keys(contexts).sort(), [
     'compact/dark',
     'compact/light',
     'dark',
     'light',
+    'touch/dark',
+    'touch/light',
   ]);
   assert.equal(contexts.light['--ki-zero'], '0');
   assert.equal(contexts['compact/light']['--ki-zero'], '-8px');
   assert.equal(contexts['compact/dark']['--ki-color'], 'rgb(255,255,255)');
+  assert.equal(contexts['touch/light']['--ki-zero'], '4px');
 });
 
 test('[S10] a themed export publishes the compact contexts of the default stylesheet', () => {

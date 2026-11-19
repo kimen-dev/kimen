@@ -33,6 +33,10 @@
         "$value": "{ki.typography.size.body-1}",
         "$description": "Material 3 dimension used by the input component for font size."
       },
+      "font-size-touch": {
+        "$value": "{ki.typography.size.body-2}",
+        "$description": "Material 3 dimension used by the input component for the text a person types under a coarse primary pointer: body-large, 16px (spec 048)."
+      },
       "font-weight": {
         "$value": "{ki.typography.weight.body.normal}",
         "$description": "Material 3 font weight used by the input component for font weight."

@@ -10,6 +10,7 @@
 :host {
   --_ki-icon-button-size: var(--ki-icon-button-md-size);
   --_ki-icon-button-icon-size: var(--ki-icon-button-md-icon-size);
+  --_ki-button-spinner-size: var(--ki-icon-button-md-spinner-size);
   --_ki-button-radius: var(--ki-button-md-radius);
 
   font-family: var(--ki-typography-family-body);
@@ -18,24 +19,28 @@
 :host([size="xs"]) {
   --_ki-icon-button-size: var(--ki-icon-button-xs-size);
   --_ki-icon-button-icon-size: var(--ki-icon-button-xs-icon-size);
+  --_ki-button-spinner-size: var(--ki-icon-button-xs-spinner-size);
   --_ki-button-radius: var(--ki-button-xs-radius);
 }
 
 :host([size="sm"]) {
   --_ki-icon-button-size: var(--ki-icon-button-sm-size);
   --_ki-icon-button-icon-size: var(--ki-icon-button-sm-icon-size);
+  --_ki-button-spinner-size: var(--ki-icon-button-sm-spinner-size);
   --_ki-button-radius: var(--ki-button-sm-radius);
 }
 
 :host([size="lg"]) {
   --_ki-icon-button-size: var(--ki-icon-button-lg-size);
   --_ki-icon-button-icon-size: var(--ki-icon-button-lg-icon-size);
+  --_ki-button-spinner-size: var(--ki-icon-button-lg-spinner-size);
   --_ki-button-radius: var(--ki-button-lg-radius);
 }
 
 :host([size="xl"]) {
   --_ki-icon-button-size: var(--ki-icon-button-xl-size);
   --_ki-icon-button-icon-size: var(--ki-icon-button-xl-icon-size);
+  --_ki-button-spinner-size: var(--ki-icon-button-xl-spinner-size);
   --_ki-button-radius: var(--ki-button-xl-radius);
 }
 
@@ -48,15 +53,25 @@ button {
      24/32/40/48/56 square comes from border-box sizing on fixed block/inline
      sizes — the 1px border stays inside the box (the calc(padding - border)
      mechanic of ki-button does not apply to a padding-less square;
-     specs/022-ki-icon-button/design-extraction.md decision 3). */
-  block-size: max(
-    var(--ki-density-target-min),
-    calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+     specs/022-ki-icon-button/design-extraction.md decision 3).
+     Density (spec 045): a negative step shrinks the square down to the
+     target minimum; no step grows it past its own size (A1-D3/D4), so under
+     touch the square keeps its size and the shared surface extends its
+     target to the minimum instead. */
+  block-size: min(
+    var(--_ki-icon-button-size),
+    max(
+      var(--ki-density-target-min),
+      calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+    )
   );
   box-sizing: border-box;
-  inline-size: max(
-    var(--ki-density-target-min),
-    calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+  inline-size: min(
+    var(--_ki-icon-button-size),
+    max(
+      var(--ki-density-target-min),
+      calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+    )
   );
   padding-block: 0;
   padding-inline: 0;
@@ -77,6 +92,12 @@ slot::slotted(*) {
   inline-size: var(--_ki-icon-button-icon-size);
 }
 
+/* Loading (specs/046-button-loading D4): the icon stays laid out and turns
+   transparent under the spinner the shared surface draws in its place. */
+button[aria-disabled="true"] > [part="icon"] {
+  opacity: 0;
+}
+
 /* The pressed dip with the icon squeeze; the button's own transition is
    declared with the shared surface. */
 @media (prefers-reduced-motion: no-preference) {
@@ -86,11 +107,11 @@ slot::slotted(*) {
     transition-timing-function: var(--ki-motion-easing-out);
   }
 
-  button:is(:active, [data-ki-pressed]):not(:disabled) {
+  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
     transform: scale(0.96);
   }
 
-  button:is(:active, [data-ki-pressed]):not(:disabled) [part="icon"] {
+  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) [part="icon"] {
     transform: scale(0.92);
   }
 }

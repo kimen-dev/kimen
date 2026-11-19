@@ -86,6 +86,11 @@
   padding-block: 0 var(--ki-tab-padding-block-end);
   padding-inline: var(--ki-tab-padding-inline);
   gap: var(--ki-tab-gap);
+
+  /* A tab is its own target: the strip it sits in scrolls and clips what a
+     tab draws outside it, so the tab grows to the target minimum in both
+     axes instead of extending past its box (spec 045 A1-D3). */
+  min-inline-size: var(--ki-density-target-min);
 }
 
 [part="indicator"] {

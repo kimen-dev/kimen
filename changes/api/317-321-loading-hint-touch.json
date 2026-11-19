@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "ba0f4a3785c29d7e84eef7797fccc0e4fd8afe10dac27164a921c1d975a0c80e",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Loading buttons, field label hints, touch density and touch-size field text, and a 12px extra-small button label (issues #317, #318, #319, #320 and #321; specs 046, 047, 045 amendment A1, 048 and 002 amendment A1), cumulative since baseline 0.0.0 and superseding declaration 011-ki-alert-anatomy (its deltas, and those of every declaration it supersedes, remain as declared there). Nothing is removed or renamed. Added: the loading and loadingLabel (loading-label) props and the spinner part on ki-button and ki-icon-button; the labelHint (label-hint) prop and the label-hint part on ki-input, ki-textarea, ki-select, ki-checkbox and ki-radio-group; the touch density level (data-ki-density=\"touch\"), published as the touch/light and touch/dark contexts; and 24 tokens: --ki-button-{xs,sm,md,lg,xl}-spinner-size, --ki-button-spinner-stroke-width, --ki-button-spinner-duration, --ki-icon-button-{xs,sm,md,lg,xl}-spinner-size, --ki-{input,textarea,select,checkbox,radio-group}-label-hint-fg and -label-hint-gap, --ki-input-font-size-touch and --ki-textarea-font-size-touch. Deliberate effective-value changes: --ki-button-xs-font-size and --ki-button-xs-line-height move from caption-1 to caption-2 (10px to 12px label, 16px line height unchanged), departing from the Figma Button master; and --ki-density-target-min is declared on the document root and in every density rule (24px in default and compact, 44px in touch) instead of on the theme roots, so it inherits the same value everywhere it did before. ki-alert, ki-checkbox, ki-radio, ki-switch and ki-tab now consume the target minimum. The new props change the component class signatures, which the gate classifies as MAJOR; the cumulative delta since 0.0.0 was already MAJOR. Zero removals, no root growth. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

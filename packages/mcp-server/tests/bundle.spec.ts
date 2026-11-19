@@ -4,6 +4,11 @@
 // stays within its size budget — set about 5% above the size measured on
 // 2026-11-16 (2,295,989 bytes raw, 433,018 gzip, 327,929 brotli), most of it
 // the MCP Apps surface document, the SDK and the catalog's validator.
+// Raw and gzip re-based for issues #317-#321 (button loading, field label
+// hint, touch density, touch-size field text, all carried by the surface
+// document and the manifest), when the binary measured 2,421,589 raw, 458,775
+// gzip and 341,942 brotli: 11,589 and 3,775 bytes over the old raw and gzip
+// lines. Both move to about 5% above; brotli is still inside its line.
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -13,7 +18,7 @@ import { describe, expect, it } from 'vitest';
 
 import { BUNDLE, PACKAGE } from './harness.js';
 
-const BUDGET = { brotli: 345_000, gzip: 455_000, raw: 2_410_000 };
+const BUDGET = { brotli: 345_000, gzip: 482_000, raw: 2_543_000 };
 
 describe('Kimen MCP server: the shipped binary (038 S16)', () => {
   it('S16: a fresh build is byte-identical to the shipped binary', () => {

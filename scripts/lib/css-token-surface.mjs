@@ -48,7 +48,7 @@ const MODE_CONTRACT = [
  * published as one context per scheme; `default` follows them and restores
  * the document-inherited tokens they reassign.
  */
-const DENSITY_CONTRACT = ['compact'];
+const DENSITY_CONTRACT = ['compact', 'touch'];
 
 function modeSelectors(mode, theme) {
   const activation = mode.activations.join(', ');

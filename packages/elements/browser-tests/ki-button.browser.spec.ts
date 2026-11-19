@@ -584,6 +584,28 @@ describe('ki-button in a real browser', () => {
     ).toBe(true);
   });
 
+  // Amendment A1 (issue #321): the extra-small label rose from 10px to 12px,
+  // the smallest size the library ships for informative text.
+  it.each(['onmars', 'material3'] as const)(
+    'S15 an extra-small button label is at least 12 pixels: %s',
+    async (theme) => {
+      cleanup();
+      ensureTokens();
+      if (theme === 'material3') {
+        ensureMaterial3Tokens();
+        document.documentElement.setAttribute('data-ki-theme', 'material3');
+      }
+      const el = await mount('Undo', { size: 'xs' });
+      const label = el.shadowRoot?.querySelector<HTMLElement>('[part="label"]');
+      expect(label, 'ki-button rendered no label part').toBeInstanceOf(HTMLElement);
+      if (!label) {
+        return;
+      }
+
+      expect(Number.parseFloat(getComputedStyle(label).fontSize)).toBeGreaterThanOrEqual(12);
+    },
+  );
+
   it('S13 keeps start and end slots in logical order under RTL', async () => {
     cleanup();
     document.documentElement.setAttribute('dir', 'rtl');

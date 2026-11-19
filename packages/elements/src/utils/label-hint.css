@@ -1,0 +1,27 @@
+/* Label hint of every form control that takes one (spec 047), loaded through
+ * each control's `styleUrls` before the control's own sheet. Tokens only
+ * (Art. VI): each control sets --_ki-label-hint-fg and --_ki-label-hint-gap
+ * from its own component tokens, and moves the ink to its label's disabled
+ * ink while it is disabled. */
+
+/* While a hint shows, the label is a wrapping row of two items, the label text
+   and the hint. Name computation separates block-level boxes with a space, so
+   the name reads "Email (optional)" (an inline span with a margin reads
+   "Email(optional)" in Chromium), and the distance between the two is a token
+   (spec 047 D4, evidence E1-E4). Without a hint the label keeps its own
+   layout. */
+[part~="label"]:has(> [part="label-hint"]) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--_ki-label-hint-gap);
+}
+
+/* The secondary run of MarsUI Input_label: the label's size and line height,
+   inherited, and the normal body weight. Its ink is the supporting-text role,
+   not the master's Text/low_em, which reads 2.8-3.13:1 on the onmars light
+   surfaces (spec 047 D5). */
+[part="label-hint"] {
+  color: var(--_ki-label-hint-fg);
+  font-weight: var(--ki-typography-weight-body-normal);
+}

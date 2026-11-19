@@ -44,6 +44,7 @@ An option without `value` submits its trimmed label text, and `required` blocks 
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the trigger, read with it as the combobox description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
+- `label-hint` (string | undefined): Short text shown after the label and read with it as part of the combobox name, so people know before submitting whether to choose: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
 - `placeholder` (string, default ''): Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
 - `required` (boolean, default false): Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
@@ -59,6 +60,7 @@ An option without `value` submits its trimmed label text, and `required` blocks 
 - `help`: Help line under the trigger, read as the combobox description.
 - `indicator`: Decorative dropdown indicator.
 - `label`: Visible label and accessible-name source.
+- `label-hint`: The `label-hint` text after the label text, inside the label and part of the accessible name of the combobox and its listbox; rendered only while a hint is set.
 - `listbox`: Popup listbox surface.
 - `option`: Mirrored option row rendered in this shadow root.
 - `trigger`: Native button carrying the combobox role.
@@ -76,7 +78,7 @@ None.
 
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-elevation-e1`: MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow.
 - `--ki-focus-danger`: MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation.
@@ -128,6 +130,8 @@ None.
 - `--ki-select-label-font-size`: dimension used by the select component for label font size (MarsUI UI/Para/medium: body_1 13px).
 - `--ki-select-label-font-weight`: font weight used by the select component for label font weight.
 - `--ki-select-label-gap`: dimension used by the select component for label gap.
+- `--ki-select-label-hint-fg`: color used by the select component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
+- `--ki-select-label-hint-gap`: dimension used by the select component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
 - `--ki-select-label-line-height`: dimension used by the select component for label line height (MarsUI line_height/para 20px).
 - `--ki-select-label-padding-inline`: dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea).
 - `--ki-select-line-height`: dimension used by the select component for the trigger value line height (MarsUI body_1 24px).
