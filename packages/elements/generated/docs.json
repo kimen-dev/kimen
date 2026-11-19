@@ -5033,15 +5033,9 @@
           "name": "direction",
           "type": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\"",
           "complexType": {
-            "original": "KiStatDirection",
+            "original": "'higher-is-better' | 'lower-is-better' | 'neutral'",
             "resolved": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\"",
-            "references": {
-              "KiStatDirection": {
-                "location": "local",
-                "path": "src/components/ki-stat/ki-stat.tsx",
-                "id": "src/components/ki-stat/ki-stat.tsx::KiStatDirection"
-              }
-            }
+            "references": {}
           },
           "mutable": false,
           "attr": "direction",
@@ -7481,11 +7475,6 @@
       "declaration": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-select/ki-select.tsx"
-    },
-    "src/components/ki-stat/ki-stat.tsx::KiStatDirection": {
-      "declaration": "export type KiStatDirection = 'higher-is-better' | 'lower-is-better' | 'neutral';",
-      "docstring": "",
-      "path": "src/components/ki-stat/ki-stat.tsx"
     },
     "src/components/ki-status/ki-status.tsx::KiStatusTone": {
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",

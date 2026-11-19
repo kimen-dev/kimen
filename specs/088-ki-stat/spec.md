@@ -1,8 +1,8 @@
 # Feature Specification: Stat
 
-**Feature branch** `feat/395-ki-stat`  
-**Issue** #395  
-**Design source** Kimen design system, Components → Proposed → Stat
+- **Feature branch** `feat/395-ki-stat`
+- **Issue** #395
+- **Design source** Kimen design system, Components → Proposed → Stat
 
 People reading a dashboard can see the latest value of a metric and how it
 changed since a reference period. A lower render time is an improvement, even
@@ -39,15 +39,14 @@ though its change points down.
   the label visible and suppresses the comparison. Unknown preferences use
   `higher-is-better`.
 - **Agent's choice, pending founder confirmation.** Use the issue's heading-1
-  typography for the value and the reference's card layout. The spoken summary is one visually hidden
-  paragraph, and the chart retains its own accessible content. Use the shipped trend glyphs
-  and provide overridable `up-label` and `down-label` props for translation.
-
+  typography for the value and the reference's card layout. The spoken summary
+  is one visually hidden paragraph, and the chart retains its own accessible
+  content. Use the shipped trend glyphs and provide overridable `up-label` and
+  `down-label` props for translation.
 - **Agent's choice, pending founder confirmation.** Use the supporting text
   semantic ink, which reaches the enhanced-contrast threshold. Check each Stat
   foreground against its shared surface so themed images can paint continuously.
   Material 3 uses the medium card radius.
-
 - **Agent's choice, pending founder confirmation.** Use the API gate's major
   classification for the new members of Stencil's existing `Components` and
   `JSX` namespaces.

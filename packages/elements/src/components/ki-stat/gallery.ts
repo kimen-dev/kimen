@@ -14,6 +14,7 @@ export default {
       </svg>
     </ki-stat>
   </div>`,
+  width: 400,
   async prepare(wrapper) {
     const surfaces = wrapper.querySelector('ki-stat[label="Active surfaces"]');
     if (surfaces) {

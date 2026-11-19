@@ -36,6 +36,10 @@ function part(name: string) {
     ?.shadowRoot?.querySelector<HTMLElement>(`[part="${name}"]`);
 }
 
+function trendName() {
+  return (part('trend') as HTMLKiIconElement | null | undefined)?.name;
+}
+
 function paintedPart(name: string): HTMLElement {
   const element = part(name);
   if (!element) {
@@ -90,7 +94,7 @@ it('S1 paints the page locale and applies independent formatting to the comparis
 
   await expectText('value', '1.234,5 ms');
   await expectText('delta', '12 %');
-  await expect.poll(() => part('trend')?.getAttribute('name')).toBe('trending-down');
+  await expect.poll(trendName).toBe('trending-down');
 });
 
 it('S1 updates both values from the JavaScript format property when no delta format is supplied', async () => {
@@ -117,7 +121,7 @@ it.each([
     stat.style.setProperty('--ki-stat-delta-danger-fg', 'darkred');
     stat.style.setProperty('--ki-stat-delta-neutral-fg', 'navy');
 
-    await expect.poll(() => part('trend')?.getAttribute('name')).toBe(icon);
+    await expect.poll(trendName).toBe(icon);
     await expect
       .poll(
         () => part('trend')?.shadowRoot?.querySelector('svg')?.getBoundingClientRect().height ?? 0,
@@ -222,7 +226,7 @@ it('S9 preserves a visible falling trend and number in a forced palette', async 
     }
 
     await expect.poll(() => part('trend')?.getBoundingClientRect().height ?? 0).toBeGreaterThan(0);
-    await expect.poll(() => part('trend')?.getAttribute('name')).toBe('trending-down');
+    await expect.poll(trendName).toBe('trending-down');
     await expectText('delta', '9 ms');
     const surface = getComputedStyle(paintedPart('card')).backgroundColor;
     expect(getComputedStyle(paintedPart('trend')).color).not.toBe(surface);

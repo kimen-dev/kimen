@@ -4,8 +4,6 @@ import '../../../icons/trending-up.js';
 
 import { deltaPresentation, formatStatNumber } from './ki-stat.presentation';
 
-export type KiStatDirection = 'higher-is-better' | 'lower-is-better' | 'neutral';
-
 function metricLocale(host: HTMLElement): string | undefined {
   let element: Element | null = host;
   while (element) {
@@ -67,7 +65,7 @@ export class KiStat {
    * Which direction is favorable for this metric. Use neutral to avoid a judgment.
    * @default 'higher-is-better'
    */
-  @Prop() direction: KiStatDirection = 'higher-is-better';
+  @Prop() direction: 'higher-is-better' | 'lower-is-better' | 'neutral' = 'higher-is-better';
 
   /** Localized comparison period, such as "vs last week". */
   @Prop() deltaLabel?: string;

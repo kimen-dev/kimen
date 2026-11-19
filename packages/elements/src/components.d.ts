@@ -21,7 +21,6 @@ import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 import { KiSelectSize } from "./components/ki-select/ki-select";
-import { KiStatDirection } from "./components/ki-stat/ki-stat";
 import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
@@ -46,7 +45,6 @@ export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 export { KiSelectSize } from "./components/ki-select/ki-select";
-export { KiStatDirection } from "./components/ki-stat/ki-stat";
 export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
@@ -897,7 +895,7 @@ export namespace Components {
           * Which direction is favorable for this metric. Use neutral to avoid a judgment.
           * @default 'higher-is-better'
          */
-        "direction": KiStatDirection;
+        "direction": 'higher-is-better' | 'lower-is-better' | 'neutral';
         /**
           * Localized spoken direction for a negative delta.
           * @default 'down'
@@ -2897,7 +2895,7 @@ declare namespace LocalJSX {
           * Which direction is favorable for this metric. Use neutral to avoid a judgment.
           * @default 'higher-is-better'
          */
-        "direction"?: KiStatDirection;
+        "direction"?: 'higher-is-better' | 'lower-is-better' | 'neutral';
         /**
           * Localized spoken direction for a negative delta.
           * @default 'down'
@@ -3448,7 +3446,7 @@ declare namespace LocalJSX {
         "value": number;
         "unit": string;
         "delta": number;
-        "direction": KiStatDirection;
+        "direction": 'higher-is-better' | 'lower-is-better' | 'neutral';
         "deltaLabel": string;
         "upLabel": string;
         "downLabel": string;

@@ -445,12 +445,6 @@
         ],
         "signature": "interface KiStat extends Components.KiStat, HTMLElement {\n}\nexport const KiStat: {\n    prototype: KiStat;\n    new (): KiStat;\n};"
       },
-      "KiStatDirection": {
-        "kinds": [
-          "type"
-        ],
-        "signature": "export type KiStatDirection = 'higher-is-better' | 'lower-is-better' | 'neutral';"
-      },
       "defineCustomElement": {
         "kinds": [
           "value"
