@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "0951e0121c2c67afc935cdf331ce977c96afc32a5ee0b50d0ff28c365f69e0ba",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Independent shadow layers in ki-select, ki-alert, ki-tooltip, ki-status and ki-video (#349 and spec 025 S13). Adds the semantic --ki-effect-video-hover-opacity token so Material 3 retains the flat play control on hover. The token build emits a transparent layer (0 0 #0000) for the Material 3 --ki-video-play-shadow value previously emitted as none. Both values prevent the resting shadow from painting. Supersedes 317-321-loading-hint-touch and retains all changes declared there and in its predecessors. The cumulative delta against 0.0.0 remains major.",
+  "release": "major",
+  "schemaVersion": 1
+}

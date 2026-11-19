@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/317-321-loading-hint-touch.json',
+      '../../changes/api/349-composed-shadows.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -590,11 +590,12 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // label hint ink and gap of the five field controls (ten), and the
   // touch-screen text size of ki-input and ki-textarea (two). The touch
   // density is published as its own context. 1223 + 24 = 1247.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1247);
+  // Issue #349 adds the video hover shadow opacity. 1247 + 1 = 1248.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1248);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1247,
+    1248,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
