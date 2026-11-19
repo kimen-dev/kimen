@@ -48,12 +48,8 @@ export function showOverlayPopover(popup: HTMLElement, source?: HTMLElement): vo
   }
 }
 
-/** Mirror component state into a connected native popover. */
-export function setOverlayOpen(
-  popup: HTMLElement | undefined,
-  open: boolean,
-  source?: HTMLElement,
-): void {
+/** Mirror component state into a connected manual popover. */
+export function setOverlayOpen(popup: HTMLElement | undefined, open: boolean): void {
   if (
     !popup?.isConnected ||
     typeof popup.showPopover !== 'function' ||
@@ -62,7 +58,7 @@ export function setOverlayOpen(
     return;
   }
   if (open) {
-    showOverlayPopover(popup, source);
+    popup.showPopover();
     return;
   }
   popup.hidePopover();
@@ -188,7 +184,9 @@ export class AnchoredOverlay {
         position?.cleanup();
       },
     };
-    setOverlayOpen(popup, true, options.source);
+    if (options.source && !popup.matches(':popover-open')) {
+      showOverlayPopover(popup, options.source);
+    }
     this.reposition();
     return true;
   }
