@@ -5,5 +5,5 @@
 - Render the three variants using native buttons where there is an action. Let the labelled
   group own reordering and keep focus predictable during removal.
 - Use semantic aliases in both themes and cover variants, states and sizes in the galleries.
-- Document HTML and guarded catalog usage. Regenerate the public surfaces, declare the minor
-  API addition and verify the deterministic checks available in the worktree.
+- Document HTML and guarded catalog usage. Regenerate the public surfaces, declare the gate-classified
+  API change and verify the deterministic checks available in the worktree.

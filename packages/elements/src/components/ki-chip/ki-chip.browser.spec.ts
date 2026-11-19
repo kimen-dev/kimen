@@ -8,7 +8,7 @@ import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
 const media = commands as unknown as {
-  emulateForcedColors: (value: 'active' | null) => Promise<boolean | undefined>;
+  emulateForcedColors: (value: 'active' | null) => Promise<void>;
   emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
 };
 
@@ -69,6 +69,7 @@ it('S3 S9 exposes one plain, text-named button and emits its contextual action',
   );
   expect(remove).not.toHaveBeenCalled();
   expect(change).not.toHaveBeenCalled();
+  await parkPointer();
   await expectAccessible(fixture);
 });
 
@@ -113,6 +114,7 @@ it('S11 uses the themed selected fill and removes transitions under reduced moti
     fixture.innerHTML = '<ki-chip style="--ki-chip-selected-bg: rgb(20, 40, 60)">Design</ki-chip>';
     const filter = page.getByRole('button', { name: 'Design' });
     await filter.click();
+    await expect.element(filter).toHaveAttribute('aria-pressed', 'true');
     const control = fixture.querySelector('ki-chip')?.shadowRoot?.querySelector('button');
     if (!control) throw new Error('Missing filter button');
     expect(getComputedStyle(control).backgroundColor).toBe('rgb(20, 40, 60)');
@@ -122,12 +124,9 @@ it('S11 uses the themed selected fill and removes transitions under reduced moti
   }
 });
 
-it('keeps the check and boundary in forced colors', async ({ skip }) => {
-  if (!(await media.emulateForcedColors('active'))) {
-    skip();
-    return;
-  }
+it('keeps the check and boundary in forced colors', async () => {
   try {
+    await media.emulateForcedColors('active');
     fixture.innerHTML =
       '<ki-chip selected>Design</ki-chip><ki-chip type="input" removable>Ana</ki-chip>';
     await expect

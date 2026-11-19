@@ -1,0 +1,6 @@
+{
+  "barePage": { "keyboardPressed": true },
+  "pointer": { "hoverWitness": true },
+  "catalog": true,
+  "budgetGroup": { "members": ["ki-chip", "ki-chip-group"] }
+}

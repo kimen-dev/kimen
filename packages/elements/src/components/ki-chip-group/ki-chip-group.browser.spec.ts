@@ -1,16 +1,12 @@
 // @spec:075-ki-chip
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
-import { commands, page, userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { defineAllComponents } from '../../../browser-tests/all-components';
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
-const media = commands as unknown as {
-  emulateHoverCapability: (value: 'none' | null) => Promise<boolean>;
-};
-
 beforeAll(() => {
   defineAllComponents();
   styles.textContent = tokensCss;
@@ -138,42 +134,13 @@ it('S12 picks and places chips through their handles without activating the filt
 
 it('S13 honors cancellation of a remove event', async () => {
   fixture.innerHTML = recipients;
-  fixture
-    .querySelector('ki-chip-group')
-    ?.addEventListener('ki-remove', (event) => { event.preventDefault(); });
+  fixture.querySelector('ki-chip-group')?.addEventListener('ki-remove', (event) => {
+    event.preventDefault();
+  });
   const remove = page.getByRole('button', { name: 'Remove Ana García' });
   await userEvent.tab();
   await expect.element(remove).toHaveFocus();
   await userEvent.keyboard('{Enter}');
   await expect.element(remove).toHaveFocus();
   expect(fixture.querySelector('ki-chip[value="ana"]')).not.toBeNull();
-});
-
-it('keeps default density on coarse pointers and uses touch density when requested', async ({
-  skip,
-}) => {
-  if (!(await media.emulateHoverCapability('none'))) {
-    skip();
-    return;
-  }
-  try {
-    fixture.innerHTML =
-      '<ki-chip size="sm">Compact</ki-chip><ki-chip type="input" size="sm" removable>Ana</ki-chip>';
-    await expect.element(page.getByRole('button', { name: 'Compact' })).toBeVisible();
-    await expect.element(page.getByRole('button', { name: 'Remove Ana' })).toBeVisible();
-    expect(matchMedia('(pointer: coarse)').matches).toBe(true);
-    const controls = Array.from(fixture.querySelectorAll('ki-chip'), (chip) => {
-      const control = chip.shadowRoot?.querySelector('button');
-      if (!control) throw new Error('Missing chip button');
-      return control;
-    });
-    expect(controls.map((control) => control.getBoundingClientRect().height)).toEqual([24, 24]);
-    fixture.setAttribute('data-ki-density', 'touch');
-    await expect
-      .poll(() => controls.map((control) => control.getBoundingClientRect().height))
-      .toEqual([44, 44]);
-  } finally {
-    fixture.removeAttribute('data-ki-density');
-    await media.emulateHoverCapability(null);
-  }
 });

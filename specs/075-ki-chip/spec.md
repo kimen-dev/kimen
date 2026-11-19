@@ -30,7 +30,9 @@ for mutually exclusive choices.
   focus recovery to its consumer.
 - **Agent's choice, pending founder confirmation.** Assist emits `ki-activate`
   for guarded surfaces. The catalog resolves the primary action from the
-  validated chip kind. An input chip must be removable to bind removal.
+  validated chip kind. An input chip must be removable to bind removal. Live
+  surfaces handle removal through an application patch and keep their model
+  ordered when a user reorders a group.
 - **Agent's choice, pending founder confirmation.** A reorderable group moves its
   direct children in DOM order. Alt+Left/Right follows inline direction. The
   handle also supports click or tap to pick up and place. Reordering keeps the
@@ -38,7 +40,14 @@ for mutually exclusive choices.
   value and zero-based indices. An input chip without remove becomes focusable
   when reordering is enabled.
 - **Agent's choice, pending founder confirmation.** Labels for remove and position
-  updates are localizable. Touch density is opt-in under Kimen's density contract.
+  updates are localizable. Touch density is opt-in under Kimen's density contract
+  and enlarges the hit area while preserving painted sizes.
+- **Agent's choice, pending founder confirmation.** The selected outline uses
+  the stronger primary outline because it clears the 3:1 threshold against
+  the selected fill across themes and modes.
+- **Agent's choice, pending founder confirmation.** The API record uses the
+  repository gate's major classification for the expanded Stencil
+  `Components` and `JSX` namespace signatures.
 
 ## Behavior contract
 
