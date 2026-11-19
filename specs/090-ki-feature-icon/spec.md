@@ -132,6 +132,17 @@ Feature: FeatureIcon decorates a heading with a tinted icon tile
 - Agent's choice, pending founder confirmation. Unknown presentation attributes keep the default neutral, medium, rounded-square appearance. The catalog validates the declared enum values.
 - Agent's choice, pending founder confirmation. The painted tile is available as `::part(tile)`. A fully rounded token defines the circle, and a system-colour edge preserves the tile in forced colours.
 - Agent's choice, pending founder confirmation. The tile is passive, with an inert glyph subtree, no motion, and fixed explicit sizes across pointer densities.
+- Agent's choice, pending founder confirmation. Record the measured marginal MCP server size in the component registry. The server embeds the catalog entry, theming metadata and preview.
+
+## Bundle evidence
+
+An isolated build of fork point `4e5f36d` and candidate `d18ce01` used the same installed toolchain. The candidate matched the worktree binary byte for byte. Gzip uses level 9, as in the server budget test.
+
+| MCP server | Raw bytes | Gzip bytes | Brotli bytes |
+| --- | ---: | ---: | ---: |
+| Fork point | 2,569,684 | 484,947 | 359,100 |
+| FeatureIcon | 2,581,365 | 486,637 | 360,071 |
+| Marginal | 11,681 | 1,690 | 971 |
 
 ## Release evidence
 
