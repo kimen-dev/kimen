@@ -7829,6 +7829,10 @@
             {
               "name": "--ki-spinner-track",
               "description": "Ink of the ring track."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
             }
           ]
         }

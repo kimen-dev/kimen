@@ -4,6 +4,7 @@
 
   display: inline-flex;
   max-inline-size: 100%;
+  font-family: var(--ki-typography-family-body);
   vertical-align: middle;
 }
 

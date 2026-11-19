@@ -92,3 +92,4 @@ None.
 - `--ki-spinner-stroke`: Stroke width of the small and medium rings.
 - `--ki-spinner-stroke-lg`: Stroke width of the large ring.
 - `--ki-spinner-track`: Ink of the ring track.
+- `--ki-typography-family-body`: semantic font family for typography family body.

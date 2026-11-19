@@ -97,6 +97,10 @@ it('S4 leaves the next button in the Tab sequence', async () => {
   const cancel = document.createElement('button');
   cancel.textContent = 'Cancel';
   fixture.append(cancel);
+  // WebKit on macOS leaves buttons out of the Tab sequence unless they
+  // carry an explicit tabindex (the ki-badge and ki-alert precedent).
+  edit.tabIndex = 0;
+  cancel.tabIndex = 0;
   await expect.element(status(saving)).toBeInTheDocument();
 
   edit.focus();
