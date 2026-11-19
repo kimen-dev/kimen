@@ -1,7 +1,10 @@
 // Components whose contract also captures Material 3 in the dark scheme.
 const MATERIAL3_DARK: ReadonlySet<string> = new Set([
+  'ki-format-date',
+  'ki-format-number',
   'ki-grid',
   'ki-icon',
+  'ki-relative-time',
   'ki-spinner',
   'ki-stack',
 ]);
