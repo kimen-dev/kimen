@@ -83,17 +83,19 @@ None.
 - `--ki-switch-checked-rest-border`: color used by the switch component for checked rest border.
 - `--ki-switch-checked-rest-thumb`: color used by the switch component for checked rest thumb.
 - `--ki-switch-checked-rest-track`: color used by the switch component for checked rest track.
+- `--ki-switch-control-height`: dimension used by the switch component for the control footprint height (Toggle md: Space/9xl 28px). The well pads the track by half of (control-height - track-height) on every side.
+- `--ki-switch-control-width`: dimension used by the switch component for the control footprint width (Toggle md 10023:1368: Space/14xl 48px). The well is centred in it; set it to the track width, with control-height, to drop the well.
 - `--ki-switch-focus-ring-color`: color used by the switch component for focus ring color.
 - `--ki-switch-focus-ring-offset`: dimension used by the switch component for focus ring offset.
 - `--ki-switch-focus-ring-shadow`: shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-switch-focus-ring-width`: dimension used by the switch component for focus ring width.
-- `--ki-switch-gap`: dimension used by the switch component for gap (MarsUI sm label pairing: Space/md 8px).
+- `--ki-switch-gap`: dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio).
 - `--ki-switch-glyph-dash-height`: dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash).
 - `--ki-switch-glyph-height`: dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height).
 - `--ki-switch-glyph-width`: dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb).
 - `--ki-switch-min-target`: dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint).
 - `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset.
-- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius (MarsUI pointer corner radius is half the height with corner smoothing; radius_round clamps to the smoothed pill).
+- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs).
 - `--ki-switch-thumb-size`: dimension used by the switch component for thumb size.
 - `--ki-switch-thumb-width`: dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size).
 - `--ki-switch-track-height`: dimension used by the switch component for track height.
@@ -111,6 +113,9 @@ None.
 - `--ki-switch-unchecked-rest-border`: color used by the switch component for unchecked rest border.
 - `--ki-switch-unchecked-rest-thumb`: color used by the switch component for unchecked rest thumb.
 - `--ki-switch-unchecked-rest-track`: color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill).
+- `--ki-switch-well-bg-end`: color used by the switch component for the bottom of the well gradient (Toggle md Base).
+- `--ki-switch-well-bg-start`: color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well.
+- `--ki-switch-well-radius`: dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md).
 - `--ki-text-base-em`: semantic color for text base em.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.

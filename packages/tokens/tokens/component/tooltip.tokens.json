@@ -21,6 +21,14 @@
         "$value": "{ki.space.md}",
         "$description": "dimension used by the tooltip component for offset (MarsUI caret depth 8px with zero extra gap = trigger-to-card distance)."
       },
+      "arrow-size": {
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger."
+      },
+      "arrow-radius": {
+        "$value": "{ki.radius.xxs}",
+        "$description": "dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step)."
+      },
       "bg": {
         "$value": "{ki.surface.special.light-s0-dark-s2}",
         "$description": "color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override)."

@@ -71,6 +71,10 @@
       "backdrop-blur": {
         "$value": "{ki.blur.none}",
         "$type": "dimension"
+      },
+      "arrow-size": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 plain tooltips have no arrow."
       }
     }
   }

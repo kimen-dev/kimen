@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "aa06ed3f1b0b9529c19ba5e49648ab7fd00af03d39830654368b57a35ce4bbbc",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Figma fidelity pass and forced-colors disabled state (Kimen UI file, masters cited per token), cumulative since baseline 0.0.0 and superseding declaration reconnect-and-property-children (its deltas, and those of every declaration it supersedes, remain as declared there). No member, prop, event, part or slot changes and no token is removed or renamed. (1) New tokens: --ki-switch-control-width, --ki-switch-control-height, --ki-switch-well-radius, --ki-switch-well-bg-start and --ki-switch-well-bg-end (the Toggle Base well, 48x28 footprint, dropped by material3); --ki-dialog-heading-padding-*, --ki-dialog-body-padding-*, --ki-dialog-footer-padding-* (block-start, block-end, inline), --ki-dialog-divider-width and --ki-dialog-divider-color (Modal compact sections and hairlines, none in material3; the divider is 3:1 under more contrast); --ki-tooltip-arrow-size and --ki-tooltip-arrow-radius (the Tooltip pointer, zero in material3). (2) Effective value changes, onmars: --ki-button-sm-gap 4px -> 6px (Button sm icon-to-text); --ki-switch-thumb-radius 1000px -> 6px and --ki-switch-gap 8px -> 12px (Toggle md Pointer and Toggle-label); --ki-textarea-padding-block 12px -> 8px (Input-cell textarea md); --ki-select-listbox-radius 20px -> 16px and --ki-select-listbox-padding 12px -> 8px (Dropmenu); --ki-dialog-gap 20px -> 12px, now the gap between footer actions only, the sections padding themselves; material3 pins its switch gap, textarea padding and dialog spacing to their previous values. (3) --ki-text-danger, a deprecated alias, now resolves to --ki-text-danger-high-em instead of --ki-text-danger-med-em (3.1-3.5:1 on the light surfaces, under AA). (4) ki-button size radii alias --ki-radius-component-* instead of the base radius scale: same pixels, but a radius mode now reaches ki-button and ki-icon-button. The cumulative delta since 0.0.0 was already MAJOR. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

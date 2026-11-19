@@ -89,6 +89,10 @@
   cursor: pointer;
   display: inline-flex;
   gap: var(--ki-switch-gap);
+
+  /* The well paints under the track (z-index -1): this keeps it above
+     whatever surface the switch sits on. */
+  isolation: isolate;
   min-block-size: var(--ki-switch-min-target);
   min-inline-size: var(--ki-switch-min-target);
   position: relative;
@@ -103,14 +107,14 @@
 /* Help and error lines (spec 042) align with the label text, past the track. */
 [part="help"],
 [part="error"] {
-  padding-inline-start: calc(var(--ki-switch-track-width) + var(--ki-switch-gap));
+  padding-inline-start: calc(var(--ki-switch-control-width) + var(--ki-switch-gap));
 }
 
 input {
-  block-size: var(--ki-switch-track-height);
+  block-size: var(--ki-switch-control-height);
   cursor: inherit;
-  inline-size: var(--ki-switch-track-width);
-  inset-block-start: calc((100% - var(--ki-switch-track-height)) / 2);
+  inline-size: var(--ki-switch-control-width);
+  inset-block-start: calc((100% - var(--ki-switch-control-height)) / 2);
   inset-inline-start: 0;
   margin: 0;
   opacity: 0;
@@ -128,11 +132,43 @@ input {
   display: inline-block;
   flex: none;
   inline-size: var(--ki-switch-track-width);
+
+  /* The control footprint (Toggle md: 48x28) centres the track. */
+  margin-block: calc((var(--ki-switch-control-height) - var(--ki-switch-track-height)) / 2);
+  margin-inline: calc((var(--ki-switch-control-width) - var(--ki-switch-track-width)) / 2);
   outline: var(--ki-switch-focus-ring-width) solid transparent;
   outline-color: transparent;
   outline-offset: var(--ki-switch-focus-ring-offset);
   pointer-events: none;
   position: relative;
+}
+
+/* The Base well of the Toggle master (md: 46x28, Radius/small-component/md,
+   Surface/s3 -> s1): it pads the track by half the difference between the
+   control and track heights, on every side, so it follows any track size. A
+   theme drops it with transparent well colours, or by making the control the
+   size of the track. Measured from the track's padding box, hence the border. */
+[part="track"]::before {
+  --_ki-switch-well-inset: calc(
+    -1 *
+    (
+      (var(--ki-switch-control-height) - var(--ki-switch-track-height)) /
+      2 +
+      var(--ki-switch-border-width)
+    )
+  );
+
+  background-image: linear-gradient(
+    180deg,
+    var(--ki-switch-well-bg-start),
+    var(--ki-switch-well-bg-end)
+  );
+  border-radius: var(--ki-switch-well-radius);
+  content: "";
+  inset: var(--_ki-switch-well-inset);
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
 }
 
 /* MarsUI pointer (master 10023:1125, md): 22x18 — wider than tall — and it
@@ -277,5 +313,20 @@ input:active:not(:disabled) ~ [part="track"] {
 
   .glyph {
     color: Canvas;
+  }
+
+  /* The palette repaints the track edge, thumb and label in CanvasText
+     whatever the state; a disabled switch says it in GrayText, as a native
+     disabled control does. */
+  :host(:disabled) [part="track"] {
+    border-color: GrayText;
+  }
+
+  :host(:disabled) [part="thumb"] {
+    background: GrayText;
+  }
+
+  :host(:disabled) [part="label"] {
+    color: GrayText;
   }
 }

@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/reconnect-and-property-children.json',
+      '../../changes/api/figma-fidelity-pass.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -576,11 +576,15 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // The compact density (changes/api/045-density) adds three: the two
   // document-inherited density tokens and the 24px target floor. 1183 + 3 =
   // 1186. The compact level is published as its own context too.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1186);
+  // The Figma fidelity pass (changes/api/figma-fidelity-pass) adds eighteen:
+  // the switch control footprint and Base well (five), the dialog heading,
+  // body and footer section paddings (nine) and its divider width and colour
+  // (two), and the tooltip arrow size and tip radius (two). 1186 + 18 = 1204.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1204);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1186,
+    1204,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),

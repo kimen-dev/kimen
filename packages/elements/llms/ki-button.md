@@ -113,7 +113,7 @@ None.
 - `--ki-button-lg-line-height`: dimension used by the button component for lg line height.
 - `--ki-button-lg-min-target`: dimension used by the button component for lg min target.
 - `--ki-button-lg-padding-inline`: dimension used by the button component for lg padding inline.
-- `--ki-button-lg-radius`: dimension used by the button component for lg radius.
+- `--ki-button-lg-radius`: dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns).
 - `--ki-button-md-font-size`: dimension used by the button component for md font size.
 - `--ki-button-md-gap`: dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px).
 - `--ki-button-md-height`: dimension used by the button component for md height.
@@ -121,7 +121,7 @@ None.
 - `--ki-button-md-line-height`: dimension used by the button component for md line height.
 - `--ki-button-md-min-target`: dimension used by the button component for md min target.
 - `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
-- `--ki-button-md-radius`: dimension used by the button component for md radius.
+- `--ki-button-md-radius`: dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).
 - `--ki-button-padding-block`: dimension used by the button component for padding block (MarsUI: 4px in every size).
 - `--ki-button-primary-active-overlay`: Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
@@ -202,13 +202,13 @@ None.
 - `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-rest-fg`: color used by the button component for secondary success rest foreground.
 - `--ki-button-sm-font-size`: dimension used by the button component for sm font size.
-- `--ki-button-sm-gap`: dimension used by the button component for sm gap (interpolated between xs and md effective gaps).
+- `--ki-button-sm-gap`: dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text).
 - `--ki-button-sm-height`: dimension used by the button component for sm height.
 - `--ki-button-sm-icon-size`: dimension used by the button component for sm icon size.
 - `--ki-button-sm-line-height`: dimension used by the button component for sm line height.
 - `--ki-button-sm-min-target`: dimension used by the button component for sm min target.
 - `--ki-button-sm-padding-inline`: dimension used by the button component for sm padding inline.
-- `--ki-button-sm-radius`: dimension used by the button component for sm radius.
+- `--ki-button-sm-radius`: dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns).
 - `--ki-button-tertiary-danger-hover-bg`: color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
 - `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground.
@@ -241,7 +241,7 @@ None.
 - `--ki-button-xl-line-height`: dimension used by the button component for xl line height.
 - `--ki-button-xl-min-target`: dimension used by the button component for xl min target.
 - `--ki-button-xl-padding-inline`: dimension used by the button component for xl padding inline (MarsUI 14px).
-- `--ki-button-xl-radius`: dimension used by the button component for xl radius.
+- `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
 - `--ki-button-xs-font-size`: dimension used by the button component for xs font size (MarsUI caption_1 10px).
 - `--ki-button-xs-gap`: dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px).
 - `--ki-button-xs-height`: dimension used by the button component for xs height.
@@ -249,7 +249,7 @@ None.
 - `--ki-button-xs-line-height`: dimension used by the button component for xs line height (MarsUI caption_1 16px).
 - `--ki-button-xs-min-target`: dimension used by the button component for xs min target.
 - `--ki-button-xs-padding-inline`: dimension used by the button component for xs padding inline.
-- `--ki-button-xs-radius`: dimension used by the button component for xs radius.
+- `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.

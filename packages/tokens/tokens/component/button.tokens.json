@@ -15,8 +15,8 @@
           "$description": "dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px)."
         },
         "radius": {
-          "$value": "{ki.radius.sm}",
-          "$description": "dimension used by the button component for xs radius."
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
         },
         "font-size": {
           "$value": "{ki.typography.size.caption-1}",
@@ -45,12 +45,12 @@
           "$description": "dimension used by the button component for sm padding inline."
         },
         "gap": {
-          "$value": "{ki.space.xs}",
-          "$description": "dimension used by the button component for sm gap (interpolated between xs and md effective gaps)."
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text)."
         },
         "radius": {
-          "$value": "{ki.radius.md}",
-          "$description": "dimension used by the button component for sm radius."
+          "$value": "{ki.radius.component.sm}",
+          "$description": "dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns)."
         },
         "font-size": {
           "$value": "{ki.typography.size.body-1}",
@@ -83,8 +83,8 @@
           "$description": "dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px)."
         },
         "radius": {
-          "$value": "{ki.radius.lg}",
-          "$description": "dimension used by the button component for md radius."
+          "$value": "{ki.radius.component.md}",
+          "$description": "dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns)."
         },
         "font-size": {
           "$value": "{ki.typography.size.body-1}",
@@ -117,8 +117,8 @@
           "$description": "dimension used by the button component for lg gap."
         },
         "radius": {
-          "$value": "{ki.radius.xl}",
-          "$description": "dimension used by the button component for lg radius."
+          "$value": "{ki.radius.component.lg}",
+          "$description": "dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns)."
         },
         "font-size": {
           "$value": "{ki.typography.size.body-2}",
@@ -151,8 +151,8 @@
           "$description": "dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px)."
         },
         "radius": {
-          "$value": "{ki.radius.2xl}",
-          "$description": "dimension used by the button component for xl radius."
+          "$value": "{ki.radius.component.xl}",
+          "$description": "dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns)."
         },
         "font-size": {
           "$value": "{ki.typography.size.title-2}",
