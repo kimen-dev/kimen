@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiInput } from '../dist/components/ki-inpu
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
+import { hasVisibleShadow } from './contracts';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { disableComponentEffectShadows } from './flat-effects';
 import { moveToNewParent } from './reconnect';
@@ -740,9 +741,9 @@ describe('ki-select in a real browser', () => {
     // The theme's danger ring composes over the trigger's rest elevation.
     // Poll while its box-shadow transition settles.
     const button = trigger(el);
-    await expect
-      .poll(() => getComputedStyle(button, '::before').boxShadow)
-      .toBe(resolvedShadowToken(button, '--ki-focus-danger'));
+    const dangerRing = resolvedShadowToken(button, '--ki-focus-danger');
+    await expect.poll(() => getComputedStyle(button, '::before').boxShadow).toBe(dangerRing);
+    expect(hasVisibleShadow(dangerRing)).toBe(true);
 
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -841,7 +842,7 @@ describe('ki-select in a real browser', () => {
     expect(valueBox && indicatorBox ? valueBox.left > indicatorBox.left : false).toBe(true);
   });
 
-  it('S17 paints the MarsUI Dropdown trigger geometry, typography, and rest elevation', async () => {
+  it('S17 paints the dropdown trigger geometry, typography, and flat surface', async () => {
     const el = await mountSelect();
     const triggerEl = trigger(el);
     const cs = getComputedStyle(triggerEl);
@@ -859,11 +860,8 @@ describe('ki-select in a real browser', () => {
     expect(cs.fontWeight).toBe('600');
     expect(cs.lineHeight).toBe('24px');
 
-    // Rest fill white (light) + Component_effect/secondary_default:
-    // drop 0/2/1.5/-0.5 Elevation/shadow plus inner White/3 0/2/3.
     expect(cs.backgroundColor).toBe('rgb(255, 255, 255)');
-    expect(cs.boxShadow).not.toBe('none');
-    expect(cs.boxShadow).toContain('inset');
+    expect(hasVisibleShadow(cs.boxShadow)).toBe(false);
 
     // Input_label row: UI/Para/medium 13/20/600 with 2px (Space/xxs) inset.
     const label = el.shadowRoot?.querySelector('[part="label"]');
@@ -908,21 +906,21 @@ describe('ki-select in a real browser', () => {
       .not.toBe(restTransform);
   });
 
-  it('S17 S3 opens a glass Dropmenu panel with MarsUI row geometry and highlight elevation', async () => {
+  it('S17 S3 opens a Dropmenu panel with the expected fill, row geometry and elevation', async () => {
     const el = await mountSelect();
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     // Dropmenu panel (12127:30113): radius 16px (Radius/big-component/xs),
-    // Body padding 8px (Space/md), White/80 glass + BACKGROUND_BLUR Blur/48
-    // (24px), Elevation/e3.
+    // Body padding 8px (Space/md) and Elevation/e3. #342 disables the filter
+    // in Calma while the reference listbox fill keeps its White/80 tint.
     const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
     expect(listbox).toBeInstanceOf(HTMLElement);
     const listboxCs = listbox ? getComputedStyle(listbox) : null;
     expect(listboxCs?.borderTopLeftRadius).toBe('16px');
     expect(listboxCs?.paddingBlockStart).toBe('8px');
     expect(listboxCs?.paddingInlineStart).toBe('8px');
-    expect(listboxCs?.backdropFilter).toBe('blur(24px)');
+    expect(listboxCs?.backdropFilter).toBe('none');
     expect(listboxCs?.backgroundColor).toBe('rgba(255, 255, 255, 0.8)');
     expect(listboxCs?.backgroundImage).toBe('none');
     expect(listboxCs?.boxShadow).not.toBe('none');

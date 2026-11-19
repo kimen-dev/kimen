@@ -407,12 +407,14 @@ describe('token reassignment in a themed subtree', () => {
     document.getElementById(STYLE_ID)?.remove();
   });
 
-  // The reason a themed subtree redeclares every token: the primary button
-  // fill aliases a semantic token that aliases the brand token. Reassigning
-  // the brand token alone restyles the button only if both aliases are
-  // recomputed on the subtree, which is the element the consumer names.
+  // The primary button's fill aliases the semantic primary surface.
+  // Reassigning it restyles the button only if the alias is recomputed
+  // on the subtree the consumer names.
   it('recomputes every alias from a token a consumer reassigns on the subtree', async () => {
-    injectStylesheet(`[data-ki-theme='acme'] { --ki-color-brand-500: ${REASSIGNED}; }`, STYLE_ID);
+    injectStylesheet(
+      `[data-ki-theme='acme'] { --ki-surface-primary-med-em: ${REASSIGNED}; }`,
+      STYLE_ID,
+    );
     const main = await mount({}, `${COMPONENTS}${region({ theme: 'acme' })}`);
     const fill = (container: HTMLElement): string => {
       const control = container

@@ -2,8 +2,8 @@
 //
 // Each capture renders one per-component state gallery from the BUILT
 // dist/components output (what ships is what is asserted, Art. III) with the
-// real token stylesheets, the vendored font fixtures (Inter for onmars,
-// Roboto for material3 — runner font packages can never shift text metrics),
+// real token stylesheets, the vendored font fixtures (Instrument Sans and
+// Newsreader for onmars, Roboto for material3) to pin text metrics,
 // reduced-motion emulation and DPR 1 headless Chromium. The matcher runs
 // strict comparator defaults: zero mismatched pixels, per-pixel threshold 0.1
 // (rasterization noise only, so a color delta under ~26/255 is a documented
@@ -21,8 +21,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { commands, page } from 'vitest/browser';
 
 import material3Css from '@kimen/tokens/css/material3?raw';
+import onmarsFontsCss from '@kimen/tokens/css/onmars-fonts.css?inline';
 import onmarsCss from '@kimen/tokens/css?raw';
-import interWoff2Url from './fonts/InterVariable.woff2?url';
 import robotoWoff2Url from './fonts/RobotoVariable.woff2?url';
 import { visualGalleries } from './galleries';
 import type { VisualComponent, VisualGallery } from './galleries';
@@ -49,6 +49,7 @@ const browserCommands = commands as unknown as {
 };
 
 const ONMARS_STYLE_ID = 'vr-onmars-tokens';
+const ONMARS_FONT_STYLE_ID = 'vr-onmars-fonts';
 const MATERIAL3_STYLE_ID = 'vr-material3-tokens';
 
 // The default 414x896 tester viewport does not fit the headless window, so
@@ -72,27 +73,24 @@ const VISUAL_TEST_TIMEOUT_MS = 10_000;
 const SHADOW_RENDER_DEADLINE_MS = 1500;
 const DISARMED_NOTICE = 'visual gate DISARMED — bootstrap pending, see README';
 
-// Vendored fixture fonts (metrics can never drift with the runner image):
-// Inter resolves the onmars `--ki-font-family-body`, Roboto the material3
-// one. Both load up front so every gallery renders real glyphs, never a
-// platform fallback face.
-const fixtureFonts = [
-  { family: 'Inter', url: interWoff2Url },
-  { family: 'Roboto', url: robotoWoff2Url },
-] as const;
 let fixtureFontsLoaded = false;
 
 async function ensureFixtureFonts(): Promise<void> {
   if (!fixtureFontsLoaded) {
-    await Promise.all(
-      fixtureFonts.map(async ({ family, url }) => {
-        const face = new FontFace(family, `url(${url}) format('woff2')`, {
-          weight: '100 900',
-        });
-        await face.load();
-        document.fonts.add(face);
-      }),
-    );
+    // Vite rebases the font URLs in the published CSS, which supplies the
+    // weight ranges and leaves Newsreader's 6–72 optical-size axis automatic.
+    injectStylesheet(onmarsFontsCss, ONMARS_FONT_STYLE_ID);
+    const roboto = new FontFace('Roboto', `url(${robotoWoff2Url}) format('woff2')`, {
+      weight: '100 900',
+    });
+    const [instrumentSans, newsreader] = await Promise.all([
+      document.fonts.load('400 16px "Instrument Sans"'),
+      document.fonts.load('500 16px Newsreader'),
+      roboto.load(),
+    ]);
+    expect(instrumentSans, 'Instrument Sans fixture').toHaveLength(1);
+    expect(newsreader, 'Newsreader fixture').toHaveLength(1);
+    document.fonts.add(roboto);
     fixtureFontsLoaded = true;
   }
   await document.fonts.ready;
@@ -157,7 +155,8 @@ async function waitForShadowRender(wrapper: HTMLElement): Promise<void> {
   await nextFrame();
 }
 
-async function mountGallery(gallery: Gallery, theme: Theme): Promise<HTMLElement> {
+export async function mountGallery(gallery: Gallery, theme: Theme): Promise<HTMLElement> {
+  await ensureFixtureFonts();
   document.body.replaceChildren();
   // Deterministic geometry: zero margin plus a wrapper as wide as the
   // viewport (page.viewport uses gallery.width) pins static content at
@@ -214,7 +213,6 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
       await browserCommands.emulateColorScheme(scheme);
       await browserCommands.emulateReducedMotion('reduce');
       await page.viewport(gallery.width ?? 640, VIEWPORT_HEIGHT);
-      await ensureFixtureFonts();
     });
 
     afterAll(async () => {

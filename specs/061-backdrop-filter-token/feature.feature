@@ -3,8 +3,8 @@ Feature: Themes control the complete backdrop filter
 
   # S1
   Scenario: A flat theme turns the backdrop effect off
-    Given an onmars page whose theme sets the backdrop filters to none
-    When glass surfaces are displayed
+    Given an onmars page displaying glass surfaces with a backdrop filter
+    When the theme sets the shared filter to none
     Then each surface has a computed backdrop filter of none
 
   # S2
@@ -15,7 +15,7 @@ Feature: Themes control the complete backdrop filter
     And the button computes none
 
   # S3
-  Scenario Outline: Built-in themes preserve their backdrop appearance
+  Scenario Outline: Built-in themes use their own backdrop settings
     Given the <theme> theme in the <scheme> colour scheme
     When glass surfaces are displayed
     Then the standard backdrop filter computes <filter>
@@ -23,19 +23,19 @@ Feature: Themes control the complete backdrop filter
 
     Examples:
       | theme     | scheme | filter     | listbox    |
-      | onmars    | light  | blur(12px) | blur(24px) |
-      | onmars    | dark   | blur(12px) | blur(24px) |
+      | onmars    | light  | none       | none       |
+      | onmars    | dark   | none       | none       |
       | material3 | light  | blur(0px)  | blur(0px)  |
       | material3 | dark   | blur(0px)  | blur(0px)  |
 
   # S4
   Scenario: An existing blur-length override still controls the glass effect
-    Given an onmars theme that customizes the published backdrop blur lengths
+    Given an onmars theme that selects the original glass filters and customizes their published blur lengths
     When the badge, button and select listbox are displayed
     Then each computes a blur using its customized length
 
   # S5
   Scenario: Reduced transparency turns the backdrop effect off
-    Given a page that enables reduced transparency
+    Given a Material 3 page that enables reduced transparency
     When glass surfaces are displayed
     Then each surface has a computed backdrop filter of none

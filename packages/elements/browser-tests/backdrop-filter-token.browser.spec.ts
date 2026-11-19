@@ -92,9 +92,18 @@ afterAll(uninstallKimen);
 
 it('S1 turns the computed backdrop filter off on every glass surface', async () => {
   themeDocument('onmars', 'light');
-  root.style.setProperty('--ki-effect-component-backdrop-filter', 'none');
+  // Calma is flat by default. Select the legacy listbox filter so it follows
+  // the shared glass setting, then exercise that switch on every surface.
+  root.style.setProperty(
+    '--ki-effect-component-listbox-backdrop-filter',
+    'blur(var(--ki-blur-48))',
+  );
+  root.style.setProperty('--ki-effect-component-backdrop-filter', 'blur(12px)');
+  const fixture = await mountGlass();
+  expectFilters(fixture, 'blur(12px)', 'blur(12px)');
 
-  expectFilters(await mountGlass(), 'none', 'none');
+  root.style.setProperty('--ki-effect-component-backdrop-filter', 'none');
+  expectFilters(fixture, 'none', 'none');
 });
 
 it('S2 can enable glass for a badge alone in a flat theme', async () => {
@@ -108,12 +117,13 @@ it('S2 can enable glass for a badge alone in a flat theme', async () => {
 });
 
 describe.each(THEMES)('S3 built-in %s theme', (theme) => {
-  it.each(SCHEMES)('S3 preserves glass appearance in %s', async (scheme) => {
+  it.each(SCHEMES)('S3 uses the shipped filters in %s', async (scheme) => {
     themeDocument(theme, scheme);
     const fixture = await mountGlass();
 
     if (theme === 'onmars') {
-      expectFilters(fixture, 'blur(12px)', 'blur(24px)');
+      // Calma disables both the standard and listbox filters.
+      expectFilters(fixture, 'none', 'none');
     } else {
       for (const name of [
         '--ki-effect-component-backdrop-blur',
@@ -129,6 +139,15 @@ describe.each(THEMES)('S3 built-in %s theme', (theme) => {
 
 it('S4 keeps theme and component-local overrides of the old blur lengths', async () => {
   themeDocument('onmars', 'light');
+  // Exercise the legacy length path with its original glass filters selected.
+  root.style.setProperty(
+    '--ki-effect-component-backdrop-filter',
+    'blur(var(--ki-effect-component-backdrop-blur))',
+  );
+  root.style.setProperty(
+    '--ki-effect-component-listbox-backdrop-filter',
+    'blur(var(--ki-blur-48))',
+  );
   root.style.setProperty('--ki-effect-component-backdrop-blur', '4px');
   root.style.setProperty('--ki-select-listbox-backdrop-blur', '8px');
   const fixture = await mountGlass();
@@ -144,15 +163,21 @@ it('S4 keeps theme and component-local overrides of the old blur lengths', async
 });
 
 it('S5 turns the filter off in a page that declares reduced transparency', async () => {
-  themeDocument('onmars', 'light');
-  root.setAttribute('data-ki-transparency', 'reduce');
+  // Material 3 retains a zero-radius filter in its standard mode.
+  themeDocument('material3', 'light');
+  const fixture = await mountGlass();
+  expectFilters(fixture, 'blur(0px)', 'blur(0px)');
 
-  expectFilters(await mountGlass(), 'none', 'none');
+  root.setAttribute('data-ki-transparency', 'reduce');
+  expectFilters(fixture, 'none', 'none');
 });
 
 it('S5 turns the filter off under the system reduced-transparency preference', async (context) => {
-  themeDocument('onmars', 'light');
+  themeDocument('material3', 'light');
+  const fixture = await mountGlass();
+  expectFilters(fixture, 'blur(0px)', 'blur(0px)');
+
   await underTransparency('reduce', context);
 
-  expectFilters(await mountGlass(), 'none', 'none');
+  expectFilters(fixture, 'none', 'none');
 });
