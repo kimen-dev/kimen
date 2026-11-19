@@ -138,6 +138,7 @@ None.
 - `--ki-select-line-height`: dimension used by the select component for the trigger value line height (MarsUI body_1 24px).
 - `--ki-select-listbox-backdrop-filter`: Complete backdrop filter behind the select listbox.
 - `--ki-select-listbox-bg`: color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter).
+- `--ki-select-listbox-bg-image`: Optional CSS background image layered over the listbox fill. Use none for a solid fill.
 - `--ki-select-listbox-max-block-size`: dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale).
 - `--ki-select-listbox-offset`: dimension used by the select component for listbox offset.
 - `--ki-select-listbox-padding`: dimension used by the select component for listbox padding (Dropmenu master Body: Space/md 8px on every side).

@@ -1,12 +1,12 @@
 {
   "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
   "baselineVersion": "0.0.0",
-  "candidateSha256": "cdaf1aacd883345c353c7f3dfeed9894493beecf57a02f75eea63c5636ac4144",
+  "candidateSha256": "916315c023aa2c2168bcfd27b6e7f8171796000ed786778c293d598804e9264e",
   "packages": [
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Complete backdrop filter tokens (issue #342, spec 061), cumulative since baseline 0.0.0 and superseding 317-321-loading-hint-touch. Adds two semantic and eight component filter tokens, and deprecates seven length tokens with their values preserved for migration. Material 3 and reduced transparency use none in place of a zero-radius blur. The select listbox keeps its distinct onmars blur. The cumulative release classification stays major. It supersedes 349-composed-shadows and carries forward its declared changes.",
+  "reason": "Complete backdrop filter tokens (issue #342, spec 061), cumulative since baseline 0.0.0 and superseding 317-321-loading-hint-touch. Adds two semantic and eight component filter tokens, and deprecates seven length tokens with their values preserved for migration. Material 3 and reduced transparency use none in place of a zero-radius blur. The select listbox keeps its distinct onmars blur. The cumulative release classification stays major. It supersedes 343-solid-surface-background and carries forward its declared changes.",
   "release": "major",
   "schemaVersion": 1
 }

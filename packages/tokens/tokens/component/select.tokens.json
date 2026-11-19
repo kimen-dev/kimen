@@ -178,6 +178,10 @@
           "$value": "{ki.surface.special.blur-base-light}",
           "$description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter)."
         },
+        "bg-image": {
+          "$value": "{ki.surface-image.listbox}",
+          "$description": "Optional CSS background image layered over the listbox fill. Use none for a solid fill."
+        },
         "backdrop-blur": {
           "$value": "{ki.blur.48}",
           "$type": "dimension",

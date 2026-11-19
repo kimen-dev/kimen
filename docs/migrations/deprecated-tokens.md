@@ -1,7 +1,7 @@
 # Migrate off deprecated tokens
 
 Deprecated `--ki-*` tokens stay in the stylesheets with their values until
-the scheduled removal. Each one names the token that replaces it.
+their scheduled removal. Each one names its replacement.
 
 ## Where you see a deprecation
 
@@ -36,9 +36,9 @@ reaches the removal version while still shipping the token.
 
 ## What to change
 
-For the original deprecations below, replace each name wherever you set or
-read it. The table uses `{variant}` for `primary`, `secondary`, `tertiary`,
-`quaternary`, or `ghost`.
+Use the replacement in the *Deprecated tokens* table wherever you set or read a
+deprecated token. In the table below, `{variant}` is `primary`, `secondary`,
+`tertiary`, `quaternary` or `ghost`.
 
 | Deprecated | Use instead | Why |
 | --- | --- | --- |
@@ -59,7 +59,20 @@ For `*-backdrop-blur` tokens, change how you set and read the value.
 
 The deprecated lengths still drive the built-in glass defaults during the
 transition. A different complete filter takes precedence, including the
-`none` used by Material 3 and reduced transparency.
+`none` used by reduced transparency.
+
+### Dialog and tooltip background stops
+
+Combine the old `--ki-dialog-bg-start` and `--ki-dialog-bg-end` colors in one
+CSS `linear-gradient()` assigned to `--ki-dialog-bg-image`. Use
+`--ki-tooltip-bg-image` the same way for the tooltip. For a solid surface,
+set the image to `none` and set `--ki-dialog-bg` or `--ki-tooltip-bg` to the
+fill color. A theme can set the tooltip arrow's edge colors through
+`--ki-surface-image-tooltip-arrow-start` and `--ki-surface-image-tooltip-arrow-end`.
+
+During the deprecation window, the onmars v1 default gradients still take
+their legacy colors from the element that declares the theme. For a
+per-component override, assign the complete image on that component.
 
 ## For contributors
 
@@ -80,6 +93,8 @@ A deprecation is declared once, on the token's base definition in
 The stylesheet comment, the reference row and the snapshot facet are generated
 from it. The build rejects a deprecation without its reason, its schedule or
 a replacement that is a live published token, one declared on a group or in a
-theme overlay, and reads of a deprecated token outside the temporary backdrop
-compatibility bridge. The contracts are `specs/041-token-deprecation` and
+theme overlay, and direct reads of deprecated tokens in component CSS or DTCG
+aliases, apart from the temporary backdrop compatibility bridge. Onmars v1
+uses temporary theme CSS expressions to keep the stops working at the theme
+scope. The contracts are `specs/041-token-deprecation` and
 `specs/061-backdrop-filter-token`.
