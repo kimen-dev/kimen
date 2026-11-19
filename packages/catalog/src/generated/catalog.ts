@@ -502,6 +502,64 @@ export const catalogData = {
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
     },
+    "ki-empty-state": {
+      "description": "A short explanation and next step for an empty view.",
+      "events": {},
+      "props": {
+        "announce": {
+          "type": "boolean",
+          "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
+          "default": false
+        },
+        "heading": {
+          "type": "string",
+          "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
+          "required": true
+        },
+        "heading-level": {
+          "type": "number",
+          "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
+          "default": 3,
+          "minimum": 2,
+          "maximum": 6
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence."
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
+          "default": "md"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "info",
+            "neutral",
+            "primary",
+            "primary-light",
+            "success",
+            "warning"
+          ],
+          "description": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Localized supporting text with a reason or recovery advice.",
+        "actions": "Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls.",
+        "media": "Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
+      },
+      "tag": "ki-empty-state",
+      "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
+      "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction."
+    },
     "ki-icon": {
       "description": "A static Lucide glyph selected by name from the application's per-icon imports.",
       "events": {},
