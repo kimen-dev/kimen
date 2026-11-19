@@ -37,6 +37,10 @@
         "$value": "{ki.typography.line-height.para}",
         "$description": "dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24)."
       },
+      "heading-font-family": {
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Font family for the alert heading. Override it to give alerts their own heading typeface."
+      },
       "heading-font-size": {
         "$value": "{ki.typography.size.body-2}",
         "$description": "dimension used by the alert component for heading font size."

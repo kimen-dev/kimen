@@ -264,6 +264,10 @@
               "description": "dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px)."
             },
             {
+              "name": "--ki-alert-heading-font-family",
+              "description": "Font family for the alert heading. Override it to give alerts their own heading typeface."
+            },
+            {
               "name": "--ki-alert-heading-font-size",
               "description": "dimension used by the alert component for heading font size."
             },
@@ -3172,12 +3176,20 @@
               "description": "dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px)."
             },
             {
+              "name": "--ki-dialog-heading-font-family",
+              "description": "Font family for the dialog heading. Override it to give dialogs their own heading typeface."
+            },
+            {
               "name": "--ki-dialog-heading-font-size",
               "description": "dimension used by the dialog component for heading font size."
             },
             {
               "name": "--ki-dialog-heading-font-weight",
               "description": "font weight used by the dialog component for heading font weight."
+            },
+            {
+              "name": "--ki-dialog-heading-letter-spacing",
+              "description": "Letter spacing for the dialog heading. Override it to tune tracking for the chosen heading typeface."
             },
             {
               "name": "--ki-dialog-heading-line-height",
