@@ -80,6 +80,12 @@ Feature: ki-icon displays an imported Lucide glyph
     Given the icon gallery has a visual suite for both schemes
     When release verification checks expected captures
     Then the audit requires onmars and Material 3 in both light and dark
+
+  # S13
+  Scenario: Keep the stock MCP surface and server in agreement
+    Given the stock MCP surface has selected circle-check
+    When a spec names circle-check or the unselected triangle-alert
+    Then the server and packaged surface accept circle-check and diagnose triangle-alert
 ```
 
 | Family | Scenarios |
@@ -89,7 +95,7 @@ Feature: ki-icon displays an imported Lucide glyph
 | Assistive-tech outcome | S3, S7 |
 | Form participation | S4 |
 | Theming | S5, S9, S12 |
-| Guarded surfaces | S6, S11 |
+| Guarded surfaces | S6, S11, S13 |
 
 ## Requirements
 
@@ -112,3 +118,4 @@ Additive public API includes the element, its three props, the theme tokens and 
 - **Agent's choice, pending founder confirmation.** Treat blank labels as decorative and unrecognized direct-element sizes as inherited. Keep directional artwork as authored in RTL. A composite owns any contextual mirroring and accessibility label for its control.
 - **Agent's choice, pending founder confirmation.** Keep the adapter's existing accessibility metadata policy and report A2UI SVG path objects as an unsupported variant. Standard A2UI names resolve to corresponding Lucide names.
 - **Agent's choice, pending founder confirmation.** Record the additive feature in a major API declaration because the protected release comparator still classifies the generated Components and JSX namespace changes from #316 as major.
+- **Agent's choice, pending founder confirmation.** Select `circle-check` for the stock self-contained MCP Apps surface. Build the document and the bundled server's preflight from the same selection. Other hosts choose their own imports.

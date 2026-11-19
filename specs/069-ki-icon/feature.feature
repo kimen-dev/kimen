@@ -71,3 +71,9 @@ Feature: ki-icon displays an imported Lucide glyph
     Given the icon gallery has a visual suite for both schemes
     When release verification checks expected captures
     Then the audit requires onmars and Material 3 in both light and dark
+
+  # S13
+  Scenario: Keep the stock MCP surface and server in agreement
+    Given the stock MCP surface has selected circle-check
+    When a spec names circle-check or the unselected triangle-alert
+    Then the server and packaged surface accept circle-check and diagnose triangle-alert

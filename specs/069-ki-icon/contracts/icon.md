@@ -9,3 +9,5 @@ Import `@kimen/elements/icons/circle-check` before rendering `<ki-icon name="cir
 | `label` | Omitted | Human-readable image name when the glyph independently conveys meaning. |
 
 The surface has no slots or actions. Unavailable names produce a catalog diagnostic when a guarded document attempts to use them.
+
+The stock self-contained MCP surface and bundled server select `circle-check`. Hosts that compose their own surfaces provide their own per-icon imports.

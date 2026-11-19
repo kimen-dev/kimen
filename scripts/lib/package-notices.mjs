@@ -16,13 +16,19 @@ const SECTION_START = new RegExp(`^${RULE}\\nThird-party notices: (.+)\\n${RULE}
 //   copyright and permission notice in every copy.
 // - @kimen/elements also ships Lucide ISC and Feather MIT icon modules.
 // - @kimen/tokens ships Kimen's stylesheets and the optional onmars fonts.
+// - The MCP Apps adapter and server embed the element runtime, QR encoder
+//   and the stock Lucide icon in the packaged MCP Apps document.
+const ELEMENT_BUNDLE_NOTICES = Object.freeze([
+  'QR Code generator library (MIT)',
+  'Stencil client runtime (MIT)',
+  'Lucide 1.63.0 and Feather icons (ISC and MIT)',
+]);
+
 export const PACKAGE_NOTICE_SECTIONS = Object.freeze({
-  '@kimen/elements': Object.freeze([
-    'QR Code generator library (MIT)',
-    'Stencil client runtime (MIT)',
-    'Lucide 1.63.0 and Feather icons (ISC and MIT)',
-  ]),
+  '@kimen/elements': ELEMENT_BUNDLE_NOTICES,
   '@kimen/tokens': Object.freeze(['onmars theme fonts (SIL OFL 1.1)']),
+  '@kimen/adapter-mcp-apps': ELEMENT_BUNDLE_NOTICES,
+  '@kimen/mcp-server': ELEMENT_BUNDLE_NOTICES,
 });
 
 const withSingleTrailingNewline = (text) => `${text.trimEnd()}\n`;
