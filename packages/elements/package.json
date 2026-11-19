@@ -87,7 +87,7 @@
     }
   },
   "dependencies": {
-    "@stencil/core": "4.45.2"
+    "@stencil/core": "4.45.3"
   },
   "devDependencies": {
     "@kimen/tokens": "workspace:*",
