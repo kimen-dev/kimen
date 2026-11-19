@@ -1,12 +1,12 @@
 {
   "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
   "baselineVersion": "0.0.0",
-  "candidateSha256": "d9c7f98868a6de7b19aef3f431deb2617fa22507a83ac73aff6cb4aa55c82a00",
+  "candidateSha256": "76afa703df075eda142b390bf0528b34d369095320611f3ab680bd782a7a7739",
   "packages": [
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Four recommended roles for ki-button and ki-icon-button (issue #344, specs 002 and 022), cumulative since 0.0.0 and superseding 317-321-loading-hint-touch with all its declared deltas. The tertiary DOM and TypeScript value remains accepted and emits a development-only deprecation warning. The twelve tertiary button background and foreground defaults now use the same semantic references as secondary. Added --ki-button-tertiary-hover-overlay with the secondary hover wash by default and a transparent Material 3 override. The existing Material 3 tertiary values retain their current references and values. The catalog carries the four recommended values and preserves existing tertiary UI specs through additive catalog-format metadata. The cumulative release classification is MAJOR. Zero removals, no root growth. It supersedes 349-composed-shadows and carries forward its declared changes.",
+  "reason": "Four recommended roles for ki-button and ki-icon-button (issue #344, specs 002 and 022), cumulative since 0.0.0 and superseding 317-321-loading-hint-touch with all its declared deltas. The tertiary DOM and TypeScript value remains accepted and emits a development-only deprecation warning. The twelve tertiary button background and foreground defaults now use the same semantic references as secondary. Added --ki-button-tertiary-hover-overlay with the secondary hover wash by default and a transparent Material 3 override. The existing Material 3 tertiary values retain their current references and values. The catalog carries the four recommended values and preserves existing tertiary UI specs through additive catalog-format metadata. The cumulative release classification is MAJOR. Zero removals, no root growth. It supersedes 342-backdrop-filter-token and carries forward its declared changes.",
   "release": "major",
   "schemaVersion": 1
 }

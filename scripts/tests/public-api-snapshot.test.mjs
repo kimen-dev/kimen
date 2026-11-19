@@ -594,12 +594,16 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // families, and the dialog heading letter spacing. 1247 + 4 = 1251.
   // Issue #345 adds three switch glyph colors. 1251 + 3 = 1254.
   // Issue #349 adds the video hover shadow opacity. 1254 + 1 = 1255.
-  // Issue #344 adds the tertiary hover overlay. 1255 + 1 = 1256.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1256);
+  // Issue #343 adds three component image tokens and six semantic tokens for
+  // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
+  // Issue #342 adds ten full-filter tokens: two semantic and eight component.
+  // 1264 + 10 = 1274.
+  // Issue #344 adds the tertiary hover overlay. 1274 + 1 = 1275.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1275);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1256,
+    1275,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
@@ -629,10 +633,11 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     assert.equal(Object.hasOwn(published, name), false, `${name} is no longer published`);
   }
   // The token deprecation (changes/api/041-token-deprecation) keeps the 85
-  // component leaves nothing reads published, each with deprecatedSince 0.1.0
-  // and a replacement, so a later major can remove them.
+  // component leaves published. Issue #343 adds four legacy gradient stops.
+  // All 89 entries carry deprecatedSince 0.1.0 and a live replacement.
   const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
-  assert.equal(deprecated.length, 85);
+  // Issue #342 also deprecates seven legacy backdrop blur lengths. 89 + 7 = 96.
+  assert.equal(deprecated.length, 96);
   assert.ok(
     deprecated.every(
       ({ deprecatedSince, replacement }) => deprecatedSince === '0.1.0' && replacement,
