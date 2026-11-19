@@ -149,6 +149,24 @@ size budget, tokens-only styling (no hardcoded visual values), and RTL support
 by construction. The whole repo is guarded by a deterministic gate suite that
 runs identically locally and in CI: `bash scripts/gates/gates-suite.sh`.
 
+### Share local caches across worktrees
+
+The default cache is private to each worktree under `reports/cache`. To share
+Nx task outputs, the pnpm store and Playwright binaries across local worktrees,
+set `KIMEN_CACHE_ROOT` to one private directory outside your home. For example,
+on macOS add `export KIMEN_CACHE_ROOT="/Users/Shared/kimen-cache-$UID"` to your
+shell startup file. The wrapper creates and validates the directory. It rejects
+symlink components and group- or world-writable cache directories. Nx project
+graph state, Vite state and gate evidence have separate worktree directories.
+
+Use the wrapper when provisioning the shared store and Chromium binaries. Run
+the install in each worktree when switching it to the shared store.
+
+```bash
+bash scripts/gates/cache-env.sh -- pnpm install --frozen-lockfile
+bash scripts/gates/cache-env.sh -- pnpm --filter @kimen/elements exec playwright install chromium
+```
+
 ## Governance
 
 The repository operates under a constitution digest

@@ -12,7 +12,7 @@ if [ "${KIMEN_CACHE_ENV_READY:-}" != '1' ]; then
 fi
 bash scripts/gates/cache-env.sh --validate || exit 1
 
-EVIDENCE_DIRECTORY="$KIMEN_CACHE_ROOT/gate-evidence"
+EVIDENCE_DIRECTORY="${KIMEN_WORKTREE_CACHE_ROOT:-$KIMEN_CACHE_ROOT}/gate-evidence"
 KIMEN_GATE_EVIDENCE_FILE="$EVIDENCE_DIRECTORY/current-run.tsv"
 mkdir -p "$EVIDENCE_DIRECTORY" || exit 1
 : >"$KIMEN_GATE_EVIDENCE_FILE" || exit 1

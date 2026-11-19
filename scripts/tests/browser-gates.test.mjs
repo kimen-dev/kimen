@@ -1,7 +1,16 @@
 // @spec:018-project-integrity-hardening#S6
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmod, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/promises';
+import {
+  chmod,
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  realpath,
+  rm,
+  writeFile,
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
@@ -89,6 +98,13 @@ function runBrowserGate(fixture, engine, environment = {}) {
     encoding: 'utf8',
     env: { ...fixture.environment, ...environment },
   });
+}
+
+async function readBrowserEvidence(fixture) {
+  const directory = join(fixture.cacheRoot, 'worktrees');
+  const namespaces = await readdir(directory);
+  assert.equal(namespaces.length, 1);
+  return readFile(join(directory, namespaces[0], 'gate-evidence/current-run.tsv'), 'utf8');
 }
 
 const diagnostic = (result) => `${result.stdout}\n${result.stderr}`;
@@ -229,7 +245,7 @@ test('S6 browser gate typechecks then runs only the requested prepared engine', 
   const fixture = await browserFixture(t, { preparedEngine: 'firefox' });
   const result = runBrowserGate(fixture, 'firefox');
   const commands = (await readFile(fixture.commandLog, 'utf8')).trim().split('\n');
-  const evidence = await readFile(join(fixture.cacheRoot, 'gate-evidence/current-run.tsv'), 'utf8');
+  const evidence = await readBrowserEvidence(fixture);
 
   assert.equal(result.status, 0, diagnostic(result));
   assert.deepEqual(commands, [
@@ -248,7 +264,7 @@ test('S6 browser gate runs one shard of the elements suite when asked', async (t
   const fixture = await browserFixture(t, { preparedEngine: 'chromium' });
   const first = runBrowserGate(fixture, 'chromium', { KIMEN_BROWSER_SHARD: '1/2' });
   const commands = (await readFile(fixture.commandLog, 'utf8')).trim().split('\n');
-  const evidence = await readFile(join(fixture.cacheRoot, 'gate-evidence/current-run.tsv'), 'utf8');
+  const evidence = await readBrowserEvidence(fixture);
 
   assert.equal(first.status, 0, diagnostic(first));
   assert.deepEqual(commands, [

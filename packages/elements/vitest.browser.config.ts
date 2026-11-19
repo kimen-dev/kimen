@@ -38,7 +38,7 @@ const inputDeviceSpecs = [pointerCapabilitySpec, 'browser-tests/touch-field-text
 const cdpSessions = new WeakMap<object, Promise<{ send: CdpSend }>>();
 type CdpSend = (method: string, params: Record<string, unknown>) => Promise<unknown>;
 
-const cacheRoot = process.env['KIMEN_CACHE_ROOT'];
+const cacheRoot = process.env['KIMEN_WORKTREE_CACHE_ROOT'] ?? process.env['KIMEN_CACHE_ROOT'];
 const cacheDir = cacheRoot ? join(cacheRoot, `vite/elements-browser-${browser}`) : undefined;
 // Playwright's default headless Chromium selects a separate headless-shell
 // binary. Selecting the installed `chromium` channel makes the executable that

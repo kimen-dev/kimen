@@ -22,7 +22,7 @@ bash scripts/gates/cache-env.sh --validate || exit 1
 export NX_TUI=false
 export KNIP_DISABLE_RAW_TRANSFER=1
 
-EVIDENCE_DIRECTORY="$KIMEN_CACHE_ROOT/gate-evidence"
+EVIDENCE_DIRECTORY="${KIMEN_WORKTREE_CACHE_ROOT:-$KIMEN_CACHE_ROOT}/gate-evidence"
 KIMEN_GATE_EVIDENCE_FILE="$EVIDENCE_DIRECTORY/current-run.tsv"
 mkdir -p "$EVIDENCE_DIRECTORY" || {
   echo 'gates-core: current-run evidence directory could not be created' >&2
@@ -74,12 +74,14 @@ command -v pnpm >/dev/null || {
   echo "gates-core: pnpm not found — run 'corepack enable pnpm'" >&2
   exit 1
 }
+. scripts/gates/lib.sh
 # Nx boundaries need a materialized ProjectGraph or their lint rule silently
 # skips. Fail if graph generation does not leave a non-empty artifact.
-nx_graph() {
+nx_graph() (
+  kimen_use_worktree_nx_graph
   pnpm exec nx graph --file=.nx/graph.json >/dev/null || return 1
   [ -s .nx/graph.json ]
-}
+)
 
 agent_skills() {
   [ -d .agents/skills ] &&
@@ -106,7 +108,10 @@ run_core_gate wrappers-sync node scripts/gates/check-generated-sync.mjs wrappers
 run_core_gate public-api pnpm run check:api
 run_core_gate token-contract pnpm run check:tokens
 run_core_gate component-inventory pnpm run check:component-inventory
-run_core_gate lint pnpm run lint
+(
+  kimen_use_worktree_nx_graph
+  run_core_gate lint pnpm run lint
+) || exit 1
 run_core_gate styles pnpm run lint:styles
 run_core_gate typecheck pnpm run typecheck
 run_core_gate deadcode pnpm run deadcode
