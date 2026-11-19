@@ -723,6 +723,46 @@ export const catalogData = {
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
     },
+    "ki-note": {
+      "description": "A compact, static explanation beside a control or inside a card.",
+      "events": {},
+      "props": {
+        "icon": {
+          "type": "boolean",
+          "description": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",
+          "default": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Uses caption text at sm and body text at md. Unknown values use md.",
+          "default": "md"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "info",
+            "neutral",
+            "primary",
+            "success",
+            "warning"
+          ],
+          "description": "Selects the background tint and decorative icon. Unknown values use neutral.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Short explanatory text that carries the full meaning.",
+        "icon": "A decorative glyph that replaces the tone's built-in icon."
+      },
+      "tag": "ki-note",
+      "whenNotToUse": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance.",
+      "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
+    },
     "ki-option": {
       "description": "A declarative data option rendered by its owning `ki-select`.",
       "events": {},
