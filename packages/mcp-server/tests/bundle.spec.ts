@@ -18,7 +18,14 @@ import { describe, expect, it } from 'vitest';
 
 import { BUNDLE, PACKAGE } from './harness.js';
 
-const BUDGET = { brotli: 345_000, gzip: 482_000, raw: 2_543_000 };
+// When a limit is exceeded, merge main, run pnpm regen and rebuild the MCP
+// bundle. For expected growth, get founder approval and rebase only the
+// exceeded limit on the merged measurement with about 5% headroom.
+const BUDGET = {
+  brotli: 345_000,
+  gzip: 482_000,
+  raw: 2_543_000,
+};
 
 describe('Kimen MCP server: the shipped binary (038 S16)', () => {
   it('S16: a fresh build is byte-identical to the shipped binary', () => {

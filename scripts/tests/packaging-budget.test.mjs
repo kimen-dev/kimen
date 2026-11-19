@@ -113,6 +113,21 @@ test('size budgets derive defaults and one entry per declared composite group', 
   assert.equal(config[1].limit, '25 KB');
 });
 
+test('each public token stylesheet has one size budget outside the package manifest', async () => {
+  const tokens = new URL('../../packages/tokens/', import.meta.url);
+  const manifest = JSON.parse(await readFile(new URL('package.json', tokens), 'utf8'));
+  assert.equal(Object.hasOwn(manifest, 'size-limit'), false);
+
+  const { default: limits } = await import(new URL('.size-limit.mjs', tokens).href);
+  assert.deepEqual(
+    limits.map(({ path }) => `./${path}`).sort(),
+    Object.values(manifest.exports).sort(),
+  );
+  for (const { limit } of limits) {
+    assert.match(limit, /^[1-9]\d*(?:\.\d+)? (?:B|KB)$/u);
+  }
+});
+
 test('composite budget entry invokes every member in one bundle so Stencil runtime is counted once', () => {
   assert.equal(
     renderCompositeEntry(
