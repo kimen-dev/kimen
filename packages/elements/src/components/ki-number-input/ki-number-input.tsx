@@ -127,13 +127,14 @@ export class KiNumberInput {
   @Prop() invalidNumberMessage = 'Enter a number.';
 
   @State() private formDisabled = false;
-  @State() private editing = false;
   @State() private draft: string | undefined;
   @State() private adjustment = '';
   @State() private showError = false;
   @State() private message = '';
 
   private input: HTMLInputElement | undefined;
+  private editing = false;
+  private editorPointerFocus = false;
   private committedValue: number | undefined;
   private localUpdate = false;
   private formatOptions: Intl.NumberFormatOptions | undefined;
@@ -159,6 +160,11 @@ export class KiNumberInput {
 
   componentDidLoad(): void {
     this.syncForm();
+  }
+
+  componentDidRender(): void {
+    // The native editor owns its text and selection while focused.
+    if (!this.editing) this.syncEditor();
   }
 
   @Watch('value')
@@ -275,10 +281,12 @@ export class KiNumberInput {
     return this.editing ? this.codec.edit(value) : this.codec.display(value);
   }
 
-  private syncEditor(): void {
-    if (this.input) {
-      this.input.value = this.editorText;
-    }
+  @Watch('format')
+  protected syncEditor(): void {
+    const input = this.input;
+    if (!input) return;
+    const text = this.editorText;
+    if (input.value !== text) input.value = text;
   }
 
   private setValue(value: number | undefined): void {
@@ -291,19 +299,30 @@ export class KiNumberInput {
     this.host.dispatchEvent(new Event(type, { bubbles: true, composed: true }));
   }
 
-  private readonly handleFocus = (): void => {
-    this.editing = true;
-    const input = this.input;
-    if (!input) return;
+  private readonly markEditorPointerFocus = (): void => {
+    this.editorPointerFocus = true;
+  };
 
-    const text = this.editorText;
+  private readonly clearEditorPointerFocus = (): void => {
+    this.editorPointerFocus = false;
+  };
+
+  private readonly handleFocus = (event: FocusEvent): void => {
+    const input = event.currentTarget as HTMLInputElement;
     const { value, selectionStart, selectionEnd, selectionDirection } = input;
-    if (value === text) return;
+    const hadFullSelection =
+      value.length > 0 && selectionStart === 0 && selectionEnd === value.length;
+    const selectAll = hadFullSelection || !this.editorPointerFocus;
+    this.editorPointerFocus = false;
 
-    input.value = text;
-    // Replacing the formatted text collapses any selection made before focus.
-    if (value.length > 0 && selectionStart === 0 && selectionEnd === value.length) {
-      input.setSelectionRange(0, text.length, selectionDirection ?? undefined);
+    this.editing = true;
+    this.syncEditor();
+    if (selectAll && input.value.length > 0) {
+      input.setSelectionRange(
+        0,
+        input.value.length,
+        hadFullSelection ? (selectionDirection ?? undefined) : undefined,
+      );
     }
   };
 
@@ -472,7 +491,6 @@ export class KiNumberInput {
             type="text"
             inputMode="decimal"
             role="spinbutton"
-            value={this.editorText}
             required={this.required}
             disabled={disabled}
             aria-required={this.required ? 'true' : undefined}
@@ -486,6 +504,9 @@ export class KiNumberInput {
             }
             aria-describedby={description || undefined}
             aria-invalid={fieldInvalid(messages)}
+            onMouseDown={this.markEditorPointerFocus}
+            onMouseUp={this.clearEditorPointerFocus}
+            onMouseLeave={this.clearEditorPointerFocus}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
             onInput={this.handleInput}

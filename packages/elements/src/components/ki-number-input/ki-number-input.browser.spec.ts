@@ -133,6 +133,24 @@ it('S3 keeps Home and End available for editing without bounds', async () => {
   await expect.element(input).toHaveValue('123');
 });
 
+it('S3 replaces a formatted value when typing after Tab and a re-render', async () => {
+  const before = document.createElement('input');
+  fixture.append(before);
+  const host = mount({ label: 'Discount', value: '0.25', format: '{"style":"percent"}' });
+  const input = spinbutton('Discount');
+  await expect.element(input).toHaveValue('25%');
+  before.focus();
+
+  await userEvent.keyboard('{Tab}');
+  await expect.element(input).toHaveValue('25');
+  host.setAttribute('help-text', 'Optional discount');
+  await expect.element(input).toHaveAccessibleDescription('Optional discount');
+  await userEvent.keyboard('12.5');
+
+  await expect.element(input).toHaveValue('12.5');
+  expect(host.value).toBe(0.125);
+});
+
 it('S4 exposes a named spinbutton, its quantity and description, and passes axe', async () => {
   mount({ ...seats, 'help-text': 'Capacity per class', unit: 'seats' });
   const input = spinbutton();
