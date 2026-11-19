@@ -774,6 +774,68 @@ export const catalogData = {
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
       "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
+    "ki-popover": {
+      "description": "A non-modal surface anchored to a button. Both kinds use the native\npopover top layer and support outside click and Escape dismissal.",
+      "events": {
+        "ki-close": "Emitted when the popover closes.",
+        "ki-open": "Emitted when the popover opens."
+      },
+      "props": {
+        "arrow": {
+          "type": "boolean",
+          "description": "Shows the decorative arrow pointing at the trigger.",
+          "default": true
+        },
+        "for": {
+          "type": "string",
+          "description": "Literal ID of the button in the same document or shadow tree."
+        },
+        "kind": {
+          "type": "enum",
+          "values": [
+            "dialog",
+            "toggletip"
+          ],
+          "description": "Dialog content can contain controls. A toggletip announces supplemental text.",
+          "default": "dialog"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the dialog kind. Give each dialog a meaningful name.",
+          "default": "Popover"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the popover is visible. Updates on activation and native dismissal.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom",
+            "bottom-end",
+            "bottom-start",
+            "end",
+            "end-end",
+            "end-start",
+            "start",
+            "start-end",
+            "start-start",
+            "top",
+            "top-end",
+            "top-start"
+          ],
+          "description": "Preferred side and optional logical alignment. Flips when the opposite side has more room.",
+          "default": "bottom-start"
+        }
+      },
+      "slots": {
+        "": "Dialog content or supplemental text for the toggletip kind."
+      },
+      "tag": "ki-popover",
+      "whenNotToUse": "Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint.",
+      "whenToUse": "Present related filters, details, a small form, or supplemental text near a button."
+    },
     "ki-progress": {
       "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",
       "events": {},

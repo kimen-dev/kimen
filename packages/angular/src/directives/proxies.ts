@@ -22,6 +22,7 @@ import { defineCustomElement as defineKiInput } from '@kimen/elements/components
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
+import { defineCustomElement as defineKiPopover } from '@kimen/elements/components/ki-popover.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
@@ -423,6 +424,37 @@ export class KiOption {
 
 
 export declare interface KiOption extends Components.KiOption {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiPopover,
+  inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement']
+})
+@Component({
+  selector: 'ki-popover',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement'],
+})
+export class KiPopover {
+  protected el: HTMLKiPopoverElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiPopover extends Components.KiPopover {
+  /**
+   * Emitted when the popover opens.
+   */
+  /**
+   * Emitted when the popover closes.
+   */
+}
 
 
 @ProxyCmp({

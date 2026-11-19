@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 334 semantic
-and 1146 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 342 semantic
+and 1158 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -28,6 +28,19 @@ two layers below is the whole re-theming surface.
 
 Meaning, not appearance. This is the layer a brand reassigns to re-theme
 every component at once.
+
+### `ki.anchored-surface`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-anchored-surface-arrow-size` | `0.625rem` | Side length of an anchored surface pointer before rotation. |
+| `--ki-anchored-surface-backdrop-filter` | `none` | Complete backdrop filter behind an anchored surface. |
+| `--ki-anchored-surface-bg-image` | `none` | Optional image layer over an anchored surface colour. |
+| `--ki-anchored-surface-border-width` | `1px` | Outline thickness for a small anchored surface. |
+| `--ki-anchored-surface-gap` | `0.5rem` | Space between a floating surface and its trigger. |
+| `--ki-anchored-surface-max-width` | `20rem` | Maximum inline size of a small anchored surface. |
+| `--ki-anchored-surface-padding` | `0.75rem` | Interior padding for a small anchored surface. |
+| `--ki-anchored-surface-radius` | `12px` | Corner radius for a small anchored surface. |
 
 ### `ki.corner`
 
@@ -1241,6 +1254,23 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-option-rest-fg` | `#181613` | color used by the option component for rest foreground. |
 | `--ki-option-selected-bg` | `#ffebe5` | color used by the option component for selected background. |
 | `--ki-option-selected-fg` | `#181613` | color used by the option component for selected foreground. |
+
+### `ki-popover`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-popover-arrow-size` | `0.625rem` | Side length of an anchored surface pointer before rotation. |
+| `--ki-popover-backdrop-filter` | `none` | Complete backdrop filter behind an anchored surface. |
+| `--ki-popover-bg` | `#f9f7f4` | Raised popover surface colour. |
+| `--ki-popover-bg-image` | `none` | Optional image layer over an anchored surface colour. |
+| `--ki-popover-border` | `rgba(24, 22, 19, 0.1)` | Popover outline colour. |
+| `--ki-popover-border-width` | `1px` | Outline thickness for a small anchored surface. |
+| `--ki-popover-fg` | `#181613` | Popover content ink. |
+| `--ki-popover-gap` | `0.5rem` | Space between a floating surface and its trigger. |
+| `--ki-popover-max-width` | `20rem` | Maximum inline size of a small anchored surface. |
+| `--ki-popover-padding` | `0.75rem` | Interior padding for a small anchored surface. |
+| `--ki-popover-radius` | `12px` | Corner radius for a small anchored surface. |
+| `--ki-popover-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Popover elevation. |
 
 ### `ki-progress`
 

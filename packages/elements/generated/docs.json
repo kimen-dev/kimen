@@ -3429,6 +3429,328 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-popover/ki-popover.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-popover",
+      "docs": "A non-modal surface anchored to a button. Both kinds use the native\npopover top layer and support outside click and Escape dismissal.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Present related filters, details, a small form, or supplemental text near a button."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Use ki-dialog for decisions that require a response and ki-tooltip for a short hover or focus hint."
+        },
+        {
+          "name": "slot",
+          "text": "- Dialog content or supplemental text for the toggletip kind."
+        },
+        {
+          "name": "part",
+          "text": "surface - The positioned and styled popover panel."
+        },
+        {
+          "name": "part",
+          "text": "arrow - The optional decorative pointer on the trigger-facing edge."
+        }
+      ],
+      "usage": {
+        "examples": "Use a named dialog popover for interactive filters. The host supplies the trigger in the same document or shadow tree.\n\n```html\n<ki-button id=\"filters\" type=\"button\" variant=\"secondary\">Filters</ki-button>\n<ki-popover for=\"filters\" label=\"Incident filters\" placement=\"bottom-start\">\n  <ki-checkbox checked>Open incidents</ki-checkbox>\n</ki-popover>\n```\n\nUse a toggletip to announce supplementary text and keep focus on the trigger.\n\n```html\n<ki-button id=\"retention\" type=\"button\" variant=\"ghost\">About retention</ki-button>\n<ki-popover for=\"retention\" kind=\"toggletip\" arrow=\"false\">\n  Logs are kept for 30 days.\n</ki-popover>\n```\n\nUse `open` to drive visibility and listen for `ki-open` and `ki-close` to observe it. In guarded catalog markup, bind actions to slotted controls. A trusted host can listen to the popover's two lifecycle events through the DOM.\n"
+      },
+      "props": [
+        {
+          "name": "arrow",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "arrow",
+          "reflectToAttr": false,
+          "docs": "Shows the decorative arrow pointing at the trigger.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "for",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "for",
+          "reflectToAttr": false,
+          "docs": "Literal ID of the button in the same document or shadow tree.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "kind",
+          "type": "\"dialog\" | \"toggletip\"",
+          "complexType": {
+            "original": "KiPopoverKind",
+            "resolved": "\"dialog\" | \"toggletip\"",
+            "references": {
+              "KiPopoverKind": {
+                "location": "local",
+                "path": "src/components/ki-popover/ki-popover.tsx",
+                "id": "src/components/ki-popover/ki-popover.tsx::KiPopoverKind"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "kind",
+          "reflectToAttr": false,
+          "docs": "Dialog content can contain controls. A toggletip announces supplemental text.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'dialog'"
+            }
+          ],
+          "default": "'dialog'",
+          "values": [
+            {
+              "value": "dialog",
+              "type": "string"
+            },
+            {
+              "value": "toggletip",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string | undefined",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the dialog kind. Give each dialog a meaningful name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Popover'"
+            }
+          ],
+          "default": "'Popover'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the popover is visible. Updates on activation and native dismissal.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placement",
+          "type": "\"bottom\" | \"bottom-end\" | \"bottom-start\" | \"end\" | \"end-end\" | \"end-start\" | \"start\" | \"start-end\" | \"start-start\" | \"top\" | \"top-end\" | \"top-start\"",
+          "complexType": {
+            "original": "KiPopoverPlacement",
+            "resolved": "\"bottom\" | \"bottom-end\" | \"bottom-start\" | \"end\" | \"end-end\" | \"end-start\" | \"start\" | \"start-end\" | \"start-start\" | \"top\" | \"top-end\" | \"top-start\"",
+            "references": {
+              "KiPopoverPlacement": {
+                "location": "local",
+                "path": "src/components/ki-popover/ki-popover.tsx",
+                "id": "src/components/ki-popover/ki-popover.tsx::KiPopoverPlacement"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "placement",
+          "reflectToAttr": false,
+          "docs": "Preferred side and optional logical alignment. Flips when the opposite side has more room.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'bottom-start'"
+            }
+          ],
+          "default": "'bottom-start'",
+          "values": [
+            {
+              "value": "bottom",
+              "type": "string"
+            },
+            {
+              "value": "bottom-end",
+              "type": "string"
+            },
+            {
+              "value": "bottom-start",
+              "type": "string"
+            },
+            {
+              "value": "end",
+              "type": "string"
+            },
+            {
+              "value": "end-end",
+              "type": "string"
+            },
+            {
+              "value": "end-start",
+              "type": "string"
+            },
+            {
+              "value": "start",
+              "type": "string"
+            },
+            {
+              "value": "start-end",
+              "type": "string"
+            },
+            {
+              "value": "start-start",
+              "type": "string"
+            },
+            {
+              "value": "top",
+              "type": "string"
+            },
+            {
+              "value": "top-end",
+              "type": "string"
+            },
+            {
+              "value": "top-start",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-close",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted when the popover closes.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-open",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted when the popover opens.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Dialog content or supplemental text for the toggletip kind."
+        }
+      ],
+      "parts": [
+        {
+          "name": "arrow",
+          "docs": "The optional decorative pointer on the trigger-facing edge."
+        },
+        {
+          "name": "surface",
+          "docs": "The positioned and styled popover panel."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-progress/ki-progress.tsx",
       "encapsulation": "shadow",
       "tag": "ki-progress",
@@ -6318,6 +6640,16 @@
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
+    },
+    "src/components/ki-popover/ki-popover.tsx::KiPopoverPlacement": {
+      "declaration": "export type OverlayPlacement = Side | `${Side}-${Alignment}`;",
+      "docstring": "",
+      "path": "src/components/ki-popover/ki-popover.tsx"
+    },
+    "src/components/ki-popover/ki-popover.tsx::KiPopoverKind": {
+      "declaration": "export type KiPopoverKind = 'dialog' | 'toggletip';",
+      "docstring": "",
+      "path": "src/components/ki-popover/ki-popover.tsx"
     },
     "src/components/ki-progress/ki-progress.tsx::KiProgressShape": {
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",

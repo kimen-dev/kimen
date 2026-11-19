@@ -20,6 +20,7 @@ export { KiInput } from './ki-input.js';
 export { KiList } from './ki-list.js';
 export { KiListItem } from './ki-list-item.js';
 export { KiOption } from './ki-option.js';
+export { KiPopover } from './ki-popover.js';
 export { KiProgress } from './ki-progress.js';
 export { KiQr } from './ki-qr.js';
 export { KiRadio } from './ki-radio.js';
