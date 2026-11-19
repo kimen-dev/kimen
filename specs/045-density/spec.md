@@ -144,8 +144,9 @@ token (S23). Kimen's default floor, 24px, is the AA minimum of WCAG 2.5.8.
   their target grows (S14). Rows (option, list item) and tabs are their own
   targets and are not extended — stacked rows would extend into each other,
   and the tab strip scrolls and clips what a tab draws outside it — so the
-  target minimum lifts them instead, as it does today. Text fields reach 44px
-  through the step; a field's target is its field box.
+  target minimum lifts them instead: rows in block size, as it does today,
+  and tabs in both axes. Text fields reach 44px through the step; a field's
+  target is its field box.
 - **A1-D4 The floor stops a shrink, it never forces a growth.** D4 floors a
   scaled dimension at the target minimum. For the controls of A1-D3 that
   floor is capped at the control's own standard size:
