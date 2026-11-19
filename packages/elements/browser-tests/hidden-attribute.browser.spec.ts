@@ -34,11 +34,18 @@ async function mountHidden(tag: string): Promise<HTMLElement> {
   document.body.append(host);
   await customElements.whenDefined(tag);
   await expect
-    .poll(() => host.shadowRoot?.adoptedStyleSheets.length ?? 0, {
-      message: `${tag} never adopted its stylesheet, so its hidden rule was not measured`,
-      timeout: STYLES_ADOPTED_DEADLINE_MS,
-    })
-    .toBeGreaterThan(0);
+    .poll(
+      () => {
+        if (host.shadowRoot) return host.shadowRoot.adoptedStyleSheets.length > 0;
+        // Stencil adds the scope class after attaching the light-DOM styles.
+        return host.classList.contains(`sc-${tag}-h`);
+      },
+      {
+        message: `${tag} never attached its stylesheet, so its hidden rule was not measured`,
+        timeout: STYLES_ADOPTED_DEADLINE_MS,
+      },
+    )
+    .toBe(true);
   return host;
 }
 
