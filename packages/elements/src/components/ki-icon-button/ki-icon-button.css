@@ -87,9 +87,21 @@ button {
   justify-content: center;
 }
 
-slot::slotted(*) {
+slot:not([name])::slotted(*) {
   block-size: var(--_ki-icon-button-icon-size);
   inline-size: var(--_ki-icon-button-icon-size);
+}
+
+slot[name="counter"]::slotted(:not([for])) {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--ki-counter-ring-width));
+  inset-inline-end: calc(-1 * var(--ki-counter-ring-width));
+  pointer-events: none;
+}
+
+slot[name="counter"]::slotted([dot]:not([for])) {
+  inset-block-start: 0;
+  inset-inline-end: 0;
 }
 
 /* Loading (specs/046-button-loading D4): the icon stays laid out and turns

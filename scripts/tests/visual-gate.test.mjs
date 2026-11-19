@@ -40,13 +40,14 @@ function parseArmedMarker(content) {
 }
 
 // Mirrors the harness matrix: light specs capture onmars + material3, dark
-// specs capture onmars only, and toMatchScreenshot names baselines
+// specs also capture Material 3 where the component contract calls for it.
+// toMatchScreenshot names baselines
 // `<name>-<browser>-<platform>.png`.
 function expectedLinuxBaselines(specFileName, engine = 'chromium') {
   const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
   const captures = dark
-    ? [['onmars', 'dark']]
+    ? [['onmars', 'dark'], ...(component === 'ki-counter' ? [['material3', 'dark']] : [])]
     : [
         ['onmars', 'light'],
         ['material3', 'light'],
@@ -101,6 +102,10 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-counter.visual.dark.browser.spec.ts'), [
+    'ki-counter-onmars-dark-gallery-chromium-linux.png',
+    'ki-counter-material3-dark-gallery-chromium-linux.png',
   ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',

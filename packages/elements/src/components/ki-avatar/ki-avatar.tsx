@@ -13,10 +13,11 @@ export type KiAvatarSize = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * stack with overflow.
  * @whenNotToUse as a clickable control (compose the avatar inside an
  * interactive host such as ki-button), for logos or arbitrary illustrations
- * (plain `img`), for presence/verification adornments overlaid on the corner
- * (a future overlay concern shared with the nav badge), or unlabeled when no
- * adjacent text names the identity.
+ * (plain `img`), or unlabeled when no adjacent text names the identity.
+ * Use the counter slot for a decorative presence dot.
  *
+ * @slot counter - Decorative ki-counter in the block-end inline-end corner.
+ * Include its meaning in the avatar label.
  * @part avatar - The avatar box: size, shape, surface, border and typography.
  * @part image - The portrait image when `src` is set and loads.
  * @part initials - The verbatim initials text of the second fallback step.
@@ -119,6 +120,7 @@ export class KiAvatar {
             </svg>
           )}
         </span>
+        <slot name="counter" />
       </Host>
     );
   }

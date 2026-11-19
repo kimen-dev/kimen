@@ -15,6 +15,7 @@
   --_avatar-icon-size: var(--ki-avatar-md-icon-size);
 
   display: inline-flex;
+  position: relative;
   font-family: var(--ki-avatar-font-family);
 }
 
@@ -118,4 +119,11 @@
       opacity: 0;
     }
   }
+}
+
+slot[name="counter"]::slotted(:not([for])) {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  pointer-events: none;
 }

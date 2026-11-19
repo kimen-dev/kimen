@@ -114,8 +114,35 @@ it('S4: follows a named link through ancestor scroll and hides when it disappear
   await expect.poll(() => counter.getBoundingClientRect().top).toBeCloseTo(initial.top - 24);
   expect(counter.getBoundingClientRect().top - link.getBoundingClientRect().top).toBeCloseTo(-2);
 
+  host('section').scrollTop = 100;
+  await expect.element(page.getByTestId('counter')).not.toBeVisible();
+  host('section').scrollTop = 0;
+  await expect.element(page.getByTestId('counter')).toBeVisible();
+
+  link.style.visibility = 'hidden';
+  await expect.element(page.getByTestId('counter')).not.toBeVisible();
+  link.style.visibility = 'visible';
+  await expect.element(page.getByTestId('counter')).toBeVisible();
+
   link.remove();
   await expect.element(page.getByTestId('counter')).not.toBeVisible();
+});
+
+it('rebinds a missing trigger when its ID appears in the same tree', async () => {
+  mount('<ki-counter for="late-inbox" value="3" data-testid="counter"></ki-counter>');
+  const counter = page.getByTestId('counter');
+  await expect.element(counter).not.toBeVisible();
+
+  const trigger = document.createElement('a');
+  trigger.href = '#inbox';
+  trigger.textContent = 'Inbox, 3 unread';
+  fixture.prepend(trigger);
+  trigger.id = 'late-inbox';
+
+  await expect.element(counter).toBeVisible();
+  expect(
+    host('ki-counter').getBoundingClientRect().right - trigger.getBoundingClientRect().right,
+  ).toBeCloseTo(2);
 });
 
 it('S5: keeps activation and tab order on the native button', async () => {
@@ -151,7 +178,9 @@ it('S6: exposes the complete host names and keeps the counters presentational', 
 });
 
 it('S7: leaves count announcements to the page-owned polite region', async () => {
-  mount(`${notificationButton()}<p role="status" aria-live="polite"></p>`);
+  mount(
+    `${notificationButton()}<p role="status" aria-live="polite" data-testid="page-status"></p>`,
+  );
   await expect.element(page.getByText('3', { exact: true })).toBeVisible();
 
   host('ki-counter').setAttribute('value', '4');
@@ -161,7 +190,7 @@ it('S7: leaves count announcements to the page-owned polite region', async () =>
   await expect
     .element(page.getByRole('button', { name: 'Notifications, 4 unread', exact: true }))
     .toBeVisible();
-  await expect.element(page.getByRole('status')).toHaveTextContent('4 unread notifications');
+  await expect.element(page.getByTestId('page-status')).toHaveTextContent('4 unread notifications');
   await expect.element(page.getByText('4', { exact: true })).toBeVisible();
   expect(fixture.querySelectorAll('[aria-live="polite"]')).toHaveLength(1);
   expect(host('ki-counter').shadowRoot?.querySelector('[role], [aria-live]')).toBeNull();

@@ -1,6 +1,10 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$value": "none",
+        "$description": "No background image on a flat surface."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1118,6 +1122,11 @@
           "$value": "blur({ki.effect.component.backdrop-blur})",
           "$description": "Complete backdrop filter for glass components. Use none to turn the effect off."
         },
+        "flat-backdrop-filter": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "No backdrop filtering on a flat surface."
+        },
         "listbox-backdrop-filter": {
           "$type": "other",
           "$value": "blur({ki.blur.48})",
@@ -1536,6 +1545,29 @@
       "block": {
         "$value": "{ki.space.xl}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
+      }
+    },
+    "notification-marker": {
+      "$type": "dimension",
+      "count-size": {
+        "$value": "{ki.space.4xl}",
+        "$description": "Minimum diameter of a notification marker that displays a count."
+      },
+      "dot-size": {
+        "$value": "{ki.space.lg}",
+        "$description": "Diameter of a notification or presence dot."
+      },
+      "ring-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Width of the separator between a notification marker and its trigger."
+      },
+      "padding-inline": {
+        "$value": "{ki.space.xs}",
+        "$description": "Inline padding of a notification marker with a count."
+      },
+      "radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "Pill radius of a notification marker."
       }
     },
     "density": {

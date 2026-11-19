@@ -26,6 +26,8 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * @slot - Exactly one decorative icon. The slot is presentational: its
  * content is hidden from assistive technology and never contributes to the
  * accessible name — that comes from `label` alone.
+ * @slot counter - Decorative ki-counter in the block-start inline-end corner.
+ * Include its meaning in the button label.
  * @part button - Internal native button.
  * @part icon - Icon wrapper around the default slot.
  * @part spinner - Loading spinner drawn in place of the icon, in the button's
@@ -240,6 +242,7 @@ export class KiIconButton {
             />
           </svg>
         ) : null}
+        <slot name="counter" />
       </button>,
       <span class="status" role="status">
         {loading ? this.loadingLabel : null}

@@ -42,6 +42,7 @@ it('keeps the indicator compact and the touch target independent of the counter'
     <ki-icon-button label="Notifications, 3 unread" size="xs">
       <ki-counter slot="counter" value="3"></ki-counter>
     </ki-icon-button>`;
+  await expect.element(page.getByRole('button', { name: 'Plain' })).toBeVisible();
   await expect.element(page.getByText('3', { exact: true })).toBeVisible();
 
   const plain = fixture

@@ -107,6 +107,15 @@ Feature: ki-counter marks new items on a trigger
   An explicit `for` associates with a literal ID in the same document or
   shadow root. The indicator hides while the target is missing. Authors set
   the label and status text, including their own pluralization.
+- ID placement uses a viewport-fixed counter in its existing stacking context.
+  It follows scroll, resize and DOM changes, and hides when the trigger is
+  outside the visible scroll area. Use the named slot or inline composition
+  in layouts that redefine the viewport-fixed containing block.
+- Success uses the semantic success ink on the base surface in reverse so its
+  dot keeps contrast against the ring in dark onmars. Neutral uses the inverse
+  surface and ink roles. The count box can grow for user text spacing.
 - Implement the slots on the existing icon button and avatar. The Sidebar
   and MobileNav issues own their future components and can consume the same
   counter composition.
+- The API declaration is major because the gate classifies changes to its
+  generated loader `Components` and `JSX` namespaces that way.
