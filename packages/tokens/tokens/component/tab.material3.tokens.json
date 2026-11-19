@@ -104,6 +104,62 @@
       },
       "min-block-size": {
         "$value": "{ki.space.7xl}"
+      },
+      "xs": {
+        "min-block-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the tab component for xs min block size in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the tab component for xs font size in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the tab component for xs line height in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        }
+      },
+      "sm": {
+        "min-block-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the tab component for sm min block size in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the tab component for sm font size in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the tab component for sm line height in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        }
+      },
+      "lg": {
+        "min-block-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the tab component for lg min block size in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the tab component for lg font size in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the tab component for lg line height in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        }
+      },
+      "xl": {
+        "min-block-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the tab component for xl min block size in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the tab component for xl font size in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the tab component for xl line height in material3: material3 renders the M3 tab at every strip size: M3 defines one tab, and the shared ramp would put sm above the M3 md tab (spec 050 D8)."
+        }
       }
     }
   }

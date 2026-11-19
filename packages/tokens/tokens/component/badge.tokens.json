@@ -130,6 +130,28 @@
           "$value": "{ki.outline.none}",
           "$description": "color used by the badge component for warning border."
         }
+      },
+      "xs": {
+        "height": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the badge component for xs height (Tag 10106:4651 xs: 20px)."
+        },
+        "padding-inline": {
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the badge component for xs padding inline (Tag 10106:4651 xs: Space/xs plus the Text_wrap Space/xxs, 6px)."
+        },
+        "radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the badge component for xs radius (Tag 10106:4651 xs binds Radius/small-component/xs)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the badge component for xs font size (Tag 10106:4651 xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7)."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the badge component for xs line height (caption_2 16px, the same height as caption_1)."
+        }
       }
     }
   }

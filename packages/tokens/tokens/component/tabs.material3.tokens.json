@@ -14,6 +14,30 @@
           "$value": "{ki.outline.med-em}",
           "$description": "M3 md.sys.color.outline-variant as the tab bar divider (ki.outline.med-em resolves to neutral-variant 80 light / 30 dark, the outline-variant pair)."
         }
+      },
+      "xs": {
+        "gap": {
+          "$value": "{ki.space.zero}",
+          "$description": "dimension used by the tabs component for the xs gap in material3: M3 tabs are contiguous, and material3 renders the M3 tab at every strip size (spec 050 D8)."
+        }
+      },
+      "sm": {
+        "gap": {
+          "$value": "{ki.space.zero}",
+          "$description": "dimension used by the tabs component for the sm gap in material3: M3 tabs are contiguous, and material3 renders the M3 tab at every strip size (spec 050 D8)."
+        }
+      },
+      "lg": {
+        "gap": {
+          "$value": "{ki.space.zero}",
+          "$description": "dimension used by the tabs component for the lg gap in material3: M3 tabs are contiguous, and material3 renders the M3 tab at every strip size (spec 050 D8)."
+        }
+      },
+      "xl": {
+        "gap": {
+          "$value": "{ki.space.zero}",
+          "$description": "dimension used by the tabs component for the xl gap in material3: M3 tabs are contiguous, and material3 renders the M3 tab at every strip size (spec 050 D8)."
+        }
       }
     }
   }

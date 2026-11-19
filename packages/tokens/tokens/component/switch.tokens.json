@@ -207,6 +207,156 @@
           "$type": "shadow",
           "$description": "shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
         }
+      },
+      "sm": {
+        "track-width": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for sm track width (Toggle 10023:1125 sm: 32px)."
+        },
+        "track-height": {
+          "$value": "{ki.space.4xl}",
+          "$description": "dimension used by the switch component for sm track height (Toggle 10023:1125 sm: 18px)."
+        },
+        "control-width": {
+          "$value": "{ki.space.12xl}",
+          "$description": "dimension used by the switch component for sm control width (Toggle 10023:1125 sm cell: 40px)."
+        },
+        "control-height": {
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the switch component for sm control height (Toggle 10023:1125 sm cell: 28px)."
+        },
+        "thumb-size": {
+          "$value": "{ki.space.2xl}",
+          "$description": "dimension used by the switch component for sm thumb height (Toggle 10023:1125 sm pointer: 14px)."
+        },
+        "thumb-width": {
+          "$value": "{ki.space.4xl}",
+          "$description": "dimension used by the switch component for sm thumb width (Toggle 10023:1125 sm pointer: 18px)."
+        },
+        "thumb-inset": {
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the switch component for sm thumb inset (Toggle 10023:1125 sm binds Space/xxs, 2px)."
+        },
+        "track-radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the switch component for sm track radius (Toggle 10023:1125 sm binds Radius/small-component/xs)."
+        },
+        "well-radius": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "dimension used by the switch component for sm well radius (Toggle 10023:1125 sm Base binds Radius/small-component/md)."
+        },
+        "thumb-radius": {
+          "$value": "{ki.radius.component.xxs}",
+          "$description": "dimension used by the switch component for sm thumb radius (Toggle 10023:1125 sm pointer binds Radius/small-component/xxs)."
+        },
+        "min-target": {
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the switch component for sm min target (Toggle 10023:1125 sm cell height: 28px)."
+        },
+        "gap": {
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the switch component for the sm gap between control and label (Toggle_label 10101:3995 sm binds Space/md, 8px; spec 050 D4)."
+        },
+        "label-font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the switch component for the sm label font size (Toggle_label 10101:3995 sm: UI/para 13/20; spec 050 D4)."
+        },
+        "label-line-height": {
+          "$value": "{ki.typography.line-height.para}",
+          "$description": "dimension used by the switch component for the sm label line height (Toggle_label 10101:3995 sm: UI/para 13/20)."
+        }
+      },
+      "lg": {
+        "track-width": {
+          "$value": "{ki.space.14xl}",
+          "$description": "dimension used by the switch component for lg track width (Toggle 10023:1125 lg: 48px)."
+        },
+        "track-height": {
+          "$value": "{ki.space.8xl}",
+          "$description": "dimension used by the switch component for lg track height (Toggle 10023:1125 lg: 26px)."
+        },
+        "control-width": {
+          "$value": "{ki.space.16xl}",
+          "$description": "dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px)."
+        },
+        "control-height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px)."
+        },
+        "thumb-size": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the switch component for lg thumb height (Toggle 10023:1125 lg pointer: 20px)."
+        },
+        "thumb-width": {
+          "$value": "{ki.space.8xl}",
+          "$description": "dimension used by the switch component for lg thumb width (Toggle 10023:1125 lg pointer: 26px)."
+        },
+        "thumb-inset": {
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the switch component for lg thumb inset (Toggle 10023:1125 lg binds Space/xxs, 2px)."
+        },
+        "track-radius": {
+          "$value": "{ki.radius.component.sm}",
+          "$description": "dimension used by the switch component for lg track radius (Toggle 10023:1125 lg binds Radius/small-component/sm)."
+        },
+        "well-radius": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "dimension used by the switch component for lg well radius (Toggle 10023:1125 lg Base binds Radius/small-component/md)."
+        },
+        "thumb-radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the switch component for lg thumb radius (Toggle 10023:1125 lg pointer binds Radius/small-component/xs)."
+        },
+        "min-target": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for lg min target (Toggle 10023:1125 lg cell height: 32px)."
+        }
+      },
+      "xl": {
+        "track-width": {
+          "$value": "{ki.space.16xl}",
+          "$description": "dimension used by the switch component for xl track width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 56px)."
+        },
+        "track-height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for xl track height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 32px)."
+        },
+        "control-width": {
+          "$value": "{ki.space.18xl}",
+          "$description": "dimension used by the switch component for xl control width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 64px)."
+        },
+        "control-height": {
+          "$value": "{ki.space.12xl}",
+          "$description": "dimension used by the switch component for xl control height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 40px)."
+        },
+        "thumb-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the switch component for xl thumb height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 24px)."
+        },
+        "thumb-width": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the switch component for xl thumb width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 32px)."
+        },
+        "thumb-inset": {
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the switch component for xl thumb inset (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Space/xs, 4px)."
+        },
+        "track-radius": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "dimension used by the switch component for xl track radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Radius/small-component/md)."
+        },
+        "well-radius": {
+          "$value": "{ki.radius.component.lg}",
+          "$description": "dimension used by the switch component for xl well radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) Base binds Radius/small-component/lg)."
+        },
+        "thumb-radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "dimension used by the switch component for xl thumb radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer binds Radius/small-component/xs)."
+        },
+        "min-target": {
+          "$value": "{ki.space.12xl}",
+          "$description": "dimension used by the switch component for xl min target (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell height: 40px)."
+        }
       }
     }
   }

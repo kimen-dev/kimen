@@ -77,6 +77,120 @@
         "secondary-fg": {
           "$value": "{ki.text.supporting}",
           "$description": "color used by the list component for item secondary foreground."
+        },
+        "sm": {
+          "min-height": {
+            "$value": "{ki.space.10xl}",
+            "$description": "dimension used by the list component for the sm one-line item min height (two List 10063:2066 sm block paddings plus the primary line: 32px)."
+          },
+          "min-height-multiline": {
+            "$value": "{ki.space.14xl}",
+            "$description": "dimension used by the list component for the sm two-line item min height (List 10063:2066 sm measures 48px)."
+          },
+          "padding-inline": {
+            "$value": "{ki.space.md}",
+            "$description": "dimension used by the list component for sm item padding inline (List 10063:2066 sm binds Space/md, 8px)."
+          },
+          "padding-block": {
+            "$value": "{ki.space.sm}",
+            "$description": "dimension used by the list component for sm item padding block (List 10063:2066 sm binds Space/sm, 6px)."
+          },
+          "gap": {
+            "$value": "{ki.space.lg}",
+            "$description": "dimension used by the list component for sm item gap (List 10063:2066 sm binds Space/lg, 10px)."
+          },
+          "primary-font-size": {
+            "$value": "{ki.typography.size.body-1}",
+            "$description": "dimension used by the list component for sm primary font size (List 10063:2066 sm primary: UI/para)."
+          },
+          "primary-line-height": {
+            "$value": "{ki.typography.line-height.para}",
+            "$description": "dimension used by the list component for sm primary line height (List 10063:2066 sm)."
+          },
+          "secondary-font-size": {
+            "$value": "{ki.typography.size.caption-2}",
+            "$description": "dimension used by the list component for sm secondary font size (List 10063:2066 sm description: UI/caption-2)."
+          },
+          "secondary-line-height": {
+            "$value": "{ki.typography.line-height.caption-2}",
+            "$description": "dimension used by the list component for sm secondary line height (List 10063:2066 sm)."
+          }
+        },
+        "lg": {
+          "min-height": {
+            "$value": "{ki.space.14xl}",
+            "$description": "dimension used by the list component for the lg one-line item min height (two List 10063:2066 lg block paddings plus the primary line: 48px)."
+          },
+          "min-height-multiline": {
+            "$value": "{ki.space.18xl}",
+            "$description": "dimension used by the list component for the lg two-line item min height (List 10063:2066 lg measures 64px)."
+          },
+          "padding-inline": {
+            "$value": "{ki.space.md}",
+            "$description": "dimension used by the list component for lg item padding inline (List 10063:2066 lg binds Space/md, 8px)."
+          },
+          "padding-block": {
+            "$value": "{ki.space.xl}",
+            "$description": "dimension used by the list component for lg item padding block (List 10063:2066 lg binds Space/xl, 12px)."
+          },
+          "gap": {
+            "$value": "{ki.space.xl}",
+            "$description": "dimension used by the list component for lg item gap (List 10063:2066 lg binds Space/xl, 12px)."
+          },
+          "primary-font-size": {
+            "$value": "{ki.typography.size.body-2}",
+            "$description": "dimension used by the list component for lg primary font size (List 10063:2066 lg primary: UI/body-2)."
+          },
+          "primary-line-height": {
+            "$value": "{ki.typography.line-height.body-2}",
+            "$description": "dimension used by the list component for lg primary line height (List 10063:2066 lg)."
+          },
+          "secondary-font-size": {
+            "$value": "{ki.typography.size.caption-2}",
+            "$description": "dimension used by the list component for lg secondary font size (List 10063:2066 lg description: UI/caption-2)."
+          },
+          "secondary-line-height": {
+            "$value": "{ki.typography.line-height.caption-2}",
+            "$description": "dimension used by the list component for lg secondary line height (List 10063:2066 lg)."
+          }
+        },
+        "xl": {
+          "min-height": {
+            "$value": "{ki.space.15xl}",
+            "$description": "dimension used by the list component for the xl one-line item min height (two List 10063:2066 xl block paddings plus the primary line: 52px)."
+          },
+          "min-height-multiline": {
+            "$value": "{ki.space.19xl}",
+            "$description": "dimension used by the list component for the xl two-line item min height (List 10063:2066 xl measures 72px)."
+          },
+          "padding-inline": {
+            "$value": "{ki.space.xl}",
+            "$description": "dimension used by the list component for xl item padding inline (List 10063:2066 xl binds Space/xl, 12px)."
+          },
+          "padding-block": {
+            "$value": "{ki.space.2xl}",
+            "$description": "dimension used by the list component for xl item padding block (List 10063:2066 xl binds Space/2xl, 14px)."
+          },
+          "gap": {
+            "$value": "{ki.space.3xl}",
+            "$description": "dimension used by the list component for xl item gap (List 10063:2066 xl binds Space/3xl, 16px)."
+          },
+          "primary-font-size": {
+            "$value": "{ki.typography.size.title-2}",
+            "$description": "dimension used by the list component for xl primary font size (List 10063:2066 xl primary: UI/title-2)."
+          },
+          "primary-line-height": {
+            "$value": "{ki.typography.line-height.title-2}",
+            "$description": "dimension used by the list component for xl primary line height (List 10063:2066 xl)."
+          },
+          "secondary-font-size": {
+            "$value": "{ki.typography.size.body-1}",
+            "$description": "dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para)."
+          },
+          "secondary-line-height": {
+            "$value": "{ki.typography.line-height.para}",
+            "$description": "dimension used by the list component for xl secondary line height (List 10063:2066 xl)."
+          }
         }
       }
     }
