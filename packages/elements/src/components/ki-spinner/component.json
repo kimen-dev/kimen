@@ -8,9 +8,13 @@
   "catalog": true,
   "sizeBudget": {
     "mcpApps": {
-      "raw": 7306,
-      "gzip": 1766,
-      "brotli": 1220
+      "raw": 7351,
+      "gzip": 1668,
+      "brotli": 1184
+    },
+    "tokenStylesheets": {
+      "onmars": 330,
+      "material3": 19
     }
   }
 }
