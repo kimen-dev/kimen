@@ -7623,6 +7623,237 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-spinner.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSpinner",
+          "customElement": true,
+          "tagName": "ki-spinner",
+          "description": "A compact status for an indeterminate wait.",
+          "whenToUse": "show brief inline activity such as saving a change or running a\ntool. Choose typing dots for an assistant that is thinking. Set a localized\nlabel that names the activity and mount the spinner when the wait starts.",
+          "whenNotToUse": "use ki-progress for page-level work or a known fraction of\na task. Use ki-alert for persistent notices.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+              "required": true
+            },
+            {
+              "name": "show-label",
+              "fieldName": "showLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"dots\" | \"ring\""
+              },
+              "default": "'ring'",
+              "description": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "showLabel",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case.",
+              "attribute": "show-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"dots\" | \"ring\""
+              },
+              "default": "'ring'",
+              "description": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring.",
+              "attribute": "variant",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "dots",
+              "description": "Group of three animated dots, in the dots variant."
+            },
+            {
+              "name": "label",
+              "description": "Activity text, adjacent to the graphic when show-label is set."
+            },
+            {
+              "name": "ring",
+              "description": "Rotating ring with a track and indicator, in the ring variant."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-spinner-dot-delay",
+              "description": "Delay between consecutive typing dots."
+            },
+            {
+              "name": "--ki-spinner-dot-duration",
+              "description": "Typing pulse period."
+            },
+            {
+              "name": "--ki-spinner-dot-easing",
+              "description": "Easing of the typing pulse."
+            },
+            {
+              "name": "--ki-spinner-dot-gap",
+              "description": "Gap between dots."
+            },
+            {
+              "name": "--ki-spinner-dot-scale-min",
+              "description": "Smallest scale of a dot during the pulse."
+            },
+            {
+              "name": "--ki-spinner-dot-size",
+              "description": "Diameter of each dot at full size."
+            },
+            {
+              "name": "--ki-spinner-indicator",
+              "description": "Ink of the revolving ring segment."
+            },
+            {
+              "name": "--ki-spinner-label-bg",
+              "description": "Background of the inline activity label."
+            },
+            {
+              "name": "--ki-spinner-label-fg",
+              "description": "Ink of the visible label and the typing dots."
+            },
+            {
+              "name": "--ki-spinner-label-font-family",
+              "description": "Font family of the visible label."
+            },
+            {
+              "name": "--ki-spinner-label-font-size",
+              "description": "Font size of the visible label."
+            },
+            {
+              "name": "--ki-spinner-label-gap",
+              "description": "Gap between the graphic and the visible label."
+            },
+            {
+              "name": "--ki-spinner-label-line-height",
+              "description": "Line height of the visible label."
+            },
+            {
+              "name": "--ki-spinner-radius",
+              "description": "Round corners of the ring and dots."
+            },
+            {
+              "name": "--ki-spinner-ring-duration",
+              "description": "Standard ring rotation period."
+            },
+            {
+              "name": "--ki-spinner-ring-duration-reduced",
+              "description": "Ring rotation period when reduced motion is requested."
+            },
+            {
+              "name": "--ki-spinner-ring-easing",
+              "description": "Easing for ring rotation."
+            },
+            {
+              "name": "--ki-spinner-size",
+              "description": "Default ring diameter."
+            },
+            {
+              "name": "--ki-spinner-size-lg",
+              "description": "Large ring diameter."
+            },
+            {
+              "name": "--ki-spinner-size-sm",
+              "description": "Small ring diameter."
+            },
+            {
+              "name": "--ki-spinner-stroke",
+              "description": "Stroke width of the small and medium rings."
+            },
+            {
+              "name": "--ki-spinner-stroke-lg",
+              "description": "Stroke width of the large ring."
+            },
+            {
+              "name": "--ki-spinner-track",
+              "description": "Ink of the ring track."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSpinner",
+          "declaration": {
+            "name": "KiSpinner",
+            "module": "dist/components/ki-spinner.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-spinner",
+          "declaration": {
+            "name": "KiSpinner",
+            "module": "dist/components/ki-spinner.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-status.js",
       "declarations": [
         {

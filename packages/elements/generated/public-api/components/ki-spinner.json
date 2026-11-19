@@ -1,0 +1,312 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "show-label": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\""
+      },
+      "variant": {
+        "default": "'ring'",
+        "deprecatedSince": null,
+        "description": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring.",
+        "replacement": null,
+        "required": false,
+        "type": "\"dots\" | \"ring\""
+      }
+    },
+    "cssProperties": {
+      "--ki-spinner-dot-delay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Delay between consecutive typing dots.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-dot-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typing pulse period.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-dot-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Easing of the typing pulse.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-dot-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between dots.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-dot-scale-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Smallest scale of a dot during the pulse.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-dot-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Diameter of each dot at full size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the revolving ring segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-label-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the inline activity label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the visible label and the typing dots.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-label-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font family of the visible label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font size of the visible label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-label-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the graphic and the visible label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the visible label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Round corners of the ring and dots.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-ring-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard ring rotation period.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-ring-duration-reduced": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ring rotation period when reduced motion is requested.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-ring-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Easing for ring rotation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default ring diameter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-size-lg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Large ring diameter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small ring diameter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-stroke": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the small and medium rings.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-stroke-lg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the large ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spinner-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the ring track.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A compact status for an indeterminate wait.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "dots": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Group of three animated dots, in the dots variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Activity text, adjacent to the graphic when show-label is set.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "ring": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Rotating ring with a track and indicator, in the ring variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "showLabel": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\""
+      },
+      "variant": {
+        "default": "'ring'",
+        "deprecatedSince": null,
+        "description": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring.",
+        "replacement": null,
+        "required": false,
+        "type": "\"dots\" | \"ring\""
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-spinner.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-spinner.d.ts",
+    "symbols": {
+      "KiSpinner": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSpinner extends Components.KiSpinner, HTMLElement {\n}\nexport const KiSpinner: {\n    prototype: KiSpinner;\n    new (): KiSpinner;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-spinner.js"
+  }
+}

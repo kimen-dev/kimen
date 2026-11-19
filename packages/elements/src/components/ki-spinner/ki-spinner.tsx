@@ -6,8 +6,8 @@ import { Component, Prop, State, h } from '@stencil/core';
  * @whenToUse show brief inline activity such as saving a change or running a
  * tool. Choose typing dots for an assistant that is thinking. Set a localized
  * label that names the activity and mount the spinner when the wait starts.
- * @whenNotToUse page-level work or a known fraction of a task belongs to
- * ki-progress; persistent notices belong to ki-alert.
+ * @whenNotToUse use ki-progress for page-level work or a known fraction of
+ * a task. Use ki-alert for persistent notices.
  *
  * @part ring - Rotating ring with a track and indicator, in the ring variant.
  * @part dots - Group of three animated dots, in the dots variant.

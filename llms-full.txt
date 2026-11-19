@@ -2536,6 +2536,87 @@ CSS custom properties:
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-spinner
+
+A compact status for an indeterminate wait.
+
+When to use: show brief inline activity such as saving a change or running a
+tool. Choose typing dots for an assistant that is thinking. Set a localized
+label that names the activity and mount the spinner when the wait starts.
+When NOT to use: use ki-progress for page-level work or a known fraction of
+a task. Use ki-alert for persistent notices.
+
+Examples:
+
+# ki-spinner examples
+
+## Inline save status
+
+Insert the spinner when the save begins. Remove it when the save ends.
+
+```html
+<ki-spinner size="sm" label="Saving changes…" show-label></ki-spinner>
+```
+
+## Assistant status
+
+Use a visually hidden label when the surrounding UI already describes the
+activity.
+
+```html
+<ki-spinner variant="dots" label="Assistant is thinking"></ki-spinner>
+```
+
+## Custom-elements entry point
+
+```ts
+import { defineCustomElement } from '@kimen/elements/ki-spinner';
+
+defineCustomElement();
+```
+
+Attributes:
+- `label` (string, required): Localized name of the ongoing activity, such as "Saving changes". Supply a meaningful label for every spinner, even when the text is hidden. Use the activity's name whenever it can be more specific than "Loading".
+- `show-label` (boolean, default false): Display the label beside the graphic when sighted users also need the activity description. The same text names the status in either case.
+- `size` ("lg" | "md" | "sm", default 'md'): Diameter of the ring. Choose the size that fits the surrounding content. Dots use a fixed size. Unrecognized values draw the medium ring.
+- `variant` ("dots" | "ring", default 'ring'): Use a ring for general inline activity and dots for assistant typing or thinking. Unrecognized values draw a ring.
+
+Slots: none
+
+Parts:
+- `dots`: Group of three animated dots, in the dots variant.
+- `label`: Activity text, adjacent to the graphic when show-label is set.
+- `ring`: Rotating ring with a track and indicator, in the ring variant.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-spinner-dot-delay`: Delay between consecutive typing dots.
+- `--ki-spinner-dot-duration`: Typing pulse period.
+- `--ki-spinner-dot-easing`: Easing of the typing pulse.
+- `--ki-spinner-dot-gap`: Gap between dots.
+- `--ki-spinner-dot-scale-min`: Smallest scale of a dot during the pulse.
+- `--ki-spinner-dot-size`: Diameter of each dot at full size.
+- `--ki-spinner-indicator`: Ink of the revolving ring segment.
+- `--ki-spinner-label-bg`: Background of the inline activity label.
+- `--ki-spinner-label-fg`: Ink of the visible label and the typing dots.
+- `--ki-spinner-label-font-family`: Font family of the visible label.
+- `--ki-spinner-label-font-size`: Font size of the visible label.
+- `--ki-spinner-label-gap`: Gap between the graphic and the visible label.
+- `--ki-spinner-label-line-height`: Line height of the visible label.
+- `--ki-spinner-radius`: Round corners of the ring and dots.
+- `--ki-spinner-ring-duration`: Standard ring rotation period.
+- `--ki-spinner-ring-duration-reduced`: Ring rotation period when reduced motion is requested.
+- `--ki-spinner-ring-easing`: Easing for ring rotation.
+- `--ki-spinner-size`: Default ring diameter.
+- `--ki-spinner-size-lg`: Large ring diameter.
+- `--ki-spinner-size-sm`: Small ring diameter.
+- `--ki-spinner-stroke`: Stroke width of the small and medium rings.
+- `--ki-spinner-stroke-lg`: Stroke width of the large ring.
+- `--ki-spinner-track`: Ink of the ring track.
+
 ### ki-status
 
 A tiny, non-interactive status dot that marks the state of a nearby item.

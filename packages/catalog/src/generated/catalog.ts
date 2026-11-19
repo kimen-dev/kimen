@@ -975,6 +975,45 @@ export const catalogData = {
       "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
       "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited."
     },
+    "ki-spinner": {
+      "description": "A compact status for an indeterminate wait.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+          "required": true
+        },
+        "show-label": {
+          "type": "boolean",
+          "description": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case.",
+          "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm"
+          ],
+          "description": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring.",
+          "default": "md"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "dots",
+            "ring"
+          ],
+          "description": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring.",
+          "default": "ring"
+        }
+      },
+      "slots": {},
+      "tag": "ki-spinner",
+      "whenNotToUse": "use ki-progress for page-level work or a known fraction of\na task. Use ki-alert for persistent notices.",
+      "whenToUse": "show brief inline activity such as saving a change or running a\ntool. Choose typing dots for an assistant that is thinking. Set a localized\nlabel that names the activity and mount the spinner when the wait starts."
+    },
     "ki-status": {
       "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",
       "events": {},

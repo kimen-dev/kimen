@@ -43,6 +43,9 @@ supplies a localized, task-specific label for both variants.
 - **Agent's choice, pending founder confirmation.** The dots pulse in size to
   keep their ink legible throughout the cycle. In forced colors, a dotted
   track and solid arc distinguish the ring marks even in a single ink.
+- **Agent's choice, pending founder confirmation.** The public API declaration
+  uses the gate's major classification. Spinner adds members to both of
+  Stencil's existing loader namespace signatures, `Components` and `JSX`.
 
 ## Scenario family coverage
 
