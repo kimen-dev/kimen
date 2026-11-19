@@ -2,8 +2,6 @@ import { Component, Element, Prop, h } from '@stencil/core';
 import { parseFormatDate } from '../../utils/format-date';
 import { formatLocale } from '../../utils/format-locale';
 
-type DateTimeStyle = 'full' | 'long' | 'medium' | 'short';
-
 /**
  * Displays an ISO date or timestamp in the reader's language.
  *
@@ -19,10 +17,10 @@ export class KiFormatDate {
   @Prop() date?: string;
 
   /** Date detail. Defaults to medium when neither date style nor time style is supplied. */
-  @Prop() dateStyle?: DateTimeStyle;
+  @Prop() dateStyle?: 'full' | 'long' | 'medium' | 'short';
 
   /** Time detail. Omit to show the date alone. */
-  @Prop() timeStyle?: DateTimeStyle;
+  @Prop() timeStyle?: 'full' | 'long' | 'medium' | 'short';
 
   /** IANA time zone for a timestamp. A calendar date keeps its day in every zone. */
   @Prop() timeZone?: string;

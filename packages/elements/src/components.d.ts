@@ -386,7 +386,7 @@ export namespace Components {
         /**
           * Date detail. Defaults to medium when neither date style nor time style is supplied.
          */
-        "dateStyle"?: DateTimeStyle;
+        "dateStyle"?: 'full' | 'long' | 'medium' | 'short';
         /**
           * Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.
          */
@@ -394,7 +394,7 @@ export namespace Components {
         /**
           * Time detail. Omit to show the date alone.
          */
-        "timeStyle"?: DateTimeStyle;
+        "timeStyle"?: 'full' | 'long' | 'medium' | 'short';
         /**
           * IANA time zone for a timestamp. A calendar date keeps its day in every zone.
          */
@@ -2524,7 +2524,7 @@ declare namespace LocalJSX {
         /**
           * Date detail. Defaults to medium when neither date style nor time style is supplied.
          */
-        "dateStyle"?: DateTimeStyle;
+        "dateStyle"?: 'full' | 'long' | 'medium' | 'short';
         /**
           * Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.
          */
@@ -2532,7 +2532,7 @@ declare namespace LocalJSX {
         /**
           * Time detail. Omit to show the date alone.
          */
-        "timeStyle"?: DateTimeStyle;
+        "timeStyle"?: 'full' | 'long' | 'medium' | 'short';
         /**
           * IANA time zone for a timestamp. A calendar date keeps its day in every zone.
          */
@@ -3606,8 +3606,8 @@ declare namespace LocalJSX {
     }
     interface KiFormatDateAttributes {
         "date": string;
-        "dateStyle": DateTimeStyle;
-        "timeStyle": DateTimeStyle;
+        "dateStyle": 'full' | 'long' | 'medium' | 'short';
+        "timeStyle": 'full' | 'long' | 'medium' | 'short';
         "timeZone": string;
         "locale": string;
     }

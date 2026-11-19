@@ -1,6 +1,7 @@
 // @spec:093-ki-format
 import { expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import type { KiFormatDate } from '../dist/components/ki-format-date.js';
 import { expectAccessible } from './axe';
 import { expectFormat, formatOutput, mountFormat, setupFormatTests } from './format-fixture';
 
@@ -60,4 +61,16 @@ it('S9 exposes a native time element with its machine-readable day', async () =>
   await expect.poll(() => formatOutput(main, 'ki-format-date')).toBeInstanceOf(HTMLTimeElement);
   expect(formatOutput(main, 'ki-format-date')?.getAttribute('datetime')).toBe('2026-11-19');
   await expectAccessible(main);
+});
+
+it('leaves an unsupported date style empty', async () => {
+  // @ts-expect-error Typed callers can only select a supported date style.
+  const invalidStyle = 'invalid' satisfies KiFormatDate['dateStyle'];
+  const main = mountFormat(
+    `<ki-format-date date="2026-11-19" date-style="${invalidStyle}"></ki-format-date>`,
+  );
+  await expect
+    .poll(() => main.querySelector('ki-format-date')?.shadowRoot)
+    .toBeInstanceOf(ShadowRoot);
+  expect(formatOutput(main, 'ki-format-date')).toBeNull();
 });
