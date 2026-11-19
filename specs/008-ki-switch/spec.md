@@ -524,6 +524,9 @@ Feature: Switch
   lets a theme hide one state and show another with the same three tokens.
   Both themes default to a visible check when on, no glyph when enabled and
   off, and a muted check or dash when disabled.
+- **#345 forced colors (agent's choice, pending founder confirmation)**.
+  The user's forced palette keeps the existing glyph visibility and uses
+  system colors for the marks it shows.
 - **#345 glyph contrast (agent's choice, pending founder confirmation)**.
   The 3:1 check applies to visible glyphs on enabled controls in rest, hover,
   and pressed states across the two themes, two schemes and three token modes.
