@@ -31,7 +31,7 @@ import { defineCustomElement as defineKiSelect } from '../dist/components/ki-sel
 import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
-import { settleEntryMotion } from './axe';
+import { parkPointer, settleEntryMotion } from './axe';
 
 type KiInputElement = HTMLElement & { value: string };
 type KiCheckboxElement = HTMLElement & { checked: boolean; value: string };
@@ -458,11 +458,10 @@ describe('composed user flows in a real browser', () => {
     // dark (bare-page legibility, a dark gallery), and the s0 baseline read
     // below is a statement about the LIGHT scheme.
     const flowCommands = commands as unknown as {
-      resetPointer: () => Promise<void>;
       emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
     };
     await flowCommands.emulateColorScheme(null);
-    await flowCommands.resetPointer();
+    await parkPointer();
     await nextFrame();
     const markup = `
       <ki-button>Save changes</ki-button>
@@ -486,10 +485,12 @@ describe('composed user flows in a real browser', () => {
       const fresh = await mountTree(markup, tags);
       await settleEntryMotion();
       const expected = paintOf(fresh);
-      await waitFor(
-        () => JSON.stringify(paintOf(main)) === JSON.stringify(expected),
-        `${message}: the live tree paints like a fresh mount`,
-      );
+      await expect
+        .poll(() => paintOf(main), {
+          message: `${message}: the live tree paints like a fresh mount`,
+          timeout: 2000,
+        })
+        .toEqual(expected);
       fresh.remove();
     };
     const onmars = paintOf(main);

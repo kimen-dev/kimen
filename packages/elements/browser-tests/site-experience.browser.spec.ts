@@ -666,6 +666,13 @@ describe('Kimen public site experience in a real browser', () => {
     await page.viewport(1440, 1000);
     await mountPage('landing');
 
+    // The approved geometry uses the vendored Inter. Keep that fixture
+    // independent of the system fallbacks while Calma's fonts are packaged.
+    document
+      .getElementById(PAGE_STYLE_ID)
+      ?.append(':root { --ki-font-family-body: Inter; --ki-font-family-display: Inter; }');
+    await settleInitialLayout();
+
     const main = requireElement<HTMLElement>('#main', HTMLElement);
     const hero = requireElement<HTMLElement>('.hero', HTMLElement);
     const title = requireElement<HTMLElement>('#hero-title', HTMLElement);
@@ -719,7 +726,7 @@ describe('Kimen public site experience in a real browser', () => {
 
     expect(orbitCards).toHaveLength(6);
     const expectedOrbitGeometry = [
-      [206, 309, 149, 50],
+      [202, 309, 153, 50],
       [212, 381, 143, 56],
       [160, 459, 195, 52],
       [1124, 273, 141, 58],
@@ -736,10 +743,10 @@ describe('Kimen public site experience in a real browser', () => {
       // runner-installed fonts must never change the card metrics.
       expectGeometryWithin(card, expected, 3);
     });
-    expect(getComputedStyle(rtlSwitch).backgroundColor).toBe('rgb(132, 90, 190)');
+    expect(getComputedStyle(rtlSwitch).backgroundColor).toBe('rgb(237, 235, 231)');
     expect(budget.textContent.replace(/\s+/gu, ' ').trim()).toBe('SIZE BUDGET 3.8 / 10 KB');
     expect(axeCard.textContent.replace(/\s+/gu, ' ').trim()).toBe('0 axe violations');
-    expect(getComputedStyle(axeMark).backgroundColor).toBe('rgb(132, 90, 190)');
+    expect(getComputedStyle(axeMark).backgroundColor).toBe('rgb(237, 235, 231)');
     expect(axeMark.getBoundingClientRect().width).toBeCloseTo(20, 0);
     expect(axeMark.getBoundingClientRect().height).toBeCloseTo(20, 0);
     expect(getComputedStyle(pipelineLine).backgroundImage).toContain('repeating-linear-gradient');

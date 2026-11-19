@@ -8,7 +8,6 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { brotliCompressSync, gzipSync } from 'node:zlib';
 
 import { describe, expect, it } from 'vitest';
@@ -29,9 +28,7 @@ import {
 const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
 
 // Art. IV: budget the complete document, including the default token CSS.
-const budgetScript = fileURLToPath(
-  new URL('../../../scripts/lib/bundle-size-budget.mjs', import.meta.url),
-);
+const budgetScript = join(process.cwd(), '../../scripts/lib/bundle-size-budget.mjs');
 const { mcpApps: SIZE_BUDGET } = JSON.parse(
   execFileSync(process.execPath, [budgetScript], { encoding: 'utf8' }),
 ) as { mcpApps: Record<'raw' | 'gzip' | 'brotli', number> };

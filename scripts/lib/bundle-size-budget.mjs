@@ -11,7 +11,8 @@ import { readComponentMetadataByTag } from '../../packages/elements/scripts/comp
 const BASE_BUDGETS = {
   mcpApps: { raw: 674_000, gzip: 152_500, brotli: 124_000 },
   mcpServer: { raw: 2_543_000, gzip: 482_000, brotli: 364_000 },
-  tokenStylesheets: { onmars: 12_400, material3: 5_000, base: 250 },
+  // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
+  tokenStylesheets: { onmars: 12_400, material3: 5_600, base: 250 },
 };
 
 export function deriveBundleSizeBudgets(components) {

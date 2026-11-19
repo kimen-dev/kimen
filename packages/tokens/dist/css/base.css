@@ -1,5 +1,5 @@
 :root {
-  background-color: var(--ki-surface-s0);
+  background-color: var(--ki-surface-base);
   color: var(--ki-text-high-em);
   font-family: var(--ki-typography-family-body);
 }

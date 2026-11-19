@@ -41,11 +41,10 @@ baselines:
   exporting a `VisualGallery` as its default export. Shared browser checks
   mount that gallery, so it must contain the component's own tag. New visual
   specs live alongside the gallery and call `runVisualSuite` for light and
-  dark. All PNGs still land in `browser-tests/__screenshots__/`. Two fonts are
-  vendored under `visual/fonts/` so text metrics never depend on the
-  runner image: Inter (onmars body font, SIL OFL 1.1) and Roboto
-  (material3 body font, Apache-2.0); licenses and SHA-256 pins are in
-  the repository `NOTICE`.
+  dark. All PNGs land in `browser-tests/__screenshots__/`. The harness
+  loads Instrument Sans and Newsreader from `packages/tokens/fonts/` for
+  onmars and Roboto from `visual/fonts/` for Material 3 to pin text metrics.
+  Licenses and SHA-256 pins are in the repository `NOTICE`.
 - Tolerance: strict comparator defaults — 0 mismatched pixels, per-pixel
   threshold 0.1, antialiasing ignored. The 0.1 threshold means a very fine
   color shift (grey delta under ~26/255) does NOT trip this gate; the

@@ -41,7 +41,7 @@ its own: `@kimen/tokens/css` must be loaded too.
 ### The page contract
 
 Tokens are custom properties: loading them paints nothing. `@kimen/tokens/css/base`
-paints the page from them — background from `--ki-surface-s0`, text from
+paints the page from them — background from `--ki-surface-base`, text from
 `--ki-text-high-em`, body family from `--ki-typography-family-body`. It
 publishes no tokens of its own — it only consumes them, so it never widens the
 token surface — and it declares no colour scheme: the token stylesheet owns
@@ -217,17 +217,26 @@ never transcribed by hand.
 - **Motion** — durations from `--ki-motion-duration-instant` and
   `--ki-motion-duration-fast` through the `short`/`medium`/`long` ramps
   (`--ki-motion-duration-short-1`…`long-4`), easing curves
-  (`--ki-motion-easing-standard`, `-emphasized`, `-spring` and their
+  (`--ki-motion-easing-standard`, `-emphasized`, `-emphasized-out` and their
   accelerate/decelerate variants), and micro-motion offsets
   (`--ki-motion-distance-xs/sm/md`).
-- **Glass** — translucent surfaces built from gradient pairs plus a backdrop
-  filter: `--ki-dialog-bg-start`/`--ki-dialog-bg-end` with
+- **Glass** — translucent surfaces can use `--ki-dialog-bg-image` with
   `--ki-dialog-backdrop-filter`. Set `--ki-effect-component-backdrop-filter`
   to `none` at a theme root to turn glass filtering off.
 - **Elevation** — the `--ki-elevation-e1`…`--ki-elevation-e6` shadow scale,
   plus effect shadows (`--ki-effect-*`) for component-specific depth.
 - **Bevels** — edge tokens such as `--ki-button-tertiary-rest-border-bottom`
   that give controls their machined bottom edge.
+
+## Onmars color and type
+
+Calma uses paper ivory in light mode, warm charcoal in dark mode, ink for
+primary surfaces and terracotta for links and focus. Crimson marks errors.
+Surfaces use hairline borders and soft shadows. Dialogs and tooltips have
+opaque fills, and the select listbox uses a single translucent tint.
+
+The UI and body stacks start with Instrument Sans. The display and serif
+stacks start with Newsreader, including dialog headings.
 
 ## Optional theme fonts
 

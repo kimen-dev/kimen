@@ -257,10 +257,18 @@ describe('044 reduced transparency from other activations', () => {
     const fixture = await mount(SELECT);
     await underTransparency('no-preference', context);
     await underContrast('no-preference', context);
+    // Calma ships with the filter off. Use a filter distinct from the legacy
+    // default (24px), which follows the shared filter for compatibility.
+    host(fixture, 'ki-select').style.setProperty(
+      '--ki-select-listbox-backdrop-filter',
+      'blur(12px)',
+    );
     const listbox = await openSelect(fixture);
 
     expect(isOpaque(listbox), 'the glass panel is translucent').toBe(false);
-    expect(blurs(listbox), 'the glass panel blurs what is behind it').toBe(true);
+    expect(getComputedStyle(listbox).backdropFilter, 'the glass filter is preserved').toBe(
+      'blur(12px)',
+    );
   });
 
   it('S10: a themed region inside a page that declares reduced transparency keeps it', async (context) => {

@@ -23,9 +23,8 @@ function fontPage(theme: 'onmars' | 'material3', withFonts: boolean) {
   const fontSheet = withFonts
     ? `<link rel="stylesheet" href="${publicPath('@kimen/tokens/css/onmars-fonts.css')}">`
     : '';
-  // Preview the #341 family values with the adjusted aliases. This is a
-  // consumer override; the published onmars defaults still use Inter.
-  const onmarsPreview =
+  // Exercise the documented opt-in for metric-adjusted Calma fallbacks.
+  const familyOverrides =
     withFonts && theme === 'onmars'
       ? `--ki-typography-family-body: 'Instrument Sans', 'Instrument Sans Fallback', system-ui, sans-serif;
          --ki-typography-family-display: 'Newsreader', 'Newsreader Fallback', Georgia, serif;`
@@ -38,7 +37,7 @@ function fontPage(theme: 'onmars' | 'material3', withFonts: boolean) {
 ${themeSheet}
 ${fontSheet}
 <style>
-  main { ${onmarsPreview} max-inline-size: 32rem; }
+  main { ${familyOverrides} max-inline-size: 32rem; }
   p {
     font: var(--ki-typography-weight-body-normal) var(--ki-typography-size-body-1) /
       var(--ki-typography-line-height-body-1) var(--ki-typography-family-body);
