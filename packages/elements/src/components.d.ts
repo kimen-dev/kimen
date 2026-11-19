@@ -11,6 +11,7 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -31,6 +32,7 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -304,6 +306,55 @@ export namespace Components {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface KiCheckboxGroup {
+        /**
+          * Makes the group unavailable and excludes it from form submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Localized message displayed for a failing selection limit.
+         */
+        "errorText"?: string;
+        /**
+          * One line of guidance displayed under the choices.
+         */
+        "helpText"?: string;
+        /**
+          * Visible legend and accessible name for these choices.
+         */
+        "label": string;
+        /**
+          * Maximum number of checked options, as a nonnegative integer.
+         */
+        "max"?: number;
+        /**
+          * Minimum number of checked options, as a nonnegative integer.
+         */
+        "min"?: number;
+        /**
+          * Form-data key repeated for each selected option.
+         */
+        "name"?: string;
+        /**
+          * Lays choices out vertically or in a wrapping horizontal row.
+          * @default 'vertical'
+         */
+        "orientation": KiCheckboxGroupOrientation;
+        /**
+          * Selected values in option order. Assign a fresh array to update selection silently. Initial checked options seed the group when this property is omitted. In HTML and catalog specs use `checked` on each selected option.
+          * @default []
+         */
+        "value": string[];
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -1088,6 +1139,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCheckboxGroupElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -1240,6 +1295,31 @@ declare global {
     var HTMLKiCheckboxElement: {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
+    };
+    interface HTMLKiCheckboxGroupElementEventMap {
+        "ki-change": KiCheckboxGroupChangeDetail;
+    }
+    /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface HTMLKiCheckboxGroupElement extends Components.KiCheckboxGroup, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCheckboxGroupElementEventMap>(type: K, listener: (this: HTMLKiCheckboxGroupElement, ev: KiCheckboxGroupCustomEvent<HTMLKiCheckboxGroupElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCheckboxGroupElementEventMap>(type: K, listener: (this: HTMLKiCheckboxGroupElement, ev: KiCheckboxGroupCustomEvent<HTMLKiCheckboxGroupElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCheckboxGroupElement: {
+        prototype: HTMLKiCheckboxGroupElement;
+        new (): HTMLKiCheckboxGroupElement;
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
@@ -1696,6 +1776,7 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-icon-button": HTMLKiIconButtonElement;
@@ -1993,6 +2074,63 @@ declare namespace LocalJSX {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface KiCheckboxGroup {
+        /**
+          * Makes the group unavailable and excludes it from form submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Localized message displayed for a failing selection limit.
+         */
+        "errorText"?: string;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * One line of guidance displayed under the choices.
+         */
+        "helpText"?: string;
+        /**
+          * Visible legend and accessible name for these choices.
+         */
+        "label": string;
+        /**
+          * Maximum number of checked options, as a nonnegative integer.
+         */
+        "max"?: number;
+        /**
+          * Minimum number of checked options, as a nonnegative integer.
+         */
+        "min"?: number;
+        /**
+          * Form-data key repeated for each selected option.
+         */
+        "name"?: string;
+        /**
+          * Fires once for a committed user toggle with a copy of the current selection.
+         */
+        "onKi-change"?: (event: KiCheckboxGroupCustomEvent<KiCheckboxGroupChangeDetail>) => void;
+        /**
+          * Lays choices out vertically or in a wrapping horizontal row.
+          * @default 'vertical'
+         */
+        "orientation"?: KiCheckboxGroupOrientation;
+        /**
+          * Selected values in option order. Assign a fresh array to update selection silently. Initial checked options seed the group when this property is omitted. In HTML and catalog specs use `checked` on each selected option.
+          * @default []
+         */
+        "value"?: string[];
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -2837,6 +2975,16 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiCheckboxGroupAttributes {
+        "label": string;
+        "name": string;
+        "helpText": string;
+        "errorText": string;
+        "disabled": boolean;
+        "min": number;
+        "max": number;
+        "orientation": KiCheckboxGroupOrientation;
+    }
     interface KiDialogAttributes {
         "open": boolean;
         "heading": string;
@@ -2980,6 +3128,7 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
@@ -3106,6 +3255,15 @@ declare module "@stencil/core" {
              * to use: do not expect it for programmatic `checked` writes, which are silent.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
+            /**
+             * A form-associated group of independently selectable checkboxes.
+             * @whenToUse people may select several visible options that share a question,
+             * form field, and optional selection limits.
+             * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+             * immediate on/off setting (use `ki-switch`). Provide a group label.
+             * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+             */
+            "ki-checkbox-group": LocalJSX.IntrinsicElements["ki-checkbox-group"] & JSXBase.HTMLAttributes<HTMLKiCheckboxGroupElement>;
             /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief

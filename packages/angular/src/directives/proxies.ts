@@ -13,6 +13,7 @@ import { defineCustomElement as defineKiBadge } from '@kimen/elements/components
 import { defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
+import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
@@ -204,6 +205,34 @@ export class KiCheckbox {
 
 
 export declare interface KiCheckbox extends Components.KiCheckbox {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiCheckboxGroup,
+  inputs: ['disabled', 'errorText', 'helpText', 'label', 'max', 'min', 'name', 'orientation', 'value']
+})
+@Component({
+  selector: 'ki-checkbox-group',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'max', 'min', 'name', 'orientation', 'value'],
+})
+export class KiCheckboxGroup {
+  protected el: HTMLKiCheckboxGroupElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCheckboxGroup extends Components.KiCheckboxGroup {
+  /**
+   * Fires once for a committed user toggle with a copy of the current selection.
+   */
+}
 
 
 @ProxyCmp({
