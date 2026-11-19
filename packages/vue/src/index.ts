@@ -15,6 +15,7 @@ export { KiCheckbox } from './ki-checkbox.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
 export { KiIconButton } from './ki-icon-button.js';
+export { KiImage } from './ki-image.js';
 export { KiIndicator } from './ki-indicator.js';
 export { KiInput } from './ki-input.js';
 export { KiList } from './ki-list.js';

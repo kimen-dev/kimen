@@ -599,6 +599,7 @@
   --ki-font-letter-spacing-sm:-0.03em;
   --ki-font-letter-spacing-md:-0.05em;
   --ki-font-letter-spacing-lg:-0.07em;
+  --ki-surface-image-none:none;
   --ki-surface-image-dialog:none;
   --ki-surface-image-listbox:none;
   --ki-surface-image-tooltip-arrow-start:initial;
@@ -827,6 +828,7 @@
   --ki-elevation-e5:0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow);
   --ki-elevation-e6:0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-6) var(--ki-shadow-distance-6) var(--ki-shadow-spread-6) var(--ki-elevation-shadow);
   --ki-elevation-none:0 0 #0000;
+  --ki-effect-no-backdrop-filter:none;
   --ki-effect-component-backdrop-blur:var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-effect-component-backdrop-filter */
   --ki-effect-component-backdrop-filter:none;
   --ki-effect-component-listbox-backdrop-filter:none;
@@ -897,6 +899,9 @@
   --ki-typography-letter-spacing-sm:-0.01em;
   --ki-typography-letter-spacing-md:-0.015em;
   --ki-typography-letter-spacing-lg:-0.02em;
+  --ki-glyph-media-size:var(--ki-space-5xl);
+  --ki-glyph-stroke-width:var(--ki-size-border-hairline);
+  --ki-spacing-media-caption:var(--ki-space-xs);
   --ki-spacing-inline:var(--ki-space-md);
   --ki-spacing-block:var(--ki-space-xl);
   --ki-corner-control:var(--ki-radius-md);
@@ -1466,6 +1471,19 @@
   --ki-icon-button-xl-size:var(--ki-space-16xl);
   --ki-icon-button-xl-icon-size:var(--ki-space-9xl);
   --ki-icon-button-xl-spinner-size:var(--ki-space-9xl);
+  --ki-image-radius:var(--ki-radius-component-lg);
+  --ki-image-radius-md:var(--ki-radius-component-md);
+  --ki-image-fallback-bg:var(--ki-surface-s2);
+  --ki-image-fallback-fg:var(--ki-text-med-em);
+  --ki-image-fallback-bg-image:var(--ki-surface-image-none);
+  --ki-image-fallback-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-image-fallback-icon-size:var(--ki-glyph-media-size);
+  --ki-image-fallback-icon-stroke-width:var(--ki-glyph-stroke-width);
+  --ki-image-caption-gap:var(--ki-spacing-media-caption);
+  --ki-image-caption-fg:var(--ki-text-supporting);
+  --ki-image-caption-font-family:var(--ki-typography-family-body);
+  --ki-image-caption-font-size:var(--ki-typography-size-caption-2);
+  --ki-image-caption-line-height:var(--ki-typography-line-height-caption-2);
   --ki-indicator-gap:var(--ki-space-sm);
   --ki-indicator-dot-inline-size:var(--ki-space-md);
   --ki-indicator-dot-block-size:var(--ki-space-md);
@@ -2146,6 +2164,7 @@
     --ki-dialog-border:var(--ki-size-border-hairline) solid var(--ki-outline-strong);
     --ki-dialog-divider-color:var(--ki-outline-strong);
     --ki-divider-color:var(--ki-outline-strong);
+    --ki-image-fallback-fg:var(--ki-text-supporting);
     --ki-indicator-dot-color:var(--ki-outline-strong);
     --ki-list-item-divider-color:var(--ki-outline-strong);
     --ki-select-placeholder-fg:light-dark(var(--ki-text-supporting),var(--ki-inverse-white-alpha-80));
@@ -2171,6 +2190,7 @@
   --ki-dialog-border:var(--ki-size-border-hairline) solid var(--ki-outline-strong);
   --ki-dialog-divider-color:var(--ki-outline-strong);
   --ki-divider-color:var(--ki-outline-strong);
+  --ki-image-fallback-fg:var(--ki-text-supporting);
   --ki-indicator-dot-color:var(--ki-outline-strong);
   --ki-list-item-divider-color:var(--ki-outline-strong);
   --ki-select-placeholder-fg:light-dark(var(--ki-text-supporting),var(--ki-inverse-white-alpha-80));

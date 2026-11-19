@@ -570,6 +570,80 @@ export const catalogData = {
       "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
       "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
     },
+    "ki-image": {
+      "description": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",
+      "events": {
+        "ki-error": "Reports a load failure or rejected URL once per source attempt. Bubbles\nand crosses shadow boundaries so consumers can observe it on a surface."
+      },
+      "props": {
+        "alt": {
+          "type": "string",
+          "description": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image."
+        },
+        "decorative": {
+          "type": "boolean",
+          "description": "Hide the media from assistive technology when it conveys no information.",
+          "default": false
+        },
+        "fallback-label": {
+          "type": "string",
+          "description": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label.",
+          "default": "Image unavailable"
+        },
+        "fit": {
+          "type": "enum",
+          "values": [
+            "contain",
+            "cover"
+          ],
+          "description": "Cover fills the frame. Contain preserves the whole image in it.",
+          "default": "cover"
+        },
+        "loading": {
+          "type": "enum",
+          "values": [
+            "eager",
+            "lazy"
+          ],
+          "description": "Native loading hint. Use eager for a critical image above the fold.",
+          "default": "lazy"
+        },
+        "radius": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "none"
+          ],
+          "description": "Corner radius of the media frame.",
+          "default": "lg"
+        },
+        "ratio": {
+          "type": "enum",
+          "values": [
+            "16:9",
+            "1:1",
+            "3:2",
+            "4:3",
+            "auto"
+          ],
+          "description": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load.",
+          "default": "auto"
+        },
+        "src": {
+          "type": "string",
+          "description": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+          "required": true,
+          "format": "url"
+        }
+      },
+      "slots": {
+        "caption": "Optional visible context displayed below the media in a figcaption."
+      },
+      "tag": "ki-image",
+      "whenNotToUse": "for a background decoration, a video, or an interactive\ncontrol. Use a separate control to open or otherwise act on an image.",
+      "whenToUse": "to show a photo, illustration, or diagram with a predictable\nlayout. Supply task-relevant alt text, or mark purely decorative media as\ndecorative. Set an explicit ratio when the layout must stay fixed."
+    },
     "ki-indicator": {
       "description": "A non-interactive page-position indicator: one dot per position of a\nbounded sequence, exactly one highlighted as current.",
       "events": {},

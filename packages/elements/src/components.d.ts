@@ -14,6 +14,7 @@ import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
+import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -34,6 +35,7 @@ export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
+export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -409,6 +411,57 @@ export namespace Components {
           * @deprecatedValue tertiary
          */
         "variant": KiIconButtonVariant;
+    }
+    /**
+     * Displays one accessible image in a reserved frame, with an optional caption
+     * and a fallback if the source is refused or fails to load.
+     * @whenToUse to show a photo, illustration, or diagram with a predictable
+     * layout. Supply task-relevant alt text, or mark purely decorative media as
+     * decorative. Set an explicit ratio when the layout must stay fixed.
+     * @whenNotToUse for a background decoration, a video, or an interactive
+     * control. Use a separate control to open or otherwise act on an image.
+     */
+    interface KiImage {
+        /**
+          * Describe what the image shows for the task at hand. Required and nonblank for an informative image. Omit it for a decorative image.
+          * @default undefined
+         */
+        "alt"?: string;
+        /**
+          * Hide the media from assistive technology when it conveys no information.
+          * @default false
+         */
+        "decorative": boolean;
+        /**
+          * Localizable fallback label. An informative fallback appends the image's description, when available, to this label.
+          * @default 'Image unavailable'
+         */
+        "fallbackLabel": string;
+        /**
+          * Cover fills the frame. Contain preserves the whole image in it.
+          * @default 'cover'
+         */
+        "fit": KiImageFit;
+        /**
+          * Native loading hint. Use eager for a critical image above the fold.
+          * @default 'lazy'
+         */
+        "loading": KiImageLoading;
+        /**
+          * Corner radius of the media frame.
+          * @default 'lg'
+         */
+        "radius": KiImageRadius;
+        /**
+          * An explicit ratio reserves the same frame before load and on failure. Auto reserves 16:9 first and uses the intrinsic ratio after load.
+          * @default 'auto'
+         */
+        "ratio": KiImageRatio;
+        /**
+          * Relative or HTTP(S) image URL. Refused sources are left unloaded.
+          * @format url
+         */
+        "src": string;
     }
     /**
      * A non-interactive page-position indicator: one dot per position of a
@@ -1092,6 +1145,10 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
 }
+export interface KiImageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiImageElement;
+}
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiTabsElement;
@@ -1306,6 +1363,32 @@ declare global {
     var HTMLKiIconButtonElement: {
         prototype: HTMLKiIconButtonElement;
         new (): HTMLKiIconButtonElement;
+    };
+    interface HTMLKiImageElementEventMap {
+        "ki-error": void;
+    }
+    /**
+     * Displays one accessible image in a reserved frame, with an optional caption
+     * and a fallback if the source is refused or fails to load.
+     * @whenToUse to show a photo, illustration, or diagram with a predictable
+     * layout. Supply task-relevant alt text, or mark purely decorative media as
+     * decorative. Set an explicit ratio when the layout must stay fixed.
+     * @whenNotToUse for a background decoration, a video, or an interactive
+     * control. Use a separate control to open or otherwise act on an image.
+     */
+    interface HTMLKiImageElement extends Components.KiImage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiImageElementEventMap>(type: K, listener: (this: HTMLKiImageElement, ev: KiImageCustomEvent<HTMLKiImageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiImageElementEventMap>(type: K, listener: (this: HTMLKiImageElement, ev: KiImageCustomEvent<HTMLKiImageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiImageElement: {
+        prototype: HTMLKiImageElement;
+        new (): HTMLKiImageElement;
     };
     /**
      * A non-interactive page-position indicator: one dot per position of a
@@ -1699,6 +1782,7 @@ declare global {
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-icon-button": HTMLKiIconButtonElement;
+        "ki-image": HTMLKiImageElement;
         "ki-indicator": HTMLKiIndicatorElement;
         "ki-input": HTMLKiInputElement;
         "ki-list": HTMLKiListElement;
@@ -2094,6 +2178,61 @@ declare namespace LocalJSX {
           * @deprecatedValue tertiary
          */
         "variant"?: KiIconButtonVariant;
+    }
+    /**
+     * Displays one accessible image in a reserved frame, with an optional caption
+     * and a fallback if the source is refused or fails to load.
+     * @whenToUse to show a photo, illustration, or diagram with a predictable
+     * layout. Supply task-relevant alt text, or mark purely decorative media as
+     * decorative. Set an explicit ratio when the layout must stay fixed.
+     * @whenNotToUse for a background decoration, a video, or an interactive
+     * control. Use a separate control to open or otherwise act on an image.
+     */
+    interface KiImage {
+        /**
+          * Describe what the image shows for the task at hand. Required and nonblank for an informative image. Omit it for a decorative image.
+          * @default undefined
+         */
+        "alt"?: string;
+        /**
+          * Hide the media from assistive technology when it conveys no information.
+          * @default false
+         */
+        "decorative"?: boolean;
+        /**
+          * Localizable fallback label. An informative fallback appends the image's description, when available, to this label.
+          * @default 'Image unavailable'
+         */
+        "fallbackLabel"?: string;
+        /**
+          * Cover fills the frame. Contain preserves the whole image in it.
+          * @default 'cover'
+         */
+        "fit"?: KiImageFit;
+        /**
+          * Native loading hint. Use eager for a critical image above the fold.
+          * @default 'lazy'
+         */
+        "loading"?: KiImageLoading;
+        /**
+          * Reports a load failure or rejected URL once per source attempt. Bubbles and crosses shadow boundaries so consumers can observe it on a surface.
+         */
+        "onKi-error"?: (event: KiImageCustomEvent<void>) => void;
+        /**
+          * Corner radius of the media frame.
+          * @default 'lg'
+         */
+        "radius"?: KiImageRadius;
+        /**
+          * An explicit ratio reserves the same frame before load and on failure. Auto reserves 16:9 first and uses the intrinsic ratio after load.
+          * @default 'auto'
+         */
+        "ratio"?: KiImageRatio;
+        /**
+          * Relative or HTTP(S) image URL. Refused sources are left unloaded.
+          * @format url
+         */
+        "src": string;
     }
     /**
      * A non-interactive page-position indicator: one dot per position of a
@@ -2854,6 +2993,16 @@ declare namespace LocalJSX {
         "loading": boolean;
         "loadingLabel": string;
     }
+    interface KiImageAttributes {
+        "src": string;
+        "alt": string;
+        "decorative": boolean;
+        "ratio": KiImageRatio;
+        "fit": KiImageFit;
+        "radius": KiImageRadius;
+        "loading": KiImageLoading;
+        "fallbackLabel": string;
+    }
     interface KiIndicatorAttributes {
         "count": number;
         "current": number;
@@ -2983,6 +3132,7 @@ declare namespace LocalJSX {
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
+        "ki-image": Omit<KiImage, keyof KiImageAttributes> & { [K in keyof KiImage & keyof KiImageAttributes]?: KiImage[K] } & { [K in keyof KiImage & keyof KiImageAttributes as `attr:${K}`]?: KiImageAttributes[K] } & { [K in keyof KiImage & keyof KiImageAttributes as `prop:${K}`]?: KiImage[K] } & OneOf<"src", KiImage["src"], KiImageAttributes["src"]>;
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
         "ki-list": KiList;
@@ -3146,6 +3296,16 @@ declare module "@stencil/core" {
              * visible label communicates the consequence).
              */
             "ki-icon-button": LocalJSX.IntrinsicElements["ki-icon-button"] & JSXBase.HTMLAttributes<HTMLKiIconButtonElement>;
+            /**
+             * Displays one accessible image in a reserved frame, with an optional caption
+             * and a fallback if the source is refused or fails to load.
+             * @whenToUse to show a photo, illustration, or diagram with a predictable
+             * layout. Supply task-relevant alt text, or mark purely decorative media as
+             * decorative. Set an explicit ratio when the layout must stay fixed.
+             * @whenNotToUse for a background decoration, a video, or an interactive
+             * control. Use a separate control to open or otherwise act on an image.
+             */
+            "ki-image": LocalJSX.IntrinsicElements["ki-image"] & JSXBase.HTMLAttributes<HTMLKiImageElement>;
             /**
              * A non-interactive page-position indicator: one dot per position of a
              * bounded sequence, exactly one highlighted as current.
