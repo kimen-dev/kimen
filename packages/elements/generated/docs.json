@@ -1229,15 +1229,15 @@
       "filePath": "src/components/ki-card/ki-card.tsx",
       "encapsulation": "shadow",
       "tag": "ki-card",
-      "docs": "A non-interactive card surface for grouping related content.",
+      "docs": "A card surface for grouping related content, with an optional primary link or action.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology."
+          "text": "group related media, a title, supporting text and actions into\none scannable surface. Set `href` for navigation or `interactive` for a\ndeclared action. Give a clickable card one text heading in the header\nslot and place secondary controls in the body or footer."
         },
         {
           "name": "whenNotToUse",
-          "text": "as a button or link target, form control, fieldset, page\nlandmark, section replacement or nested card. For an interactive card, slot\nthe button or link INSIDE a region (whole-card interactivity is a future\nfeature, not this component)."
+          "text": "as a form field, fieldset, page landmark, section replacement\nor nested card. Use a standalone button or link for a control without\nsupporting content."
         },
         {
           "name": "slot",
@@ -1245,7 +1245,7 @@
         },
         {
           "name": "slot",
-          "text": "header - Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics."
+          "text": "header - Title region. Supply one nonempty text heading at the surrounding document level for a clickable card."
         },
         {
           "name": "slot",
@@ -1274,14 +1274,142 @@
         {
           "name": "part",
           "text": "footer - Footer region wrapper."
+        },
+        {
+          "name": "part",
+          "text": "trigger - Native link or action button in a clickable card’s heading."
         }
       ],
       "usage": {
-        "examples": "The four regions — `media`, `header`, default body and `footer`; supply the heading element yourself, because plain text in the `header` slot carries no heading semantics:\n\n```html\n<ki-card>\n  <img slot=\"media\" src=\"/telemetry.png\" alt=\"Orbit trajectory plot\" />\n  <h3 slot=\"header\">Mission telemetry</h3>\n  <p>Latest downlink completed at 14:02 UTC. All systems nominal.</p>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"secondary\">View details</ki-button>\n</ki-card>\n```\n\nAny subset of regions works — a text-only card is valid:\n\n```html\n<ki-card>\n  <h3 slot=\"header\">Storage almost full</h3>\n  <p>You are using 92% of your plan. Consider archiving old projects.</p>\n</ki-card>\n```\n\nActions go in the `footer` slot (no dedicated actions slot exists in v1), and interactive elements always sit inside a region — the card itself is never a click target:\n\n```html\n<ki-card>\n  <h3 slot=\"header\">Invite your team</h3>\n  <p>Collaborators can review specs and approve merges.</p>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"primary\">Invite</ki-button>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"ghost\">Later</ki-button>\n</ki-card>\n```\n"
+        "examples": "The four regions — `media`, `header`, default body and `footer`; supply the heading element yourself, because plain text in the `header` slot carries no heading semantics:\n\n```html\n<ki-card>\n  <img slot=\"media\" src=\"/telemetry.png\" alt=\"Orbit trajectory plot\" />\n  <h3 slot=\"header\">Mission telemetry</h3>\n  <p>Latest downlink completed at 14:02 UTC. All systems nominal.</p>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"secondary\">View details</ki-button>\n</ki-card>\n```\n\nAny subset of regions works — a text-only card is valid:\n\n```html\n<ki-card>\n  <h3 slot=\"header\">Storage almost full</h3>\n  <p>You are using 92% of your plan. Consider archiving old projects.</p>\n</ki-card>\n```\n\nPlace independent actions in the `footer` slot.\n\n```html\n<ki-card>\n  <h3 slot=\"header\">Invite your team</h3>\n  <p>Collaborators can review specs and approve merges.</p>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"primary\">Invite</ki-button>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"ghost\">Later</ki-button>\n</ki-card>\n```\n\nUse `href` for a primary destination. Use `interactive` to emit the\n`ki-activate` action event. Supply a single text heading for either option\nand keep secondary controls in their own slot content.\n\n```html\n<ki-card href=\"/incidents/42\" variant=\"outlined\">\n  <h3 slot=\"header\">Search index rebuild</h3>\n  <p>Scheduled for midnight.</p>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"secondary\">Bookmark</ki-button>\n</ki-card>\n\n<ki-card interactive variant=\"filled\">\n  <h3 slot=\"header\">Preview monthly report</h3>\n  <p>Review the new report before publishing it.</p>\n</ki-card>\n```\n"
       },
-      "props": [],
+      "props": [
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "Destination for the card's title link. Supply a text heading in the\nheader slot. A nonblank href takes precedence over interactive.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "interactive",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "interactive",
+          "reflectToAttr": false,
+          "docs": "Gives a titled card a primary button that emits ki-activate. Use href\nfor navigation. Keep other actions in separate controls in the card.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"elevated\" | \"filled\" | \"outlined\" | undefined",
+          "complexType": {
+            "original": "'default' | 'elevated' | 'filled' | 'outlined'",
+            "resolved": "\"default\" | \"elevated\" | \"filled\" | \"outlined\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": false,
+          "docs": "Surface treatment. Choose elevated for a raised panel, filled for a\ntinted group or outlined for a bordered surface. Use default to follow\nthe theme's existing card treatment.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "elevated",
+              "type": "string"
+            },
+            {
+              "value": "filled",
+              "type": "string"
+            },
+            {
+              "value": "outlined",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
       "methods": [],
-      "events": [],
+      "events": [
+        {
+          "event": "ki-activate",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fires once when the user activates an action card by pointer or keyboard.",
+          "docsTags": []
+        }
+      ],
       "listeners": [],
       "styles": [],
       "slots": [
@@ -1295,7 +1423,7 @@
         },
         {
           "name": "header",
-          "docs": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics."
+          "docs": "Title region. Supply one nonempty text heading at the surrounding document level for a clickable card."
         },
         {
           "name": "media",
@@ -1322,6 +1450,10 @@
         {
           "name": "media",
           "docs": "Media region wrapper."
+        },
+        {
+          "name": "trigger",
+          "docs": "Native link or action button in a clickable card’s heading."
         }
       ],
       "states": [],

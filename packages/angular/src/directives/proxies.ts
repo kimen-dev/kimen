@@ -162,14 +162,15 @@ export declare interface KiButton extends Components.KiButton {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiCard
+  defineCustomElementFn: defineKiCard,
+  inputs: ['href', 'interactive', 'variant']
 })
 @Component({
   selector: 'ki-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['href', 'interactive', 'variant'],
 })
 export class KiCard {
   protected el: HTMLKiCardElement;
@@ -180,7 +181,12 @@ export class KiCard {
 }
 
 
-export declare interface KiCard extends Components.KiCard {}
+
+export declare interface KiCard extends Components.KiCard {
+  /**
+   * Fires once when the user activates an action card by pointer or keyboard.
+   */
+}
 
 
 @ProxyCmp({

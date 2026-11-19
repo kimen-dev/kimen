@@ -599,6 +599,7 @@
   --ki-font-letter-spacing-sm:-0.03em;
   --ki-font-letter-spacing-md:-0.05em;
   --ki-font-letter-spacing-lg:-0.07em;
+  --ki-surface-image-none:none;
   --ki-surface-image-dialog:none;
   --ki-surface-image-listbox:none;
   --ki-surface-image-tooltip-arrow-start:initial;
@@ -827,6 +828,7 @@
   --ki-elevation-e5:0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow);
   --ki-elevation-e6:0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-6) var(--ki-shadow-distance-6) var(--ki-shadow-spread-6) var(--ki-elevation-shadow);
   --ki-elevation-none:0 0 #0000;
+  --ki-effect-backdrop-filter-none:none;
   --ki-effect-component-backdrop-blur:var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-effect-component-backdrop-filter */
   --ki-effect-component-backdrop-filter:none;
   --ki-effect-component-listbox-backdrop-filter:none;
@@ -1351,6 +1353,20 @@
   --ki-card-header-padding:var(--ki-space-3xl);
   --ki-card-body-padding:var(--ki-space-3xl);
   --ki-card-footer-padding:var(--ki-space-3xl);
+  --ki-card-bg-image:var(--ki-surface-image-none);
+  --ki-card-backdrop-filter:var(--ki-effect-backdrop-filter-none);
+  --ki-card-elevated-bg:var(--ki-surface-s1);
+  --ki-card-elevated-fg:var(--ki-text-high-em);
+  --ki-card-elevated-shadow:var(--ki-elevation-e1);
+  --ki-card-filled-bg:var(--ki-surface-s2);
+  --ki-card-filled-fg:var(--ki-text-high-em);
+  --ki-card-outlined-bg:var(--ki-surface-s0);
+  --ki-card-outlined-fg:var(--ki-text-high-em);
+  --ki-card-outlined-border:var(--ki-outline-low-em);
+  --ki-card-outlined-border-width:var(--ki-size-border-hairline);
+  --ki-card-hover-shadow:var(--ki-elevation-e2);
+  --ki-card-hover-overlay:var(--ki-surface-hover-overlay);
+  --ki-card-title-family:var(--ki-typography-family-heading);
   --ki-checkbox-control-size:var(--ki-space-5xl);
   --ki-checkbox-min-target:var(--ki-space-7xl);
   --ki-checkbox-gap:var(--ki-space-xl);

@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 330 semantic
-and 1142 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 332 semantic
+and 1156 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -47,6 +47,7 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-effect-backdrop-filter-none` | `none` | A surface that leaves the backdrop unfiltered. |
 | `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
 | `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
 | `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
@@ -323,6 +324,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
+| `--ki-surface-image-none` | `none` | Solid surface with no decorative image. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
@@ -890,19 +892,33 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-card-backdrop-filter` | `none` | Complete card backdrop filter, off by default. |
 | `--ki-card-bg` | `#ffffff` | color used by the card component for background (MarsUI Dashboard masters bind Surface/special/light-s0_dark-s1: white light / Dark/900 dark; #f9f9fa is the nested media panel, so the old s1 value inverted the surface hierarchy). |
+| `--ki-card-bg-image` | `none` | Optional decorative image over the card background. |
 | `--ki-card-body-padding` | `1rem` | dimension used by the card component for body padding. |
 | `--ki-card-border-color` | `rgba(24, 22, 19, 0.1)` | color used by the card component for border color (MarsUI Outline/base_em hairline — painted on large Chart cards; Dashboard_info leaves width 0, which stays the default via ki.card.border-width). |
 | `--ki-card-border-width` | `1px` | dimension used by the card component for border width. |
+| `--ki-card-elevated-bg` | `#f9f7f4` | Raised card background. |
+| `--ki-card-elevated-fg` | `#181613` | Text on the elevated card background. |
+| `--ki-card-elevated-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05)` | Resting shadow for an elevated card. |
 | `--ki-card-elevation` | `0 0 #0000` | Card resting elevation: MarsUI elevation ramp level e1 (brief §5, drop 0/1/1/-0.5 in the scheme shadow color; replaces the migrated M2-era shadow). |
 | `--ki-card-fg` | `#181613` | color used by the card component for foreground. |
+| `--ki-card-filled-bg` | `#f3f0eb` | Tinted card background. |
+| `--ki-card-filled-fg` | `#181613` | Text on the filled card background. |
 | `--ki-card-footer-padding` | `1rem` | dimension used by the card component for footer padding. |
 | `--ki-card-gap` | `0.75rem` | dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override). |
 | `--ki-card-header-padding` | `1rem` | dimension used by the card component for header padding. |
+| `--ki-card-hover-overlay` | `rgba(255, 255, 255, 0.05)` | Pointer hover state layer on a primary-action card. |
+| `--ki-card-hover-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Hover shadow of a primary-action card. |
 | `--ki-card-media-padding` | `0.5rem` | dimension used by the card component for media padding (MarsUI Dashboard masters inset media panels 8px inline; material3 keeps full-bleed zero via its override). |
 | `--ki-card-media-radius` | `20px` | dimension used by the card component for slotted media corner radius (MarsUI nested media panel Radius/big_component/radius_sm 20px; formalizes the fallback ki-card.css already consumes). |
+| `--ki-card-outlined-bg` | `#ffffff` | Page-coloured background for an outlined card. |
+| `--ki-card-outlined-border` | `rgba(24, 22, 19, 0.1)` | Boundary colour for an outlined card. |
+| `--ki-card-outlined-border-width` | `1px` | Hairline width for an outlined card. |
+| `--ki-card-outlined-fg` | `#181613` | Text on the outlined card background. |
 | `--ki-card-padding-block` | `1rem` | dimension used by the card component for the surface block padding (16px carried by the card surface itself so stacked region paddings no longer double to 32px; formalizes the fallback ki-card.css already consumes). |
 | `--ki-card-radius` | `14px` | dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px). |
+| `--ki-card-title-family` | `'Instrument Sans', system-ui, sans-serif` | Family used for a clickable card title. |
 
 ### `ki-checkbox`
 

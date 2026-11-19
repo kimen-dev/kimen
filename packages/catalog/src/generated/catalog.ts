@@ -376,18 +376,42 @@ export const catalogData = {
       "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
     "ki-card": {
-      "description": "A non-interactive card surface for grouping related content.",
-      "events": {},
-      "props": {},
+      "description": "A card surface for grouping related content, with an optional primary link or action.",
+      "events": {
+        "ki-activate": "Fires once when the user activates an action card by pointer or keyboard."
+      },
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "Destination for the card's title link. Supply a text heading in the\nheader slot. A nonblank href takes precedence over interactive.",
+          "format": "url"
+        },
+        "interactive": {
+          "type": "boolean",
+          "description": "Gives a titled card a primary button that emits ki-activate. Use href\nfor navigation. Keep other actions in separate controls in the card.",
+          "default": false
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "default",
+            "elevated",
+            "filled",
+            "outlined"
+          ],
+          "description": "Surface treatment. Choose elevated for a raised panel, filled for a\ntinted group or outlined for a bordered surface. Use default to follow\nthe theme's existing card treatment.",
+          "default": "default"
+        }
+      },
       "slots": {
         "": "Body region for supporting text or arbitrary composed content.",
         "footer": "Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1.",
-        "header": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics.",
+        "header": "Title region. Supply one nonempty text heading at the surrounding document level for a clickable card.",
         "media": "Leading visual region for an image, video or illustration."
       },
       "tag": "ki-card",
-      "whenNotToUse": "as a button or link target, form control, fieldset, page\nlandmark, section replacement or nested card. For an interactive card, slot\nthe button or link INSIDE a region (whole-card interactivity is a future\nfeature, not this component).",
-      "whenToUse": "group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology."
+      "whenNotToUse": "as a form field, fieldset, page landmark, section replacement\nor nested card. Use a standalone button or link for a control without\nsupporting content.",
+      "whenToUse": "group related media, a title, supporting text and actions into\none scannable surface. Set `href` for navigation or `interactive` for a\ndeclared action. Give a clickable card one text heading in the header\nslot and place secondary controls in the body or footer."
     },
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
