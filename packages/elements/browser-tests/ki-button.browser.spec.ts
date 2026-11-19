@@ -11,6 +11,7 @@ import { defineCustomElement } from '../dist/components/ki-button.js';
 import { expectAccessible, parkPointer } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { alphaOf } from './contracts';
+import { moveToNewParent } from './reconnect';
 
 const browserCommands = commands as unknown as {
   emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
@@ -300,6 +301,34 @@ describe('ki-button in a real browser', () => {
     el.setAttribute('aria-description', 'Sends immediately');
     await settle();
     await expectAccessible(document.body);
+  });
+
+  it('S14 keeps forwarding the host aria-description after the button moves to another parent', async () => {
+    cleanup();
+    const el = await mount('Save');
+    const button = requireButton(el);
+
+    // A sortable row re-inserts its controls; the tooltip around one of them
+    // then describes its trigger again.
+    moveToNewParent(el);
+    el.setAttribute('aria-description', 'Sends immediately');
+
+    await expect.poll(() => button.getAttribute('aria-description')).toBe('Sends immediately');
+
+    el.removeAttribute('aria-description');
+    await expect.poll(() => button.hasAttribute('aria-description')).toBe(false);
+  });
+
+  it('S14 forwards a description written while the button was out of the document', async () => {
+    cleanup();
+    const el = await mount('Save');
+    const button = requireButton(el);
+
+    el.remove();
+    el.setAttribute('aria-description', 'Sends immediately');
+    document.body.append(el);
+
+    await expect.poll(() => button.getAttribute('aria-description')).toBe('Sends immediately');
   });
 
   it('S2 observes no activation from a real click on a disabled button', async () => {

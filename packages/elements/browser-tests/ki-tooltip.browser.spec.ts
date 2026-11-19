@@ -9,6 +9,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { moveToNewParent } from './reconnect';
 
 type KiTooltipElement = HTMLElement & {
   label: string;
@@ -477,6 +478,121 @@ describe('ki-tooltip pointer path in a real browser', () => {
 
     expect(tooltipBubble(host)).toBeNull();
     expect(trigger.getAttribute('aria-description')).toBeNull();
+  });
+
+  it('S13 a tooltip created without a label renders its trigger and works once the label arrives', async () => {
+    ensureTokens();
+    // What a framework does with `label={undefined}` on the first render.
+    const host = document.createElement('ki-tooltip') as KiTooltipElement;
+    (host as { label: unknown }).label = undefined;
+    host.style.setProperty('--ki-tooltip-show-delay', '0ms');
+    const trigger = document.createElement('button');
+    trigger.textContent = 'Send';
+    host.append(trigger);
+    document.body.append(host);
+    await customElements.whenDefined('ki-tooltip');
+
+    // The trigger is laid out: the slot it is assigned to has rendered.
+    await expect.poll(() => trigger.getBoundingClientRect().width).toBeGreaterThan(0);
+    expect(tooltipBubble(host)).toBeNull();
+    expect(trigger.getAttribute('aria-description')).toBeNull();
+
+    host.label = 'Send immediately';
+    await expect.poll(() => trigger.getAttribute('aria-description')).toBe('Send immediately');
+    trigger.focus();
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+  });
+
+  it.each([
+    [
+      'set to undefined',
+      (host: KiTooltipElement) => {
+        (host as { label: unknown }).label = undefined;
+      },
+    ],
+    [
+      'set to null',
+      (host: KiTooltipElement) => {
+        (host as { label: unknown }).label = null;
+      },
+    ],
+    [
+      'removed as an attribute',
+      (host: KiTooltipElement) => {
+        host.removeAttribute('label');
+      },
+    ],
+  ])('S13 a label %s leaves no tooltip and a tooltip that still works', async (_case, clear) => {
+    ensureTokens();
+    const host = document.createElement('ki-tooltip') as KiTooltipElement;
+    host.setAttribute('label', 'Send immediately');
+    host.style.setProperty('--ki-tooltip-show-delay', '0ms');
+    const trigger = document.createElement('button');
+    trigger.textContent = 'Send';
+    host.append(trigger);
+    document.body.append(host);
+    await customElements.whenDefined('ki-tooltip');
+    await expect.poll(() => trigger.getAttribute('aria-description')).toBe('Send immediately');
+
+    clear(host);
+
+    await expect.poll(() => tooltipBubble(host)).toBeNull();
+    expect(trigger.getAttribute('aria-description')).toBeNull();
+
+    // The instance survived: a new label describes and shows again.
+    host.label = 'Send now';
+    await expect.poll(() => trigger.getAttribute('aria-description')).toBe('Send now');
+    trigger.focus();
+    await expect.element(page.getByRole('tooltip', { name: 'Send now' })).toBeVisible();
+  });
+
+  it('S7 keeps describing its trigger after the tooltip moves to another parent', async () => {
+    const { host, trigger } = await mount();
+    await expect.poll(() => trigger.getAttribute('aria-description')).toBe('Send immediately');
+
+    // A sortable row re-inserts itself with the tooltip inside: the trigger
+    // keeps its place in the slot, so no slotchange describes it again.
+    moveToNewParent(host);
+
+    expect(trigger.getAttribute('aria-description')).toBe('Send immediately');
+  });
+
+  it('S9 still owns and restores the trigger description after the tooltip moves to another parent', async () => {
+    ensureTokens();
+    const host = document.createElement('ki-tooltip') as KiTooltipElement;
+    host.label = 'Send immediately';
+    const trigger = document.createElement('button');
+    trigger.textContent = 'Send';
+    trigger.setAttribute('aria-description', 'Author note');
+    host.append(trigger);
+    document.body.append(host);
+    await customElements.whenDefined('ki-tooltip');
+    await expect.poll(() => trigger.getAttribute('aria-description')).toBe('Send immediately');
+
+    moveToNewParent(host);
+    expect(trigger.getAttribute('aria-description')).toBe('Send immediately');
+
+    host.label = '';
+    await expect.poll(() => trigger.getAttribute('aria-description')).toBe('Author note');
+  });
+
+  it('S2 a tooltip taken out of the document under the pointer comes back hidden and follows the pointer again', async () => {
+    const { host, trigger } = await mount();
+    await hoverTrigger(host, trigger);
+
+    // Out of the document there is no pointerleave to hear, and the tooltip
+    // lands away from the pointer: it must not come back believing the
+    // pointer is still on it.
+    host.remove();
+    const spacer = document.createElement('div');
+    spacer.style.blockSize = '240px';
+    document.body.append(spacer, host);
+    await expect.poll(() => isTooltipShown(host)).toBe(false);
+
+    await userEvent.hover(trigger);
+    await expect.poll(() => isTooltipShown(host)).toBe(true);
+    await userEvent.unhover(trigger);
+    await expect.poll(() => isTooltipShown(host)).toBe(false);
   });
 
   it('S9 preserves and restores a consumer-authored trigger aria-description', async () => {

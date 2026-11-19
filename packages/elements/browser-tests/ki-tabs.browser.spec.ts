@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-t
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { moveToNewParent } from './reconnect';
 
 type KiTabsElement = HTMLElement & { value: string };
 const browserCommands = commands as unknown as {
@@ -116,6 +117,50 @@ function main(): HTMLElement {
     throw new Error('Missing main fixture');
   }
   return el;
+}
+
+type ValueElement = HTMLElement & { value: string };
+
+/** A tab and its panel whose value is assigned as a property, as framework wrappers do. */
+function propertyPair(value: string): { tab: ValueElement; panel: ValueElement } {
+  return {
+    tab: Object.assign(document.createElement('ki-tab'), {
+      value,
+      textContent: `Tab ${value}`,
+    }),
+    panel: Object.assign(document.createElement('ki-tab-panel'), {
+      value,
+      textContent: `Panel ${value}`,
+    }),
+  };
+}
+
+/** Whether the tab names this panel as the one it controls, and the panel names the tab. */
+function paired(pair: { tab: ValueElement; panel: ValueElement }): boolean {
+  return (
+    pair.panel.id !== '' &&
+    pair.tab.id !== '' &&
+    pair.tab.getAttribute('aria-controls') === pair.panel.id &&
+    pair.panel.getAttribute('aria-labelledby') === pair.tab.id
+  );
+}
+
+/** A group whose own value, and its children's, are properties set before insertion. */
+function propertyGroup(
+  requested: string,
+  values: string[],
+): { tabs: KiTabsElement; pairs: { tab: ValueElement; panel: ValueElement }[] } {
+  ensureTokens();
+  const tabs = Object.assign(document.createElement('ki-tabs'), {
+    label: 'Settings',
+    value: requested,
+  }) as KiTabsElement;
+  const pairs = values.map(propertyPair);
+  tabs.append(...pairs.map((pair) => pair.tab), ...pairs.map((pair) => pair.panel));
+  const main = document.createElement('main');
+  main.append(tabs);
+  document.body.append(main);
+  return { tabs, pairs };
 }
 
 function firstEvent(spy: ReturnType<typeof vi.fn>): CustomEvent<{ value: string }> {
@@ -238,6 +283,235 @@ describe('ki-tabs core behavior in a real browser', () => {
 
     expect(tabs.value).toBe('orphan-tab');
     expect(panel(tabs, 'orphan-panel').hasAttribute('hidden')).toBe(true);
+  });
+});
+
+describe('ki-tabs built and updated through properties', () => {
+  it('S1 a group built from properties before it is inserted selects the requested tab', async () => {
+    // What @kimen/react does: every prop is assigned as a property, on the
+    // tabs and panels too, and the finished tree is inserted at once.
+    const { tabs, pairs } = propertyGroup('q', ['p', 'q', 'r']);
+    await waitForRender(tabs);
+
+    await expect
+      .poll(() => pairs.map((pair) => pair.tab.hasAttribute('selected')))
+      .toEqual([false, true, false]);
+    expect(tabs.value).toBe('q');
+    expect(pairs.map((pair) => pair.panel.hasAttribute('hidden'))).toEqual([true, false, true]);
+    expect(pairs.map(paired)).toEqual([true, true, true]);
+  });
+
+  it('S7 S8 tabs inserted first and given their value right after are each paired with their own panel', async () => {
+    const tabs = await mount(fixture());
+    // What a framework wrapper does on an update: the new children are
+    // inserted, tabs before the panels, and their props are assigned after.
+    const added = ['x', 'y'].map((value) => ({
+      value,
+      tab: document.createElement('ki-tab'),
+      panel: document.createElement('ki-tab-panel'),
+    }));
+    for (const pair of added) {
+      panel(tabs, 'email').before(pair.tab);
+      tabs.append(pair.panel);
+    }
+    for (const pair of added) {
+      pair.tab.textContent = `Tab ${pair.value}`;
+      pair.tab.value = pair.value;
+      pair.panel.textContent = `Panel ${pair.value}`;
+      pair.panel.value = pair.value;
+    }
+
+    await expect.poll(() => added.map(paired)).toEqual([true, true]);
+    tabs.value = 'y';
+    await expect.poll(() => added[1]?.panel.hasAttribute('hidden')).toBe(false);
+    expect(tabs.value).toBe('y');
+  });
+
+  it('S3 a requested value that no tab owns yet is honoured when its tab arrives', async () => {
+    // Async lists: the value is set once, the tabs render later, and nobody
+    // sets the value again.
+    const { tabs } = propertyGroup('q', ['p']);
+    await waitForRender(tabs);
+    await expect.poll(() => tabs.value).toBe('p');
+
+    const late = propertyPair('q');
+    tabs.append(late.tab, late.panel);
+
+    await expect.poll(() => late.tab.hasAttribute('selected')).toBe(true);
+    expect(tabs.value).toBe('q');
+    expect(late.panel.hasAttribute('hidden')).toBe(false);
+  });
+
+  it('S1 a tab the user selected is not displaced by a late tab that owns an earlier request', async () => {
+    const { tabs, pairs } = propertyGroup('q', ['p', 'r']);
+    await waitForRender(tabs);
+    await expect.poll(() => tabs.value).toBe('p');
+    const chosen = pairs[1];
+    if (!chosen) {
+      throw new Error('missing tab');
+    }
+    await userEvent.click(chosen.tab);
+    expect(tabs.value).toBe('r');
+
+    const late = propertyPair('q');
+    tabs.append(late.tab, late.panel);
+
+    await expect.poll(() => paired(late)).toBe(true);
+    expect(tabs.value).toBe('r');
+    expect(late.tab.hasAttribute('selected')).toBe(false);
+  });
+
+  it('S1 a tab and its panel renamed through their value property can be selected by the new value at once', async () => {
+    const { tabs, pairs } = propertyGroup('p', ['p', 'q']);
+    await waitForRender(tabs);
+    await expect.poll(() => tabs.value).toBe('p');
+    const renamed = pairs[1];
+    if (!renamed) {
+      throw new Error('missing tab');
+    }
+
+    // One framework commit: the children's props first, then the group's.
+    renamed.tab.value = 'z';
+    renamed.panel.value = 'z';
+    tabs.value = 'z';
+
+    await expect.poll(() => renamed.panel.hasAttribute('hidden')).toBe(false);
+    expect(tabs.value).toBe('z');
+    expect(renamed.tab.hasAttribute('selected')).toBe(true);
+  });
+
+  it('S8 a tab whose value changes away from its panel stops claiming to control it', async () => {
+    const { tabs, pairs } = propertyGroup('p', ['p', 'q']);
+    await waitForRender(tabs);
+    const renamed = pairs[1];
+    if (!renamed) {
+      throw new Error('missing tab');
+    }
+    await expect.poll(() => paired(renamed)).toBe(true);
+
+    renamed.tab.value = 'z';
+
+    await expect.poll(() => renamed.tab.hasAttribute('aria-controls')).toBe(false);
+    expect(renamed.panel.hasAttribute('aria-labelledby')).toBe(false);
+  });
+
+  it('S1 the selected tab keeps the selection when its value is renamed', async () => {
+    const { tabs, pairs } = propertyGroup('q', ['p', 'q']);
+    await waitForRender(tabs);
+    await expect.poll(() => tabs.value).toBe('q');
+    const selected = pairs[1];
+    if (!selected) {
+      throw new Error('missing tab');
+    }
+
+    selected.tab.value = 'z';
+    selected.panel.value = 'z';
+
+    await expect.poll(() => tabs.value).toBe('z');
+    expect(selected.tab.hasAttribute('selected')).toBe(true);
+    expect(selected.panel.hasAttribute('hidden')).toBe(false);
+  });
+});
+
+// A definition loaded before the body (a classic script in the head) makes
+// the parser upgrade the group at its start tag, before any child exists; a
+// document that arrives in chunks gives the group time to load meanwhile.
+// The children then come in source order, attributes and all.
+describe('ki-tabs defined before the parser reaches its children', () => {
+  function parsedChild(localName: 'ki-tab' | 'ki-tab-panel', value: string): HTMLElement {
+    const child = document.createElement(localName);
+    child.setAttribute('value', value);
+    child.textContent = localName === 'ki-tab' ? `Tab ${value}` : `Panel ${value}`;
+    return child;
+  }
+
+  async function loadedEmptyGroup(value: string): Promise<KiTabsElement> {
+    ensureTokens();
+    const tabs = document.createElement('ki-tabs') as KiTabsElement;
+    tabs.setAttribute('label', 'Settings');
+    tabs.setAttribute('value', value);
+    const main = document.createElement('main');
+    main.append(tabs);
+    document.body.append(main);
+    await waitForRender(tabs);
+    return tabs;
+  }
+
+  it('S1 selects the tab its value attribute declares once the tabs are parsed', async () => {
+    const tabs = await loadedEmptyGroup('q');
+    const onChange = vi.fn();
+    tabs.addEventListener('ki-change', onChange);
+
+    // The first tab arrives in one chunk, the rest in the next one.
+    tabs.append(parsedChild('ki-tab', 'p'));
+    await waitForRender(tabs);
+    tabs.append(
+      parsedChild('ki-tab', 'q'),
+      parsedChild('ki-tab', 'r'),
+      parsedChild('ki-tab-panel', 'p'),
+      parsedChild('ki-tab-panel', 'q'),
+      parsedChild('ki-tab-panel', 'r'),
+    );
+
+    await expect.poll(() => tab(tabs, 'q').hasAttribute('selected')).toBe(true);
+    expect(tabs.value).toBe('q');
+    expect([...tabs.querySelectorAll('ki-tab[selected]')]).toHaveLength(1);
+    expect(panel(tabs, 'q').hasAttribute('hidden')).toBe(false);
+    expect(panel(tabs, 'p').hasAttribute('hidden')).toBe(true);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('S3 still falls back to the first tab when the declared value names none of them', async () => {
+    const tabs = await loadedEmptyGroup('missing');
+
+    tabs.append(
+      parsedChild('ki-tab', 'p'),
+      parsedChild('ki-tab', 'q'),
+      parsedChild('ki-tab-panel', 'p'),
+      parsedChild('ki-tab-panel', 'q'),
+    );
+
+    await expect.poll(() => tab(tabs, 'p').hasAttribute('selected')).toBe(true);
+    expect(tabs.value).toBe('p');
+    expect(panel(tabs, 'p').hasAttribute('hidden')).toBe(false);
+  });
+});
+
+describe('ki-tabs moved to another parent', () => {
+  it('S2 a tab disabled after the move gives up the selection', async () => {
+    const tabs = await mount(fixture('notifications'));
+    moveToNewParent(tabs);
+
+    tab(tabs, 'notifications').setAttribute('disabled', '');
+
+    await expect.poll(() => tabs.value).toBe('email');
+    expect(tab(tabs, 'notifications').hasAttribute('selected')).toBe(false);
+    expect(panel(tabs, 'email').hasAttribute('hidden')).toBe(false);
+  });
+
+  it('S2 a tab disabled while the group was out of the document is not selected when it returns', async () => {
+    const tabs = await mount(fixture('notifications'));
+
+    tabs.remove();
+    tab(tabs, 'notifications').setAttribute('disabled', '');
+    main().append(tabs);
+
+    await expect.poll(() => tabs.value).toBe('email');
+    expect(tab(tabs, 'notifications').hasAttribute('selected')).toBe(false);
+  });
+
+  it('S1 pointer and keyboard still select after the move', async () => {
+    const tabs = await mount(fixture());
+    moveToNewParent(tabs);
+    const onChange = vi.fn();
+    tabs.addEventListener('ki-change', onChange);
+
+    await userEvent.click(page.getByRole('tab', { name: 'Notifications' }));
+    expect(tabs.value).toBe('notifications');
+    await userEvent.keyboard('{ArrowLeft}');
+
+    expect(tabs.value).toBe('email');
+    expect(onChange).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -717,24 +991,30 @@ describe('ki-tabs theming behavior in a real browser', () => {
   });
 
   it('S17 switches panels without transition or animation under reduced motion', async () => {
+    // Restored in `finally`: the emulation belongs to the Playwright page,
+    // not to this file, so a leak reaches whichever spec runs next.
     await browserCommands.emulateReducedMotion('reduce');
-    const tabs = await mount(fixture());
+    try {
+      const tabs = await mount(fixture());
 
-    await userEvent.click(tab(tabs, 'notifications'));
+      await userEvent.click(tab(tabs, 'notifications'));
 
-    const visiblePanel = panel(tabs, 'notifications');
-    const indicator = tab(tabs, 'notifications').shadowRoot?.querySelector('[part="indicator"]');
-    const panelPart = visiblePanel.shadowRoot?.querySelector('[part="panel"]');
-    if (!(indicator instanceof HTMLElement) || !(panelPart instanceof HTMLElement)) {
-      throw new Error('Missing indicator or panel part');
+      const visiblePanel = panel(tabs, 'notifications');
+      const indicator = tab(tabs, 'notifications').shadowRoot?.querySelector('[part="indicator"]');
+      const panelPart = visiblePanel.shadowRoot?.querySelector('[part="panel"]');
+      if (!(indicator instanceof HTMLElement) || !(panelPart instanceof HTMLElement)) {
+        throw new Error('Missing indicator or panel part');
+      }
+
+      expect(visiblePanel.hasAttribute('hidden')).toBe(false);
+      expect(getComputedStyle(visiblePanel).transitionDuration).toBe('0s');
+      expect(getComputedStyle(visiblePanel).animationName).toBe('none');
+      expect(getComputedStyle(panelPart).animationName).toBe('none');
+      expect(getComputedStyle(indicator).transitionDuration).toBe('0s');
+      expect(getComputedStyle(indicator).animationName).toBe('none');
+    } finally {
+      await browserCommands.emulateReducedMotion(null);
     }
-
-    expect(visiblePanel.hasAttribute('hidden')).toBe(false);
-    expect(getComputedStyle(visiblePanel).transitionDuration).toBe('0s');
-    expect(getComputedStyle(visiblePanel).animationName).toBe('none');
-    expect(getComputedStyle(panelPart).animationName).toBe('none');
-    expect(getComputedStyle(indicator).transitionDuration).toBe('0s');
-    expect(getComputedStyle(indicator).animationName).toBe('none');
   });
 });
 

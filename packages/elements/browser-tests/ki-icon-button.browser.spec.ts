@@ -12,6 +12,7 @@ import { defineCustomElement } from '../dist/components/ki-icon-button.js';
 import { expectAccessible, parkPointer } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { alphaOf } from './contracts';
+import { moveToNewParent } from './reconnect';
 
 const browserCommands = commands as unknown as {
   emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
@@ -416,6 +417,34 @@ describe('ki-icon-button in a real browser', () => {
     el.setAttribute('aria-description', 'Closes the dialog');
     await settle();
     await expectAccessible(document.body);
+  });
+
+  it('S12 S13 keeps forwarding the host aria-description after the icon button moves to another parent', async () => {
+    cleanup();
+    const el = await mount('Close');
+    const button = requireButton(el);
+
+    // A sortable row re-inserts its controls; the tooltip around one of them
+    // then describes its trigger again.
+    moveToNewParent(el);
+    el.setAttribute('aria-description', 'Closes the dialog');
+
+    await expect.poll(() => button.getAttribute('aria-description')).toBe('Closes the dialog');
+
+    el.removeAttribute('aria-description');
+    await expect.poll(() => button.hasAttribute('aria-description')).toBe(false);
+  });
+
+  it('S12 forwards a description written while the icon button was out of the document', async () => {
+    cleanup();
+    const el = await mount('Close');
+    const button = requireButton(el);
+
+    el.remove();
+    el.setAttribute('aria-description', 'Closes the dialog');
+    landmark().append(el);
+
+    await expect.poll(() => button.getAttribute('aria-description')).toBe('Closes the dialog');
   });
 
   it('S9 never submits an enclosing form', async () => {

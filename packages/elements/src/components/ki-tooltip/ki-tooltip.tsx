@@ -68,7 +68,10 @@ export class KiTooltip {
   private listeningForEscape = false;
 
   private get normalizedLabel(): string {
-    return this.label.trim();
+    // Typed as a string, yet a framework passes `undefined` for a prop it has
+    // no value for, and removing the attribute assigns `null`: both mean "no
+    // label", exactly as an empty one does.
+    return (this.label as string | null | undefined)?.trim() ?? '';
   }
 
   private get hasLabel(): boolean {
@@ -84,6 +87,15 @@ export class KiTooltip {
     // pair (review 013 minor).
     this.host.addEventListener('focusin', this.handleFocusIn);
     this.host.addEventListener('focusout', this.handleFocusOut);
+    // Back in the document after a move (a reordered row, a keyed list): the
+    // trigger kept its place in the slot, so no slotchange describes it again.
+    // disconnectedCallback handed the description back to the trigger, so what
+    // it carries now is the author's own. On the first connection there is no
+    // trigger yet: the first slotchange takes it.
+    if (this.trigger) {
+      this.authoredDescription = this.trigger.getAttribute('aria-description');
+      this.syncTriggerDescription();
+    }
   }
 
   disconnectedCallback(): void {
@@ -94,6 +106,12 @@ export class KiTooltip {
     this.clearTimer();
     this.removeEscapeListener();
     this.clearTriggerDescription();
+    // Leaving the document takes the pointer and the focus away without a
+    // pointerleave or a focusout, and closes the popover: what was true of
+    // them is not true any more, and the tooltip has to come back hidden.
+    this.pointerWithin = false;
+    this.focusWithin = false;
+    this.visible = false;
   }
 
   @Watch('label')

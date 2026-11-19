@@ -11,6 +11,7 @@ import { defineCustomElement as defineButton } from '../dist/components/ki-butto
 import { defineCustomElement } from '../dist/components/ki-card.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { moveToNewParent } from './reconnect';
 
 const STYLE_ID = 'ki-card-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-card-browser-material3-token-style';
@@ -211,6 +212,42 @@ describe('ki-card in a real browser', () => {
     await nextFrame();
     await nextFrame();
     expect(body.hasAttribute('data-empty')).toBe(true);
+  });
+
+  it('S2 shows body text that arrives after the card moved to another parent', async () => {
+    cleanup();
+    const el = await mount('<ki-card><h3 slot="header">Storage</h3> </ki-card>');
+    const body = regionPart(el, 'body');
+    expect(body.hasAttribute('data-empty')).toBe(true);
+
+    // A reordered card keeps its slotted nodes, so no slotchange announces
+    // the text written into them afterwards.
+    moveToNewParent(el);
+    const textNode = [...el.childNodes].find((node) => node.nodeType === Node.TEXT_NODE);
+    if (textNode === undefined) {
+      throw new Error('missing body text node');
+    }
+    textNode.textContent = 'Storage is almost full';
+
+    await expect.poll(() => body.hasAttribute('data-empty')).toBe(false);
+    expect(getComputedStyle(body).display).not.toBe('none');
+  });
+
+  it('S2 shows body text written while the card was out of the document', async () => {
+    cleanup();
+    const el = await mount('<ki-card><h3 slot="header">Storage</h3> </ki-card>');
+    const body = regionPart(el, 'body');
+    expect(body.hasAttribute('data-empty')).toBe(true);
+
+    el.remove();
+    const textNode = [...el.childNodes].find((node) => node.nodeType === Node.TEXT_NODE);
+    if (textNode === undefined) {
+      throw new Error('missing body text node');
+    }
+    textNode.textContent = 'Storage is almost full';
+    document.body.append(el);
+
+    await expect.poll(() => body.hasAttribute('data-empty')).toBe(false);
   });
 
   it('S3 renders an unrecognized variant attribute with the default card appearance', async () => {

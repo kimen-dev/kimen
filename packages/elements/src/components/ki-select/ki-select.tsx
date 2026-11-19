@@ -13,6 +13,7 @@ import {
   booleanFromAttributePresence,
   observeAttributePresence,
 } from '../../utils/boolean-presence';
+import { childDisabled, childValue } from '../../utils/child-props';
 import {
   FieldMessage,
   fieldDescribedBy,
@@ -170,6 +171,18 @@ export class KiSelect {
   // then emptied" (clear the value, per FR-004: the value reads '' once the
   // selected option disappears).
   private sawOptions = false;
+  // A value requested by attribute, property or reset that no option carries
+  // yet. `value` reads '' meanwhile (FR-004), and the request is honoured when
+  // an option carrying it arrives, loads or takes that value: frameworks and
+  // streamed generated UI set the value before the options exist, and nobody
+  // sets it again. Another value, the user's choice or a form reset replaces
+  // it. Writing '' does not: `value` already reads '' while it waits, so that
+  // write is no change and reaches no watcher (ki-radio-group shares the
+  // limit).
+  private pendingValue = '';
+  // True while `value` is written to project the selection, so the watch does
+  // not take the projection for a new request and drop the pending one.
+  private projecting = false;
   // Typeahead (APG select-only): the string being typed and when its last
   // character arrived; a pause longer than TYPEAHEAD_RESET_MS starts a new one.
   private typed = '';
@@ -272,6 +285,12 @@ export class KiSelect {
     // Removal from the document hides a popover; a select moved while open
     // shows its list again where it lands.
     this.syncPopover();
+    // disconnectedCallback released the options observer, and the options may
+    // have changed while the select was out of the document: a select that is
+    // moved (a keyed reorder, a drag between lists) connects again without
+    // loading again. On the first connection the slot is not rendered yet:
+    // componentDidLoad reads the options.
+    this.reconcileRoster();
   }
 
   componentWillLoad(): void {
@@ -302,6 +321,9 @@ export class KiSelect {
 
   @Watch('value')
   protected valueChanged(nextValue: string): void {
+    if (this.projecting) {
+      return;
+    }
     this.selectByValue(nextValue);
   }
 
@@ -424,7 +446,11 @@ export class KiSelect {
 
   private reconcileRoster(): void {
     const slot = this.host.shadowRoot?.querySelector('slot');
-    const assigned = slot?.assignedElements({ flatten: true }) ?? [];
+    if (!slot) {
+      // Nothing rendered yet: there are no options to read.
+      return;
+    }
+    const assigned = slot.assignedElements({ flatten: true });
     const options = assigned.filter(
       (element) => element.localName === 'ki-option',
     ) as HTMLElement[];
@@ -449,8 +475,8 @@ export class KiSelect {
         element,
         id: `option-${String(index)}`,
         label,
-        value: optionValue(element.getAttribute('value'), text),
-        disabled: element.hasAttribute('disabled'),
+        value: optionValue(childValue(element), text),
+        disabled: childDisabled(element),
       };
     });
 
@@ -469,10 +495,22 @@ export class KiSelect {
         this.value = current.value;
         this.syncValidity();
       }
-    } else if (this.value !== '' || this.host.hasAttribute('value')) {
+    } else if (this.pendingValue !== '' || this.value !== '' || this.host.hasAttribute('value')) {
+      // In order: a request still waiting for its option; the value itself,
+      // set before any option could carry it or left by an option that has
+      // just gone and that another one may carry too; the declared attribute.
       const declaredValue =
-        this.value !== '' ? this.value : (this.host.getAttribute('value') ?? '');
+        this.pendingValue !== ''
+          ? this.pendingValue
+          : this.value !== ''
+            ? this.value
+            : (this.host.getAttribute('value') ?? '');
       this.selectByValue(declaredValue);
+      if (selectedElement) {
+        // The selected option left and no other carries its value: the
+        // selection is gone, not waiting to come back (FR-004).
+        this.pendingValue = '';
+      }
     } else {
       // No declared default: an option carrying value="" must NOT be
       // auto-selected — show the placeholder and submit nothing (S2/S24,
@@ -490,6 +528,7 @@ export class KiSelect {
   private selectByValue(value: string): void {
     const selected = resolveSelection(this.roster, value);
     this.selectedIndex = selected ? this.roster.indexOf(selected) : -1;
+    this.pendingValue = selected ? '' : value;
     // Clear an unmatched value once options exist OR ever existed. A roster
     // that is empty and never had options means the children have not upgraded
     // yet (a framework assigning the `value` property before its <ki-option>s
@@ -497,7 +536,9 @@ export class KiSelect {
     // arrive. But once options have appeared, an unmatched value clears to ''
     // even if the roster was later emptied — the selection is gone (FR-004).
     if (selected || this.roster.length > 0 || this.sawOptions) {
+      this.projecting = true;
       this.value = selected?.value ?? '';
+      this.projecting = false;
     }
     this.syncValidity();
   }
@@ -520,6 +561,8 @@ export class KiSelect {
       return;
     }
     this.selectedIndex = index;
+    // The user's choice settles any request that was still waiting.
+    this.pendingValue = '';
     this.value = option.value;
     this.userInvalid = false;
     this.syncValidity();

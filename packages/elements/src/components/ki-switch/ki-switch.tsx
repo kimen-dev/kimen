@@ -184,6 +184,21 @@ export class KiSwitch {
     this.syncValidity();
   }
 
+  connectedCallback(): void {
+    // Boolean presence semantics must survive hydration. Stencil natively adopts
+    // `checked=""`/removal, but parses a present-but-falsy `checked="false"` set
+    // after load to `false`; restore presence semantics for that case. Armed on
+    // every connection: disconnectedCallback releases the observer, and a
+    // switch that is moved in the document connects again without loading
+    // again.
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = observeAttributePresence(
+      this.host,
+      ['checked', 'disabled'],
+      this.handlePresentAttribute,
+    );
+  }
+
   componentWillLoad(): void {
     this.checked = checkedFromMarkup(this.host.hasAttribute('checked'), this.checked);
     this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
@@ -192,18 +207,11 @@ export class KiSwitch {
   componentDidLoad(): void {
     this.syncInput();
     this.syncFormValue();
-    // Boolean presence semantics must survive hydration. Stencil natively adopts
-    // `checked=""`/removal, but parses a present-but-falsy `checked="false"` set
-    // after load to `false`; restore presence semantics for that case.
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      ['checked', 'disabled'],
-      this.handlePresentAttribute,
-    );
   }
 
   disconnectedCallback(): void {
     this.presenceObserver?.disconnect();
+    this.presenceObserver = undefined;
   }
 
   // Correct ONLY the case Stencil gets wrong: a present-but-falsy attribute set

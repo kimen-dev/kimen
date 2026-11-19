@@ -57,16 +57,25 @@ export class KiListItem {
     }
   }
 
-  componentDidLoad(): void {
-    this.syncSlotState();
+  connectedCallback(): void {
     // slotchange does not fire when an already-assigned text node's content
     // changes (e.g. secondary text populated after async load), so a
     // characterData observer re-checks the slots on those mutations (codex
-    // review).
+    // review). Armed on every connection: disconnectedCallback releases the
+    // observer, and an item that is moved in the document (a reordered row)
+    // connects again without loading again.
+    this.observer?.disconnect();
     this.observer = new MutationObserver(() => {
       this.syncSlotState();
     });
     this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
+    // Content written while the item was out of the document. On the first
+    // connection the slots are not rendered yet: componentDidLoad syncs.
+    this.syncSlotState();
+  }
+
+  componentDidLoad(): void {
+    this.syncSlotState();
   }
 
   disconnectedCallback(): void {
