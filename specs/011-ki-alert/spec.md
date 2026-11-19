@@ -54,10 +54,139 @@ themes — and future ones — style the same contract from their own color role
 |---|---|---|---|
 | Component existence | **Corrected 2026-07-25**: MarsUI ships a dedicated alert master — page `Alerts` `12074:6200` → `Alert` `12074:6202` (5 variants, 10 properties). Nor is it the file's only message artifact: `Info_note` `12126:4670` (page `Info Notes` `12126:4668`, 15 variants) and the transient `Toast` `12071:5771` (page `Toasts` `12051:292`) are separate masters, and only the last of the three maps to the future ki-toast. The 2026-07-08 full-file sweep that reported no alert frame is a false negative (correction note above) | No alert in M3: the snackbar is transient with a single action (it maps to the future ki-toast); the banner was an M2 component and did not carry into M3 | A persistent inline message; each theme styles it from its own container/on-color roles through `--ki-alert-*` tokens — no 1:1 M3 component is required, and the loose mapping is documented in the catalog's when-to-use. **[the onmars side of this abstraction was derived without the master — re-derive against `Alert 12074:6202`]** |
 | Semantic intent | Tone ramps already exist in the extracted onmars token vocabulary: success, danger, info and warning alongside neutral (001 extraction) | Error color roles plus container/on-container pairs; no per-tone message component | `tone`: five values — `neutral` (default), `success`, `danger`, `info`, `warning` — the charter's full feedback vocabulary, token-resolved |
-| Content anatomy | **Corrected 2026-07-25**: the alert anatomy lives in `Alert 12074:6202` (5 variants, 10 properties) and has not been extracted. What this row records is the anatomy of the separate `Toast` `12071:5771` — leading tone icon + heading + supporting text + action buttons + close — which stays valid for the future ki-toast but was never evidence about this component | Snackbar anatomy (label + optional action + optional close icon) is transient and not 1:1 | Optional `heading` attribute + default slot for the message + opt-in dismiss control. **[rests on a refuted premise: derived without `Alert 12074:6202` — needs re-derivation]** |
+| Content anatomy | **Corrected 2026-07-25**: the alert anatomy lives in `Alert 12074:6202` (5 variants, 10 properties) and has not been extracted. What this row records is the anatomy of the separate `Toast` `12071:5771` — leading tone icon + heading + supporting text + action buttons + close — which stays valid for the future ki-toast but was never evidence about this component | Snackbar anatomy (label + optional action + optional close icon) is transient and not 1:1 | Optional `heading` attribute + default slot for the message + opt-in dismiss control. **[rests on a refuted premise: derived without `Alert 12074:6202` — needs re-derivation]** Re-derived in Amendment A1 (proposed 2026-11-19). |
 | Dismissal | **Corrected 2026-07-25**: the alert master `Alert 12074:6202` exists and its dismissal affordances are unextracted. The visible countdown and close control recorded here belong to the separate `Toast` `12071:5771` — evidence about toast behavior, which never spoke to the alert either way | Snackbar dismisses on a timer or via its close affordance | Explicit user dismissal only, opt-in via `dismissible`, notified as `ki-dismiss`; no auto-timeout (that is toast behavior). **[the opt-in half rests on a refuted premise — check the master's 10 properties for a close/dismissible axis before it stands]** |
 | Surface style (filled / outlined) | onmars surfaces s0–s5 exist in the token vocabulary; **corrected 2026-07-25** — there IS a frame to pin a surface to, `Alert 12074:6202`, whose 5 variants and 10 properties are unextracted | Container vs outlined surfaces are color-role decisions | No `variant`: filled-vs-outlined is a theme decision expressed in component tokens (002 precedent), never a prop. **[premise refuted — whether the master exposes an emphasis axis must be checked before this stands]** |
 | Size | onmars metrics xs–xl exist as tokens; **corrected 2026-07-25** — `Alert 12074:6202` exists, so "no alert scale exists" was never verified: whether its 10 properties carry a size axis is unknown until extraction | No equivalent to scale against | No `size` in v1; alert metrics are per-theme component tokens. **[rests on a refuted premise — needs re-derivation]** |
+
+## Amendment A1: the Alert master anatomy *(proposed 2026-11-19)*
+
+**Status**: Proposed. The founder approves or changes the intent in the PR
+before anyone implements it. Contract only: no component, token or test
+change ships with this amendment.
+
+**Merge sequencing**: S20–S34 have no traced test yet, so
+`check-traceability.sh` is red for this spec on this branch. Like the
+spec-only contracts 019–030 (see the merge-sequencing assumption in
+`027-runtime-catalog`), the amendment reaches `main` only together with the
+implementation that traces it.
+
+**Path**: in place, through the Art. II amendment path: one component, so
+new S-IDs are appended (S20–S34) and none is retired, as in 030 and in
+002 S14. Specs 042–045 opened folders of their own because each one spans
+many components.
+
+### Master facts against what ships
+
+Verified from the founder's `.fig` export (set `12074:6202`,
+`State=default` `12074:6203`, Regular radius mode, Default spacing).
+
+| Layer | `Alert` master | `ki-alert` today | Delta |
+|---|---|---|---|
+| Variants | `State`: default, info, success, warning, danger | `tone`: neutral (default), info, success, warning, danger | None. `State` is the tone axis; Figma `default` is Kimen `neutral` |
+| Shell | padding `Space/xl` 12px, radius `Radius/big-component/lg` 28px, background blur 24 (12px in CSS: `ki.blur.24`, served as `--ki-effect-component-backdrop-blur`), vertical stack gap 12px | absent: one box | New outer layer |
+| Card (`List_wrap`) | padding 12px, gap 12px, radius `Radius/big-component/xs` 16px, elevation e5 (0 56 56 −28, 0 32 32 −16, 0 20 20 −12, 0 3 3 −1.5, 0 1 1 −0.5; `--ki-elevation-e5` already matches) | the single box: padding 12px, gap 12px, radius `component.md` 10px, no elevation | Radius 10 → 16px, gains e5, becomes the inner layer |
+| `Feature-icon` | 32px, round (radius 1000), primary-light, size xs | none | New `icon` slot in a round frame |
+| `Text_wrap` | gap 4px; heading body-2 15/24; message 13/20 | matches | None |
+| `CTAs` | row gap 12px: start group (tertiary sm button + secondary sm link, gap 12px), end group (secondary sm button + primary-light sm button, gap 8px); 32px buttons | none | New `actions` slot |
+| Dismiss | tertiary xs icon button, 24px, round | matches | None |
+
+### Proposed decisions
+
+- **A1-D1 Anatomy.** The shell holds the card and, below it, the actions
+  row. The card holds the icon frame, the text (heading and message) and the
+  dismiss control, which keeps today's place trailing the text. The `alert`
+  part stays the outermost element, now the shell; `card`, `icon` and
+  `actions` are new parts. Every dimension, fill, blur and elevation comes
+  from tokens, so a theme can flatten the alert into one box (S20, S31).
+- **A1-D2 `icon` slot.** Optional and always presentational, like the
+  default slot of `ki-icon-button`: hidden from assistive technology, never
+  part of the announcement or of any accessible name. Meaning belongs in the
+  heading and the message. With nothing slotted the frame is not rendered
+  and takes no space (S21, S22, S29).
+- **A1-D3 `actions` slot.** Optional. The row sits after the card, inside
+  the shell, outside the live region, in source order. The alert never
+  activates or interprets what is slotted there: an action does not dismiss
+  the alert, and when the application dismisses it from an action by setting
+  `dismissed`, no `ki-dismiss` fires, as for any programmatic change today.
+  With nothing slotted the row is not rendered and takes no space (S23–S25,
+  S28, S30).
+- **A1-D4 Focus order.** Tab order follows the visual reading order: the
+  dismiss control (in the card) before the actions (below the card), so DOM
+  order and visual order agree (S27).
+- **A1-D5 Focus hand-off.** FR-013 extends to any focus inside the alert:
+  when the alert stops displaying while a slotted action holds focus, focus
+  moves exactly as it does from the dismiss control (S28).
+- **A1-D6 Tones.** All five tones share one anatomy; the colors of each
+  layer come from the tone's tokens; live-region urgency stays as FR-005
+  sets it (S26).
+- **A1-D7 Preferences.** The layout follows the writing direction (S32).
+  Forced colors keep the outer edge and the icon (S33). Reduced transparency
+  (044) drops the shell blur and makes shell and card opaque while the card
+  keeps its elevation, as 044 D2 does for floating surfaces (S34). Compact
+  density (045) scales shell and card padding and gaps like every other
+  container (045 D3).
+
+### Open questions for the founder
+
+1. **Which layers carry the tone?** Only `State=default` was verified. Does
+   the tone color the shell fill, the card fill, the icon frame, or a mix?
+   *Recommended*: extract the fills of the four tone variants before writing
+   tokens. Until then the contract stays layer-agnostic: S26 asserts only
+   that the colors come from the tone's tokens.
+2. **Is the icon always decorative?** *Recommended*: yes (A1-D2, encoded in
+   S29). Alternative: announce an icon that carries its own accessible name
+   at the start of the live region; S29 changes before approval.
+3. **May actions dismiss the alert?** *Recommended*: not by themselves. The
+   application dismisses by setting `dismissed`, focus is handed on (S28) and
+   `ki-dismiss` keeps meaning "the person used the dismiss control".
+   Alternatives: fire `ki-dismiss` for application dismissals with a reason
+   in `detail`, as `ki-close` reports one in `ki-dialog` (an additive
+   payload); or a declarative "this action dismisses" marker (rejected under
+   Art. VII unless a use case demands it).
+4. **Dismiss before or after the actions in Tab order?** *Recommended*:
+   before (A1-D4, S27), assuming the master keeps the dismiss control in the
+   card; its position is not among the verified facts. Alternative: actions
+   first, so the person reaches the response the alert asks for first. That
+   puts the dismiss control after the actions in the DOM while it paints in
+   the card's corner, a visual and DOM order mismatch (WCAG technique C27).
+5. **Elevation and blur of an inline alert in the flow.** The e5 stack casts
+   its deepest shadow up to 84px below the card (72px beyond the shell),
+   over the content that follows, and any ancestor that clips its overflow
+   cuts it. The shell blur only shows over an image or a gradient and costs
+   a compositing layer per alert. *Recommended*: ship the master's values
+   through tokens (S20) so a page or theme can lower them. Alternative: a
+   lower default step (e2 or e3) and no shell blur for alerts in the flow.
+6. **One `actions` slot or two?** The master splits the row into a start
+   group (gap 12px) and an end group (gap 8px). *Recommended*: one slot now,
+   actions in source order from the inline start (Art. VII); authors who need
+   the split wrap their own groups, and an `actions-end` slot can come later
+   as an additive change. The alert does not resize what is slotted: the
+   guidance asks for `size="sm"` buttons, as in the master.
+7. **Does material3 keep both layers?** *Recommended*: flatten it to one box
+   through its own token overrides (S31 proves the mechanism): Material 3
+   has neither glass nor a card nested inside a message, and its 12dp
+   container (S13) stays.
+8. **Names.** `icon` and `actions` as briefed, although `ki-button`,
+   `ki-input` and `ki-list-item` call their leading slot `start`, and
+   `ki-card` and `ki-dialog` call their action region `footer`.
+   *Recommended*: keep `icon` and `actions`: they name the two roles of the
+   alert, and `start` would invite other content into a 32px round frame.
+   The `alert` part stays on the outermost element (A1-D1); the alternative
+   moves it to the card, where today's padding, gap and radius tokens point.
+
+### Edge cases
+
+- A slot that holds only whitespace counts as empty: no frame, no row.
+- Adding or removing an icon or actions after the alert appears announces
+  nothing; neither one is inside the live region.
+- Actions are not announced. An author whose action matters to the message
+  says so in the message ("Choose Stay signed in to keep working").
+- An alert whose response is mandatory is a decision, not a message: it
+  belongs in `ki-dialog`, never in `actions`.
+- A dismissed alert hides its actions with everything else (FR-003).
+- Long action labels wrap the row onto another line; the row never
+  overflows the shell.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -168,6 +297,23 @@ neutral rendering.
 
 1. **Given** an alert with an unrecognized tone value, **When** the page
    renders, **Then** the alert renders with the neutral tone appearance.
+
+---
+
+### User Story 5 - Recognize the message and respond to it in place (Priority: P2, Amendment A1)
+
+A person sees the alert in the MarsUI anatomy: an elevated card inside a
+glass shell, a leading icon that marks the kind of message at a glance, and
+the responses the message offers ("Stay signed in", "Retry") right below it.
+They respond with pointer or keyboard without leaving the alert; assistive
+technology announces the message alone, and the icon and the actions never
+pad an alert that has neither.
+
+**Why this priority**: it brings the component to its design master and
+adds the alert's one missing ability, responding in place; it builds on the
+message and dismissal behavior above.
+
+**Independent Test**: S20–S34.
 
 ### Edge Cases
 
@@ -338,17 +484,131 @@ Feature: Alert
     Given a right-to-left document with a dismissible alert
     When the page renders
     Then the message leads and the dismiss control trails the writing direction
+
+  # Amendment A1 (proposed 2026-11-19): the Alert master anatomy, icon and actions
+  # Family: core behavior
+  # S20
+  Scenario: The alert holds its content in an elevated card inside a padded shell
+    Given an onmars page with an info alert "Backup completed"
+    When the page renders
+    Then the alert's shell has 12px of padding and 28px corners around its card
+    And the card has 12px of padding, 16px corners and the level-5 elevation
+
+  # S21
+  Scenario: A slotted icon leads the text in a round 32px frame
+    Given an onmars page with an alert holding an icon, the heading "Backup completed" and a message
+    When the page renders
+    Then the icon sits before the heading in a round 32px frame
+    And the heading starts 12px after the icon
+
+  # S22
+  Scenario: An alert without an icon reserves no space for one
+    Given an onmars page with an alert holding the heading "Backup completed" and no icon
+    When the page renders
+    Then the heading starts 12px from the card's leading edge
+
+  # S23
+  Scenario: Slotted actions sit in a row below the card
+    Given an onmars page with an alert "Your session expires in one minute" holding the actions "Sign out" and "Stay signed in"
+    When the page renders
+    Then "Sign out" and "Stay signed in" are displayed in that order in one row inside the shell
+    And the row sits 12px below the card
+
+  # S24
+  Scenario: An alert without actions reserves no space for them
+    Given an onmars page with an alert "Profile saved" holding no actions
+    When the page renders
+    Then the alert is exactly as tall as its card plus the shell's 12px of padding above and below
+
+  # S25
+  Scenario: Activating an action leaves the alert in place
+    Given a dismissible alert holding the action "Retry"
+    When the user activates the "Retry" action
+    Then the alert is still displayed
+    And the page observes no ki-dismiss event
+
+  # S26
+  Scenario Outline: Every tone keeps the same anatomy
+    Given an onmars page with a <tone> alert holding an icon, the heading "Heads up", a message and the action "Review"
+    When the page renders
+    Then the shell, the card, the icon and the actions measure as they do under the neutral tone
+    And the alert's colors resolve from the <tone> tone's tokens
+
+    Examples:
+      | tone    |
+      | info    |
+      | success |
+      | warning |
+      | danger  |
+
+  # Family: keyboard path
+  # S27
+  Scenario: Tab reaches the dismiss control and then the actions, in reading order
+    Given a page whose first interactive element is a dismissible alert holding the actions "Sign out" and "Stay signed in"
+    When the user tabs through the alert
+    Then focus visits the dismiss control, "Sign out" and "Stay signed in", in that order
+
+  # S28
+  Scenario: Dismissing the alert from a focused action hands focus to the next element
+    Given an alert whose focused action "Undo" makes the application dismiss it, placed before a button labeled "Save"
+    When the user activates "Undo" from the keyboard
+    Then the alert is no longer displayed
+    And focus lands on the "Save" button
+    And the page observes no ki-dismiss event
+
+  # Family: assistive-tech outcome
+  # S29
+  Scenario: The icon is never part of the announcement
+    Given a page where a payment fails
+    When a danger alert appears holding an icon labeled "Error", the heading "Payment failed" and the message "Your card was declined"
+    Then the alert's live region exposes only "Payment failed" and "Your card was declined"
+    And the icon is hidden from assistive technology
+
+  # S30
+  Scenario: Actions are reachable buttons outside the announcement
+    Given a page where the session is about to expire
+    When a warning alert "Your session expires in one minute" appears holding the action "Stay signed in"
+    Then the alert's live region exposes only "Your session expires in one minute"
+    And a button named "Stay signed in" is exposed after the live region
+
+  # Family: theming
+  # S31
+  Scenario: A theme flattens the shell and the card into one box through tokens alone
+    Given a page whose theme gives the alert shell no padding, fill or blur and the card no elevation
+    When the page renders
+    Then the alert paints as one box with the card's corners and no frame around it
+
+  # S32
+  Scenario: Icon, dismiss control and actions follow a right-to-left document
+    Given a right-to-left document with a dismissible alert holding an icon and the actions "Sign out" and "Stay signed in"
+    When the page renders
+    Then the icon sits at the right edge of the card and the dismiss control at its left edge
+    And "Sign out" is the rightmost action
+
+  # S33
+  Scenario: Under forced colors the alert keeps its edge and a visible icon
+    Given forced colors are active and an info alert holding an icon drawn in the current text color and the action "Review"
+    When the page renders
+    Then the alert's outer edge is drawn in the forced text color
+    And the icon is painted in the forced text color
+
+  # S34
+  Scenario: Reduced transparency makes the shell opaque and keeps the card raised
+    Given an onmars dark page with an info alert holding an icon
+    When the page renders under a "reduce" transparency system preference
+    Then the shell and the card paint opaque surfaces without blurring what is behind them
+    And the card keeps its elevation
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S19 | |
-| Keyboard path | S6, S7, S8, S16 | |
-| Assistive-tech outcome | S9, S10, S11, S12, S17, S18 | |
+| Core behavior | S1, S2, S3, S4, S5, S19, S20, S21, S22, S23, S24, S25, S26 | |
+| Keyboard path | S6, S7, S8, S16, S27, S28 | |
+| Assistive-tech outcome | S9, S10, S11, S12, S17, S18, S29, S30 | |
 | Form participation | | N/A — ki-alert is a feedback message, not a form control: it holds no user-entered value, submits nothing and is not form-associated (the charter's form-associated set for this batch is input, textarea, select, checkbox, radio-group, switch). |
-| Theming | S13, S14, S15 | |
+| Theming | S13, S14, S15, S31, S32, S33, S34 | |
 
 ## Requirements *(mandatory)*
 
@@ -415,6 +675,47 @@ Feature: Alert
   to the previous focusable element; when the document offers neither, to
   the document body.
 
+Amendment A1 (proposed 2026-11-19):
+
+- **FR-014** *(amends FR-002, FR-009)*: The alert MUST render a shell that
+  holds a card and, below it, the actions row; the card holds the icon
+  frame, the heading and message, and the dismiss control. The `alert` part
+  names the shell; `card`, `icon` and `actions` are new parts.
+- **FR-015** *(amends FR-008)*: Every dimension, fill, blur and elevation of
+  the shell, the card, the icon frame and the actions row MUST resolve from
+  `--ki-alert-*` tokens, so a theme flattens the alert into one box without
+  markup changes. The onmars values are the master's (Amendment A1 table).
+  No existing `--ki-alert-*` token is removed or renamed.
+- **FR-016**: An optional `icon` slot MUST render its content in a round
+  frame that leads the text. The content is presentational: hidden from
+  assistive technology, never part of the live region or of any accessible
+  name. With nothing slotted, the frame MUST NOT render or take space.
+- **FR-017** *(amends FR-005)*: An optional `actions` slot MUST render its
+  content in source order in a row after the card, inside the shell and
+  outside the live region. The alert MUST NOT activate, intercept or
+  interpret that content. With nothing slotted, the row MUST NOT render or
+  take space, gap included.
+- **FR-018** *(amends FR-006)*: Tab order MUST follow the visual reading
+  order: the dismiss control, then the actions in source order. The alert
+  itself stays unfocusable.
+- **FR-019** *(amends FR-013)*: When the alert stops displaying while focus
+  is anywhere inside it, on the dismiss control or on a slotted action, by
+  user dismissal or by the application setting `dismissed`, focus MUST move
+  as FR-013 describes. `ki-dismiss` still fires only when the person
+  activates the dismiss control.
+- **FR-020** *(amends FR-010, FR-011)*: The icon MUST sit at the inline
+  start, the dismiss control at the inline end, and the actions MUST run
+  from the inline start. Under forced colors the outer edge MUST be drawn in
+  the forced text color and the icon MUST stay visible. Under reduced
+  transparency (044) the shell MUST drop its blur and the shell and card
+  MUST paint opaque while the card keeps its elevation. Under compact
+  density (045) shell and card padding and gaps MUST scale like any other
+  container.
+- **FR-021** *(amends FR-012)*: The public contract MUST say when to use the
+  two slots and when not: the icon never carries meaning the text lacks;
+  actions are responses to this message, slotted as `size="sm"` buttons, and
+  a response the person cannot skip belongs in `ki-dialog`.
+
 ## Constitutional Surface *(mandatory)*
 
 - **Public API delta** (Art. IX): new element `ki-alert` (attributes:
@@ -462,6 +763,31 @@ Feature: Alert
 - **Guardrail/security boundary** (Art. VIII): none — no spec rendering,
   declared actions or adapter surface touched.
 
+Amendment A1 (proposed 2026-11-19):
+
+- **Public API delta** (Art. IX): additive. Slots `icon` and `actions`;
+  parts `card`, `icon`, `actions`; new component tokens for the shell
+  (padding, gap, radius, fill, blur), the card (fill, elevation), the icon
+  frame (size, radius, fill, ink) and the actions row (gap), final names
+  fixed at implementation. The existing structural tokens keep describing
+  the card, whose values their descriptions already cite; `--ki-alert-radius`
+  changes value from 10px to 16px. Declared in `changes/api/` with the
+  implementation.
+- **Bundle budget** (Art. IV): two slots, two wrappers and their styles; no
+  runtime dependency.
+- **Accessibility** (Art. V): the APG Alert pattern is unchanged; content
+  outside the live region is new. A manual screen-reader pass, documented in
+  the implementation PR, checks that announcements carry only the heading
+  and the message (S29, S30). The actions are the author's own controls; no
+  new interaction pattern.
+- **Tokens** (Art. VI): component layer only, onmars and material3; the
+  shell and card reuse the semantic `--ki-elevation-e5` and
+  `--ki-effect-component-backdrop-blur`. No semantic-layer delta expected.
+- **Catalog/agent legibility** (Art. I): the generated catalog and
+  `llms.txt` gain the two slots and the guidance of FR-021.
+- **Guardrail/security boundary** (Art. VIII): none; slotted children pass
+  the renderer's existing slot checks.
+
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
@@ -486,6 +812,13 @@ Feature: Alert
   (gzipped) and within the declared budget gate.
 - **SC-007**: an alert with an unknown tone renders as neutral in 100% of
   cases; rendering never breaks on malformed input.
+- **SC-008** *(A1)*: across tone × theme × scheme, every alert renders the
+  shell and card anatomy from tokens alone, and an absent icon or actions
+  slot adds 0px.
+- **SC-009** *(A1)*: in 100% of tones, the announcement of an alert holding
+  an icon and actions contains only its heading and message.
+- **SC-010** *(A1)*: zero accessibility violations across tone × {icon,
+  actions, both, neither} × theme × scheme in automated auditing.
 
 ## Assumptions
 
@@ -524,7 +857,9 @@ Feature: Alert
   content is unextracted, so this exclusion rests on a refuted premise and
   needs re-derivation.** If that anatomy is ever inherited by the persistent
   alert it lands as a theme token or an additive slot — per the recorded
-  assumption this is additive MINOR post-v1.
+  assumption this is additive MINOR post-v1. **Superseded by Amendment A1
+  (proposed 2026-11-19): the master carries a leading `Feature-icon` and a
+  `CTAs` row, and A1 adds them as the `icon` and `actions` slots.**
 - No auto-dismiss timer: time-based disappearance is toast behavior and
   explicitly out of scope (charter: M3 snackbar maps to the future
   ki-toast).

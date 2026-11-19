@@ -134,3 +134,117 @@ Feature: Alert
     Given a right-to-left document with a dismissible alert
     When the page renders
     Then the message leads and the dismiss control trails the writing direction
+
+  # Amendment A1 (proposed 2026-11-19): the Alert master anatomy, icon and actions
+  # Family: core behavior
+  # S20
+  Scenario: The alert holds its content in an elevated card inside a padded shell
+    Given an onmars page with an info alert "Backup completed"
+    When the page renders
+    Then the alert's shell has 12px of padding and 28px corners around its card
+    And the card has 12px of padding, 16px corners and the level-5 elevation
+
+  # S21
+  Scenario: A slotted icon leads the text in a round 32px frame
+    Given an onmars page with an alert holding an icon, the heading "Backup completed" and a message
+    When the page renders
+    Then the icon sits before the heading in a round 32px frame
+    And the heading starts 12px after the icon
+
+  # S22
+  Scenario: An alert without an icon reserves no space for one
+    Given an onmars page with an alert holding the heading "Backup completed" and no icon
+    When the page renders
+    Then the heading starts 12px from the card's leading edge
+
+  # S23
+  Scenario: Slotted actions sit in a row below the card
+    Given an onmars page with an alert "Your session expires in one minute" holding the actions "Sign out" and "Stay signed in"
+    When the page renders
+    Then "Sign out" and "Stay signed in" are displayed in that order in one row inside the shell
+    And the row sits 12px below the card
+
+  # S24
+  Scenario: An alert without actions reserves no space for them
+    Given an onmars page with an alert "Profile saved" holding no actions
+    When the page renders
+    Then the alert is exactly as tall as its card plus the shell's 12px of padding above and below
+
+  # S25
+  Scenario: Activating an action leaves the alert in place
+    Given a dismissible alert holding the action "Retry"
+    When the user activates the "Retry" action
+    Then the alert is still displayed
+    And the page observes no ki-dismiss event
+
+  # S26
+  Scenario Outline: Every tone keeps the same anatomy
+    Given an onmars page with a <tone> alert holding an icon, the heading "Heads up", a message and the action "Review"
+    When the page renders
+    Then the shell, the card, the icon and the actions measure as they do under the neutral tone
+    And the alert's colors resolve from the <tone> tone's tokens
+
+    Examples:
+      | tone    |
+      | info    |
+      | success |
+      | warning |
+      | danger  |
+
+  # Family: keyboard path
+  # S27
+  Scenario: Tab reaches the dismiss control and then the actions, in reading order
+    Given a page whose first interactive element is a dismissible alert holding the actions "Sign out" and "Stay signed in"
+    When the user tabs through the alert
+    Then focus visits the dismiss control, "Sign out" and "Stay signed in", in that order
+
+  # S28
+  Scenario: Dismissing the alert from a focused action hands focus to the next element
+    Given an alert whose focused action "Undo" makes the application dismiss it, placed before a button labeled "Save"
+    When the user activates "Undo" from the keyboard
+    Then the alert is no longer displayed
+    And focus lands on the "Save" button
+    And the page observes no ki-dismiss event
+
+  # Family: assistive-tech outcome
+  # S29
+  Scenario: The icon is never part of the announcement
+    Given a page where a payment fails
+    When a danger alert appears holding an icon labeled "Error", the heading "Payment failed" and the message "Your card was declined"
+    Then the alert's live region exposes only "Payment failed" and "Your card was declined"
+    And the icon is hidden from assistive technology
+
+  # S30
+  Scenario: Actions are reachable buttons outside the announcement
+    Given a page where the session is about to expire
+    When a warning alert "Your session expires in one minute" appears holding the action "Stay signed in"
+    Then the alert's live region exposes only "Your session expires in one minute"
+    And a button named "Stay signed in" is exposed after the live region
+
+  # Family: theming
+  # S31
+  Scenario: A theme flattens the shell and the card into one box through tokens alone
+    Given a page whose theme gives the alert shell no padding, fill or blur and the card no elevation
+    When the page renders
+    Then the alert paints as one box with the card's corners and no frame around it
+
+  # S32
+  Scenario: Icon, dismiss control and actions follow a right-to-left document
+    Given a right-to-left document with a dismissible alert holding an icon and the actions "Sign out" and "Stay signed in"
+    When the page renders
+    Then the icon sits at the right edge of the card and the dismiss control at its left edge
+    And "Sign out" is the rightmost action
+
+  # S33
+  Scenario: Under forced colors the alert keeps its edge and a visible icon
+    Given forced colors are active and an info alert holding an icon drawn in the current text color and the action "Review"
+    When the page renders
+    Then the alert's outer edge is drawn in the forced text color
+    And the icon is painted in the forced text color
+
+  # S34
+  Scenario: Reduced transparency makes the shell opaque and keeps the card raised
+    Given an onmars dark page with an info alert holding an icon
+    When the page renders under a "reduce" transparency system preference
+    Then the shell and the card paint opaque surfaces without blurring what is behind them
+    And the card keeps its elevation
