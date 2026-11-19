@@ -61,8 +61,8 @@ overrides:
   # GHSA-3jxr-9vmj-r5cp, GHSA-mh99-v99m-4gvg and GHSA-rgw5-rvv9-x895. The
   # 1.x line carries no fix for the later ones, so both lines resolve to
   # 5.0.9. Then GHSA-6j4f-fj2g-mc7p, GHSA-qhr7-859c-m2p7 (High) and
-  # GHSA-q2hr-2g5m-vwhr, 5.0.9 → 5.0.12.
-  brace-expansion: 5.0.12
+  # GHSA-q2hr-2g5m-vwhr, 5.0.9 → 5.0.12; then 5.0.12 → 5.0.13.
+  brace-expansion: 5.0.13
   # GHSA-v2hh-gcrm-f6hx; then GHSA-5jgf-p345-68v8, GHSA-f65p-4m7j-42xc,
   # GHSA-fph4-wmhf-6fwf, GHSA-jqff-g426-hqxp, GHSA-qw65-cvwx-89v3 (High)
   # and five Medium/Low, 4.1.2 → 4.2.3.
@@ -105,7 +105,7 @@ overrides:
   # vitest, storybook and unplugin-stencil (all accept 8.x), 8.2.0 → 8.2.4.
   vite: 8.3.8
   # GHSA-2wm5-q62r-hmrv, via stylelint (^2.9.3), 2.9.3 → 2.9.4.
-  colord: 2.11.0
+  colord: 2.12.0
   # GHSA-rj75-hqrm-r3gf on both majors in the tree: postcss-nested wants
   # ^6.1.1, stylelint and @csstools want ^7.1.4.
   postcss-selector-parser@6: 6.1.6

@@ -53,8 +53,11 @@ jobs:
         with:
           # Renovate declares engines.node ^24.11.0 and .npmrc sets
           # engine-strict, so this pins the major the validator supports —
-          # not the one the rest of CI runs on.
-          node-version: 26
+          # not the one the rest of CI runs on. Renovate's own node bump moved
+          # it to 26 with every other workflow (#216) and the validator
+          # refused to start from then on; renovate.json now keeps this
+          # file's major out of those bumps.
+          node-version: 24
           # This job never installs workspace dependencies; the validator
           # arrives through npx. Left on, the cache step reads `packageManager`
           # from package.json and fails looking for a pnpm this job has no

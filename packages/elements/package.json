@@ -87,7 +87,7 @@
     }
   },
   "dependencies": {
-    "@stencil/core": "4.45.2"
+    "@stencil/core": "4.45.3"
   },
   "devDependencies": {
     "@kimen/tokens": "workspace:*",
@@ -95,7 +95,7 @@
     "@stencil/angular-output-target": "1.6.0",
     "@stencil/react-output-target": "1.8.1",
     "@stencil/storybook-plugin": "0.7.1",
-    "@stencil/vitest": "1.16.1",
+    "@stencil/vitest": "1.16.2",
     "@stencil/vue-output-target": "0.15.0",
     "@storybook/addon-a11y": "10.6.7",
     "@storybook/addon-docs": "10.6.7",
