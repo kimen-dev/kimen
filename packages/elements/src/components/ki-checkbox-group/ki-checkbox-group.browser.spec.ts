@@ -42,6 +42,17 @@ const groupRole = () => page.getByRole('group', { name: 'Regions' });
 const option = (name: string) => page.getByRole('checkbox', { name });
 const after = () => page.getByRole('button', { name: 'After Regions' });
 
+async function expectOptionFocus(name: string): Promise<void> {
+  const checkbox = option(name).element();
+  const root = checkbox.getRootNode();
+  // The document reports the host when focus is inside a checkbox's shadow root.
+  await expect
+    .poll(() => root instanceof ShadowRoot && root.activeElement === checkbox, {
+      message: `Expected ${name} to receive focus inside its shadow root`,
+    })
+    .toBe(true);
+}
+
 async function mount({
   attributes = '',
   choices = options,
@@ -61,10 +72,11 @@ async function mount({
     <ki-checkbox-group label="Regions" name="regions" ${attributes}>
       ${choices}
     </ki-checkbox-group>`;
+  // Explicit tab stops keep native buttons in the sequence on macOS WebKit.
   form.innerHTML = `
-    <button type="button">Before Regions</button>
+    <button type="button" tabindex="0">Before Regions</button>
     ${fieldset ? `<fieldset disabled>${groupMarkup}</fieldset>` : groupMarkup}
-    <button type="submit">After Regions</button>
+    <button type="submit" tabindex="0">After Regions</button>
   `;
   const group = form.querySelector<Group>('ki-checkbox-group');
   if (!group) throw new Error('Regions did not mount');
@@ -116,11 +128,11 @@ it('S2 tabs through enabled checkboxes in order and preserves selection', async 
   await mount({ initial: ['eu'] });
   page.getByRole('button', { name: 'Before Regions' }).element().focus();
   await userEvent.tab();
-  await expect.element(option('Europe')).toHaveFocus();
+  await expectOptionFocus('Europe');
 
   await userEvent.tab();
 
-  await expect.element(option('Americas')).toHaveFocus();
+  await expectOptionFocus('Americas');
   expect(option('Americas').element().matches(':focus-visible')).toBe(true);
   await expect.element(option('Europe')).toBeChecked();
   await expect.element(option('Americas')).not.toBeChecked();
@@ -196,7 +208,7 @@ it('S7 displays range overflow only after leaving the whole group', async () => 
   });
   option('Europe').element().focus();
   await userEvent.tab();
-  await expect.element(option('Americas')).toHaveFocus();
+  await expectOptionFocus('Americas');
   await expect.element(groupRole()).toHaveAccessibleDescription('Choose your regions');
 
   await userEvent.tab();
