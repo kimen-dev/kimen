@@ -1,6 +1,19 @@
 {
-  "barePage": { "keyboardPressed": true },
-  "pointer": { "hoverWitness": true },
+  "barePage": {
+    "keyboardPressed": true
+  },
+  "pointer": {
+    "hoverWitness": true
+  },
   "catalog": true,
-  "budgetGroup": { "members": ["ki-chip", "ki-chip-group"] }
+  "budgetGroup": {
+    "members": ["ki-chip", "ki-chip-group"]
+  },
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 19647,
+      "gzip": 5125,
+      "brotli": 4023
+    }
+  }
 }
