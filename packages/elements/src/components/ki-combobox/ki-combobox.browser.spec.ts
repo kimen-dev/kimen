@@ -129,13 +129,32 @@ it.each([
 );
 
 it('S6 preserves the query on the first Escape and clears it on the second', async () => {
-  const { input, combo } = await mount();
+  const { host, input, combo } = await mount();
   await combo.fill('An');
+  await expect.element(combo).toHaveAttribute('aria-expanded', 'true');
   await userEvent.keyboard('{Escape}');
   await expect.element(combo).toHaveAttribute('aria-expanded', 'false');
   expect(input.value).toBe('An');
+  expect(host.shadowRoot?.activeElement).toBe(input);
   await userEvent.keyboard('{Escape}');
   await expect.element(combo).toHaveValue('');
+});
+
+it('S6 clears a native edit when input and both Escape presses share one render', async () => {
+  const { input, combo } = await mount();
+  input.focus();
+  const pressEscape = () => {
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', cancelable: true }));
+  };
+
+  input.value = 'An';
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  pressEscape();
+  expect(input.value).toBe('An');
+  pressEscape();
+
+  await expect.element(combo).toHaveValue('');
+  await expect.element(combo).toHaveAttribute('aria-expanded', 'false');
 });
 
 it('S7 Backspace removes the last selection from an empty query', async () => {

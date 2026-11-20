@@ -459,7 +459,6 @@ export class KiCombobox {
         part="option"
         role="option"
         tabindex="-1"
-        aria-label={choice.label}
         aria-selected={String(isSelected)}
         aria-disabled={choice.disabled ? 'true' : undefined}
         aria-describedby={descriptionId}
@@ -470,6 +469,7 @@ export class KiCombobox {
       >
         {choice.start && choice.start.length > 0 ? (
           <span
+            aria-hidden="true"
             inert
             ref={(element) => {
               const startContent = choice.start;
@@ -490,7 +490,7 @@ export class KiCombobox {
               : choice.label}
           </span>
           {descriptionId && (
-            <span id={descriptionId} part="description">
+            <span id={descriptionId} part="description" aria-hidden="true">
               {choice.description}
             </span>
           )}
@@ -551,6 +551,8 @@ export class KiCombobox {
             part="input"
             ref={(element) => {
               this.input = element;
+              // Native edits can occur between renders with the same display value.
+              if (element && element.value !== display) element.value = display;
             }}
             type="text"
             role="combobox"
@@ -563,7 +565,6 @@ export class KiCombobox {
             aria-describedby={error ? 'error' : help ? 'help' : undefined}
             aria-invalid={error ? 'true' : undefined}
             disabled={this.unavailable}
-            value={display}
             placeholder={this.placeholder}
             onInput={(event) => {
               this.onInput(event);
