@@ -141,6 +141,17 @@ it('S5: returns to its original position when the page scrolls up', async () => 
   await expect.poll(() => Math.abs(toolbar.getBoundingClientRect().top - top)).toBeLessThan(0.5);
 });
 
+it('honors a hide-on-scroll property assigned immediately after connection', async () => {
+  fixture.innerHTML = `<ki-toolbar label="Formatting" variant="docked">${nativeActions}</ki-toolbar>`;
+  const toolbar = fixture.querySelector('ki-toolbar');
+  if (!toolbar) throw new Error('Expected the toolbar host');
+  toolbar.hideOnScroll = true;
+
+  await expect.element(page.getByRole('toolbar', { name: 'Formatting' })).toBeVisible();
+  scrollTo(200);
+  await expectOpacity(toolbar, '0');
+});
+
 it('keeps its position and visibility on scroll by default', async () => {
   const { toolbar } = await mount('variant="docked"');
   const top = toolbar.getBoundingClientRect().top;
@@ -354,6 +365,19 @@ it('S18: makes the next available control the Tab stop when the current one is d
   rendered('Before').focus();
   await userEvent.keyboard('{Tab}');
   expect((link.getRootNode() as ShadowRoot).activeElement).toBe(link);
+});
+
+it('gives Tab to the first displayed action', async () => {
+  await mount(
+    '',
+    '<button type="button" style="display:none">Bold</button><button type="button">Insert link</button>',
+    '<button type="button" tabindex="0">Before</button>',
+  );
+  const link = rendered('Insert link');
+  await expect.poll(() => link.getAttribute('tabindex')).toBe('0');
+  rendered('Before').focus();
+  await userEvent.keyboard('{Tab}');
+  expect(document.activeElement).toBe(link);
 });
 
 it('restores a slotted button’s tabindex after it leaves', async () => {

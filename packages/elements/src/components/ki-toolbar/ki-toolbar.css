@@ -1,0 +1,100 @@
+:host {
+  align-items: center;
+  display: inline-flex;
+  font-family: var(--ki-typography-family-body);
+  gap: var(--ki-toolbar-fab-gap);
+  max-inline-size: 100%;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([orientation="vertical"]:not([variant="docked"])) {
+  flex-direction: column;
+}
+
+[part="toolbar"] {
+  align-items: center;
+  backdrop-filter: var(--ki-toolbar-backdrop-filter);
+  background-color: var(--ki-toolbar-bg);
+  background-image: var(--ki-toolbar-bg-image);
+  border-radius: var(--ki-toolbar-radius);
+  box-shadow: var(--ki-toolbar-shadow);
+  box-sizing: border-box;
+  color: var(--ki-toolbar-fg);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ki-toolbar-gap);
+  min-inline-size: 0;
+  padding: var(--ki-toolbar-padding);
+}
+
+:host([tone="vibrant"]) [part="toolbar"] {
+  background-color: var(--ki-toolbar-vibrant-bg);
+  color: var(--ki-toolbar-vibrant-fg);
+}
+
+[aria-orientation="vertical"] {
+  flex-direction: column;
+}
+
+[aria-orientation="vertical"] ::slotted(ki-divider:not([orientation="vertical"])) {
+  align-self: stretch;
+}
+
+/* Reserve room for the hit area that the Kimen buttons extend under touch density. */
+slot:not([name])::slotted(:is(ki-button, ki-icon-button, button):not([hidden])) {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  min-block-size: var(--ki-density-target-min);
+  min-inline-size: var(--ki-density-target-min);
+}
+
+slot:not([name])::slotted(button) {
+  font-family: inherit;
+}
+
+:host([variant="docked"]) {
+  inset-block-end: 0;
+  inset-inline: 0;
+  position: fixed;
+}
+
+:host([variant="docked"]) [part="toolbar"] {
+  border-radius: var(--ki-toolbar-docked-radius);
+  box-shadow: none;
+  inline-size: 100%;
+  justify-content: space-around;
+  min-block-size: calc(var(--ki-toolbar-height) + env(safe-area-inset-bottom, 0px));
+  padding-block-end: calc(var(--ki-toolbar-padding) + env(safe-area-inset-bottom, 0px));
+  padding-inline: var(--ki-toolbar-docked-padding-inline);
+}
+
+/* Keep the Tab entry available while the bar is out of sight. */
+:host(.scroll-hidden:not(:focus-within)) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :host([hide-on-scroll]:not(:focus-within)) {
+    transition-duration: var(--ki-toolbar-scroll-duration);
+    transition-property: opacity, translate;
+    transition-timing-function: var(--ki-toolbar-scroll-easing);
+  }
+
+  :host(.scroll-hidden:not(:focus-within)) {
+    translate: 0 100%;
+  }
+}
+
+@media (forced-colors: active) {
+  [part="toolbar"] {
+    backdrop-filter: none;
+    background-image: none;
+    outline: var(--ki-focus-ring-width) solid CanvasText;
+    outline-offset: calc(-1 * var(--ki-focus-ring-width));
+  }
+}

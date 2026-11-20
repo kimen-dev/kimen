@@ -12,6 +12,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-segmented-control',
   'ki-spinner',
   'ki-stack',
+  'ki-toolbar',
 ]);
 
 /** Both schemes are alternately themed when the component contract requires it. */
