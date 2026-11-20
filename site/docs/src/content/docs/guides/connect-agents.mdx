@@ -16,50 +16,25 @@ gets three things from it:
   as real, interactive Kimen components in the conversation.
 
 You can set up either half on its own. Skills need nothing installed; the
-server needs Node 22 or later.
-
-:::note
-Kimen is pre-1.0 and its packages are **not on npm yet**, so `npx` cannot
-fetch `kimen-mcp` today. Build it once from the repository and point your
-client at the file, as shown below. When the packages publish, only the
-command changes.
-:::
+server is the npm package `@kimen/mcp-server`, which clients start with
+`npx` and which needs Node 22 or later.
 
 ## What works where
 
 | Client | Skills | `kimen-mcp` tools | Renders Kimen surfaces |
 | --- | --- | --- | --- |
-| Claude Code | plugin or `~/.claude/skills` | yes | no, shows a text outline |
+| Claude Code | plugin (brings the server too) or `~/.claude/skills` | yes | no, shows a text outline |
 | Claude Desktop | through Claude's skills settings | yes | **yes** (MCP Apps) |
-| Codex | plugin or `.agents/skills` | yes | text outline |
-| Antigravity | plugin or `.agents/skills` | yes | text outline |
+| Codex | plugin (brings the server too) or `.agents/skills` | yes | text outline |
+| Antigravity | plugin (brings the server too) or `.agents/skills` | yes | text outline |
+| Gemini CLI | extension (brings the server too) or `.agents/skills` | yes | text outline |
 | OpenCode | `.agents/skills` or `.claude/skills` | yes | text outline |
-| Gemini CLI, VS Code Copilot, Cursor | `.agents/skills` | yes | Copilot (experimental) and Cursor: **yes** |
+| VS Code Copilot, Cursor | `.agents/skills` | yes | Copilot (experimental) and Cursor: **yes** |
 
 "Text outline" means the render tool still works: the agent receives a
 readable outline of the surface instead of the live components. The MCP
 Apps column follows the
 [MCP client matrix](https://modelcontextprotocol.io/extensions/client-matrix).
-
-## Before you start: build `kimen-mcp`
-
-```sh
-git clone https://github.com/kimen-dev/kimen.git
-cd kimen
-pnpm install --frozen-lockfile
-pnpm exec nx run @kimen/mcp-server:build
-```
-
-The result is one self-contained file with no runtime dependencies. Keep its
-absolute path at hand; the examples below call it `$KIMEN_MCP`:
-
-```sh
-export KIMEN_MCP="$PWD/packages/mcp-server/dist/kimen-mcp.mjs"
-```
-
-In JSON and TOML files, write the absolute path itself (for example
-`/Users/you/src/kimen/packages/mcp-server/dist/kimen-mcp.mjs`); those files
-do not expand shell variables.
 
 ## Step 1: give your agent the Kimen skills
 
@@ -79,11 +54,12 @@ claude plugin install kimen@kimen
 
 Inside a session the same commands are `/plugin marketplace add
 kimen-dev/kimen` and `/plugin install kimen@kimen`. The skills then appear as
-`kimen:kimen-components` and `kimen:kimen-genui`.
+`kimen:kimen-components` and `kimen:kimen-genui`, and the plugin starts
+`kimen-mcp` too, so you can skip step 2.
 
 ### Codex
 
-Codex reads the same marketplace:
+Codex reads the same marketplace, and the plugin brings `kimen-mcp` with it:
 
 ```sh
 codex plugin marketplace add kimen-dev/kimen
@@ -92,7 +68,7 @@ codex plugin add kimen@kimen
 
 Codex also loads any skill folder in `.agents/skills/` (project) or
 `~/.agents/skills/` (all projects), so copying the folders works too (see
-[Other agents](#other-agents)).
+[Other agents](#other-agents)); then connect the server in step 2.
 
 ### Antigravity
 
@@ -102,14 +78,29 @@ From a clone of the repository:
 agy plugin install ./kimen/plugins/kimen
 ```
 
-Or copy the skill folders into the workspace's `.agents/skills/`, or into
-`~/.gemini/config/skills/` for every workspace.
+The plugin brings `kimen-mcp` with it. Or copy the skill folders into the
+workspace's `.agents/skills/`, or into `~/.gemini/config/skills/` for every
+workspace, and connect the server in step 2.
+
+### Gemini CLI
+
+The plugin folder is also a Gemini CLI extension with both skills and
+`kimen-mcp`. Gemini CLI installs extensions only from the root of a
+repository, and this one lives in a subfolder, so install it from a clone:
+
+```sh
+gemini extensions install ./kimen/plugins/kimen
+```
+
+Use `gemini extensions link` instead to follow your clone as it updates.
+`gemini skills list` should show both skills and `gemini mcp list` should
+show `kimen` as connected.
 
 ### Other agents
 
-For OpenCode, Gemini CLI, GitHub Copilot, Cursor and the other agents the
-open [`skills` CLI](https://skills.sh/) supports, run this in your project
-(Node 22.20 or later):
+For OpenCode, GitHub Copilot, Cursor and the other agents the open
+[`skills` CLI](https://skills.sh/) supports, run this in your project (Node
+22.20 or later):
 
 ```sh
 npx skills add kimen-dev/kimen --skill kimen-components --skill kimen-genui
@@ -159,13 +150,16 @@ design tokens (`--ki-*`, `@kimen/tokens`).
 
 ## Step 2: connect `kimen-mcp`
 
-Each client starts the server itself over stdio. The binary takes no
-arguments.
+Skip this step if you installed the Claude Code, Codex or Antigravity plugin
+or the Gemini CLI extension: they start the server for you.
+
+Each client starts the server itself over stdio with
+`npx -y -p @kimen/mcp-server kimen-mcp`. The server takes no arguments.
 
 ### Claude Code
 
 ```sh
-claude mcp add --transport stdio --scope user kimen -- node "$KIMEN_MCP"
+claude mcp add --transport stdio --scope user kimen -- npx -y -p @kimen/mcp-server kimen-mcp
 ```
 
 `--scope user` makes it available in every project. To share it with a
@@ -185,8 +179,8 @@ Windows `%APPDATA%\Claude\claude_desktop_config.json`):
 {
   "mcpServers": {
     "kimen": {
-      "command": "node",
-      "args": ["/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs"]
+      "command": "npx",
+      "args": ["-y", "-p", "@kimen/mcp-server", "kimen-mcp"]
     }
   }
 }
@@ -199,7 +193,7 @@ connect only to remote servers, so a local `kimen-mcp` is a desktop feature.
 ### Codex
 
 ```sh
-codex mcp add kimen -- node "$KIMEN_MCP"
+codex mcp add kimen -- npx -y -p @kimen/mcp-server kimen-mcp
 ```
 
 This writes to `~/.codex/config.toml`, which the Codex CLI, the IDE
@@ -207,8 +201,8 @@ extension and the desktop app share:
 
 ```toml
 [mcp_servers.kimen]
-command = "node"
-args = ["/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs"]
+command = "npx"
+args = ["-y", "-p", "@kimen/mcp-server", "kimen-mcp"]
 ```
 
 ### Antigravity
@@ -221,8 +215,8 @@ Add the server to `~/.gemini/config/mcp_config.json` (all workspaces) or
 {
   "mcpServers": {
     "kimen": {
-      "command": "node",
-      "args": ["/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs"]
+      "command": "npx",
+      "args": ["-y", "-p", "@kimen/mcp-server", "kimen-mcp"]
     }
   }
 }
@@ -239,7 +233,7 @@ Add the server to `opencode.json` in the project, or to
   "mcp": {
     "kimen": {
       "type": "local",
-      "command": ["node", "/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs"],
+      "command": ["npx", "-y", "-p", "@kimen/mcp-server", "kimen-mcp"],
       "enabled": true
     }
   }
@@ -248,28 +242,64 @@ Add the server to `opencode.json` in the project, or to
 
 `opencode mcp list` should report `kimen` as connected.
 
+### Cursor and VS Code
+
+One click adds the server, after you review it:
+
+- [Add to Cursor](https://cursor.com/install-mcp?name=kimen&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIi1wIiwiQGtpbWVuL21jcC1zZXJ2ZXIiLCJraW1lbi1tY3AiXX0%3D)
+- [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522kimen%2522%252C%2522type%2522%253A%2522stdio%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522-p%2522%252C%2522%2540kimen%252Fmcp-server%2522%252C%2522kimen-mcp%2522%255D%257D)
+  ([VS Code Insiders](https://vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522kimen%2522%252C%2522type%2522%253A%2522stdio%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522-p%2522%252C%2522%2540kimen%252Fmcp-server%2522%252C%2522kimen-mcp%2522%255D%257D))
+
+Both links carry the same `npx` command as the other clients. VS Code adds
+the server to your editor configuration, which it forwards to Copilot
+sessions; MCP Apps there needs `chat.mcp.apps.enabled`. To write the
+configuration by hand, see [Other clients](#other-clients).
+
 ### Other clients
 
 | Client | File | Shape |
 | --- | --- | --- |
-| Gemini CLI | `.gemini/settings.json` or `~/.gemini/settings.json` | `mcpServers.kimen` with `command` and `args`; or `gemini mcp add -s user kimen node "$KIMEN_MCP"` |
+| Gemini CLI | `.gemini/settings.json` or `~/.gemini/settings.json` | `mcpServers.kimen` with `command` and `args`; or `gemini mcp add -s user kimen npx -y -p @kimen/mcp-server kimen-mcp` |
 | VS Code (GitHub Copilot) | `.mcp.json` at the workspace root | `mcpServers.kimen` with `"type": "stdio"`, `command`, `args`; MCP Apps needs `chat.mcp.apps.enabled` |
 | Cursor | `.cursor/mcp.json` or `~/.cursor/mcp.json` | `mcpServers.kimen` with `"type": "stdio"`, `command`, `args` |
 | Devin Desktop (Windsurf) | `.devin/mcp_config.json` | `mcpServers.kimen` with `command` and `args` |
 
 ### Optional: lock the server down
 
-The binary embeds everything it serves, so Node's permission model can deny
-it every other file, child processes and, from Node 25, the network. Pass
-the flags before the path:
+The server is one file that embeds everything it serves, so Node's
+permission model can deny it every other file, child processes and, from
+Node 25, the network. The flags need that file's path, which `npx` hides in
+its cache, so install the package and run the file with `node`:
 
 ```sh
+npm install --global @kimen/mcp-server
+KIMEN_MCP="$(npm root --global)/@kimen/mcp-server/dist/kimen-mcp.mjs"
 claude mcp add --transport stdio --scope user kimen -- \
   node --permission --allow-fs-read="$KIMEN_MCP" "$KIMEN_MCP"
 ```
 
-In a JSON or TOML config the same thing is
-`"args": ["--permission", "--allow-fs-read=/absolute/path/to/kimen-mcp.mjs", "/absolute/path/to/kimen-mcp.mjs"]`.
+In a JSON or TOML config the same thing is `"command": "node"` with
+`"args": ["--permission", "--allow-fs-read=/absolute/path/to/kimen-mcp.mjs", "/absolute/path/to/kimen-mcp.mjs"]`;
+those files do not expand shell variables, so write the path that
+`echo "$KIMEN_MCP"` prints. The plugin, the extension and the one-click
+links use `npx` and run without these flags.
+
+### Alternative: run `kimen-mcp` from a clone
+
+To try an unreleased change, build the server from the repository and point
+your client at the file:
+
+```sh
+git clone https://github.com/kimen-dev/kimen.git
+cd kimen
+pnpm install --frozen-lockfile
+pnpm exec nx run @kimen/mcp-server:build
+export KIMEN_MCP="$PWD/packages/mcp-server/dist/kimen-mcp.mjs"
+```
+
+Then use `node "$KIMEN_MCP"` wherever this guide uses
+`npx -y -p @kimen/mcp-server kimen-mcp`; in JSON and TOML, `"command": "node"`
+with the absolute path as the only argument.
 
 ## Step 3: check it works
 
@@ -319,11 +349,14 @@ The `kimen-genui` skill carries a short recipe for each of the three.
 
 ## Troubleshooting
 
-- **The server does not start.** Run `node "$KIMEN_MCP" < /dev/null`: it
-  should exit at once, silently, with status 0. A syntax or version error
-  means Node is older than 22. "Cannot find module" means the file was not
-  built or the path is not absolute. The binary refuses any argument, so
-  check that the config passes only the path.
+- **The server does not start.** Run
+  `npx -y -p @kimen/mcp-server kimen-mcp < /dev/null`: it should exit at
+  once, silently, with status 0. A syntax or version error means Node is
+  older than 22. `kimen-mcp: command not found` means npx fetched version
+  `0.0.0`, which only reserves the name: ask for `@kimen/mcp-server@latest`.
+  With a file path instead of npx, "Cannot find module" means the file was
+  not built or the path is not absolute. The server refuses any argument, so
+  check that the config passes nothing after `kimen-mcp` or the path.
 - **No live components, only an outline.** The client does not render MCP
   Apps (see [What works where](#what-works-where)). The outline is the
   expected result there.

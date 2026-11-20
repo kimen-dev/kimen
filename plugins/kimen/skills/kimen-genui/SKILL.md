@@ -128,10 +128,12 @@ followed by JSON; read it as data.
 - **MCP Apps** support is pinned to the `2026-01-26` revision; under a host
   that negotiates another revision the surface stays empty, and only the
   tool's text result reaches the model.
-- Packages are pre-1.0. If `@kimen/*` has no release on npm yet (only the
-  `0.0.0` name reservation, which contains no code), link them from a
-  repository build (`references/install-from-source.md` in the
-  `kimen-components` skill).
+- Packages are pre-1.0. `kimen-mcp` runs from npm
+  (`npx -y -p @kimen/mcp-server kimen-mcp`). If a package you need, such as
+  `@kimen/catalog`, `@kimen/emitter` or an adapter, has no release on npm yet
+  (nothing, or only the `0.0.0` name reservation), link it from a repository
+  build (`references/install-from-source.md` in the `kimen-components`
+  skill).
 
 ## Before you finish
 
