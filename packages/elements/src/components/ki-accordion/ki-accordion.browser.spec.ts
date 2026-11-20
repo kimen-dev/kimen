@@ -48,12 +48,13 @@ it('S4 closes the open accordion member and reports both changed members', async
   await mount(`
     <ki-accordion exclusive>
       <ki-details id="permissions" summary="Permissions" open>Invite users.</ki-details>
-      <ki-details id="exports" summary="Exports">Make a backup.</ki-details>
+      <ki-details id="exports" summary="Exports"><p>Make a backup.</p></ki-details>
     </ki-accordion>
   `);
   const permissions = member('permissions');
   const exports = member('exports');
   await expect.poll(() => permissions.panel.open).toBe(true);
+  const openHeight = permissions.panel.getBoundingClientRect().height;
   const states: Record<string, boolean> = {};
   for (const { host } of [permissions, exports]) {
     host.addEventListener('ki-toggle', (event) => {
@@ -65,7 +66,11 @@ it('S4 closes the open accordion member and reports both changed members', async
   await expect.poll(() => ({ ...states })).toEqual({ permissions: false, exports: true });
   expect(permissions.host.open).toBe(false);
   expect(exports.host.open).toBe(true);
-  await expect.element(page.getByText('Invite users.')).not.toBeVisible();
+  expect(permissions.panel.open).toBe(false);
+  expect(exports.panel.open).toBe(true);
+  await expect
+    .poll(() => permissions.panel.getBoundingClientRect().height)
+    .toBeLessThan(openHeight);
   await expect.element(page.getByText('Make a backup.')).toBeVisible();
   await expectAccessible(fixture);
 });

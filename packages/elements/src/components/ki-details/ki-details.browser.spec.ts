@@ -54,13 +54,25 @@ function toggles(host: HTMLElement): boolean[] {
   return states;
 }
 
+async function expectCollapsed(panel: HTMLDetailsElement, summary: HTMLElement): Promise<void> {
+  // WebKit's Vitest visibility check walks light DOM ancestry and can miss
+  // the closed shadow disclosure. Measure the space after the native summary.
+  await expect.poll(() => panel.open).toBe(false);
+  await expect
+    .poll(() => {
+      const border = Number.parseFloat(getComputedStyle(panel).borderBlockEndWidth);
+      return panel.getBoundingClientRect().bottom - summary.getBoundingClientRect().bottom - border;
+    })
+    .toBeCloseTo(0, 0);
+}
+
 it('S1 shows and hides the answer and emits each resulting state once', async () => {
-  const { host, summary } = await mount(
+  const { host, panel, summary } = await mount(
     '<ki-details summary="Who can see my workspace?"><p>Only invited people.</p></ki-details>',
   );
   const states = toggles(host);
   const answer = page.getByText('Only invited people.');
-  await expect.element(answer).not.toBeVisible();
+  await expectCollapsed(panel, summary);
 
   await userEvent.click(summary);
   await expect.element(answer).toBeVisible();
@@ -68,13 +80,13 @@ it('S1 shows and hides the answer and emits each resulting state once', async ()
   expect(host.open).toBe(true);
 
   await userEvent.click(summary);
-  await expect.element(answer).not.toBeVisible();
+  await expectCollapsed(panel, summary);
   await expect.poll(() => states.slice()).toEqual([true, false]);
   expect(host.open).toBe(false);
 });
 
 it('S2 reflects open property writes without replaying a toggle', async () => {
-  const { host, panel } = await mount(
+  const { host, panel, summary } = await mount(
     '<ki-details open summary="Exports"><p>Download your data as CSV.</p></ki-details>',
   );
   const states = toggles(host);
@@ -98,7 +110,7 @@ it('S2 reflects open property writes without replaying a toggle', async () => {
     if (open) {
       await expect.element(answer).toBeVisible();
     } else {
-      await expect.element(answer).not.toBeVisible();
+      await expectCollapsed(panel, summary);
     }
   }
   await expect.element(answer).toBeVisible();
@@ -121,14 +133,19 @@ it('S3 keeps open content usable while the summary is disabled', async () => {
 });
 
 it.each(['Enter', 'Space'])('S7 opens with %s and keeps keyboard focus', async (key) => {
-  const { host, summary } = await mount(
-    '<button tabindex="0">Previous</button><ki-details summary="Exports">Export instructions.</ki-details>',
+  const { host, panel, summary } = await mount(
+    '<button tabindex="0">Previous</button><ki-details summary="Exports"><p>Export instructions.</p></ki-details>',
   );
+  expect(panel.firstElementChild).toBe(summary);
+  const bodySlot = summary.nextElementSibling?.querySelector('slot');
+  expect(bodySlot?.assignedElements()).toEqual([host.querySelector('p')]);
   fixture.querySelector('button')?.focus();
   await userEvent.keyboard('{Tab}');
   expect(host.shadowRoot?.activeElement).toBe(summary);
   await userEvent.keyboard(key === 'Space' ? ' ' : '{Enter}');
 
+  await expect.poll(() => panel.open).toBe(true);
+  await expect.poll(() => host.open).toBe(true);
   await expect.element(page.getByText('Export instructions.')).toBeVisible();
   expect(host.shadowRoot?.activeElement).toBe(summary);
 });
@@ -203,7 +220,7 @@ it('S10 reflects a native reveal of the closed answer', async () => {
   expect(answer?.textContent).toBe('Guests inherit workspace permissions.');
   expect(answer?.closest('[hidden], [inert], [aria-hidden="true"]')).toBeNull();
   expect(panel.firstElementChild).toBe(summary);
-  await expect.element(page.getByText('Guests inherit workspace permissions.')).not.toBeVisible();
+  await expectCollapsed(panel, summary);
 
   // Exercise the native state change the browser uses to reveal a matching
   // ancestor. Browser chrome Find is covered by the manual walkthrough.
