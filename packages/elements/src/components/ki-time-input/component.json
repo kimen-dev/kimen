@@ -5,7 +5,7 @@
   "catalog": true,
   "formBinding": "select",
   "sizeBudget": {
-    "mcpApps": { "raw": 21297, "gzip": 5443, "brotli": 3926 },
-    "mcpServer": { "raw": 39136, "gzip": 7579, "brotli": 4581 }
+    "mcpApps": { "raw": 21397, "gzip": 5506, "brotli": 3997 },
+    "mcpServer": { "raw": 39231, "gzip": 7639, "brotli": 4517 }
   }
 }

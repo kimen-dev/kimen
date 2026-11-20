@@ -59,23 +59,16 @@ function withoutDirectionMarks(text: string): string {
   return text.replace(/[\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/gu, '');
 }
 
-function escapePattern(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+function normalizeLiteral(text: string): string {
+  return withoutDirectionMarks(text).replace(/\s+/gu, '').toLowerCase();
 }
 
-function timePattern(parts: Intl.DateTimeFormatPart[]): RegExp {
-  const pattern = parts
-    .map(({ type, value }) => {
-      if (type === 'hour') {
-        return '(?<hour>[0-9]{1,2})';
-      }
-      if (type === 'minute') {
-        return '(?<minute>[0-9]{2})';
-      }
-      return escapePattern(withoutDirectionMarks(value)).replace(/\s+/gu, '\\s*');
-    })
-    .join('');
-  return new RegExp(`^${pattern}$`, 'iu');
+function timeLiterals(parts: Intl.DateTimeFormatPart[]): string[] {
+  return parts
+    .map(({ type, value }) => (type === 'hour' || type === 'minute' ? '\0' : value))
+    .join('')
+    .split('\0')
+    .map(normalizeLiteral);
 }
 
 export function createTimeLocale(locale: string | undefined, fallback?: string): TimeLocale {
@@ -86,14 +79,17 @@ export function createTimeLocale(locale: string | undefined, fallback?: string):
     locale: resolvedLocale,
   } = formatter.resolvedOptions();
   const number = new Intl.NumberFormat(resolvedLocale, { numberingSystem, useGrouping: false });
-  const digits = Array.from({ length: 10 }, (_, index) => number.format(index));
-  const digitPattern = new RegExp(digits.map(escapePattern).join('|'), 'gu');
+  const digits = new Map(
+    Array.from({ length: 10 }, (_, index) => [number.format(index), String(index)]),
+  );
   const morning = formatter.formatToParts(0);
-  const afternoon = formatter.formatToParts(12 * 60 * 60 * 1000);
   const hasDayPeriod = morning.some(({ type }) => type === 'dayPeriod');
-  const patterns = hasDayPeriod
-    ? [timePattern(morning), timePattern(afternoon)]
-    : [timePattern(morning)];
+  const hourFirst =
+    morning.find(({ type }) => type === 'hour' || type === 'minute')?.type === 'hour';
+  const patterns = [timeLiterals(morning)];
+  if (hasDayPeriod) {
+    patterns.push(timeLiterals(formatter.formatToParts(12 * 60 * 60 * 1000)));
+  }
   const minHour = hourCycle === 'h12' || hourCycle === 'h24' ? 1 : 0;
   const maxHour = hasDayPeriod ? minHour + 11 : minHour + 23;
 
@@ -102,23 +98,28 @@ export function createTimeLocale(locale: string | undefined, fallback?: string):
     parse(text) {
       const normalized = withoutDirectionMarks(text)
         .trim()
-        .replace(digitPattern, (digit) => String(digits.indexOf(digit)));
+        .replace(/./gu, (character) => digits.get(character) ?? character);
       const canonical = parseCanonicalTime(normalized);
       if (canonical !== undefined) {
         return canonical;
       }
 
-      for (const [period, pattern] of patterns.entries()) {
-        const parts = pattern.exec(normalized)?.groups;
-        if (parts) {
-          const hour = Number(parts.hour);
-          const minute = Number(parts.minute);
-          if (hour >= minHour && hour <= maxHour && minute < 60) {
-            return ((hour % (hasDayPeriod ? 12 : 24)) + period * 12) * MINUTES_IN_HOUR + minute;
-          }
-        }
+      const parts = normalized.split(/([0-9]+)/u);
+      const [before = '', first = '', between = '', second = '', after = ''] = parts;
+      const [hourText, minuteText] = hourFirst ? [first, second] : [second, first];
+      if (parts.length !== 5 || hourText.length > 2 || minuteText.length !== 2) {
+        return undefined;
       }
-      return undefined;
+      const [prefix, separator, suffix] = [before, between, after].map(normalizeLiteral);
+      const period = patterns.findIndex(
+        ([start, split, end]) => start === prefix && split === separator && end === suffix,
+      );
+      const hour = Number(hourText);
+      const minute = Number(minuteText);
+      if (period === -1 || hour < minHour || hour > maxHour || minute >= 60) {
+        return undefined;
+      }
+      return ((hour % (hasDayPeriod ? 12 : 24)) + period * 12) * MINUTES_IN_HOUR + minute;
     },
   };
 }
