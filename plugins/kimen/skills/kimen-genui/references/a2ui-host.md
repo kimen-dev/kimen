@@ -58,11 +58,12 @@ client metadata so the agent picks a supported version and catalog.
 - The adapter keeps the data model: bindings (`{ "path": … }` in 0.9.x,
   `{ "@path": … }` in 1.0), `updateDataModel` and list templates resolve
   inside it.
-- What the person types stays in the control: it does not flow back into the
-  data model, so action contexts and `sendDataModel` carry the values the
-  agent last set, not what the person entered. A2UI forms that submit typed
-  input are therefore not supported yet; collect such input with the catalog
-  path, whose `onAction` data carries the control's live value.
+- Two-way binding: what the person commits in a bound text field, checkbox,
+  slider or single-selection picker is written to its data-model path before
+  the next action, so action contexts and `sendDataModel` carry it. Bind the
+  inputs (`{ "@path": "/form/email" }`) and read the same paths in the
+  button's action context. Multiple-selection pickers and date or time
+  inputs still keep their edits local.
 - Every update re-renders the whole surface (focus and scroll reset).
 - The declared action set freezes at the first render that binds one,
   unless you pass `actions` up front; a later update binding a new name is

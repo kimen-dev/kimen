@@ -58,6 +58,19 @@ function isBinding(value: Record<string, unknown>, dialect: Dialect): boolean {
   return keys.length === 1 && keys[0] === dialect.bindingKey;
 }
 
+/**
+ * The data-model path a dynamic value is bound to (`{ path }` in 0.9.1,
+ * `{ "@path" }` in 1.0), or undefined for a literal or a function call.
+ */
+export function bindingPath(raw: unknown, dialect: Dialect): string | undefined {
+  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) {
+    return undefined;
+  }
+  const value = raw as Record<string, unknown>;
+  const path = value[dialect.bindingKey];
+  return isBinding(value, dialect) && typeof path === 'string' ? path : undefined;
+}
+
 function isFunctionCall(value: Record<string, unknown>, dialect: Dialect): boolean {
   return (
     typeof value[dialect.callKey] === 'string' &&

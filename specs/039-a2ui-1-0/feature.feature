@@ -170,3 +170,52 @@ Feature: A2UI 1.0 alongside 0.9.1 in the A2UI adapter
       Given a 1.0 surface "s"
       When the agent sends a card carrying the undeclared property "style"
       Then the agent receives an A2UI "1.0" validation error naming the surface and the offending property
+
+  Rule: What the person enters is written back to the data model
+
+    # S24
+    Scenario Outline: A typed value reaches the agent with the next action
+      Given an A2UI "<version>" surface whose text field is bound to "/booking/email" and whose "Book" button sends "/booking/email" in its context
+      And the person typed "ana@example.com" into the text field
+      When the person activates "Book"
+      Then the agent receives the action "book" with "ana@example.com" in its context
+
+      Examples:
+        | version |
+        | 1.0     |
+        | v0.9.1  |
+
+    # S25
+    Scenario Outline: A choice the person makes is written to its bound path
+      Given a 1.0 surface whose <control> is bound to "<path>" holding <before>
+      And the person changed the <control> to <after>
+      When the person activates a button that sends "<path>" in its context
+      Then the agent receives <after> for "<path>"
+
+      Examples:
+        | control              | path              | before | after  |
+        | checkbox             | /prefs/newsletter | false  | true   |
+        | single-choice picker | /order/size       | ["m"]  | ["l"]  |
+        | slider               | /order/quantity   | 1      | 3      |
+
+    # S26
+    Scenario: The data model sent with an action carries what the person entered
+      Given a 1.0 surface created with sendDataModel whose text field is bound to "/booking/email"
+      And the person typed "ana@example.com" into the text field
+      When the person activates "Book"
+      Then the data model attached to the action holds "ana@example.com" at "/booking/email"
+
+    # S27
+    Scenario: Writing back keeps the person's place in the surface
+      Given a 1.0 surface with a name field bound to "/booking/name" and an email field bound to "/booking/email"
+      And the person typed "Ana" into the name field
+      When the person moves to the email field
+      Then the email field has focus
+      And the name field still shows "Ana"
+
+    # S28
+    Scenario: A field with a literal value writes nothing to the data model
+      Given a 1.0 surface created with sendDataModel whose text field holds the literal value "draft"
+      And the person typed "final" into the text field
+      When the person activates "Save"
+      Then the data model attached to the action is the one the agent last set
