@@ -1,387 +1,801 @@
-/* Progressive behavior shared by the landing and playground. The document is
-   complete without this module; JavaScript adds persisted themes, live custom
-   elements, the CEM-derived catalog and the dialog demonstration. */
-
-const initializedDocuments = new WeakMap();
-const material3Requests = new WeakMap();
-const themeRequestIds = new WeakMap();
-
-function windowFor(root) {
-  return root.defaultView ?? window;
-}
-
-function storageFor(root) {
-  try {
-    return windowFor(root).localStorage;
-  } catch {
-    return null;
-  }
-}
-
-function readPreference(root, key) {
-  try {
-    return storageFor(root)?.getItem(key) ?? null;
-  } catch {
-    return null;
-  }
-}
-
-function writePreference(root, key, value) {
-  try {
-    storageFor(root)?.setItem(key, value);
-  } catch {
-    // A hardened or private context may intentionally disable storage.
-  }
-}
-
-function material3Url(root = document) {
-  return new (windowFor(root).URL)('./assets/tokens/tokens.material3.css', import.meta.url).href;
-}
-
-function prefersReducedMotion(root) {
-  return windowFor(root).matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-}
-
-function animateThemeFlip(root) {
-  if (prefersReducedMotion(root)) {
-    return;
-  }
-
-  const element = root.documentElement;
-  const view = windowFor(root);
-  element.classList.add('theme-anim');
-  view.clearTimeout(animateThemeFlip.timer);
-  animateThemeFlip.timer = view.setTimeout(() => element.classList.remove('theme-anim'), 500);
-}
-
-function ensureMaterial3(root) {
-  const existing = root.getElementById('material3-css');
-  if (existing) {
-    return Promise.resolve();
-  }
-
-  let request = material3Requests.get(root);
-  if (!request) {
-    request = new Promise((resolve) => {
-      const link = root.createElement('link');
-      link.id = 'material3-css';
-      link.rel = 'stylesheet';
-      link.href = material3Url(root);
-      link.addEventListener('load', resolve, { once: true });
-      // The default Onmars variables remain valid if a network policy blocks
-      // the optional second theme, so failure is deliberately non-fatal.
-      link.addEventListener('error', resolve, { once: true });
-      root.head.append(link);
-    });
-    material3Requests.set(root, request);
-  }
-  return request;
-}
-
-function announceThemeChange(root) {
-  const view = windowFor(root);
-  root.dispatchEvent(
-    new view.CustomEvent('kimen-theme-change', {
-      detail: {
-        theme: root.documentElement.dataset.kiTheme ?? 'onmars',
-        scheme: root.documentElement.dataset.kiColorScheme ?? 'auto',
-      },
-    }),
-  );
-}
-
-/** Apply a token theme without allowing a slow stylesheet request to win a race. */
-export async function applyTheme(theme, root = document) {
-  const requestId = (themeRequestIds.get(root) ?? 0) + 1;
-  themeRequestIds.set(root, requestId);
-
-  if (theme === 'material3') {
-    await ensureMaterial3(root);
-    if (themeRequestIds.get(root) !== requestId) {
-      return;
-    }
-    animateThemeFlip(root);
-    root.documentElement.dataset.kiTheme = 'material3';
-  } else {
-    animateThemeFlip(root);
-    root.documentElement.removeAttribute('data-ki-theme');
-    theme = 'onmars';
-  }
-
-  writePreference(root, 'kimen-theme', theme);
-  syncThemeControls(root);
-  announceThemeChange(root);
-}
-
-/** Apply an explicit scheme or return the document to operating-system auto. */
-export function applyScheme(scheme, root = document) {
-  animateThemeFlip(root);
-  if (scheme === 'light' || scheme === 'dark') {
-    root.documentElement.dataset.kiColorScheme = scheme;
-  } else {
-    root.documentElement.removeAttribute('data-ki-color-scheme');
-    scheme = 'auto';
-  }
-
-  writePreference(root, 'kimen-scheme', scheme);
-  syncThemeControls(root);
-  announceThemeChange(root);
-}
-
-/** Keep every desktop, mobile and in-content control aligned to one truth. */
-export function syncThemeControls(root = document) {
-  const currentTheme =
-    root.documentElement.dataset.kiTheme === 'material3' ? 'material3' : 'onmars';
-  const currentScheme = root.documentElement.dataset.kiColorScheme ?? 'auto';
-
-  for (const input of root.querySelectorAll('[data-theme-control] input[type="radio"]')) {
-    input.checked = input.value === currentTheme;
-  }
-  for (const input of root.querySelectorAll('[data-scheme-control] input[type="radio"]')) {
-    input.checked = input.value === currentScheme;
-  }
-}
-
-function componentDeclarations(manifest) {
-  if (!manifest || !Array.isArray(manifest.modules)) {
-    return [];
-  }
-
-  return manifest.modules
-    .flatMap((module) => (Array.isArray(module.declarations) ? module.declarations : []))
-    .filter(
-      (declaration) =>
-        typeof declaration?.tagName === 'string' && declaration.tagName.startsWith('ki-'),
-    )
-    .map((declaration) => ({
-      description:
-        typeof declaration.description === 'string' && declaration.description.trim()
-          ? declaration.description.trim().split('\n')[0]
-          : 'A contract-driven Kimen custom element.',
-      tagName: declaration.tagName,
-    }))
-    .sort((left, right) => left.tagName.localeCompare(right.tagName));
-}
-
-/** Render manifest data as text nodes, never as executable markup. */
-export function renderCatalog(manifest, root = document) {
-  const grid = root.getElementById('catalog-grid');
-  if (!grid) {
-    return;
-  }
-
-  const declarations = componentDeclarations(manifest);
-  const count = root.getElementById('component-count');
-  if (count && declarations.length > 0) {
-    count.textContent = String(declarations.length);
-    count.setAttribute('value', String(declarations.length));
-  }
-  const catalogCount = root.getElementById('catalog-count');
-  if (catalogCount && declarations.length > 0) {
-    catalogCount.textContent = String(declarations.length);
-  }
-
-  grid.replaceChildren();
-  for (const declaration of declarations) {
-    const card = root.createElement('a');
-    card.className = 'catalog-card panel';
-    card.href = `./docs/components/${declaration.tagName.slice(3)}/`;
-
-    const title = root.createElement('span');
-    title.className = 'catalog-tag';
-    title.textContent = `<${declaration.tagName}>`;
-    const description = root.createElement('span');
-    description.className = 'catalog-description';
-    description.textContent = declaration.description;
-    card.append(title, description);
-    grid.append(card);
-  }
-
-  if (declarations.length === 0) {
-    renderCatalogFallback(root);
-  }
-  grid.setAttribute('aria-busy', 'false');
-}
-
-function renderCatalogFallback(root) {
-  const grid = root.getElementById('catalog-grid');
-  if (!grid) {
-    return;
-  }
-
-  grid.replaceChildren();
-  const fallback = root.createElement('p');
-  fallback.className = 'catalog-fallback panel';
-  const link = root.createElement('a');
-  link.href = './docs/components/alert/';
-  link.textContent = 'Browse all components in the documentation.';
-  fallback.append(link);
-  grid.append(fallback);
-  grid.setAttribute('aria-busy', 'false');
-}
-
-async function loadCatalog(root) {
-  if (!root.getElementById('catalog-grid')) {
-    return;
-  }
-
-  try {
-    const manifestUrl = new (windowFor(root).URL)(
-      './assets/elements/custom-elements.json',
-      import.meta.url,
-    );
-    const response = await windowFor(root).fetch(manifestUrl);
-    if (!response.ok) {
-      throw new Error(`manifest request failed: ${response.status}`);
-    }
-    renderCatalog(await response.json(), root);
-  } catch {
-    renderCatalogFallback(root);
-  }
-}
+/* Progressive enhancement for the Calma landing. The document retains its
+   navigation, example spec and disclosures without JavaScript. */
+import { applyScheme, ensureMaterial3, readScheme, readTheme, writePreference } from './pages.js';
 
 let elementsRequest;
 
-/** Load the canonical Stencil browser build once when a live surface approaches. */
 export function loadKimenElements() {
   const bundleUrl = new window.URL('./assets/elements/kimen/kimen.esm.js', import.meta.url).href;
   elementsRequest ??= import(/* @vite-ignore */ bundleUrl).catch(() => undefined);
   return elementsRequest;
 }
 
-function observeComponentSurfaces(root, cleanups) {
-  const surfaces = [...root.querySelectorAll('[data-component-surface]')];
-  if (surfaces.length === 0) {
-    return;
+const SCHEMES = ['auto', 'light', 'dark'];
+const SCHEME_LABELS = { auto: 'follow the system', light: 'light', dark: 'dark' };
+
+function wirePreferences(root, view, signal) {
+  const button = root.querySelector('[data-scheme]');
+  const radios = [...root.querySelectorAll('[data-scheme-control] input')];
+  const themeRadios = [...root.querySelectorAll('[data-theme-control] input')];
+  const preferences = root.querySelector('[data-theme-preferences]');
+  const systemScheme = view.matchMedia('(prefers-color-scheme: light)');
+  let scheme = readScheme(root);
+  let themeRequest = 0;
+
+  function setScheme(next, persist = false) {
+    scheme = next;
+    applyScheme(scheme, root);
+    for (const radio of radios) radio.checked = radio.value === scheme;
+    if (button) {
+      button.dataset.mode = scheme;
+      button.setAttribute('aria-label', `Colour scheme: ${SCHEME_LABELS[scheme]}`);
+    }
+    if (persist) writePreference(root, 'kimen-scheme', scheme);
   }
 
-  const view = windowFor(root);
-  if (!('IntersectionObserver' in view)) {
-    void loadKimenElements();
-    return;
+  async function setTheme(theme, persist = false) {
+    const request = ++themeRequest;
+    const isMaterial = theme === 'material3' && (await ensureMaterial3(root));
+    if (signal.aborted || request !== themeRequest) return;
+    if (isMaterial) root.documentElement.dataset.kiTheme = theme;
+    else root.documentElement.removeAttribute('data-ki-theme');
+    const active = isMaterial ? theme : 'onmars';
+    for (const radio of themeRadios) radio.checked = radio.value === active;
+    if (persist) writePreference(root, 'kimen-theme', active);
   }
 
-  const observer = new view.IntersectionObserver(
-    (entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        observer.disconnect();
-        void loadKimenElements();
+  function restorePreferences() {
+    setScheme(readScheme(root));
+    void setTheme(readTheme(root));
+  }
+
+  restorePreferences();
+  if (preferences) preferences.hidden = false;
+  if (button) {
+    button.hidden = false;
+    button.addEventListener(
+      'click',
+      () => {
+        const next = SCHEMES[(SCHEMES.indexOf(scheme) + 1) % SCHEMES.length];
+        setScheme(next, true);
+      },
+      { signal },
+    );
+  }
+  for (const radio of radios) {
+    radio.addEventListener('change', () => setScheme(radio.value, true), { signal });
+  }
+  for (const radio of themeRadios) {
+    radio.addEventListener('change', () => void setTheme(radio.value, true), { signal });
+  }
+  systemScheme.addEventListener(
+    'change',
+    () => {
+      if (scheme === 'auto') setScheme(scheme);
+    },
+    { signal },
+  );
+  view.addEventListener(
+    'pageshow',
+    (event) => {
+      if (event.persisted) restorePreferences();
+    },
+    { signal },
+  );
+  view.addEventListener(
+    'storage',
+    (event) => {
+      if (event.key === null || event.key === 'kimen-theme' || event.key === 'kimen-scheme') {
+        restorePreferences();
       }
     },
-    { rootMargin: '600px' },
+    { signal },
   );
-  for (const surface of surfaces) {
-    observer.observe(surface);
-  }
-  cleanups.push(() => observer.disconnect());
 }
 
-function wireDialog(root, cleanups) {
-  const dialog = root.getElementById('demo-dialog');
-  const open = root.getElementById('open-demo-dialog');
-  const closeButtons = [
-    root.getElementById('cancel-demo-dialog'),
-    root.getElementById('confirm-demo-dialog'),
-  ].filter(Boolean);
-
-  if (!dialog || !open) {
-    return;
+function wireCopy(root, view, signal) {
+  for (const button of root.querySelectorAll('[data-copy]')) {
+    const label = button.querySelector('.copy-label');
+    const icon = button.querySelector('[data-copy-icon] use');
+    let resetTimer;
+    button.hidden = false;
+    button.addEventListener(
+      'click',
+      async () => {
+        try {
+          await view.navigator.clipboard.writeText(button.dataset.copy);
+          if (signal.aborted) return;
+          label.textContent = 'Copied';
+          icon.setAttribute('href', '#i-check');
+        } catch {
+          if (signal.aborted) return;
+          const selection = view.getSelection();
+          const range = root.createRange();
+          range.selectNodeContents(button.closest('[data-copy-source]').querySelector('code'));
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+          label.textContent = 'Use your copy shortcut';
+        }
+        view.clearTimeout(resetTimer);
+        resetTimer = view.setTimeout(() => {
+          label.textContent = 'Copy';
+          icon.setAttribute('href', '#i-copy');
+        }, 1800);
+      },
+      { signal },
+    );
+    signal.addEventListener('abort', () => view.clearTimeout(resetTimer), { once: true });
   }
+}
 
-  const show = () => {
-    void loadKimenElements().then(() => dialog.show?.());
-  };
-  const close = () => dialog.close?.();
-  open.addEventListener('click', show);
-  for (const button of closeButtons) {
-    button.addEventListener('click', close);
-  }
-  cleanups.push(() => {
-    open.removeEventListener('click', show);
-    for (const button of closeButtons) {
-      button.removeEventListener('click', close);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function drawLeads(root, hero, overlay) {
+  const box = overlay.getBoundingClientRect();
+  if (box.width === 0 || box.height === 0) return;
+  const spine = hero.querySelector('.spine').getBoundingClientRect();
+  overlay.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+  const lines = [...hero.querySelectorAll('.ln[data-node]')];
+  const existing = new Map(
+    [...overlay.querySelectorAll('g')].map((group) => [group.dataset.node, group]),
+  );
+  const sx = spine.right - box.left;
+
+  lines.forEach((line, index) => {
+    const node = line.dataset.node;
+    const target = hero.querySelector(`[data-node-target="${node}"]`);
+    if (!target) return;
+    const from = line.getBoundingClientRect();
+    const to = target.getBoundingClientRect();
+    const sy = from.top + from.height / 2 - box.top;
+    const tx = to.left - box.left - 6;
+    const ty =
+      node === 'card' ? to.top - box.top + 2 : to.top + Math.min(to.height / 2, 24) - box.top;
+    const lane = Math.min(tx - 10, sx + 12 + (lines.length - 1 - index) * 7);
+    const radius = Math.min(6, Math.abs(ty - sy) / 2);
+    const turn = Math.sign(ty - sy) * radius;
+    const path = `M ${sx} ${sy} H ${lane - radius} Q ${lane} ${sy} ${lane} ${sy + turn} V ${ty - turn} Q ${lane} ${ty} ${lane + radius} ${ty} H ${tx}`;
+
+    let group = existing.get(node);
+    if (!group) {
+      group = root.createElementNS(SVG_NS, 'g');
+      group.dataset.node = node;
+      group.append(root.createElementNS(SVG_NS, 'path'), root.createElementNS(SVG_NS, 'circle'));
+      overlay.append(group);
     }
+    group.querySelector('path').setAttribute('d', path);
+    const dot = group.querySelector('circle');
+    dot.setAttribute('cx', String(tx + 3));
+    dot.setAttribute('cy', String(ty));
+    dot.setAttribute('r', '2.5');
   });
 }
 
-function prefetchMaterial3(root, cleanups) {
-  if (root.querySelector('link[data-material3-prefetch]')) {
-    return;
+function wireHero(root, view, signal) {
+  const hero = root.querySelector('.hero');
+  if (!hero) return;
+  const replay = hero.querySelector('[data-replay]');
+  const replayLabel = replay.querySelector('.sr');
+  const spec = hero.querySelector('[data-spec]');
+  const overlay = hero.querySelector('[data-leads]');
+  const lines = [...spec.querySelectorAll('.ln')];
+  const steps = [...hero.querySelectorAll('.verdict p')];
+  const targets = [...hero.querySelectorAll('[data-node-target]')];
+  const motion = view.matchMedia('(prefers-reduced-motion: reduce)');
+  const timers = [];
+  let redrawFrame = 0;
+
+  for (const line of lines) {
+    const indent = /^ */.exec(line.textContent)?.[0].length ?? 0;
+    line.style.setProperty('--ki-site-indent', String(indent));
   }
 
-  const view = windowFor(root);
-  const schedule = view.requestIdleCallback ?? ((callback) => view.setTimeout(callback, 2000));
-  const cancel = view.cancelIdleCallback ?? view.clearTimeout;
-  const request = schedule(() => {
-    const hint = root.createElement('link');
-    hint.rel = 'prefetch';
-    hint.as = 'style';
-    hint.href = material3Url(root);
-    hint.dataset.material3Prefetch = '';
-    root.head.append(hint);
+  function finish() {
+    for (const timer of timers.splice(0)) view.clearTimeout(timer);
+    hero.classList.remove('is-staging');
+    for (const item of [...lines, ...steps, ...targets, ...overlay.children]) {
+      item.classList.remove('is-in', 'is-hit');
+    }
+    replayLabel.textContent = 'Replay the spec';
+  }
+
+  function play() {
+    if (motion.matches || signal.aborted) return;
+    hero.classList.add('is-staging');
+    replayLabel.textContent = 'Skip the spec animation';
+    spec.scrollTop = 0;
+    let elapsed = 160;
+    for (const line of lines) {
+      timers.push(
+        view.setTimeout(() => {
+          line.classList.add('is-in');
+          const offset = line.getBoundingClientRect().bottom - spec.getBoundingClientRect().bottom;
+          if (offset > 0) spec.scrollTop += offset + line.offsetHeight;
+          const node = line.dataset.node;
+          if (node) {
+            line.classList.add('is-hit');
+            hero.querySelector(`[data-node-target="${node}"]`)?.classList.add('is-in');
+            overlay.querySelector(`g[data-node="${node}"]`)?.classList.add('is-in');
+          }
+        }, elapsed),
+      );
+      elapsed += line.hasAttribute('data-node') ? 160 : 65;
+      if (line.hasAttribute('data-bad')) {
+        for (const step of steps) {
+          timers.push(view.setTimeout(() => step.classList.add('is-in'), elapsed));
+          elapsed += 450;
+        }
+      }
+    }
+    timers.push(view.setTimeout(finish, elapsed + 300));
+  }
+
+  function redraw() {
+    view.cancelAnimationFrame(redrawFrame);
+    redrawFrame = view.requestAnimationFrame(() => drawLeads(root, hero, overlay));
+  }
+
+  const resizeObserver = new view.ResizeObserver(redraw);
+  resizeObserver.observe(hero);
+  void root.fonts?.ready.then(() => {
+    if (!signal.aborted) redraw();
   });
-  cleanups.push(() => cancel.call(view, request));
+  replay.hidden = motion.matches;
+  replay.addEventListener(
+    'click',
+    () => {
+      if (hero.classList.contains('is-staging')) finish();
+      else play();
+    },
+    { signal },
+  );
+  hero.addEventListener(
+    'focusin',
+    (event) => {
+      if (hero.classList.contains('is-staging') && event.target.closest('[data-node-target]')) {
+        finish();
+      }
+    },
+    { signal },
+  );
+  motion.addEventListener(
+    'change',
+    () => {
+      if (motion.matches) finish();
+      replay.hidden = motion.matches;
+    },
+    { signal },
+  );
+
+  // Start once after the example is visible. The finished spec is the static state.
+  const visibility = new view.IntersectionObserver(
+    (entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      visibility.disconnect();
+      if (!hero.classList.contains('is-staging') && !hero.contains(root.activeElement)) play();
+    },
+    { threshold: 0.4 },
+  );
+  void loadKimenElements().then(() => {
+    if (signal.aborted) return;
+    redraw();
+    visibility.observe(hero.querySelector('.spine'));
+  });
+  signal.addEventListener(
+    'abort',
+    () => {
+      finish();
+      view.cancelAnimationFrame(redrawFrame);
+      resizeObserver.disconnect();
+      visibility.disconnect();
+    },
+    { once: true },
+  );
 }
 
-/** Initialize one site document. Repeated calls reuse the same cleanup handle. */
+const BANDS = [
+  { theme: 'onmars', scheme: 'dark', label: 'onmars · dark' },
+  { theme: 'material3', scheme: 'light', label: 'Material 3 · light' },
+  { theme: 'material3', scheme: 'dark', label: 'Material 3 · dark' },
+];
+
+function wireBands(root, view, signal) {
+  const bands = root.querySelector('[data-bands]');
+  if (!bands) return;
+  const first = bands.querySelector('[data-band]');
+  const seams = [...bands.querySelectorAll('[data-seam]')];
+  const picker = root.querySelector('[data-band-picks]');
+  const picks = [...picker.querySelectorAll('[data-pick]')];
+  const narrow = view.matchMedia('(width <= 64rem)');
+  const motion = view.matchMedia('(prefers-reduced-motion: reduce)');
+  const bandElements = [first];
+  const values = [25, 50, 75];
+  const gap = 6;
+  let scrollFrame = 0;
+  let fitFrame = 0;
+
+  function seamPosition(event) {
+    const box = bands.getBoundingClientRect();
+    const rtl = view.getComputedStyle(bands).direction === 'rtl';
+    const inline = rtl ? box.right - event.clientX : event.clientX - box.left;
+    return (inline / box.width) * 100;
+  }
+
+  function setSeam(index, value) {
+    const min = index === 0 ? gap : values[index - 1] + gap;
+    const max = index === values.length - 1 ? 100 - gap : values[index + 1] - gap;
+    values[index] = Math.min(max, Math.max(min, Math.round(value)));
+    bands.style.setProperty(`--ki-site-s${index + 1}`, `${values[index]}%`);
+    seams.forEach((seam, offset) => {
+      seam.setAttribute('aria-valuemin', String(offset === 0 ? gap : values[offset - 1] + gap));
+      seam.setAttribute(
+        'aria-valuemax',
+        String(offset === values.length - 1 ? 100 - gap : values[offset + 1] - gap),
+      );
+      seam.setAttribute('aria-valuenow', String(values[offset]));
+      seam.setAttribute('aria-valuetext', `${values[offset]}%`);
+    });
+  }
+
+  function highlightBand() {
+    const box = bands.getBoundingClientRect();
+    const rtl = view.getComputedStyle(bands).direction === 'rtl';
+    let selected = bandElements[0];
+    let distance = Infinity;
+    for (const band of bandElements) {
+      const rect = band.getBoundingClientRect();
+      const difference = Math.abs(rtl ? rect.right - box.right : rect.left - box.left);
+      if (difference < distance) {
+        selected = band;
+        distance = difference;
+      }
+    }
+    for (const band of bandElements) band.inert = !narrow.matches || band !== selected;
+    for (const pick of picks) {
+      pick.setAttribute('aria-pressed', String(pick.dataset.pick === selected.dataset.band));
+    }
+  }
+
+  function fitBandTitles() {
+    view.cancelAnimationFrame(fitFrame);
+    fitFrame = view.requestAnimationFrame(() => {
+      const titles = bandElements.map((band) => band.querySelector('.surface-title'));
+      for (const title of titles) {
+        title.style.removeProperty('--ki-site-band-heading-size');
+        title.style.removeProperty('--ki-site-band-heading-height');
+      }
+      if (narrow.matches || !bands.hasAttribute('data-ready')) return;
+
+      // Match the word break at the center seam even when the themes use
+      // different typefaces. Keep a single row height across all four bands.
+      const box = bands.getBoundingClientRect();
+      const center = box.left + box.width / 2;
+      const rtl = view.getComputedStyle(bands).direction === 'rtl';
+      const sizes = titles.map((title) => {
+        const rect = title.getBoundingClientRect();
+        const range = root.createRange();
+        const at = title.textContent.indexOf(' Light');
+        if (at < 0) return Number.parseFloat(view.getComputedStyle(title).fontSize);
+        range.setStart(title.firstChild, at);
+        range.setEnd(title.firstChild, at + 1);
+        const space = range.getBoundingClientRect();
+        const inlineStart = rtl ? rect.right : rect.left;
+        const width = Math.abs((space.left + space.right) / 2 - inlineStart);
+        const base = Number.parseFloat(view.getComputedStyle(title).fontSize);
+        return width > 0
+          ? Math.min(base * 1.4, (base * Math.abs(center - inlineStart)) / width)
+          : base;
+      });
+      const rowHeight = Math.max(...sizes);
+      titles.forEach((title, index) => {
+        title.style.setProperty('--ki-site-band-heading-size', `${sizes[index]}px`);
+        title.style.setProperty('--ki-site-band-heading-height', `${rowHeight}px`);
+      });
+    });
+  }
+
+  function activateBands() {
+    for (const [index, config] of BANDS.entries()) {
+      const copy = first.cloneNode(true);
+      copy.dataset.band = String(index + 2);
+      copy.dataset.kiTheme = config.theme;
+      copy.dataset.kiColorScheme = config.scheme;
+      copy.querySelector('.band-label').textContent = config.label;
+      copy.querySelector('.band-attr').textContent =
+        config.theme === 'onmars'
+          ? `data-ki-color-scheme="${config.scheme}"`
+          : `data-ki-theme="material3"\ndata-ki-color-scheme="${config.scheme}"`;
+      bandElements.at(-1).after(copy);
+      bandElements.push(copy);
+    }
+    bands.dataset.ready = '';
+    for (const seam of seams) seam.hidden = false;
+    picker.hidden = false;
+    for (const hint of root.querySelectorAll('[data-band-hint]')) hint.hidden = false;
+    setSeam(0, values[0]);
+    highlightBand();
+    fitBandTitles();
+  }
+
+  // Request Material 3 as the band demo approaches, or when a visitor tabbing
+  // ahead chooses Material 3 as the page theme.
+  const near = new view.IntersectionObserver(
+    (entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      near.disconnect();
+      void ensureMaterial3(root).then((loaded) => {
+        if (loaded && !signal.aborted) activateBands();
+      });
+    },
+    { rootMargin: '10% 0px' },
+  );
+  near.observe(bands);
+
+  bands.addEventListener(
+    'click',
+    (event) => {
+      if (
+        narrow.matches ||
+        !bands.hasAttribute('data-ready') ||
+        event.target.closest('[data-seam]')
+      ) {
+        return;
+      }
+      const position = seamPosition(event);
+      const nearest = values.reduce(
+        (index, value, candidate) =>
+          Math.abs(value - position) < Math.abs(values[index] - position) ? candidate : index,
+        0,
+      );
+      setSeam(nearest, position);
+    },
+    { signal },
+  );
+
+  seams.forEach((seam, index) => {
+    seam.addEventListener(
+      'pointerdown',
+      (event) => {
+        if (event.button !== 0) return;
+        seam.focus({ preventScroll: true });
+        seam.setPointerCapture(event.pointerId);
+        seam.classList.add('is-dragging');
+      },
+      { signal },
+    );
+    seam.addEventListener(
+      'pointermove',
+      (event) => {
+        if (seam.hasPointerCapture(event.pointerId)) setSeam(index, seamPosition(event));
+      },
+      { signal },
+    );
+    seam.addEventListener('lostpointercapture', () => seam.classList.remove('is-dragging'), {
+      signal,
+    });
+    seam.addEventListener(
+      'keydown',
+      (event) => {
+        const rtl = view.getComputedStyle(bands).direction === 'rtl';
+        const step = {
+          ArrowLeft: rtl ? 2 : -2,
+          ArrowRight: rtl ? -2 : 2,
+          ArrowDown: -2,
+          ArrowUp: 2,
+          PageDown: -10,
+          PageUp: 10,
+        };
+        if (Object.hasOwn(step, event.key)) setSeam(index, values[index] + step[event.key]);
+        else if (event.key === 'Home') setSeam(index, 0);
+        else if (event.key === 'End') setSeam(index, 100);
+        else return;
+        event.preventDefault();
+      },
+      { signal },
+    );
+  });
+
+  for (const pick of picks) {
+    pick.addEventListener(
+      'click',
+      () => {
+        const target = bandElements[Number(pick.dataset.pick) - 1]?.getBoundingClientRect();
+        if (!target) return;
+        const frame = bands.getBoundingClientRect();
+        const rtl = view.getComputedStyle(bands).direction === 'rtl';
+        bands.scrollBy({
+          left: rtl ? target.right - frame.right : target.left - frame.left,
+          behavior: motion.matches ? 'instant' : 'smooth',
+        });
+      },
+      { signal },
+    );
+  }
+  bands.addEventListener(
+    'scroll',
+    () => {
+      view.cancelAnimationFrame(scrollFrame);
+      scrollFrame = view.requestAnimationFrame(highlightBand);
+    },
+    { signal, passive: true },
+  );
+  narrow.addEventListener('change', highlightBand, { signal });
+  const resize = new view.ResizeObserver(fitBandTitles);
+  resize.observe(bands);
+  root.fonts?.addEventListener('loadingdone', fitBandTitles, { signal });
+  signal.addEventListener(
+    'abort',
+    () => {
+      view.cancelAnimationFrame(scrollFrame);
+      view.cancelAnimationFrame(fitFrame);
+      near.disconnect();
+      resize.disconnect();
+    },
+    { once: true },
+  );
+}
+
+function issue(code, path, message, value) {
+  return { ok: false, issues: [{ code, path, message, value }] };
+}
+
+// Examples show recorded results of the package's validateUiSpec API.
+const CASES = [
+  {
+    spec: {
+      version: 1,
+      root: { component: 'ki-button', props: { onclick: 'alert(1)' }, slots: { '': ['Pay now'] } },
+    },
+    output: issue(
+      'unknown-prop',
+      'root.props.onclick',
+      'ki-button declares no prop "onclick"',
+      'onclick',
+    ),
+  },
+  {
+    spec: {
+      version: 1,
+      root: { component: 'ki-badge', props: { tone: 'sparkle' }, slots: { '': ['New'] } },
+    },
+    output: issue(
+      'invalid-prop-type',
+      'root.props.tone',
+      'ki-badge prop "tone" expects one of "danger", "info", "neutral", "success", "warning"',
+      'sparkle',
+    ),
+  },
+  {
+    spec: { version: 1, root: { component: 'ki-iframe', props: { src: 'https://example.com' } } },
+    output: issue(
+      'unknown-component',
+      'root.component',
+      'component "ki-iframe" is outside the catalog',
+      'ki-iframe',
+    ),
+  },
+  {
+    spec: {
+      version: 1,
+      actions: ['save-draft'],
+      root: { component: 'ki-button', action: 'delete-account', slots: { '': ['Delete account'] } },
+    },
+    output: issue(
+      'undeclared-action',
+      'root.action',
+      'action "delete-account" is not declared in the spec\'s action list',
+      'delete-account',
+    ),
+  },
+  {
+    spec: {
+      version: 1,
+      root: {
+        component: 'ki-badge',
+        props: { ['__proto__']: { admin: true } },
+        slots: { '': ['Staff'] },
+      },
+    },
+    output: issue(
+      'forbidden-key',
+      'spec.root.props.__proto__',
+      'forbidden key "__proto__" is not allowed in a UI spec',
+      '__proto__',
+    ),
+  },
+];
+
+function wireGuard(root, signal) {
+  const bench = root.querySelector('[data-guard]');
+  if (!bench) return;
+  const input = bench.querySelector('[data-guard-in] code');
+  const output = bench.querySelector('[data-guard-out] code');
+  const picks = bench.querySelector('.guard-picks');
+  const buttons = [...picks.querySelectorAll('[data-case]')];
+  picks.hidden = false;
+  for (const button of buttons) {
+    button.addEventListener(
+      'click',
+      () => {
+        const chosen = CASES[Number(button.dataset.case)];
+        for (const other of buttons) other.setAttribute('aria-pressed', String(other === button));
+        input.textContent = JSON.stringify(chosen.spec, null, 2);
+        output.textContent = JSON.stringify(chosen.output, null, 2);
+      },
+      { signal },
+    );
+  }
+}
+
+function componentDeclarations(manifest) {
+  const declarations = new Map();
+  if (!Array.isArray(manifest?.modules)) return declarations;
+  for (const module of manifest.modules) {
+    if (!Array.isArray(module?.declarations)) continue;
+    for (const declaration of module.declarations) {
+      const tag = declaration?.tagName;
+      if (typeof tag === 'string' && /^ki-[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u.test(tag)) {
+        declarations.set(tag, declaration);
+      }
+    }
+  }
+  return declarations;
+}
+
+function appendTagLinks(root, cell, tags) {
+  const label = root.createElement('p');
+  label.className = 'tag';
+  for (const tag of tags) {
+    if (label.hasChildNodes()) label.append(' · ');
+    const link = root.createElement('a');
+    link.href = `./docs/components/${tag.slice(3)}/`;
+    link.textContent = tag;
+    label.append(link);
+  }
+  cell.append(label);
+}
+
+function defaultSample(root, tag, declaration) {
+  const cell = root.createElement('div');
+  cell.className = 'cell';
+  const sample = root.createElement(tag);
+  const name = tag.slice(3).replaceAll('-', ' ');
+  const title = name.charAt(0).toUpperCase() + name.slice(1);
+  for (const member of declaration.members ?? []) {
+    if (member.attribute === 'label' || member.attribute === 'heading') {
+      sample.setAttribute(member.attribute, title);
+    }
+  }
+  if (declaration.slots?.some((slot) => slot.name === '')) sample.textContent = title;
+  cell.append(sample);
+  if (declaration.description?.trim()) {
+    const description = root.createElement('p');
+    description.className = 'cell-description';
+    description.textContent = declaration.description.trim().split('\n')[0];
+    cell.append(description);
+  }
+  return cell;
+}
+
+export function renderCatalog(manifest, root = document) {
+  const grid = root.getElementById('catalog-grid');
+  const samples = root.querySelector('[data-catalog-samples]');
+  const declarations = componentDeclarations(manifest);
+  if (!grid || !samples || declarations.size === 0) return false;
+  const represented = new Set();
+  const cells = root.createDocumentFragment();
+
+  // Specimen templates provide richer examples for known tags. The manifest
+  // decides which templates qualify, which tags get links and what gets a fallback.
+  for (const specimen of samples.content.children) {
+    const tags = [
+      ...new Set(
+        [...specimen.querySelectorAll('*')]
+          .map((node) => node.localName)
+          .filter((tag) => tag.startsWith('ki-')),
+      ),
+    ];
+    if (tags.some((tag) => !declarations.has(tag))) continue;
+    const firstAppearances = tags.filter((tag) => !represented.has(tag));
+    if (firstAppearances.length === 0) continue;
+    const cell = specimen.cloneNode(true);
+    appendTagLinks(root, cell, firstAppearances);
+    cells.append(cell);
+    for (const tag of firstAppearances) represented.add(tag);
+  }
+
+  for (const tag of [...declarations.keys()].sort()) {
+    if (represented.has(tag)) continue;
+    const cell = defaultSample(root, tag, declarations.get(tag));
+    appendTagLinks(root, cell, [tag]);
+    cells.append(cell);
+  }
+
+  grid.replaceChildren(cells);
+  grid.hidden = false;
+  const count = root.querySelector('[data-component-count]');
+  if (count) count.textContent = String(declarations.size);
+  return true;
+}
+
+function wireCatalog(root, view, signal) {
+  const grid = root.getElementById('catalog-grid');
+  if (!grid) return;
+  const manifestUrl = new view.URL('./assets/elements/custom-elements.json', import.meta.url);
+  const status = root.querySelector('[data-catalog-status]');
+  grid.addEventListener(
+    'click',
+    (event) => {
+      const toast = event.target.closest('[data-wall-toast]');
+      if (toast) {
+        const toaster = toast.closest('.cell').querySelector('ki-toaster');
+        void toaster.show?.({ message: 'Changes saved.', tone: 'success' });
+      }
+      const toggle = event.target.closest('[data-wall-spinner]');
+      if (toggle) {
+        const spinner = toggle.closest('.cell').querySelector('ki-spinner');
+        spinner.hidden = !spinner.hidden;
+        toggle.setAttribute('aria-pressed', String(!spinner.hidden));
+      }
+    },
+    { signal },
+  );
+  const observer = new view.IntersectionObserver(
+    (entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      void view
+        .fetch(manifestUrl, { signal })
+        .then((response) => {
+          if (!response.ok) throw new Error('Could not load the component manifest.');
+          return response.json();
+        })
+        .then((manifest) => {
+          if (signal.aborted) return;
+          if (!renderCatalog(manifest, root))
+            throw new Error('No components found in the manifest.');
+        })
+        .catch(() => {
+          if (!signal.aborted)
+            status.textContent =
+              'The live wall is unavailable. Browse the component documentation.';
+        });
+    },
+    { rootMargin: '90% 0px' },
+  );
+  observer.observe(grid.parentElement);
+  signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+}
+
+function wireDock(root, view, signal) {
+  const dock = root.querySelector('[data-dock]');
+  const hero = root.querySelector('.hero');
+  if (!dock || !hero) return;
+  const observer = new view.IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting || !dock.contains(root.activeElement))
+      dock.hidden = entry.isIntersecting;
+    dock.classList.toggle('is-shown', !dock.hidden);
+  });
+  observer.observe(hero);
+  signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+}
+
 export function initializeLanding(root = document) {
-  const existingCleanup = initializedDocuments.get(root);
-  if (existingCleanup) {
-    return existingCleanup;
-  }
-
-  const cleanups = [];
-  const handleChange = (event) => {
-    const input = event.target;
-    if (!(input instanceof windowFor(root).HTMLInputElement) || !input.checked) {
-      return;
-    }
-    if (input.closest('[data-theme-control]')) {
-      void applyTheme(input.value, root);
-    } else if (input.closest('[data-scheme-control]')) {
-      applyScheme(input.value, root);
-    }
-  };
-  const handlePageShow = () => syncThemeControls(root);
-
-  root.addEventListener('change', handleChange);
-  windowFor(root).addEventListener('pageshow', handlePageShow);
-  cleanups.push(() => root.removeEventListener('change', handleChange));
-  cleanups.push(() => windowFor(root).removeEventListener('pageshow', handlePageShow));
-
-  const storedTheme = readPreference(root, 'kimen-theme');
-  const storedScheme = readPreference(root, 'kimen-scheme');
-  if (storedTheme === 'material3') {
-    root.documentElement.dataset.kiTheme = 'material3';
-    void ensureMaterial3(root);
-  } else if (storedTheme === 'onmars') {
-    root.documentElement.removeAttribute('data-ki-theme');
-  }
-  if (storedScheme === 'light' || storedScheme === 'dark') {
-    root.documentElement.dataset.kiColorScheme = storedScheme;
-  } else if (storedScheme === 'auto') {
-    root.documentElement.removeAttribute('data-ki-color-scheme');
-  } else {
-    root.documentElement.dataset.kiColorScheme = 'dark';
-    writePreference(root, 'kimen-scheme', 'dark');
-  }
-
-  syncThemeControls(root);
-  prefetchMaterial3(root, cleanups);
-  observeComponentSurfaces(root, cleanups);
-  wireDialog(root, cleanups);
-  void loadCatalog(root);
-
-  const cleanup = () => {
-    for (const dispose of cleanups.splice(0)) {
-      dispose();
-    }
-    initializedDocuments.delete(root);
-  };
-  initializedDocuments.set(root, cleanup);
-  return cleanup;
+  const view = root.defaultView;
+  const controller = new view.AbortController();
+  const { signal } = controller;
+  wirePreferences(root, view, signal);
+  wireCopy(root, view, signal);
+  wireHero(root, view, signal);
+  wireBands(root, view, signal);
+  wireGuard(root, signal);
+  wireCatalog(root, view, signal);
+  wireDock(root, view, signal);
+  return () => controller.abort();
 }
 
-if (document.body?.dataset.kimenPage === 'landing') {
-  initializeLanding(document);
+if (document.querySelector('[data-kimen-page="landing"]')) {
+  const iconUrl = new window.URL('./assets/elements/icons/circle-check.js', import.meta.url).href;
+  void import(/* @vite-ignore */ iconUrl).catch(() => undefined);
+  initializeLanding();
 }

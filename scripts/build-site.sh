@@ -30,6 +30,8 @@ for required in \
   packages/tokens/dist/css/tokens.material3.css \
   packages/elements/dist/kimen/kimen.esm.js \
   packages/elements/generated/custom-elements.json \
+  packages/elements/icons/circle-check.js \
+  packages/elements/icons/_registry.mjs \
   llms.txt \
   llms-full.txt \
   site/playground/index.html \
@@ -41,7 +43,7 @@ for required in \
 done
 
 rm -rf "$OUT"
-mkdir -p "$OUT/assets/tokens" "$OUT/assets/elements" "$OUT/assets/fonts" "$OUT/playground" "$OUT/docs" "$OUT/privacy" "$OUT/llms"
+mkdir -p "$OUT/assets/tokens" "$OUT/assets/elements/icons" "$OUT/assets/fonts" "$OUT/playground" "$OUT/docs" "$OUT/privacy" "$OUT/llms"
 
 # Landing: top-level files only — site/docs/ is the docs-site source tree
 # (node_modules, dist) and must never be copied wholesale into the artifact.
@@ -55,6 +57,8 @@ cp packages/tokens/fonts/{InstrumentSans,Newsreader}{Variable.woff2,-OFL.txt} "$
 cp packages/elements/browser-tests/visual/fonts/RobotoVariable.woff2 "$OUT/assets/fonts/"
 cp packages/tokens/dist/css/tokens.css packages/tokens/dist/css/tokens.material3.css "$OUT/assets/tokens/"
 cp -R packages/elements/dist/kimen "$OUT/assets/elements/kimen"
+# The wall's named icon uses the same registration module as package consumers.
+cp packages/elements/icons/{circle-check.js,_registry.mjs} "$OUT/assets/elements/icons/"
 # The generated manifest, for api viewers and machine consumers.
 cp packages/elements/generated/custom-elements.json "$OUT/assets/elements/custom-elements.json"
 # Agent surfaces (spec 017): the repository llms.txt is the index this site

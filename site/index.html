@@ -1,428 +1,1319 @@
 <!doctype html>
 <html lang="en" data-ki-color-scheme="dark">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen — Web Components for generative UI</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kimen — web components for generative UI</title>
     <meta
       name="description"
-      content="A standards-first Web Components foundation for generative UI: token-driven theming, agent-legible contracts and a guarded catalog with A2UI and MCP Apps adapters."
-    />
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <!-- SEO metadata only: a canonical link is never fetched or executed by
-         the browser, so subresource integrity does not apply.
-         nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
-    <link rel="canonical" href="https://kimen.dev/" />
-    <meta property="og:title" content="Kimen — Web Components for generative UI" />
-    <meta
-      property="og:description"
-      content="The component foundation built for generative UI: framework-neutral, token-driven and guarded by machine-readable contracts."
-    />
-    <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f9f9fa" media="(prefers-color-scheme: light)" />
-    <link rel="stylesheet" href="./assets/tokens/tokens.css" />
-    <link rel="stylesheet" href="./fonts.css" />
-    <link rel="stylesheet" href="./landing.css" />
+      content="Kimen is a web-component foundation for generative UI: agents emit JSON specs, a guarded catalog validates them fail-closed, and real ki-* components render them in your brand, in any framework."
+    >
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="canonical" href="https://kimen.dev/">
+    <meta property="og:title" content="Kimen — web components for generative UI">
+    <meta property="og:description" content="Agents write data. Kimen renders real UI.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kimen.dev/">
+    <meta name="theme-color" content="#f9f7f4" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1b1916" media="(prefers-color-scheme: dark)">
+    <link
+      rel="preload"
+      href="./assets/fonts/NewsreaderVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    >
+    <link
+      rel="preload"
+      href="./assets/fonts/InstrumentSansVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    >
+    <link rel="stylesheet" href="./assets/tokens/tokens.css">
+    <link rel="stylesheet" href="./fonts.css">
+    <link rel="stylesheet" href="./landing.css">
     <script>
-      // Apply the persisted token theme before first paint. This tiny bootstrap
-      // stays inline so a returning visitor never sees the default theme flash.
-      (() => {
-        try {
-          const theme = localStorage.getItem('kimen-theme');
-          const scheme = localStorage.getItem('kimen-scheme') ?? 'dark';
-          const root = document.documentElement;
-          if (theme === 'material3') {
-            root.setAttribute('data-ki-theme', 'material3');
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = './assets/tokens/tokens.material3.css';
-            link.id = 'material3-css';
-            document.head.appendChild(link);
-          }
-          if (scheme === 'light' || scheme === 'dark') {
-            root.setAttribute('data-ki-color-scheme', scheme);
-          }
-        } catch {
-          // Storage may be unavailable in a hardened/private browsing context.
+    // Apply the stored colour scheme before first paint, so a returning visitor never sees a flash.
+    (() => {
+      try {
+        const scheme = localStorage.getItem('kimen-scheme');
+        if (scheme === 'auto') {
+          document.documentElement.dataset.kiColorScheme = window.matchMedia(
+            '(prefers-color-scheme: light)',
+          ).matches
+            ? 'light'
+            : 'dark';
+        } else if (scheme === 'light' || scheme === 'dark') {
+          document.documentElement.dataset.kiColorScheme = scheme;
         }
-      })();
+      } catch {
+        // Storage can be unavailable in a hardened or private context.
+      }
+    })();
     </script>
     <script type="module" src="./landing.js"></script>
     <!-- kimen:analytics -->
   </head>
-  <body data-kimen-page="landing">
-    <a class="skip-link" href="#main">Skip to content</a>
-    <div class="aurora" aria-hidden="true"></div>
-
-    <header class="site-header">
-      <a class="brand" href="#top">
-        <svg class="brand-mark" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+  <body>
+    <div class="home-page" data-kimen-page="landing">
+      <svg class="sprite" aria-hidden="true" focusable="false">
+        <symbol id="i-copy" viewBox="0 0 24 24">
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+        <symbol id="i-x" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <path d="m15 9-6 6" />
+          <path d="m9 9 6 6" />
+        </symbol>
+        <symbol id="i-ok" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <path d="m16 9-5.5 5.5L8 12" />
+        </symbol>
+        <symbol id="i-replay" viewBox="0 0 24 24">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+          <path d="M3 3v5h5" />
+        </symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24">
           <path
-            d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
           />
-        </svg>
-        <span class="brand-name">Kimen</span>
-        <span class="brand-stage">pre-v1</span>
-        <span class="visually-hidden">home</span>
-      </a>
+        </symbol>
+        <symbol id="i-auto" viewBox="0 0 24 24">
+          <rect width="20" height="14" x="2" y="3" rx="2" />
+          <path d="M8 21h8" />
+          <path d="M12 17v4" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
+        </symbol>
+        <symbol id="i-out" viewBox="0 0 24 24">
+          <path d="M7 7h10v10" />
+          <path d="M7 17 17 7" />
+        </symbol>
+        <symbol id="i-grip" viewBox="0 0 24 24">
+          <circle cx="9" cy="12" r="1" />
+          <circle cx="9" cy="5" r="1" />
+          <circle cx="9" cy="19" r="1" />
+          <circle cx="15" cy="12" r="1" />
+          <circle cx="15" cy="5" r="1" />
+          <circle cx="15" cy="19" r="1" />
+        </symbol>
+        <symbol id="i-mark" viewBox="0 0 24 24">
+          <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9" />
+        </symbol>
+      </svg>
 
-      <div class="header-desktop">
-        <nav class="site-nav" aria-label="Primary">
+      <a class="skip" href="#main">Skip to content</a>
+
+      <nav class="dock" aria-label="Sections" data-dock hidden>
+        <a class="dock-brand" href="#top" aria-label="Kimen, back to top"
+          ><svg class="icon mark" aria-hidden="true" focusable="false">
+            <use href="#i-mark" />
+          </svg></a
+        >
+        <a href="#themes">Themes</a>
+        <a href="#start">Use it</a>
+        <a href="#guardrail">Guardrail</a>
+        <a href="#components">Live wall</a>
+        <a class="action action-primary action-sm" href="./docs/">Get started</a>
+      </nav>
+
+      <header class="hero" id="top">
+        <a
+          class="brand"
+          data-ki-theme="onmars"
+          data-ki-color-scheme="dark"
+          href="./"
+          aria-label="Kimen home"
+        >
+          <svg class="icon mark" aria-hidden="true" focusable="false"><use href="#i-mark" /></svg>
+          <span class="brand-name">Kimen</span>
+          <ki-badge size="sm" aria-hidden="true">pre-v1</ki-badge>
+        </a>
+        <nav class="topnav" aria-label="Primary">
           <a href="./docs/components/alert/">Components</a>
+          <a href="#start">Use it</a>
+          <a href="./docs/">Docs</a>
           <a href="./playground/">Playground</a>
           <a href="https://github.com/kimen-dev/kimen">GitHub</a>
+          <button
+            class="scheme"
+            type="button"
+            data-scheme
+            hidden
+            aria-label="Colour scheme: follow the system"
+          >
+            <svg aria-hidden="true" focusable="false" class="icon" data-scheme-icon="auto">
+              <use href="#i-auto" />
+            </svg>
+            <svg aria-hidden="true" focusable="false" class="icon" data-scheme-icon="light">
+              <use href="#i-sun" />
+            </svg>
+            <svg aria-hidden="true" focusable="false" class="icon" data-scheme-icon="dark">
+              <use href="#i-moon" />
+            </svg>
+          </button>
         </nav>
-        <fieldset class="segmented segmented-compact" data-scheme-control>
-          <legend class="visually-hidden">Color scheme</legend>
-          <label><input type="radio" name="header-scheme" value="auto" /><span>Auto</span></label>
-          <label><input type="radio" name="header-scheme" value="light" /><span>Light</span></label>
-          <label><input type="radio" name="header-scheme" value="dark" /><span>Dark</span></label>
-        </fieldset>
-      </div>
-
-      <details class="mobile-menu">
-        <summary>Menu</summary>
-        <div class="mobile-menu-panel">
-          <nav aria-label="Primary mobile">
-            <a href="./docs/components/alert/">Components</a>
-            <a href="./playground/">Playground</a>
-            <a href="https://github.com/kimen-dev/kimen">GitHub</a>
-          </nav>
-          <fieldset class="segmented" data-scheme-control>
-            <legend>Color scheme</legend>
-            <label><input type="radio" name="mobile-scheme" value="auto" /><span>Auto</span></label>
-            <label><input type="radio" name="mobile-scheme" value="light" /><span>Light</span></label>
-            <label><input type="radio" name="mobile-scheme" value="dark" /><span>Dark</span></label>
-          </fieldset>
-        </div>
-      </details>
-    </header>
-
-    <main id="main" class="landing-main">
-      <section class="hero" id="top" aria-labelledby="hero-title">
-        <div class="hero-layout">
-          <div class="hero-orbit hero-orbit-start" aria-hidden="true">
-            <span class="signal-card signal-status">
-              <span class="signal-dot signal-dot-ring"></span>
-              <span>gates · exit 0</span>
-            </span>
-            <span class="signal-card signal-switch">
-              <span class="switch-figure" aria-hidden="true"><span></span></span>
-              <span>RTL ready</span>
-            </span>
-            <span class="signal-card signal-badge-card">
-              <span class="signal-badge signal-badge-info">custom-elements.json</span>
-            </span>
+        <div class="pitch">
+          <h1 id="hero-title">Agents write data. <em>Kimen renders real UI.</em></h1>
+          <p class="lede">
+            The component foundation built for generative UI. Your agent emits a JSON spec, a
+            guarded catalog validates it fail-closed, and real, accessible
+            <code>ki-*</code> components render it — in your brand, in any framework.
+          </p>
+          <div class="cta">
+            <div class="install" data-copy-source>
+              <code
+                ><span class="prompt" aria-hidden="true">$</span>
+                pnpm add @kimen/elements @kimen/tokens</code
+              >
+              <button
+                class="copy"
+                type="button"
+                hidden
+                data-copy="pnpm add @kimen/elements @kimen/tokens"
+              >
+                <svg aria-hidden="true" focusable="false" class="icon" data-copy-icon>
+                  <use href="#i-copy" />
+                </svg><span class="copy-label">Copy</span>
+              </button>
+            </div>
+            <a class="action action-primary" href="./docs/"
+              >Get started
+              <svg aria-hidden="true" focusable="false" class="icon">
+                <use href="#i-arrow" />
+              </svg></a
+            >
+            <a class="action" href="./playground/">Open the playground</a>
           </div>
-
-          <div class="hero-copy">
-            <p class="eyebrow">Web Components · Agent-legible contracts · Apache-2.0</p>
-            <h1 id="hero-title">
-              The component foundation built for generative UI.
-            </h1>
-            <p class="hero-lede">
-              Standards-first <code>ki-*</code> web components that work in any framework, under
-              any brand. Agents read the same contract you do — and a guarded catalog keeps what
-              they render safe.
+          <p class="note">
+            Pre-v1: not on npm yet. These are the commands v1 ships with;
+            <a href="https://github.com/kimen-dev/kimen">build it from the repository</a> today.
+          </p>
+        </div>
+        <aside
+          class="spine"
+          data-ki-theme="onmars"
+          data-ki-color-scheme="dark"
+          aria-label="An agent's UI spec, validated"
+        >
+          <div class="file">
+            <span class="file-name">workspace.spec.json</span>
+            <span class="file-from">from your agent · abridged example</span>
+            <button class="replay" type="button" data-replay hidden>
+              <svg aria-hidden="true" focusable="false" class="icon"><use href="#i-replay" /></svg
+              ><span class="sr">Replay the spec</span>
+            </button>
+          </div>
+          <pre
+            class="spec"
+            data-spec
+            tabindex="0"
+            aria-label="Example workspace spec"
+          ><code><span class="ln">{</span>
+<span class="ln">  <i class="k">"version"</i>: <i class="n">1</i>,</span>
+<span class="ln">  <i class="k">"actions"</i>: [<i class="s">"create-workspace"</i>],</span>
+<span class="ln" data-node="card">  <i class="k">"root"</i>: { <i class="k">"component"</i>: <i class="c">"ki-card"</i>,</span>
+<span class="ln">    <i class="k">"slots"</i>: {</span>
+<span class="ln" data-node="header">      <i class="k">"header"</i>: [<i class="s">"New workspace"</i>],</span>
+<span class="ln">      <i class="k">""</i>: [</span>
+<span class="ln" data-node="input">        { <i class="k">"component"</i>: <i class="c">"ki-input"</i>,</span>
+<span class="ln">          <i class="k">"props"</i>: { <i class="k">"label"</i>: <i class="s">"Workspace name"</i> } },</span>
+<span class="ln" data-node="select">        { <i class="k">"component"</i>: <i class="c">"ki-select"</i>,</span>
+<span class="ln">          <i class="k">"props"</i>: { <i class="k">"label"</i>: <i class="s">"Region"</i> },</span>
+<span class="ln">          <i class="k">"slots"</i>: { <i class="k">""</i>: [ <i class="elide">ki-option × 3</i> ] } },</span>
+<span class="ln" data-node="switch">        { <i class="k">"component"</i>: <i class="c">"ki-switch"</i>,</span>
+<span class="ln">          <i class="k">"slots"</i>: { <i class="k">""</i>: [<i class="s">"Invite via link"</i>] } }</span>
+<span class="ln">      ],</span>
+<span class="ln">      <i class="k">"footer"</i>: [</span>
+<span class="ln" data-node="button">        { <i class="k">"component"</i>: <i class="c">"ki-button"</i>,</span>
+<span class="ln">          <i class="k">"props"</i>: { <i class="k">"variant"</i>: <i class="s">"primary"</i>,</span>
+<span class="ln bad" data-bad>                     <i class="k">"onclick"</i>: <i class="s">"fetch('/export')"</i> },</span>
+<span class="ln">          <i class="k">"action"</i>: <i class="s">"create-workspace"</i>,</span>
+<span class="ln">          <i class="k">"slots"</i>: { <i class="k">""</i>: [<i class="s">"Create workspace"</i>] } }</span>
+<span class="ln">      ]</span>
+<span class="ln">} } }</span></code></pre>
+          <div class="verdict" data-verdict role="status">
+            <p class="v-call"><code>validateUiSpec(spec)</code></p>
+            <p class="v-bad" data-step="reject">
+              <svg aria-hidden="true" focusable="false" class="icon"><use href="#i-x" /></svg>
+              <span
+                ><code>unknown-prop</code>
+                <code class="path">root.slots.footer[0].props.onclick</code><br>ki-button declares
+                no prop "onclick"</span
+              >
             </p>
-            <div class="hero-actions">
-              <a class="cta cta-primary" href="./docs/components/alert/">Explore the components</a>
-              <a class="cta cta-secondary" href="./playground/">Open the playground</a>
-              <a class="cta cta-ghost" href="https://github.com/kimen-dev/kimen">GitHub</a>
+            <p class="v-ok" data-step="ok">
+              <svg aria-hidden="true" focusable="false" class="icon"><use href="#i-ok" /></svg>
+              <span
+                >The agent drops the prop and retries: <code>ok: true</code>. The preview shows the
+                result.</span
+              >
+            </p>
+          </div>
+        </aside>
+        <figure class="render" data-component-surface>
+          <ki-card class="render-card" data-node-target="card">
+            <span slot="header" data-node-target="header">New workspace</span>
+            <div class="render-fields">
+              <ki-input
+                label="Workspace name"
+                value="Acme research"
+                data-node-target="input"
+              ></ki-input>
+              <ki-select label="Region" value="eu-west" data-node-target="select">
+                <ki-option value="eu-west">eu-west</ki-option>
+                <ki-option value="us-east">us-east</ki-option>
+                <ki-option value="ap-south">ap-south</ki-option>
+              </ki-select>
+              <ki-switch checked data-node-target="switch">Invite via link</ki-switch>
+            </div>
+            <ki-button slot="footer" variant="primary" data-node-target="button"
+              >Create workspace</ki-button
+            >
+          </ki-card>
+          <figcaption>
+            The preview uses real <code>ki-*</code> components. The spec and its verdict illustrate
+            the guarded renderer.
+            <a href="#how">How it works</a>
+          </figcaption>
+        </figure>
+        <svg class="leads" data-leads aria-hidden="true" focusable="false"></svg>
+      </header>
+
+      <main id="main" tabindex="-1">
+        <dl class="project-stats" aria-label="Project snapshot">
+          <div>
+            <dt>Components</dt>
+            <dd><a href="#components" data-component-count>See the live wall</a></dd>
+          </div>
+          <div>
+            <dt>Themes, 1 attribute</dt>
+            <dd>2</dd>
+          </div>
+          <div>
+            <dt>Allowed axe violations</dt>
+            <dd>0</dd>
+          </div>
+          <div>
+            <dt>Browser engines</dt>
+            <dd>3</dd>
+          </div>
+          <div>
+            <dt>Component budget</dt>
+            <dd>Single-digit KB</dd>
+          </div>
+          <div>
+            <dt>Token-styled</dt>
+            <dd>100%</dd>
+          </div>
+        </dl>
+        <section class="themes" id="themes" aria-labelledby="theme-title">
+          <div class="bands" data-bands>
+            <div
+              class="band"
+              data-band="1"
+              inert
+              data-ki-theme="onmars"
+              data-ki-color-scheme="light"
+            >
+              <div class="surface">
+                <p class="band-label">onmars · light</p>
+                <p class="surface-title">Same spec. Any brand. Light or dark.</p>
+                <p class="surface-lede">
+                  Themes are token layers: primitive, theme, semantic, component. One attribute
+                  restyles every component; no component CSS changes.
+                </p>
+                <ki-alert class="surface-alert" tone="info" heading="Spec validated"
+                  >4 components, 1 declared action, 0 issues.</ki-alert
+                >
+                <ki-list class="surface-members" aria-label="Members">
+                  <ki-list-item
+                    ><ki-avatar slot="start" initials="AG" label="Ana García"></ki-avatar>Ana García<span
+                      slot="secondary"
+                      >Owner</span
+                    ></ki-list-item
+                  >
+                  <ki-list-item
+                    ><ki-avatar slot="start" initials="MK" label="Mina Kato"></ki-avatar>Mina Kato<span
+                      slot="secondary"
+                      >Editor</span
+                    ></ki-list-item
+                  >
+                  <ki-list-item
+                    ><ki-avatar slot="start" initials="LB" label="Leo Brandt"></ki-avatar>Leo Brandt<ki-badge
+                      slot="end"
+                      tone="warning"
+                      >Pending</ki-badge
+                    ></ki-list-item
+                  >
+                </ki-list>
+                <div class="surface-meter">
+                  <ki-progress label="Storage · 6.4 of 10 GB" value="64"></ki-progress>
+                  <div class="surface-badges">
+                    <ki-badge tone="success">Synced</ki-badge><ki-badge>eu-west</ki-badge
+                    ><ki-badge tone="info">3 seats</ki-badge>
+                  </div>
+                </div>
+                <ki-card class="surface-card">
+                  <span slot="header">New workspace</span>
+                  <div class="surface-fields">
+                    <ki-input label="Workspace name" value="Acme research"></ki-input>
+                    <ki-select label="Region" value="eu-west"
+                      ><ki-option value="eu-west">eu-west</ki-option
+                      ><ki-option value="us-east">us-east</ki-option></ki-select
+                    >
+                    <div class="surface-toggles">
+                      <ki-switch checked>Invite via link</ki-switch>
+                      <ki-checkbox checked>Send a weekly digest</ki-checkbox>
+                    </div>
+                    <div class="surface-actions">
+                      <ki-button>Cancel</ki-button>
+                      <ki-button variant="primary">Create workspace</ki-button>
+                    </div>
+                  </div>
+                </ki-card>
+                <code class="band-attr">data-ki-color-scheme="light"</code>
+              </div>
+            </div>
+            <div
+              class="seam"
+              hidden
+              data-seam="1"
+              role="slider"
+              tabindex="0"
+              aria-label="Boundary between onmars light and onmars dark"
+              aria-valuemin="6"
+              aria-valuemax="94"
+              aria-valuenow="25"
+              aria-valuetext="25%"
+            >
+              <span class="seam-handle"
+                ><svg aria-hidden="true" focusable="false" class="icon">
+                  <use href="#i-grip" />
+                </svg></span
+              >
+            </div>
+            <div
+              class="seam"
+              hidden
+              data-seam="2"
+              role="slider"
+              tabindex="0"
+              aria-label="Boundary between onmars dark and Material 3 light"
+              aria-valuemin="6"
+              aria-valuemax="94"
+              aria-valuenow="50"
+              aria-valuetext="50%"
+            >
+              <span class="seam-handle"
+                ><svg aria-hidden="true" focusable="false" class="icon">
+                  <use href="#i-grip" />
+                </svg></span
+              >
+            </div>
+            <div
+              class="seam"
+              hidden
+              data-seam="3"
+              role="slider"
+              tabindex="0"
+              aria-label="Boundary between Material 3 light and Material 3 dark"
+              aria-valuemin="6"
+              aria-valuemax="94"
+              aria-valuenow="75"
+              aria-valuetext="75%"
+            >
+              <span class="seam-handle"
+                ><svg aria-hidden="true" focusable="false" class="icon">
+                  <use href="#i-grip" />
+                </svg></span
+              >
             </div>
           </div>
-
-          <div class="hero-orbit hero-orbit-end" aria-hidden="true">
-            <span class="signal-card signal-avatar-card">
-              <span class="avatar-figure"><span>MG</span><span>A2</span><span>UI</span><b>+9</b></span>
-            </span>
-            <span class="signal-card signal-budget">
-              <span class="signal-budget-label">SIZE BUDGET</span>
-              <span class="budget-track"><span></span></span>
-              <span class="signal-budget-value">3.8 / 10 KB</span>
-            </span>
-            <span class="signal-card signal-axe">
-              <span class="checkbox-figure" aria-hidden="true">
-                <svg class="checkbox-mark" viewBox="0 0 18 18">
-                  <path d="M4 9.5 7.5 13 14 5"></path>
-                </svg>
-              </span>
-              <span>0 axe violations</span>
-            </span>
+          <div class="band-picks" role="group" aria-label="Show theme" data-band-picks hidden>
+            <button type="button" data-pick="1" aria-pressed="true">onmars light</button>
+            <button type="button" data-pick="2" aria-pressed="false">onmars dark</button>
+            <button type="button" data-pick="3" aria-pressed="false">Material 3 light</button>
+            <button type="button" data-pick="4" aria-pressed="false">Material 3 dark</button>
           </div>
-        </div>
-
-        <article class="pipeline panel" aria-labelledby="pipeline-title" data-component-surface>
-          <header class="panel-header">
-            <h2 class="pipeline-title" id="pipeline-title">
-              agent → spec → guardrail → catalog → render
+          <div class="themes-foot">
+            <h2 class="section-title" id="theme-title">
+              This page runs on <code>@kimen/tokens</code>. Flip it.
             </h2>
-            <span class="status-pill status-success">guarded renderer · available</span>
-          </header>
-          <div class="pipeline-line" aria-hidden="true"></div>
-          <div class="pipeline-grid">
-            <section class="pipeline-step" aria-labelledby="pipeline-spec-title">
-              <h3 id="pipeline-spec-title"><span>01</span>An agent emits a spec</h3>
-              <pre class="code-block" tabindex="0" role="region" aria-label="Generated UI specification"><code>{
-  "surface": "form",
-  "children": [
-    { "component": "ki-input",
-      "props": { "label": "Workspace name" } },
-    { "component": "ki-select",
-      "props": { "label": "Region" } },
-    { "component": "ki-switch",
-      "props": { "label": "Invite via link" } },
-    { "component": "ki-button",
-      "props": { "variant": "primary" },
-      "action": "create" }
-  ]
-}</code></pre>
-            </section>
-
-            <section class="pipeline-step" aria-labelledby="pipeline-guardrail-title">
-              <h3 id="pipeline-guardrail-title"><span>02</span>The guardrail validates it</h3>
-              <div class="pipeline-validation">
-                <ul class="validation-list">
-                  <li><span class="signal-dot"></span>every component is in the catalog</li>
-                  <li><span class="signal-dot"></span>props match the machine contract</li>
-                  <li><span class="signal-dot"></span>only declared actions are wired</li>
-                  <li><span class="signal-dot"></span>no code-execution path from spec data</li>
-                </ul>
-                <p class="microcopy">unknown props → rejected. fail-closed.</p>
-              </div>
-            </section>
-
-            <section class="pipeline-step" aria-labelledby="pipeline-render-title">
-              <h3 id="pipeline-render-title"><span>03</span>Real ki-* components mount</h3>
-              <div class="pipeline-demo">
-                <ki-input label="Workspace name" placeholder="acme-corp" readonly></ki-input>
-                <ki-select label="Region" value="eu-west">
-                  <ki-option value="eu-west">eu-west</ki-option>
-                  <ki-option value="us-east">us-east</ki-option>
-                </ki-select>
-                <ki-switch checked>Invite via link</ki-switch>
-                <ki-button type="button" variant="primary">Create workspace</ki-button>
-                <ki-alert tone="success" heading="Rendered through the guardrail"></ki-alert>
-              </div>
-            </section>
+            <p>
+              <span class="hint-wide" data-band-hint hidden
+                >Drag a seam, click within a band, or use the arrow keys on a seam.</span
+              ><span class="hint-narrow" data-band-hint hidden
+                >Swipe the bands or pick a theme.</span
+              >
+              Every band is the same markup; only <code>data-ki-theme</code> and
+              <code>data-ki-color-scheme</code> change. Load your own theme as another token layer.
+              <a href="./docs/guides/theming/">Theming guide</a>
+            </p>
+            <div class="theme-preferences" data-theme-preferences hidden>
+              <fieldset data-theme-control>
+                <legend>Page theme</legend>
+                <label
+                  ><input type="radio" name="landing-theme" value="onmars" checked>
+                  onmars</label
+                >
+                <label
+                  ><input type="radio" name="landing-theme" value="material3">
+                  Material 3</label
+                >
+              </fieldset>
+              <fieldset data-scheme-control>
+                <legend>Colour scheme</legend>
+                <label><input type="radio" name="landing-scheme" value="auto"> System</label>
+                <label><input type="radio" name="landing-scheme" value="light"> Light</label>
+                <label><input type="radio" name="landing-scheme" value="dark" checked> Dark</label>
+              </fieldset>
+            </div>
           </div>
-        </article>
+        </section>
 
-        <dl class="project-stats" aria-label="Project snapshot">
-          <div><dt>Components</dt><dd><data id="component-count" value="29">29</data></dd></div>
-          <div><dt>Themes, 1 attribute</dt><dd>2</dd></div>
-          <div><dt>Axe violations</dt><dd>0</dd></div>
-          <div><dt>Browser engines</dt><dd>3</dd></div>
-          <div><dt>Per component</dt><dd>&lt;10 KB</dd></div>
-          <div><dt>Token-styled</dt><dd>100%</dd></div>
-        </dl>
-      </section>
-
-      <section class="section" id="components" aria-labelledby="components-title">
-        <header class="section-heading">
-          <p class="eyebrow">Live from the library</p>
-          <h2 id="components-title">Every component, live. Not screenshots.</h2>
-          <p>
-            Rendered from the same token pipeline the package ships. Hover, focus, click — every
-            state below is the real state matrix.
+        <section class="ways" id="start" aria-labelledby="ways-title">
+          <h2 id="ways-title" class="section-title">
+            Write it yourself, or let your agent compose it.
+          </h2>
+          <p class="section-lede" id="how">
+            The same web components serve both. Hand-written UI imports them directly. Agent-written
+            UI goes through the catalog, which turns a spec into components only after it passes
+            validation.
           </p>
-        </header>
-
-        <div class="specimen" data-component-surface>
-          <ki-tabs label="Component families" value="buttons">
-            <ki-tab value="buttons">Buttons</ki-tab>
-            <ki-tab value="forms">Forms</ki-tab>
-            <ki-tab value="feedback">Feedback</ki-tab>
-            <ki-tab value="overlays">Overlays</ki-tab>
-            <ki-tab value="data">Data</ki-tab>
-
-            <ki-tab-panel value="buttons">
-              <div class="specimen-matrix">
-                <section class="specimen-group" aria-labelledby="specimen-emphasis-title">
-                  <h3 id="specimen-emphasis-title">Emphasis</h3>
-                  <div class="component-row">
-                    <ki-button type="button" variant="primary">Primary</ki-button>
-                    <ki-button type="button" variant="secondary">Secondary</ki-button>
-                    <ki-button type="button" variant="quaternary">Quaternary</ki-button>
-                    <ki-button type="button" variant="ghost">Ghost</ki-button>
-                  </div>
-                </section>
-                <section class="specimen-group" aria-labelledby="specimen-tone-title">
-                  <h3 id="specimen-tone-title">Tone</h3>
-                  <div class="component-row">
-                    <ki-button type="button" variant="primary">Neutral</ki-button>
-                    <ki-button type="button" variant="primary" tone="success">Success</ki-button>
-                    <ki-button type="button" variant="primary" tone="danger">Danger</ki-button>
-                    <ki-button type="button" variant="secondary" tone="success">Success</ki-button>
-                    <ki-button type="button" variant="secondary" tone="danger">Danger</ki-button>
-                  </div>
-                </section>
-                <section class="specimen-group" aria-labelledby="specimen-size-title">
-                  <h3 id="specimen-size-title">Size</h3>
-                  <div class="component-row component-row-aligned">
-                    <ki-button type="button" variant="secondary" size="xs">xs</ki-button>
-                    <ki-button type="button" variant="secondary" size="sm">sm</ki-button>
-                    <ki-button type="button" variant="secondary" size="md">md</ki-button>
-                    <ki-button type="button" variant="secondary" size="lg">lg</ki-button>
-                    <ki-button type="button" variant="secondary" size="xl">xl</ki-button>
-                  </div>
-                </section>
-                <section class="specimen-group" aria-labelledby="specimen-states-title">
-                  <h3 id="specimen-states-title">States &amp; slots</h3>
-                  <div class="component-row">
-                    <ki-button type="button" variant="primary" disabled>Disabled</ki-button>
-                    <ki-button type="button" variant="secondary">
-                      <span aria-hidden="true" slot="start">
-                        <svg class="inline-icon" viewBox="0 0 16 16" focusable="false">
-                          <path d="M2 8h10m-3-3 3 3-3 3"></path>
-                        </svg>
-                      </span>
-                      With slots
-                    </ki-button>
-                  </div>
-                </section>
-                <pre class="code-block" tabindex="0" role="region" aria-label="Button markup example"><code>&lt;ki-button variant="primary" tone="success" size="md"&gt;
-  Save changes
-&lt;/ki-button&gt;</code></pre>
-              </div>
-            </ki-tab-panel>
-
-            <ki-tab-panel value="forms">
-              <div class="form-showcase">
-                <ki-input label="Workspace" placeholder="relay-team"></ki-input>
-                <ki-select label="Region" placeholder="Pick a region">
-                  <ki-option value="eu-west">eu-west</ki-option>
-                  <ki-option value="us-east">us-east</ki-option>
-                  <ki-option value="ap-south">ap-south</ki-option>
-                </ki-select>
-                <ki-checkbox checked>Run the gate suite</ki-checkbox>
-                <ki-switch checked>Progressive rollout</ki-switch>
-              </div>
-            </ki-tab-panel>
-
-            <ki-tab-panel value="feedback">
-              <div class="specimen-stack">
-                <ki-alert tone="info" heading="Contracts stay in sync">
-                  Docs, manifests and the catalog derive from one source.
-                </ki-alert>
-                <ki-progress value="64" label="Building the component package"></ki-progress>
-                <div class="component-row">
-                  <ki-status tone="success" label="Online"></ki-status><span>Online</span>
-                  <ki-badge tone="info">agent-legible</ki-badge>
-                  <ki-badge tone="success">available</ki-badge>
-                </div>
-              </div>
-            </ki-tab-panel>
-
-            <ki-tab-panel value="data">
-              <div class="content-showcase">
-                <ki-card>
-                  <h3 slot="header">Guarded surface</h3>
-                  Only catalog components and declared actions reach the renderer.
-                  <ki-badge slot="footer" tone="success">fail-closed</ki-badge>
-                </ki-card>
-                <ki-list>
-                  <ki-list-item>
-                    <ki-avatar slot="start" initials="MG" label="Mars Gotta"></ki-avatar>
-                    Agent contract
-                    <span slot="secondary">custom-elements.json + llms.txt</span>
-                    <ki-badge slot="end" tone="success">synced</ki-badge>
-                  </ki-list-item>
-                  <ki-list-item>
-                    <ki-avatar slot="start" initials="A2" label="A2UI adapter"></ki-avatar>
-                    Protocol adapter
-                    <span slot="secondary">Disposable around a neutral catalog</span>
-                    <ki-badge slot="end" tone="info">A2UI</ki-badge>
-                  </ki-list-item>
-                </ki-list>
-              </div>
-            </ki-tab-panel>
-
-            <ki-tab-panel value="overlays">
-              <div class="component-row">
-                <ki-tooltip label="This hint is exposed as a description">
-                  <ki-button type="button" variant="secondary">Focus for a tooltip</ki-button>
-                </ki-tooltip>
-                <ki-button id="open-demo-dialog" type="button" variant="primary">Open a dialog</ki-button>
-              </div>
-            </ki-tab-panel>
-          </ki-tabs>
-        </div>
-      </section>
-
-      <section class="section section-centered theme-section" aria-labelledby="theme-title">
-        <p class="eyebrow">Tokens, proven live</p>
-        <h2 id="theme-title">This page runs on <code>@kimen/tokens</code>. Flip it.</h2>
-        <div class="theme-console panel">
-          <div class="theme-controls">
-            <fieldset class="segmented" data-theme-control>
-              <legend class="visually-hidden">Token theme</legend>
-              <label><input type="radio" name="console-theme" value="onmars" /><span>Onmars</span></label>
-              <label><input type="radio" name="console-theme" value="material3" /><span>Material 3</span></label>
-            </fieldset>
-            <fieldset class="segmented" data-scheme-control>
-              <legend class="visually-hidden">Color scheme</legend>
-              <label><input type="radio" name="console-scheme" value="auto" /><span>Auto</span></label>
-              <label><input type="radio" name="console-scheme" value="light" /><span>Light</span></label>
-              <label><input type="radio" name="console-scheme" value="dark" /><span>Dark</span></label>
-            </fieldset>
-          </div>
-          <div class="theme-swatches" role="group" aria-label="Live semantic token values">
-            <span class="theme-swatch theme-swatch-s0" title="surface.s0"></span>
-            <span class="theme-swatch theme-swatch-s2" title="surface.s2"></span>
-            <span class="theme-swatch theme-swatch-primary" title="surface.primary"></span>
-            <span class="theme-swatch theme-swatch-success" title="surface.success"></span>
-            <span class="theme-swatch theme-swatch-danger" title="surface.danger"></span>
-            <span class="theme-swatch-label">← live token values</span>
-          </div>
-          <p>
-            Every color, radius and type size here resolves primitive → semantic → component.
-            Reassign the semantic layer and an entire product restyles — proven in CI, not in a
-            keynote.
-          </p>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="agents-title">
-        <header class="section-heading">
-          <p class="eyebrow">Built for agentic development</p>
-          <h2 id="agents-title">Legible to agents, by contract.</h2>
-          <p>
-            The component contract is the single source of truth. Everything an agent needs ships
-            with the package — an API a capable agent cannot wire correctly from its description
-            alone is treated as a defect.
-          </p>
-        </header>
-
-        <div class="contract-layout">
-          <div class="contract-artifacts">
-            <article class="panel contract-artifact">
-              <code>custom-elements.json</code>
-              <p>Machine-readable manifest of every prop, event, slot and part.</p>
-            </article>
-            <article class="panel contract-artifact">
-              <code>llms.txt</code>
-              <p>The whole library, summarized for language models.</p>
-            </article>
-            <article class="panel contract-artifact">
-              <code>@whenToUse / @whenNotToUse</code>
-              <p>Usage guidance on every component, in the contract itself.</p>
-            </article>
-            <article class="panel contract-artifact">
-              <code>@kimen/catalog</code>
+          <div class="ways-grid">
+            <article class="way">
+              <h3>By hand, in any framework</h3>
               <p>
-                Schema-validated UI specs at the GenUI boundary — the neutral catalog agents emit
-                against.
+                Standards-first custom elements: identical in plain HTML, React, Vue and Angular,
+                with generated, typed wrappers for the three frameworks.
               </p>
+              <ki-tabs label="Framework" value="html" class="code-tabs">
+                <ki-tab value="html">HTML</ki-tab>
+                <ki-tab value="react">React</ki-tab>
+                <ki-tab value="vue">Vue</ki-tab>
+                <ki-tab value="angular">Angular</ki-tab>
+                <ki-tab-panel value="html"
+                  ><pre
+                    class="code"
+                    data-ki-theme="onmars"
+                    data-ki-color-scheme="dark"
+                  ><code><i class="cm">// pnpm add @kimen/elements @kimen/tokens</i>
+<i class="kw">import</i> { defineCustomElement } <i class="kw">from</i> <i class="s">'@kimen/elements/ki-button'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css'</i>;
+
+defineCustomElement();
+
+<i class="tg">&lt;ki-button</i> <i class="at">variant</i>=<i class="s">"primary"</i><i class="tg">&gt;</i>Save<i class="tg">&lt;/ki-button&gt;</i></code></pre></ki-tab-panel
+                >
+                <ki-tab-panel value="react"
+                  ><pre
+                    class="code"
+                    data-ki-theme="onmars"
+                    data-ki-color-scheme="dark"
+                  ><code><i class="kw">import</i> { KiButton, KiInput } <i class="kw">from</i> <i class="s">'@kimen/react'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css'</i>;
+
+<i class="tg">&lt;KiInput</i> <i class="at">label</i>=<i class="s">"Name"</i> <i class="at">onInput</i>={onName} <i class="tg">/&gt;</i>
+<i class="tg">&lt;KiButton</i> <i class="at">variant</i>=<i class="s">"primary"</i> <i class="at">onClick</i>={save}<i class="tg">&gt;</i>Save<i class="tg">&lt;/KiButton&gt;</i></code></pre></ki-tab-panel
+                >
+                <ki-tab-panel value="vue"
+                  ><pre
+                    class="code"
+                    data-ki-theme="onmars"
+                    data-ki-color-scheme="dark"
+                  ><code><i class="kw">import</i> { KiButton, KiInput } <i class="kw">from</i> <i class="s">'@kimen/vue'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css'</i>;
+
+<i class="tg">&lt;KiInput</i> <i class="at">label</i>=<i class="s">"Name"</i> <i class="at">v-model</i>=<i class="s">"name"</i> <i class="tg">/&gt;</i>
+<i class="tg">&lt;KiButton</i> <i class="at">variant</i>=<i class="s">"primary"</i> <i class="at">@click</i>=<i class="s">"save"</i><i class="tg">&gt;</i>Save<i class="tg">&lt;/KiButton&gt;</i></code></pre></ki-tab-panel
+                >
+                <ki-tab-panel value="angular"
+                  ><pre
+                    class="code"
+                    data-ki-theme="onmars"
+                    data-ki-color-scheme="dark"
+                  ><code><i class="kw">import</i> { KiButton, KiInput, TextValueAccessor } <i class="kw">from</i> <i class="s">'@kimen/angular'</i>;
+
+<i class="cm">// standalone component imports: [KiButton, KiInput, TextValueAccessor]</i>
+<i class="tg">&lt;ki-input</i> <i class="at">label</i>=<i class="s">"Name"</i> [<i class="at">formControl</i>]=<i class="s">"name"</i><i class="tg">&gt;&lt;/ki-input&gt;</i>
+<i class="tg">&lt;ki-button</i> <i class="at">variant</i>=<i class="s">"primary"</i> (<i class="at">click</i>)=<i class="s">"save()"</i><i class="tg">&gt;</i>Save<i class="tg">&lt;/ki-button&gt;</i></code></pre></ki-tab-panel
+                >
+              </ki-tabs>
+            </article>
+            <article class="way">
+              <h3>By agents, through the guarded catalog</h3>
+              <p>
+                Agents emit data, never code. Only catalog components render, only declared actions
+                dispatch, and protocol adapters translate A2UI and MCP Apps into the same path.
+              </p>
+              <ki-tabs label="Integration" value="render" class="code-tabs">
+                <ki-tab value="render">Render a spec</ki-tab>
+                <ki-tab value="a2ui">A2UI</ki-tab>
+                <ki-tab value="mcp">MCP server</ki-tab>
+                <ki-tab-panel value="render"
+                  ><pre
+                    class="code"
+                    data-ki-theme="onmars"
+                    data-ki-color-scheme="dark"
+                  ><code><i class="kw">import</i> { renderUiSpec } <i class="kw">from</i> <i class="s">'@kimen/catalog'</i>;
+
+<i class="kw">const</i> result = renderUiSpec(spec, {
+  surface: document.querySelector(<i class="s">'#genui'</i>),
+  onAction: (event) =&gt; agent.send(event.action),
+});
+<i class="kw">if</i> (!result.ok) console.warn(result.diagnostics);</code></pre></ki-tab-panel
+                >
+                <ki-tab-panel value="a2ui"
+                  ><pre
+                    class="code"
+                    data-ki-theme="onmars"
+                    data-ki-color-scheme="dark"
+                  ><code><i class="kw">import</i> { createA2uiAdapter } <i class="kw">from</i> <i class="s">'@kimen/adapter-a2ui'</i>;
+
+<i class="kw">const</i> adapter = createA2uiAdapter({
+  surface: document.querySelector(<i class="s">'#genui'</i>),
+  onAction: (event, meta) =&gt; channel.send(event, meta),
+  onError: (error) =&gt; channel.send(error),
+});
+adapter.apply(message); <i class="cm">// A2UI 1.0 or v0.9.1</i></code></pre></ki-tab-panel
+                >
+                <ki-tab-panel value="mcp"
+                  ><pre
+                    class="code"
+                    data-ki-theme="onmars"
+                    data-ki-color-scheme="dark"
+                  ><code><i class="cm"># Build the server from the repository (pre-v1)</i>
+pnpm exec nx run @kimen/mcp-server:build
+
+<i class="cm"># Point Claude Code, or any MCP client, at it</i>
+claude mcp add kimen -- node --permission \
+  --allow-fs-read=/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs \
+  /absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs
+
+<i class="cm"># Agents list the catalog, validate specs, render MCP Apps</i></code></pre></ki-tab-panel
+                >
+              </ki-tabs>
             </article>
           </div>
+        </section>
 
+        <section class="guard" id="guardrail" aria-labelledby="guard-title">
+          <div class="guard-intro">
+            <h2 id="guard-title" class="section-title">The guardrail says no, and says why.</h2>
+            <p class="section-lede">
+              <code>validateUiSpec</code>
+              rejects a spec before anything renders, and names the offender and its path so a model
+              can repair it in one round. Select an example to see the recorded validator result.
+            </p>
+          </div>
+          <div class="guard-bench" data-guard>
+            <div class="guard-picks" role="group" aria-label="Rejected specs" hidden>
+              <button type="button" aria-pressed="true" data-case="0">A prop that runs code</button>
+              <button type="button" aria-pressed="false" data-case="1">A value off the list</button>
+              <button type="button" aria-pressed="false" data-case="2">
+                A component outside the catalog
+              </button>
+              <button type="button" aria-pressed="false" data-case="3">
+                An action nobody declared
+              </button>
+              <button type="button" aria-pressed="false" data-case="4">A prototype key</button>
+            </div>
+            <div class="guard-io" data-ki-theme="onmars" data-ki-color-scheme="dark">
+              <p class="io-label">spec</p>
+              <pre
+                class="code"
+                data-guard-in
+                tabindex="0"
+                aria-label="Spec input"
+              ><code>{ <i class="k">"version"</i>: 1,
+  <i class="k">"root"</i>: { <i class="k">"component"</i>: <i class="c">"ki-button"</i>,
+    <i class="k">"props"</i>: { <i class="k">"onclick"</i>: <i class="s">"alert(1)"</i> },
+    <i class="k">"slots"</i>: { <i class="k">""</i>: [<i class="s">"Pay now"</i>] } } }</code></pre>
+              <p class="io-label">validateUiSpec(spec)</p>
+              <pre
+                class="code out"
+                data-guard-out
+                tabindex="0"
+                aria-label="Validator output"
+                aria-live="polite"
+                aria-atomic="true"
+              ><code>{ ok: <i class="no">false</i>, issues: [{
+    code: <i class="s">'unknown-prop'</i>,
+    path: <i class="s">'root.props.onclick'</i>,
+    message: <i class="s">'ki-button declares no prop "onclick"'</i>,
+    value: <i class="s">'onclick'</i> }] }</code></pre>
+            </div>
+          </div>
+          <p class="guard-codes">
+            Examples of issue codes: <code>malformed-spec</code> · <code>unknown-component</code> ·
+            <code>unknown-prop</code> ·
+            <code>invalid-prop-type</code>
+            · <code>unknown-slot</code> · <code>undeclared-action</code> ·
+            <code>forbidden-key</code> ·
+            <code>size-budget</code>
+            · <code>depth-budget</code>. The validator also rejects getters, functions and shared
+            references.
+          </p>
+        </section>
+
+        <section class="catalog" id="components" aria-labelledby="components-title">
+          <h2 id="components-title" class="section-title">
+            Every component, live. Not screenshots.
+          </h2>
+          <p class="section-lede">
+            Rendered from the same tokens the package ships. Hover, focus and click them: every
+            state is the real one.
+          </p>
+          <h3 id="catalog-title" class="catalog-title">The ki-* catalog.</h3>
+          <div class="wall" id="catalog-grid" aria-labelledby="catalog-title" hidden></div>
+          <p class="catalog-all">
+            <a href="./docs/components/alert/">Explore the components</a>
+            <span data-catalog-status role="status"></span>
+          </p>
+          <template data-catalog-samples>
+            <div class="cell cell-wide">
+              <div class="row">
+                <ki-button variant="primary">Primary</ki-button><ki-button>Secondary</ki-button
+                ><ki-button variant="quaternary">Quaternary</ki-button
+                ><ki-button variant="ghost">Ghost</ki-button>
+              </div>
+              <div class="row">
+                <ki-button variant="primary" tone="success">Confirm</ki-button
+                ><ki-button tone="danger">Delete draft</ki-button
+                ><ki-button disabled>Disabled</ki-button>
+              </div>
+            </div>
+            <div class="cell">
+              <ki-input
+                label="Email"
+                value="ana@acme.dev"
+                help-text="We send the invite here."
+              ></ki-input>
+            </div>
+            <div class="cell">
+              <ki-select label="Plan" value="team"
+                ><ki-option value="free">Free</ki-option><ki-option value="team">Team</ki-option
+                ><ki-option value="org">Organisation</ki-option></ki-select
+              >
+            </div>
+            <div class="cell">
+              <ki-radio-group label="Density" value="comfortable"
+                ><ki-radio value="comfortable">Comfortable</ki-radio
+                ><ki-radio value="compact">Compact</ki-radio></ki-radio-group
+              >
+            </div>
+            <div class="cell">
+              <div class="stack">
+                <ki-switch checked>Email notifications</ki-switch
+                ><ki-checkbox checked>Weekly digest</ki-checkbox
+                ><ki-checkbox>Product news</ki-checkbox>
+              </div>
+            </div>
+            <div class="cell cell-wide">
+              <ki-alert tone="warning" heading="Builds are slower than usual"
+                >Two runners are offline; queued jobs start within 4 minutes.</ki-alert
+              >
+            </div>
+            <div class="cell">
+              <div class="row">
+                <ki-badge>Draft</ki-badge><ki-badge tone="success">Live</ki-badge
+                ><ki-badge tone="info">Beta</ki-badge><ki-badge tone="danger">Failed</ki-badge>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="stack">
+                <ki-progress label="Upload" value="72"></ki-progress
+                ><ki-indicator count="5" current="2" label="Onboarding step"></ki-indicator>
+              </div>
+            </div>
+            <div class="cell">
+              <ki-textarea
+                label="Release notes"
+                value="Adds the Material 3 reference theme."
+              ></ki-textarea>
+            </div>
+            <div class="cell">
+              <div class="row">
+                <ki-avatar-group
+                  ><ki-avatar initials="AG" label="Ana García"></ki-avatar
+                  ><ki-avatar initials="MK" label="Mina Kato"></ki-avatar
+                  ><ki-avatar initials="LB" label="Leo Brandt"></ki-avatar></ki-avatar-group
+                ><span class="with-status"
+                  ><ki-avatar initials="SN" label="Sam Novak"></ki-avatar
+                  ><ki-status tone="success" label="Online" ring></ki-status></span
+                >
+              </div>
+            </div>
+            <div class="cell cell-wide">
+              <ki-tabs label="Project" value="overview"
+                ><ki-tab value="overview">Overview</ki-tab><ki-tab value="runs">Runs</ki-tab
+                ><ki-tab value="settings">Settings</ki-tab
+                ><ki-tab-panel value="overview"
+                  >Three surfaces, one catalog, last validated two minutes ago.</ki-tab-panel
+                ><ki-tab-panel value="runs">42 runs this week, none rejected.</ki-tab-panel
+                ><ki-tab-panel value="settings"
+                  >Allowed origins and declared actions.</ki-tab-panel
+                ></ki-tabs
+              >
+            </div>
+            <div class="cell">
+              <div class="row">
+                <ki-tooltip label="Copies a shareable link"
+                  ><ki-icon-button label="Copy link"
+                    ><svg aria-hidden="true" focusable="false" class="icon">
+                      <use href="#i-copy" />
+                    </svg></ki-icon-button
+                  ></ki-tooltip
+                >
+              </div>
+            </div>
+            <div class="cell">
+              <ki-list aria-label="Recent specs"
+                ><ki-list-item
+                  >onboarding.spec.json<span slot="secondary"
+                    >validated · 3 min ago</span
+                  ></ki-list-item
+                ><ki-divider></ki-divider
+                ><ki-list-item
+                  >billing.spec.json<span slot="secondary"
+                    >rejected · unknown-prop</span
+                  ></ki-list-item
+                ></ki-list
+              >
+            </div>
+            <div class="cell">
+              <ki-button type="button" command="show-modal" commandfor="wall-dialog"
+                >Open a dialog</ki-button
+              >
+              <ki-dialog id="wall-dialog" heading="Delete this draft?">
+                The draft and its two specs are removed for everyone in the workspace. This can't be
+                undone.
+                <ki-button
+                  slot="footer"
+                  type="button"
+                  command="request-close"
+                  commandfor="wall-dialog"
+                  autofocus
+                  >Cancel</ki-button
+                >
+                <ki-button
+                  slot="footer"
+                  variant="primary"
+                  tone="danger"
+                  type="button"
+                  command="close"
+                  commandfor="wall-dialog"
+                  >Delete draft</ki-button
+                >
+              </ki-dialog>
+            </div>
+            <div class="cell">
+              <ki-card variant="outlined">
+                <span slot="header">Workspace</span>
+                <p>Settings shared with the team.</p>
+                <ki-ai-label
+                  slot="footer"
+                  explanation="Written from the workspace activity."
+                ></ki-ai-label>
+              </ki-card>
+            </div>
+            <div class="cell cell-wide">
+              <ki-breadcrumb label="Workspace trail">
+                <ki-breadcrumb-item href="#start">Workspace</ki-breadcrumb-item>
+                <ki-breadcrumb-item current>Activity</ki-breadcrumb-item>
+              </ki-breadcrumb>
+              <ki-button-group label="Update view" attached>
+                <ki-button type="button">Refresh</ki-button>
+                <ki-button type="button">Reset</ki-button>
+              </ki-button-group>
+            </div>
+            <div class="cell">
+              <ki-checkbox-group label="Delivery channels">
+                <ki-checkbox value="email" checked>Email</ki-checkbox>
+                <ki-checkbox value="inbox">Inbox</ki-checkbox>
+              </ki-checkbox-group>
+            </div>
+            <div class="cell">
+              <ki-chip-group label="Filter by team">
+                <ki-chip value="design" selected>Design</ki-chip>
+                <ki-chip value="engineering">Engineering</ki-chip>
+              </ki-chip-group>
+            </div>
+            <div class="cell">
+              <div class="row">
+                <ki-copy-button value="workspace.spec.json">Copy filename</ki-copy-button>
+                <ki-icon-button label="Notifications">
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-ok" /></svg>
+                  <ki-counter slot="counter" value="3"></ki-counter>
+                </ki-icon-button>
+              </div>
+            </div>
+            <div class="cell cell-wide">
+              <ki-empty-state heading="No pending invites" tone="info"
+                >New invitations will appear here.</ki-empty-state
+              >
+            </div>
+            <div class="cell">
+              <div class="row">
+                <ki-fab label="New workspace" extended>
+                  <svg class="icon" slot="icon" aria-hidden="true" focusable="false">
+                    <use href="#i-arrow" />
+                  </svg>
+                </ki-fab>
+                <ki-feature-icon tone="success" shape="circle">
+                  <ki-icon name="circle-check" label="Complete"></ki-icon>
+                </ki-feature-icon>
+              </div>
+            </div>
+            <div class="cell">
+              <dl class="sample-data">
+                <div>
+                  <dt>Release date</dt>
+                  <dd><ki-format-date date="2026-11-19" date-style="long"></ki-format-date></dd>
+                </div>
+                <div>
+                  <dt>Last update</dt>
+                  <dd><ki-relative-time date="2026-11-19" threshold="0"></ki-relative-time></dd>
+                </div>
+                <div>
+                  <dt>Coverage</dt>
+                  <dd><ki-format-number value="0.98" format-style="percent"></ki-format-number></dd>
+                </div>
+              </dl>
+            </div>
+            <div class="cell">
+              <ki-grid columns="2" gap="md">
+                <ki-stack gap="md"
+                  ><ki-badge>Open</ki-badge><ki-badge tone="success">Ready</ki-badge></ki-stack
+                >
+                <ki-stack gap="md"
+                  ><ki-badge>Draft</ki-badge><ki-badge tone="warning">Review</ki-badge></ki-stack
+                >
+              </ki-grid>
+            </div>
+            <div class="cell">
+              <ki-image src="./favicon.svg" alt="Kimen mark" ratio="3:2" fit="contain">
+                <span slot="caption">Kimen</span>
+              </ki-image>
+            </div>
+            <div class="cell">
+              <div class="row">
+                <ki-button id="wall-menu-trigger" type="button">Actions</ki-button>
+                <ki-menu anchor="wall-menu-trigger" filter-label="Filter actions">
+                  <ki-menu-group label="Workspace">
+                    <ki-menu-item value="pin" type="checkbox">Pin workspace</ki-menu-item>
+                    <ki-menu-item value="duplicate">Duplicate</ki-menu-item>
+                  </ki-menu-group>
+                </ki-menu>
+                <ki-button id="wall-popover-trigger" type="button">About retention</ki-button>
+                <ki-popover for="wall-popover-trigger" kind="toggletip"
+                  >Logs are kept for 30 days.</ki-popover
+                >
+              </div>
+            </div>
+            <div class="cell">
+              <ki-note tone="info">The next sync starts at noon.</ki-note>
+              <ki-link href="./docs/">Read the docs</ki-link>
+            </div>
+            <div class="cell">
+              <ki-qr value="https://kimen.dev/" label="QR code for kimen.dev"></ki-qr>
+            </div>
+            <div class="cell">
+              <ki-scroller class="sample-scroller" label="Recent workspaces">
+                <ki-list aria-label="Recent workspaces">
+                  <ki-list-item>Relay</ki-list-item>
+                  <ki-list-item>Atlas</ki-list-item>
+                  <ki-list-item>Control room</ki-list-item>
+                </ki-list>
+              </ki-scroller>
+            </div>
+            <div class="cell">
+              <ki-segmented-control label="Timeline" value="today">
+                <ki-segment value="today">Today</ki-segment>
+                <ki-segment value="week">Week</ki-segment>
+              </ki-segmented-control>
+            </div>
+            <div class="cell">
+              <div class="stack">
+                <ki-skeleton lines="2" animated="false"></ki-skeleton>
+                <button
+                  type="button"
+                  class="action sample-toggle"
+                  data-wall-spinner
+                  aria-pressed="false"
+                >
+                  Toggle spinner
+                </button>
+                <ki-spinner label="Loading" show-label hidden></ki-spinner>
+              </div>
+            </div>
+            <div class="cell">
+              <ki-slider label="Zoom" value="40" min="0" max="100" format="percent"></ki-slider>
+            </div>
+            <div class="cell">
+              <ki-stat label="Successful builds" value="42" delta="3"></ki-stat>
+            </div>
+            <div class="cell cell-wide">
+              <ki-stepper label="Set up workspace">
+                <ki-step state="done">Account</ki-step>
+                <ki-step state="current">Workspace</ki-step>
+                <ki-step>Invite</ki-step>
+              </ki-stepper>
+            </div>
+            <div class="cell cell-wide">
+              <ki-table selectable>
+                <table>
+                  <caption>
+                    Services
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Service</th>
+                      <th scope="col">State</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-key="relay">
+                      <th scope="row">Relay</th>
+                      <td><ki-badge tone="success">Ready</ki-badge></td>
+                    </tr>
+                    <tr data-key="atlas">
+                      <th scope="row">Atlas</th>
+                      <td><ki-badge tone="info">Queued</ki-badge></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </ki-table>
+            </div>
+            <div class="cell">
+              <ki-toast tone="info" duration="0" dismissible="false">Changes saved.</ki-toast>
+              <ki-button type="button" data-wall-toast>Show a toast</ki-button>
+              <ki-toaster label="Demo notifications"></ki-toaster>
+            </div>
+            <div class="cell">
+              <ki-video label="Play the alignment demo">
+                <video
+                  width="96"
+                  height="54"
+                  src="./component-preview.mp4"
+                  preload="metadata"
+                  muted
+                  playsinline
+                ></video>
+              </ki-video>
+              <p class="cell-description">A terracotta square crosses the frame.</p>
+            </div>
+          </template>
+        </section>
+
+        <section class="agents" id="agents" aria-labelledby="agents-title">
+          <div class="agents-copy">
+            <h2 id="agents-title" class="section-title">Legible to agents, by contract.</h2>
+            <p class="section-lede">
+              Everything a model needs ships with the package and is generated from the source,
+              never written by hand. An API a capable agent can't wire correctly from its
+              description is treated as a defect.
+            </p>
+            <dl class="artifacts">
+              <div class="contract-artifact">
+                <dt>
+                  <a href="./assets/elements/custom-elements.json"
+                    ><code>custom-elements.json</code></a
+                  >
+                </dt>
+                <dd>Every prop, event, slot and part, machine-readable.</dd>
+              </div>
+              <div class="contract-artifact">
+                <dt>
+                  <a href="./llms.txt"><code>llms.txt</code></a>
+                  · <a href="./llms-full.txt"><code>llms-full.txt</code></a>
+                </dt>
+                <dd>The library as an index for language models, and all of it in one file.</dd>
+              </div>
+              <div class="contract-artifact">
+                <dt><code>@whenToUse</code> · <code>@whenNotToUse</code></dt>
+                <dd>Usage guidance on every component, inside the contract itself.</dd>
+              </div>
+              <div class="contract-artifact">
+                <dt><code>@kimen/emitter</code></dt>
+                <dd>
+                  A system prompt, a provider-ready JSON Schema and a tool definition derived from
+                  any catalog, plus a one-round repair loop.
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <figure class="llms" data-ki-theme="onmars" data-ki-color-scheme="dark">
+            <figcaption><code>kimen.dev/llms.txt</code></figcaption>
+            <pre
+              class="code"
+              data-ki-theme="onmars"
+              data-ki-color-scheme="dark"
+            ><code><i class="tg"># @kimen/elements — Kimen web components</i>
+
+<i class="cm">&gt; Kimen web components (ki-*). Standards-first Stencil
+&gt; components, tokens-only styling, agent-legible by contract.</i>
+
+Install with `pnpm add @kimen/elements @kimen/tokens`.
+
+<i class="tg">## Components</i>
+
+- [ki-button](https://kimen.dev/llms/ki-button.md): trigger the
+  single main action of a view, supporting actions in descending
+  hierarchy, or confirming/destructive actions through tone.</code></pre>
+          </figure>
+          <details class="comparison">
+            <summary>What only a GenUI-first library does.</summary>
+            <div class="comparison-wrap" tabindex="0" role="region" aria-label="Library approach comparison">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col"><span class="sr">Capability</span></th>
+                    <th scope="col" class="kimen-column">Kimen</th>
+                    <th scope="col">React-only kits</th>
+                    <th scope="col">Classic WC kits</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Runs in any framework — or none</th>
+                    <td class="kimen-column">Web components, identical in every host</td>
+                    <td>React hosts only</td>
+                    <td>Yes</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Re-theming</th>
+                    <td class="kimen-column">DTCG token layers — one attribute swaps the theme</td>
+                    <td>Varies per library</td>
+                    <td>CSS custom props, ad hoc</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Agent-legible contracts</th>
+                    <td class="kimen-column">
+                      custom-elements.json + llms.txt + when-to-use, shipped
+                    </td>
+                    <td>Rare</td>
+                    <td>Manifest sometimes, no guidance</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Guarded GenUI rendering</th>
+                    <td class="kimen-column">Schema-validated specs, fail-closed</td>
+                    <td>Not a goal</td>
+                    <td>Not a goal</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Protocol adapters</th>
+                    <td class="kimen-column">A2UI + MCP Apps; AG-UI planned</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Accessibility enforcement</th>
+                    <td class="kimen-column">0 axe violations gated in CI, WCAG 2.2 AA target</td>
+                    <td>Varies</td>
+                    <td>Varies</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Size discipline</th>
+                    <td class="kimen-column">Single-digit-KB budget per component, gated</td>
+                    <td>Varies</td>
+                    <td>Varies</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="comparison-note">
+              “React-only kits” are component libraries coupled to one framework. “Classic WC kits”
+              are web-component design systems without agent contracts.
+            </p>
+          </details>
+        </section>
+
+        <section class="gates" id="quality" aria-labelledby="gates-title">
+          <h2 id="gates-title" class="section-title">Done means gates exit 0.</h2>
+          <p class="section-lede">
+            Run the quality gates locally with <code>bash scripts/gates/gates-suite.sh</code>
+          </p>
+          <table class="gate-table">
+            <caption class="sr">
+              Quality gates
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Gate</th>
+                <th scope="col">Bar</th>
+                <th scope="col">State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Real-browser tests</th>
+                <td>Chromium, Firefox and WebKit at release, never JSDOM</td>
+                <td>
+                  <span class="state ok"
+                    ><svg aria-hidden="true" focusable="false" class="icon">
+                      <use href="#i-ok" />
+                    </svg
+                    >required</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Accessibility</th>
+                <td><code>0</code> axe-core violations; WCAG 2.2 AA and EN 301 549 targeted</td>
+                <td>
+                  <span class="state ok"
+                    ><svg aria-hidden="true" focusable="false" class="icon">
+                      <use href="#i-ok" />
+                    </svg
+                    >required</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Size budget</th>
+                <td>Under <code>10 KB</code> per component, measured on packed tarballs</td>
+                <td>
+                  <span class="state ok"
+                    ><svg aria-hidden="true" focusable="false" class="icon">
+                      <use href="#i-ok" />
+                    </svg
+                    >required</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Tokens only</th>
+                <td>
+                  Every visual value resolves from a <code>--ki-*</code> token, enforced by lint
+                </td>
+                <td>
+                  <span class="state ok"
+                    ><svg aria-hidden="true" focusable="false" class="icon">
+                      <use href="#i-ok" />
+                    </svg
+                    >required</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Right to left</th>
+                <td>Logical properties only; RTL is the default, not a variant</td>
+                <td>
+                  <span class="state ok"
+                    ><svg aria-hidden="true" focusable="false" class="icon">
+                      <use href="#i-ok" />
+                    </svg
+                    >required</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Mutation testing</th>
+                <td>Changed-core mutation gate: tests that test the tests</td>
+                <td><span class="state wip">hardening</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="status" id="status" aria-labelledby="status-title">
+          <h2 id="status-title" class="section-title">Honest, gated, in the open.</h2>
+          <div class="status-grid">
+            <div>
+              <p class="section-lede">
+                Pre-v1. Build and use the packages from the repository today. The roadmap tracks the
+                first npm release and the remaining protocol adapters.
+              </p>
+              <a class="action" href="https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md"
+                >Read the roadmap
+                <svg aria-hidden="true" focusable="false" class="icon">
+                  <use href="#i-out" />
+                </svg></a
+              >
+              <ol class="roadmap">
+                <li data-state="done">
+                  <span aria-hidden="true"
+                    ><svg class="icon" viewBox="0 0 16 16" focusable="false">
+                      <path d="m3 8 3 3 7-7"></path>
+                    </svg></span
+                  >
+                  <p>
+                    <strong>Tokens &amp; theming</strong>four layers, two themes, re-theming proven
+                    in CI
+                  </p>
+                </li>
+                <li data-state="current">
+                  <span aria-hidden="true"
+                    ><svg class="icon" viewBox="0 0 16 16" focusable="false">
+                      <circle cx="8" cy="8" r="3"></circle>
+                    </svg></span
+                  >
+                  <p>
+                    <strong>Factory hardening</strong>closing enforcement, mutation, release and
+                    sandbox gaps
+                  </p>
+                </li>
+                <li data-state="done">
+                  <span aria-hidden="true"
+                    ><svg class="icon" viewBox="0 0 16 16" focusable="false">
+                      <path d="m3 8 3 3 7-7"></path>
+                    </svg></span
+                  >
+                  <p>
+                    <strong>Core components</strong>Real ki-* components, contracts and browser
+                    tests
+                  </p>
+                </li>
+                <li data-state="done">
+                  <span aria-hidden="true"
+                    ><svg class="icon" viewBox="0 0 16 16" focusable="false">
+                      <path d="m3 8 3 3 7-7"></path>
+                    </svg></span
+                  >
+                  <p>
+                    <strong>Catalog + guardrail</strong>schema-validated specs rendered fail-closed
+                  </p>
+                </li>
+                <li data-state="current">
+                  <span aria-hidden="true"
+                    ><svg class="icon" viewBox="0 0 16 16" focusable="false">
+                      <circle cx="8" cy="8" r="3"></circle>
+                    </svg></span
+                  >
+                  <p>
+                    <strong>Protocol adapters</strong>A2UI and MCP Apps available; AG-UI and
+                    json-render planned
+                  </p>
+                </li>
+                <li data-state="next">
+                  <span aria-hidden="true"
+                    ><svg class="icon" viewBox="0 0 16 16" focusable="false">
+                      <circle cx="8" cy="8" r="3"></circle>
+                    </svg></span
+                  >
+                  <p><strong>v1.0.0</strong>npm with trusted publishing and signed provenance</p>
+                </li>
+              </ol>
+            </div>
+            <div class="capability-block">
       <!-- kimen:capabilities:site-status:start -->
       <section class="section" aria-labelledby="capability-status-title">
         <h2 id="capability-status-title">Capability status</h2>
@@ -441,101 +1332,57 @@
         </ul>
       </section>
       <!-- kimen:capabilities:site-status:end -->
-        </div>
-      </section>
+            </div>
+          </div>
+        </section>
 
-      <section class="section" aria-labelledby="comparison-title">
-        <header class="section-heading">
-          <p class="eyebrow">Where it stands</p>
-          <h2 id="comparison-title">What only a GenUI-first library does.</h2>
-        </header>
-        <div class="comparison-wrap panel" tabindex="0" role="region" aria-label="Library approach comparison">
-          <table>
-            <thead>
-              <tr><th scope="col"><span class="visually-hidden">Capability</span></th><th scope="col" class="kimen-column">Kimen</th><th scope="col">React-only kits</th><th scope="col">Classic WC kits</th></tr>
-            </thead>
-            <tbody>
-              <tr><th scope="row">Runs in any framework — or none</th><td class="kimen-column">Web components, identical in every host</td><td>React hosts only</td><td>Yes</td></tr>
-              <tr><th scope="row">Re-theming</th><td class="kimen-column">DTCG token layers — one attribute swaps the theme</td><td>Varies per library</td><td>CSS custom props, ad hoc</td></tr>
-              <tr><th scope="row">Agent-legible contracts</th><td class="kimen-column">custom-elements.json + llms.txt + when-to-use, shipped</td><td>Rare</td><td>Manifest sometimes, no guidance</td></tr>
-              <tr><th scope="row">Guarded GenUI rendering</th><td class="kimen-column">Schema-validated specs, fail-closed</td><td>Not a goal</td><td>Not a goal</td></tr>
-              <tr><th scope="row">Protocol adapters</th><td class="kimen-column">A2UI + MCP Apps; AG-UI planned</td><td>—</td><td>—</td></tr>
-              <tr><th scope="row">Accessibility enforcement</th><td class="kimen-column">0 axe violations gated in CI, WCAG 2.2 AA target</td><td>Varies</td><td>Varies</td></tr>
-              <tr><th scope="row">Size discipline</th><td class="kimen-column">Single-digit-KB budget per component, gated</td><td>Varies</td><td>Varies</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="comparison-note">
-          Categories, not call-outs: “React-only kits” = component libraries coupled to one
-          framework; “classic WC kits” = web-component design systems without agent contracts.
+        <section class="close" aria-labelledby="close-title">
+          <h2 id="close-title">Start with one element.</h2>
+          <div class="install install-lg" data-copy-source>
+            <code
+              ><span class="prompt" aria-hidden="true">$</span>
+              pnpm add @kimen/elements @kimen/tokens</code
+            >
+            <button
+              class="copy"
+              type="button"
+              hidden
+              data-copy="pnpm add @kimen/elements @kimen/tokens"
+            >
+              <svg aria-hidden="true" focusable="false" class="icon" data-copy-icon>
+                <use href="#i-copy" />
+              </svg><span class="copy-label">Copy</span>
+            </button>
+          </div>
+          <div class="close-actions">
+            <a class="action action-primary" href="./docs/"
+              >Read the docs
+              <svg aria-hidden="true" focusable="false" class="icon">
+                <use href="#i-arrow" />
+              </svg></a
+            >
+            <a class="action" href="https://github.com/kimen-dev/kimen">Star it on GitHub</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <p>
+          <svg class="icon mark" aria-hidden="true" focusable="false"><use href="#i-mark" /></svg>
+          <span><em>Kimen</em>: the seed from which something grows.</span>
         </p>
-      </section>
-
-      <section class="section" aria-labelledby="quality-title">
-        <header class="section-heading">
-          <p class="eyebrow">Quality is a gate, not a promise</p>
-          <h2 id="quality-title">Done means gates exit 0.</h2>
-          <p>
-            No self-assessment — a deterministic script proves each gate, identically on a laptop
-            and in CI: <code>bash scripts/gates/gates-suite.sh</code>
-          </p>
-        </header>
-        <div class="quality-grid">
-          <article class="quality-card panel"><span>real-browser</span><h3>Three engines at release</h3><p>Every component ships with real-browser tests, not JSDOM approximations.</p></article>
-          <article class="quality-card panel"><span>axe-core: 0</span><h3>Accessibility as a hard gate</h3><p>Zero violations tolerated. WCAG 2.2 AA and EN 301 549 as the target.</p></article>
-          <article class="quality-card panel"><span>&lt;10 KB</span><h3>Size budgets per component</h3><p>Single-digit-KB budgets, checked on packed tarballs on every release dry run.</p></article>
-          <article class="quality-card panel"><span>tokens-only</span><h3>No hardcoded visual values</h3><p>Stylelint-enforced: every visual value resolves from a --ki-* token.</p></article>
-          <article class="quality-card panel"><span>RTL</span><h3>Direction-agnostic by construction</h3><p>Logical properties only — right-to-left support isn’t a variant, it’s the default.</p></article>
-          <article class="quality-card panel"><span>mutation</span><h3>Tests that test the tests</h3><p>Changed-core mutation gating is part of the current hardening work.</p></article>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="catalog-title">
-        <div class="catalog-heading">
-          <header class="section-heading">
-            <p class="eyebrow"><span id="catalog-count">29</span> and counting</p>
-            <h2 id="catalog-title">The ki-* catalog.</h2>
-          </header>
-          <a class="cta cta-secondary" href="./docs/components/alert/">All docs</a>
-        </div>
-        <div class="catalog-grid" id="catalog-grid" aria-live="polite" aria-busy="true">
-          <noscript><p><a href="./docs/components/alert/">Browse all components in the documentation.</a></p></noscript>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="roadmap-title">
-        <header class="section-heading">
-          <p class="eyebrow">Where we are</p>
-          <h2 id="roadmap-title">Honest, gated, in the open.</h2>
-        </header>
-        <ol class="roadmap">
-          <li data-state="done"><span aria-hidden="true"><svg class="inline-icon" viewBox="0 0 16 16" focusable="false"><path d="m3 8 3 3 7-7"></path></svg></span><p><strong>Tokens &amp; theming</strong>four layers, two themes, re-theming proven in CI</p></li>
-          <li data-state="current"><span aria-hidden="true"><svg class="inline-icon inline-icon-filled" viewBox="0 0 16 16" focusable="false"><circle cx="8" cy="8" r="3"></circle></svg></span><p><strong>Factory hardening</strong>closing enforcement, mutation, release and sandbox gaps</p></li>
-          <li data-state="done"><span aria-hidden="true"><svg class="inline-icon" viewBox="0 0 16 16" focusable="false"><path d="m3 8 3 3 7-7"></path></svg></span><p><strong>Core components</strong>29 real ki-* components, contracts and browser tests</p></li>
-          <li data-state="done"><span aria-hidden="true"><svg class="inline-icon" viewBox="0 0 16 16" focusable="false"><path d="m3 8 3 3 7-7"></path></svg></span><p><strong>Catalog + guardrail</strong>schema-validated specs rendered fail-closed</p></li>
-          <li data-state="current"><span aria-hidden="true"><svg class="inline-icon inline-icon-filled" viewBox="0 0 16 16" focusable="false"><circle cx="8" cy="8" r="3"></circle></svg></span><p><strong>Protocol adapters</strong>A2UI and MCP Apps available; AG-UI and json-render planned</p></li>
-          <li data-state="next"><span aria-hidden="true"><svg class="inline-icon" viewBox="0 0 16 16" focusable="false"><circle cx="8" cy="8" r="3"></circle></svg></span><p><strong>v1.0.0</strong>npm with trusted publishing and signed provenance</p></li>
-        </ol>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <p>Apache-2.0 · Built by agents, verified by deterministic gates, merged by a human.</p>
-      <nav aria-label="Footer">
-        <a href="https://github.com/kimen-dev/kimen">GitHub</a>
-        <a href="./storybook/">Storybook</a>
-        <a href="https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md">Roadmap</a>
-        <a href="./privacy/">Privacy</a>
-      </nav>
-    </footer>
-
-    <ki-dialog id="demo-dialog" heading="Delete ki-video?">
-      <p>
-        This demonstration uses the real dialog component, including focus containment and focus
-        restoration through its public API.
-      </p>
-      <ki-button id="cancel-demo-dialog" slot="footer" type="button" autofocus>Cancel</ki-button>
-      <ki-button id="confirm-demo-dialog" slot="footer" type="button" variant="primary" tone="danger">Delete</ki-button>
-    </ki-dialog>
+        <p>
+          Apache-2.0 · © 2026 Marcela Gotta. Built by agents, verified by deterministic gates,
+          merged by a human.
+        </p>
+        <nav aria-label="Footer">
+          <a href="https://github.com/kimen-dev/kimen">GitHub</a>
+          <a href="./docs/">Docs</a>
+          <a href="./storybook/">Storybook</a>
+          <a href="https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md">Roadmap</a>
+          <a href="./privacy/">Privacy</a>
+        </nav>
+      </footer>
+    </div>
   </body>
 </html>
