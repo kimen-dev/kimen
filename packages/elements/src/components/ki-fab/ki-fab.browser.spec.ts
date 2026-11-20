@@ -85,7 +85,7 @@ it.each([
 ] as const)('S1: paints the icon FAB (%s) at %dpx square', async (size, width, iconSize) => {
   fixture.innerHTML = `<ki-fab label="Compose" icon-name="pencil" ${size}></ki-fab>`;
   await expect.element(compose).toBeVisible();
-  await expect.element(composeText).not.toBeVisible();
+  await expect.element(composeText).not.toBeInTheDocument();
 
   const rect = partOf(host(), 'control').getBoundingClientRect();
   expect(rect.width).toBeCloseTo(width, 0);
@@ -209,10 +209,16 @@ it('S8: Enter on the link follows its native destination', async () => {
 it('S9: the accessible button name excludes a supplied glyph with its own name', async () => {
   fixture.innerHTML = `<main><ki-fab label="Compose">${slottedIcon}</ki-fab></main>`;
   await expect.element(compose).toBeVisible();
+  const fab = host();
+  expect(fab.querySelector('svg')?.getBoundingClientRect().width ?? 0).toBeGreaterThan(0);
+  expect(partOf(fab, 'icon').getAttribute('aria-hidden')).toBe('true');
+
+  // The ARIA snapshot follows the supplied SVG through its shadow slot.
   const snapshot = await browser.ariaSnapshot('#fab-test-fixture');
+  expect(snapshot.match(/^\s*- button\b/gmu) ?? []).toHaveLength(1);
   expect(snapshot).toContain('button "Compose"');
   expect(snapshot).not.toContain('Pencil');
-  await expect.element(page.getByRole('img')).not.toBeInTheDocument();
+  expect(snapshot).not.toMatch(/^\s*-\s+img\b/mu);
   await expectAccessible(fixture);
 });
 
