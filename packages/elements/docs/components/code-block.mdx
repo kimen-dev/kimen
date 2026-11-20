@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-code-block" />
+
+# ki-code-block
+
+Display source in a named figure with syntax colors, optional line numbers,
+highlighted lines and a copy button.
+
+```html
+<ki-code-block language="ts" filename="main.ts" line-numbers highlight="2">// Load the current sample.
+const sample = load(3);</ki-code-block>
+```
+
+Pass the source as a plain text child. Escape HTML in markup or set
+`textContent` from JavaScript. JavaScript, TypeScript and JSON have syntax
+colors. Code in other languages remains readable as plain text.
+
+Add `wrap` to soft-wrap long lines or `copyable="false"` to omit the copy
+button. Tab to the scroll area and use the arrow keys to scroll overflow.
+Selected lines have a visible rule and are described to assistive technology.
+Line numbers are decorative.
+
+Copy preserves whitespace and emits `ki-copy` with the copied string in
+`detail.value`. A clipboard failure emits `ki-copy-error`.
+Localize the control with `copy-label`, `copied-label` and `copy-error-label`.
+
+## Customization
+
+The `--ki-code-*` tokens theme the component’s surfaces, syntax, spacing and
+typography. The `figure`, `header`, `scroll` and `code` parts expose the
+main presentation surfaces.

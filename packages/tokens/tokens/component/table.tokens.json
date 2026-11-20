@@ -1,0 +1,161 @@
+{
+  "ki": {
+    "table": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Table frame and caption surface."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Primary record and caption ink."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the table frame."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete filter applied behind the frame."
+      },
+      "header-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s1}",
+        "$description": "Column header surface, including when sticky."
+      },
+      "header-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Column header ink."
+      },
+      "header-bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the column header."
+      },
+      "meta-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Surface behind secondary and numeric values at rest."
+      },
+      "meta-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Secondary and numeric value ink."
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.low-em}",
+        "$description": "Frame and row dividers."
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.layout.rule-width}",
+        "$description": "Frame and row divider stroke."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Outer frame corner radius."
+      },
+      "row-height": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.14xl}",
+        "$description": "Default data row height."
+      },
+      "row-height-compact": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.12xl}",
+        "$description": "Compact data row height."
+      },
+      "header-height": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.12xl}",
+        "$description": "Column header row height."
+      },
+      "cell-padding-inline": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Horizontal space inside cells."
+      },
+      "row-hover-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s1}",
+        "$description": "Surface under a record on hover."
+      },
+      "row-hover-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Record ink on hover."
+      },
+      "row-selected-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Surface under a selected record."
+      },
+      "row-selected-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Record ink when selected."
+      },
+      "skeleton": {
+        "$type": "color",
+        "$value": "{ki.surface.s3}",
+        "$description": "Decorative loading bar fill."
+      },
+      "skeleton-height": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.lg}",
+        "$description": "Loading bar height."
+      },
+      "skeleton-radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.round}",
+        "$description": "Loading bar corner radius."
+      },
+      "touch-target-min": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.13xl}",
+        "$description": "Minimum width and height of controls with a coarse pointer."
+      },
+      "sort-gap": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Space between a column label and sort indicator."
+      },
+      "sort-glyph-size": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.2xl}",
+        "$description": "Decorative sort indicator edge."
+      },
+      "focus-radius": {
+        "$type": "dimension",
+        "$value": "{ki.corner.inline}",
+        "$description": "Corner radius of the sort button focus ring."
+      },
+      "focus-ring-color": {
+        "$type": "color",
+        "$value": "{ki.focus.ring-color}",
+        "$description": "Keyboard focus outline ink."
+      },
+      "focus-ring-width": {
+        "$type": "dimension",
+        "$value": "{ki.focus.ring-width}",
+        "$description": "Keyboard focus outline stroke."
+      },
+      "focus-ring-offset": {
+        "$type": "dimension",
+        "$value": "{ki.focus.ring-offset}",
+        "$description": "Space between a focus outline and its control."
+      },
+      "caption-font-family": {
+        "$type": "fontFamily",
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Typeface of the native table caption."
+      }
+    }
+  }
+}

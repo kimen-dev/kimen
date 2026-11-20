@@ -1,0 +1,559 @@
+{
+  "component": {
+    "attributes": {
+      "explanation": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Plain-text explanation of how the content was generated. Supply a\nnonblank explanation to offer disclosure. Omit it for a static mark.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "generated-at": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional generation date or time, displayed as supplied.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "generated-at-label": {
+        "default": "'Generated'",
+        "deprecatedSince": null,
+        "description": "Visible prefix for the generation date or time.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": "'AI'",
+        "deprecatedSince": null,
+        "description": "Short visible provenance text. Localize it with the trigger name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "model": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional plain-text model name shown in the explanation.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "model-label": {
+        "default": "'Model:'",
+        "deprecatedSince": null,
+        "description": "Visible prefix for the model name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "popover-label": {
+        "default": "'About this content'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the non-modal explanation panel.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "revert-label": {
+        "default": "'Revert to my text'",
+        "deprecatedSince": null,
+        "description": "Visible text and accessible name of the revert action.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "revertible": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Offer the revert action inside the explanation. Enable it when the\napplication has the original text and handles `ki-revert`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'sm'",
+        "deprecatedSince": null,
+        "description": "Size of the painted mark. Unknown values use the small metrics.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "trigger-label": {
+        "default": "'AI-generated: about this content'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the disclosure button. Include the visible label.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-ai-label-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter behind the AI provenance mark. Defaults to none.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the AI provenance mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the AI provenance fill. Defaults to none.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border width of the panel and the forced-colors mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text and icon ink of the AI provenance mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the mark and its icon or between provenance metadata items.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-md-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum painted block size of the medium AI mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-md-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Sparkles icon size in the medium AI mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-md-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline inset of the medium AI mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter behind the provenance explanation. Defaults to none.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised fill of the provenance explanation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the provenance explanation fill. Defaults to none.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hairline color of the explanation panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the provenance explanation and metadata.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the panel sections and between the panel and trigger.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset of the explanation panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the explanation panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Elevation of the explanation panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-popover-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Preferred inline size of the explanation panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the AI provenance mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-sm-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum painted block size of the small AI mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-sm-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Sparkles icon size in the small AI mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-ai-label-sm-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline inset of the small AI mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-para": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height para.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A compact provenance mark for AI-generated content, with optional details\nand a user-initiated request to restore their original text.",
+    "events": {
+      "ki-revert": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Bubbles when a person requests their original text. Use this request\nto restore the original from application state.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "explanation": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source explanation paragraph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative sparkles glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tinted mark containing the icon and visible text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "metadata": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional model and generation time.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "popover": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Non-modal explanation panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "revert": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Button that requests reversion.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "trigger": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Disclosure button, available with an explanation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "explanation": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Plain-text explanation of how the content was generated. Supply a\nnonblank explanation to offer disclosure. Omit it for a static mark.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "generatedAt": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional generation date or time, displayed as supplied.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "generatedAtLabel": {
+        "default": "'Generated'",
+        "deprecatedSince": null,
+        "description": "Visible prefix for the generation date or time.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": "'AI'",
+        "deprecatedSince": null,
+        "description": "Short visible provenance text. Localize it with the trigger name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "model": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional plain-text model name shown in the explanation.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "modelLabel": {
+        "default": "'Model:'",
+        "deprecatedSince": null,
+        "description": "Visible prefix for the model name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "popoverLabel": {
+        "default": "'About this content'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the non-modal explanation panel.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "revertLabel": {
+        "default": "'Revert to my text'",
+        "deprecatedSince": null,
+        "description": "Visible text and accessible name of the revert action.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "revertible": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Offer the revert action inside the explanation. Enable it when the\napplication has the original text and handles `ki-revert`.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'sm'",
+        "deprecatedSince": null,
+        "description": "Size of the painted mark. Unknown values use the small metrics.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "triggerLabel": {
+        "default": "'AI-generated: about this content'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the disclosure button. Include the visible label.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-ai-label.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-ai-label.d.ts",
+    "symbols": {
+      "KiAiLabel": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiAiLabel extends Components.KiAiLabel, HTMLElement {\n}\nexport const KiAiLabel: {\n    prototype: KiAiLabel;\n    new (): KiAiLabel;\n};"
+      },
+      "KiAiLabelSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiAiLabelSize = 'sm' | 'md';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-ai-label.js"
+  }
+}

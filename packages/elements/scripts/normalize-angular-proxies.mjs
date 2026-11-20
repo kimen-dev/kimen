@@ -21,9 +21,9 @@
 // then-unused imports — leaving the native path as the one event channel.
 // Fail-loud: any drift in the upstream shape aborts the build rather than
 // shipping a half-normalized artifact.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 export function normalizeAngularProxies(source) {
   if (!source.includes('outputs: [') && !source.includes('@Output()')) {
@@ -81,7 +81,12 @@ export function normalizeAngularProxies(source) {
   return { source, orphanCount, strippedTypeImports };
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+const entryPath = process.argv[1];
+if (
+  entryPath &&
+  existsSync(entryPath) &&
+  realpathSync(entryPath) === realpathSync(fileURLToPath(import.meta.url))
+) {
   const proxiesPath = join(
     fileURLToPath(new URL('.', import.meta.url)),
     '../../angular/src/directives/proxies.ts',
