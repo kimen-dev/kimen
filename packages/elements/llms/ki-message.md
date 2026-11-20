@@ -29,7 +29,7 @@ slot and application controls in `actions`.
 
 ```html
 <ki-message message-role="assistant" author="Ava said">
-  <span slot="avatar" aria-hidden="true">AV</span>
+  <ki-avatar slot="avatar" size="xs" initials="AV"></ki-avatar>
   <strong>Yes.</strong> Choose <code>JSON</code> from the export menu.
   <details slot="actions">
     <summary>View source</summary>

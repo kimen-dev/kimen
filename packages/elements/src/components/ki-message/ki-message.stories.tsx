@@ -25,7 +25,7 @@ export const CustomAvatarAndActions: StoryObj<Args> = {
     h(
       'ki-message',
       args,
-      h('span', { slot: 'avatar', 'aria-hidden': 'true' }, 'AV'),
+      h('ki-avatar', { slot: 'avatar', size: 'xs', initials: 'AV' }),
       h('strong', null, 'Start here.'),
       ' The input and textarea show field errors.',
       h(
