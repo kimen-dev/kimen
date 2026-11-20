@@ -56,7 +56,7 @@ For an explanation with controls, use `ki-popover` with
 
 ## Attributes
 
-- `for` (string | undefined): ID of the rich tooltip's external trigger in the same document or shadow tree.
+- `for` (string | undefined, ID of another element of the same spec): ID of the rich tooltip's external trigger in the same document or shadow tree.
 - `heading` (string | undefined): Rich tooltip heading. Pair it with `for` and optional direct text in the default slot.
 - `label` (string, default ''): The entire plain tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a popover.
 - `placement` ("bottom" | "end" | "start" | "top", default 'top'): Preferred placement for the tooltip. The component may flip or clamp the rendered placement to keep the bubble inside the viewport; unknown runtime values fall back to `top`. When NOT to use: do not depend on placement for meaning or reading order.

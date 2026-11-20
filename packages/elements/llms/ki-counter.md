@@ -49,7 +49,7 @@ write one localized announcement to the pre-existing status region.
 ## Attributes
 
 - `dot` (boolean, default false): Show a dot independently of the count, including when the value is zero.
-- `for` (string | undefined): Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
+- `for` (string | undefined, ID of another element of the same spec): Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
 - `max` (number, default 99): Largest count displayed in full. Higher values display the cap with a plus sign. Fractional caps round down; invalid caps use 99.
 - `tone` ("danger" | "neutral" | "primary" | "success", default 'danger'): Semantic palette of the pill or dot. An unknown tone uses danger.
 - `value` (number | undefined): Count of unread or pending items. Finite values are rounded down. Values below one and non-finite values hide the count.

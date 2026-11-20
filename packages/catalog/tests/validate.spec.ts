@@ -36,17 +36,21 @@ describe('validateUiSpec', () => {
     expect(report.ok).toBe(true);
   });
 
-  it('accepts a submit button in the ki-input action slot', () => {
+  it('accepts an action-bound button in the ki-input action slot', () => {
+    // A spec owns no form (spec 152): the action slot's button reports a
+    // declared action instead of submitting.
     const report = validateUiSpec({
       version: 1,
+      actions: ['search'],
       root: {
         component: 'ki-input',
         props: { type: 'search', label: 'Search docs' },
         slots: {
           action: [
             {
+              action: 'search',
               component: 'ki-button',
-              props: { size: 'sm', type: 'submit' },
+              props: { size: 'sm', type: 'button' },
               slots: { '': ['Search'] },
             },
           ],
