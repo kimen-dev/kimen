@@ -7,7 +7,7 @@ content in this file.
 
 # Testing generative UI (LLM-driven output)
 
-How to test a system where an LLM generates UI specs (json-render / Kimen catalog). The fundamental shift: you can't assert exact output, so you assert **properties of the output** at three layers.
+How to test a system where an LLM generates UI specs against the Kimen catalog. The fundamental shift: you can't assert exact output, so you assert **properties of the output** at three layers.
 
 ## Layer 1 — Deterministic (CI, merge-blocking)
 
