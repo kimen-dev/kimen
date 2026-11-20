@@ -1,4 +1,4 @@
-import { AttrDeserialize, Component, h, Prop, State } from '@stencil/core';
+import { AttrDeserialize, Component, Element, h, Prop, State } from '@stencil/core';
 
 import { getIcon } from '../../utils/icon-registry.mjs';
 import { resolveHeadingLevel } from './ki-empty-state.heading.js';
@@ -29,6 +29,10 @@ import { resolveHeadingLevel } from './ki-empty-state.heading.js';
   shadow: true,
 })
 export class KiEmptyState {
+  @Element() private readonly host!: HTMLElement;
+  private currentHeadingLevel = 3;
+  private lastHeadingLevelAttribute: string | null = null;
+
   /** Localized heading that identifies the empty view. Blank text omits the heading. */
   @Prop() heading!: string;
 
@@ -57,7 +61,28 @@ export class KiEmptyState {
    * @minimum 2
    * @maximum 6
    */
-  @Prop() headingLevel = 3;
+  @Prop()
+  get headingLevel(): number {
+    const attribute = this.host.getAttribute('heading-level');
+    // Stencil reads the getter before skipping an attribute write that
+    // already equals the numeric property. Remember that spelling too.
+    if (Number(attribute) === this.currentHeadingLevel) {
+      this.lastHeadingLevelAttribute = attribute;
+    }
+    return this.currentHeadingLevel;
+  }
+
+  set headingLevel(value: number | null) {
+    const attribute = this.host.getAttribute('heading-level');
+    // The external Stencil runtime can call this setter with parseFloat's
+    // result. Validate the complete attribute before accepting that value.
+    const fromAttribute =
+      attribute !== null &&
+      attribute !== this.lastHeadingLevelAttribute &&
+      Object.is(value, Number.parseFloat(attribute));
+    this.lastHeadingLevelAttribute = attribute;
+    this.currentHeadingLevel = resolveHeadingLevel(fromAttribute ? attribute : value);
+  }
 
   /**
    * Put the heading and description in a polite status, with actions outside
@@ -98,7 +123,7 @@ export class KiEmptyState {
 
   render() {
     const heading = typeof this.heading === 'string' ? this.heading.trim() : '';
-    const headingTag = `h${String(resolveHeadingLevel(this.headingLevel))}`;
+    const headingTag = `h${String(this.headingLevel)}`;
     const iconName = this.iconName;
     const hasIcon = iconName !== undefined && getIcon(iconName) !== undefined;
     const small = this.size === 'sm';

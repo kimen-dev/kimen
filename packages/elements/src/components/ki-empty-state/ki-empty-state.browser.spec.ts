@@ -202,6 +202,23 @@ it.each([
   expect(page.getByRole('status').all()).toHaveLength(0);
 });
 
+it('S6 revalidates changed heading attributes and accepts subsequent numeric property writes', async () => {
+  fixture.innerHTML = markup('heading-level="2"');
+  const host = fixture.querySelector('ki-empty-state');
+  if (!host) throw new Error('Expected the EmptyState host');
+
+  await expect.element(page.getByRole('heading', { level: 2, name: heading })).toBeVisible();
+  host.setAttribute('heading-level', '2junk');
+  await expect.element(page.getByRole('heading', { level: 3, name: heading })).toBeVisible();
+
+  host.setAttribute('heading-level', '3');
+  host.setAttribute('heading-level', '2junk');
+  expect(host.headingLevel).toBe(3);
+
+  host.headingLevel = 2;
+  await expect.element(page.getByRole('heading', { level: 2, name: heading })).toBeVisible();
+});
+
 it('S7 takes its heading family and wrapping width from tokens', async () => {
   fixture.setAttribute('data-ki-theme', 'onmars');
   fixture.style.setProperty('--ki-typography-family-heading', 'serif');

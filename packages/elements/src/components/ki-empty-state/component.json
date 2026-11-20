@@ -8,9 +8,9 @@
   "catalog": true,
   "sizeBudget": {
     "mcpServer": {
-      "raw": 18458,
-      "gzip": 3548,
-      "brotli": 2627
+      "raw": 18904,
+      "gzip": 3662,
+      "brotli": 2731
     }
   }
 }

@@ -13,6 +13,7 @@ const browser = commands as unknown as {
 };
 const fixture = document.createElement('main');
 const styles = document.createElement('style');
+const recoveryCopy = 'Create a project to get started.';
 
 beforeAll(() => {
   defineCustomElement();
@@ -34,13 +35,12 @@ afterAll(() => {
 });
 
 async function mountMessage() {
-  fixture.innerHTML =
-    '<ki-empty-state heading="No projects yet">Create a project to get started.</ki-empty-state>';
+  fixture.innerHTML = `<ki-empty-state heading="No projects yet">${recoveryCopy}</ki-empty-state>`;
   await expect.element(page.getByRole('heading', { name: 'No projects yet' })).toBeVisible();
   const root = fixture.firstElementChild?.shadowRoot;
   const container = root?.querySelector('[part="container"]');
   const title = root?.querySelector('h3');
-  const description = root?.querySelector('[part="description"]');
+  const description = root?.querySelector<HTMLElement>('[part="description"]');
   if (!container || !title || !description) throw new Error('Expected the EmptyState message');
   return { container, title, description };
 }
@@ -70,7 +70,9 @@ it('S8 keeps the heading and description legible in forced colors', async (conte
 it('S9 shows the whole message with no animation under reduced motion', async () => {
   await browser.emulateReducedMotion('reduce');
   await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
-  const { container } = await mountMessage();
-  await expect.element(page.getByText('Create a project to get started.')).toBeVisible();
+  const { container, description } = await mountMessage();
+  await expect.element(description).toBeVisible();
+  const assignedText = description.querySelector('slot')?.assignedNodes({ flatten: true });
+  expect(assignedText?.map((node) => node.textContent).join('')).toBe(recoveryCopy);
   expect(container.getAnimations({ subtree: true })).toHaveLength(0);
 });

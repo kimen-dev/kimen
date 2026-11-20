@@ -2155,8 +2155,8 @@
           ],
           "optional": false,
           "required": false,
-          "getter": false,
-          "setter": false
+          "getter": true,
+          "setter": true
         },
         {
           "name": "iconName",
