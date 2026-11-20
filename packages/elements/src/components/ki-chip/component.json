@@ -11,9 +11,17 @@
   },
   "sizeBudget": {
     "mcpApps": {
-      "raw": 19647,
-      "gzip": 5125,
-      "brotli": 4023
+      "raw": 19614,
+      "gzip": 4983,
+      "brotli": 3993
+    },
+    "mcpServer": {
+      "raw": 31781,
+      "gzip": 6845,
+      "brotli": 4649
+    },
+    "tokenStylesheets": {
+      "onmars": 286
     }
   }
 }

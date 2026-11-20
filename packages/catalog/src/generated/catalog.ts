@@ -1393,6 +1393,72 @@ export const catalogData = {
       "whenNotToUse": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis.",
       "whenToUse": "a bounded region inside a view whose content can outgrow it:\nchat or message panes, code and log blocks, tag rows, sidebar navigation,\ntall menus inside cards. Give it bounds (its size comes entirely from your\nlayout) and a `label` (required: the accessible name of the scroll\nregion). Scrolling stays native — wheel, touch, keyboard and indicator\ndrag operate the viewport directly."
     },
+    "ki-segment": {
+      "description": "A single choice in a ki-segmented-control.",
+      "events": {},
+      "props": {
+        "aria-label": {
+          "type": "string",
+          "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Excludes the option from selection and keyboard navigation.",
+          "default": false
+        },
+        "value": {
+          "type": "string",
+          "description": "Required nonempty option identifier. Each value must be unique in its group.",
+          "required": true
+        }
+      },
+      "slots": {
+        "": "Noninteractive visible option label.",
+        "start": "Decorative leading icon. Supply aria-label for an icon-only option."
+      },
+      "tag": "ki-segment",
+      "whenNotToUse": "standalone, for navigation, or for form submission.",
+      "whenToUse": "offer one mutually exclusive choice with text or a named icon."
+    },
+    "ki-segmented-control": {
+      "description": "A compact control for one in-place choice among two to five options.",
+      "events": {
+        "ki-change": "Emitted once per changed user choice with the new resolved value."
+      },
+      "props": {
+        "full-width": {
+          "type": "boolean",
+          "description": "Distribute the available inline space evenly among all segments.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Required accessible name of the group. Use a short name for the setting.",
+          "required": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm",
+            "xs"
+          ],
+          "description": "Track size. The default heights are 28, 32 and 40 CSS px respectively;\nsurrounding density settings can increase or decrease targets.",
+          "default": "md"
+        },
+        "value": {
+          "type": "string",
+          "description": "Resolved selected value. Set it to choose an option programmatically.\nOmit it to select the first available option. The value is empty when\nthere are no available options. Programmatic changes are silent.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "Two to five direct ki-segment children with distinct nonempty values."
+      },
+      "tag": "ki-segmented-control",
+      "whenNotToUse": "switching between panels (ki-tabs), submitted form choices\n(ki-radio-group), or more than five options (ki-select).",
+      "whenToUse": "apply a chart range, view mode, or another immediate setting."
+    },
     "ki-select": {
       "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {

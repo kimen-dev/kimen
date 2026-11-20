@@ -33,6 +33,8 @@ export { KiQr } from './ki-qr.js';
 export { KiRadio } from './ki-radio.js';
 export { KiRadioGroup } from './ki-radio-group.js';
 export { KiScroller } from './ki-scroller.js';
+export { KiSegment } from './ki-segment.js';
+export { KiSegmentedControl } from './ki-segmented-control.js';
 export { KiSelect } from './ki-select.js';
 export { KiSpinner } from './ki-spinner.js';
 export { KiStack } from './ki-stack.js';
