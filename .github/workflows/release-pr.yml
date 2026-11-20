@@ -1,0 +1,90 @@
+name: release-pr
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: kimen-release-pr
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
+            *.actions.githubusercontent.com:443
+            registry.npmjs.org:443
+
+      - name: Require release App credentials
+        env:
+          RELEASE_APP_ID: ${{ secrets.RELEASE_APP_ID }}
+          RELEASE_APP_PRIVATE_KEY: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          if [[ -z "$RELEASE_APP_ID" || -z "$RELEASE_APP_PRIVATE_KEY" ]]; then
+            echo '::error::Release automation requires RELEASE_APP_ID and RELEASE_APP_PRIVATE_KEY.'
+            exit 1
+          fi
+
+      - name: Check out main event with release history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Allocate isolated writable caches
+        run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - name: Install Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          package-manager-cache: false
+
+      - name: Install frozen dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare release proposal with Nx
+        id: plan
+        run: node scripts/release/prepare-release.mjs
+
+      - name: Regenerate versioned API and catalog metadata
+        if: steps.plan.outputs.version != ''
+        run: pnpm regen
+
+      - name: Mint release App token
+        if: steps.plan.outputs.version != ''
+        id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Open or update the release pull request
+        if: steps.plan.outputs.version != ''
+        env:
+          RELEASE_APP_TOKEN: ${{ steps.app.outputs.token }}
+          RELEASE_VERSION: ${{ steps.plan.outputs.version }}
+        run: node scripts/release/release-github.mjs pr "$RELEASE_VERSION"

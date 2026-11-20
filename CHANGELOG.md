@@ -4,9 +4,8 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
-[Semantic Versioning](https://semver.org/spec/v2.0.0.html). The changelog is
-maintained by hand — the repo deliberately does not use changesets (see
-[`docs/releasing.md`](./docs/releasing.md)); nothing is published to npm yet.
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
+are generated through [the release pull request](./docs/releasing.md).
 
 ## [Unreleased]
 
