@@ -658,13 +658,13 @@ export class KiMessage {
 
 export declare interface KiMessage extends Components.KiMessage {
   /**
-   * Requests the alternative reply at the one-based index in the event detail.
+   * Requests a branch by its one-based index.
    */
   /**
-   * Reports the selected rating. Persist it or offer optional feedback in the app.
+   * Reports the selected rating.
    */
   /**
-   * Requests a new reply when the authored Regenerate action is activated.
+   * Requests a new reply on Regenerate.
    */
 }
 

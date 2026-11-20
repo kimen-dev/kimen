@@ -153,9 +153,7 @@ slot[name="avatar"]::slotted(*) {
 
 @media (hover: hover) {
   /* Preserve the keyboard stop while the earlier toolbar is visually at rest. */
-  :host(:has(~ ki-message:not([message-role="user"], [message-role="event"], [hidden])))
-    .assistant:not(:hover, :focus-within)
-    .reply-actions {
+  :host([data-ki-earlier-reply]:not(:hover, :focus-within)) .reply-actions {
     opacity: 0;
     pointer-events: none;
   }

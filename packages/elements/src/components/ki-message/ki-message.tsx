@@ -6,6 +6,7 @@ import { Component, Element, Event, type EventEmitter, h, Prop, Watch } from '@s
 import { getKeyboardIntent, isNavigationIntent } from '../../utils/keyboard-intent';
 import { rovingFocusIndex, rovingTabIndex } from '../../utils/roving-focus';
 import { replyBranches } from './ki-message.branches';
+import { trackReplyOrder } from './ki-message.reply-order';
 
 export type KiMessageRole = 'user' | 'assistant' | 'event';
 export type KiMessageFeedback = 'good' | 'bad';
@@ -30,19 +31,17 @@ const authorLabels: Readonly<Record<KiMessageRole, string>> = {
  * A user message, assistant reply or event.
  *
  * @whenToUse Display an entry in ki-conversation.
- * @whenNotToUse Collect prompts, announce alerts or execute tools.
+ * @whenNotToUse Prompt input, page alerts or tool execution.
  *
  * @slot - Text or formatted content.
  * @slot avatar - Overrides the decorative assistant avatar.
- * @slot actions - App controls below the message.
- * With actions-label, use direct buttons or buttons inside a layout-only
- * ki-button-group. Mark Regenerate and rating buttons with data-message-action.
- * The toolbar manages their tab order and includes any reply branch controls.
+ * @slot actions - App controls. With actions-label, use direct buttons or a layout-only
+ * ki-button-group. Mark regenerate and rating buttons with data-message-action.
  * @part message - Named article.
  * @part avatar - Assistant avatar.
  * @part content - Body and optional event icon.
  * @part actions - Follow-up controls.
- * @part branches - The previous and next controls and the visible branch position.
+ * @part branches - Branch picker and position.
  * @part caret - Decorative streaming marker.
  */
 @Component({
@@ -62,9 +61,7 @@ export class KiMessage {
   /** Show a caret and mark the article busy. */
   @Prop({ reflect: true }) streaming = false;
 
-  /**
-   * Accessible article name. Override the role-specific label to name a speaker or localize it.
-   */
+  /** Accessible article name. Defaults by role. */
   @Prop() author?: string;
 
   /**
@@ -72,44 +69,44 @@ export class KiMessage {
    */
   @Prop() iconName?: string;
 
-  /** Accessible name that opts this assistant reply into the message actions toolbar. */
+  /** Names and enables the assistant toolbar. */
   @Prop() actionsLabel?: string;
 
   /**
-   * Current rating for this reply. Assign the saved rating when displaying a
-   * different branch. Select good or bad with the corresponding action control.
+   * Good or bad rating. Restore it when switching branches.
    */
   @Prop({ mutable: true, reflect: true }) feedback?: KiMessageFeedback;
 
-  /** One-based index of the displayed reply. Update it after accepting a branch request. */
+  /** One-based reply index. Update after accepting a branch request. */
   @Prop() branchIndex?: number = 1;
 
-  /** Number of reply alternatives. The controls appear when there are at least two. */
+  /** Total replies. Shows a picker for two or more. */
   @Prop() branchCount?: number = 1;
 
-  /** Accessible name for the previous branch control. */
+  /** Previous branch button label. */
   @Prop() previousBranchLabel?: string = branchLabels.previous;
 
-  /** Accessible name for the next branch control. */
+  /** Next branch button label. */
   @Prop() nextBranchLabel?: string = branchLabels.next;
 
-  /** Localized branch status template. Use {index} and {count} for the reply position. */
+  /** Branch announcement template with {index} and {count}. */
   @Prop() branchStatusLabel?: string = branchLabels.status;
 
-  /** Requests the alternative reply at the one-based index in the event detail. */
+  /** Requests a branch by its one-based index. */
   @Event({ eventName: 'ki-branch-change', cancelable: false })
   branchChange!: EventEmitter<{ index: number }>;
 
-  /** Reports the selected rating. Persist it or offer optional feedback in the app. */
+  /** Reports the selected rating. */
   @Event({ eventName: 'ki-feedback', cancelable: false })
   feedbackChange!: EventEmitter<{ value: KiMessageFeedback }>;
 
-  /** Requests a new reply when the authored Regenerate action is activated. */
+  /** Requests a new reply on Regenerate. */
   @Event({ eventName: 'ki-regenerate', cancelable: false })
   regenerate!: EventEmitter<void>;
 
   private actionSlot: HTMLSlotElement | undefined;
   private actionsObserver?: MutationObserver;
+  private stopTrackingOrder: (() => void) | undefined;
   private branchControls: HTMLDivElement | undefined;
   private readonly authoredTabIndexes = new Map<HTMLElement, string | null>();
   private stops: HTMLElement[] = [];
@@ -118,6 +115,7 @@ export class KiMessage {
   connectedCallback(): void {
     this.observeActions();
     this.syncActions();
+    this.syncReplyOrder();
   }
 
   componentDidLoad(): void {
@@ -127,11 +125,13 @@ export class KiMessage {
   componentDidRender(): void {
     this.observeActions();
     this.syncActions();
+    this.syncReplyOrder();
   }
 
   disconnectedCallback(): void {
     this.actionsObserver?.disconnect();
     this.releaseTabStops([]);
+    this.releaseReplyOrder();
   }
 
   componentWillLoad(): void {
@@ -160,6 +160,25 @@ export class KiMessage {
   private get toolbarLabel(): string | undefined {
     const label = this.actionsLabel?.trim();
     return this.role === 'assistant' && label ? label : undefined;
+  }
+
+  private get branches() {
+    if (this.role === 'assistant')
+      return replyBranches(this.branchIndex ?? 1, this.branchCount ?? 1);
+    return undefined;
+  }
+
+  private syncReplyOrder(): void {
+    if (this.toolbarLabel ?? this.branches) {
+      this.stopTrackingOrder ??= trackReplyOrder(this.host);
+    } else {
+      this.releaseReplyOrder();
+    }
+  }
+
+  private releaseReplyOrder(): void {
+    this.stopTrackingOrder?.();
+    this.stopTrackingOrder = undefined;
   }
 
   private observeActions(): void {
@@ -319,10 +338,7 @@ export class KiMessage {
   render() {
     const role = this.role;
     const toolbarLabel = this.toolbarLabel;
-    const branches =
-      role === 'assistant'
-        ? replyBranches(this.branchIndex ?? 1, this.branchCount ?? 1)
-        : undefined;
+    const branches = this.branches;
     const branchStatus = branches
       ? (this.branchStatusLabel ?? branchLabels.status)
           .replaceAll('{index}', String(branches.index))

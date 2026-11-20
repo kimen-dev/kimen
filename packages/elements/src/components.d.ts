@@ -925,34 +925,34 @@ export namespace Components {
     /**
      * A user message, assistant reply or event.
      * @whenToUse Display an entry in ki-conversation.
-     * @whenNotToUse Collect prompts, announce alerts or execute tools.
+     * @whenNotToUse Prompt input, page alerts or tool execution.
      */
     interface KiMessage {
         /**
-          * Accessible name that opts this assistant reply into the message actions toolbar.
+          * Names and enables the assistant toolbar.
          */
         "actionsLabel"?: string;
         /**
-          * Accessible article name. Override the role-specific label to name a speaker or localize it.
+          * Accessible article name. Defaults by role.
          */
         "author"?: string;
         /**
-          * Number of reply alternatives. The controls appear when there are at least two.
+          * Total replies. Shows a picker for two or more.
           * @default 1
          */
         "branchCount"?: number;
         /**
-          * One-based index of the displayed reply. Update it after accepting a branch request.
+          * One-based reply index. Update after accepting a branch request.
           * @default 1
          */
         "branchIndex"?: number;
         /**
-          * Localized branch status template. Use {index} and {count} for the reply position.
+          * Branch announcement template with {index} and {count}.
           * @default 'Response {index} of {count}'
          */
         "branchStatusLabel"?: string;
         /**
-          * Current rating for this reply. Assign the saved rating when displaying a different branch. Select good or bad with the corresponding action control.
+          * Good or bad rating. Restore it when switching branches.
          */
         "feedback"?: KiMessageFeedback;
         /**
@@ -965,12 +965,12 @@ export namespace Components {
          */
         "messageRole"?: KiMessageRole;
         /**
-          * Accessible name for the next branch control.
+          * Next branch button label.
           * @default 'Next response'
          */
         "nextBranchLabel"?: string;
         /**
-          * Accessible name for the previous branch control.
+          * Previous branch button label.
           * @default 'Previous response'
          */
         "previousBranchLabel"?: string;
@@ -2254,7 +2254,7 @@ declare global {
     /**
      * A user message, assistant reply or event.
      * @whenToUse Display an entry in ki-conversation.
-     * @whenNotToUse Collect prompts, announce alerts or execute tools.
+     * @whenNotToUse Prompt input, page alerts or tool execution.
      */
     interface HTMLKiMessageElement extends Components.KiMessage, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiMessageElementEventMap>(type: K, listener: (this: HTMLKiMessageElement, ev: KiMessageCustomEvent<HTMLKiMessageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -3650,34 +3650,34 @@ declare namespace LocalJSX {
     /**
      * A user message, assistant reply or event.
      * @whenToUse Display an entry in ki-conversation.
-     * @whenNotToUse Collect prompts, announce alerts or execute tools.
+     * @whenNotToUse Prompt input, page alerts or tool execution.
      */
     interface KiMessage {
         /**
-          * Accessible name that opts this assistant reply into the message actions toolbar.
+          * Names and enables the assistant toolbar.
          */
         "actionsLabel"?: string;
         /**
-          * Accessible article name. Override the role-specific label to name a speaker or localize it.
+          * Accessible article name. Defaults by role.
          */
         "author"?: string;
         /**
-          * Number of reply alternatives. The controls appear when there are at least two.
+          * Total replies. Shows a picker for two or more.
           * @default 1
          */
         "branchCount"?: number;
         /**
-          * One-based index of the displayed reply. Update it after accepting a branch request.
+          * One-based reply index. Update after accepting a branch request.
           * @default 1
          */
         "branchIndex"?: number;
         /**
-          * Localized branch status template. Use {index} and {count} for the reply position.
+          * Branch announcement template with {index} and {count}.
           * @default 'Response {index} of {count}'
          */
         "branchStatusLabel"?: string;
         /**
-          * Current rating for this reply. Assign the saved rating when displaying a different branch. Select good or bad with the corresponding action control.
+          * Good or bad rating. Restore it when switching branches.
          */
         "feedback"?: KiMessageFeedback;
         /**
@@ -3690,24 +3690,24 @@ declare namespace LocalJSX {
          */
         "messageRole"?: KiMessageRole;
         /**
-          * Accessible name for the next branch control.
+          * Next branch button label.
           * @default 'Next response'
          */
         "nextBranchLabel"?: string;
         /**
-          * Requests the alternative reply at the one-based index in the event detail.
+          * Requests a branch by its one-based index.
          */
         "onKi-branch-change"?: (event: KiMessageCustomEvent<{ index: number }>) => void;
         /**
-          * Reports the selected rating. Persist it or offer optional feedback in the app.
+          * Reports the selected rating.
          */
         "onKi-feedback"?: (event: KiMessageCustomEvent<{ value: KiMessageFeedback }>) => void;
         /**
-          * Requests a new reply when the authored Regenerate action is activated.
+          * Requests a new reply on Regenerate.
          */
         "onKi-regenerate"?: (event: KiMessageCustomEvent<void>) => void;
         /**
-          * Accessible name for the previous branch control.
+          * Previous branch button label.
           * @default 'Previous response'
          */
         "previousBranchLabel"?: string;
@@ -5128,7 +5128,7 @@ declare module "@stencil/core" {
             /**
              * A user message, assistant reply or event.
              * @whenToUse Display an entry in ki-conversation.
-             * @whenNotToUse Collect prompts, announce alerts or execute tools.
+             * @whenNotToUse Prompt input, page alerts or tool execution.
              */
             "ki-message": LocalJSX.IntrinsicElements["ki-message"] & JSXBase.HTMLAttributes<HTMLKiMessageElement>;
             /**

@@ -5820,7 +5820,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "Collect prompts, announce alerts or execute tools."
+          "text": "Prompt input, page alerts or tool execution."
         },
         {
           "name": "slot",
@@ -5832,7 +5832,7 @@
         },
         {
           "name": "slot",
-          "text": "actions - App controls below the message.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls."
+          "text": "actions - App controls. With actions-label, use direct buttons or a layout-only\nki-button-group. Mark regenerate and rating buttons with data-message-action."
         },
         {
           "name": "part",
@@ -5852,7 +5852,7 @@
         },
         {
           "name": "part",
-          "text": "branches - The previous and next controls and the visible branch position."
+          "text": "branches - Branch picker and position."
         },
         {
           "name": "part",
@@ -5874,7 +5874,7 @@
           "mutable": false,
           "attr": "actions-label",
           "reflectToAttr": false,
-          "docs": "Accessible name that opts this assistant reply into the message actions toolbar.",
+          "docs": "Names and enables the assistant toolbar.",
           "docsTags": [],
           "values": [
             {
@@ -5900,7 +5900,7 @@
           "mutable": false,
           "attr": "author",
           "reflectToAttr": false,
-          "docs": "Accessible article name. Override the role-specific label to name a speaker or localize it.",
+          "docs": "Accessible article name. Defaults by role.",
           "docsTags": [],
           "values": [
             {
@@ -5926,7 +5926,7 @@
           "mutable": false,
           "attr": "branch-count",
           "reflectToAttr": false,
-          "docs": "Number of reply alternatives. The controls appear when there are at least two.",
+          "docs": "Total replies. Shows a picker for two or more.",
           "docsTags": [
             {
               "name": "default",
@@ -5958,7 +5958,7 @@
           "mutable": false,
           "attr": "branch-index",
           "reflectToAttr": false,
-          "docs": "One-based index of the displayed reply. Update it after accepting a branch request.",
+          "docs": "One-based reply index. Update after accepting a branch request.",
           "docsTags": [
             {
               "name": "default",
@@ -5990,7 +5990,7 @@
           "mutable": false,
           "attr": "branch-status-label",
           "reflectToAttr": false,
-          "docs": "Localized branch status template. Use {index} and {count} for the reply position.",
+          "docs": "Branch announcement template with {index} and {count}.",
           "docsTags": [
             {
               "name": "default",
@@ -6028,7 +6028,7 @@
           "mutable": true,
           "attr": "feedback",
           "reflectToAttr": true,
-          "docs": "Current rating for this reply. Assign the saved rating when displaying a\ndifferent branch. Select good or bad with the corresponding action control.",
+          "docs": "Good or bad rating. Restore it when switching branches.",
           "docsTags": [],
           "values": [
             {
@@ -6131,7 +6131,7 @@
           "mutable": false,
           "attr": "next-branch-label",
           "reflectToAttr": false,
-          "docs": "Accessible name for the next branch control.",
+          "docs": "Next branch button label.",
           "docsTags": [
             {
               "name": "default",
@@ -6163,7 +6163,7 @@
           "mutable": false,
           "attr": "previous-branch-label",
           "reflectToAttr": false,
-          "docs": "Accessible name for the previous branch control.",
+          "docs": "Previous branch button label.",
           "docsTags": [
             {
               "name": "default",
@@ -6227,7 +6227,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Requests the alternative reply at the one-based index in the event detail.",
+          "docs": "Requests a branch by its one-based index.",
           "docsTags": []
         },
         {
@@ -6247,7 +6247,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Reports the selected rating. Persist it or offer optional feedback in the app.",
+          "docs": "Reports the selected rating.",
           "docsTags": []
         },
         {
@@ -6261,7 +6261,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Requests a new reply when the authored Regenerate action is activated.",
+          "docs": "Requests a new reply on Regenerate.",
           "docsTags": []
         }
       ],
@@ -6274,7 +6274,7 @@
         },
         {
           "name": "actions",
-          "docs": "App controls below the message.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls."
+          "docs": "App controls. With actions-label, use direct buttons or a layout-only\nki-button-group. Mark regenerate and rating buttons with data-message-action."
         },
         {
           "name": "avatar",
@@ -6292,7 +6292,7 @@
         },
         {
           "name": "branches",
-          "docs": "The previous and next controls and the visible branch position."
+          "docs": "Branch picker and position."
         },
         {
           "name": "caret",

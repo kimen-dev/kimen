@@ -1198,32 +1198,32 @@ export const catalogData = {
     "ki-message": {
       "description": "A user message, assistant reply or event.",
       "events": {
-        "ki-branch-change": "Requests the alternative reply at the one-based index in the event detail.",
-        "ki-feedback": "Reports the selected rating. Persist it or offer optional feedback in the app.",
-        "ki-regenerate": "Requests a new reply when the authored Regenerate action is activated."
+        "ki-branch-change": "Requests a branch by its one-based index.",
+        "ki-feedback": "Reports the selected rating.",
+        "ki-regenerate": "Requests a new reply on Regenerate."
       },
       "props": {
         "actions-label": {
           "type": "string",
-          "description": "Accessible name that opts this assistant reply into the message actions toolbar."
+          "description": "Names and enables the assistant toolbar."
         },
         "author": {
           "type": "string",
-          "description": "Accessible article name. Override the role-specific label to name a speaker or localize it."
+          "description": "Accessible article name. Defaults by role."
         },
         "branch-count": {
           "type": "number",
-          "description": "Number of reply alternatives. The controls appear when there are at least two.",
+          "description": "Total replies. Shows a picker for two or more.",
           "default": 1
         },
         "branch-index": {
           "type": "number",
-          "description": "One-based index of the displayed reply. Update it after accepting a branch request.",
+          "description": "One-based reply index. Update after accepting a branch request.",
           "default": 1
         },
         "branch-status-label": {
           "type": "string",
-          "description": "Localized branch status template. Use {index} and {count} for the reply position.",
+          "description": "Branch announcement template with {index} and {count}.",
           "default": "Response {index} of {count}"
         },
         "feedback": {
@@ -1232,7 +1232,7 @@ export const catalogData = {
             "bad",
             "good"
           ],
-          "description": "Current rating for this reply. Assign the saved rating when displaying a\ndifferent branch. Select good or bad with the corresponding action control."
+          "description": "Good or bad rating. Restore it when switching branches."
         },
         "icon-name": {
           "type": "string",
@@ -1249,12 +1249,12 @@ export const catalogData = {
         },
         "next-branch-label": {
           "type": "string",
-          "description": "Accessible name for the next branch control.",
+          "description": "Next branch button label.",
           "default": "Next response"
         },
         "previous-branch-label": {
           "type": "string",
-          "description": "Accessible name for the previous branch control.",
+          "description": "Previous branch button label.",
           "default": "Previous response"
         },
         "streaming": {
@@ -1265,11 +1265,11 @@ export const catalogData = {
       },
       "slots": {
         "": "Text or formatted content.",
-        "actions": "App controls below the message.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls.",
+        "actions": "App controls. With actions-label, use direct buttons or a layout-only\nki-button-group. Mark regenerate and rating buttons with data-message-action.",
         "avatar": "Overrides the decorative assistant avatar."
       },
       "tag": "ki-message",
-      "whenNotToUse": "Collect prompts, announce alerts or execute tools.",
+      "whenNotToUse": "Prompt input, page alerts or tool execution.",
       "whenToUse": "Display an entry in ki-conversation."
     },
     "ki-note": {

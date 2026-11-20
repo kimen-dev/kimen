@@ -4,7 +4,7 @@
       "actions-label": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Accessible name that opts this assistant reply into the message actions toolbar.",
+        "description": "Names and enables the assistant toolbar.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -12,7 +12,7 @@
       "author": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Accessible article name. Override the role-specific label to name a speaker or localize it.",
+        "description": "Accessible article name. Defaults by role.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -20,7 +20,7 @@
       "branch-count": {
         "default": "1",
         "deprecatedSince": null,
-        "description": "Number of reply alternatives. The controls appear when there are at least two.",
+        "description": "Total replies. Shows a picker for two or more.",
         "replacement": null,
         "required": false,
         "type": "number | undefined"
@@ -28,7 +28,7 @@
       "branch-index": {
         "default": "1",
         "deprecatedSince": null,
-        "description": "One-based index of the displayed reply. Update it after accepting a branch request.",
+        "description": "One-based reply index. Update after accepting a branch request.",
         "replacement": null,
         "required": false,
         "type": "number | undefined"
@@ -36,7 +36,7 @@
       "branch-status-label": {
         "default": "'Response {index} of {count}'",
         "deprecatedSince": null,
-        "description": "Localized branch status template. Use {index} and {count} for the reply position.",
+        "description": "Branch announcement template with {index} and {count}.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -44,7 +44,7 @@
       "feedback": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Current rating for this reply. Assign the saved rating when displaying a\ndifferent branch. Select good or bad with the corresponding action control.",
+        "description": "Good or bad rating. Restore it when switching branches.",
         "replacement": null,
         "required": false,
         "type": "\"bad\" | \"good\" | undefined"
@@ -68,7 +68,7 @@
       "next-branch-label": {
         "default": "'Next response'",
         "deprecatedSince": null,
-        "description": "Accessible name for the next branch control.",
+        "description": "Next branch button label.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -76,7 +76,7 @@
       "previous-branch-label": {
         "default": "'Previous response'",
         "deprecatedSince": null,
-        "description": "Accessible name for the previous branch control.",
+        "description": "Previous branch button label.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -481,7 +481,7 @@
       "ki-branch-change": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Requests the alternative reply at the one-based index in the event detail.",
+        "description": "Requests a branch by its one-based index.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<{ index: number }>"
@@ -489,7 +489,7 @@
       "ki-feedback": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Reports the selected rating. Persist it or offer optional feedback in the app.",
+        "description": "Reports the selected rating.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<{ value: KiMessageFeedback }>"
@@ -497,7 +497,7 @@
       "ki-regenerate": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Requests a new reply when the authored Regenerate action is activated.",
+        "description": "Requests a new reply on Regenerate.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<void>"
@@ -524,7 +524,7 @@
       "branches": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The previous and next controls and the visible branch position.",
+        "description": "Branch picker and position.",
         "replacement": null,
         "required": false,
         "type": null
@@ -558,7 +558,7 @@
       "actionsLabel": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Accessible name that opts this assistant reply into the message actions toolbar.",
+        "description": "Names and enables the assistant toolbar.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -566,7 +566,7 @@
       "author": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Accessible article name. Override the role-specific label to name a speaker or localize it.",
+        "description": "Accessible article name. Defaults by role.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -574,7 +574,7 @@
       "branchCount": {
         "default": "1",
         "deprecatedSince": null,
-        "description": "Number of reply alternatives. The controls appear when there are at least two.",
+        "description": "Total replies. Shows a picker for two or more.",
         "replacement": null,
         "required": false,
         "type": "number | undefined"
@@ -582,7 +582,7 @@
       "branchIndex": {
         "default": "1",
         "deprecatedSince": null,
-        "description": "One-based index of the displayed reply. Update it after accepting a branch request.",
+        "description": "One-based reply index. Update after accepting a branch request.",
         "replacement": null,
         "required": false,
         "type": "number | undefined"
@@ -590,7 +590,7 @@
       "branchStatusLabel": {
         "default": "'Response {index} of {count}'",
         "deprecatedSince": null,
-        "description": "Localized branch status template. Use {index} and {count} for the reply position.",
+        "description": "Branch announcement template with {index} and {count}.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -598,7 +598,7 @@
       "feedback": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Current rating for this reply. Assign the saved rating when displaying a\ndifferent branch. Select good or bad with the corresponding action control.",
+        "description": "Good or bad rating. Restore it when switching branches.",
         "replacement": null,
         "required": false,
         "type": "\"bad\" | \"good\" | undefined"
@@ -622,7 +622,7 @@
       "nextBranchLabel": {
         "default": "'Next response'",
         "deprecatedSince": null,
-        "description": "Accessible name for the next branch control.",
+        "description": "Next branch button label.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -630,7 +630,7 @@
       "previousBranchLabel": {
         "default": "'Previous response'",
         "deprecatedSince": null,
-        "description": "Accessible name for the previous branch control.",
+        "description": "Previous branch button label.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -656,7 +656,7 @@
       "actions": {
         "default": null,
         "deprecatedSince": null,
-        "description": "App controls below the message.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls.",
+        "description": "App controls. With actions-label, use direct buttons or a layout-only\nki-button-group. Mark regenerate and rating buttons with data-message-action.",
         "replacement": null,
         "required": false,
         "type": null

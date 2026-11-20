@@ -62,6 +62,14 @@ it('S1 shows the latest assistant toolbar even after a user turn', async () => {
         actionsOpacity(fixture, '#earlier') === resting,
     )
     .toBe(true);
+
+  const latest = fixture.querySelector('#latest');
+  if (!latest) throw new Error('Missing latest reply');
+  latest.setAttribute('hidden', '');
+  await expect.poll(() => actionsOpacity(fixture, '#earlier')).toBe('1');
+
+  latest.removeAttribute('hidden');
+  await expect.poll(() => actionsOpacity(fixture, '#earlier')).toBe(resting);
 });
 
 it('S2 reveals an earlier toolbar on hover when the device supports it', async () => {

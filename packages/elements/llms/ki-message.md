@@ -8,7 +8,7 @@ Display an entry in ki-conversation.
 
 ## When not to use
 
-Collect prompts, announce alerts or execute tools.
+Prompt input, page alerts or tool execution.
 
 ## Examples
 
@@ -60,38 +60,38 @@ guide includes the complete Message actions recipe.
 
 ## Attributes
 
-- `actions-label` (string | undefined): Accessible name that opts this assistant reply into the message actions toolbar.
-- `author` (string | undefined): Accessible article name. Override the role-specific label to name a speaker or localize it.
-- `branch-count` (number | undefined, default 1): Number of reply alternatives. The controls appear when there are at least two.
-- `branch-index` (number | undefined, default 1): One-based index of the displayed reply. Update it after accepting a branch request.
-- `branch-status-label` (string | undefined, default 'Response {index} of {count}'): Localized branch status template. Use {index} and {count} for the reply position.
-- `feedback` ("bad" | "good" | undefined): Current rating for this reply. Assign the saved rating when displaying a different branch. Select good or bad with the corresponding action control.
+- `actions-label` (string | undefined): Names and enables the assistant toolbar.
+- `author` (string | undefined): Accessible article name. Defaults by role.
+- `branch-count` (number | undefined, default 1): Total replies. Shows a picker for two or more.
+- `branch-index` (number | undefined, default 1): One-based reply index. Update after accepting a branch request.
+- `branch-status-label` (string | undefined, default 'Response {index} of {count}'): Branch announcement template with {index} and {count}.
+- `feedback` ("bad" | "good" | undefined): Good or bad rating. Restore it when switching branches.
 - `icon-name` (string | undefined): Decorative event icon. Search is built in. Import other icons before use.
 - `message-role` ("assistant" | "event" | "user" | undefined): Trailing user bubble, leading assistant avatar or centered event.
-- `next-branch-label` (string | undefined, default 'Next response'): Accessible name for the next branch control.
-- `previous-branch-label` (string | undefined, default 'Previous response'): Accessible name for the previous branch control.
+- `next-branch-label` (string | undefined, default 'Next response'): Next branch button label.
+- `previous-branch-label` (string | undefined, default 'Previous response'): Previous branch button label.
 - `streaming` (boolean, default false): Show a caret and mark the article busy.
 
 ## Slots
 
 - (default): Text or formatted content.
-- `actions`: App controls below the message. With actions-label, use direct buttons or buttons inside a layout-only ki-button-group. Mark Regenerate and rating buttons with data-message-action. The toolbar manages their tab order and includes any reply branch controls.
+- `actions`: App controls. With actions-label, use direct buttons or a layout-only ki-button-group. Mark regenerate and rating buttons with data-message-action.
 - `avatar`: Overrides the decorative assistant avatar.
 
 ## Parts
 
 - `actions`: Follow-up controls.
 - `avatar`: Assistant avatar.
-- `branches`: The previous and next controls and the visible branch position.
+- `branches`: Branch picker and position.
 - `caret`: Decorative streaming marker.
 - `content`: Body and optional event icon.
 - `message`: Named article.
 
 ## Events
 
-- `ki-branch-change` (CustomEvent<{ index: number }>): Requests the alternative reply at the one-based index in the event detail.
-- `ki-feedback` (CustomEvent<{ value: KiMessageFeedback }>): Reports the selected rating. Persist it or offer optional feedback in the app.
-- `ki-regenerate` (CustomEvent<void>): Requests a new reply when the authored Regenerate action is activated.
+- `ki-branch-change` (CustomEvent<{ index: number }>): Requests a branch by its one-based index.
+- `ki-feedback` (CustomEvent<{ value: KiMessageFeedback }>): Reports the selected rating.
+- `ki-regenerate` (CustomEvent<void>): Requests a new reply on Regenerate.
 
 ## Methods
 
