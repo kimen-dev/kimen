@@ -12,5 +12,18 @@ export default {
     row(
       '<ki-input label="Amount"><span slot="start">EUR</span><span slot="end">.00</span></ki-input>',
     ),
+    row(`<form role="search" aria-label="Documentation" onsubmit="event.preventDefault()">
+      <ki-input label="Search docs" type="search" name="q" placeholder="Components, tokens…">
+        <svg slot="start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>
+        </svg>
+        <ki-button slot="action" size="sm" variant="secondary" type="submit">Search</ki-button>
+      </ki-input>
+    </form>`),
+    row(`<form aria-label="Newsletter" onsubmit="event.preventDefault()">
+      <ki-input label="Email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+        <ki-button slot="action" size="sm" variant="primary" type="submit">Subscribe</ki-button>
+      </ki-input>
+    </form>`),
   ].join(''),
 } satisfies VisualGallery;

@@ -29,6 +29,11 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  *
  * @slot start - Leading icon or text affix inside the field. Follows writing direction.
  * @slot end - Trailing icon or text affix inside the field. Follows writing direction.
+ * @slot action - One small submit action inside the field after the end adornment.
+ * Use for one-field forms such as search or subscribe. Place a named
+ * `ki-button size="sm" type="submit"` here, or wire a labeled
+ * `ki-icon-button size="sm"` to request form submission. The action has its own tab
+ * stop. Use the end slot for clear or reveal controls.
  * @part error - Error line shown in place of the help text while the field is invalid
  * after the person answered or submitted; a polite live region, starting with a
  * decorative error symbol.
@@ -456,6 +461,7 @@ export class KiInput {
             onKeyDown={this.handleKeyDown}
           />
           <slot name="end" />
+          <slot name="action" />
         </div>
         <FieldMessage {...messages} />
       </div>
