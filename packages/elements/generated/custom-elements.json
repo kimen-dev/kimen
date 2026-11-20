@@ -3042,6 +3042,291 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-checkbox-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCheckboxGroup",
+          "customElement": true,
+          "tagName": "ki-checkbox-group",
+          "description": "A form-associated group of independently selectable checkboxes.",
+          "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits.",
+          "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the group unavailable and excludes it from form submission."
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Localized message displayed for a failing selection limit."
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "One line of guidance displayed under the choices."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible legend and accessible name for these choices.",
+              "required": true
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of checked options, as a nonnegative integer."
+            },
+            {
+              "name": "min",
+              "fieldName": "min",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Minimum number of checked options, as a nonnegative integer."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key repeated for each selected option."
+            },
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'vertical'",
+              "description": "Lays choices out vertically or in a wrapping horizontal row."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the group unavailable and excludes it from form submission.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Localized message displayed for a failing selection limit.",
+              "attribute": "error-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "One line of guidance displayed under the choices.",
+              "attribute": "help-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible legend and accessible name for these choices.",
+              "attribute": "label",
+              "reflects": true,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of checked options, as a nonnegative integer.",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Minimum number of checked options, as a nonnegative integer.",
+              "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key repeated for each selected option.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "privacy": "public",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'vertical'",
+              "description": "Lays choices out vertically or in a wrapping horizontal row.",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "this.defaultValue",
+              "description": "Selected values in option order. Assign a fresh array to update selection\nsilently. Initial checked options seed the group when this property is\nomitted. In HTML and catalog specs use `checked` on each selected option.",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<KiCheckboxGroupChangeDetail>"
+              },
+              "description": "Fires once for a committed user toggle with a copy of the current selection."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "error",
+              "description": "Polite error message shown in place of the help."
+            },
+            {
+              "name": "help",
+              "description": "Guidance below the options and the group's accessible description."
+            },
+            {
+              "name": "label",
+              "description": "Legend that names the group."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-checkbox-group-gap",
+              "description": "Space between checkbox options and the group label and messages."
+            },
+            {
+              "name": "--ki-radio-group-label-font-size",
+              "description": "dimension used by the radio group component for label font size."
+            },
+            {
+              "name": "--ki-radio-group-label-font-weight",
+              "description": "font weight used by the radio group component for label font weight."
+            },
+            {
+              "name": "--ki-radio-group-label-line-height",
+              "description": "dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement)."
+            },
+            {
+              "name": "--ki-text-danger-high-em",
+              "description": "semantic color for text danger high em."
+            },
+            {
+              "name": "--ki-text-high-em",
+              "description": "semantic color for text high em."
+            },
+            {
+              "name": "--ki-text-med-em",
+              "description": "semantic color for text med em."
+            },
+            {
+              "name": "--ki-text-supporting",
+              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-normal",
+              "description": "semantic font weight for typography weight body normal."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCheckboxGroup",
+          "declaration": {
+            "name": "KiCheckboxGroup",
+            "module": "dist/components/ki-checkbox-group.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-checkbox-group",
+          "declaration": {
+            "name": "KiCheckboxGroup",
+            "module": "dist/components/ki-checkbox-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-counter.js",
       "declarations": [
         {

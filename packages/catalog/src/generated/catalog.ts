@@ -455,6 +455,59 @@ export const catalogData = {
       "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked.",
       "whenToUse": "selecting one or more independent options that a form submits\nlater, including a \"select all\" parent that presents partial selection with\n`indeterminate`. Always provide a visible label in the default slot."
     },
+    "ki-checkbox-group": {
+      "description": "A form-associated group of independently selectable checkboxes.",
+      "events": {
+        "ki-change": "Fires once for a committed user toggle with a copy of the current selection."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Makes the group unavailable and excludes it from form submission.",
+          "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Localized message displayed for a failing selection limit."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of guidance displayed under the choices."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible legend and accessible name for these choices.",
+          "required": true
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum number of checked options, as a nonnegative integer."
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum number of checked options, as a nonnegative integer."
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key repeated for each selected option."
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Lays choices out vertically or in a wrapping horizontal row.",
+          "default": "vertical"
+        }
+      },
+      "slots": {
+        "": "Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group."
+      },
+      "tag": "ki-checkbox-group",
+      "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
+      "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},

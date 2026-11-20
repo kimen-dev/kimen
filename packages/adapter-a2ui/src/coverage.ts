@@ -195,7 +195,7 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     properties: ['label', 'value', CHECKS],
   },
   ChoicePicker: {
-    catalog: ['ki-radio-group', 'ki-radio'],
+    catalog: ['ki-radio-group', 'ki-radio', 'ki-checkbox-group', 'ki-checkbox'],
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', CHECKS],
   },
@@ -350,7 +350,7 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     properties: ['label', 'value', V1_CHECKS],
   },
   ChoicePicker: {
-    catalog: ['ki-radio-group', 'ki-radio'],
+    catalog: ['ki-radio-group', 'ki-radio', 'ki-checkbox-group', 'ki-checkbox'],
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', V1_CHECKS],
   },

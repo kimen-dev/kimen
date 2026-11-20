@@ -1438,6 +1438,7 @@
   --ki-card-header-padding:var(--ki-space-3xl);
   --ki-card-body-padding:var(--ki-space-3xl);
   --ki-card-footer-padding:var(--ki-space-3xl);
+  --ki-checkbox-group-gap:var(--ki-space-md);
   --ki-checkbox-control-size:var(--ki-space-5xl);
   --ki-checkbox-min-target:var(--ki-space-7xl);
   --ki-checkbox-gap:var(--ki-space-xl);

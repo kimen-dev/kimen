@@ -1720,6 +1720,362 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-checkbox-group/ki-checkbox-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-checkbox-group",
+      "docs": "A form-associated group of independently selectable checkboxes.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "people may select several visible options that share a question,\nform field, and optional selection limits."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group."
+        },
+        {
+          "name": "part",
+          "text": "label - Legend that names the group."
+        },
+        {
+          "name": "part",
+          "text": "help - Guidance below the options and the group's accessible description."
+        },
+        {
+          "name": "part",
+          "text": "error - Polite error message shown in place of the help."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-checkbox-group-gap - Space between options and group sections."
+        }
+      ],
+      "usage": {
+        "examples": "# Checkbox group examples\n\n## Submit several selections\n\n```html\n<form id=\"settings\">\n  <ki-checkbox-group\n    id=\"regions\"\n    label=\"Regions\"\n    name=\"regions\"\n    min=\"1\"\n    help-text=\"Choose the regions you serve.\"\n    error-text=\"Choose at least one region.\"\n  >\n    <ki-checkbox value=\"eu\" checked>Europe</ki-checkbox>\n    <ki-checkbox value=\"am\">Americas</ki-checkbox>\n    <ki-checkbox value=\"apac\">Asia-Pacific</ki-checkbox>\n  </ki-checkbox-group>\n  <button type=\"submit\">Save regions</button>\n</form>\n```\n\nReading `new FormData(form).getAll('regions')` returns each checked value\nin option order. Keep individual option labels visible and give each option\na distinct value when you need to select it independently from JavaScript.\n\n## Read and update selection\n\n```js\nimport { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';\nimport { defineCustomElement as defineCheckboxGroup } from '@kimen/elements/ki-checkbox-group';\n\ndefineCheckbox();\ndefineCheckboxGroup();\n\nconst group = document.querySelector('#regions');\ngroup.value = ['eu', 'apac'];\n\ngroup.addEventListener('ki-change', (event) => {\n  const selectedRegions = event.detail.value;\n  console.log(selectedRegions);\n});\n```\n\n## Horizontal choices\n\n```html\n<ki-checkbox-group label=\"Notifications\" orientation=\"horizontal\">\n  <ki-checkbox value=\"mentions\">Mentions</ki-checkbox>\n  <ki-checkbox value=\"reviews\">Review requests</ki-checkbox>\n</ki-checkbox-group>\n```\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Makes the group unavailable and excludes it from form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Localized message displayed for a failing selection limit.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "One line of guidance displayed under the choices.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Visible legend and accessible name for these choices.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": true,
+          "docs": "Maximum number of checked options, as a nonnegative integer.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "min",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min",
+          "reflectToAttr": true,
+          "docs": "Minimum number of checked options, as a nonnegative integer.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key repeated for each selected option.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "complexType": {
+            "original": "KiCheckboxGroupOrientation",
+            "resolved": "\"horizontal\" | \"vertical\"",
+            "references": {
+              "KiCheckboxGroupOrientation": {
+                "location": "local",
+                "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx",
+                "id": "src/components/ki-checkbox-group/ki-checkbox-group.tsx::KiCheckboxGroupOrientation"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "orientation",
+          "reflectToAttr": true,
+          "docs": "Lays choices out vertically or in a wrapping horizontal row.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'vertical'"
+            }
+          ],
+          "default": "'vertical'",
+          "values": [
+            {
+              "value": "horizontal",
+              "type": "string"
+            },
+            {
+              "value": "vertical",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "complexType": {
+            "original": "string[]",
+            "resolved": "string[]",
+            "references": {}
+          },
+          "mutable": true,
+          "reflectToAttr": false,
+          "docs": "Selected values in option order. Assign a fresh array to update selection\nsilently. Initial checked options seed the group when this property is\nomitted. In HTML and catalog specs use `checked` on each selected option.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "[]"
+            }
+          ],
+          "default": "this.defaultValue",
+          "values": [
+            {
+              "type": "string[]"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "KiCheckboxGroupChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiCheckboxGroupChangeDetail",
+            "resolved": "KiCheckboxGroupChangeDetail",
+            "references": {
+              "KiCheckboxGroupChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx",
+                "id": "src/components/ki-checkbox-group/ki-checkbox-group.tsx::KiCheckboxGroupChangeDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fires once for a committed user toggle with a copy of the current selection.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "focusout",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "change",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group."
+        }
+      ],
+      "parts": [
+        {
+          "name": "error",
+          "docs": "Polite error message shown in place of the help."
+        },
+        {
+          "name": "help",
+          "docs": "Guidance below the options and the group's accessible description."
+        },
+        {
+          "name": "label",
+          "docs": "Legend that names the group."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-counter/ki-counter.tsx",
       "encapsulation": "shadow",
       "tag": "ki-counter",
@@ -8788,6 +9144,16 @@
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
       "docstring": "",
       "path": "src/components/ki-checkbox/ki-checkbox.tsx"
+    },
+    "src/components/ki-checkbox-group/ki-checkbox-group.tsx::KiCheckboxGroupOrientation": {
+      "declaration": "export type KiCheckboxGroupOrientation = 'vertical' | 'horizontal';",
+      "docstring": "",
+      "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx"
+    },
+    "src/components/ki-checkbox-group/ki-checkbox-group.tsx::KiCheckboxGroupChangeDetail": {
+      "declaration": "export interface KiCheckboxGroupChangeDetail {\n  value: string[];\n}",
+      "docstring": "",
+      "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx"
     },
     "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
