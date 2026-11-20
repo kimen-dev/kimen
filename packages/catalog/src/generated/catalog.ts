@@ -1367,58 +1367,6 @@ export const catalogData = {
       "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
       "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once."
     },
-    "ki-reasoning": {
-      "description": "A disclosure for the assistant's progress or plan, with a localized summary.",
-      "events": {
-        "ki-toggle": "Emitted after a native disclosure toggle. Setting open from the application is silent."
-      },
-      "props": {
-        "done-label": {
-          "type": "string",
-          "description": "Summary text when done and elapsed time is unavailable.",
-          "default": "Thought"
-        },
-        "duration": {
-          "type": "number",
-          "description": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds."
-        },
-        "duration-label": {
-          "type": "string",
-          "description": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.",
-          "default": "Thought for {seconds} seconds"
-        },
-        "open": {
-          "type": "boolean",
-          "description": "Whether the disclosure shows its steps. Native toggles update this reflected property.",
-          "default": false
-        },
-        "singular-duration-label": {
-          "type": "string",
-          "description": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.",
-          "default": "Thought for {seconds} second"
-        },
-        "status": {
-          "type": "enum",
-          "values": [
-            "done",
-            "thinking"
-          ],
-          "description": "Use thinking while steps arrive and done once the assistant finishes.",
-          "default": "thinking"
-        },
-        "thinking-label": {
-          "type": "string",
-          "description": "Summary text while the assistant is thinking.",
-          "default": "Thinking…"
-        }
-      },
-      "slots": {
-        "": "Supporting content shown when expanded, such as an ordered list of steps supplied by the application."
-      },
-      "tag": "ki-reasoning",
-      "whenNotToUse": "hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.",
-      "whenToUse": "present assistant-supplied steps, progress or a completed plan alongside the answer."
-    },
     "ki-scroller": {
       "description": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",
       "events": {},
@@ -1735,6 +1683,59 @@ export const catalogData = {
       "tag": "ki-status",
       "whenNotToUse": "short labeled status text (that pill is ki-badge — this dot\nnever renders text), notification counters or the overlay attachment\nmechanism (a future, separate nav-badge concern), messages that need\nattention or announcement (ki-alert — the dot has no live region),\nprogress or loading (ki-progress). An unlabeled dot without adjacent\nvisible text is an authoring mistake (WCAG 1.4.1).",
       "whenToUse": "mark a state with minimal footprint adjacent to (or overlaid\non) the item it describes: presence on an avatar, health of a service\nlist entry, connection state in a toolbar. Label it (`label`) or pair it\nwith adjacent visible text — color is never the only carrier of the\nmeaning (WCAG 1.4.1)."
+    },
+    "ki-suggestion": {
+      "description": "A native prompt button displayed by a ki-suggestions group.",
+      "events": {},
+      "props": {
+        "description": {
+          "type": "string",
+          "description": "Optional accessible description, visible below the title in cards."
+        }
+      },
+      "slots": {
+        "": "Plain text forming the visible and accessible prompt title."
+      },
+      "tag": "ki-suggestion",
+      "whenNotToUse": "navigation, static content, or a submitted form value.",
+      "whenToUse": "offer one short, actionable prompt in a suggestion group."
+    },
+    "ki-suggestions": {
+      "description": "A labelled group of prompt starters or follow-up suggestions.",
+      "events": {
+        "ki-select": "Reports the chosen prompt title. Use this event to send the prompt in\nsend mode. Cancel it to take over the default composer write and focus."
+      },
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Required accessible name for the group.",
+          "required": true
+        },
+        "mode": {
+          "type": "enum",
+          "values": [
+            "fill",
+            "send"
+          ],
+          "description": "Send through the application or fill its attached editor for revision.",
+          "default": "send"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "cards",
+            "chips"
+          ],
+          "description": "Wrapping chips for follow-ups or cards with room for a description.",
+          "default": "chips"
+        }
+      },
+      "slots": {
+        "": "Direct ki-suggestion children in reading order."
+      },
+      "tag": "ki-suggestions",
+      "whenNotToUse": "choose a form value, switch views, or display static example text.",
+      "whenToUse": "offer suggested prompts to start or continue an assistant conversation."
     },
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",

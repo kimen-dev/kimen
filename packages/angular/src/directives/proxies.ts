@@ -34,7 +34,6 @@ import { defineCustomElement as defineKiProgress } from '@kimen/elements/compone
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
-import { defineCustomElement as defineKiReasoning } from '@kimen/elements/components/ki-reasoning.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
@@ -42,6 +41,8 @@ import { defineCustomElement as defineKiSelect } from '@kimen/elements/component
 import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
+import { defineCustomElement as defineKiSuggestion } from '@kimen/elements/components/ki-suggestion.js';
+import { defineCustomElement as defineKiSuggestions } from '@kimen/elements/components/ki-suggestions.js';
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
 import { defineCustomElement as defineKiTab } from '@kimen/elements/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
@@ -750,34 +751,6 @@ export declare interface KiRadioGroup extends Components.KiRadioGroup {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiReasoning,
-  inputs: ['doneLabel', 'duration', 'durationLabel', 'open', 'singularDurationLabel', 'status', 'thinkingLabel']
-})
-@Component({
-  selector: 'ki-reasoning',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['doneLabel', 'duration', 'durationLabel', 'open', 'singularDurationLabel', 'status', 'thinkingLabel'],
-})
-export class KiReasoning {
-  protected el: HTMLKiReasoningElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-
-export declare interface KiReasoning extends Components.KiReasoning {
-  /**
-   * Emitted after a native disclosure toggle. Setting open from the application is silent.
-   */
-}
-
-
-@ProxyCmp({
   defineCustomElementFn: defineKiScroller,
   inputs: ['label', 'orientation']
 })
@@ -941,6 +914,58 @@ export class KiStatus {
 
 
 export declare interface KiStatus extends Components.KiStatus {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSuggestion,
+  inputs: ['description']
+})
+@Component({
+  selector: 'ki-suggestion',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['description'],
+})
+export class KiSuggestion {
+  protected el: HTMLKiSuggestionElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSuggestion extends Components.KiSuggestion {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSuggestions,
+  inputs: ['composer', 'label', 'mode', 'variant']
+})
+@Component({
+  selector: 'ki-suggestions',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['composer', { name: 'label', required: true }, 'mode', 'variant'],
+})
+export class KiSuggestions {
+  protected el: HTMLKiSuggestionsElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiSuggestions extends Components.KiSuggestions {
+  /**
+   * Reports the chosen prompt title. Use this event to send the prompt in
+send mode. Cancel it to take over the default composer write and focus.
+   */
+}
 
 
 @ProxyCmp({

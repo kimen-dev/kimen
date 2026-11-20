@@ -3751,15 +3751,9 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [
-        "ki-reasoning"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-reasoning": [
-          "ki-icon"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -6685,301 +6679,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-reasoning/ki-reasoning.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-reasoning",
-      "docs": "A disclosure for the assistant's progress or plan, with a localized summary.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "present assistant-supplied steps, progress or a completed plan alongside the answer."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content."
-        },
-        {
-          "name": "slot",
-          "text": "- Supporting content shown when expanded, such as an ordered list of steps supplied by the application."
-        },
-        {
-          "name": "part",
-          "text": "summary - The native disclosure control that shows the current status."
-        },
-        {
-          "name": "part",
-          "text": "body - The slotted content area with the inline-start rule."
-        }
-      ],
-      "usage": {
-        "examples": "# Using ki-reasoning\n\n## Show a plan while it develops\n\n```html\n<ki-reasoning open>\n  <ol>\n    <li>Check the inputs.</li>\n  </ol>\n</ki-reasoning>\n```\n\nAdd subsequent list items as the assistant produces them. The default state is\ncollapsed. Set `open` to show the steps immediately.\n\n## Show the elapsed time after completion\n\n```html\n<ki-reasoning status=\"done\" duration=\"12000\">\n  <ol>\n    <li>Check the inputs.</li>\n    <li>Compare the available outcomes.</li>\n  </ol>\n</ki-reasoning>\n```\n\nThe summary reads “Thought for 12 seconds.” Omit `duration` if it is unavailable.\n\n## Localize the summary\n\n```html\n<ki-reasoning\n  lang=\"es\"\n  status=\"done\"\n  duration=\"1000\"\n  thinking-label=\"Pensando…\"\n  done-label=\"Listo\"\n  singular-duration-label=\"Pensó durante {seconds} segundo\"\n  duration-label=\"Pensó durante {seconds} segundos\"\n>\n  <ol>\n    <li>Revisar los datos de entrada.</li>\n  </ol>\n</ki-reasoning>\n```\n\n## Report disclosure changes in a guarded surface\n\nDeclare the action in the surface and reference it on the disclosure. The\nrenderer binds it to the catalog's `ki-toggle` event.\n\n```json\n{\n  \"version\": 1,\n  \"actions\": [\"record-plan-toggle\"],\n  \"root\": {\n    \"component\": \"ki-reasoning\",\n    \"props\": { \"status\": \"done\", \"duration\": 12000 },\n    \"action\": \"record-plan-toggle\",\n    \"slots\": { \"\": [\"Check the inputs and compare the outcomes.\"] }\n  }\n}\n```\n\n## Custom-elements entry point\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-reasoning';\n\ndefineCustomElement();\n```\n"
-      },
-      "props": [
-        {
-          "name": "doneLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "done-label",
-          "reflectToAttr": false,
-          "docs": "Summary text when done and elapsed time is unavailable.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Thought'"
-            }
-          ],
-          "default": "'Thought'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "duration",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "duration",
-          "reflectToAttr": false,
-          "docs": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "durationLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "duration-label",
-          "reflectToAttr": false,
-          "docs": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Thought for {seconds} seconds'"
-            }
-          ],
-          "default": "'Thought for {seconds} seconds'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "open",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "open",
-          "reflectToAttr": true,
-          "docs": "Whether the disclosure shows its steps. Native toggles update this reflected property.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "singularDurationLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "singular-duration-label",
-          "reflectToAttr": false,
-          "docs": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Thought for {seconds} second'"
-            }
-          ],
-          "default": "'Thought for {seconds} second'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "status",
-          "type": "\"done\" | \"thinking\"",
-          "complexType": {
-            "original": "KiReasoningStatus",
-            "resolved": "\"done\" | \"thinking\"",
-            "references": {
-              "KiReasoningStatus": {
-                "location": "local",
-                "path": "src/components/ki-reasoning/ki-reasoning.tsx",
-                "id": "src/components/ki-reasoning/ki-reasoning.tsx::KiReasoningStatus"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "status",
-          "reflectToAttr": true,
-          "docs": "Use thinking while steps arrive and done once the assistant finishes.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'thinking'"
-            }
-          ],
-          "default": "'thinking'",
-          "values": [
-            {
-              "value": "done",
-              "type": "string"
-            },
-            {
-              "value": "thinking",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "thinkingLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "thinking-label",
-          "reflectToAttr": false,
-          "docs": "Summary text while the assistant is thinking.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Thinking…'"
-            }
-          ],
-          "default": "'Thinking…'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-toggle",
-          "detail": "KiReasoningToggleDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiReasoningToggleDetail",
-            "resolved": "KiReasoningToggleDetail",
-            "references": {
-              "KiReasoningToggleDetail": {
-                "location": "local",
-                "path": "src/components/ki-reasoning/ki-reasoning.tsx",
-                "id": "src/components/ki-reasoning/ki-reasoning.tsx::KiReasoningToggleDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Emitted after a native disclosure toggle. Setting open from the application is silent.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Supporting content shown when expanded, such as an ordered list of steps supplied by the application."
-        }
-      ],
-      "parts": [
-        {
-          "name": "body",
-          "docs": "The slotted content area with the inline-start rule."
-        },
-        {
-          "name": "summary",
-          "docs": "The native disclosure control that shows the current status."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-reasoning": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-scroller/ki-scroller.tsx",
       "encapsulation": "shadow",
       "tag": "ki-scroller",
@@ -8541,6 +8240,293 @@
         {
           "name": "dot",
           "docs": "The dot itself: size, tone fill, radius, ring and effects."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-suggestion/ki-suggestion.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-suggestion",
+      "docs": "A native prompt button displayed by a ki-suggestions group.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "offer one short, actionable prompt in a suggestion group."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "navigation, static content, or a submitted form value."
+        },
+        {
+          "name": "slot",
+          "text": "- Plain text forming the visible and accessible prompt title."
+        },
+        {
+          "name": "part",
+          "text": "button - The native suggestion button."
+        },
+        {
+          "name": "part",
+          "text": "description - Optional supporting text shown in cards."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-suggestion examples\n\n## Add context to a prompt\n\n```html\n<ki-suggestions label=\"Start a conversation\" variant=\"cards\">\n  <ki-suggestion description=\"For the merged pull requests\">Draft release notes</ki-suggestion>\n  <ki-suggestion>Plan the next release</ki-suggestion>\n</ki-suggestions>\n```\n\nPut the prompt in the default slot as plain text. The title supplies the\nbutton's accessible name. Use `description` for separate context.\n\nRegister both tags for direct imports. Listen to `ki-select` on the group\nfor the chosen title.\n"
+      },
+      "props": [
+        {
+          "name": "description",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "description",
+          "reflectToAttr": false,
+          "docs": "Optional accessible description, visible below the title in cards.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Plain text forming the visible and accessible prompt title."
+        }
+      ],
+      "parts": [
+        {
+          "name": "button",
+          "docs": "The native suggestion button."
+        },
+        {
+          "name": "description",
+          "docs": "Optional supporting text shown in cards."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-suggestions/ki-suggestions.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-suggestions",
+      "docs": "A labelled group of prompt starters or follow-up suggestions.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "offer suggested prompts to start or continue an assistant conversation."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "choose a form value, switch views, or display static example text."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-suggestion children in reading order."
+        },
+        {
+          "name": "part",
+          "text": "group - The container that lays out the suggested prompts."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-suggestions examples\n\n## Fill a draft for editing\n\n```html\n<ki-suggestions id=\"starters\" label=\"Start a conversation\" variant=\"cards\" mode=\"fill\">\n  <ki-suggestion description=\"For the merged pull requests\">Draft release notes</ki-suggestion>\n  <ki-suggestion description=\"From the on-call reports\">Summarise the incidents</ki-suggestion>\n</ki-suggestions>\n<label for=\"draft\">Message</label>\n<textarea id=\"draft\"></textarea>\n```\n\n```js\nimport { defineCustomElement as defineSuggestions } from '@kimen/elements/ki-suggestions';\nimport { defineCustomElement as defineSuggestion } from '@kimen/elements/ki-suggestion';\n\ndefineSuggestions();\ndefineSuggestion();\n\ndocument.querySelector('#starters').composer = document.querySelector('#draft');\n```\n\nThe group replaces the draft and focuses the textarea. A custom composer can\nexpose the same writable string `value` and `focus()` interface.\n\n## Send a follow-up\n\n```html\n<ki-suggestions id=\"follow-ups\" label=\"Follow-up suggestions\">\n  <ki-suggestion>Which ones recur?</ki-suggestion>\n  <ki-suggestion>Group them by service</ki-suggestion>\n</ki-suggestions>\n```\n\n```js\nconst followUps = document.querySelector('#follow-ups');\nfollowUps.composer = document.querySelector('#draft');\nfollowUps.addEventListener('ki-select', ({ detail }) => {\n  sendPrompt(detail.text);\n});\n```\n\nHere `sendPrompt` is the application's conversation handler. After dispatch,\nthe group focuses the composer and preserves its draft. Cancel the event to\nmanage value and focus in the application handler.\n"
+      },
+      "props": [
+        {
+          "name": "composer",
+          "type": "KiSuggestionsComposer | undefined",
+          "complexType": {
+            "original": "KiSuggestionsComposer",
+            "resolved": "KiSuggestionsComposer | undefined",
+            "references": {
+              "KiSuggestionsComposer": {
+                "location": "local",
+                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
+                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsComposer"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Optional composer supplied by application code. Fill mode sets its value.\nBoth modes focus it after an uncancelled selection.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "KiSuggestionsComposer"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Required accessible name for the group.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "mode",
+          "type": "\"fill\" | \"send\"",
+          "complexType": {
+            "original": "KiSuggestionsMode",
+            "resolved": "\"fill\" | \"send\"",
+            "references": {
+              "KiSuggestionsMode": {
+                "location": "local",
+                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
+                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsMode"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "mode",
+          "reflectToAttr": false,
+          "docs": "Send through the application or fill its attached editor for revision.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'send'"
+            }
+          ],
+          "default": "'send'",
+          "values": [
+            {
+              "value": "fill",
+              "type": "string"
+            },
+            {
+              "value": "send",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"cards\" | \"chips\"",
+          "complexType": {
+            "original": "KiSuggestionsVariant",
+            "resolved": "\"cards\" | \"chips\"",
+            "references": {
+              "KiSuggestionsVariant": {
+                "location": "local",
+                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
+                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Wrapping chips for follow-ups or cards with room for a description.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'chips'"
+            }
+          ],
+          "default": "'chips'",
+          "values": [
+            {
+              "value": "cards",
+              "type": "string"
+            },
+            {
+              "value": "chips",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-select",
+          "detail": "{ text: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ text: string }",
+            "resolved": "{ text: string; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Reports the chosen prompt title. Use this event to send the prompt in\nsend mode. Cancel it to take over the default composer write and focus.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-suggestion children in reading order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The container that lays out the suggested prompts."
         }
       ],
       "states": [],
@@ -10653,16 +10639,6 @@
       "docstring": "",
       "path": "src/components/ki-radio-group/ki-radio-group.tsx"
     },
-    "src/components/ki-reasoning/ki-reasoning.tsx::KiReasoningStatus": {
-      "declaration": "export type KiReasoningStatus = 'thinking' | 'done';",
-      "docstring": "",
-      "path": "src/components/ki-reasoning/ki-reasoning.tsx"
-    },
-    "src/components/ki-reasoning/ki-reasoning.tsx::KiReasoningToggleDetail": {
-      "declaration": "export interface KiReasoningToggleDetail {\n  open: boolean;\n}",
-      "docstring": "The resulting open state of the disclosure.",
-      "path": "src/components/ki-reasoning/ki-reasoning.tsx"
-    },
     "src/components/ki-scroller/ki-scroller.tsx::KiScrollerOrientation": {
       "declaration": "export type KiScrollerOrientation = 'vertical' | 'horizontal';",
       "docstring": "",
@@ -10702,6 +10678,21 @@
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
       "path": "src/components/ki-status/ki-status.tsx"
+    },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsVariant": {
+      "declaration": "export type KiSuggestionsVariant = 'chips' | 'cards';",
+      "docstring": "",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
+    },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsMode": {
+      "declaration": "export type KiSuggestionsMode = 'send' | 'fill';",
+      "docstring": "",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
+    },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsComposer": {
+      "declaration": "export interface KiSuggestionsComposer {\n  value: string;\n  focus(): void;\n}",
+      "docstring": "Application-owned editor used by a suggestions group.",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
     },
     "src/components/ki-switch/ki-switch.tsx::KiSwitchSize": {
       "declaration": "export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';",

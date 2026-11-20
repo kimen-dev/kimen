@@ -29,12 +29,12 @@ import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
-import { KiReasoningStatus, KiReasoningToggleDetail } from "./components/ki-reasoning/ki-reasoning";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 import { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
 import { KiSelectSize } from "./components/ki-select/ki-select";
 import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 import { KiStatusTone } from "./components/ki-status/ki-status";
+import { KiSuggestionsComposer, KiSuggestionsMode, KiSuggestionsVariant } from "./components/ki-suggestions/ki-suggestions";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
@@ -66,12 +66,12 @@ export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
-export { KiReasoningStatus, KiReasoningToggleDetail } from "./components/ki-reasoning/ki-reasoning";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 export { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
 export { KiSelectSize } from "./components/ki-select/ki-select";
 export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 export { KiStatusTone } from "./components/ki-status/ki-status";
+export { KiSuggestionsComposer, KiSuggestionsMode, KiSuggestionsVariant } from "./components/ki-suggestions/ki-suggestions";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
@@ -1090,47 +1090,6 @@ export namespace Components {
         "value": string;
     }
     /**
-     * A disclosure for the assistant's progress or plan, with a localized summary.
-     * @whenToUse present assistant-supplied steps, progress or a completed plan alongside the answer.
-     * @whenNotToUse hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
-     */
-    interface KiReasoning {
-        /**
-          * Summary text when done and elapsed time is unavailable.
-          * @default 'Thought'
-         */
-        "doneLabel": string;
-        /**
-          * Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.
-         */
-        "duration"?: number;
-        /**
-          * Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.
-          * @default 'Thought for {seconds} seconds'
-         */
-        "durationLabel": string;
-        /**
-          * Whether the disclosure shows its steps. Native toggles update this reflected property.
-          * @default false
-         */
-        "open": boolean;
-        /**
-          * Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.
-          * @default 'Thought for {seconds} second'
-         */
-        "singularDurationLabel": string;
-        /**
-          * Use thinking while steps arrive and done once the assistant finishes.
-          * @default 'thinking'
-         */
-        "status": KiReasoningStatus;
-        /**
-          * Summary text while the assistant is thinking.
-          * @default 'Thinking…'
-         */
-        "thinkingLabel": string;
-    }
-    /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
      * @whenToUse a bounded region inside a view whose content can outgrow it:
@@ -1362,6 +1321,42 @@ export namespace Components {
           * @default 'neutral'
          */
         "tone": KiStatusTone;
+    }
+    /**
+     * A native prompt button displayed by a ki-suggestions group.
+     * @whenToUse offer one short, actionable prompt in a suggestion group.
+     * @whenNotToUse navigation, static content, or a submitted form value.
+     */
+    interface KiSuggestion {
+        /**
+          * Optional accessible description, visible below the title in cards.
+         */
+        "description"?: string;
+    }
+    /**
+     * A labelled group of prompt starters or follow-up suggestions.
+     * @whenToUse offer suggested prompts to start or continue an assistant conversation.
+     * @whenNotToUse choose a form value, switch views, or display static example text.
+     */
+    interface KiSuggestions {
+        /**
+          * Optional composer supplied by application code. Fill mode sets its value. Both modes focus it after an uncancelled selection.
+         */
+        "composer"?: KiSuggestionsComposer;
+        /**
+          * Required accessible name for the group.
+         */
+        "label": string;
+        /**
+          * Send through the application or fill its attached editor for revision.
+          * @default 'send'
+         */
+        "mode": KiSuggestionsMode;
+        /**
+          * Wrapping chips for follow-ups or cards with room for a description.
+          * @default 'chips'
+         */
+        "variant": KiSuggestionsVariant;
     }
     /**
      * A token-styled switch for immediate on/off settings.
@@ -1725,13 +1720,13 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
-export interface KiReasoningCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLKiReasoningElement;
-}
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiSegmentedControlElement;
+}
+export interface KiSuggestionsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiSuggestionsElement;
 }
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2299,28 +2294,6 @@ declare global {
         prototype: HTMLKiRadioGroupElement;
         new (): HTMLKiRadioGroupElement;
     };
-    interface HTMLKiReasoningElementEventMap {
-        "ki-toggle": KiReasoningToggleDetail;
-    }
-    /**
-     * A disclosure for the assistant's progress or plan, with a localized summary.
-     * @whenToUse present assistant-supplied steps, progress or a completed plan alongside the answer.
-     * @whenNotToUse hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
-     */
-    interface HTMLKiReasoningElement extends Components.KiReasoning, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLKiReasoningElementEventMap>(type: K, listener: (this: HTMLKiReasoningElement, ev: KiReasoningCustomEvent<HTMLKiReasoningElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLKiReasoningElementEventMap>(type: K, listener: (this: HTMLKiReasoningElement, ev: KiReasoningCustomEvent<HTMLKiReasoningElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLKiReasoningElement: {
-        prototype: HTMLKiReasoningElement;
-        new (): HTMLKiReasoningElement;
-    };
     /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
@@ -2447,6 +2420,39 @@ declare global {
     var HTMLKiStatusElement: {
         prototype: HTMLKiStatusElement;
         new (): HTMLKiStatusElement;
+    };
+    /**
+     * A native prompt button displayed by a ki-suggestions group.
+     * @whenToUse offer one short, actionable prompt in a suggestion group.
+     * @whenNotToUse navigation, static content, or a submitted form value.
+     */
+    interface HTMLKiSuggestionElement extends Components.KiSuggestion, HTMLStencilElement {
+    }
+    var HTMLKiSuggestionElement: {
+        prototype: HTMLKiSuggestionElement;
+        new (): HTMLKiSuggestionElement;
+    };
+    interface HTMLKiSuggestionsElementEventMap {
+        "ki-select": { text: string };
+    }
+    /**
+     * A labelled group of prompt starters or follow-up suggestions.
+     * @whenToUse offer suggested prompts to start or continue an assistant conversation.
+     * @whenNotToUse choose a form value, switch views, or display static example text.
+     */
+    interface HTMLKiSuggestionsElement extends Components.KiSuggestions, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiSuggestionsElementEventMap>(type: K, listener: (this: HTMLKiSuggestionsElement, ev: KiSuggestionsCustomEvent<HTMLKiSuggestionsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiSuggestionsElementEventMap>(type: K, listener: (this: HTMLKiSuggestionsElement, ev: KiSuggestionsCustomEvent<HTMLKiSuggestionsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiSuggestionsElement: {
+        prototype: HTMLKiSuggestionsElement;
+        new (): HTMLKiSuggestionsElement;
     };
     /**
      * A token-styled switch for immediate on/off settings.
@@ -2678,7 +2684,6 @@ declare global {
         "ki-qr": HTMLKiQrElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
-        "ki-reasoning": HTMLKiReasoningElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-segment": HTMLKiSegmentElement;
         "ki-segmented-control": HTMLKiSegmentedControlElement;
@@ -2686,6 +2691,8 @@ declare global {
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
+        "ki-suggestion": HTMLKiSuggestionElement;
+        "ki-suggestions": HTMLKiSuggestionsElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
         "ki-tab-panel": HTMLKiTabPanelElement;
@@ -3762,51 +3769,6 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
-     * A disclosure for the assistant's progress or plan, with a localized summary.
-     * @whenToUse present assistant-supplied steps, progress or a completed plan alongside the answer.
-     * @whenNotToUse hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
-     */
-    interface KiReasoning {
-        /**
-          * Summary text when done and elapsed time is unavailable.
-          * @default 'Thought'
-         */
-        "doneLabel"?: string;
-        /**
-          * Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.
-         */
-        "duration"?: number;
-        /**
-          * Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.
-          * @default 'Thought for {seconds} seconds'
-         */
-        "durationLabel"?: string;
-        /**
-          * Emitted after a native disclosure toggle. Setting open from the application is silent.
-         */
-        "onKi-toggle"?: (event: KiReasoningCustomEvent<KiReasoningToggleDetail>) => void;
-        /**
-          * Whether the disclosure shows its steps. Native toggles update this reflected property.
-          * @default false
-         */
-        "open"?: boolean;
-        /**
-          * Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.
-          * @default 'Thought for {seconds} second'
-         */
-        "singularDurationLabel"?: string;
-        /**
-          * Use thinking while steps arrive and done once the assistant finishes.
-          * @default 'thinking'
-         */
-        "status"?: KiReasoningStatus;
-        /**
-          * Summary text while the assistant is thinking.
-          * @default 'Thinking…'
-         */
-        "thinkingLabel"?: string;
-    }
-    /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
      * @whenToUse a bounded region inside a view whose content can outgrow it:
@@ -4046,6 +4008,46 @@ declare namespace LocalJSX {
           * @default 'neutral'
          */
         "tone"?: KiStatusTone;
+    }
+    /**
+     * A native prompt button displayed by a ki-suggestions group.
+     * @whenToUse offer one short, actionable prompt in a suggestion group.
+     * @whenNotToUse navigation, static content, or a submitted form value.
+     */
+    interface KiSuggestion {
+        /**
+          * Optional accessible description, visible below the title in cards.
+         */
+        "description"?: string;
+    }
+    /**
+     * A labelled group of prompt starters or follow-up suggestions.
+     * @whenToUse offer suggested prompts to start or continue an assistant conversation.
+     * @whenNotToUse choose a form value, switch views, or display static example text.
+     */
+    interface KiSuggestions {
+        /**
+          * Optional composer supplied by application code. Fill mode sets its value. Both modes focus it after an uncancelled selection.
+         */
+        "composer"?: KiSuggestionsComposer;
+        /**
+          * Required accessible name for the group.
+         */
+        "label": string;
+        /**
+          * Send through the application or fill its attached editor for revision.
+          * @default 'send'
+         */
+        "mode"?: KiSuggestionsMode;
+        /**
+          * Reports the chosen prompt title. Use this event to send the prompt in send mode. Cancel it to take over the default composer write and focus.
+         */
+        "onKi-select"?: (event: KiSuggestionsCustomEvent<{ text: string }>) => void;
+        /**
+          * Wrapping chips for follow-ups or cards with room for a description.
+          * @default 'chips'
+         */
+        "variant"?: KiSuggestionsVariant;
     }
     /**
      * A token-styled switch for immediate on/off settings.
@@ -4580,15 +4582,6 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
-    interface KiReasoningAttributes {
-        "status": KiReasoningStatus;
-        "duration": number;
-        "open": boolean;
-        "thinkingLabel": string;
-        "doneLabel": string;
-        "singularDurationLabel": string;
-        "durationLabel": string;
-    }
     interface KiScrollerAttributes {
         "orientation": KiScrollerOrientation;
         "label": string;
@@ -4633,6 +4626,14 @@ declare namespace LocalJSX {
         "tone": KiStatusTone;
         "ring": boolean;
         "label": string;
+    }
+    interface KiSuggestionAttributes {
+        "description": string;
+    }
+    interface KiSuggestionsAttributes {
+        "label": string;
+        "variant": KiSuggestionsVariant;
+        "mode": KiSuggestionsMode;
     }
     interface KiSwitchAttributes {
         "checked": boolean;
@@ -4721,7 +4722,6 @@ declare namespace LocalJSX {
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
-        "ki-reasoning": Omit<KiReasoning, keyof KiReasoningAttributes> & { [K in keyof KiReasoning & keyof KiReasoningAttributes]?: KiReasoning[K] } & { [K in keyof KiReasoning & keyof KiReasoningAttributes as `attr:${K}`]?: KiReasoningAttributes[K] } & { [K in keyof KiReasoning & keyof KiReasoningAttributes as `prop:${K}`]?: KiReasoning[K] };
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-segment": Omit<KiSegment, keyof KiSegmentAttributes> & { [K in keyof KiSegment & keyof KiSegmentAttributes]?: KiSegment[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `attr:${K}`]?: KiSegmentAttributes[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `prop:${K}`]?: KiSegment[K] } & OneOf<"value", KiSegment["value"], KiSegmentAttributes["value"]>;
         "ki-segmented-control": Omit<KiSegmentedControl, keyof KiSegmentedControlAttributes> & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes]?: KiSegmentedControl[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `attr:${K}`]?: KiSegmentedControlAttributes[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `prop:${K}`]?: KiSegmentedControl[K] } & OneOf<"label", KiSegmentedControl["label"], KiSegmentedControlAttributes["label"]>;
@@ -4729,6 +4729,8 @@ declare namespace LocalJSX {
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
+        "ki-suggestion": Omit<KiSuggestion, keyof KiSuggestionAttributes> & { [K in keyof KiSuggestion & keyof KiSuggestionAttributes]?: KiSuggestion[K] } & { [K in keyof KiSuggestion & keyof KiSuggestionAttributes as `attr:${K}`]?: KiSuggestionAttributes[K] } & { [K in keyof KiSuggestion & keyof KiSuggestionAttributes as `prop:${K}`]?: KiSuggestion[K] };
+        "ki-suggestions": Omit<KiSuggestions, keyof KiSuggestionsAttributes> & { [K in keyof KiSuggestions & keyof KiSuggestionsAttributes]?: KiSuggestions[K] } & { [K in keyof KiSuggestions & keyof KiSuggestionsAttributes as `attr:${K}`]?: KiSuggestionsAttributes[K] } & { [K in keyof KiSuggestions & keyof KiSuggestionsAttributes as `prop:${K}`]?: KiSuggestions[K] } & OneOf<"label", KiSuggestions["label"], KiSuggestionsAttributes["label"]>;
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
@@ -5079,12 +5081,6 @@ declare module "@stencil/core" {
              */
             "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
             /**
-             * A disclosure for the assistant's progress or plan, with a localized summary.
-             * @whenToUse present assistant-supplied steps, progress or a completed plan alongside the answer.
-             * @whenNotToUse hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
-             */
-            "ki-reasoning": LocalJSX.IntrinsicElements["ki-reasoning"] & JSXBase.HTMLAttributes<HTMLKiReasoningElement>;
-            /**
              * A bounded scroll container that clips its content along one declared axis
              * and replaces platform scrollbar chrome with a token-resolved indicator.
              * @whenToUse a bounded region inside a view whose content can outgrow it:
@@ -5165,6 +5161,18 @@ declare module "@stencil/core" {
              * visible text is an authoring mistake (WCAG 1.4.1).
              */
             "ki-status": LocalJSX.IntrinsicElements["ki-status"] & JSXBase.HTMLAttributes<HTMLKiStatusElement>;
+            /**
+             * A native prompt button displayed by a ki-suggestions group.
+             * @whenToUse offer one short, actionable prompt in a suggestion group.
+             * @whenNotToUse navigation, static content, or a submitted form value.
+             */
+            "ki-suggestion": LocalJSX.IntrinsicElements["ki-suggestion"] & JSXBase.HTMLAttributes<HTMLKiSuggestionElement>;
+            /**
+             * A labelled group of prompt starters or follow-up suggestions.
+             * @whenToUse offer suggested prompts to start or continue an assistant conversation.
+             * @whenNotToUse choose a form value, switch views, or display static example text.
+             */
+            "ki-suggestions": LocalJSX.IntrinsicElements["ki-suggestions"] & JSXBase.HTMLAttributes<HTMLKiSuggestionsElement>;
             /**
              * A token-styled switch for immediate on/off settings.
              * Like a native field, it answers `checkValidity()`, `reportValidity()`,

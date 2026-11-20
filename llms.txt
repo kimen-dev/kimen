@@ -70,7 +70,6 @@ methods, CSS custom properties and examples.
 - [ki-qr](https://kimen.dev/llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.
 - [ki-radio](https://kimen.dev/llms/ki-radio.md): place inside `ki-radio-group` when a person must choose exactly one of a small visible set.
 - [ki-radio-group](https://kimen.dev/llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
-- [ki-reasoning](https://kimen.dev/llms/ki-reasoning.md): present assistant-supplied steps, progress or a completed plan alongside the answer.
 - [ki-scroller](https://kimen.dev/llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
 - [ki-segment](https://kimen.dev/llms/ki-segment.md): offer one mutually exclusive choice with text or a named icon.
 - [ki-segmented-control](https://kimen.dev/llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
@@ -78,6 +77,8 @@ methods, CSS custom properties and examples.
 - [ki-spinner](https://kimen.dev/llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](https://kimen.dev/llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-status](https://kimen.dev/llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.
+- [ki-suggestion](https://kimen.dev/llms/ki-suggestion.md): offer one short, actionable prompt in a suggestion group.
+- [ki-suggestions](https://kimen.dev/llms/ki-suggestions.md): offer suggested prompts to start or continue an assistant conversation.
 - [ki-switch](https://kimen.dev/llms/ki-switch.md): binary settings whose change takes effect immediately, always with a slotted label.
 - [ki-tab](https://kimen.dev/llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional `start` and `end` slot media.
 - [ki-tab-panel](https://kimen.dev/llms/ki-tab-panel.md): hold the content for one peer tab view, sharing `value` with its `ki-tab`.
