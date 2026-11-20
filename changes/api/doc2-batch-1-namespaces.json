@@ -1,0 +1,18 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "d5e49e8bbf8dc88d070018055fbd9f79ac5c1ac6628ba824ee2d608c568f8cc8",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "417184dbb61abe94d89e11e4ee444f96fbf3206b731e4263c5aac522e181110c",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "d5cb2873f53047744951365ee0e06f50d45a0dc928cd46e5e9226e35403b8715",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "4e50fa29e50c97db7cc04ea7ec509f24a46fe0588323fa4f985c14833ea7984b"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "Land document 2 batch 1 (NumberInput, Drawer, FileUpload, Timeline, Carousel, ToolCall). The generated loader and components Components and JSX namespaces grow to include all six; each component's own declaration covers its other deltas.",
+  "release": "major",
+  "schemaVersion": 2
+}
