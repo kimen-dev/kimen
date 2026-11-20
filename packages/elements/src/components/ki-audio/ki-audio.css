@@ -81,6 +81,7 @@
   block-size: var(--_audio-target);
   margin: 0;
   background-color: transparent;
+  font-family: inherit;
   cursor: pointer;
 }
 

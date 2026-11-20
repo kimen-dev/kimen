@@ -282,11 +282,13 @@ describe('the delivered document is a complete Kimen surface', () => {
       .toBeInstanceOf(view.SVGPathElement);
     // The document's policy loads images from data: only, and the URL policy
     // never lets a spec name one, so the sample image source is refused: that
-    // report is the policy working. Nothing else may be reported.
+    // report is the policy working.
+    // The document's default policy also blocks the sample audio source.
     const sample = new URL('Sample', view.document.baseURI).href;
-    expect(
-      host.violations.filter((violation) => violation !== `img-src blocked ${sample}`),
-    ).toEqual([]);
+    const expectedViolations = [`img-src blocked ${sample}`, `media-src blocked ${sample}`];
+    expect(host.violations.filter((violation) => !expectedViolations.includes(violation))).toEqual(
+      [],
+    );
   });
 
   it('S13 renders the stock glyph and rejects unselected names', async () => {

@@ -143,8 +143,9 @@ export class KiAudio {
 
   @Watch('rates')
   protected updateRates(value?: string): void {
-    this.choices = parsePlaybackRates(value ?? DEFAULT_RATES);
-    if (!this.choices.includes(this.rate)) this.applyRate(1);
+    const configuredRates = value?.trim();
+    this.choices = parsePlaybackRates(configuredRates ?? DEFAULT_RATES);
+    if (!configuredRates || !this.choices.includes(this.rate)) this.applyRate(1);
   }
 
   private get activeMedia(): HTMLAudioElement | undefined {
@@ -361,10 +362,15 @@ export class KiAudio {
               tabindex={0}
               aria-label={this.speedLabel}
               disabled={!source}
+              ref={(select) => {
+                // Stencil runs the ref after patching the options.
+                const value = String(this.rate);
+                if (select && select.value !== value) select.value = value;
+              }}
               onChange={this.selectRate}
             >
               {this.choices.map((rate) => (
-                <option key={rate} value={String(rate)} selected={rate === this.rate}>
+                <option key={rate} value={String(rate)}>
                   {`${String(rate)}×`}
                 </option>
               ))}

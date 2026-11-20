@@ -190,26 +190,44 @@ it('S2 chooses a playback speed and keeps focus on the native control', async ()
   expect(host.shadowRoot?.activeElement).toBe(speed);
 });
 
-it('restores normal speed and the default choices when custom rates are removed', async () => {
-  const { host, media } = await mountRecording({ attributes: { rates: '0.5,1' } });
-  const speed = required(
-    host.shadowRoot?.querySelector<HTMLSelectElement>('select[part~="speed"]'),
-  );
-  await speedControl().selectOptions('0.5');
-  await expect.poll(() => media.playbackRate).toBe(0.5);
+it.each([
+  {
+    source: 'attribute',
+    rate: '0.5',
+    clear: (host: HTMLElement) => {
+      host.removeAttribute('rates');
+    },
+  },
+  {
+    source: 'property',
+    rate: '1.5',
+    clear: (host: HTMLElement) => {
+      Object.assign(host, { rates: undefined });
+    },
+  },
+])(
+  'restores normal speed and the default choices when custom rates are removed through the $source',
+  async ({ rate, clear }) => {
+    const { host, media } = await mountRecording({ attributes: { rates: `${rate},1` } });
+    const speed = required(
+      host.shadowRoot?.querySelector<HTMLSelectElement>('select[part~="speed"]'),
+    );
+    await speedControl().selectOptions(rate);
+    await expect.poll(() => media.playbackRate).toBe(Number(rate));
 
-  host.removeAttribute('rates');
+    clear(host);
 
-  await expect.poll(() => media.playbackRate).toBe(1);
-  await expect.element(speedControl()).toHaveValue('1');
-  expect(Array.from(speed.options, (option) => option.text)).toEqual([
-    '0.75×',
-    '1×',
-    '1.25×',
-    '1.5×',
-    '2×',
-  ]);
-});
+    await expect.poll(() => media.playbackRate).toBe(1);
+    await expect.element(speedControl()).toHaveValue('1');
+    expect(Array.from(speed.options, (option) => option.text)).toEqual([
+      '0.75×',
+      '1×',
+      '1.25×',
+      '1.5×',
+      '2×',
+    ]);
+  },
+);
 
 it('S3 toggles the native muted state and names the next action', async () => {
   const { media } = await mountRecording();
