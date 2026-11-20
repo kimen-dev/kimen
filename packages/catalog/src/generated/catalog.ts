@@ -298,6 +298,19 @@ export const catalogData = {
       "description": "A token-styled action button with native button semantics.",
       "events": {},
       "props": {
+        "command": {
+          "type": "enum",
+          "values": [
+            "close",
+            "request-close",
+            "show-modal"
+          ],
+          "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
+        },
+        "commandfor": {
+          "type": "string",
+          "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button. Wins over\n`loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
@@ -346,7 +359,7 @@ export const catalogData = {
             "reset",
             "submit"
           ],
-          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "default": "submit"
         },
         "value": {
@@ -673,75 +686,71 @@ export const catalogData = {
       "whenNotToUse": "choose exactly one option or submit a form value.",
       "whenToUse": "label related chips or let people change their reading order."
     },
-    "ki-code-input": {
-      "description": "A form-associated verification field with one native text input and a visual box per character.",
+    "ki-copy-button": {
+      "description": "Copies text to the clipboard and confirms the result in the same button.",
       "events": {
-        "ki-complete": "Emitted after the input event when the edited code fills all the cells.",
-        "ki-input": "Emitted when a user edit changes the code."
+        "ki-copy": "Fired after a successful clipboard write. The detail carries the exact text copied."
       },
       "props": {
-        "disabled": {
-          "type": "boolean",
-          "description": "Disable editing, sequential focus and form participation.",
-          "default": false
-        },
-        "error-text": {
+        "copied-label": {
           "type": "string",
-          "description": "Message for a failing code constraint. Omit to use the browser's message."
+          "description": "Polite announcement after a successful write. Override for localized interfaces.",
+          "default": "Copied"
         },
-        "help-text": {
+        "copy-error-label": {
           "type": "string",
-          "description": "Instructions saying where the code was sent and how long it is valid."
+          "description": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
+          "default": "Couldn't copy"
+        },
+        "feedback-duration": {
+          "type": "number",
+          "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+          "default": 1500,
+          "minimum": 0
+        },
+        "from": {
+          "type": "string",
+          "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
         },
         "label": {
           "type": "string",
-          "description": "Visible accessible name. Supply a label in the language of the form.",
-          "required": true
-        },
-        "length": {
-          "type": "number",
-          "description": "Number of cells and maximum code length. Unsupported lengths fall back to six.",
-          "default": 6,
-          "minimum": 4,
-          "maximum": 8
-        },
-        "name": {
-          "type": "string",
-          "description": "Key for the single value submitted to the enclosing form."
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Require a complete code before submitting. An optional field may be empty.",
-          "default": false
+          "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
+          "default": "Copy"
         },
         "size": {
           "type": "enum",
           "values": [
+            "lg",
             "md",
-            "sm"
+            "sm",
+            "xl",
+            "xs"
           ],
-          "description": "Medium or small cells. The form region's density adjusts both sizes.",
+          "description": "Token-backed button size. Match the size of adjacent controls.",
           "default": "md"
-        },
-        "type": {
-          "type": "enum",
-          "values": [
-            "alphanumeric",
-            "numeric"
-          ],
-          "description": "Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.",
-          "default": "numeric"
         },
         "value": {
           "type": "string",
-          "description": "The current code, including leading zeros. Use the attribute to declare\nthe reset value. Programmatic assignments are normalized and silent.",
-          "default": ""
+          "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly."
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "ghost",
+            "primary",
+            "quaternary",
+            "secondary"
+          ],
+          "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
+          "default": "ghost"
         }
       },
-      "slots": {},
-      "tag": "ki-code-input",
-      "whenNotToUse": "Use ki-input for passwords, long codes or free text.",
-      "whenToUse": "Collect a one-time code of four to eight characters for sign-in or verification."
+      "slots": {
+        "": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
+      },
+      "tag": "ki-copy-button",
+      "whenNotToUse": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions.",
+      "whenToUse": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root."
     },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
@@ -785,7 +794,7 @@ export const catalogData = {
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
       "events": {
-        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
       },
       "props": {
         "close-on-backdrop": {
@@ -806,11 +815,11 @@ export const catalogData = {
       },
       "slots": {
         "": "Dialog body content.",
-        "footer": "Dialog actions; applications wire every action to `close()`."
+        "footer": "Dialog actions. Dismiss using an invoker command or `close()`."
       },
       "tag": "ki-dialog",
       "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
-      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
     },
     "ki-divider": {
       "description": "A static, decorative rule that visually separates adjacent content.",
@@ -830,6 +839,306 @@ export const catalogData = {
       "tag": "ki-divider",
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
+    },
+    "ki-empty-state": {
+      "description": "A short explanation and next step for an empty view.",
+      "events": {},
+      "props": {
+        "announce": {
+          "type": "boolean",
+          "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
+          "default": false
+        },
+        "heading": {
+          "type": "string",
+          "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
+          "required": true
+        },
+        "heading-level": {
+          "type": "number",
+          "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
+          "default": 3,
+          "minimum": 2,
+          "maximum": 6
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence."
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
+          "default": "md"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "info",
+            "neutral",
+            "primary",
+            "primary-light",
+            "success",
+            "warning"
+          ],
+          "description": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Localized supporting text with a reason or recovery advice.",
+        "actions": "Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls.",
+        "media": "Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
+      },
+      "tag": "ki-empty-state",
+      "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
+      "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction."
+    },
+    "ki-fab": {
+      "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
+      "events": {
+        "click": "Native activation click. The page or guarded renderer handles the declared action."
+      },
+      "props": {
+        "collapse-on-scroll": {
+          "type": "boolean",
+          "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+          "default": false
+        },
+        "extended": {
+          "type": "boolean",
+          "description": "Show the action label next to its icon.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the action. Also the visible text in the extended state.",
+          "required": true
+        },
+        "position": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "static"
+          ],
+          "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+          "default": "static"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "xl"
+          ],
+          "description": "Square footprint when icon-only, and minimum size when extended.",
+          "default": "md"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "primary",
+            "secondary",
+            "surface"
+          ],
+          "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+          "default": "secondary"
+        }
+      },
+      "slots": {
+        "icon": "Decorative, noninteractive icon replacing the named glyph."
+      },
+      "tag": "ki-fab",
+      "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
+      "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
+    },
+    "ki-fab-menu": {
+      "description": "An icon FAB that opens two to six related actions above its trigger.",
+      "events": {
+        "ki-select": "Emits the selected item's value or its trimmed label. Native links retain their destination."
+      },
+      "props": {
+        "close-label": {
+          "type": "string",
+          "description": "Localized accessible name of the trigger when it becomes the close control.",
+          "default": "Close menu"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.",
+          "default": "plus"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the closed trigger and of the menu.",
+          "required": true
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the action stack is open. Reflected when the user opens or dismisses it.",
+          "default": false
+        },
+        "position": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "static"
+          ],
+          "description": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.",
+          "default": "static"
+        },
+        "scrim": {
+          "type": "boolean",
+          "description": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out.",
+          "default": true
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "primary",
+            "secondary",
+            "surface"
+          ],
+          "description": "Closed FAB surface. The open trigger always uses primary.",
+          "default": "secondary"
+        }
+      },
+      "slots": {
+        "": "Two to six direct ki-fab-menu-item children, in top-to-bottom order."
+      },
+      "tag": "ki-fab-menu",
+      "whenNotToUse": "for a single primary action, long lists, or site navigation.",
+      "whenToUse": "group related creation or screen actions behind one floating button."
+    },
+    "ki-fab-menu-item": {
+      "description": "A labeled command or native link within a floating action menu.",
+      "events": {
+        "ki-select": "Local command selection for a direct action binding. Links use native navigation."
+      },
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "A nonempty destination renders a native link and preserves relative URL resolution.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide glyph. Import the desired icon before rendering."
+        },
+        "value": {
+          "type": "string",
+          "description": "Stable selection identifier. When omitted, the menu reports the trimmed visible label."
+        }
+      },
+      "slots": {
+        "": "The visible action label."
+      },
+      "tag": "ki-fab-menu-item",
+      "whenNotToUse": "for a standalone action, a form control, or a container of interactive content.",
+      "whenToUse": "as a direct child of ki-fab-menu, with a short, visible action label."
+    },
+    "ki-format-date": {
+      "description": "Displays an ISO date or timestamp in the reader's language.",
+      "events": {},
+      "props": {
+        "date": {
+          "type": "string",
+          "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time."
+        },
+        "date-style": {
+          "type": "enum",
+          "values": [
+            "full",
+            "long",
+            "medium",
+            "short"
+          ],
+          "description": "Date detail. Defaults to medium when neither date style nor time style is supplied."
+        },
+        "lang": {
+          "type": "string",
+          "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted."
+        },
+        "time-style": {
+          "type": "enum",
+          "values": [
+            "full",
+            "long",
+            "medium",
+            "short"
+          ],
+          "description": "Time detail. Omit to show the date alone."
+        },
+        "time-zone": {
+          "type": "string",
+          "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone."
+        }
+      },
+      "slots": {},
+      "tag": "ki-format-date",
+      "whenNotToUse": "For an editable date or an elapsed time that should change as the clock advances.",
+      "whenToUse": "For raw date and timestamp values in tables, records and prose."
+    },
+    "ki-format-number": {
+      "description": "Displays a raw number using local number conventions and tabular figures.",
+      "events": {},
+      "props": {
+        "currency": {
+          "type": "string",
+          "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted."
+        },
+        "format-style": {
+          "type": "enum",
+          "values": [
+            "decimal",
+            "percent",
+            "unit"
+          ],
+          "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal."
+        },
+        "maximum-fraction-digits": {
+          "type": "number",
+          "description": "Maximum number of fraction digits.",
+          "minimum": 0
+        },
+        "minimum-fraction-digits": {
+          "type": "number",
+          "description": "Minimum number of fraction digits.",
+          "minimum": 0
+        },
+        "notation": {
+          "type": "enum",
+          "values": [
+            "compact"
+          ],
+          "description": "Use compact notation for abbreviated large numbers. Omit for standard notation."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\"."
+        },
+        "value": {
+          "type": "number",
+          "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%."
+        }
+      },
+      "slots": {},
+      "tag": "ki-format-number",
+      "whenNotToUse": "For numeric input or values that already include localized formatting.",
+      "whenToUse": "For numeric data, currency amounts, ratios and measurements in content."
     },
     "ki-grid": {
       "description": "A passive responsive grid for content items.",
@@ -926,6 +1235,19 @@ export const catalogData = {
       "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
       "events": {},
       "props": {
+        "command": {
+          "type": "enum",
+          "values": [
+            "close",
+            "request-close",
+            "show-modal"
+          ],
+          "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
+        },
+        "commandfor": {
+          "type": "string",
+          "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
@@ -1598,6 +1920,39 @@ export const catalogData = {
       "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
       "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once."
     },
+    "ki-relative-time": {
+      "description": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
+      "events": {},
+      "props": {
+        "date": {
+          "type": "string",
+          "description": "ISO calendar date or date-time. A timestamp without an offset uses local time."
+        },
+        "numeric": {
+          "type": "enum",
+          "values": [
+            "always",
+            "auto"
+          ],
+          "description": "Auto can show words such as yesterday. Always uses a number.",
+          "default": "auto"
+        },
+        "sync": {
+          "type": "boolean",
+          "description": "Refresh the visible wording as the clock crosses a formatting boundary.",
+          "default": false
+        },
+        "threshold": {
+          "type": "number",
+          "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+          "minimum": 0
+        }
+      },
+      "slots": {},
+      "tag": "ki-relative-time",
+      "whenNotToUse": "For an interactive countdown or a date that should always show an absolute value.",
+      "whenToUse": "For timestamps whose distance from the present matters, such as timeline entries or recent changes."
+    },
     "ki-scroller": {
       "description": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",
       "events": {},
@@ -1927,6 +2282,60 @@ export const catalogData = {
       "tag": "ki-stack",
       "whenNotToUse": "for page shells, painted grouping (use ki-card), or tabular data.",
       "whenToUse": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing."
+    },
+    "ki-stat": {
+      "description": "A key metric with an optional comparison against a reference period.",
+      "events": {},
+      "props": {
+        "delta": {
+          "type": "number",
+          "description": "Optional finite change. Its sign determines the trend and its magnitude is displayed."
+        },
+        "delta-label": {
+          "type": "string",
+          "description": "Localized comparison period, such as \"vs last week\"."
+        },
+        "direction": {
+          "type": "enum",
+          "values": [
+            "higher-is-better",
+            "lower-is-better",
+            "neutral"
+          ],
+          "description": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+          "default": "higher-is-better"
+        },
+        "down-label": {
+          "type": "string",
+          "description": "Localized spoken direction for a negative delta.",
+          "default": "down"
+        },
+        "label": {
+          "type": "string",
+          "description": "Localized name of the metric, such as \"Median render time\".",
+          "required": true
+        },
+        "unit": {
+          "type": "string",
+          "description": "Literal suffix for decimal readings, such as \"ms\"."
+        },
+        "up-label": {
+          "type": "string",
+          "description": "Localized spoken direction for a positive delta.",
+          "default": "up"
+        },
+        "value": {
+          "type": "number",
+          "description": "Current finite reading.",
+          "required": true
+        }
+      },
+      "slots": {
+        "chart": "An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+      },
+      "tag": "ki-stat",
+      "whenNotToUse": "Present a sequence of readings or inspect multiple data\npoints. Use a chart or table with a text equivalent for that data.",
+      "whenToUse": "Summarize one numeric metric in a dashboard or report. Set\ndirection to lower-is-better for metrics such as latency and neutral for\nchanges that carry no favorable or unfavorable meaning."
     },
     "ki-status": {
       "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",

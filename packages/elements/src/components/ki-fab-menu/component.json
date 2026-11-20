@@ -1,0 +1,19 @@
+{
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": true
+  },
+  "catalog": true,
+  "catalogAction": "ki-select",
+  "budgetGroup": {
+    "members": ["ki-fab-menu", "ki-fab-menu-item"]
+  },
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 26162,
+      "gzip": 4396
+    }
+  }
+}

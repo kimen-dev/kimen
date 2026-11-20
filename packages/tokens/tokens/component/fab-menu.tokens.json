@@ -1,0 +1,28 @@
+{
+  "ki": {
+    "fab-menu": {
+      "gap": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Gap between two stacked actions."
+      },
+      "trigger-gap": {
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Gap between the last action and the FAB."
+      },
+      "scrim": {
+        "bg": {
+          "$value": "{ki.overlay.high-em}",
+          "$description": "Dimming fill behind the open menu and its trigger."
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image painted above the scrim fill."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$description": "Complete optional filter behind the scrim."
+        }
+      }
+    }
+  }
+}
