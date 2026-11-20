@@ -139,26 +139,10 @@
         "required": false,
         "type": null
       },
-      "--ki-app-bar-height-compact": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Height of a small app bar.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-app-bar-lg-height": {
         "default": null,
         "deprecatedSince": null,
         "description": "Expanded height of a large app bar.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-app-bar-lg-title-line-height": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Expanded two-row app-bar title line height.",
         "replacement": null,
         "required": false,
         "type": null
@@ -211,30 +195,6 @@
         "required": false,
         "type": null
       },
-      "--ki-app-bar-title-font-weight": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Screen heading font weight.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-app-bar-title-line-height": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "One-row app-bar title line height.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-app-bar-title-padding": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Block-end padding under the expanded title group.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-app-bar-title-size": {
         "default": null,
         "deprecatedSince": null,
@@ -255,6 +215,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-elevation-e3": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12).",
         "replacement": null,
         "required": false,
         "type": null
@@ -283,6 +251,54 @@
         "required": false,
         "type": null
       },
+      "--ki-layout-selection-indicator-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the line identifying a selected navigation destination.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-12xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 12xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-7xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 7xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-surface-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hairline edge on a structural surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-motion-duration-fast": {
         "default": null,
         "deprecatedSince": null,
@@ -307,10 +323,10 @@
         "required": false,
         "type": null
       },
-      "--ki-top-nav-action-gap": {
+      "--ki-text-low-em": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Gap between actions and inner menu padding.",
+        "description": "semantic color for text low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone.",
         "replacement": null,
         "required": false,
         "type": null
@@ -347,34 +363,10 @@
         "required": false,
         "type": null
       },
-      "--ki-top-nav-border-width": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Edge width for sticky bars and menus.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-control-size": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Trigger size before applying the density target floor.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-top-nav-fg": {
         "default": null,
         "deprecatedSince": null,
         "description": "Application header brand and control ink.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-gap": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Gap between header regions.",
         "replacement": null,
         "required": false,
         "type": null
@@ -399,14 +391,6 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Bar marking the current primary destination.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-indicator-width": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Thickness of the current-destination bar.",
         "replacement": null,
         "required": false,
         "type": null
@@ -459,74 +443,10 @@
         "required": false,
         "type": null
       },
-      "--ki-top-nav-item-padding-inline": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Inline padding for links and menu items.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-menu-backdrop-filter": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Filter applied to the entire menu backdrop.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-menu-bg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Navigation and overflow menu fill.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-menu-bg-image": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Optional image above the menu fill.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-menu-disabled-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Disabled overflow menu item ink.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-menu-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Overflow menu item ink.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-menu-max-size": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Maximum group dimension for the anchored menu.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-top-nav-menu-radius": {
         "default": null,
         "deprecatedSince": null,
         "description": "Menu and trigger corner radius.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-top-nav-menu-shadow": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Elevation of the anchored menu.",
         "replacement": null,
         "required": false,
         "type": null
@@ -551,6 +471,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-heading-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height heading 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-title-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height title 2.",
         "replacement": null,
         "required": false,
         "type": null
@@ -583,6 +519,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
         "replacement": null,
         "required": false,
         "type": null

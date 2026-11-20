@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 405 semantic
-and 1324 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 404 semantic
+and 1306 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -155,7 +155,6 @@ every component at once.
 | `--ki-layout-app-bar-xl-height` | `9.5rem` | Height of an extra-large two-row screen bar. |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
-| `--ki-layout-menu-max-size` | `20rem` | Maximum dimension of a floating navigation menu. |
 | `--ki-layout-selection-indicator-width` | `2px` | Thickness of the line identifying a selected navigation destination. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
@@ -1994,9 +1993,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-app-bar-bg-image` | `none` | Optional image above the app-bar fill. |
 | `--ki-app-bar-fg` | `#181613` | Resting app-bar title and control ink. |
 | `--ki-app-bar-height` | `4rem` | Height of a normal or collapsed app bar. |
-| `--ki-app-bar-height-compact` | `3.5rem` | Height of a small app bar. |
 | `--ki-app-bar-lg-height` | `7rem` | Expanded height of a large app bar. |
-| `--ki-app-bar-lg-title-line-height` | `2.25rem` | Expanded two-row app-bar title line height. |
 | `--ki-app-bar-lg-title-size` | `1.5625rem` | Expanded two-row app-bar title size. |
 | `--ki-app-bar-scrolled-bg` | `#f3f0eb` | App-bar fill when its container scrolls. |
 | `--ki-app-bar-scrolled-fg` | `#181613` | App-bar title and control ink when its container scrolls. |
@@ -2005,39 +2002,23 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-app-bar-subtitle-bg` | `#ffffff` | Resting surface behind the app-bar subtitle. |
 | `--ki-app-bar-subtitle-fg` | `#5e5953` | Resting app-bar subtitle ink. |
 | `--ki-app-bar-title-font-family` | `'Instrument Sans', system-ui, sans-serif` | Screen heading typeface. |
-| `--ki-app-bar-title-font-weight` | `700` | Screen heading font weight. |
-| `--ki-app-bar-title-line-height` | `1.5rem` | One-row app-bar title line height. |
-| `--ki-app-bar-title-padding` | `0.75rem` | Block-end padding under the expanded title group. |
 | `--ki-app-bar-title-size` | `1.125rem` | One-row app-bar title size. |
 | `--ki-app-bar-xl-height` | `9.5rem` | Expanded height of an extra-large app bar. |
-| `--ki-top-nav-action-gap` | `0.25rem` | Gap between actions and inner menu padding. |
 | `--ki-top-nav-backdrop-filter` | `none` | Filter applied to the entire header backdrop. |
 | `--ki-top-nav-bg` | `#ffffff` | Application header fill. |
 | `--ki-top-nav-bg-image` | `none` | Optional image above the header fill. |
 | `--ki-top-nav-border` | `rgba(24, 22, 19, 0.1)` | Edge color for sticky bars and menus. |
-| `--ki-top-nav-border-width` | `1px` | Edge width for sticky bars and menus. |
-| `--ki-top-nav-control-size` | `2.5rem` | Trigger size before applying the density target floor. |
 | `--ki-top-nav-fg` | `#181613` | Application header brand and control ink. |
-| `--ki-top-nav-gap` | `1.5rem` | Gap between header regions. |
 | `--ki-top-nav-height` | `4rem` | Height of a normal application header. |
 | `--ki-top-nav-height-compact` | `3.5rem` | Height of a small application header. |
 | `--ki-top-nav-indicator` | `#1d1a16` | Bar marking the current primary destination. |
-| `--ki-top-nav-indicator-width` | `2px` | Thickness of the current-destination bar. |
 | `--ki-top-nav-item-bg` | `#ffffff` | Primary navigation item resting surface. |
 | `--ki-top-nav-item-current-bg` | `#ffffff` | Current navigation destination surface. |
 | `--ki-top-nav-item-current-fg` | `#181613` | Current navigation destination ink. |
 | `--ki-top-nav-item-fg` | `#5e5953` | Primary navigation item resting ink. |
 | `--ki-top-nav-item-hover-bg` | `#f3f0eb` | Hovered control or highlighted menu item surface. |
 | `--ki-top-nav-item-hover-fg` | `#181613` | Hovered control or highlighted menu item ink. |
-| `--ki-top-nav-item-padding-inline` | `0.75rem` | Inline padding for links and menu items. |
-| `--ki-top-nav-menu-backdrop-filter` | `none` | Filter applied to the entire menu backdrop. |
-| `--ki-top-nav-menu-bg` | `#ffffff` | Navigation and overflow menu fill. |
-| `--ki-top-nav-menu-bg-image` | `none` | Optional image above the menu fill. |
-| `--ki-top-nav-menu-disabled-fg` | `#6b665f` | Disabled overflow menu item ink. |
-| `--ki-top-nav-menu-fg` | `#181613` | Overflow menu item ink. |
-| `--ki-top-nav-menu-max-size` | `20rem` | Maximum group dimension for the anchored menu. |
 | `--ki-top-nav-menu-radius` | `12px` | Menu and trigger corner radius. |
-| `--ki-top-nav-menu-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the anchored menu. |
 | `--ki-top-nav-padding-inline` | `1rem` | Padding at the inline edges of both bars. |
 
 ### `ki-video`

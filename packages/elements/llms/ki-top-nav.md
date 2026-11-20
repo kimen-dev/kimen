@@ -107,60 +107,53 @@ None.
 - `--ki-app-bar-bg-image`: Optional image above the app-bar fill.
 - `--ki-app-bar-fg`: Resting app-bar title and control ink.
 - `--ki-app-bar-height`: Height of a normal or collapsed app bar.
-- `--ki-app-bar-height-compact`: Height of a small app bar.
 - `--ki-app-bar-lg-height`: Expanded height of a large app bar.
-- `--ki-app-bar-lg-title-line-height`: Expanded two-row app-bar title line height.
 - `--ki-app-bar-lg-title-size`: Expanded two-row app-bar title size.
 - `--ki-app-bar-scrolled-bg`: App-bar fill when its container scrolls.
 - `--ki-app-bar-scrolled-fg`: App-bar title and control ink when its container scrolls.
 - `--ki-app-bar-scrolled-subtitle-fg`: App-bar subtitle ink when its container scrolls.
 - `--ki-app-bar-subtitle-fg`: Resting app-bar subtitle ink.
 - `--ki-app-bar-title-font-family`: Screen heading typeface.
-- `--ki-app-bar-title-font-weight`: Screen heading font weight.
-- `--ki-app-bar-title-line-height`: One-row app-bar title line height.
-- `--ki-app-bar-title-padding`: Block-end padding under the expanded title group.
 - `--ki-app-bar-title-size`: One-row app-bar title size.
 - `--ki-app-bar-xl-height`: Expanded height of an extra-large app bar.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-elevation-e3`: MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12).
 - `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
 - `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
 - `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-layout-selection-indicator-width`: Thickness of the line identifying a selected navigation destination.
+- `--ki-layout-spacing-12xl`: The 12xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-7xl`: The 7xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
+- `--ki-layout-surface-border-width`: Hairline edge on a structural surface.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
-- `--ki-top-nav-action-gap`: Gap between actions and inner menu padding.
+- `--ki-text-low-em`: semantic color for text low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone.
 - `--ki-top-nav-backdrop-filter`: Filter applied to the entire header backdrop.
 - `--ki-top-nav-bg`: Application header fill.
 - `--ki-top-nav-bg-image`: Optional image above the header fill.
 - `--ki-top-nav-border`: Edge color for sticky bars and menus.
-- `--ki-top-nav-border-width`: Edge width for sticky bars and menus.
-- `--ki-top-nav-control-size`: Trigger size before applying the density target floor.
 - `--ki-top-nav-fg`: Application header brand and control ink.
-- `--ki-top-nav-gap`: Gap between header regions.
 - `--ki-top-nav-height`: Height of a normal application header.
 - `--ki-top-nav-height-compact`: Height of a small application header.
 - `--ki-top-nav-indicator`: Bar marking the current primary destination.
-- `--ki-top-nav-indicator-width`: Thickness of the current-destination bar.
 - `--ki-top-nav-item-bg`: Primary navigation item resting surface.
 - `--ki-top-nav-item-current-bg`: Current navigation destination surface.
 - `--ki-top-nav-item-current-fg`: Current navigation destination ink.
 - `--ki-top-nav-item-fg`: Primary navigation item resting ink.
 - `--ki-top-nav-item-hover-bg`: Hovered control or highlighted menu item surface.
 - `--ki-top-nav-item-hover-fg`: Hovered control or highlighted menu item ink.
-- `--ki-top-nav-item-padding-inline`: Inline padding for links and menu items.
-- `--ki-top-nav-menu-backdrop-filter`: Filter applied to the entire menu backdrop.
-- `--ki-top-nav-menu-bg`: Navigation and overflow menu fill.
-- `--ki-top-nav-menu-bg-image`: Optional image above the menu fill.
-- `--ki-top-nav-menu-disabled-fg`: Disabled overflow menu item ink.
-- `--ki-top-nav-menu-fg`: Overflow menu item ink.
-- `--ki-top-nav-menu-max-size`: Maximum group dimension for the anchored menu.
 - `--ki-top-nav-menu-radius`: Menu and trigger corner radius.
-- `--ki-top-nav-menu-shadow`: Elevation of the anchored menu.
 - `--ki-top-nav-padding-inline`: Padding at the inline edges of both bars.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 - `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
+- `--ki-typography-line-height-heading-2`: semantic dimension for typography line height heading 2.
+- `--ki-typography-line-height-title-2`: semantic dimension for typography line height title 2.
 - `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
 - `--ki-typography-size-title-2`: semantic dimension for typography size title 2.
 - `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
 - `--ki-typography-weight-display-semibold`: semantic font weight for typography weight display semibold.

@@ -1894,10 +1894,6 @@
         "$value": "{ki.size.border.hairline}",
         "$description": "Hairline edge on a structural surface."
       },
-      "menu-max-size": {
-        "$value": "{ki.size.surface.xs}",
-        "$description": "Maximum dimension of a floating navigation menu."
-      },
       "selection-indicator-width": {
         "$value": "{ki.size.border.thin}",
         "$description": "Thickness of the line identifying a selected navigation destination."

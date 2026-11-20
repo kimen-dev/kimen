@@ -12803,16 +12803,8 @@
               "description": "Height of a normal or collapsed app bar."
             },
             {
-              "name": "--ki-app-bar-height-compact",
-              "description": "Height of a small app bar."
-            },
-            {
               "name": "--ki-app-bar-lg-height",
               "description": "Expanded height of a large app bar."
-            },
-            {
-              "name": "--ki-app-bar-lg-title-line-height",
-              "description": "Expanded two-row app-bar title line height."
             },
             {
               "name": "--ki-app-bar-lg-title-size",
@@ -12839,18 +12831,6 @@
               "description": "Screen heading typeface."
             },
             {
-              "name": "--ki-app-bar-title-font-weight",
-              "description": "Screen heading font weight."
-            },
-            {
-              "name": "--ki-app-bar-title-line-height",
-              "description": "One-row app-bar title line height."
-            },
-            {
-              "name": "--ki-app-bar-title-padding",
-              "description": "Block-end padding under the expanded title group."
-            },
-            {
               "name": "--ki-app-bar-title-size",
               "description": "One-row app-bar title size."
             },
@@ -12861,6 +12841,10 @@
             {
               "name": "--ki-density-target-min",
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-elevation-e3",
+              "description": "MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12)."
             },
             {
               "name": "--ki-focus-ring-color",
@@ -12875,6 +12859,30 @@
               "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
             },
             {
+              "name": "--ki-layout-selection-indicator-width",
+              "description": "Thickness of the line identifying a selected navigation destination."
+            },
+            {
+              "name": "--ki-layout-spacing-12xl",
+              "description": "The 12xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-7xl",
+              "description": "The 7xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-surface-border-width",
+              "description": "Hairline edge on a structural surface."
+            },
+            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
             },
@@ -12887,8 +12895,8 @@
               "description": "Standard interaction transition easing curve."
             },
             {
-              "name": "--ki-top-nav-action-gap",
-              "description": "Gap between actions and inner menu padding."
+              "name": "--ki-text-low-em",
+              "description": "semantic color for text low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
             },
             {
               "name": "--ki-top-nav-backdrop-filter",
@@ -12907,20 +12915,8 @@
               "description": "Edge color for sticky bars and menus."
             },
             {
-              "name": "--ki-top-nav-border-width",
-              "description": "Edge width for sticky bars and menus."
-            },
-            {
-              "name": "--ki-top-nav-control-size",
-              "description": "Trigger size before applying the density target floor."
-            },
-            {
               "name": "--ki-top-nav-fg",
               "description": "Application header brand and control ink."
-            },
-            {
-              "name": "--ki-top-nav-gap",
-              "description": "Gap between header regions."
             },
             {
               "name": "--ki-top-nav-height",
@@ -12933,10 +12929,6 @@
             {
               "name": "--ki-top-nav-indicator",
               "description": "Bar marking the current primary destination."
-            },
-            {
-              "name": "--ki-top-nav-indicator-width",
-              "description": "Thickness of the current-destination bar."
             },
             {
               "name": "--ki-top-nav-item-bg",
@@ -12963,40 +12955,8 @@
               "description": "Hovered control or highlighted menu item ink."
             },
             {
-              "name": "--ki-top-nav-item-padding-inline",
-              "description": "Inline padding for links and menu items."
-            },
-            {
-              "name": "--ki-top-nav-menu-backdrop-filter",
-              "description": "Filter applied to the entire menu backdrop."
-            },
-            {
-              "name": "--ki-top-nav-menu-bg",
-              "description": "Navigation and overflow menu fill."
-            },
-            {
-              "name": "--ki-top-nav-menu-bg-image",
-              "description": "Optional image above the menu fill."
-            },
-            {
-              "name": "--ki-top-nav-menu-disabled-fg",
-              "description": "Disabled overflow menu item ink."
-            },
-            {
-              "name": "--ki-top-nav-menu-fg",
-              "description": "Overflow menu item ink."
-            },
-            {
-              "name": "--ki-top-nav-menu-max-size",
-              "description": "Maximum group dimension for the anchored menu."
-            },
-            {
               "name": "--ki-top-nav-menu-radius",
               "description": "Menu and trigger corner radius."
-            },
-            {
-              "name": "--ki-top-nav-menu-shadow",
-              "description": "Elevation of the anchored menu."
             },
             {
               "name": "--ki-top-nav-padding-inline",
@@ -13009,6 +12969,14 @@
             {
               "name": "--ki-typography-line-height-body-1",
               "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-heading-2",
+              "description": "semantic dimension for typography line height heading 2."
+            },
+            {
+              "name": "--ki-typography-line-height-title-2",
+              "description": "semantic dimension for typography line height title 2."
             },
             {
               "name": "--ki-typography-size-body-1",
@@ -13025,6 +12993,10 @@
             {
               "name": "--ki-typography-weight-body-medium",
               "description": "semantic font weight for typography weight body medium."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
             },
             {
               "name": "--ki-typography-weight-display-semibold",
