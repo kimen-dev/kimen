@@ -107,7 +107,7 @@ Feature: Drawer
     Then the sheet has a visible boundary and its Close control stays legible
 
   # S13
-  Scenario: The Close control grows for a coarse pointer
-    Given a drawer on a page with a coarse primary pointer
-    When the drawer opens
-    Then the Close control has a target at least 44 CSS pixels on each axis
+  Scenario: Touch density enlarges the Close control on a coarse pointer page
+    Given an open drawer on a page with a coarse primary pointer
+    When the page selects touch density
+    Then the Close control grows to at least 44 CSS pixels on each axis
