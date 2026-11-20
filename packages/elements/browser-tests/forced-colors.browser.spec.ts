@@ -1,4 +1,5 @@
 // @spec:062-solid-surface-background
+// @spec:113-tabs-variants
 // Forced-colors contract (Art. III: the reproduction IS a failing test).
 //
 // A forced palette — Windows Contrast themes, `forced-colors: active` — is the
@@ -341,30 +342,42 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     },
   );
 
-  it('ki-tab marks the selected tab and only that one', async (test) => {
-    await underForcedColors(test);
-    const fixture = await mount(
-      '<ki-tabs label="Settings" value="email">' +
-        '<ki-tab value="email">Email</ki-tab>' +
-        '<ki-tab value="billing">Billing</ki-tab>' +
-        '<ki-tab-panel value="email">Email settings.</ki-tab-panel>' +
-        '<ki-tab-panel value="billing">Billing settings.</ki-tab-panel>' +
-        '</ki-tabs>',
-    );
-    const selected = await partOf(fixture, 'ki-tab[value="email"]', '[part="indicator"]');
-    const other = await partOf(fixture, 'ki-tab[value="billing"]', '[part="indicator"]');
+  it.for(['primary', 'secondary'])(
+    'S5 ki-tab distinguishes selected text and indicator in %s',
+    async (variant, test) => {
+      await underForcedColors(test);
+      const fixture = await mount(
+        `<ki-tabs label="Mail" value="inbox" variant="${variant}">` +
+          '<ki-tab value="inbox"><span>Inbox</span></ki-tab>' +
+          '<ki-tab value="sent"><span>Sent</span></ki-tab>' +
+          '<ki-tab-panel value="inbox">Incoming mail.</ki-tab-panel>' +
+          '<ki-tab-panel value="sent">Sent mail.</ki-tab-panel>' +
+          '</ki-tabs>',
+      );
+      const selected = await partOf(fixture, 'ki-tab[value="sent"]', '[part="indicator"]');
+      const other = await partOf(fixture, 'ki-tab[value="inbox"]', '[part="indicator"]');
+      const sentText = fixture.querySelector('ki-tab[value="sent"] span');
+      const inboxText = fixture.querySelector('ki-tab[value="inbox"] span');
+      if (!sentText || !inboxText) throw new Error('Missing label text');
 
-    await expect.poll(() => getComputedStyle(selected).opacity).toBe('1');
-    expect(selected.getBoundingClientRect().height).toBeGreaterThan(0);
-    expect(
-      fillOf(selected),
-      'the selection indicator is Canvas on Canvas: no tab reads as selected',
-    ).not.toBeNull();
-    expect(
-      other.getBoundingClientRect().height === 0 || getComputedStyle(other).opacity === '0',
-      'an unselected tab shows the selection indicator too',
-    ).toBe(true);
-  });
+      fixture.querySelector<HTMLElement>('ki-tab[value="sent"]')?.click();
+
+      await expect.poll(() => getComputedStyle(selected).opacity).toBe('1');
+      expect(selected.getBoundingClientRect().height).toBeGreaterThan(0);
+      expect(fillOf(selected), 'the indicator paints against Canvas').not.toBeNull();
+      await expect
+        .poll(
+          () =>
+            other.getBoundingClientRect().height === 0 || getComputedStyle(other).opacity === '0',
+        )
+        .toBe(true);
+      const selectedInk = inkOnCanvas(getComputedStyle(sentText).color);
+      expect(selectedInk, 'selected text paints against Canvas').not.toBeNull();
+      expect(selectedInk, 'the selected label has its own ink').not.toBe(
+        inkOnCanvas(getComputedStyle(inboxText).color),
+      );
+    },
+  );
 
   it('S5 ki-select tells the selected option, the active option and the rest apart', async (test) => {
     await underForcedColors(test);
