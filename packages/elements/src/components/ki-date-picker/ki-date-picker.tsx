@@ -68,7 +68,7 @@ function languageOf(element: Element): string | undefined {
   formAssociated: true,
 })
 export class KiDatePicker {
-  @Element() private readonly host!: HTMLKiDatePickerElement;
+  @Element() private readonly host!: HTMLElement;
   @AttachInternals() private readonly internals!: ElementInternals;
 
   #input: HTMLInputElement | undefined;
