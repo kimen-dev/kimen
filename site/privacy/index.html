@@ -16,7 +16,7 @@
     <meta property="og:title" content="Privacy — Kimen" />
     <meta
       property="og:description"
-      content="Kimen's public site is measured with cookieless, self-hosted analytics. No accounts, no advertising, no cross-site profile."
+      content="What Kimen's public site measures and keeps. No accounts, no cookies, no advertising, no cross-site profile."
     />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#1b1916" media="(prefers-color-scheme: dark)" />
@@ -99,20 +99,35 @@
       </p>
       <ul class="privacy-glance" aria-label="At a glance">
         <li>No accounts or login</li>
-        <li>Cookieless analytics</li>
+        <li>No cookies</li>
         <li>No advertising or third-party trackers</li>
-        <li>Self-hosted page counts</li>
+        <li>No cross-site profile</li>
       </ul>
       <h2>What is measured</h2>
+      <!-- scripts/build-site.sh publishes exactly one of the two declarations
+           below, so the page always says what that build really does. -->
+      <!-- kimen:measurement -->
+      <p>This site does not currently collect analytics.</p>
       <p>
-        Page views are counted with
-        <a href="https://umami.is/">Umami</a>, self-hosted by the maintainers at
-        <code>umami.onmars.tech</code>. Umami sets no cookies and builds no cross-site profile; it
-        records the page visited, the referrer, and technical details derived from the request —
-        browser, operating system, device type, screen size, language, and location down to country,
-        region and city — without storing the IP address. Because nothing is stored on your device
-        and no profile is built, no consent banner is required.
+        The only thing this site keeps in your browser is your theme and color-scheme choice, in
+        local storage; it is never sent anywhere.
       </p>
+      <!-- /kimen:measurement -->
+      <template data-kimen-measured>
+        <p>
+          Page views are counted with
+          <a href="https://umami.is/">Umami</a>, self-hosted by the maintainers at
+          <code>umami.onmars.tech</code>. Umami sets no cookies and builds no cross-site profile; it
+          records the page visited, the referrer, and technical details derived from the request —
+          browser, operating system, device type, screen size, language, and country — without
+          storing the IP address.
+        </p>
+        <p>
+          Because Umami stores nothing on your device and builds no profile, no consent banner is
+          required. The only thing this site keeps in your browser is your theme and color-scheme
+          choice, in local storage; it is never sent anywhere.
+        </p>
+      </template>
       <h2>What is not done</h2>
       <p>
         No advertising networks, no third-party trackers, no session recording, no fingerprinting,

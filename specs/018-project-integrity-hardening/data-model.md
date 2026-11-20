@@ -287,7 +287,7 @@ agent-writable clone.
 | `sourceSha` | Git SHA | Exact checkout; protected-main reachability required in release mode |
 | `mode` | enum | dry-run or release |
 | `tag` | SemVer tag/null | Required/reachable in release; null in non-mutating dry-run |
-| `packages` | sorted list | Exactly @kimen/elements and @kimen/tokens for contract 018 |
+| `packages` | canonically ordered list | Exactly @kimen/elements, @kimen/tokens and @kimen/mcp-server (151 S6) |
 | `tarballs` | path + SHA-256 + SHA-512 SRI | Built once by read-only validation |
 | `manifest` | canonical JSON | Names, versions, file sizes and digests |
 | `candidateArchive` | bytes | Single immutable upload artifact |

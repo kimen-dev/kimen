@@ -372,7 +372,7 @@ body:has(.home-page) {
     line-height: var(--ki-site-code-line);
     color: var(--ki-text-low-em);
     counter-reset: line;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
     overflow: auto;
   }
 
@@ -388,9 +388,11 @@ body:has(.home-page) {
 
   /* Long lines wrap with a hanging indent instead of being clipped by the spine (the reference
      clips them at wide desktops): overflow aligns two characters past the line's own indent,
-     set per line by landing.js. */
+     set per line by landing.js. The indent counts up to the spec's deepest nesting level (10):
+     the rejected line is aligned under "variant" at 21, and a 23ch hang left its unbreakable
+     string token no room in the narrow spine below 80rem. */
   .ln {
-    --ki-site-hang: calc((var(--ki-site-indent, 0) + 2) * 1ch);
+    --ki-site-hang: calc((min(var(--ki-site-indent, 0), 10) + 2) * 1ch);
 
     position: relative;
     display: block;
@@ -418,8 +420,11 @@ body:has(.home-page) {
     text-indent: 0;
   }
 
+  /* Every key, string, number and tag is one token: a wrapped line breaks between tokens, never
+     inside one (Chrome would otherwise break "ki-card" after its hyphen). */
   .spec i {
     font-style: normal;
+    white-space: nowrap;
   }
 
   .spec .k {
@@ -446,21 +451,17 @@ body:has(.home-page) {
     background: var(--ki-surface-primary-base-em-alpha);
   }
 
+  /* The rejected line is struck through as text, so the strike follows it onto every row it
+     wraps to. */
   .ln.bad {
     background: var(--ki-surface-danger-tint);
     color: var(--ki-text-danger-high-em);
+    text-decoration: line-through;
+    text-decoration-thickness: var(--ki-site-rule-width);
   }
 
   .ln.bad i {
     color: inherit;
-  }
-
-  .ln.bad::after {
-    position: absolute;
-    inset-block-start: calc(var(--ki-site-code-line) * 1em / 2);
-    inset-inline: var(--ki-space-18xl) var(--ki-space-3xl);
-    border-block-start: var(--ki-site-rule-width) solid currentcolor;
-    content: "";
   }
 
   .verdict {
@@ -756,6 +757,10 @@ body:has(.home-page) {
 
   .dock.is-shown {
     transform: translate(-50%, 0);
+  }
+
+  .dock a {
+    white-space: nowrap;
   }
 
   .dock a:not(.action) {
@@ -1841,8 +1846,7 @@ body:has(.home-page) {
       font-size: var(--ki-typography-size-caption-1);
     }
 
-    /* Lines wrap more often here: the hanging indent starts nearer the line numbers, and the
-       strike follows the wrapped text. */
+    /* Lines wrap more often here: the hanging indent starts nearer the line numbers. */
     .ln {
       padding-inline: calc(var(--ki-space-14xl) + var(--ki-site-hang)) var(--ki-space-3xl);
     }
@@ -1852,15 +1856,6 @@ body:has(.home-page) {
     }
 
     .file-from {
-      display: none;
-    }
-
-    .ln.bad {
-      text-decoration: line-through;
-      text-decoration-thickness: var(--ki-site-rule-width);
-    }
-
-    .ln.bad::after {
       display: none;
     }
 
@@ -1887,6 +1882,11 @@ body:has(.home-page) {
 
   /* Bands switch to a swipeable row a little earlier than the rest, while their columns are still wide enough. */
   @media (width <= 64rem) {
+    /* The section links no longer fit the dock on one line: keep the brand and Get started. */
+    .dock a:not(.action, .dock-brand) {
+      display: none;
+    }
+
     .bands {
       display: flex;
       block-size: auto;
@@ -2045,10 +2045,6 @@ body:has(.home-page) {
       white-space: normal;
     }
 
-    .dock a:not(.action, .dock-brand) {
-      display: none;
-    }
-
     .project-stats {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -2068,7 +2064,6 @@ body:has(.home-page) {
   }
 
   @media (forced-colors: active) {
-    .ln.bad::after,
     .seam::before {
       border-color: CanvasText;
     }

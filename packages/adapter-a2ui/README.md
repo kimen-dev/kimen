@@ -107,8 +107,9 @@ with an unsupported `version` is rejected naming the supported set. The
 surface's declared action set is fixed (pass `actions`, or it freezes at the
 first render that binds one) so no later update can bind an undeclared action.
 [`COMPAT.md`](./COMPAT.md) lists every mapping, the lossy ones and the declared
-gaps (user input does not yet flow back into the data model; every update
-re-renders the whole surface).
+gaps (two-way binding covers text fields, checkboxes, sliders and
+single-selection pickers, not multiple selection or date and time; every
+update re-renders the whole surface).
 
 Transport is caller-owned: the adapter consumes already-delivered A2UI
 messages and emits client messages to the supplied callbacks. `deleteSurface`

@@ -20,6 +20,16 @@ upstream `current` version; 0.9.1 becomes `previous`.
 scenarios S3, S4, S5, S6, S7, S18, S19, S20, S21 and S22 touch the Art. VIII
 guardrail and require explicit founder confirmation before implementation.
 
+**Amendment A1 (2026-11-20): two-way binding.** Founder decision of
+2026-11-20 ("Sí, ábrelas") on finding H2 of the generative UI audit. A2UI 1.0
+(`specification/v1_0/docs/a2ui_protocol.md`, "Two-way binding & input
+components") requires the renderer to write what the person enters into the
+bound path of the local data model; v0.9 has the same rule. The adapter kept
+edits local to the control, so an action's context and the `sendDataModel`
+metadata carried the values the agent last set. Scenarios S24 to S28 and
+FR-010 to FR-013 add the write-back, inside the adapter only (FR-009 holds).
+The founder confirmed S24 to S28 verbatim on 2026-11-20 ("Sí, confirmados").
+
 ## Design-source analysis (Figma)
 
 Not applicable: protocol translation layer with no visual surface of its own.
@@ -270,6 +280,55 @@ Feature: A2UI 1.0 alongside 0.9.1 in the A2UI adapter
       Given a 1.0 surface "s"
       When the agent sends a card carrying the undeclared property "style"
       Then the agent receives an A2UI "1.0" validation error naming the surface and the offending property
+
+  Rule: What the person enters is written back to the data model
+
+    # S24
+    Scenario Outline: A typed value reaches the agent with the next action
+      Given an A2UI "<version>" surface whose text field is bound to "/booking/email" and whose "Book" button sends "/booking/email" in its context
+      And the person typed "ana@example.com" into the text field
+      When the person activates "Book"
+      Then the agent receives the action "book" with "ana@example.com" in its context
+
+      Examples:
+        | version |
+        | 1.0     |
+        | v0.9.1  |
+
+    # S25
+    Scenario Outline: A choice the person makes is written to its bound path
+      Given a 1.0 surface whose <control> is bound to "<path>" holding <before>
+      And the person changed the <control> to <after>
+      When the person activates a button that sends "<path>" in its context
+      Then the agent receives <after> for "<path>"
+
+      Examples:
+        | control              | path              | before | after  |
+        | checkbox             | /prefs/newsletter | false  | true   |
+        | single-choice picker | /order/size       | ["m"]  | ["l"]  |
+        | slider               | /order/quantity   | 1      | 3      |
+
+    # S26
+    Scenario: The data model sent with an action carries what the person entered
+      Given a 1.0 surface created with sendDataModel whose text field is bound to "/booking/email"
+      And the person typed "ana@example.com" into the text field
+      When the person activates "Book"
+      Then the data model attached to the action holds "ana@example.com" at "/booking/email"
+
+    # S27
+    Scenario: Writing back keeps the person's place in the surface
+      Given a 1.0 surface with a name field bound to "/booking/name" and an email field bound to "/booking/email"
+      And the person typed "Ana" into the name field
+      When the person moves to the email field
+      Then the email field has focus
+      And the name field still shows "Ana"
+
+    # S28
+    Scenario: A field with a literal value writes nothing to the data model
+      Given a 1.0 surface created with sendDataModel whose text field holds the literal value "draft"
+      And the person typed "final" into the text field
+      When the person activates "Save"
+      Then the data model attached to the action is the one the agent last set
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -280,7 +339,7 @@ component that carries its own five-family contract.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S25, S26, S27, S28 | |
 | Keyboard path | | N/A — no new interaction pattern; rendered catalog components keep their own keyboard contracts |
 | Assistive-tech outcome | | N/A — no new rendered pattern; the accessibility tree is owned by the catalog components' own contracts |
 | Form participation | | N/A — no new form control; form behavior belongs to the rendered catalog components |
@@ -343,6 +402,25 @@ component that carries its own five-family contract.
 - **FR-009 (no core change)**: all changes stay inside
   `packages/adapter-a2ui` and this spec; zero diffs in `packages/elements`,
   `packages/catalog` or `packages/tokens` (Art. VIII, `029` SC-004).
+- **FR-010 (two-way binding, A1)**: in both version families, when the
+  person commits a value in a text field (`TextField`), a checkbox
+  (`CheckBox`), a slider (`Slider`) or a single-selection choice picker
+  (`ChoicePicker` rendered as a radio group or a single combobox), the
+  adapter writes that value to the component's bound path in the surface's
+  data model before any action that follows is dispatched (S24, S25). A
+  choice picker writes a one-item list, a slider a number, a checkbox a
+  boolean, a text field a string. A missing path is created.
+- **FR-011 (no re-render, A1)**: the write-back never re-renders the surface,
+  so focus, other in-progress input and scroll stay as they are (S27).
+  Components that display the same path refresh on the next agent update.
+- **FR-012 (only the own binding, A1)**: a control writes only to the path
+  its own value is bound to; a control whose value is a literal or a function
+  call writes nothing (S28). The write-back channel is internal to the
+  adapter: it never reaches the agent as an action, never joins the agent's
+  declared action set and cannot be bound by agent messages.
+- **FR-013 (still out, A1)**: multiple-selection choice pickers and
+  `DateTimeInput` keep their edits local until their catalog components
+  report a single committed value; `COMPAT.md` declares the gap.
 
 ### Differences 0.9.1 → 1.0 and how each translates
 

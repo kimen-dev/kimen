@@ -15,6 +15,27 @@ test('main requires one consolidated quality result with no bypass actors', asyn
   ]);
 });
 
+// Every merge goes through the queue, which tests each group against the
+// latest main with the full suite. That replaces the strict up-to-date policy,
+// which made each merge restart CI on every other open PR. The queue only works
+// if the required check also runs on merge_group events, or entries time out.
+test('main merges through a squash merge queue that the required check runs in', async () => {
+  const [ruleset, workflow] = await Promise.all([
+    read('.github/rulesets/main.json').then(JSON.parse),
+    read('.github/workflows/ci.yml'),
+  ]);
+  const queue = ruleset.rules.find(({ type }) => type === 'merge_queue');
+  const statusRule = ruleset.rules.find(({ type }) => type === 'required_status_checks');
+
+  assert.ok(queue, 'main must declare a merge_queue rule');
+  assert.equal(queue.parameters.merge_method, 'SQUASH');
+  assert.equal(queue.parameters.grouping_strategy, 'HEADGREEN');
+  assert.ok(queue.parameters.check_response_timeout_minutes >= 35 + 10);
+  assert.equal(statusRule.parameters.strict_required_status_checks_policy, false);
+  assert.match(workflow, /^ {2}merge_group:\n {4}types: \[checks_requested\]$/mu);
+  assert.match(workflow, /^ {2}quality:$/mu);
+});
+
 test('ruleset applicator is dry-run by default and has no temporary bypass mode', async () => {
   const script = await read('scripts/github/apply-main-ruleset.sh');
 

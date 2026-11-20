@@ -1068,6 +1068,63 @@ describe('Kimen public site experience in a real browser', () => {
     ).toEqual(['Token', 'Declared as', 'Now · onmars dark']);
   });
 
+  // The live review of kimen.dev (#520, item 5): at 1024 the spine broke
+  // tokens at hyphens ("ki-" / "card"), and at 1440 the rejected line's strike
+  // crossed only the first row it wraps to. Both widths wrap that line.
+  it.each([1024, 1440] as const)(
+    'keeps every spec token whole and strikes each row of the rejected line at %i CSS pixels',
+    async (width) => {
+      await browserCommands.emulateReducedMotion('reduce');
+      await page.viewport(width, DEFAULT_VIEWPORT.height);
+      await mountPage('landing');
+      const spec = requireElement<HTMLElement>('.spec', HTMLElement);
+      const rows = (element: Element) => {
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        return new Set([...range.getClientRects()].map(({ top }) => Math.round(top))).size;
+      };
+
+      const split = [...spec.querySelectorAll<HTMLElement>('i')]
+        .filter((token) => token.getClientRects().length > 1)
+        .map((token) => token.textContent);
+      expect(split, 'spec tokens broken across rows').toEqual([]);
+      expect(spec.scrollWidth - spec.clientWidth, 'the spine must not scroll sideways').toBe(0);
+
+      const rejected = requireElement<HTMLElement>('.ln.bad', HTMLElement);
+      expect(rows(rejected), 'the rejected line wraps at this width').toBeGreaterThan(1);
+      expect(getComputedStyle(rejected).textDecorationLine).toBe('line-through');
+      expect(getComputedStyle(rejected, '::after').content, 'no first-row-only strike').toBe(
+        'none',
+      );
+    },
+  );
+
+  // #520, item 7: at 768 the dock's labels broke onto two lines.
+  it.each([
+    [768, ['Kimen, back to top', 'Get started']],
+    [1280, ['Kimen, back to top', 'Themes', 'Use it', 'Guardrail', 'Live wall', 'Get started']],
+  ] as const)('keeps every dock label on one line at %i CSS pixels', async (width, labels) => {
+    await page.viewport(width, DEFAULT_VIEWPORT.height);
+    await mountPage('landing');
+    const dock = requireElement<HTMLElement>('[data-dock]', HTMLElement);
+    requireElement<HTMLElement>('#components', HTMLElement).scrollIntoView({
+      behavior: 'instant',
+    });
+    await waitFor(() => dock.classList.contains('is-shown'), 'the dock follows past the hero');
+    await nextFrame();
+
+    const shown = [...dock.querySelectorAll<HTMLAnchorElement>('a')].filter(isRendered);
+    expect(shown.map((link) => link.getAttribute('aria-label') ?? link.textContent.trim())).toEqual(
+      labels,
+    );
+    for (const link of shown) {
+      const range = document.createRange();
+      range.selectNodeContents(link);
+      const rows = new Set([...range.getClientRects()].map(({ top }) => Math.round(top))).size;
+      expect(rows, `"${link.textContent.trim()}" sits on one line`).toBeLessThanOrEqual(1);
+    }
+  });
+
   it.each([
     ['landing', 320],
     ['landing', 1440],

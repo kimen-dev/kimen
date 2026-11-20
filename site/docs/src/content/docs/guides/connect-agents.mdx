@@ -186,6 +186,13 @@ Windows `%APPDATA%\Claude\claude_desktop_config.json`):
 }
 ```
 
+Claude Desktop does not inherit your terminal's `PATH`, so it may not find
+`npx` and `node`, or may find older ones. If the server does not start, use
+the absolute path that `command -v npx` prints in your terminal as
+`"command"` (for example `/opt/homebrew/bin/npx`), and add
+`"env": { "PATH": "/opt/homebrew/bin:/usr/bin:/bin" }` with that directory
+first, so `npx` starts the same `node` your terminal uses.
+
 Quit and reopen Claude Desktop. It renders MCP Apps, so specs the model
 renders appear as live Kimen components. Claude on the web and on mobile
 connect only to remote servers, so a local `kimen-mcp` is a desktop feature.
@@ -352,11 +359,12 @@ The `kimen-genui` skill carries a short recipe for each of the three.
 - **The server does not start.** Run
   `npx -y -p @kimen/mcp-server kimen-mcp < /dev/null`: it should exit at
   once, silently, with status 0. A syntax or version error means Node is
-  older than 22. `kimen-mcp: command not found` means npx fetched version
-  `0.0.0`, which only reserves the name: ask for `@kimen/mcp-server@latest`.
-  With a file path instead of npx, "Cannot find module" means the file was
-  not built or the path is not absolute. The server refuses any argument, so
-  check that the config passes nothing after `kimen-mcp` or the path.
+  older than 22. With a file path instead of npx, "Cannot find module" means
+  the file was not built or the path is not absolute. The server refuses any
+  argument, so check that the config passes nothing after `kimen-mcp` or the
+  path. If the command works in your terminal but not in a desktop app
+  (Claude Desktop, Antigravity), the app is not finding `npx` or `node`: see
+  the `PATH` note under [Claude Desktop](#claude-desktop).
 - **No live components, only an outline.** The client does not render MCP
   Apps (see [What works where](#what-works-where)). The outline is the
   expected result there.
@@ -365,10 +373,3 @@ The `kimen-genui` skill carries a short recipe for each of the three.
   names (`line-numbers`, not `lineNumbers`).
 - **`url-scheme` or a refused URL.** `kimen-mcp` surfaces cannot load URLs.
   Render images and links from your own page or server instead.
-- **Known issue: built-in glyphs missing.** Some components draw an icon of
-  their own: the close ×, select and tree chevrons, the number input's + and
-  −, the AI label's sparkles. Today those glyphs are dropped from the live
-  surface, and from app bundles whose bundler honours `sideEffects`, so the
-  buttons keep their accessible names but render without the glyph. A fix is
-  in progress. In your own app, import the glyphs explicitly, for example
-  `import '@kimen/elements/icons/x';`.

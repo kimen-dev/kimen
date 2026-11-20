@@ -40,7 +40,10 @@ export class KiChipGroup {
   /** Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips. */
   @Prop({ reflect: true }) reorderable = false;
 
-  /** ID of the entry field in the same document or shadow root for focus after the last chip. */
+  /**
+   * ID of the entry field in the same document or shadow root for focus after the last chip.
+   * @format idref
+   */
   @Prop({ reflect: true }) focusTarget?: string;
 
   /** Localized polite message using {label}, {position} and {total}. Position is one-based. */

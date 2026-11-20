@@ -6,6 +6,7 @@ import { vueOutputTarget } from '@stencil/vue-output-target';
 
 import { compactButtonPalette } from './scripts/compact-button-palette';
 import { readComponentFormBindings } from './scripts/component-metadata.mjs';
+import { glyphChunks } from './scripts/glyph-chunks';
 
 // Form controls re-dispatch native input/change events across the shadow
 // boundary. The component manifest selects the wrapper binding for its prop.
@@ -22,7 +23,15 @@ export const config: Config = {
   // cold build. The regular TypeScript gate still checks those specs and the
   // gallery fixtures after the build has produced the public types.
   tsconfig: 'tsconfig.stencil.json',
-  rollupPlugins: { after: [compactButtonPalette] },
+  // Glyph chunks get the prefix package.json `sideEffects` declares. The
+  // plugin resolves the glyph modules' registry import, so it runs before
+  // Stencil's node resolution.
+  rollupPlugins: {
+    before: [
+      glyphChunks(resolve(__dirname, 'icons'), resolve(__dirname, 'src/utils/icon-registry.mjs')),
+    ],
+    after: [compactButtonPalette],
+  },
   outputTargets: [
     { type: 'dist', esmLoaderPath: '../loader' },
     { type: 'dist-custom-elements', customElementsExportBehavior: 'single-export-module' },

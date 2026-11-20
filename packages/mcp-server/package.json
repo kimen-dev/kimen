@@ -1,5 +1,6 @@
 {
   "name": "@kimen/mcp-server",
+  "mcpName": "io.github.kimen-dev/kimen",
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
@@ -60,6 +61,7 @@
           "!{projectRoot}/src/generated/**",
           "^default",
           "{workspaceRoot}/packages/elements/generated/custom-elements.json",
+          "{workspaceRoot}/scripts/lib/bundled-package-inventory.mjs",
           "{workspaceRoot}/scripts/lib/stock-surface-icons.mjs"
         ],
         "outputs": [

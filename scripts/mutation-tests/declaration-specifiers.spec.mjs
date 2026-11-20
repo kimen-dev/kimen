@@ -8,11 +8,13 @@ import { it, onTestFinished } from 'vitest';
 
 import {
   DECLARATION_DIRECTORIES,
+  DECLARATION_SOURCE_ROOTS,
   normalizePackageDeclarations,
 } from '../../packages/elements/scripts/normalize-declaration-specifiers.mjs';
 import {
   extensionlessRelativeSpecifiers,
   normalizeDeclarationDirectories,
+  rebaseDeclarationSpecifiers,
   rewriteDeclarationSpecifiers,
 } from '../lib/declaration-specifiers.mjs';
 
@@ -455,4 +457,151 @@ it('the elements build pass covers exactly the three directories that ship decla
     await readFile(join(packageRoot, 'dist/collection/untouched.d.ts'), 'utf8'),
     "export * from './left-alone';\n",
   );
+});
+
+// Re-basing: Stencil copies src/ into dist/types/ one directory deeper, so a
+// specifier that leaves src/ points one directory short of its file. The
+// cases of scripts/tests/declaration-specifiers.test.mjs, then the details.
+const label = '/package/dist/types/components/ki-ai-label/ki-ai-label.d.ts';
+const mirror = { outputRoot: '/package/dist/types', sourceRoot: '/package/src' };
+
+it('re-bases a specifier that names a file only the source location answers', () => {
+  const result = rebaseDeclarationSpecifiers(
+    "import '../../../icons/sparkles.js';\nimport { A } from '../../utils/a.js';\n",
+    label,
+    mirror,
+    present('/package/icons/sparkles.d.ts', '/package/dist/types/utils/a.d.ts'),
+  );
+
+  assert.equal(
+    result.text,
+    "import '../../../../icons/sparkles.js';\nimport { A } from '../../utils/a.js';\n",
+  );
+  assert.equal(result.rewritten, 1);
+});
+
+it('reads the declaration of each runtime extension and a named JSON file as is', () => {
+  const answers = {
+    'a.mjs': 'a.d.mts',
+    'b.cjs': 'b.d.cts',
+    'c.json': 'c.json',
+    'd.js': 'd.d.ts',
+  };
+  for (const [file, declaration] of Object.entries(answers)) {
+    const result = rebaseDeclarationSpecifiers(
+      `import '../../../icons/${file}';\n`,
+      label,
+      mirror,
+      present(`/package/icons/${declaration}`),
+    );
+    assert.equal(result.text, `import '../../../../icons/${file}';\n`);
+  }
+  // A runtime file is not its own declaration.
+  for (const file of ['a.mjs', 'b.cjs', 'd.js']) {
+    assert.throws(() =>
+      rebaseDeclarationSpecifiers(
+        `import '../../../icons/${file}';\n`,
+        label,
+        mirror,
+        present(`/package/icons/${file}`),
+      ),
+    );
+  }
+});
+
+it('a re-based specifier stays put on a second pass, and a sibling keeps its dot', () => {
+  const owner = '/package/dist/types/components/ki-x/ki-x.d.ts';
+  const exists = present('/package/icons/x.d.ts', '/package/dist/types/components/ki-x/y.d.ts');
+  const first = rebaseDeclarationSpecifiers(
+    "import '../../../icons/x.js';\nimport './y.js';\n",
+    owner,
+    mirror,
+    exists,
+  );
+  const second = rebaseDeclarationSpecifiers(first.text, owner, mirror, exists);
+
+  assert.equal(first.text, "import '../../../../icons/x.js';\nimport './y.js';\n");
+  assert.equal(second.text, first.text);
+  assert.equal(second.rewritten, 0);
+});
+
+it('re-bases onto a sibling-relative path with a leading dot', () => {
+  const result = rebaseDeclarationSpecifiers(
+    "import './sibling.js';\n",
+    '/package/dist/types/a.d.ts',
+    { outputRoot: '/package/dist/types', sourceRoot: '/package/dist/types/nested' },
+    present('/package/dist/types/nested/sibling.d.ts'),
+  );
+
+  assert.equal(result.text, "import './nested/sibling.js';\n");
+});
+
+it('refuses a named specifier that neither location answers, or one with no source root', () => {
+  const missing = "import '../../../icons/gone.js';\n";
+  for (const roots of [mirror, {}, undefined, { outputRoot: '/package/dist/types' }]) {
+    assert.throws(
+      () => rebaseDeclarationSpecifiers(missing, label, roots, present()),
+      (error) =>
+        error instanceof Error &&
+        error.message ===
+          `${label}: relative specifier '../../../icons/gone.js' has no declaration file behind it; refusing to guess`,
+    );
+  }
+  // With only a source root, nothing mirrors: the output location must answer.
+  assert.throws(() =>
+    rebaseDeclarationSpecifiers(
+      missing,
+      label,
+      { sourceRoot: '/package/src' },
+      present('/package/icons/gone.d.ts'),
+    ),
+  );
+});
+
+it('leaves extensionless and package specifiers to the naming pass', () => {
+  const source = "import { h } from '@stencil/core';\nexport * from './elsewhere';\n";
+  const result = rebaseDeclarationSpecifiers(source, label, mirror, present());
+
+  assert.deepEqual(result, { text: source, rewritten: 0 });
+});
+
+it('keeps the quote style and every character around a re-based specifier', () => {
+  const result = rebaseDeclarationSpecifiers(
+    'import "../../../icons/a.js"; // a\nimport \'../../../icons/b.js\';\n',
+    label,
+    mirror,
+    present('/package/icons/a.d.ts', '/package/icons/b.d.ts'),
+  );
+
+  assert.equal(
+    result.text,
+    'import "../../../../icons/a.js"; // a\nimport \'../../../../icons/b.js\';\n',
+  );
+  assert.equal(result.rewritten, 2);
+});
+
+it('the elements build pass re-bases dist/types against src and nothing else', async () => {
+  assert.deepEqual({ ...DECLARATION_SOURCE_ROOTS }, { 'dist/types': 'src' });
+  assert.equal(Object.isFrozen(DECLARATION_SOURCE_ROOTS), true);
+
+  const packageRoot = await mkdtemp(join(tmpdir(), 'kimen-declaration-package-'));
+  onTestFinished(() => rm(packageRoot, { force: true, recursive: true }));
+  await writeTree(packageRoot, {
+    'icons/x.d.ts': 'export {};\n',
+    'dist/types/components/ki-x/ki-x.d.ts': "import '../../../icons/x.js';\n",
+    'dist/components/ki-x.d.ts': "export * from '../types/components/ki-x/ki-x.js';\n",
+    'loader/index.d.ts': "export * from '../dist/components/ki-x.js';\n",
+  });
+
+  const report = await normalizePackageDeclarations({ packageRoot, workspaceRoot });
+
+  assert.deepEqual(report, { declarations: 3, rewrittenFiles: 1, rewrittenSpecifiers: 1 });
+  assert.equal(
+    await readFile(join(packageRoot, 'dist/types/components/ki-x/ki-x.d.ts'), 'utf8'),
+    "import '../../../../icons/x.js';\n",
+  );
+
+  // The same escape outside dist/types has no source to answer it.
+  await writeFile(join(packageRoot, 'loader/index.d.ts'), "import '../../icons/x.js';\n", 'utf8');
+  await assert.rejects(normalizePackageDeclarations({ packageRoot, workspaceRoot }));
 });

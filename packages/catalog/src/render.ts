@@ -14,8 +14,8 @@
  */
 import {
   allocateDialogId,
-  type DialogIdFor,
   DIALOG_TAG,
+  type DialogIdFor,
   isDialogCommand,
   isDialogInvoker,
   writeDialogId,
@@ -179,7 +179,7 @@ function promptInputActivations(tag: string, events: readonly string[]): boolean
 }
 
 /** These buttons use their declared change only when the spec enables toggle mode. */
-export function hasToggleActivation(entry: CatalogEntry | undefined): boolean {
+function hasToggleActivation(entry: CatalogEntry | undefined): boolean {
   return (
     (entry?.tag === 'ki-button' || entry?.tag === 'ki-icon-button') &&
     Object.hasOwn(entry.events, 'ki-change')
@@ -531,17 +531,26 @@ export function attachText(
   return parent.insertBefore(holder, before);
 }
 
-/** Writes one validated prop as an attribute. */
+/**
+ * Writes one validated prop as an attribute. A neutral node id a prop names
+ * (a dialog invoker's `commandfor`, or a prop the catalog in use marks
+ * `format: "idref"`, spec 152) is written as the DOM id the renderer
+ * allocated for that node, never as the spec's value, so it cannot resolve
+ * to an element of the host page.
+ */
 export function writeProp(
   element: Element,
   component: string,
   name: string,
   value: Scalar | undefined,
   idFor?: DialogIdFor,
+  entry?: CatalogEntry,
 ): void {
   let attributeValue = value;
-  // Resolve neutral IDs only for catalog dialog invokers.
-  if (name === 'commandfor' && isDialogInvoker(component)) {
+  if (
+    (name === 'commandfor' && isDialogInvoker(component)) ||
+    ownEntry(entry?.props, name)?.format === 'idref'
+  ) {
     attributeValue = typeof value === 'string' ? idFor?.(value) : undefined;
   }
   if (attributeValue === undefined) {
@@ -600,19 +609,60 @@ export function writeProps(
   component: string,
   props: Readonly<Record<string, Scalar>>,
   idFor: DialogIdFor,
+  entry?: CatalogEntry,
 ): void {
   if (writeNativeLayout(element, component, props)) {
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, component, name, value, idFor);
+    writeProp(element, component, name, value, idFor, entry);
   }
+  // A spec owns no form (spec 152 FR-007): a form-action type the spec left
+  // unset is pinned to "button" on every node, bound to an action or not.
+  pinButtonType(element, entry, props);
+}
+
+/**
+ * The node ids a tree names as targets (spec 152): every dialog that has an
+ * id, and every value of a dialog invoker's `commandfor` or of a prop the
+ * catalog in use marks `format: "idref"`. Only these nodes receive a
+ * renderer-allocated DOM id.
+ */
+function referenceTargets(
+  root: UiSpecNode,
+  entries: Readonly<Record<string, CatalogEntry>>,
+): Set<string> {
+  const targets = new Set<string>();
+  const pending: UiSpecNode[] = [root];
+  for (let node = pending.pop(); node !== undefined; node = pending.pop()) {
+    if (node.component === DIALOG_TAG && node.id !== undefined) {
+      targets.add(node.id);
+    }
+    const entry = ownEntry(entries, node.component);
+    for (const [name, value] of Object.entries(node.props ?? {})) {
+      if (
+        typeof value === 'string' &&
+        ((name === 'commandfor' && isDialogInvoker(node.component)) ||
+          ownEntry(entry?.props, name)?.format === 'idref')
+      ) {
+        targets.add(value);
+      }
+    }
+    for (const children of Object.values(node.slots ?? {})) {
+      for (const child of children) {
+        if (typeof child !== 'string') {
+          pending.push(child);
+        }
+      }
+    }
+  }
+  return targets;
 }
 
 /**
  * Declaratively neutralizes a form-submitting default when the catalog
  * types this component's `type` prop and the spec left it unset: pins it to
- * "button" so no native submit path runs alongside a click-bound action.
+ * "button" so no native submit path runs, whether or not the node is bound.
  */
 export function pinButtonType(
   element: Element,
@@ -751,7 +801,7 @@ function buildNode(
 ): Element {
   const element = createNodeElement(doc, node.component, allowedUrlOrigins, sourceScope);
   const props = node.props ?? {};
-  writeProps(element, node.component, props, idFor);
+  writeProps(element, node.component, props, idFor, ownEntry(entries, node.component));
   writeDialogId(element, node.id, idFor);
   const action = node.action;
   wireActivation(
@@ -795,9 +845,13 @@ function ownerDocument(surface: Element): Document {
   return surface.ownerDocument;
 }
 
-function scopedDialogIds(surface: Element): DialogIdFor {
+/** Allocates one DOM id per target node of a tree, and none for any other. */
+function scopedDialogIds(surface: Element, targets: ReadonlySet<string>): DialogIdFor {
   const ids = new Map<string, string>();
   return (nodeId) => {
+    if (!targets.has(nodeId)) {
+      return undefined;
+    }
     const id = ids.get(nodeId) ?? allocateDialogId(surface);
     ids.set(nodeId, id);
     return id;
@@ -961,7 +1015,7 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
       doc,
       options.onAction,
       catalog.components,
-      scopedDialogIds(options.surface),
+      scopedDialogIds(options.surface, referenceTargets(prepared.spec.root, catalog.components)),
       options.allowedUrlOrigins,
       Symbol(),
     ),
@@ -1086,7 +1140,7 @@ export function createStreamingRenderer(
           doc,
           options.onAction,
           catalog.components,
-          scopedDialogIds(options.surface),
+          scopedDialogIds(options.surface, referenceTargets(report.spec.root, catalog.components)),
           context.allowedUrlOrigins,
           sourceScope,
         ),

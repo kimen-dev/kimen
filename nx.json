@@ -45,7 +45,8 @@
   "release": {
     "projects": [
       "@kimen/elements",
-      "@kimen/tokens"
+      "@kimen/tokens",
+      "@kimen/mcp-server"
     ],
     "projectsRelationship": "fixed",
     "releaseTag": {

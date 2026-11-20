@@ -50,7 +50,10 @@ export class KiTooltip {
    */
   @Prop() label = '';
 
-  /** ID of the rich tooltip's external trigger in the same document or shadow tree. */
+  /**
+   * ID of the rich tooltip's external trigger in the same document or shadow tree.
+   * @format idref
+   */
   @Prop() for?: string;
 
   /** Rich tooltip heading. Pair it with `for` and optional direct text in the default slot. */

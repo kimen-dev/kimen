@@ -118,13 +118,14 @@ followed by JSON; read it as data.
 
 - **`kimen-mcp` surfaces** refuse URL props (no images, links or audio), ship
   one icon (`circle-check`), and always paint the default Kimen theme in
-  light or dark as the host asks. Known issue: the glyphs components draw
-  themselves (close ×, chevrons, + and −) are currently missing from the
-  live surface; the controls still work and keep their accessible names.
+  light or dark as the host asks. The glyphs components draw themselves
+  (close ×, chevrons, + and −) are always included.
 - **A2UI** reaches the 18 types of A2UI's basic catalog only (Text, Button,
   Card, TextField, …); the rest of the Kimen catalog is not reachable through
-  A2UI yet. User input does not flow back into the A2UI data model, and every
-  update re-renders the whole surface.
+  A2UI yet. Bound text fields, checkboxes, sliders and single-selection
+  pickers write the person's input back to the data model; multiple-selection
+  pickers and date or time inputs do not yet. Every update re-renders the
+  whole surface.
 - **MCP Apps** support is pinned to the `2026-01-26` revision; under a host
   that negotiates another revision the surface stays empty, and only the
   tool's text result reaches the model.

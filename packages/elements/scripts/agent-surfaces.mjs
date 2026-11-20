@@ -183,7 +183,7 @@ export function buildManifest(docs, inputs = {}) {
               required: requiredFlag(prop),
               deprecatedValues: deprecatedValues(prop),
               ...numericBounds(prop),
-              format: urlFormat(prop),
+              format: propFormat(prop),
             }),
           ),
         members: [
@@ -200,7 +200,7 @@ export function buildManifest(docs, inputs = {}) {
               required: requiredFlag(prop),
               deprecatedValues: deprecatedValues(prop),
               ...numericBounds(prop),
-              format: urlFormat(prop),
+              format: propFormat(prop),
             }),
           ),
           ...(component.methods ?? []).map((method) =>
@@ -907,14 +907,19 @@ function boundViolations(tag, prop) {
 // `@format url` on the prop: the catalog then holds its value to the URL
 // policy (scheme allowlist, allowed origins) because the contract says so,
 // not because of what the prop happens to be called (spec 027 FR-018).
-// `url` is the only format; anything else fails the build.
+// A string prop that names another element by id declares `@format idref`:
+// the catalog then resolves it only to a node of the same spec (spec 152).
+// `url` and `idref` are the only formats; anything else fails the build.
+const PROP_FORMATS = new Set(['url', 'idref']);
+
 function formatTags(prop) {
   return (prop.docsTags ?? []).filter((docsTag) => docsTag.name === 'format');
 }
 
-function urlFormat(prop) {
+function propFormat(prop) {
   const [tag] = formatTags(prop);
-  return tag !== undefined && String(tag.text ?? '').trim() === 'url' ? 'url' : undefined;
+  const format = tag === undefined ? '' : String(tag.text ?? '').trim();
+  return PROP_FORMATS.has(format) ? format : undefined;
 }
 
 function formatViolations(tag, prop) {
@@ -926,12 +931,15 @@ function formatViolations(tag, prop) {
   if (tags.length > 1) {
     return [`${subject}: @format is declared more than once`];
   }
-  if (urlFormat(prop) === undefined) {
-    return [`${subject}: @format must be "url", received ${JSON.stringify(tags[0].text ?? '')}`];
+  const format = propFormat(prop);
+  if (format === undefined) {
+    return [
+      `${subject}: @format must be "url" or "idref", received ${JSON.stringify(tags[0].text ?? '')}`,
+    ];
   }
   return soleType(prop) === 'string'
     ? []
-    : [`${subject}: @format url applies to string props only`];
+    : [`${subject}: @format ${format} applies to string props only`];
 }
 
 // An observed attribute may deserialize text to a richer property value.
@@ -1017,7 +1025,8 @@ function renderAttribute(prop) {
     ...(prop.default === undefined ? [] : [`default ${prop.default}`]),
     ...(minimum === undefined ? [] : [`minimum ${String(minimum)}`]),
     ...(maximum === undefined ? [] : [`maximum ${String(maximum)}`]),
-    ...(urlFormat(prop) === 'url' ? ['URL'] : []),
+    ...(propFormat(prop) === 'url' ? ['URL'] : []),
+    ...(propFormat(prop) === 'idref' ? ['ID of another element of the same spec'] : []),
   ];
   return `\`${prop.attr}\` (${facts.join(', ')}): ${oneLine(prop.docs ?? '')}`;
 }

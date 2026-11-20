@@ -4,7 +4,7 @@ import Search from '@astrojs/starlight/components/Search.astro';
 
 const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
 const siteBase = docsBase.replace(/docs\/?$/u, '');
-const { entry } = Astro.locals.starlightRoute;
+const { entry, hasSidebar } = Astro.locals.starlightRoute;
 const guidePaths = ['guides/ui-spec', 'guides/emitting-specs', 'guides/a2ui', 'guides/mcp-apps'];
 const isDocsHome = Astro.url.pathname.replace(/\/$/u, '') === docsBase.slice(0, -1);
 const componentIndex = { href: docsBase, label: 'Components' };
@@ -90,6 +90,50 @@ const schemes = ['Auto', 'Light', 'Dark'] as const;
       <span class="visually-hidden">GitHub</span>
     </a>
   </nav>
+
+  {
+    /* Below 50rem the section tabs and site links leave the header. Pages
+       with a sidebar reach them through Starlight's menu button (the sidebar,
+       then MobileMenuFooter); the docs home is a splash page with no sidebar,
+       so it gets this disclosure instead. */
+    !hasSidebar && (
+      <details class="kimen-docs-menu" data-docs-menu>
+        <summary>
+          <Icon name="bars" class="kimen-docs-menu-open" />
+          <Icon name="close" class="kimen-docs-menu-close" />
+          <span class="visually-hidden">Menu</span>
+        </summary>
+        <div class="kimen-docs-menu-panel">
+          <nav aria-label="Documentation sections">
+            <ul>
+              {sections.map((section) => (
+                <li>
+                  <a
+                    href={'href' in section ? `${section.href}${section.path}` : `${docsBase}${section.path}/`}
+                    aria-current={section.current ? 'location' : undefined}
+                  >
+                    {section.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <nav aria-label="Site">
+            <ul>
+              {siteLinks.map(({ href, label }) => (
+                <li>
+                  <a href={href}>{label}</a>
+                </li>
+              ))}
+              <li>
+                <a href="https://github.com/kimen-dev/kimen">GitHub</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </details>
+    )
+  }
 </div>
 
 <script>
@@ -154,4 +198,23 @@ const schemes = ['Auto', 'Light', 'Dark'] as const;
   }
 
   applyScheme(readScheme());
+
+  // The docs-home menu is a native <details>; close it the way a menu closes:
+  // on Escape (focus back on its button), on a click outside it, and when a
+  // link inside it is followed (a same-page hash link would leave it open).
+  const menu = document.querySelector<HTMLDetailsElement>('[data-docs-menu]');
+  if (menu) {
+    const summary = menu.querySelector('summary');
+    menu.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || !menu.open) return;
+      menu.open = false;
+      summary?.focus();
+    });
+    document.addEventListener('click', (event) => {
+      if (menu.open && event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
+    });
+    menu.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) menu.open = false;
+    });
+  }
 </script>

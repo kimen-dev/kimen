@@ -1,4 +1,5 @@
 import { existsSync, globSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -83,6 +84,60 @@ const provider = playwright(
   browser === 'chromium' ? { launchOptions: { channel: 'chromium' } } : undefined,
 );
 
+// A consumer's production build of the named components, from the package
+// specifiers a consumer imports, minified and with the package's
+// `sideEffects` declaration honoured. The bundler is the esbuild of the
+// elements size gate, resolved as scripts/icon-modules.test.mjs resolves it.
+// `honourSideEffects: false` makes esbuild ignore every side-effect
+// annotation, so the bundle keeps whatever the unbundled modules execute: the
+// reference a production bundle has to match.
+const elementsRoot = fileURLToPath(new URL('.', import.meta.url));
+async function bundleComponents(
+  tags: readonly string[],
+  honourSideEffects: boolean,
+): Promise<{ code: string; warnings: string[] }> {
+  if (tags.length === 0 || tags.some((tag) => !/^ki-[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(tag))) {
+    throw new Error(`bundleComponents: expected ki-* tags, received ${tags.join(', ')}`);
+  }
+  const require = createRequire(join(elementsRoot, 'package.json'));
+  const preset = createRequire(require.resolve('@size-limit/preset-small-lib'));
+  const sizeLimitEsbuild = createRequire(preset.resolve('@size-limit/esbuild'));
+  // esbuild is not a dependency of this package, so its types are not either.
+  const { build } = sizeLimitEsbuild('esbuild') as {
+    build(options: Record<string, unknown>): Promise<{
+      outputFiles?: { text: string }[];
+      warnings: { id: string; text: string }[];
+    }>;
+  };
+  const result = await build({
+    absWorkingDir: elementsRoot,
+    bundle: true,
+    format: 'iife',
+    ignoreAnnotations: !honourSideEffects,
+    logLevel: 'silent',
+    minify: true,
+    platform: 'browser',
+    stdin: {
+      contents: [
+        ...tags.map(
+          (tag, index) =>
+            `import { defineCustomElement as define${index} } from '@kimen/elements/${tag}';`,
+        ),
+        ...tags.map((_, index) => `define${index}();`),
+      ].join('\n'),
+      loader: 'js',
+      resolveDir: elementsRoot,
+      sourcefile: 'consumer-entry.js',
+    },
+    target: 'es2022',
+    write: false,
+  });
+  return {
+    code: result.outputFiles?.[0]?.text ?? '',
+    warnings: result.warnings.map(({ id, text }) => `${id}: ${text}`),
+  };
+}
+
 const browserTestsDirectory = fileURLToPath(new URL('./browser-tests', import.meta.url));
 const visualBaselinePath = (spec: string, name: string, engine: string, platform: string): string =>
   join(browserTestsDirectory, '__screenshots__', spec, `${name}-${engine}-${platform}.png`);
@@ -121,6 +176,10 @@ export default defineConfig({
         },
       },
       commands: {
+        bundleComponents: defineBrowserCommand(
+          async (_context, tags: readonly string[], honourSideEffects: boolean) =>
+            bundleComponents(tags, honourSideEffects),
+        ),
         measureThemeFonts: defineBrowserCommand(
           async ({ page }, theme: 'onmars' | 'material3', withFonts: boolean) =>
             measureThemeFonts(page, theme, withFonts),

@@ -149,7 +149,7 @@ External conformance status is intentionally fail-closed:
   are enabled in CI, but real unattended execution stays disabled until the
   user-managed signed lease broker/key passes `model-lease-v1` conformance;
 - dry-run candidate, three-engine and no-OIDC verification are enabled, but
-  real npm publication stays disabled until both packages exist and their
+  real npm publication stays disabled until all three release packages exist and their
   trusted publishers plus the protected `npm` environment are configured;
 - neither missing prerequisite permits a durable secret, permissive egress or
   a skipped containment/browser check.
