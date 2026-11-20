@@ -5594,6 +5594,10 @@
           ],
           "slots": [
             {
+              "name": "action",
+              "description": "One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls."
+            },
+            {
               "name": "end",
               "description": "Trailing icon or text affix inside the field. Follows writing direction."
             },
@@ -5636,6 +5640,14 @@
             {
               "name": "--ki-density-target-min",
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-input-action-gap",
+              "description": "Gap between the input action and the preceding control or adornment."
+            },
+            {
+              "name": "--ki-input-action-padding-end",
+              "description": "Inline-end inset between the input action and the inside edge of the field border."
             },
             {
               "name": "--ki-input-border-block-end-width",

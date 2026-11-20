@@ -123,6 +123,22 @@
         "required": false,
         "type": null
       },
+      "--ki-input-action-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the input action and the preceding control or adornment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-action-padding-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline-end inset between the input action and the inside edge of the field border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-input-border-block-end-width": {
         "default": null,
         "deprecatedSince": null,
@@ -1101,6 +1117,14 @@
       }
     },
     "slots": {
+      "action": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "end": {
         "default": null,
         "deprecatedSince": null,

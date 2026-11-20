@@ -1605,6 +1605,8 @@
   --ki-input-min-target:var(--ki-space-7xl); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-input-height */
   --ki-input-padding-inline:var(--ki-space-lg);
   --ki-input-gap:var(--ki-space-xs);
+  --ki-input-action-gap:var(--ki-space-xs);
+  --ki-input-action-padding-end:var(--ki-space-xs);
   --ki-input-label-gap:var(--ki-space-xs);
   --ki-input-label-padding-inline:var(--ki-space-xxs);
   --ki-input-radius:var(--ki-radius-component-md);
