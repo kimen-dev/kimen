@@ -43,6 +43,11 @@ const { code, lang = 'html', layout = 'row', live = true } = Astro.props;
 </figure>
 
 <script>
+  // The glyphs the docs demos draw with ki-icon, imported once per icon.
+  import '@kimen/elements/icons/info';
+  import '@kimen/elements/icons/plus';
+  import '@kimen/elements/icons/trash-2';
+  import '@kimen/elements/icons/x';
   import { defineAllComponents } from 'virtual:kimen-component-registrations';
 
   defineAllComponents();

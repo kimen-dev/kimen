@@ -11,7 +11,7 @@ A token-styled, icon-only action button with native button semantics and a
 
 <Demo
   code={`<ki-icon-button label="Close">
-  <span aria-hidden="true">✕</span>
+  <ki-icon name="x"></ki-icon>
 </ki-icon-button>`}
 />
 
@@ -26,11 +26,11 @@ and a filled selected state in toggle mode. The `tone` prop carries intent
 for momentary actions in the primary, secondary, quaternary and ghost variants.
 
 <Demo
-  code={`<ki-icon-button variant="primary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
-<ki-icon-button variant="secondary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
-<ki-icon-button variant="quaternary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
-<ki-icon-button variant="ghost" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
-<ki-icon-button variant="primary" tone="danger" label="Delete item"><span aria-hidden="true">🗑</span></ki-icon-button>`}
+  code={`<ki-icon-button variant="primary" label="Add item"><ki-icon name="plus"></ki-icon></ki-icon-button>
+<ki-icon-button variant="secondary" label="Add item"><ki-icon name="plus"></ki-icon></ki-icon-button>
+<ki-icon-button variant="quaternary" label="Add item"><ki-icon name="plus"></ki-icon></ki-icon-button>
+<ki-icon-button variant="ghost" label="Add item"><ki-icon name="plus"></ki-icon></ki-icon-button>
+<ki-icon-button variant="primary" tone="danger" label="Delete item"><ki-icon name="trash-2"></ki-icon></ki-icon-button>`}
 />
 
 `tertiary` is deprecated. Use `secondary` for new icon buttons. Existing
@@ -70,7 +70,7 @@ discoverability — the tooltip's `label` becomes the accessible
 <Demo
   code={`<ki-tooltip label="Closes the dialog">
   <ki-icon-button label="Close">
-    <span aria-hidden="true">✕</span>
+    <ki-icon name="x"></ki-icon>
   </ki-icon-button>
 </ki-tooltip>`}
 />
@@ -83,7 +83,7 @@ returns to the icon button when the dialog closes.
 
 <Demo
   code={`<ki-icon-button label="Project details" commandfor="icon-project-details" command="show-modal">
-  <span aria-hidden="true">ⓘ</span>
+  <ki-icon name="info"></ki-icon>
 </ki-icon-button>
 <ki-dialog id="icon-project-details" heading="Project details">
   <p>This project is private.</p>
