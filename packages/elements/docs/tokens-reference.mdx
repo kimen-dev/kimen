@@ -818,6 +818,33 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-badge-xs-padding-inline` | `0.375rem` | dimension used by the badge component for xs padding inline (Tag 10106:4651 xs: Space/xs plus the Text_wrap Space/xxs, 6px). |
 | `--ki-badge-xs-radius` | `6px` | dimension used by the badge component for xs radius (Tag 10106:4651 xs binds Radius/small-component/xs). |
 
+### `ki-breadcrumb`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-breadcrumb-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for ancestor text and the overflow trigger. |
+| `--ki-breadcrumb-current-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for the current level. |
+| `--ki-breadcrumb-current-fg` | `#181613` | Emphasized foreground of the current level. |
+| `--ki-breadcrumb-fg` | `#5e5953` | Medium-emphasis ink for ancestors and the overflow trigger, strengthened in more-contrast mode. |
+| `--ki-breadcrumb-gap` | `0.25rem` | Gap between breadcrumb rows, levels and their chevrons. |
+| `--ki-breadcrumb-glyph-size` | `1rem` | Size of the ellipsis glyph. |
+| `--ki-breadcrumb-hover-bg` | `#f3f0eb` | Backing for the active overflow trigger and highlighted overflow links. |
+| `--ki-breadcrumb-hover-fg` | `#181613` | Foreground for the active overflow trigger and highlighted overflow links. |
+| `--ki-breadcrumb-menu-backdrop-filter` | `none` | Complete backdrop filter of the overflow menu, none by default. |
+| `--ki-breadcrumb-menu-bg` | `#f9f7f4` | Surface behind the overflow menu entries. |
+| `--ki-breadcrumb-menu-bg-image` | `none` | Optional image layered over the overflow menu surface. |
+| `--ki-breadcrumb-menu-fg` | `#181613` | Text of overflow menu entries. |
+| `--ki-breadcrumb-menu-max-block-size` | `9rem` | Maximum block size of the scrollable overflow menu. |
+| `--ki-breadcrumb-menu-padding` | `0.25rem` | Inset around the overflow menu entries. |
+| `--ki-breadcrumb-menu-radius` | `2px` | Outer radius of the overflow menu. |
+| `--ki-breadcrumb-menu-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Elevation of the overflow menu above the page. |
+| `--ki-breadcrumb-padding-block` | `0.125rem` | Block inset of a level label. |
+| `--ki-breadcrumb-padding-inline` | `0.25rem` | Inline inset of a level label. |
+| `--ki-breadcrumb-radius` | `2px` | Radius of the overflow trigger and level focus outlines. |
+| `--ki-breadcrumb-separator` | `#6b665f` | Foreground of the decorative breadcrumb chevron. |
+| `--ki-breadcrumb-separator-size` | `0.375rem` | Edge length of the decorative chevron before rotation. |
+| `--ki-breadcrumb-separator-stroke` | `2px` | Stroke width of the decorative chevron. |
+
 ### `ki-button`
 
 | Token | Value (onmars light) | Description |
@@ -2167,33 +2194,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-status-size` | `0.5rem` | dimension used by the status component for the dot: the MarsUI 4px dot, Space/xs bound to every Status variant (specs/021-ki-status/design-extraction.md). One size per theme, never an attribute (FR-006). |
 | `--ki-status-success-color` | `#409b3f` | color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500). |
 | `--ki-status-warning-color` | `#945b05` | color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008). |
-
-### `ki-stepper`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-step-description-bg` | `rgba(0, 0, 0, 0)` | Backing of a step description. |
-| `--ki-step-description-fg` | `#5e5953` | Ink of a step description. |
-| `--ki-stepper-connector` | `rgba(24, 22, 19, 0.1)` | Decorative connector from a step that is still incomplete. |
-| `--ki-stepper-connector-done` | `#1d1a16` | Decorative connector from a completed step. |
-| `--ki-stepper-current-bg` | `rgba(0, 0, 0, 0)` | Fill of the current step marker. |
-| `--ki-stepper-current-border` | `#1d1a16` | Outline of the current step marker. |
-| `--ki-stepper-current-fg` | `#ad411c` | Number ink on the current step marker. |
-| `--ki-stepper-done-bg` | `#1d1a16` | Fill of a completed step marker. |
-| `--ki-stepper-done-fg` | `#ffffff` | Glyph ink on the completed step marker. |
-| `--ki-stepper-dot-size` | `1.5rem` | Diameter of the step marker. |
-| `--ki-stepper-error-bg` | `rgba(0, 0, 0, 0)` | Fill of the step error marker. |
-| `--ki-stepper-error-border` | `#c21a45` | Outline of the step error marker. |
-| `--ki-stepper-error-fg` | `#c21a45` | Glyph ink of the step error marker. |
-| `--ki-stepper-glyph-size` | `0.875rem` | Size of the marker and disclosure glyphs. |
-| `--ki-stepper-label-bg` | `rgba(0, 0, 0, 0)` | Default backing of a step label. |
-| `--ki-stepper-label-fg` | `#181613` | Default ink of a step label. |
-| `--ki-stepper-stroke` | `2px` | Width of the marker outline and connector. |
-| `--ki-stepper-summary-bg` | `rgba(0, 0, 0, 0)` | Backing of the compact disclosure. |
-| `--ki-stepper-summary-fg` | `#181613` | Ink of the compact disclosure. |
-| `--ki-stepper-upcoming-bg` | `rgba(0, 0, 0, 0)` | Fill of an upcoming step marker. |
-| `--ki-stepper-upcoming-border` | `#86827b` | Outline of an upcoming step marker. |
-| `--ki-stepper-upcoming-fg` | `#5e5953` | Number and label ink of an upcoming step. |
 
 ### `ki-switch`
 

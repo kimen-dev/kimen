@@ -10,6 +10,8 @@ import { defineCustomElement as defineKiAlert } from '@kimen/elements/components
 import { defineCustomElement as defineKiAvatar } from '@kimen/elements/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '@kimen/elements/components/ki-avatar-group.js';
 import { defineCustomElement as defineKiBadge } from '@kimen/elements/components/ki-badge.js';
+import { defineCustomElement as defineKiBreadcrumb } from '@kimen/elements/components/ki-breadcrumb.js';
+import { defineCustomElement as defineKiBreadcrumbItem } from '@kimen/elements/components/ki-breadcrumb-item.js';
 import { defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
 import { defineCustomElement as defineKiButtonGroup } from '@kimen/elements/components/ki-button-group.js';
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
@@ -56,8 +58,6 @@ import { defineCustomElement as defineKiSpinner } from '@kimen/elements/componen
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStat } from '@kimen/elements/components/ki-stat.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
-import { defineCustomElement as defineKiStep } from '@kimen/elements/components/ki-step.js';
-import { defineCustomElement as defineKiStepper } from '@kimen/elements/components/ki-stepper.js';
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
 import { defineCustomElement as defineKiTab } from '@kimen/elements/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
@@ -168,6 +168,52 @@ export class KiBadge {
 
 
 export declare interface KiBadge extends Components.KiBadge {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiBreadcrumb,
+  inputs: ['label', 'maxItems', 'moreLabel']
+})
+@Component({
+  selector: 'ki-breadcrumb',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label', 'maxItems', 'moreLabel'],
+})
+export class KiBreadcrumb {
+  protected el: HTMLKiBreadcrumbElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiBreadcrumb extends Components.KiBreadcrumb {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiBreadcrumbItem,
+  inputs: ['current', 'href']
+})
+@Component({
+  selector: 'ki-breadcrumb-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['current', 'href'],
+})
+export class KiBreadcrumbItem {
+  protected el: HTMLKiBreadcrumbItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiBreadcrumbItem extends Components.KiBreadcrumbItem {}
 
 
 @ProxyCmp({
@@ -1295,52 +1341,6 @@ export class KiStatus {
 
 
 export declare interface KiStatus extends Components.KiStatus {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiStep,
-  inputs: ['description', 'href', 'state']
-})
-@Component({
-  selector: 'ki-step',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['description', 'href', 'state'],
-})
-export class KiStep {
-  protected el: HTMLKiStepElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiStep extends Components.KiStep {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiStepper,
-  inputs: ['countLabel', 'currentLabel', 'doneLabel', 'errorLabel', 'label', 'orientation', 'summaryLabel', 'upcomingLabel']
-})
-@Component({
-  selector: 'ki-stepper',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['countLabel', 'currentLabel', 'doneLabel', 'errorLabel', { name: 'label', required: true }, 'orientation', 'summaryLabel', 'upcomingLabel'],
-})
-export class KiStepper {
-  protected el: HTMLKiStepperElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiStepper extends Components.KiStepper {}
 
 
 @ProxyCmp({

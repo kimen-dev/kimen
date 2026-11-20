@@ -38,6 +38,8 @@ methods, CSS custom properties and examples.
 - [ki-avatar](llms/ki-avatar.md): a compact identity visual for a person or entity — a comment author, a contact list item, a project member.
 - [ki-avatar-group](llms/ki-avatar-group.md): a compact "who is involved" stack — the members of a shared document, project card or event row — where space deserves only the first few identities and an exact "+N" counter accounts for the rest.
 - [ki-badge](llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.
+- [ki-breadcrumb](llms/ki-breadcrumb.md): show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
+- [ki-breadcrumb-item](llms/ki-breadcrumb-item.md): declare a direct child of ki-breadcrumb in hierarchy order.
 - [ki-button](llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.
 - [ki-button-group](llms/ki-button-group.md): place two to five related actions together, present a primary action with a menu of alternatives, or give formatting tools one Tab stop.
 - [ki-card](llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
@@ -84,8 +86,6 @@ methods, CSS custom properties and examples.
 - [ki-stack](llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-stat](llms/ki-stat.md): Summarize one numeric metric in a dashboard or report.
 - [ki-status](llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.
-- [ki-step](llms/ki-step.md): Place directly inside ki-stepper in task order.
-- [ki-stepper](llms/ki-stepper.md): Show the current place in onboarding, checkout or a wizard.
 - [ki-switch](llms/ki-switch.md): binary settings whose change takes effect immediately, always with a slotted label.
 - [ki-tab](llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional `start` and `end` slot media.
 - [ki-tab-panel](llms/ki-tab-panel.md): hold the content for one peer tab view, sharing `value` with its `ki-tab`.

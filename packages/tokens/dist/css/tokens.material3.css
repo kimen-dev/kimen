@@ -363,6 +363,8 @@
   --ki-badge-info-bg:var(--ki-surface-info-base-em);
   --ki-badge-warning-bg:var(--ki-surface-warning-base-em);
   --ki-badge-xs-radius:var(--ki-radius-round);
+  --ki-breadcrumb-hover-bg:var(--ki-surface-s3);
+  --ki-breadcrumb-menu-bg:var(--ki-surface-s2);
   --ki-button-xs-radius:var(--ki-radius-round);
   --ki-button-sm-radius:var(--ki-radius-round);
   --ki-button-md-radius:var(--ki-radius-round);

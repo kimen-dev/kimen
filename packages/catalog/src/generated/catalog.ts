@@ -294,6 +294,54 @@ export const catalogData = {
       "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (use ki-counter).",
       "whenToUse": "annotate an entity with short status text (a state, a\ncategory) whose meaning is carried by the label itself; the tone color\nonly reinforces the text, it never replaces it."
     },
+    "ki-breadcrumb": {
+      "description": "A path of ancestor links ending at the current page, with optional overflow.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the navigation landmark.",
+          "default": "Breadcrumb"
+        },
+        "max-items": {
+          "type": "number",
+          "description": "Optional overflow threshold. Above it, keep the first and last two levels\nvisible. Positive values are rounded down and clamped to four. Omit this\nprop, or pass a non-positive or non-finite value, to show the full trail."
+        },
+        "more-label": {
+          "type": "string",
+          "description": "Localizable name of the overflow control. Use {n} for the hidden level count.",
+          "default": "Show {n} more levels"
+        }
+      },
+      "slots": {
+        "": "Direct ki-breadcrumb-item children in hierarchy order."
+      },
+      "tag": "ki-breadcrumb",
+      "whenNotToUse": "switch between peer routes, toggle peer panels, or display progress through a form.",
+      "whenToUse": "show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current."
+    },
+    "ki-breadcrumb-item": {
+      "description": "One declarative level in a breadcrumb path.",
+      "events": {},
+      "props": {
+        "current": {
+          "type": "boolean",
+          "description": "Explicitly marks the final level as current. The owning breadcrumb treats\nits final level as current by position, including when this marker is omitted.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Native destination for an ancestor level. Leaves the label as text when omitted.\nThe final level never links away from the current page.",
+          "format": "url"
+        }
+      },
+      "slots": {
+        "": "Plain-text label mirrored by the owning breadcrumb."
+      },
+      "tag": "ki-breadcrumb-item",
+      "whenNotToUse": "render a standalone link or display an interactive control inside the label.",
+      "whenToUse": "declare a direct child of ki-breadcrumb in hierarchy order. Give ancestors an href and use short text labels. The last level is the current page."
+    },
     "ki-button": {
       "description": "A token-styled action button with native button semantics.",
       "events": {},
@@ -2491,94 +2539,6 @@ export const catalogData = {
       "tag": "ki-status",
       "whenNotToUse": "short labeled status text (that pill is ki-badge — this dot\nnever renders text), notification counters or the overlay attachment\nmechanism (a future, separate nav-badge concern), messages that need\nattention or announcement (ki-alert — the dot has no live region),\nprogress or loading (ki-progress). An unlabeled dot without adjacent\nvisible text is an authoring mistake (WCAG 1.4.1).",
       "whenToUse": "mark a state with minimal footprint adjacent to (or overlaid\non) the item it describes: presence on an avatar, health of a service\nlist entry, connection state in a toolbar. Label it (`label`) or pair it\nwith adjacent visible text — color is never the only carrier of the\nmeaning (WCAG 1.4.1)."
-    },
-    "ki-step": {
-      "description": "One authored step in a Stepper.",
-      "events": {},
-      "props": {
-        "description": {
-          "type": "string",
-          "description": "Optional supporting text displayed below the label."
-        },
-        "href": {
-          "type": "string",
-          "description": "Destination for a completed step. Omit for a passive step.",
-          "format": "url"
-        },
-        "state": {
-          "type": "enum",
-          "values": [
-            "current",
-            "done",
-            "error",
-            "upcoming"
-          ],
-          "description": "The step's progress state. Mark the active step as current.",
-          "default": "upcoming"
-        }
-      },
-      "slots": {
-        "": "The visible label. Use text or passive inline markup."
-      },
-      "tag": "ki-step",
-      "whenNotToUse": "Standalone or with interactive content in the label.\nA completed step can make the label itself a link.",
-      "whenToUse": "Place directly inside ki-stepper in task order. Its default slot\nis the step label and its properties describe the step to the owning list."
-    },
-    "ki-stepper": {
-      "description": "An ordered, responsive view of progress through named steps.",
-      "events": {},
-      "props": {
-        "count-label": {
-          "type": "string",
-          "description": "Compact disclosure text without a current step. Include {total}.",
-          "default": "Steps ({total})"
-        },
-        "current-label": {
-          "type": "string",
-          "description": "Localized text for the current step.",
-          "default": "Current"
-        },
-        "done-label": {
-          "type": "string",
-          "description": "Localized text for a completed step.",
-          "default": "Completed"
-        },
-        "error-label": {
-          "type": "string",
-          "description": "Localized text for a step that has an error.",
-          "default": "Error"
-        },
-        "label": {
-          "type": "string",
-          "description": "Accessible name of the list. Use a localized description of the task.",
-          "required": true
-        },
-        "orientation": {
-          "type": "enum",
-          "values": [
-            "horizontal",
-            "vertical"
-          ],
-          "description": "Use vertical for a stacked list. Horizontal layout compacts below 22rem.",
-          "default": "horizontal"
-        },
-        "summary-label": {
-          "type": "string",
-          "description": "Compact disclosure text. Place {current} and {total} in the local order.",
-          "default": "Step {current} of {total}"
-        },
-        "upcoming-label": {
-          "type": "string",
-          "description": "Localized text for an upcoming step.",
-          "default": "Not started"
-        }
-      },
-      "slots": {
-        "": "Direct ki-step children in task order. The stepper assigns each\nchild to its row automatically."
-      },
-      "tag": "ki-stepper",
-      "whenNotToUse": "A percentage or indeterminate task, a carousel position,\nor navigation among peer views. The task owner updates step states.",
-      "whenToUse": "Show the current place in onboarding, checkout or a wizard.\nProvide a label and direct ki-step children in task order."
     },
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",

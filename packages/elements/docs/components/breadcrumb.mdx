@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-breadcrumb" />
+
+# ki-breadcrumb
+
+Use a breadcrumb to show where a page sits in a hierarchy. Add one direct
+`ki-breadcrumb-item` for each level, in order from the root to the current page.
+
+```html
+<ki-breadcrumb label="Project path">
+  <ki-breadcrumb-item href="/workspace">Workspace</ki-breadcrumb-item>
+  <ki-breadcrumb-item href="/workspace/projects">Projects</ki-breadcrumb-item>
+  <ki-breadcrumb-item current>Settings</ki-breadcrumb-item>
+</ki-breadcrumb>
+```
+
+## Collapse a long path
+
+Set `max-items="4"` to keep the root and final two levels visible once the
+path exceeds four levels. The ellipsis opens a menu containing the middle
+levels. The default button name is “Show {n} more levels”. Set `more-label`
+to localize it.
+
+Tab visits the visible links and ellipsis button. The menu opens with
+Enter, Space, or an arrow key, and supports arrows, Home, End, first-character
+navigation, and Escape. Tab continues through the page.
+
+## Customize the trail
+
+| Token | Controls |
+| --- | --- |
+| `--ki-breadcrumb-fg` | Ancestor text and ellipsis ink |
+| `--ki-breadcrumb-current-fg` | Current page ink |
+| `--ki-breadcrumb-separator` | Decorative chevron ink |
+| `--ki-breadcrumb-gap` | Space between levels and chevrons |
+
+Set `label` to name the navigation landmark and use `dir` to set the reading
+direction. The breadcrumb follows the surrounding region's density.
