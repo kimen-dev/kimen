@@ -66,6 +66,7 @@ methods, CSS custom properties and examples.
 - [ki-menu-group](llms/ki-menu-group.md): name a set of related actions or scope exclusive radio items in a menu.
 - [ki-menu-item](llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-note](llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
+- [ki-number-input](llms/ki-number-input.md): Collect a number like a quantity, amount, or limit.
 - [ki-option](llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-progress](llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
 - [ki-qr](llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.

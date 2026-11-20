@@ -37,6 +37,7 @@ export { KiMenu } from './ki-menu.js';
 export { KiMenuGroup } from './ki-menu-group.js';
 export { KiMenuItem } from './ki-menu-item.js';
 export { KiNote } from './ki-note.js';
+export { KiNumberInput } from './ki-number-input.js';
 export { KiOption } from './ki-option.js';
 export { KiProgress } from './ki-progress.js';
 export { KiQr } from './ki-qr.js';
