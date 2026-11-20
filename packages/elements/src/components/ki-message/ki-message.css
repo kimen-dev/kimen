@@ -145,3 +145,79 @@ slot[name="avatar"]::slotted(*) {
     animation: none;
   }
 }
+
+.reply-actions {
+  align-items: center;
+  margin-block-start: var(--ki-layout-spacing-md);
+}
+
+@media (hover: hover) {
+  /* Preserve the keyboard stop while the earlier toolbar is visually at rest. */
+  :host(:has(~ ki-message:not([message-role="user"], [message-role="event"], [hidden])))
+    .assistant:not(:hover, :focus-within)
+    .reply-actions {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+[part="branches"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ki-layout-spacing-xxs);
+  white-space: nowrap;
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.branch-button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  inline-size: max(var(--ki-icon-button-xs-size), var(--ki-density-target-min));
+  block-size: max(var(--ki-icon-button-xs-size), var(--ki-density-target-min));
+  padding: 0;
+  border: var(--ki-control-border-width) solid var(--ki-button-ghost-neutral-rest-border);
+  border-radius: var(--ki-button-xs-radius);
+  background-color: var(--ki-button-ghost-neutral-rest-bg);
+  color: var(--ki-button-ghost-neutral-rest-fg);
+  font-family: inherit;
+  font-size: var(--ki-icon-button-xs-icon-size);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .branch-button:hover:not([aria-disabled="true"]) {
+    border-color: var(--ki-button-ghost-neutral-hover-border);
+    background-color: var(--ki-button-ghost-neutral-hover-bg);
+    color: var(--ki-button-ghost-neutral-hover-fg);
+  }
+}
+
+.branch-button[aria-disabled="true"] {
+  border-color: var(--ki-button-ghost-neutral-disabled-border);
+  background-color: var(--ki-button-ghost-neutral-disabled-bg);
+  color: var(--ki-button-ghost-neutral-disabled-fg);
+  cursor: default;
+}
+
+.branch-button:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+.branch-button:first-child:dir(ltr) ki-icon,
+.branch-button:last-child:dir(rtl) ki-icon {
+  scale: -1 1;
+}
+
+.branch-status {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

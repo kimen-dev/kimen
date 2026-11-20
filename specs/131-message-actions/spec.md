@@ -20,12 +20,16 @@ Each interpretation is the **agent's choice, pending founder confirmation**.
   `feedback` can initialize or restore the pressed rating. Selecting either
   rating replaces the other and emits its value. Activating the already
   selected rating keeps it selected. The host app can offer a feedback form.
+  Ratings use IconButton's controlled pressed state. On the Conversation
+  stack, the message reflects that state on the exposed native button.
 - Branch indexes are one-based. With fewer than two branches there is no
   picker. The navigator clamps an out-of-range index to the nearest branch
   and defaults invalid indexes to the first. It emits the requested index
   and keeps the visible index controlled by the app.
 - Branch boundary controls remain focusable and expose their unavailable
-  state. Labels and the branch status template are localizable.
+  state. Labels and the branch status template are localizable. The picker
+  uses ghost icon-button tokens and a decorative chevron that mirrors with
+  reading direction.
 
 ## Scenario family coverage
 

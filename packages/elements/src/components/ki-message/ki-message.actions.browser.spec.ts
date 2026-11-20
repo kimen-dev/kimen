@@ -63,8 +63,10 @@ async function reply(options = '') {
       <button type="button" slot="actions">Copy</button>
       <ki-icon-button slot="actions" label="Regenerate" variant="ghost" size="sm"
         data-message-action="regenerate"></ki-icon-button>
-      <button type="button" slot="actions" aria-pressed="false" data-message-action="good">Good response</button>
-      <button type="button" slot="actions" aria-pressed="false" data-message-action="bad">Bad response</button>
+      <ki-icon-button slot="actions" label="Good response" variant="ghost" size="sm"
+        data-message-action="good"></ki-icon-button>
+      <ki-icon-button slot="actions" label="Bad response" variant="ghost" size="sm"
+        data-message-action="bad"></ki-icon-button>
       <button type="button" slot="actions">More actions</button>
     </ki-message>
   `;
