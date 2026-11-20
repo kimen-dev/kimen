@@ -532,6 +532,109 @@ export const catalogData = {
       "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
       "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits."
     },
+    "ki-chip": {
+      "description": "A compact filter toggle, removable picked value, or contextual action.",
+      "events": {
+        "ki-activate": "Emitted by an assist chip when its native button is activated.",
+        "ki-change": "Emitted after a filter chip changes its pressed state.",
+        "ki-remove": "Remove request for an input chip. Cancel it to keep application ownership of the chip."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Prevents activation, removal and moving the chip.",
+          "default": false
+        },
+        "removable": {
+          "type": "boolean",
+          "description": "Gives an input chip a trailing remove button and keyboard deletion.",
+          "default": false
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+          "default": "Remove"
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "The pressed state of a filter chip. The user can toggle it in place.",
+          "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+          "default": "md"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "assist",
+            "filter",
+            "input"
+          ],
+          "description": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter."
+        },
+        "value": {
+          "type": "string",
+          "description": "Value sent with removal, contextual activation and reorder events.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The visible text label. Use text or non-interactive markup.",
+        "start": "One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+      },
+      "tag": "ki-chip",
+      "whenNotToUse": "static status (ki-badge), primary actions (ki-button), suggested\nprompts, or mutually exclusive choices (ki-radio-group).",
+      "whenToUse": "apply independent filters, represent values selected in an entry\nfield, or offer a small contextual action alongside content."
+    },
+    "ki-chip-group": {
+      "description": "A named collection of filter, input or assist chips, with optional ordering.",
+      "events": {
+        "ki-reorder": "Emitted after moving a chip. Indices are zero-based positions in the visible chip collection."
+      },
+      "props": {
+        "focus-target": {
+          "type": "string",
+          "description": "ID of the entry field in the same document or shadow root for focus after the last chip."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the group or list.",
+          "default": ""
+        },
+        "reorder-announcement": {
+          "type": "string",
+          "description": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+          "default": "{label} moved to position {position} of {total}."
+        },
+        "reorderable": {
+          "type": "boolean",
+          "description": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+          "default": false
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "assist",
+            "filter",
+            "input"
+          ],
+          "description": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+          "default": "filter"
+        }
+      },
+      "slots": {
+        "": "Direct ki-chip children in reading order."
+      },
+      "tag": "ki-chip-group",
+      "whenNotToUse": "choose exactly one option or submit a form value.",
+      "whenToUse": "label related chips or let people change their reading order."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},
@@ -1264,6 +1367,58 @@ export const catalogData = {
       "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
       "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once."
     },
+    "ki-reasoning": {
+      "description": "A disclosure for the assistant's progress or plan, with a localized summary.",
+      "events": {
+        "ki-toggle": "Emitted after a native disclosure toggle. Setting open from the application is silent."
+      },
+      "props": {
+        "done-label": {
+          "type": "string",
+          "description": "Summary text when done and elapsed time is unavailable.",
+          "default": "Thought"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds."
+        },
+        "duration-label": {
+          "type": "string",
+          "description": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.",
+          "default": "Thought for {seconds} seconds"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the disclosure shows its steps. Native toggles update this reflected property.",
+          "default": false
+        },
+        "singular-duration-label": {
+          "type": "string",
+          "description": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.",
+          "default": "Thought for {seconds} second"
+        },
+        "status": {
+          "type": "enum",
+          "values": [
+            "done",
+            "thinking"
+          ],
+          "description": "Use thinking while steps arrive and done once the assistant finishes.",
+          "default": "thinking"
+        },
+        "thinking-label": {
+          "type": "string",
+          "description": "Summary text while the assistant is thinking.",
+          "default": "Thinking…"
+        }
+      },
+      "slots": {
+        "": "Supporting content shown when expanded, such as an ordered list of steps supplied by the application."
+      },
+      "tag": "ki-reasoning",
+      "whenNotToUse": "hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.",
+      "whenToUse": "present assistant-supplied steps, progress or a completed plan alongside the answer."
+    },
     "ki-scroller": {
       "description": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",
       "events": {},
@@ -1876,56 +2031,6 @@ export const catalogData = {
       "tag": "ki-toaster",
       "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
       "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
-    },
-    "ki-toolbar": {
-      "description": "Brings frequent page actions together in a floating pill or docked surface.",
-      "events": {},
-      "props": {
-        "hide-on-scroll": {
-          "type": "boolean",
-          "description": "Hides on downward page scroll and reveals on upward scroll or when an\naction receives focus. Use for secondary actions where content needs room.",
-          "default": false
-        },
-        "label": {
-          "type": "string",
-          "description": "Accessible name for the group, such as \"Formatting\". Supply it in the page's language.",
-          "required": true
-        },
-        "orientation": {
-          "type": "enum",
-          "values": [
-            "horizontal",
-            "vertical"
-          ],
-          "description": "Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.",
-          "default": "horizontal"
-        },
-        "tone": {
-          "type": "enum",
-          "values": [
-            "standard",
-            "vibrant"
-          ],
-          "description": "Surface palette. Use vibrant to emphasize the toolbar with an accent tint.",
-          "default": "standard"
-        },
-        "variant": {
-          "type": "enum",
-          "values": [
-            "docked",
-            "floating"
-          ],
-          "description": "Floating leaves placement to the page. Docked fixes the surface to the\nviewport's bottom edge. Reserve space below the content when docking.",
-          "default": "floating"
-        }
-      },
-      "slots": {
-        "": "Direct ki-button, ki-icon-button (including toggles), native button\nand ki-divider children. Give every icon-only action an accessible name.",
-        "fab": "A companion ki-fab for the floating variant. It follows the\ntoolbar and has its own Tab stop."
-      },
-      "tag": "ki-toolbar",
-      "whenNotToUse": "for site navigation, mutually exclusive choices, or a docked\nbar on a screen already using MobileNav.",
-      "whenToUse": "group a small set of related page actions, such as text\nformatting or the commands on a compact message screen."
     },
     "ki-tooltip": {
       "description": "A transient, text-only description bubble for one slotted trigger.",

@@ -10,6 +10,8 @@ export const DIRECTIVES = [
   d.KiCard,
   d.KiCheckbox,
   d.KiCheckboxGroup,
+  d.KiChip,
+  d.KiChipGroup,
   d.KiCounter,
   d.KiDialog,
   d.KiDivider,
@@ -28,6 +30,7 @@ export const DIRECTIVES = [
   d.KiQr,
   d.KiRadio,
   d.KiRadioGroup,
+  d.KiReasoning,
   d.KiScroller,
   d.KiSegment,
   d.KiSegmentedControl,
@@ -42,7 +45,6 @@ export const DIRECTIVES = [
   d.KiTextarea,
   d.KiToast,
   d.KiToaster,
-  d.KiToolbar,
   d.KiTooltip,
   d.KiVideo
 ];

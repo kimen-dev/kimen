@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 408 semantic
-and 1335 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 420 semantic
+and 1370 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -45,6 +45,18 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-control-border-width` | `1px` | Stroke width of the boundary of a compact control. |
+| `--ki-control-compact-pill-backdrop-filter` | `none` | Default compact pill surface leaves the backdrop unfiltered. |
+| `--ki-control-compact-pill-bg-image` | `none` | Default compact pill surface uses a solid color. |
+| `--ki-control-compact-pill-border-width` | `1px` | Default thickness of a compact pill border. |
+| `--ki-control-compact-pill-collection-gap` | `0.5rem` | Gap between adjacent compact pills. |
+| `--ki-control-compact-pill-gap` | `0.375rem` | Gap between content in a compact pill. |
+| `--ki-control-compact-pill-height` | `2rem` | Default height of a compact pill. |
+| `--ki-control-compact-pill-height-sm` | `1.5rem` | Small height of a compact pill. |
+| `--ki-control-compact-pill-icon-size` | `1rem` | Icon size inside a compact pill. |
+| `--ki-control-compact-pill-inset` | `0.75rem` | Default inline padding of a compact pill. |
+| `--ki-control-compact-pill-inset-action` | `0.25rem` | Trailing inset beside a pill action. |
+| `--ki-control-compact-pill-inset-sm` | `0.5rem` | Small inline padding of a compact pill. |
+| `--ki-control-compact-pill-radius` | `1000px` | Fully rounded compact pill shape. |
 | `--ki-control-icon-gap` | `0.375rem` | Separation between a control label and its leading icon. |
 | `--ki-control-radius-item` | `8px` | Corner radius of an individual control inside a track. |
 | `--ki-control-radius-track` | `10px` | Corner radius of a track containing adjacent controls. |
@@ -1092,6 +1104,54 @@ theme-wide change or on any subtree for a scoped one.
 | --- | --- | --- |
 | `--ki-checkbox-group-gap` | `0.5rem` | Space between checkbox options and the group label and messages. |
 
+### `ki-chip`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-chip-assist-icon-fg` | `#ad411c` | Decorative glyph in an assist chip. |
+| `--ki-chip-backdrop-filter` | `none` | Default compact pill surface leaves the backdrop unfiltered. |
+| `--ki-chip-bg` | `rgba(0, 0, 0, 0)` | Resting filter and assist surface. |
+| `--ki-chip-bg-image` | `none` | Default compact pill surface uses a solid color. |
+| `--ki-chip-border` | `#86827b` | Outline of an unselected filter or assist chip. |
+| `--ki-chip-border-width` | `1px` | Default thickness of a compact pill border. |
+| `--ki-chip-disabled-border` | `rgba(24, 22, 19, 0.1)` | Outline of a disabled chip. |
+| `--ki-chip-disabled-ink` | `#cbc7bf` | Label on a disabled chip. |
+| `--ki-chip-fg` | `#181613` | Resting filter and assist label. |
+| `--ki-chip-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family for the visible chip label. |
+| `--ki-chip-font-size` | `0.8125rem` | Default chip label size. |
+| `--ki-chip-font-size-sm` | `0.75rem` | Small chip label size. |
+| `--ki-chip-font-weight` | `600` | Weight for a chip label. |
+| `--ki-chip-gap` | `0.375rem` | Gap between content in a compact pill. |
+| `--ki-chip-height` | `2rem` | Default height of a compact pill. |
+| `--ki-chip-height-sm` | `1.5rem` | Small height of a compact pill. |
+| `--ki-chip-hover-bg` | `#f3f0eb` | Surface under the hovering pointer. |
+| `--ki-chip-hover-fg` | `#181613` | Label over the hover surface. |
+| `--ki-chip-icon-size` | `1rem` | Icon size inside a compact pill. |
+| `--ki-chip-input-bg` | `#f3f0eb` | Surface of a picked value. |
+| `--ki-chip-input-fg` | `#181613` | Label of a picked value. |
+| `--ki-chip-inset` | `0.75rem` | Default inline padding of a compact pill. |
+| `--ki-chip-inset-action` | `0.25rem` | Trailing inset beside a pill action. |
+| `--ki-chip-inset-sm` | `0.5rem` | Small inline padding of a compact pill. |
+| `--ki-chip-line-height` | `1.5rem` | Default line height of the chip label. |
+| `--ki-chip-line-height-sm` | `1rem` | Small line height of the chip label. |
+| `--ki-chip-pressed-bg` | `#ebe7e1` | Surface while the activation is held. |
+| `--ki-chip-pressed-fg` | `#181613` | Label while the activation is held. |
+| `--ki-chip-radius` | `1000px` | Fully rounded compact pill shape. |
+| `--ki-chip-remove-bg` | `#f3f0eb` | Remove button surface inside an input chip. |
+| `--ki-chip-remove-fg` | `#5e5953` | Resting remove glyph. |
+| `--ki-chip-remove-hover-bg` | `#e0dcd4` | Remove button hover surface. |
+| `--ki-chip-remove-hover-fg` | `#181613` | Remove glyph over the hover surface. |
+| `--ki-chip-selected-bg` | `#ffebe5` | Selected filter surface. |
+| `--ki-chip-selected-border` | `#bc4c26` | Accessible boundary of a selected filter. |
+| `--ki-chip-selected-fg` | `#9a3715` | Selected filter label and check. |
+
+### `ki-chip-group`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-chip-group-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family inherited by chip group content. |
+| `--ki-chip-group-gap` | `0.5rem` | Gap between adjacent chips and rows. |
+
 ### `ki-counter`
 
 | Token | Value (onmars light) | Description |
@@ -1547,6 +1607,24 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-radio-group-label-hint-fg` | `#5e5953` | color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
 | `--ki-radio-group-label-hint-gap` | `0.25rem` | dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-radio-group-label-line-height` | `1.25rem` | dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement). |
+
+### `ki-reasoning`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-reasoning-backdrop-filter` | `none` | Complete filter behind the disclosure. None keeps the backdrop clear. |
+| `--ki-reasoning-bg` | `rgba(0, 0, 0, 0)` | Fill behind the disclosure summary and its steps. |
+| `--ki-reasoning-bg-image` | `none` | Optional image painted over the disclosure fill. |
+| `--ki-reasoning-body-gap` | `0.5rem` | Block spacing between the summary and the step content. |
+| `--ki-reasoning-body-indent` | `0.75rem` | Inline spacing between the rule and the content. |
+| `--ki-reasoning-border` | `rgba(24, 22, 19, 0.16)` | Ink of the decorative rule at the inline start of the steps. |
+| `--ki-reasoning-border-width` | `2px` | Width of the steps rule. |
+| `--ki-reasoning-fg` | `#5e5953` | Medium-emphasis ink for the disclosure summary and its steps. |
+| `--ki-reasoning-list-indent` | `1.25rem` | Inline space for markers on a slotted list. |
+| `--ki-reasoning-shimmer-duration` | `1200ms` | Period of the thinking shimmer. |
+| `--ki-reasoning-shimmer-easing` | `cubic-bezier(0.42, 0, 0.58, 1)` | Easing into and out of the thinking highlight. |
+| `--ki-reasoning-shimmer-fg` | `#181613` | Readable highlight at the midpoint of the thinking shimmer. |
+| `--ki-reasoning-summary-gap` | `0.25rem` | Space between the summary text and glyphs and between separate step blocks. |
 
 ### `ki-scroller`
 
@@ -2015,27 +2093,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-toaster-gap` | `0.75rem` | dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014). |
 | `--ki-toaster-inset-block` | `1rem` | dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014). |
 | `--ki-toaster-inset-inline` | `1rem` | dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014). |
-
-### `ki-toolbar`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-toolbar-backdrop-filter` | `none` | Complete backdrop filter behind the surface. |
-| `--ki-toolbar-bg` | `#f3f0eb` | Background of the standard toolbar. |
-| `--ki-toolbar-bg-image` | `none` | Optional image above the solid surface color. |
-| `--ki-toolbar-docked-padding-inline` | `0.75rem` | Inline insets for docked actions. |
-| `--ki-toolbar-docked-radius` | `0rem` | Corner radius of the docked toolbar. |
-| `--ki-toolbar-fab-gap` | `0.5rem` | Gap between a floating pill and its companion FAB. |
-| `--ki-toolbar-fg` | `#181613` | Foreground of the standard toolbar. |
-| `--ki-toolbar-gap` | `0.25rem` | Gap between toolbar actions. |
-| `--ki-toolbar-height` | `4rem` | Minimum height of the docked toolbar before its safe area. |
-| `--ki-toolbar-padding` | `0.5rem` | Toolbar surface padding. |
-| `--ki-toolbar-radius` | `1000px` | Radius of the floating pill. |
-| `--ki-toolbar-scroll-duration` | `260ms` | Duration of the scroll visibility transition. |
-| `--ki-toolbar-scroll-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the scroll visibility transition. |
-| `--ki-toolbar-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Resting elevation of the floating pill. |
-| `--ki-toolbar-vibrant-bg` | `#ffebe5` | Accent background of the vibrant toolbar. |
-| `--ki-toolbar-vibrant-fg` | `#9a3715` | Foreground on the vibrant toolbar. |
 
 ### `ki-tooltip`
 

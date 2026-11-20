@@ -1171,6 +1171,180 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-chip
+
+A compact filter toggle, removable picked value, or contextual action.
+
+When to use: apply independent filters, represent values selected in an entry
+field, or offer a small contextual action alongside content.
+When NOT to use: static status (ki-badge), primary actions (ki-button), suggested
+prompts, or mutually exclusive choices (ki-radio-group).
+
+Examples:
+
+# Chip examples
+
+Use a filter group for independent toggles. Read `ki-change.detail.selected` to
+update the results. The chip's `value` identifies the filter.
+
+```html
+<ki-chip-group label="Team" type="filter">
+  <ki-chip value="design" selected>Design</ki-chip>
+  <ki-chip value="eng">Engineering</ki-chip>
+</ki-chip-group>
+```
+
+Use an input group for picked values. Link the entry field by ID so focus
+returns to it after the last chip. Listen to `ki-remove` to update your
+collection. If a framework owns these nodes, cancel the event and let it
+apply the DOM change, then focus the next chip or the linked field.
+
+```html
+<ki-chip-group label="Recipients" type="input" focus-target="recipient">
+  <ki-chip value="ana" removable>
+    <ki-avatar slot="start" size="xxs" initials="AG" label="Ana García"></ki-avatar>
+    Ana García
+  </ki-chip>
+  <ki-chip value="luis" removable>Luis</ki-chip>
+</ki-chip-group>
+<input id="recipient" aria-label="Add recipient">
+```
+
+Use assist for a contextual action. Handle `ki-activate` in application code.
+
+```html
+<ki-chip type="assist" value="calendar">
+  <svg slot="start" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <rect x="3" y="5" width="18" height="16" rx="2"/>
+    <path d="M3 10h18M8 2v6m8-6v6"/>
+  </svg>
+  Add to calendar
+</ki-chip>
+```
+
+Attributes:
+- `disabled` (boolean, default false): Prevents activation, removal and moving the chip.
+- `removable` (boolean, default false): Gives an input chip a trailing remove button and keyboard deletion.
+- `remove-label` (string, default 'Remove'): Localized action prefix in the remove button's accessible name, followed by the chip label.
+- `selected` (boolean, default false): The pressed state of a filter chip. The user can toggle it in place.
+- `size` ("md" | "sm", default 'md'): Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.
+- `type` ("assist" | "filter" | "input" | undefined): Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.
+- `value` (string, default ''): Value sent with removal, contextual activation and reorder events.
+
+Slots:
+- (default): The visible text label. Use text or non-interactive markup.
+- `start`: One decorative glyph or extra-extra-small avatar. A filter check replaces it when selected. Do not slot controls.
+
+Parts:
+- `chip`: The painted pill.
+- `drag-handle`: The grip enabled by a reorderable parent group.
+- `label`: The text wrapper around the default slot.
+- `remove`: The native remove button on a removable input chip.
+- `selection-icon`: The selected filter check.
+- `start`: The decorative leading content.
+
+Events:
+- `ki-activate` (CustomEvent<{
+    value: string;
+  }>): Emitted by an assist chip when its native button is activated.
+- `ki-change` (CustomEvent<{
+    selected: boolean;
+  }>): Emitted after a filter chip changes its pressed state.
+- `ki-remove` (CustomEvent<{ value: string }>): Remove request for an input chip. Cancel it to keep application ownership of the chip.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-chip-assist-icon-fg`: Decorative glyph in an assist chip.
+- `--ki-chip-backdrop-filter`: Default compact pill surface leaves the backdrop unfiltered.
+- `--ki-chip-bg`: Resting filter and assist surface.
+- `--ki-chip-bg-image`: Default compact pill surface uses a solid color.
+- `--ki-chip-border`: Outline of an unselected filter or assist chip.
+- `--ki-chip-border-width`: Default thickness of a compact pill border.
+- `--ki-chip-disabled-border`: Outline of a disabled chip.
+- `--ki-chip-disabled-ink`: Label on a disabled chip.
+- `--ki-chip-fg`: Resting filter and assist label.
+- `--ki-chip-font-family`: Font family for the visible chip label.
+- `--ki-chip-font-size`: Default chip label size.
+- `--ki-chip-font-size-sm`: Small chip label size.
+- `--ki-chip-font-weight`: Weight for a chip label.
+- `--ki-chip-gap`: Gap between content in a compact pill.
+- `--ki-chip-height`: Default height of a compact pill.
+- `--ki-chip-height-sm`: Small height of a compact pill.
+- `--ki-chip-hover-bg`: Surface under the hovering pointer.
+- `--ki-chip-hover-fg`: Label over the hover surface.
+- `--ki-chip-icon-size`: Icon size inside a compact pill.
+- `--ki-chip-input-bg`: Surface of a picked value.
+- `--ki-chip-input-fg`: Label of a picked value.
+- `--ki-chip-inset`: Default inline padding of a compact pill.
+- `--ki-chip-inset-action`: Trailing inset beside a pill action.
+- `--ki-chip-inset-sm`: Small inline padding of a compact pill.
+- `--ki-chip-line-height`: Default line height of the chip label.
+- `--ki-chip-line-height-sm`: Small line height of the chip label.
+- `--ki-chip-pressed-bg`: Surface while the activation is held.
+- `--ki-chip-pressed-fg`: Label while the activation is held.
+- `--ki-chip-radius`: Fully rounded compact pill shape.
+- `--ki-chip-remove-bg`: Remove button surface inside an input chip.
+- `--ki-chip-remove-fg`: Resting remove glyph.
+- `--ki-chip-remove-hover-bg`: Remove button hover surface.
+- `--ki-chip-remove-hover-fg`: Remove glyph over the hover surface.
+- `--ki-chip-selected-bg`: Selected filter surface.
+- `--ki-chip-selected-border`: Accessible boundary of a selected filter.
+- `--ki-chip-selected-fg`: Selected filter label and check.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+
+### ki-chip-group
+
+A named collection of filter, input or assist chips, with optional ordering.
+
+When to use: label related chips or let people change their reading order.
+When NOT to use: choose exactly one option or submit a form value.
+
+Examples:
+
+# Chip group examples
+
+A labelled group lets the user reorder direct chips with a drag handle,
+two pointer activations on the handles, or Alt+Left/Right. The order is
+announced on each move. Listen for `ki-reorder` to persist the new order.
+
+```html
+<ki-chip-group label="Recipients" type="input" reorderable focus-target="recipient">
+  <ki-chip value="ana" removable>Ana García</ki-chip>
+  <ki-chip value="luis" removable>Luis</ki-chip>
+</ki-chip-group>
+<input id="recipient" aria-label="Add recipient">
+```
+
+Attributes:
+- `focus-target` (string | undefined): ID of the entry field in the same document or shadow root for focus after the last chip.
+- `label` (string, default ''): Accessible name for the group or list.
+- `reorder-announcement` (string, default '{label} moved to position {position} of {total}.'): Localized polite message using {label}, {position} and {total}. Position is one-based.
+- `reorderable` (boolean, default false): Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.
+- `type` ("assist" | "filter" | "input", default 'filter'): Shared chip kind and collection semantics. Input chips are presented as a list.
+
+Slots:
+- (default): Direct ki-chip children in reading order.
+
+Parts:
+- `group`: The wrapping chip layout.
+
+Events:
+- `ki-reorder` (CustomEvent<KiChipReorderDetail>): Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-chip-group-font-family`: Font family inherited by chip group content.
+- `--ki-chip-group-gap`: Gap between adjacent chips and rows.
+- `--ki-chip-height-sm`: Small height of a compact pill.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+
 ### ki-counter
 
 A decorative count or dot over a trigger or avatar.
@@ -2877,6 +3051,133 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-reasoning
+
+A disclosure for the assistant's progress or plan, with a localized summary.
+
+When to use: present assistant-supplied steps, progress or a completed plan alongside the answer.
+When NOT to use: hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
+
+Examples:
+
+# Using ki-reasoning
+
+## Show a plan while it develops
+
+```html
+<ki-reasoning open>
+  <ol>
+    <li>Check the inputs.</li>
+  </ol>
+</ki-reasoning>
+```
+
+Add subsequent list items as the assistant produces them. The default state is
+collapsed. Set `open` to show the steps immediately.
+
+## Show the elapsed time after completion
+
+```html
+<ki-reasoning status="done" duration="12000">
+  <ol>
+    <li>Check the inputs.</li>
+    <li>Compare the available outcomes.</li>
+  </ol>
+</ki-reasoning>
+```
+
+The summary reads “Thought for 12 seconds.” Omit `duration` if it is unavailable.
+
+## Localize the summary
+
+```html
+<ki-reasoning
+  lang="es"
+  status="done"
+  duration="1000"
+  thinking-label="Pensando…"
+  done-label="Listo"
+  singular-duration-label="Pensó durante {seconds} segundo"
+  duration-label="Pensó durante {seconds} segundos"
+>
+  <ol>
+    <li>Revisar los datos de entrada.</li>
+  </ol>
+</ki-reasoning>
+```
+
+## Report disclosure changes in a guarded surface
+
+Declare the action in the surface and reference it on the disclosure. The
+renderer binds it to the catalog's `ki-toggle` event.
+
+```json
+{
+  "version": 1,
+  "actions": ["record-plan-toggle"],
+  "root": {
+    "component": "ki-reasoning",
+    "props": { "status": "done", "duration": 12000 },
+    "action": "record-plan-toggle",
+    "slots": { "": ["Check the inputs and compare the outcomes."] }
+  }
+}
+```
+
+## Custom-elements entry point
+
+```ts
+import { defineCustomElement } from '@kimen/elements/ki-reasoning';
+
+defineCustomElement();
+```
+
+Attributes:
+- `done-label` (string, default 'Thought'): Summary text when done and elapsed time is unavailable.
+- `duration` (number | undefined): Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.
+- `duration-label` (string, default 'Thought for {seconds} seconds'): Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.
+- `open` (boolean, default false): Whether the disclosure shows its steps. Native toggles update this reflected property.
+- `singular-duration-label` (string, default 'Thought for {seconds} second'): Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.
+- `status` ("done" | "thinking", default 'thinking'): Use thinking while steps arrive and done once the assistant finishes.
+- `thinking-label` (string, default 'Thinking…'): Summary text while the assistant is thinking.
+
+Slots:
+- (default): Supporting content shown when expanded, such as an ordered list of steps supplied by the application.
+
+Parts:
+- `body`: The slotted content area with the inline-start rule.
+- `summary`: The native disclosure control that shows the current status.
+
+Events:
+- `ki-toggle` (CustomEvent<KiReasoningToggleDetail>): Emitted after a native disclosure toggle. Setting open from the application is silent.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
+- `--ki-reasoning-backdrop-filter`: Complete filter behind the disclosure. None keeps the backdrop clear.
+- `--ki-reasoning-bg`: Fill behind the disclosure summary and its steps.
+- `--ki-reasoning-bg-image`: Optional image painted over the disclosure fill.
+- `--ki-reasoning-body-gap`: Block spacing between the summary and the step content.
+- `--ki-reasoning-body-indent`: Inline spacing between the rule and the content.
+- `--ki-reasoning-border`: Ink of the decorative rule at the inline start of the steps.
+- `--ki-reasoning-border-width`: Width of the steps rule.
+- `--ki-reasoning-fg`: Medium-emphasis ink for the disclosure summary and its steps.
+- `--ki-reasoning-list-indent`: Inline space for markers on a slotted list.
+- `--ki-reasoning-shimmer-duration`: Period of the thinking shimmer.
+- `--ki-reasoning-shimmer-easing`: Easing into and out of the thinking highlight.
+- `--ki-reasoning-shimmer-fg`: Readable highlight at the midpoint of the thinking shimmer.
+- `--ki-reasoning-summary-gap`: Space between the summary text and glyphs and between separate step blocks.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+
 ### ki-scroller
 
 A bounded scroll container that clips its content along one declared axis and replaces platform scrollbar chrome with a token-resolved indicator.
@@ -4288,100 +4589,6 @@ CSS custom properties:
 - `--ki-toaster-gap`: dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014).
 - `--ki-toaster-inset-block`: dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014).
 - `--ki-toaster-inset-inline`: dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-
-### ki-toolbar
-
-Brings frequent page actions together in a floating pill or docked surface.
-
-When to use: group a small set of related page actions, such as text
-formatting or the commands on a compact message screen.
-When NOT to use: for site navigation, mutually exclusive choices, or a docked
-bar on a screen already using MobileNav.
-
-Examples:
-
-# Toolbar examples
-
-## Formatting controls
-
-```html
-<ki-toolbar label="Formatting">
-  <ki-button variant="ghost">Bold</ki-button>
-  <ki-divider orientation="vertical"></ki-divider>
-  <ki-button variant="ghost">Insert link</ki-button>
-</ki-toolbar>
-```
-
-Give icon-only actions their own label. With ToggleIconButton available, a
-`ki-icon-button` with `toggle`, `selected` and `label="Bold"` owns the
-pressed state and activation of the Bold command.
-
-## Docked message actions
-
-```html
-<ki-toolbar label="Message actions" variant="docked" tone="vibrant" hide-on-scroll>
-  <ki-button variant="ghost">Archive</ki-button>
-  <ki-button variant="ghost">Mark unread</ki-button>
-</ki-toolbar>
-```
-
-Reserve the bottom edge for the toolbar and leave space for its minimum
-height plus `env(safe-area-inset-bottom, 0px)` below page content. Use this
-variant on compact pages without MobileNav.
-
-## Floating with a FAB
-
-When `ki-fab` is available, register it alongside the toolbar and buttons
-when using direct imports. Give the FAB a label and use its named slot.
-
-```html
-<ki-toolbar label="Message actions" tone="vibrant">
-  <ki-button variant="ghost">Archive</ki-button>
-  <ki-fab slot="fab" label="Reply"></ki-fab>
-</ki-toolbar>
-```
-
-This companion action follows the pill in the Tab sequence. Handle actions
-on the slotted controls. The toolbar coordinates navigation and placement.
-
-Attributes:
-- `hide-on-scroll` (boolean, default false): Hides on downward page scroll and reveals on upward scroll or when an action receives focus. Use for secondary actions where content needs room.
-- `label` (string, required): Accessible name for the group, such as "Formatting". Supply it in the page's language.
-- `orientation` ("horizontal" | "vertical", default 'horizontal'): Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.
-- `tone` ("standard" | "vibrant", default 'standard'): Surface palette. Use vibrant to emphasize the toolbar with an accent tint.
-- `variant` ("docked" | "floating", default 'floating'): Floating leaves placement to the page. Docked fixes the surface to the viewport's bottom edge. Reserve space below the content when docking.
-
-Slots:
-- (default): Direct ki-button, ki-icon-button (including toggles), native button and ki-divider children. Give every icon-only action an accessible name.
-- `fab`: A companion ki-fab for the floating variant. It follows the toolbar and has its own Tab stop.
-
-Parts:
-- `toolbar`: The named surface containing the grouped actions.
-
-Events: none
-
-Methods: none
-
-CSS custom properties:
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-toolbar-backdrop-filter`: Complete backdrop filter behind the surface.
-- `--ki-toolbar-bg`: Background of the standard toolbar.
-- `--ki-toolbar-bg-image`: Optional image above the solid surface color.
-- `--ki-toolbar-docked-padding-inline`: Inline insets for docked actions.
-- `--ki-toolbar-docked-radius`: Corner radius of the docked toolbar.
-- `--ki-toolbar-fab-gap`: Gap between a floating pill and its companion FAB.
-- `--ki-toolbar-fg`: Foreground of the standard toolbar.
-- `--ki-toolbar-gap`: Gap between toolbar actions.
-- `--ki-toolbar-height`: Minimum height of the docked toolbar before its safe area.
-- `--ki-toolbar-padding`: Toolbar surface padding.
-- `--ki-toolbar-radius`: Radius of the floating pill.
-- `--ki-toolbar-scroll-duration`: Duration of the scroll visibility transition.
-- `--ki-toolbar-scroll-easing`: Easing of the scroll visibility transition.
-- `--ki-toolbar-shadow`: Resting elevation of the floating pill.
-- `--ki-toolbar-vibrant-bg`: Accent background of the vibrant toolbar.
-- `--ki-toolbar-vibrant-fg`: Foreground on the vibrant toolbar.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-tooltip

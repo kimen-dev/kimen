@@ -14,6 +14,8 @@ import { defineCustomElement as defineKiButton } from '@kimen/elements/component
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
+import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
+import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
@@ -32,6 +34,7 @@ import { defineCustomElement as defineKiProgress } from '@kimen/elements/compone
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
+import { defineCustomElement as defineKiReasoning } from '@kimen/elements/components/ki-reasoning.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
@@ -46,7 +49,6 @@ import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
-import { defineCustomElement as defineKiToolbar } from '@kimen/elements/components/ki-toolbar.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
 @ProxyCmp({
@@ -250,6 +252,68 @@ export class KiCheckboxGroup {
 export declare interface KiCheckboxGroup extends Components.KiCheckboxGroup {
   /**
    * Fires once for a committed user toggle with a copy of the current selection.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiChip,
+  inputs: ['disabled', 'removable', 'removeLabel', 'selected', 'size', 'type', 'value']
+})
+@Component({
+  selector: 'ki-chip',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'removable', 'removeLabel', 'selected', 'size', 'type', 'value'],
+})
+export class KiChip {
+  protected el: HTMLKiChipElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiChip extends Components.KiChip {
+  /**
+   * Emitted after a filter chip changes its pressed state.
+   */
+  /**
+   * Remove request for an input chip. Cancel it to keep application ownership of the chip.
+   */
+  /**
+   * Emitted by an assist chip when its native button is activated.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiChipGroup,
+  inputs: ['focusTarget', 'label', 'reorderAnnouncement', 'reorderable', 'type']
+})
+@Component({
+  selector: 'ki-chip-group',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['focusTarget', 'label', 'reorderAnnouncement', 'reorderable', 'type'],
+})
+export class KiChipGroup {
+  protected el: HTMLKiChipGroupElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiChipGroup extends Components.KiChipGroup {
+  /**
+   * Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
    */
 }
 
@@ -686,6 +750,34 @@ export declare interface KiRadioGroup extends Components.KiRadioGroup {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiReasoning,
+  inputs: ['doneLabel', 'duration', 'durationLabel', 'open', 'singularDurationLabel', 'status', 'thinkingLabel']
+})
+@Component({
+  selector: 'ki-reasoning',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['doneLabel', 'duration', 'durationLabel', 'open', 'singularDurationLabel', 'status', 'thinkingLabel'],
+})
+export class KiReasoning {
+  protected el: HTMLKiReasoningElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiReasoning extends Components.KiReasoning {
+  /**
+   * Emitted after a native disclosure toggle. Setting open from the application is silent.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiScroller,
   inputs: ['label', 'orientation']
 })
@@ -1030,29 +1122,6 @@ export class KiToaster {
 
 
 export declare interface KiToaster extends Components.KiToaster {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiToolbar,
-  inputs: ['hideOnScroll', 'label', 'orientation', 'tone', 'variant']
-})
-@Component({
-  selector: 'ki-toolbar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['hideOnScroll', { name: 'label', required: true }, 'orientation', 'tone', 'variant'],
-})
-export class KiToolbar {
-  protected el: HTMLKiToolbarElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiToolbar extends Components.KiToolbar {}
 
 
 @ProxyCmp({
