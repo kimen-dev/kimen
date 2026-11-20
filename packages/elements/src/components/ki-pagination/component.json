@@ -1,13 +1,27 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
-  "visual": { "material3Dark": true },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
+  "visual": {
+    "material3Dark": true
+  },
   "catalog": true,
   "sizeBudget": {
+    "mcpApps": {
+      "raw": 10082,
+      "gzip": 2923,
+      "brotli": 2173
+    },
     "mcpServer": {
-      "raw": 18429,
-      "gzip": 4484,
-      "brotli": 2982
+      "raw": 18933,
+      "gzip": 4554,
+      "brotli": 2687
+    },
+    "tokenStylesheets": {
+      "onmars": 52
     }
   }
 }
