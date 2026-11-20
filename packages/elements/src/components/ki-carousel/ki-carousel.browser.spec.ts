@@ -17,7 +17,7 @@ type Carousel = HTMLElement & {
 
 const browser = commands as unknown as {
   ariaSnapshot(selector: string): Promise<string>;
-  emulateForcedColors(value: 'active' | null): Promise<boolean>;
+  emulateForcedColors(value: 'active' | null): Promise<void>;
   emulateReducedMotion(value: 'reduce' | 'no-preference' | null): Promise<void>;
   installClock(): Promise<void>;
   pauseClock(): Promise<void>;
@@ -70,7 +70,11 @@ async function frames(): Promise<void> {
     return;
   }
   await new Promise<void>((resolve) =>
-    requestAnimationFrame(() => requestAnimationFrame(() => { resolve(); })),
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        resolve();
+      }),
+    ),
   );
 }
 
@@ -239,7 +243,7 @@ it('S9 keeps the position after Pause is clicked', async () => {
     await startClock();
     const host = await mount({ autoplay: '1000', loop: '' });
 
-    part(host, 'rotation').click();
+    await page.getByRole('button', { name: 'Pause' }).click();
     await frames();
     await browser.fastForwardClock(1200);
 
@@ -308,16 +312,21 @@ it('S13 follows a navigation background token override', async () => {
 });
 
 it('S14 retains forced-color control boundaries and glyphs', async (test) => {
-  if (!(await browser.emulateForcedColors('active')))
-    test.skip('forced colors unavailable');
+  await browser.emulateForcedColors('active');
   try {
+    if (!matchMedia('(forced-colors: active)').matches) test.skip('forced colors unavailable');
     const host = await mount();
 
     const button = part(host, 'next');
     const computed = getComputedStyle(button);
     expect(computed.borderInlineStartStyle).toBe('solid');
     expect(computed.borderInlineStartColor).toBe(computed.color);
-    expect(button.querySelector('ki-icon')?.getBoundingClientRect().width).toBeGreaterThan(0);
+    await expect
+      .poll(() => {
+        const glyph = button.querySelector('ki-icon')?.shadowRoot?.querySelector('svg');
+        return glyph?.getBoundingClientRect().width ?? 0;
+      })
+      .toBeGreaterThan(0);
   } finally {
     await browser.emulateForcedColors(null);
   }
@@ -378,4 +387,18 @@ it('S19 skips offscreen links in the tab sequence', async () => {
   await userEvent.tab();
 
   expect(host.shadowRoot?.activeElement).toBe(part(host, 'previous'));
+});
+
+it('S11 lets the reader continue through an oversized full-screen slide', async () => {
+  const host = await mount({ layout: 'full-screen' });
+  const viewport = part(host, 'viewport');
+  slide(host, 1).style.minBlockSize = `${String(viewport.clientHeight * 4)}px`;
+  const offset = viewport.clientHeight * 2.5;
+
+  viewport.scrollBy({ top: offset, behavior: 'instant' });
+
+  await expect.poll(() => Math.abs(viewport.scrollTop - offset) < 0.5).toBe(true);
+  await frames();
+  expect(host.current).toBe(1);
+  expect(slide(host, 1).inert).toBe(false);
 });

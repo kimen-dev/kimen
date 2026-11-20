@@ -9,6 +9,7 @@ import { defineCustomElement } from '../../../dist/components/ki-carousel.js';
 const browser = commands as unknown as {
   emulateHoverCapability(value: 'none' | null): Promise<boolean>;
   tapWithCoarsePointer(selector: string): Promise<void>;
+  swipeWithCoarsePointer(selector: string): Promise<void>;
 };
 
 const fixture = document.createElement('main');
@@ -55,6 +56,24 @@ it('S17 provides 44 CSS pixel navigation targets and accepts a touch tap', async
     await browser.tapWithCoarsePointer('ki-carousel [part="next"]');
 
     await expect.element(page.getByRole('img', { name: 'Slide position, 2 / 2' })).toBeVisible();
+  } finally {
+    await browser.emulateHoverCapability(null);
+  }
+});
+
+it('S3 advances one native snap position after a touch swipe', async (test) => {
+  if (!(await browser.emulateHoverCapability('none'))) test.skip('touch emulation unavailable');
+  try {
+    fixture.innerHTML = `<ki-carousel label="Highlights">
+      <ki-carousel-item>Discover</ki-carousel-item>
+      <ki-carousel-item>Explore</ki-carousel-item>
+      <ki-carousel-item>Customize</ki-carousel-item>
+    </ki-carousel>`;
+    await expect.element(page.getByRole('img', { name: 'Slide position, 1 / 3' })).toBeVisible();
+
+    await browser.swipeWithCoarsePointer('ki-carousel [part="viewport"]');
+
+    await expect.element(page.getByRole('img', { name: 'Slide position, 2 / 3' })).toBeVisible();
   } finally {
     await browser.emulateHoverCapability(null);
   }

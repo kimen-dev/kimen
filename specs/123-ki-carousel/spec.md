@@ -47,6 +47,9 @@ position. Rotation requires an explicit interval.
   generates the slide tag from a sibling folder. Catalog authors place slide
   items in the carousel's default slot and can bind `ki-slide-change` as its
   sole action.
+- **Agent's choice, pending founder confirmation.** Use the repository's explicit
+  touch-density setting for 44 px targets and the API gate's classification
+  for additions to the existing Stencil type namespaces.
 
 ## Scenario family coverage
 
@@ -178,7 +181,7 @@ Feature: ki-carousel presents a sequence of slides
 
   # S17
   Scenario: Coarse pointers have comfortable targets
-    Given a carousel on a coarse-pointer device
+    Given a carousel with touch density on a coarse-pointer device
     When the carousel appears
     Then both navigation controls have at least 44 by 44 CSS pixel targets
 

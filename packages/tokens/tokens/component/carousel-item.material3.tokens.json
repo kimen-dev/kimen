@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "carousel-item": {
+      "bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Material 3 surface for carousel slide content and its preview."
+      }
+    }
+  }
+}

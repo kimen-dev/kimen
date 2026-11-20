@@ -115,7 +115,7 @@ Feature: ki-carousel presents a sequence of slides
 
   # S17
   Scenario: Coarse pointers have comfortable targets
-    Given a carousel on a coarse-pointer device
+    Given a carousel with touch density on a coarse-pointer device
     When the carousel appears
     Then both navigation controls have at least 44 by 44 CSS pixel targets
 

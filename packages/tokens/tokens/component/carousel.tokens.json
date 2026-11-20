@@ -1,0 +1,62 @@
+{
+  "ki": {
+    "carousel": {
+      "gap": {
+        "$value": "{ki.space.xl}",
+        "$description": "Gap between carousel slides and between the viewport and the controls."
+      },
+      "radius": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Corner radius shared by the carousel viewport and slide surfaces."
+      },
+      "preview-min-inline-size": {
+        "$value": "{ki.control.size.sm}",
+        "$description": "Minimum inline size of a decorative carousel preview when space permits."
+      },
+      "full-screen-block-size": {
+        "$value": "{ki.size.surface.xs}",
+        "$description": "Block size of the vertical carousel viewport."
+      },
+      "control-bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Surface of the carousel navigation and rotation controls."
+      },
+      "control-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text and glyph ink against the carousel control surface."
+      },
+      "control-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the carousel control background color."
+      },
+      "control-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete optional backdrop filter for the carousel controls."
+      },
+      "control-shadow": {
+        "$value": "{ki.elevation.e2}",
+        "$description": "Resting elevation of the carousel controls."
+      },
+      "control-radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "Corner radius of the carousel controls."
+      },
+      "control-border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Visible control boundary against the surrounding surface."
+      },
+      "control-size": {
+        "$value": "{ki.control.size.sm}",
+        "$description": "Resting carousel control size before applying the density target floor."
+      },
+      "control-icon-size": {
+        "$value": "{ki.space.5xl}",
+        "$description": "Glyph size in the carousel navigation controls."
+      },
+      "control-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "Spacing between carousel controls."
+      }
+    }
+  }
+}
