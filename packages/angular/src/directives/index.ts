@@ -30,6 +30,7 @@ export const DIRECTIVES = [
   d.KiLink,
   d.KiList,
   d.KiListItem,
+  d.KiMarkdown,
   d.KiMenu,
   d.KiMenuGroup,
   d.KiMenuItem,

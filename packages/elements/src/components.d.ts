@@ -1184,6 +1184,34 @@ export namespace Components {
         "size": KiListItemSize;
     }
     /**
+     * Displays Markdown as Kimen components and native HTML semantics.
+     * @whenToUse Show a formatted reply, readme excerpt or progressively received text from a person or model.
+     * @whenNotToUse Present an editable document or apply trusted authored HTML. Use native markup for structured page content.
+     */
+    interface KiMarkdown {
+        /**
+          * Render Markdown images that pass the URL policy. Otherwise show their alternative text.
+          * @default false
+         */
+        "allowImages": boolean;
+        /**
+          * Add zero through five levels to source headings. The output stops at level six. Invalid values use two.
+          * @minimum 0
+          * @maximum 5
+          * @default 2
+         */
+        "headingOffset": number;
+        /**
+          * Markdown source. A supplied value, including an empty string, takes precedence over the default text slot.
+         */
+        "srcText"?: string;
+        /**
+          * Keep established blocks mounted while an answer grows. Turn it off when the source is complete.
+          * @default false
+         */
+        "streaming": boolean;
+    }
+    /**
      * A popup of actions opened by a button in the same document or shadow root.
      * @whenToUse row actions, account commands, split buttons, and overflow actions.
      * @whenNotToUse form values, navigation destinations, or long action lists.
@@ -2746,6 +2774,17 @@ declare global {
         prototype: HTMLKiListItemElement;
         new (): HTMLKiListItemElement;
     };
+    /**
+     * Displays Markdown as Kimen components and native HTML semantics.
+     * @whenToUse Show a formatted reply, readme excerpt or progressively received text from a person or model.
+     * @whenNotToUse Present an editable document or apply trusted authored HTML. Use native markup for structured page content.
+     */
+    interface HTMLKiMarkdownElement extends Components.KiMarkdown, HTMLStencilElement {
+    }
+    var HTMLKiMarkdownElement: {
+        prototype: HTMLKiMarkdownElement;
+        new (): HTMLKiMarkdownElement;
+    };
     interface HTMLKiMenuElementEventMap {
         "ki-select": KiMenuSelectDetail;
     }
@@ -3294,6 +3333,7 @@ declare global {
         "ki-link": HTMLKiLinkElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
+        "ki-markdown": HTMLKiMarkdownElement;
         "ki-menu": HTMLKiMenuElement;
         "ki-menu-group": HTMLKiMenuGroupElement;
         "ki-menu-item": HTMLKiMenuItemElement;
@@ -4485,6 +4525,34 @@ declare namespace LocalJSX {
           * @default 'md'
          */
         "size"?: KiListItemSize;
+    }
+    /**
+     * Displays Markdown as Kimen components and native HTML semantics.
+     * @whenToUse Show a formatted reply, readme excerpt or progressively received text from a person or model.
+     * @whenNotToUse Present an editable document or apply trusted authored HTML. Use native markup for structured page content.
+     */
+    interface KiMarkdown {
+        /**
+          * Render Markdown images that pass the URL policy. Otherwise show their alternative text.
+          * @default false
+         */
+        "allowImages"?: boolean;
+        /**
+          * Add zero through five levels to source headings. The output stops at level six. Invalid values use two.
+          * @minimum 0
+          * @maximum 5
+          * @default 2
+         */
+        "headingOffset"?: number;
+        /**
+          * Markdown source. A supplied value, including an empty string, takes precedence over the default text slot.
+         */
+        "srcText"?: string;
+        /**
+          * Keep established blocks mounted while an answer grows. Turn it off when the source is complete.
+          * @default false
+         */
+        "streaming"?: boolean;
     }
     /**
      * A popup of actions opened by a button in the same document or shadow root.
@@ -5689,6 +5757,12 @@ declare namespace LocalJSX {
     interface KiListItemAttributes {
         "size": KiListItemSize;
     }
+    interface KiMarkdownAttributes {
+        "srcText": string;
+        "streaming": boolean;
+        "headingOffset": number;
+        "allowImages": boolean;
+    }
     interface KiMenuAttributes {
         "anchor": string;
         "open": boolean;
@@ -5898,6 +5972,7 @@ declare namespace LocalJSX {
         "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
         "ki-list": KiList;
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
+        "ki-markdown": Omit<KiMarkdown, keyof KiMarkdownAttributes> & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes]?: KiMarkdown[K] } & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes as `attr:${K}`]?: KiMarkdownAttributes[K] } & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes as `prop:${K}`]?: KiMarkdown[K] };
         "ki-menu": Omit<KiMenu, keyof KiMenuAttributes> & { [K in keyof KiMenu & keyof KiMenuAttributes]?: KiMenu[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `attr:${K}`]?: KiMenuAttributes[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `prop:${K}`]?: KiMenu[K] };
         "ki-menu-group": Omit<KiMenuGroup, keyof KiMenuGroupAttributes> & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes]?: KiMenuGroup[K] } & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes as `attr:${K}`]?: KiMenuGroupAttributes[K] } & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes as `prop:${K}`]?: KiMenuGroup[K] };
         "ki-menu-item": Omit<KiMenuItem, keyof KiMenuItemAttributes> & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes]?: KiMenuItem[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `attr:${K}`]?: KiMenuItemAttributes[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `prop:${K}`]?: KiMenuItem[K] };
@@ -6237,6 +6312,12 @@ declare module "@stencil/core" {
              * tabular row, navigation link or whole-item clickable control.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
+            /**
+             * Displays Markdown as Kimen components and native HTML semantics.
+             * @whenToUse Show a formatted reply, readme excerpt or progressively received text from a person or model.
+             * @whenNotToUse Present an editable document or apply trusted authored HTML. Use native markup for structured page content.
+             */
+            "ki-markdown": LocalJSX.IntrinsicElements["ki-markdown"] & JSXBase.HTMLAttributes<HTMLKiMarkdownElement>;
             /**
              * A popup of actions opened by a button in the same document or shadow root.
              * @whenToUse row actions, account commands, split buttons, and overflow actions.

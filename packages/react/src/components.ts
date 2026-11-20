@@ -32,6 +32,7 @@ export { KiInput } from './ki-input.js';
 export { KiLink } from './ki-link.js';
 export { KiList } from './ki-list.js';
 export { KiListItem } from './ki-list-item.js';
+export { KiMarkdown } from './ki-markdown.js';
 export { KiMenu } from './ki-menu.js';
 export { KiMenuGroup } from './ki-menu-group.js';
 export { KiMenuItem } from './ki-menu-item.js';

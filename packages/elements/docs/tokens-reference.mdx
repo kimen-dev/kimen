@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 451 semantic
-and 1519 component tokens. Values are the resolved **onmars light**
+and 1534 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1615,6 +1615,26 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-list-item-xl-secondary-font-size` | `0.8125rem` | dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para). |
 | `--ki-list-item-xl-secondary-line-height` | `1.25rem` | dimension used by the list component for xl secondary line height (List 10063:2066 xl). |
 | `--ki-list-padding` | `0rem` | dimension used by the list component for padding. |
+
+### `ki-markdown`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-markdown-backdrop-filter` | `none` | Complete backdrop filter for the answer surface. |
+| `--ki-markdown-bg` | `rgba(0, 0, 0, 0)` | Answer surface backing. It defaults to transparent so the enclosing surface shows through. |
+| `--ki-markdown-bg-image` | `none` | Optional image over the answer's solid backing. |
+| `--ki-markdown-block-gap` | `0.75rem` | Spacing between Markdown blocks at standard density. |
+| `--ki-markdown-fg` | `#181613` | Ink for prose and headings. |
+| `--ki-markdown-heading-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface for Markdown headings. |
+| `--ki-markdown-inline-code-backdrop-filter` | `none` | Complete backdrop filter for inline code. |
+| `--ki-markdown-inline-code-bg` | `#f3f0eb` | Solid backing of an inline code span. |
+| `--ki-markdown-inline-code-bg-image` | `none` | Optional image over the inline code backing. |
+| `--ki-markdown-inline-code-fg` | `#181613` | Ink for source within an inline code span. |
+| `--ki-markdown-muted-backdrop-filter` | `none` | Complete backdrop filter for quotes and table headings. |
+| `--ki-markdown-muted-bg` | `rgba(0, 0, 0, 0)` | Backing of quotes and table headings. |
+| `--ki-markdown-muted-bg-image` | `none` | Optional image over the muted backing. |
+| `--ki-markdown-muted-fg` | `#5e5953` | Ink for quotes and table headings, strengthened under more contrast. |
+| `--ki-markdown-quote-border` | `rgba(24, 22, 19, 0.16)` | Logical start rule of a quotation and the ink of a thematic divider. |
 
 ### `ki-menu`
 

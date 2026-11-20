@@ -10181,6 +10181,300 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-markdown.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMarkdown",
+          "customElement": true,
+          "tagName": "ki-markdown",
+          "description": "Displays Markdown as Kimen components and native HTML semantics.",
+          "whenToUse": "Show a formatted reply, readme excerpt or progressively received text from a person or model.",
+          "whenNotToUse": "Present an editable document or apply trusted authored HTML. Use native markup for structured page content.",
+          "attributes": [
+            {
+              "name": "allow-images",
+              "fieldName": "allowImages",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Render Markdown images that pass the URL policy. Otherwise show their alternative text."
+            },
+            {
+              "name": "heading-offset",
+              "fieldName": "headingOffset",
+              "type": {
+                "text": "number"
+              },
+              "default": "2",
+              "description": "Add zero through five levels to source headings. The output stops at level six. Invalid values use two.",
+              "minimum": 0,
+              "maximum": 5
+            },
+            {
+              "name": "src-text",
+              "fieldName": "srcText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Markdown source. A supplied value, including an empty string, takes precedence over the default text slot."
+            },
+            {
+              "name": "streaming",
+              "fieldName": "streaming",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keep established blocks mounted while an answer grows. Turn it off when the source is complete."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "allowImages",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Render Markdown images that pass the URL policy. Otherwise show their alternative text.",
+              "attribute": "allow-images",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "headingOffset",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "2",
+              "description": "Add zero through five levels to source headings. The output stops at level six. Invalid values use two.",
+              "attribute": "heading-offset",
+              "reflects": false,
+              "minimum": 0,
+              "maximum": 5
+            },
+            {
+              "kind": "field",
+              "name": "srcText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Markdown source. A supplied value, including an empty string, takes precedence over the default text slot.",
+              "attribute": "src-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "streaming",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keep established blocks mounted while an answer grows. Turn it off when the source is complete.",
+              "attribute": "streaming",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Literal Markdown source. Set a text node or escape markup when writing HTML."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "content",
+              "description": "Box containing the formatted blocks."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-corner-inline",
+              "description": "Small radius for an outline around inline content."
+            },
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-layout-spacing-5xl",
+              "description": "The 5xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-markdown-backdrop-filter",
+              "description": "Complete backdrop filter for the answer surface."
+            },
+            {
+              "name": "--ki-markdown-bg",
+              "description": "Answer surface backing. It defaults to transparent so the enclosing surface shows through."
+            },
+            {
+              "name": "--ki-markdown-bg-image",
+              "description": "Optional image over the answer's solid backing."
+            },
+            {
+              "name": "--ki-markdown-block-gap",
+              "description": "Spacing between Markdown blocks at standard density."
+            },
+            {
+              "name": "--ki-markdown-fg",
+              "description": "Ink for prose and headings."
+            },
+            {
+              "name": "--ki-markdown-heading-family",
+              "description": "Typeface for Markdown headings."
+            },
+            {
+              "name": "--ki-markdown-inline-code-backdrop-filter",
+              "description": "Complete backdrop filter for inline code."
+            },
+            {
+              "name": "--ki-markdown-inline-code-bg",
+              "description": "Solid backing of an inline code span."
+            },
+            {
+              "name": "--ki-markdown-inline-code-bg-image",
+              "description": "Optional image over the inline code backing."
+            },
+            {
+              "name": "--ki-markdown-inline-code-fg",
+              "description": "Ink for source within an inline code span."
+            },
+            {
+              "name": "--ki-markdown-muted-backdrop-filter",
+              "description": "Complete backdrop filter for quotes and table headings."
+            },
+            {
+              "name": "--ki-markdown-muted-bg",
+              "description": "Backing of quotes and table headings."
+            },
+            {
+              "name": "--ki-markdown-muted-bg-image",
+              "description": "Optional image over the muted backing."
+            },
+            {
+              "name": "--ki-markdown-muted-fg",
+              "description": "Ink for quotes and table headings, strengthened under more contrast."
+            },
+            {
+              "name": "--ki-markdown-quote-border",
+              "description": "Logical start rule of a quotation and the ink of a thematic divider."
+            },
+            {
+              "name": "--ki-outline-low-em",
+              "description": "semantic color for outline low em."
+            },
+            {
+              "name": "--ki-spacing-action-hairline",
+              "description": "Width of the frame and divider in an action surface."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-family-mono",
+              "description": "semantic font family for typography family mono."
+            },
+            {
+              "name": "--ki-typography-line-height-body-2",
+              "description": "semantic dimension for typography line height body 2."
+            },
+            {
+              "name": "--ki-typography-line-height-heading-1",
+              "description": "semantic dimension for typography line height heading 1."
+            },
+            {
+              "name": "--ki-typography-line-height-heading-2",
+              "description": "semantic dimension for typography line height heading 2."
+            },
+            {
+              "name": "--ki-typography-line-height-title-1",
+              "description": "semantic dimension for typography line height title 1."
+            },
+            {
+              "name": "--ki-typography-line-height-title-2",
+              "description": "semantic dimension for typography line height title 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-body-2",
+              "description": "semantic dimension for typography size body 2."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-size-heading-1",
+              "description": "semantic dimension for typography size heading 1."
+            },
+            {
+              "name": "--ki-typography-size-heading-2",
+              "description": "semantic dimension for typography size heading 2."
+            },
+            {
+              "name": "--ki-typography-size-title-1",
+              "description": "semantic dimension for typography size title 1."
+            },
+            {
+              "name": "--ki-typography-size-title-2",
+              "description": "semantic dimension for typography size title 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMarkdown",
+          "declaration": {
+            "name": "KiMarkdown",
+            "module": "dist/components/ki-markdown.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-markdown",
+          "declaration": {
+            "name": "KiMarkdown",
+            "module": "dist/components/ki-markdown.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-menu.js",
       "declarations": [
         {

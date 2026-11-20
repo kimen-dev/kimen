@@ -62,6 +62,7 @@ methods, CSS custom properties and examples.
 - [ki-link](llms/ki-link.md): navigate to a page, section, or resource.
 - [ki-list](llms/ki-list.md): settings, contacts, results or activity feeds where each item composes leading media, primary text, optional secondary text and trailing meta or a slotted control.
 - [ki-list-item](llms/ki-list-item.md): only as a child of `ki-list`, for one read-only entry in a similar vertical collection.
+- [ki-markdown](llms/ki-markdown.md): Show a formatted reply, readme excerpt or progressively received text from a person or model.
 - [ki-menu](llms/ki-menu.md): row actions, account commands, split buttons, and overflow actions.
 - [ki-menu-group](llms/ki-menu-group.md): name a set of related actions or scope exclusive radio items in a menu.
 - [ki-menu-item](llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.

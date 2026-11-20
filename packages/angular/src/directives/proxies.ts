@@ -34,6 +34,7 @@ import { defineCustomElement as defineKiInput } from '@kimen/elements/components
 import { defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
+import { defineCustomElement as defineKiMarkdown } from '@kimen/elements/components/ki-markdown.js';
 import { defineCustomElement as defineKiMenu } from '@kimen/elements/components/ki-menu.js';
 import { defineCustomElement as defineKiMenuGroup } from '@kimen/elements/components/ki-menu-group.js';
 import { defineCustomElement as defineKiMenuItem } from '@kimen/elements/components/ki-menu-item.js';
@@ -774,6 +775,29 @@ export class KiListItem {
 
 
 export declare interface KiListItem extends Components.KiListItem {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMarkdown,
+  inputs: ['allowImages', 'headingOffset', 'srcText', 'streaming']
+})
+@Component({
+  selector: 'ki-markdown',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['allowImages', 'headingOffset', 'srcText', 'streaming'],
+})
+export class KiMarkdown {
+  protected el: HTMLKiMarkdownElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMarkdown extends Components.KiMarkdown {}
 
 
 @ProxyCmp({

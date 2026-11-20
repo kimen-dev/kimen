@@ -1520,6 +1520,39 @@ export const catalogData = {
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
     },
+    "ki-markdown": {
+      "description": "Displays Markdown as Kimen components and native HTML semantics.",
+      "events": {},
+      "props": {
+        "allow-images": {
+          "type": "boolean",
+          "description": "Render Markdown images that pass the URL policy. Otherwise show their alternative text.",
+          "default": false
+        },
+        "heading-offset": {
+          "type": "number",
+          "description": "Add zero through five levels to source headings. The output stops at level six. Invalid values use two.",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 5
+        },
+        "src-text": {
+          "type": "string",
+          "description": "Markdown source. A supplied value, including an empty string, takes precedence over the default text slot."
+        },
+        "streaming": {
+          "type": "boolean",
+          "description": "Keep established blocks mounted while an answer grows. Turn it off when the source is complete.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Literal Markdown source. Set a text node or escape markup when writing HTML."
+      },
+      "tag": "ki-markdown",
+      "whenNotToUse": "Present an editable document or apply trusted authored HTML. Use native markup for structured page content.",
+      "whenToUse": "Show a formatted reply, readme excerpt or progressively received text from a person or model."
+    },
     "ki-menu": {
       "description": "A popup of actions opened by a button in the same document or shadow root.",
       "events": {

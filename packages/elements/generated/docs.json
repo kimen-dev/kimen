@@ -3502,7 +3502,9 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-markdown"
+      ],
       "dependencies": [
         "ki-copy-button"
       ],
@@ -3512,6 +3514,9 @@
         ],
         "ki-copy-button": [
           "ki-icon"
+        ],
+        "ki-markdown": [
+          "ki-code-block"
         ]
       }
     },
@@ -7385,9 +7390,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-markdown"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-markdown": [
+          "ki-link"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-list/ki-list.tsx",
@@ -7581,6 +7592,192 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-markdown/ki-markdown.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-markdown",
+      "docs": "Displays Markdown as Kimen components and native HTML semantics.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Show a formatted reply, readme excerpt or progressively received text from a person or model."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Present an editable document or apply trusted authored HTML. Use native markup for structured page content."
+        },
+        {
+          "name": "slot",
+          "text": "- Literal Markdown source. Set a text node or escape markup when writing HTML."
+        },
+        {
+          "name": "part",
+          "text": "content - Box containing the formatted blocks."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-markdown examples\n\nRender a short note as static text.\n\n```html\n<ki-markdown src-text=\"## Release notes\"></ki-markdown>\n\n<ki-markdown>Check the **release date** and the [upgrade guide](/guides/upgrade).</ki-markdown>\n```\n\nUpdate the source while chunks arrive. When all text has arrived, finish the\nstream so the component renders the complete Markdown document.\n\n```html\n<ki-markdown id=\"answer\" streaming></ki-markdown>\n```\n\n```js\nconst answer = document.querySelector('#answer');\nlet source = '';\nfor await (const chunk of answerChunks) {\n  source += chunk;\n  answer.srcText = source;\n}\nanswer.streaming = false;\n```\n\nAssign untrusted strings to `srcText`. In a static HTML example, escape angle\nbrackets before passing them as text.\n\n```html\n<ki-markdown>&lt;aside&gt;This markup is shown as text.&lt;/aside&gt;</ki-markdown>\n```\n\nA guarded surface can pass the source as a string in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-markdown\",\n    \"props\": { \"headingOffset\": 1 },\n    \"slots\": { \"\": [\"# Release notes\\n\\nRead the [upgrade guide](/guides/upgrade).\"] }\n  }\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "allowImages",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "allow-images",
+          "reflectToAttr": false,
+          "docs": "Render Markdown images that pass the URL policy. Otherwise show their alternative text.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "headingOffset",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading-offset",
+          "reflectToAttr": false,
+          "docs": "Add zero through five levels to source headings. The output stops at level six. Invalid values use two.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "5"
+            },
+            {
+              "name": "default",
+              "text": "2"
+            }
+          ],
+          "default": "2",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "srcText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "src-text",
+          "reflectToAttr": false,
+          "docs": "Markdown source. A supplied value, including an empty string, takes precedence over the default text slot.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "streaming",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "streaming",
+          "reflectToAttr": false,
+          "docs": "Keep established blocks mounted while an answer grows. Turn it off when the source is complete.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Literal Markdown source. Set a text node or escape markup when writing HTML."
+        }
+      ],
+      "parts": [
+        {
+          "name": "content",
+          "docs": "Box containing the formatted blocks."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-link",
+        "ki-code-block",
+        "ki-note"
+      ],
+      "dependencyGraph": {
+        "ki-markdown": [
+          "ki-link",
+          "ki-code-block",
+          "ki-note"
+        ],
+        "ki-code-block": [
+          "ki-copy-button"
+        ],
+        "ki-copy-button": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-menu/ki-menu.tsx",
@@ -8412,9 +8609,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-markdown"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-markdown": [
+          "ki-note"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-option/ki-option.tsx",
