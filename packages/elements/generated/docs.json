@@ -8607,6 +8607,7 @@
         "ki-empty-state",
         "ki-fab",
         "ki-message",
+        "ki-number-input",
         "ki-stat",
         "ki-stepper",
         "ki-table"
@@ -8635,6 +8636,9 @@
           "ki-icon"
         ],
         "ki-message": [
+          "ki-icon"
+        ],
+        "ki-number-input": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -11850,6 +11854,628 @@
       "dependencyGraph": {
         "ki-confirmation": [
           "ki-note"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-number-input/ki-number-input.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-number-input",
+      "docs": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible name of the spinbutton."
+        },
+        {
+          "name": "part",
+          "text": "field - Enclosure around the editor, unit and stepper buttons."
+        },
+        {
+          "name": "part",
+          "text": "input - Native text editor carrying the spinbutton role."
+        },
+        {
+          "name": "part",
+          "text": "unit - Visible unit referenced by the spinbutton's description."
+        },
+        {
+          "name": "part",
+          "text": "decrease - Button that subtracts one step."
+        },
+        {
+          "name": "part",
+          "text": "increase - Button that adds one step."
+        },
+        {
+          "name": "part",
+          "text": "help - Help message associated with the spinbutton."
+        },
+        {
+          "name": "part",
+          "text": "error - Polite validation feedback associated with the spinbutton."
+        },
+        {
+          "name": "part",
+          "text": "status - Polite feedback explaining a value adjustment."
+        },
+        {
+          "name": "event",
+          "text": "change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-number-input examples\n\n## Quantity with bounds\n\n```html\n<ki-number-input label=\"Seats\" name=\"seats\" value=\"3\" min=\"1\" max=\"50\" steppers required></ki-number-input>\n```\n\n## Plain field with a unit\n\n```html\n<ki-number-input label=\"Timeout\" name=\"timeout\" value=\"30\" unit=\"seconds\" min=\"0\"></ki-number-input>\n```\n\nThe form submits `timeout=30`.\n\n## Percentage with localized editing\n\n```html\n<ki-number-input\n  lang=\"de-DE\"\n  label=\"Discount\"\n  name=\"discount\"\n  min=\"0\"\n  max=\"1\"\n  step=\"0.005\"\n  value=\"0.125\"\n  format='{\"style\":\"percent\",\"maximumFractionDigits\":1}'\n></ki-number-input>\n```\n\nThe editor displays `12,5` while focused and formats it as a percentage on\nblur. The form submits `discount=0.125`.\n\n## Custom-elements entry point\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-number-input';\n\ndefineCustomElement();\nconst discount = document.querySelector('ki-number-input[name=\"discount\"]');\nif (discount) {\n  discount.format = { style: 'percent', maximumFractionDigits: 1 };\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "decreaseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "decrease-label",
+          "reflectToAttr": false,
+          "docs": "Stepper's accessible name. The field label replaces {label}.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Decrease {label}'"
+            }
+          ],
+          "default": "'Decrease {label}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Prevents editing and excludes the control from form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": false,
+          "docs": "Validation hint to show when the entry fails a constraint.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "format",
+          "type": "NumberFormatOptions | undefined",
+          "complexType": {
+            "original": "Intl.NumberFormatOptions | undefined",
+            "resolved": "NumberFormatOptions | undefined",
+            "references": {
+              "Intl": {
+                "location": "global",
+                "id": "global::Intl"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "format",
+          "reflectToAttr": false,
+          "docs": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
+          "docsTags": [
+            {
+              "name": "attributeType",
+              "text": "string"
+            }
+          ],
+          "values": [
+            {
+              "type": "NumberFormatOptions"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": true,
+          "setter": true
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": false,
+          "docs": "Context or instructions displayed beneath the field when it has no visible error.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "increaseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "increase-label",
+          "reflectToAttr": false,
+          "docs": "Stepper's accessible name. The field label replaces {label}.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Increase {label}'"
+            }
+          ],
+          "default": "'Increase {label}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "invalidNumberMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "invalid-number-message",
+          "reflectToAttr": false,
+          "docs": "Default validation message for text that cannot be read as a number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Enter a number.'"
+            }
+          ],
+          "default": "'Enter a number.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible accessible name. Supply a meaningful label in the page language.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": false,
+          "docs": "Maximum permitted numeric value. Omit for an unbounded maximum.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maximumMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maximum-message",
+          "reflectToAttr": false,
+          "docs": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Value adjusted to the maximum of {value}.'"
+            }
+          ],
+          "default": "'Value adjusted to the maximum of {value}.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "min",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min",
+          "reflectToAttr": false,
+          "docs": "Minimum permitted numeric value. Omit for an unbounded minimum.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minimumMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minimum-message",
+          "reflectToAttr": false,
+          "docs": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Value adjusted to the minimum of {value}.'"
+            }
+          ],
+          "default": "'Value adjusted to the minimum of {value}.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key for the plain numeric value.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Whether the user must enter a number before submitting the form.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "step",
+          "reflectToAttr": false,
+          "docs": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "steppers",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "steppers",
+          "reflectToAttr": false,
+          "docs": "Shows named decrease and increase buttons inside the field.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "unit",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "unit",
+          "reflectToAttr": false,
+          "docs": "Visible suffix such as seconds or seats, included in the accessible description.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number | undefined",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "decrease",
+          "docs": "Button that subtracts one step."
+        },
+        {
+          "name": "error",
+          "docs": "Polite validation feedback associated with the spinbutton."
+        },
+        {
+          "name": "field",
+          "docs": "Enclosure around the editor, unit and stepper buttons."
+        },
+        {
+          "name": "help",
+          "docs": "Help message associated with the spinbutton."
+        },
+        {
+          "name": "increase",
+          "docs": "Button that adds one step."
+        },
+        {
+          "name": "input",
+          "docs": "Native text editor carrying the spinbutton role."
+        },
+        {
+          "name": "label",
+          "docs": "Visible name of the spinbutton."
+        },
+        {
+          "name": "status",
+          "docs": "Polite feedback explaining a value adjustment."
+        },
+        {
+          "name": "unit",
+          "docs": "Visible unit referenced by the spinbutton's description."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-number-input": [
+          "ki-icon"
         ]
       }
     },
