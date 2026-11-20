@@ -2983,6 +2983,395 @@
       }
     },
     {
+      "filePath": "src/components/ki-image/ki-image.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-image",
+      "docs": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "to show a photo, illustration, or diagram with a predictable\nlayout. Supply task-relevant alt text, or mark purely decorative media as\ndecorative. Set an explicit ratio when the layout must stay fixed."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for a background decoration, a video, or an interactive\ncontrol. Use a separate control to open or otherwise act on an image."
+        },
+        {
+          "name": "slot",
+          "text": "caption - Optional visible context displayed below the media in a figcaption."
+        },
+        {
+          "name": "part",
+          "text": "figure - The figure containing the frame and optional caption."
+        },
+        {
+          "name": "part",
+          "text": "frame - The reserved media box and its shape and backing surface."
+        },
+        {
+          "name": "part",
+          "text": "image - The native image and its fit within the frame."
+        },
+        {
+          "name": "part",
+          "text": "fallback - The unavailable-image indicator inside the frame."
+        },
+        {
+          "name": "part",
+          "text": "caption - The figcaption carrying the slotted caption."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-image\n\nGive an informative image alt text that describes the detail the reader needs.\nAn explicit ratio reserves the same frame while the image loads and when the\nfallback appears. Add supporting context in the caption slot.\n\n```html\n<ki-image src=\"/hills.jpg\" alt=\"Low green hills under a pale sky\" ratio=\"16:9\">\n  <span slot=\"caption\">View from the ridge</span>\n</ki-image>\n```\n\nUse `contain` when the whole image must stay visible. The fallback for this\nexample is named `Image unavailable: Office floor plan` if the source fails.\n\n```html\n<ki-image src=\"/floor-plan.png\" alt=\"Office floor plan\" ratio=\"4:3\" fit=\"contain\"></ki-image>\n```\n\nUse `decorative` for ornamentation. The image and fallback stay out of the\naccessibility tree.\n\n```html\n<ki-image src=\"/divider.svg\" decorative radius=\"none\"></ki-image>\n```\n"
+      },
+      "props": [
+        {
+          "name": "alt",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "alt",
+          "reflectToAttr": false,
+          "docs": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "decorative",
+          "reflectToAttr": false,
+          "docs": "Hide the media from assistive technology when it conveys no information.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "fallbackLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "fallback-label",
+          "reflectToAttr": false,
+          "docs": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Image unavailable'"
+            }
+          ],
+          "default": "'Image unavailable'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "fit",
+          "type": "\"contain\" | \"cover\"",
+          "complexType": {
+            "original": "KiImageFit",
+            "resolved": "\"contain\" | \"cover\"",
+            "references": {
+              "KiImageFit": {
+                "location": "local",
+                "path": "src/components/ki-image/ki-image.tsx",
+                "id": "src/components/ki-image/ki-image.tsx::KiImageFit"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "fit",
+          "reflectToAttr": true,
+          "docs": "Cover fills the frame. Contain preserves the whole image in it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'cover'"
+            }
+          ],
+          "default": "'cover'",
+          "values": [
+            {
+              "value": "contain",
+              "type": "string"
+            },
+            {
+              "value": "cover",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loading",
+          "type": "\"eager\" | \"lazy\"",
+          "complexType": {
+            "original": "KiImageLoading",
+            "resolved": "\"eager\" | \"lazy\"",
+            "references": {
+              "KiImageLoading": {
+                "location": "local",
+                "path": "src/components/ki-image/ki-image.tsx",
+                "id": "src/components/ki-image/ki-image.tsx::KiImageLoading"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "loading",
+          "reflectToAttr": false,
+          "docs": "Native loading hint. Use eager for a critical image above the fold.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'lazy'"
+            }
+          ],
+          "default": "'lazy'",
+          "values": [
+            {
+              "value": "eager",
+              "type": "string"
+            },
+            {
+              "value": "lazy",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "radius",
+          "type": "\"lg\" | \"md\" | \"none\"",
+          "complexType": {
+            "original": "KiImageRadius",
+            "resolved": "\"lg\" | \"md\" | \"none\"",
+            "references": {
+              "KiImageRadius": {
+                "location": "local",
+                "path": "src/components/ki-image/ki-image.tsx",
+                "id": "src/components/ki-image/ki-image.tsx::KiImageRadius"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "radius",
+          "reflectToAttr": true,
+          "docs": "Corner radius of the media frame.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'lg'"
+            }
+          ],
+          "default": "'lg'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "none",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "ratio",
+          "type": "\"16:9\" | \"1:1\" | \"3:2\" | \"4:3\" | \"auto\"",
+          "complexType": {
+            "original": "KiImageRatio",
+            "resolved": "\"16:9\" | \"1:1\" | \"3:2\" | \"4:3\" | \"auto\"",
+            "references": {
+              "KiImageRatio": {
+                "location": "local",
+                "path": "src/components/ki-image/ki-image.tsx",
+                "id": "src/components/ki-image/ki-image.tsx::KiImageRatio"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "ratio",
+          "reflectToAttr": true,
+          "docs": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'auto'"
+            }
+          ],
+          "default": "'auto'",
+          "values": [
+            {
+              "value": "16:9",
+              "type": "string"
+            },
+            {
+              "value": "1:1",
+              "type": "string"
+            },
+            {
+              "value": "3:2",
+              "type": "string"
+            },
+            {
+              "value": "4:3",
+              "type": "string"
+            },
+            {
+              "value": "auto",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "src",
+          "reflectToAttr": false,
+          "docs": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-error",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports a load failure or rejected URL once per source attempt. Bubbles\nand crosses shadow boundaries so consumers can observe it on a surface.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "caption",
+          "docs": "Optional visible context displayed below the media in a figcaption."
+        }
+      ],
+      "parts": [
+        {
+          "name": "caption",
+          "docs": "The figcaption carrying the slotted caption."
+        },
+        {
+          "name": "fallback",
+          "docs": "The unavailable-image indicator inside the frame."
+        },
+        {
+          "name": "figure",
+          "docs": "The figure containing the frame and optional caption."
+        },
+        {
+          "name": "frame",
+          "docs": "The reserved media box and its shape and backing surface."
+        },
+        {
+          "name": "image",
+          "docs": "The native image and its fit within the frame."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-indicator/ki-indicator.tsx",
       "encapsulation": "shadow",
       "tag": "ki-indicator",
@@ -8434,6 +8823,26 @@
       "declaration": "export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-icon-button/ki-icon-button.tsx"
+    },
+    "src/components/ki-image/ki-image.tsx::KiImageRatio": {
+      "declaration": "export type KiImageRatio = 'auto' | '1:1' | '4:3' | '3:2' | '16:9';",
+      "docstring": "",
+      "path": "src/components/ki-image/ki-image.tsx"
+    },
+    "src/components/ki-image/ki-image.tsx::KiImageFit": {
+      "declaration": "export type KiImageFit = 'cover' | 'contain';",
+      "docstring": "",
+      "path": "src/components/ki-image/ki-image.tsx"
+    },
+    "src/components/ki-image/ki-image.tsx::KiImageRadius": {
+      "declaration": "export type KiImageRadius = 'none' | 'md' | 'lg';",
+      "docstring": "",
+      "path": "src/components/ki-image/ki-image.tsx"
+    },
+    "src/components/ki-image/ki-image.tsx::KiImageLoading": {
+      "declaration": "export type KiImageLoading = 'lazy' | 'eager';",
+      "docstring": "",
+      "path": "src/components/ki-image/ki-image.tsx"
     },
     "src/components/ki-input/ki-input.tsx::KiInputType": {
       "declaration": "export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';",

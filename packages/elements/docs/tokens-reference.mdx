@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 398 semantic
-and 1260 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 400 semantic
+and 1273 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -68,6 +68,7 @@ every component at once.
 | `--ki-effect-component-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter. |
 | `--ki-effect-component-secondary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter. |
 | `--ki-effect-component-secondary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with --ki-effect-component-backdrop-filter. |
+| `--ki-effect-no-backdrop-filter` | `none` | A surface that paints without filtering its backdrop. |
 | `--ki-effect-small-dark-shadow` | `0 2px 3px -1.5px rgba(0, 0, 0, 0.32)` | MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters. |
 | `--ki-effect-video-hover-opacity` | `1` | Opacity of the added play-container shadow on hover. onmars shows the full primary hover effect over the resting shadow. |
 
@@ -301,6 +302,7 @@ every component at once.
 | `--ki-spacing-activity-label-gap` | `0.5rem` | Gap between an inline activity mark and its label. |
 | `--ki-spacing-block` | `0.75rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. |
 | `--ki-spacing-inline` | `0.5rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. |
+| `--ki-spacing-media-caption` | `0.25rem` | Block spacing between a media frame and its caption. |
 
 ### `ki.state-layer`
 
@@ -1159,6 +1161,24 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-icon-button-xs-icon-size` | `1rem` | dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon). |
 | `--ki-icon-button-xs-size` | `1.5rem` | dimension used by the icon button component for xs box (24px square, Figma Space/7xl). |
 | `--ki-icon-button-xs-spinner-size` | `1rem` | dimension used by the icon button component for the xs loading spinner box (16px, the xs icon size; spec 046 D5: the spinner takes the place of the icon). |
+
+### `ki-image`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-image-caption-fg` | `#5e5953` | Text colour of the visible caption. |
+| `--ki-image-caption-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the visible caption. |
+| `--ki-image-caption-font-size` | `0.75rem` | Type size of the visible caption. |
+| `--ki-image-caption-gap` | `0.25rem` | Space between the image frame and its caption. |
+| `--ki-image-caption-line-height` | `1rem` | Line height of the visible caption. |
+| `--ki-image-fallback-backdrop-filter` | `none` | Complete filter applied behind the media surface. |
+| `--ki-image-fallback-bg` | `#f3f0eb` | Solid fill behind the image and fallback symbol. |
+| `--ki-image-fallback-bg-image` | `none` | Optional background image over the media fill. |
+| `--ki-image-fallback-fg` | `#5e5953` | Foreground of the fallback symbol. |
+| `--ki-image-fallback-icon-size` | `1.25rem` | Inline and block size of the unavailable-image symbol. |
+| `--ki-image-fallback-icon-stroke-width` | `2` | Stroke width of the unavailable-image symbol. |
+| `--ki-image-radius` | `12px` | Corner radius of the default media frame. |
+| `--ki-image-radius-md` | `10px` | Corner radius of the medium media frame. |
 
 ### `ki-indicator`
 

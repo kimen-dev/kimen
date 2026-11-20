@@ -4826,6 +4826,306 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-image.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiImage",
+          "customElement": true,
+          "tagName": "ki-image",
+          "description": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",
+          "whenToUse": "to show a photo, illustration, or diagram with a predictable\nlayout. Supply task-relevant alt text, or mark purely decorative media as\ndecorative. Set an explicit ratio when the layout must stay fixed.",
+          "whenNotToUse": "for a background decoration, a video, or an interactive\ncontrol. Use a separate control to open or otherwise act on an image.",
+          "attributes": [
+            {
+              "name": "alt",
+              "fieldName": "alt",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image."
+            },
+            {
+              "name": "decorative",
+              "fieldName": "decorative",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hide the media from assistive technology when it conveys no information."
+            },
+            {
+              "name": "fallback-label",
+              "fieldName": "fallbackLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Image unavailable'",
+              "description": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label."
+            },
+            {
+              "name": "fit",
+              "fieldName": "fit",
+              "type": {
+                "text": "\"contain\" | \"cover\""
+              },
+              "default": "'cover'",
+              "description": "Cover fills the frame. Contain preserves the whole image in it."
+            },
+            {
+              "name": "loading",
+              "fieldName": "loading",
+              "type": {
+                "text": "\"eager\" | \"lazy\""
+              },
+              "default": "'lazy'",
+              "description": "Native loading hint. Use eager for a critical image above the fold."
+            },
+            {
+              "name": "radius",
+              "fieldName": "radius",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"none\""
+              },
+              "default": "'lg'",
+              "description": "Corner radius of the media frame."
+            },
+            {
+              "name": "ratio",
+              "fieldName": "ratio",
+              "type": {
+                "text": "\"16:9\" | \"1:1\" | \"3:2\" | \"4:3\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load."
+            },
+            {
+              "name": "src",
+              "fieldName": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+              "required": true,
+              "format": "url"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "alt",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image.",
+              "attribute": "alt",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "decorative",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hide the media from assistive technology when it conveys no information.",
+              "attribute": "decorative",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "fallbackLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Image unavailable'",
+              "description": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label.",
+              "attribute": "fallback-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "fit",
+              "privacy": "public",
+              "type": {
+                "text": "\"contain\" | \"cover\""
+              },
+              "default": "'cover'",
+              "description": "Cover fills the frame. Contain preserves the whole image in it.",
+              "attribute": "fit",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "privacy": "public",
+              "type": {
+                "text": "\"eager\" | \"lazy\""
+              },
+              "default": "'lazy'",
+              "description": "Native loading hint. Use eager for a critical image above the fold.",
+              "attribute": "loading",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "radius",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"none\""
+              },
+              "default": "'lg'",
+              "description": "Corner radius of the media frame.",
+              "attribute": "radius",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "ratio",
+              "privacy": "public",
+              "type": {
+                "text": "\"16:9\" | \"1:1\" | \"3:2\" | \"4:3\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load.",
+              "attribute": "ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+              "attribute": "src",
+              "reflects": false,
+              "required": true,
+              "format": "url"
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-error",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Reports a load failure or rejected URL once per source attempt. Bubbles\nand crosses shadow boundaries so consumers can observe it on a surface."
+            }
+          ],
+          "slots": [
+            {
+              "name": "caption",
+              "description": "Optional visible context displayed below the media in a figcaption."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "caption",
+              "description": "The figcaption carrying the slotted caption."
+            },
+            {
+              "name": "fallback",
+              "description": "The unavailable-image indicator inside the frame."
+            },
+            {
+              "name": "figure",
+              "description": "The figure containing the frame and optional caption."
+            },
+            {
+              "name": "frame",
+              "description": "The reserved media box and its shape and backing surface."
+            },
+            {
+              "name": "image",
+              "description": "The native image and its fit within the frame."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-image-caption-fg",
+              "description": "Text colour of the visible caption."
+            },
+            {
+              "name": "--ki-image-caption-font-family",
+              "description": "Typeface of the visible caption."
+            },
+            {
+              "name": "--ki-image-caption-font-size",
+              "description": "Type size of the visible caption."
+            },
+            {
+              "name": "--ki-image-caption-gap",
+              "description": "Space between the image frame and its caption."
+            },
+            {
+              "name": "--ki-image-caption-line-height",
+              "description": "Line height of the visible caption."
+            },
+            {
+              "name": "--ki-image-fallback-backdrop-filter",
+              "description": "Complete filter applied behind the media surface."
+            },
+            {
+              "name": "--ki-image-fallback-bg",
+              "description": "Solid fill behind the image and fallback symbol."
+            },
+            {
+              "name": "--ki-image-fallback-bg-image",
+              "description": "Optional background image over the media fill."
+            },
+            {
+              "name": "--ki-image-fallback-fg",
+              "description": "Foreground of the fallback symbol."
+            },
+            {
+              "name": "--ki-image-fallback-icon-size",
+              "description": "Inline and block size of the unavailable-image symbol."
+            },
+            {
+              "name": "--ki-image-fallback-icon-stroke-width",
+              "description": "Stroke width of the unavailable-image symbol."
+            },
+            {
+              "name": "--ki-image-radius",
+              "description": "Corner radius of the default media frame."
+            },
+            {
+              "name": "--ki-image-radius-md",
+              "description": "Corner radius of the medium media frame."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiImage",
+          "declaration": {
+            "name": "KiImage",
+            "module": "dist/components/ki-image.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-image",
+          "declaration": {
+            "name": "KiImage",
+            "module": "dist/components/ki-image.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-indicator.js",
       "declarations": [
         {

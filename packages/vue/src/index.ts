@@ -18,6 +18,7 @@ export { KiDivider } from './ki-divider.js';
 export { KiGrid } from './ki-grid.js';
 export { KiIcon } from './ki-icon.js';
 export { KiIconButton } from './ki-icon-button.js';
+export { KiImage } from './ki-image.js';
 export { KiIndicator } from './ki-indicator.js';
 export { KiInput } from './ki-input.js';
 export { KiLink } from './ki-link.js';

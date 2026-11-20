@@ -34,8 +34,8 @@ Chromium, Firefox and WebKit, and each engine compares against its own
 baselines:
 
 - Matrix: onmars light, onmars dark and material3 light for each component
-  on each browser engine. Counter also captures material3 dark. Hover and
-  animated states are out of v1.
+  on each browser engine. The components listed in `visual/theme-matrix.ts`
+  also capture material3 dark. Hover and animated states are out of v1.
 - Shared harness: `visual/harness.ts` (tokens injection, vendored font
   fixtures + `document.fonts.ready`, reduced-motion emulation, gallery
   mounting). Each component owns a `src/components/ki-<name>/gallery.ts`

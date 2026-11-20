@@ -1,0 +1,94 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="figure"] {
+  margin: 0;
+}
+
+[part="frame"] {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--ki-image-radius);
+  background-color: var(--ki-image-fallback-bg);
+  background-image: var(--ki-image-fallback-bg-image, none);
+  backdrop-filter: var(--ki-image-fallback-backdrop-filter, none);
+}
+
+:host([ratio="1:1"]) [part="frame"] {
+  aspect-ratio: 1;
+}
+
+:host([ratio="4:3"]) [part="frame"] {
+  aspect-ratio: 4 / 3;
+}
+
+:host([ratio="3:2"]) [part="frame"] {
+  aspect-ratio: 3 / 2;
+}
+
+:host([radius="md"]) [part="frame"] {
+  border-radius: var(--ki-image-radius-md);
+}
+
+:host([radius="none"]) [part="frame"] {
+  border-radius: 0;
+}
+
+[part="image"],
+[part="fallback"] {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+[part="image"] {
+  display: block;
+  object-fit: cover;
+}
+
+:host([fit="contain"]) [part="image"] {
+  object-fit: contain;
+}
+
+[part="fallback"] {
+  display: grid;
+  place-items: center;
+  color: var(--ki-image-fallback-fg);
+}
+
+[part="fallback"] svg {
+  inline-size: min(100%, var(--ki-image-fallback-icon-size));
+  block-size: min(100%, var(--ki-image-fallback-icon-size));
+  fill: none;
+  stroke-width: var(--ki-image-fallback-icon-stroke-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+[part="caption"] {
+  margin-block-start: var(--ki-image-caption-gap);
+  color: var(--ki-image-caption-fg);
+  font-family: var(--ki-image-caption-font-family);
+  font-size: var(--ki-image-caption-font-size);
+  line-height: var(--ki-image-caption-line-height);
+  overflow-wrap: anywhere;
+}
+
+@media (forced-colors: active) {
+  [part="frame"] {
+    background-color: Canvas;
+  }
+
+  [part="fallback"] svg {
+    stroke: CanvasText;
+  }
+}

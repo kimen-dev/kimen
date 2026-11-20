@@ -47,6 +47,7 @@ methods, CSS custom properties and examples.
 - [ki-grid](llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.
 - [ki-icon](llms/ki-icon.md): show a named glyph next to text, or give a standalone meaningful glyph an accessible label.
 - [ki-icon-button](llms/ki-icon-button.md): a compact, widely understood action where space precludes a visible label: toolbars, card and dialog corners (close), media transport, data-row actions.
+- [ki-image](llms/ki-image.md): to show a photo, illustration, or diagram with a predictable layout.
 - [ki-indicator](llms/ki-indicator.md): show the current position within a bounded, sequential set of peer views whose navigation lives elsewhere: carousel slides, unlabeled onboarding steps, gallery pages.
 - [ki-input](llms/ki-input.md): collect one line of free text from a person, always with a visible `label`; choose the `type` and `autocomplete` that match the entry purpose.
 - [ki-link](llms/ki-link.md): navigate to a page, section, or resource.

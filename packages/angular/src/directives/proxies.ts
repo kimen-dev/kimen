@@ -19,6 +19,7 @@ import { defineCustomElement as defineKiDivider } from '@kimen/elements/componen
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
 import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
+import { defineCustomElement as defineKiImage } from '@kimen/elements/components/ki-image.js';
 import { defineCustomElement as defineKiIndicator } from '@kimen/elements/components/ki-indicator.js';
 import { defineCustomElement as defineKiInput } from '@kimen/elements/components/ki-input.js';
 import { defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
@@ -363,6 +364,35 @@ export class KiIconButton {
 
 
 export declare interface KiIconButton extends Components.KiIconButton {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiImage,
+  inputs: ['alt', 'decorative', 'fallbackLabel', 'fit', 'loading', 'radius', 'ratio', 'src']
+})
+@Component({
+  selector: 'ki-image',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['alt', 'decorative', 'fallbackLabel', 'fit', 'loading', 'radius', 'ratio', { name: 'src', required: true }],
+})
+export class KiImage {
+  protected el: HTMLKiImageElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiImage extends Components.KiImage {
+  /**
+   * Reports a load failure or rejected URL once per source attempt. Bubbles
+and crosses shadow boundaries so consumers can observe it on a surface.
+   */
+}
 
 
 @ProxyCmp({

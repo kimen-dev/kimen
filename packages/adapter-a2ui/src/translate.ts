@@ -46,7 +46,11 @@ export interface A2uiDegradationReport {
   readonly surfaceId: string;
   readonly componentId: string;
   readonly componentType: string;
-  readonly reason: 'unmapped-type' | 'unsupported-function' | 'unsupported-variant';
+  readonly reason:
+    | 'missing-image-alt'
+    | 'unmapped-type'
+    | 'unsupported-function'
+    | 'unsupported-variant';
   readonly detail?: string | undefined;
 }
 
@@ -115,7 +119,7 @@ interface WalkContext {
 class Degrade extends Error {
   constructor(
     readonly reason: A2uiDegradationReport['reason'],
-    readonly detail: string,
+    readonly detail?: string,
   ) {
     super(reason);
   }
@@ -530,6 +534,35 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       node(
         'ki-divider',
         axis === 'vertical' || axis === 'horizontal' ? { orientation: axis } : {},
+        [],
+      ),
+    ];
+  },
+  Image: (it) => {
+    const src = it.value('url');
+    if (src === undefined && it.body['url'] !== undefined) {
+      // A missing binding can resolve when the data model arrives.
+      return [];
+    }
+    if (typeof src !== 'string') {
+      throw it.malformed('url', 'Image url must resolve to a string');
+    }
+    const fit = it.literal('fit');
+    const accessibility =
+      it.body[it.context.dialect.reservedNamespace ? '@accessibility' : 'accessibility'];
+    const { hidden, label } = isPlainObject(accessibility) ? accessibility : {};
+    const alt = typeof label === 'string' ? label : '';
+    if (hidden !== true && alt.trim() === '') {
+      throw new Degrade('missing-image-alt');
+    }
+    return [
+      node(
+        'ki-image',
+        {
+          src,
+          ...(hidden === true ? { decorative: true } : { alt }),
+          ...(fit === 'cover' || fit === 'contain' ? { fit } : {}),
+        },
         [],
       ),
     ];
