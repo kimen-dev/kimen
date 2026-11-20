@@ -71,11 +71,6 @@
         "text": "MCP Apps adapter: Kimen surfaces reach MCP Apps hosts as self-contained ui:// resources rendered through the guarded renderer"
       },
       {
-        "id": "protocol-adapters-remaining",
-        "state": "planned",
-        "text": "AG-UI and json-render protocol adapters planned"
-      },
-      {
         "id": "runtime-catalog",
         "state": "available",
         "text": "Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary"

@@ -52,7 +52,10 @@ unchanged default.
 `@kimen/adapter-a2ui` and `@kimen/adapter-mcp-apps` are implemented, each
 declaring the exact protocol versions it supports in its `COMPAT.md`.
 Adapters are disposable by design: protocol churn is absorbed in the adapter
-without touching the core. AG-UI and json-render adapters remain planned.
+without touching the core. AG-UI needs no adapter of its own: its streams carry
+A2UI messages, which the A2UI adapter renders (see the "Connect your agent"
+guide). The json-render adapter is dropped: json-render is a library format,
+not a protocol.
 
 ## 6. Emitter kit (shipped)
 
@@ -97,7 +100,6 @@ Follow progress through issues and pull requests.
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer
 - **available** — MCP Apps adapter: Kimen surfaces reach MCP Apps hosts as self-contained ui:// resources rendered through the guarded renderer
-- **planned** — AG-UI and json-render protocol adapters planned
 - **available** — Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary
 - **available** — Machine-readable Web Components foundation with token-driven theming
 <!-- kimen:capabilities:roadmap-status:end -->
