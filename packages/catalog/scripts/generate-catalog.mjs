@@ -295,8 +295,21 @@ if (
     [...metadata].filter(([, entry]) => entry.catalog === true).map(([tag]) => tag),
   );
   const output = buildCatalog(manifest, { elementsVersion, catalogTags });
-  mkdirSync(join(repoRoot, 'packages/catalog/src/generated'), { recursive: true });
-  writeFileSync(join(repoRoot, 'packages/catalog/src/generated/catalog.ts'), output, 'utf8');
+  const schemePolicy = readFileSync(
+    join(repoRoot, 'packages/elements/src/utils/url-scheme.ts'),
+    'utf8',
+  );
+  const outputDir = join(repoRoot, 'packages/catalog/src/generated');
+  mkdirSync(outputDir, { recursive: true });
+  writeFileSync(join(outputDir, 'catalog.ts'), output, 'utf8');
+  // The default scheme rules are shared with the element; the catalog adds
+  // host origin rules without importing the built elements package. Expose
+  // the control-character predicate here for the catalog-only origin check.
+  writeFileSync(
+    join(outputDir, 'url-scheme.ts'),
+    `// GENERATED from packages/elements/src/utils/url-scheme.ts.\n${schemePolicy}\nexport { isControlOrSpace };\n`,
+    'utf8',
+  );
   process.stdout.write(
     `catalog: generated src/generated/catalog.ts (schema ${CATALOG_SCHEMA_VERSION})\n`,
   );

@@ -1,0 +1,129 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Visible and accessible group name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-menu-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Family for action labels and the filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-group-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for group labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-group-label-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of group labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-inline-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Start and end inset of an action, group label, or filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-meta-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of metadata and group labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-meta-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of metadata and group labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space inside the popup.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A named group of related actions in a ki-menu.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The visible group name.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Visible and accessible group name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The ki-menu-item and ki-divider children of the group.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-menu-group.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-menu-group.d.ts",
+    "symbols": {
+      "KiMenuGroup": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiMenuGroup extends Components.KiMenuGroup, HTMLElement {\n}\nexport const KiMenuGroup: {\n    prototype: KiMenuGroup;\n    new (): KiMenuGroup;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-menu-group.js"
+  }
+}

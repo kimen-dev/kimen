@@ -46,7 +46,11 @@ export interface A2uiDegradationReport {
   readonly surfaceId: string;
   readonly componentId: string;
   readonly componentType: string;
-  readonly reason: 'unmapped-type' | 'unsupported-function' | 'unsupported-variant';
+  readonly reason:
+    | 'missing-image-alt'
+    | 'unmapped-type'
+    | 'unsupported-function'
+    | 'unsupported-variant';
   readonly detail?: string | undefined;
 }
 
@@ -115,7 +119,7 @@ interface WalkContext {
 class Degrade extends Error {
   constructor(
     readonly reason: A2uiDegradationReport['reason'],
-    readonly detail: string,
+    readonly detail?: string,
   ) {
     super(reason);
   }
@@ -420,6 +424,15 @@ function layout(it: Instance, direction?: 'row'): UiSpecNode {
   );
 }
 
+/** Reads the label leaves while keeping the rendered Row and Column stacks intact. */
+function modalLabelContent(label: readonly Piece[]): Piece[] {
+  return label.flatMap((piece) =>
+    typeof piece !== 'string' && piece.component === 'ki-stack'
+      ? modalLabelContent(piece.slots?.[''] ?? [])
+      : [piece],
+  );
+}
+
 /** Basic-catalog Icon names whose Lucide names differ, in both A2UI versions. */
 const ICON_NAMES: Readonly<Record<string, string>> = {
   accountCircle: 'circle-user-round',
@@ -492,18 +505,22 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
   },
   ChoicePicker: (it) => {
     const variant = it.literal('variant') ?? 'mutuallyExclusive';
+    if (variant !== 'mutuallyExclusive' && variant !== 'multipleSelection') {
+      throw new Degrade('unsupported-variant', variant);
+    }
+    const multiple = variant === 'multipleSelection';
     const options = it.body['options'];
     if (!Array.isArray(options)) {
       throw it.malformed('options', 'ChoicePicker options must be a list');
     }
     const searchable = options.length > 15;
-    const multiple = variant === 'multipleSelection';
-    if (variant !== 'mutuallyExclusive' && !(searchable && multiple)) {
-      throw new Degrade('unsupported-variant', 'multipleSelection');
-    }
-
     const selected = it.value('value');
     const first = Array.isArray(selected) ? toText(selected[0]) : toText(selected);
+    const selectedValues = new Set(
+      multiple && !searchable && Array.isArray(selected)
+        ? selected.filter((value): value is string => typeof value === 'string')
+        : [],
+    );
     const choices = options.map((option, index) => {
       if (!isPlainObject(option) || typeof option['value'] !== 'string') {
         throw it.malformed(
@@ -513,23 +530,30 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       }
       const label =
         option['label'] === undefined ? '' : toText(resolveOption(it, option['label'], index));
+      const value = option['value'];
       return node(
-        searchable ? 'ki-option' : 'ki-radio',
-        { value: option['value'] },
+        searchable ? 'ki-option' : multiple ? 'ki-checkbox' : 'ki-radio',
+        { value, ...(selectedValues.has(value) ? { checked: true } : {}) },
         label === '' ? [] : [label],
       );
     });
     const label = it.text('label');
-    const value = multiple
-      ? JSON.stringify(Array.isArray(selected) ? selected.map(toText) : first === '' ? [] : [first])
-      : first;
+    if (multiple && label.trim() === '') {
+      throw new Degrade('unsupported-variant', 'multipleSelection requires a group label');
+    }
+    const value =
+      searchable && multiple
+        ? JSON.stringify(
+            Array.isArray(selected) ? selected.map(toText) : first === '' ? [] : [first],
+          )
+        : first;
     return [
       node(
-        searchable ? 'ki-combobox' : 'ki-radio-group',
+        searchable ? 'ki-combobox' : multiple ? 'ki-checkbox-group' : 'ki-radio-group',
         {
           ...(label === '' ? {} : { label }),
-          ...(multiple ? { multiple: true } : {}),
-          ...(value === '' ? {} : { value }),
+          ...(searchable && multiple ? { multiple: true } : {}),
+          ...((searchable || !multiple) && value !== '' ? { value } : {}),
         },
         choices,
       ),
@@ -542,6 +566,35 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       node(
         'ki-divider',
         axis === 'vertical' || axis === 'horizontal' ? { orientation: axis } : {},
+        [],
+      ),
+    ];
+  },
+  Image: (it) => {
+    const src = it.value('url');
+    if (src === undefined && it.body['url'] !== undefined) {
+      // A missing binding can resolve when the data model arrives.
+      return [];
+    }
+    if (typeof src !== 'string') {
+      throw it.malformed('url', 'Image url must resolve to a string');
+    }
+    const fit = it.literal('fit');
+    const accessibility =
+      it.body[it.context.dialect.reservedNamespace ? '@accessibility' : 'accessibility'];
+    const { hidden, label } = isPlainObject(accessibility) ? accessibility : {};
+    const alt = typeof label === 'string' ? label : '';
+    if (hidden !== true && alt.trim() === '') {
+      throw new Degrade('missing-image-alt');
+    }
+    return [
+      node(
+        'ki-image',
+        {
+          src,
+          ...(hidden === true ? { decorative: true } : { alt }),
+          ...(fit === 'cover' || fit === 'contain' ? { fit } : {}),
+        },
         [],
       ),
     ];
@@ -575,6 +628,72 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         .map((group) => node('ki-list-item', {}, group)),
     ),
   ],
+  Modal: (it) => {
+    const triggerId = it.literal('trigger');
+    const contentId = it.literal('content');
+    if (!triggerId || !contentId) {
+      throw it.malformed(
+        triggerId ? 'content' : 'trigger',
+        'Modal requires trigger and content component ids',
+      );
+    }
+    const { actionNodes, components, nodes } = it.context;
+    const triggerType = components.get(triggerId)?.component;
+    if (triggerType === undefined || !components.has(contentId)) {
+      // Progressive updates can deliver either reference in a later message.
+      return [];
+    }
+    if (triggerType !== 'Button' && triggerType !== 'Text') {
+      throw new Degrade('unsupported-variant', `Modal trigger: ${triggerType}`);
+    }
+
+    const [trigger] = it.child('trigger');
+    if (typeof trigger === 'object' && trigger.component !== 'ki-button') {
+      return [trigger];
+    }
+    const button = typeof trigger === 'object' ? trigger : undefined;
+    const label = typeof trigger === 'string' ? [trigger] : (button?.slots?.[''] ?? []);
+    const content = modalLabelContent(label);
+    const text = content
+      .filter((piece): piece is string => typeof piece === 'string')
+      .join('')
+      .trim();
+    // The adapter's icons are decorative. Keep their glyphs and name the opener.
+    const needsFallback =
+      text === '' &&
+      content.every((piece) => typeof piece === 'string' || piece.component === 'ki-icon');
+    const openerLabel = needsFallback
+      ? [...label.filter((piece) => typeof piece !== 'string'), 'Open dialog']
+      : label;
+    // The visit number is unique even when a ChildList repeats the A2UI id.
+    const id = `a2ui-modal-${String(nodes)}`;
+    const opener = {
+      ...button,
+      ...node(
+        'ki-button',
+        { ...button?.props, command: 'show-modal', commandfor: id, type: 'button' },
+        openerLabel,
+      ),
+    };
+    const binding = button === undefined ? undefined : actionNodes.get(button);
+    if (binding !== undefined) {
+      actionNodes.set(opener, binding);
+    }
+    return [
+      opener,
+      {
+        component: 'ki-dialog',
+        id,
+        props: { heading: text || 'Dialog' },
+        slots: {
+          '': it.child('content'),
+          footer: [
+            node('ki-button', { command: 'close', commandfor: id, type: 'button' }, ['Close']),
+          ],
+        },
+      },
+    ];
+  },
   Row: (it) => [layout(it, 'row')],
   Tabs: (it) => {
     const tabs = it.body['tabs'];

@@ -76,9 +76,11 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
   const eventNames = Object.keys(entry.events);
   if (eventNames.length > 0) {
     lines.push(
-      entry.activationEvent === undefined
-        ? '- Events (a spec never names an event: an "action" on this component fires on its one listed event, and a binding is rejected when more than one is listed):'
-        : `- Events (an "action" on this component fires on \`${entry.activationEvent}\`):`,
+      tag === 'ki-chip'
+        ? '- Events (chip actions use ki-change for filter, ki-remove for removable input, and ki-activate for assist, based on the chip or parent group type):'
+        : entry.activationEvent === undefined
+          ? '- Events (a spec never names an event: an "action" on this component fires on its one listed event, and a binding is rejected when more than one is listed):'
+          : `- Events (an "action" on this component fires on \`${entry.activationEvent}\`):`,
     );
     for (const name of eventNames) {
       lines.push(`  - \`${name}\` — ${entry.events[name] ?? ''}`);

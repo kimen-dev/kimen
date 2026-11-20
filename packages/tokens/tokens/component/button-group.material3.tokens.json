@@ -1,0 +1,22 @@
+{
+  "ki": {
+    "button-group": {
+      "divider": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Decorative toolbar separator ink."
+      },
+      "bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Toolbar surface colour."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Default toolbar foreground on its raised surface."
+      },
+      "border-color": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Thin toolbar frame colour."
+      }
+    }
+  }
+}

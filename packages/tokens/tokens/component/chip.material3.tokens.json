@@ -1,0 +1,50 @@
+{
+  "ki": {
+    "chip": {
+      "bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Resting filter and assist surface."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Resting filter and assist label."
+      },
+      "border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Outline of an unselected filter or assist chip."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Surface under the hovering pointer."
+      },
+      "hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Label over the hover surface."
+      },
+      "selected-bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Selected filter surface."
+      },
+      "selected-fg": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Selected filter label and check."
+      },
+      "selected-border": {
+        "$value": "{ki.outline.primary-high-em}",
+        "$description": "Accessible boundary of a selected filter."
+      },
+      "input-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Surface of a picked value."
+      },
+      "input-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Label of a picked value."
+      },
+      "assist-icon-fg": {
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Decorative glyph in an assist chip."
+      }
+    }
+  }
+}
