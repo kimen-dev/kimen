@@ -498,6 +498,7 @@ export class KiCarousel {
     const windowStart = Math.floor((this.position - 1) / INDICATOR_LIMIT) * INDICATOR_LIMIT;
     return (
       <Host
+        key="carousel"
         role={this.label ? 'region' : undefined}
         aria-label={this.label || undefined}
         aria-roledescription={this.label ? this.carouselRoleDescription : undefined}
@@ -507,6 +508,7 @@ export class KiCarousel {
       >
         {this.canRotate && (
           <button
+            key="rotation"
             type="button"
             part="rotation"
             tabIndex={0}
@@ -518,31 +520,36 @@ export class KiCarousel {
           </button>
         )}
         <div
+          key="viewport"
           part="viewport"
           data-layout={this.arrangement}
           style={{ '--_ki-carousel-view': String(this.view) }}
           tabIndex={this.limit > 1 ? 0 : -1}
           onScroll={this.onScroll}
         >
-          <slot onSlotchange={this.refreshSlides} />
+          <slot key="slides" onSlotchange={this.refreshSlides} />
         </div>
         {(pagination || (this.navigation && this.count > 1)) && (
-          <div part="controls">
+          <div key="controls" part="controls">
             {pagination && (
-              <div part="position">
-                <div aria-hidden={largeSequence ? 'true' : undefined}>
+              <div key="position" part="position">
+                <div key="dots" aria-hidden={largeSequence ? 'true' : undefined}>
                   <ki-indicator
+                    key="indicator"
                     count={Math.min(INDICATOR_LIMIT, this.count - windowStart)}
                     current={this.position - windowStart}
                     label={this.positionLabel}
                   ></ki-indicator>
                 </div>
-                {largeSequence && <span>{this.positionText(this.position)}</span>}
+                {largeSequence && (
+                  <span key="position-text">{this.positionText(this.position)}</span>
+                )}
               </div>
             )}
             {this.navigation && this.count > 1 && (
-              <div class="navigation">
+              <div key="navigation" class="navigation">
                 <button
+                  key="previous"
                   type="button"
                   part="previous"
                   tabIndex={0}
@@ -550,9 +557,10 @@ export class KiCarousel {
                   aria-disabled={String(this.limit === 1 || (!this.loop && this.position === 1))}
                   onClick={this.onPrevious}
                 >
-                  <ki-icon name="chevron-right"></ki-icon>
+                  <ki-icon key="previous-icon" name="chevron-right"></ki-icon>
                 </button>
                 <button
+                  key="next"
                   type="button"
                   part="next"
                   tabIndex={0}
@@ -562,13 +570,18 @@ export class KiCarousel {
                   )}
                   onClick={this.onNext}
                 >
-                  <ki-icon name="chevron-right"></ki-icon>
+                  <ki-icon key="next-icon" name="chevron-right"></ki-icon>
                 </button>
               </div>
             )}
           </div>
         )}
-        <span part="announcement" aria-live={this.rotating ? 'off' : 'polite'} aria-atomic="true">
+        <span
+          key="announcement"
+          part="announcement"
+          aria-live={this.rotating ? 'off' : 'polite'}
+          aria-atomic="true"
+        >
           {this.announcement ? this.positionText(this.announcement) : ''}
         </span>
       </Host>
