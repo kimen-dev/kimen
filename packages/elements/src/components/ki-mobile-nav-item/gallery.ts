@@ -6,7 +6,6 @@ import type { VisualGallery } from '../../../browser-tests/visual/galleries';
 
 export default {
   width: 384,
-  focusFirst: true,
   html: `
     <div style="transform:translate(0);min-block-size:7rem;background-color:var(--ki-surface-s0)">
       <ki-mobile-nav label="Item states" variant="floating">

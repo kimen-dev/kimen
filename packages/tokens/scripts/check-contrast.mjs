@@ -45,13 +45,15 @@ const CONTRAST_PAIRS = [
 
 // Both variants share the destination inks. Check each ink against both
 // surfaces since the item and its painted background have distinct stems.
-const MOBILE_NAV_TEXT_PAIRS = ['--ki-mobile-nav-bg', '--ki-mobile-nav-floating-bg'].flatMap(
-  (surface) =>
-    ['--ki-mobile-nav-item-fg', '--ki-mobile-nav-item-current-fg'].map((text) => ({
-      text,
-      surface,
-    })),
+const MOBILE_NAV_SURFACES = ['--ki-mobile-nav-bg', '--ki-mobile-nav-floating-bg'];
+const MOBILE_NAV_TEXT_PAIRS = MOBILE_NAV_SURFACES.flatMap((surface) =>
+  ['--ki-mobile-nav-item-fg', '--ki-mobile-nav-item-current-fg'].map((text) => ({ text, surface })),
 );
+const MOBILE_NAV_STATE_PAIRS = MOBILE_NAV_SURFACES.map((surface) => ({
+  text: '--ki-mobile-nav-indicator-fg',
+  surface,
+  minRatio: NON_TEXT_MIN_RATIO,
+}));
 
 export function parseColor(value) {
   const color = value.trim().toLowerCase();
@@ -1170,7 +1172,13 @@ function evaluateContext(theme, scheme, declarations) {
     const ink = surface.replace(/-bg$/u, '-icon');
     return declarations.has(ink) ? [{ text: ink, surface, minRatio: NON_TEXT_MIN_RATIO }] : [];
   });
-  for (const pair of [...CONTRAST_PAIRS, ...MOBILE_NAV_TEXT_PAIRS, ...swept, ...icons]) {
+  for (const pair of [
+    ...CONTRAST_PAIRS,
+    ...MOBILE_NAV_TEXT_PAIRS,
+    ...MOBILE_NAV_STATE_PAIRS,
+    ...swept,
+    ...icons,
+  ]) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
     const backdrops =

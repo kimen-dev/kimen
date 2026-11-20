@@ -3,16 +3,19 @@ import '../../../icons/inbox.js';
 import '../../../icons/search.js';
 import { h } from '@stencil/core';
 import type { Meta, StoryObj } from '@stencil/storybook-plugin';
-import type { JSX } from '../../components';
+import type { KiMobileNavItem } from './ki-mobile-nav-item';
+
+type Args = Pick<KiMobileNavItem, 'href' | 'iconName'> &
+  Partial<Pick<KiMobileNavItem, 'count' | 'countLabel' | 'current'>>;
 
 const meta = {
   title: 'Elements/ki-mobile-nav-item',
   component: 'ki-mobile-nav-item',
   args: { href: '#inbox', iconName: 'inbox', count: 3, current: true },
-} satisfies Meta<JSX.KiMobileNavItem>;
+} satisfies Meta<Args>;
 
 export default meta;
-type Story = StoryObj<JSX.KiMobileNavItem>;
+type Story = StoryObj<Args>;
 
 export const Destination: Story = {
   render: (args) => (

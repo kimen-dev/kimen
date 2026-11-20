@@ -86,3 +86,4 @@ Feature: Mobile navigation keeps the main destinations visible
 - **Agent's choice, pending founder confirmation.** The landmark label defaults to `Main`. Navigation uses native anchors and the catalog's standard click binding when an action is declared.
 - **Agent's choice, pending founder confirmation.** Use the supporting ink role for inactive labels. It matches medium-emphasis ink in standard mode and adapts in contrast-more.
 - **Agent's choice, pending founder confirmation.** Use the public API gate's major classification for the generated loader `Components` and `JSX` namespace changes. The two tags themselves are additive.
+- **Agent's choice, pending founder confirmation.** Use the indicator ink for an inset hairline around the current pill so its shape remains distinct from either bar surface.

@@ -4,18 +4,20 @@ import '../../../icons/inbox.js';
 import '../../../icons/search.js';
 import { h } from '@stencil/core';
 import type { Meta, StoryObj } from '@stencil/storybook-plugin';
-import type { JSX } from '../../components';
+import type { KiMobileNav } from './ki-mobile-nav';
+
+type Args = Partial<Pick<KiMobileNav, 'label' | 'variant'>>;
 
 const meta = {
   title: 'Elements/ki-mobile-nav',
   component: 'ki-mobile-nav',
   args: { label: 'Main', variant: 'fixed' },
-} satisfies Meta<JSX.KiMobileNav>;
+} satisfies Meta<Args>;
 
 export default meta;
-type Story = StoryObj<JSX.KiMobileNav>;
+type Story = StoryObj<Args>;
 
-function preview(args: JSX.KiMobileNav, dir = 'ltr') {
+function preview(args: Args, dir = 'ltr') {
   return (
     <div
       dir={dir}

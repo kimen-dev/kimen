@@ -56,6 +56,8 @@ a:focus-visible {
 :host([current]) [part="indicator"] {
   background-color: var(--ki-mobile-nav-indicator-bg);
   color: var(--ki-mobile-nav-indicator-fg);
+  outline: var(--ki-mobile-nav-border-width) solid currentcolor;
+  outline-offset: calc(-1 * var(--ki-mobile-nav-border-width));
 }
 
 ki-counter {
@@ -77,5 +79,6 @@ ki-counter {
     forced-color-adjust: none;
     background-color: Highlight;
     color: HighlightText;
+    outline-color: Highlight;
   }
 }

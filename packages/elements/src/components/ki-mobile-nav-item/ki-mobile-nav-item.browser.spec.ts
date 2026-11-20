@@ -92,6 +92,8 @@ it('S6 distinguishes the current icon with a theme override and under display pr
   if (!current || !ordinary) throw new Error('Missing icon indicators');
 
   expect(getComputedStyle(current).backgroundColor).toBe('rgb(220, 235, 250)');
+  expect(getComputedStyle(current).outlineStyle).toBe('solid');
+  expect(getComputedStyle(ordinary).outlineStyle).toBe('none');
 
   await preferences.emulateReducedMotion('reduce');
   expect(getComputedStyle(current).animationName).toBe('none');
