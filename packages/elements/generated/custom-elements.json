@@ -5766,6 +5766,15 @@
           "whenNotToUse": "multiline text, predefined choices, boolean state, numeric\nstepper entry, or placeholder-only labeling.",
           "attributes": [
             {
+              "name": "appearance",
+              "fieldName": "appearance",
+              "type": {
+                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
+              },
+              "default": "'default'",
+              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes."
+            },
+            {
               "name": "autocomplete",
               "fieldName": "autocomplete",
               "type": {
@@ -5788,7 +5797,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
             },
             {
               "name": "help-text",
@@ -5814,6 +5823,26 @@
                 "text": "string | undefined"
               },
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+            },
+            {
+              "name": "maxlength",
+              "fieldName": "maxlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "name": "minlength",
+              "fieldName": "minlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+              "minimum": 0,
+              "maximum": 2147483647
             },
             {
               "name": "name",
@@ -5850,6 +5879,15 @@
               "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields."
             },
             {
+              "name": "show-count",
+              "fieldName": "showCount",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit."
+            },
+            {
               "name": "size",
               "fieldName": "size",
               "type": {
@@ -5880,6 +5918,18 @@
           "members": [
             {
               "kind": "field",
+              "name": "appearance",
+              "privacy": "public",
+              "type": {
+                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
+              },
+              "default": "'default'",
+              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+              "attribute": "appearance",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "autocomplete",
               "privacy": "public",
               "type": {
@@ -5908,7 +5958,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
               "attribute": "error-text",
               "reflects": true
             },
@@ -5945,6 +5995,32 @@
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
               "attribute": "label-hint",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "maxlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+              "attribute": "maxlength",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "kind": "field",
+              "name": "minlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+              "attribute": "minlength",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 2147483647
             },
             {
               "kind": "field",
@@ -5990,6 +6066,18 @@
               "default": "false",
               "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showCount",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+              "attribute": "show-count",
               "reflects": true
             },
             {
@@ -6050,6 +6138,10 @@
           ],
           "cssParts": [
             {
+              "name": "count",
+              "description": "Current character count and maximum at the end of the field message row."
+            },
+            {
               "name": "error",
               "description": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
             },
@@ -6084,6 +6176,10 @@
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
+              "name": "--ki-input-appearance-border-width",
+              "description": "Resting stroke width of both explicit text field appearances."
+            },
+            {
               "name": "--ki-input-border-block-end-width",
               "description": "dimension used by the input component for border block end width."
             },
@@ -6098,6 +6194,22 @@
             {
               "name": "--ki-input-border-inline-start-width",
               "description": "dimension used by the input component for border inline start width."
+            },
+            {
+              "name": "--ki-input-count-bg",
+              "description": "Resting character count surface over the surrounding page."
+            },
+            {
+              "name": "--ki-input-count-fg",
+              "description": "Character count when the value fits the maximum."
+            },
+            {
+              "name": "--ki-input-count-over-bg",
+              "description": "Over-limit character count surface over the surrounding page."
+            },
+            {
+              "name": "--ki-input-count-over-fg",
+              "description": "Character count when the value exceeds the maximum."
             },
             {
               "name": "--ki-input-disabled-bg",
@@ -6118,6 +6230,38 @@
             {
               "name": "--ki-input-disabled-placeholder-fg",
               "description": "color used by the input component for disabled placeholder foreground."
+            },
+            {
+              "name": "--ki-input-filled-backdrop-filter",
+              "description": "Optional backdrop filter of a filled field."
+            },
+            {
+              "name": "--ki-input-filled-bg",
+              "description": "Surface of a filled text field."
+            },
+            {
+              "name": "--ki-input-filled-bg-image",
+              "description": "Optional background image of a filled field."
+            },
+            {
+              "name": "--ki-input-filled-fg",
+              "description": "Entered text on a filled field."
+            },
+            {
+              "name": "--ki-input-filled-focus-width",
+              "description": "Stroke width of the block-end indicator while focused."
+            },
+            {
+              "name": "--ki-input-filled-indicator",
+              "description": "Continuous block-end edge of an enabled filled text field."
+            },
+            {
+              "name": "--ki-input-filled-placeholder-fg",
+              "description": "Placeholder on a filled field."
+            },
+            {
+              "name": "--ki-input-filled-radius",
+              "description": "Block-start corner radius of a filled text field."
             },
             {
               "name": "--ki-input-focus-bg",
@@ -6286,6 +6430,26 @@
             {
               "name": "--ki-input-line-height",
               "description": "dimension used by the input component for line height."
+            },
+            {
+              "name": "--ki-input-outlined-bg",
+              "description": "Surface of an outlined text field."
+            },
+            {
+              "name": "--ki-input-outlined-border",
+              "description": "Full outline of an enabled outlined text field."
+            },
+            {
+              "name": "--ki-input-outlined-fg",
+              "description": "Entered text on an outlined field."
+            },
+            {
+              "name": "--ki-input-outlined-placeholder-fg",
+              "description": "Placeholder on an outlined field."
+            },
+            {
+              "name": "--ki-input-outlined-radius",
+              "description": "Corner radius of an outlined text field."
             },
             {
               "name": "--ki-input-padding-inline",
@@ -6484,8 +6648,16 @@
               "description": "semantic dimension for typography size caption 2."
             },
             {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
               "name": "--ki-typography-weight-body-normal",
               "description": "semantic font weight for typography weight body normal."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
             }
           ]
         }
@@ -11621,6 +11793,15 @@
           "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
           "attributes": [
             {
+              "name": "appearance",
+              "fieldName": "appearance",
+              "type": {
+                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
+              },
+              "default": "'default'",
+              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes."
+            },
+            {
               "name": "autocomplete",
               "fieldName": "autocomplete",
               "type": {
@@ -11643,7 +11824,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
             },
             {
               "name": "help-text",
@@ -11669,6 +11850,35 @@
                 "text": "string | undefined"
               },
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+            },
+            {
+              "name": "maxlength",
+              "fieldName": "maxlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "name": "maxlength-error-text",
+              "fieldName": "maxlengthErrorText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Shorten the text to fit the character limit.'",
+              "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language."
+            },
+            {
+              "name": "minlength",
+              "fieldName": "minlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+              "minimum": 0,
+              "maximum": 2147483647
             },
             {
               "name": "name",
@@ -11714,6 +11924,15 @@
               "description": "Visible line count. Invalid, non-numeric, zero, or negative values fall\nback to 2; no auto-grow or user resize handle exists in v1.\nWhen to use: set the stable multiline height needed by the layout. When\nNOT to use: do not use rows as a responsive size axis."
             },
             {
+              "name": "show-count",
+              "fieldName": "showCount",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit."
+            },
+            {
               "name": "size",
               "fieldName": "size",
               "type": {
@@ -11733,6 +11952,18 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "appearance",
+              "privacy": "public",
+              "type": {
+                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
+              },
+              "default": "'default'",
+              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+              "attribute": "appearance",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "autocomplete",
@@ -11763,7 +11994,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
               "attribute": "error-text",
               "reflects": true
             },
@@ -11800,6 +12031,44 @@
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
               "attribute": "label-hint",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "maxlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+              "attribute": "maxlength",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "kind": "field",
+              "name": "maxlengthErrorText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Shorten the text to fit the character limit.'",
+              "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+              "attribute": "maxlength-error-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+              "attribute": "minlength",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 2147483647
             },
             {
               "kind": "field",
@@ -11861,6 +12130,18 @@
             },
             {
               "kind": "field",
+              "name": "showCount",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+              "attribute": "show-count",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "privacy": "public",
               "type": {
@@ -11896,6 +12177,10 @@
           "slots": [],
           "cssParts": [
             {
+              "name": "count",
+              "description": "Current character count and maximum at the end of the field message row."
+            },
+            {
               "name": "error",
               "description": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
             },
@@ -11928,6 +12213,82 @@
             {
               "name": "--ki-density-target-min",
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-input-appearance-border-width",
+              "description": "Resting stroke width of both explicit text field appearances."
+            },
+            {
+              "name": "--ki-input-count-bg",
+              "description": "Resting character count surface over the surrounding page."
+            },
+            {
+              "name": "--ki-input-count-fg",
+              "description": "Character count when the value fits the maximum."
+            },
+            {
+              "name": "--ki-input-count-over-bg",
+              "description": "Over-limit character count surface over the surrounding page."
+            },
+            {
+              "name": "--ki-input-count-over-fg",
+              "description": "Character count when the value exceeds the maximum."
+            },
+            {
+              "name": "--ki-input-filled-backdrop-filter",
+              "description": "Optional backdrop filter of a filled field."
+            },
+            {
+              "name": "--ki-input-filled-bg",
+              "description": "Surface of a filled text field."
+            },
+            {
+              "name": "--ki-input-filled-bg-image",
+              "description": "Optional background image of a filled field."
+            },
+            {
+              "name": "--ki-input-filled-fg",
+              "description": "Entered text on a filled field."
+            },
+            {
+              "name": "--ki-input-filled-focus-width",
+              "description": "Stroke width of the block-end indicator while focused."
+            },
+            {
+              "name": "--ki-input-filled-indicator",
+              "description": "Continuous block-end edge of an enabled filled text field."
+            },
+            {
+              "name": "--ki-input-filled-placeholder-fg",
+              "description": "Placeholder on a filled field."
+            },
+            {
+              "name": "--ki-input-filled-radius",
+              "description": "Block-start corner radius of a filled text field."
+            },
+            {
+              "name": "--ki-input-label-gap",
+              "description": "dimension used by the input component for label gap."
+            },
+            {
+              "name": "--ki-input-outlined-bg",
+              "description": "Surface of an outlined text field."
+            },
+            {
+              "name": "--ki-input-outlined-border",
+              "description": "Full outline of an enabled outlined text field."
+            },
+            {
+              "name": "--ki-input-outlined-fg",
+              "description": "Entered text on an outlined field."
+            },
+            {
+              "name": "--ki-input-outlined-placeholder-fg",
+              "description": "Placeholder on an outlined field."
+            },
+            {
+              "name": "--ki-input-outlined-radius",
+              "description": "Corner radius of an outlined text field."
             },
             {
               "name": "--ki-motion-duration-fast",
@@ -12290,8 +12651,16 @@
               "description": "semantic dimension for typography size caption 2."
             },
             {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
               "name": "--ki-typography-weight-body-normal",
               "description": "semantic font weight for typography weight body normal."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
             }
           ]
         }

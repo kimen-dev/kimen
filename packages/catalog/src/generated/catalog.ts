@@ -887,6 +887,16 @@ export const catalogData = {
         "change": "Fired when the user commits an edited value (native text-field\ntiming, such as on blur), composed across the shadow boundary; `value` is\nalready current when listeners run. When to use: react to a committed\nvalue. When NOT to use: do not use it for per-keystroke updates; the native\n`input` event carries those."
       },
       "props": {
+        "appearance": {
+          "type": "enum",
+          "values": [
+            "default",
+            "filled",
+            "outlined"
+          ],
+          "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "default": "default"
+        },
         "autocomplete": {
           "type": "string",
           "description": "Native autocomplete detail token forwarded to the internal input.\nWhen NOT to use: omit when no autofill entry purpose is known."
@@ -898,7 +908,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -912,6 +922,18 @@ export const catalogData = {
         "label-hint": {
           "type": "string",
           "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+        },
+        "maxlength": {
+          "type": "number",
+          "description": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "minlength": {
+          "type": "number",
+          "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "minimum": 0,
+          "maximum": 2147483647
         },
         "name": {
           "type": "string",
@@ -929,6 +951,11 @@ export const catalogData = {
         "required": {
           "type": "boolean",
           "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
+          "default": false
+        },
+        "show-count": {
+          "type": "boolean",
+          "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
           "default": false
         },
         "size": {
@@ -1715,6 +1742,16 @@ export const catalogData = {
         "change": "Fired when the user commits an edited value (on blur, with native\ntextarea timing), composed across the shadow boundary; `value` is already\ncurrent when listeners run. When to use: react to a committed value. When\nNOT to use: do not use it for per-keystroke updates; the native `input`\nevent carries those."
       },
       "props": {
+        "appearance": {
+          "type": "enum",
+          "values": [
+            "default",
+            "filled",
+            "outlined"
+          ],
+          "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "default": "default"
+        },
         "autocomplete": {
           "type": "string",
           "description": "Autofill detail token forwarded to the native textarea.\nWhen to use: expose entry purpose such as `street-address` when available.\nWhen NOT to use: omit when no valid autofill purpose applies."
@@ -1726,7 +1763,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -1740,6 +1777,23 @@ export const catalogData = {
         "label-hint": {
           "type": "string",
           "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+        },
+        "maxlength": {
+          "type": "number",
+          "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "maxlength-error-text": {
+          "type": "string",
+          "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+          "default": "Shorten the text to fit the character limit."
+        },
+        "minlength": {
+          "type": "number",
+          "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "minimum": 0,
+          "maximum": 2147483647
         },
         "name": {
           "type": "string",
@@ -1763,6 +1817,11 @@ export const catalogData = {
           "type": "number",
           "description": "Visible line count. Invalid, non-numeric, zero, or negative values fall\nback to 2; no auto-grow or user resize handle exists in v1.\nWhen to use: set the stable multiline height needed by the layout. When\nNOT to use: do not use rows as a responsive size axis.",
           "default": 2
+        },
+        "show-count": {
+          "type": "boolean",
+          "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+          "default": false
         },
         "size": {
           "type": "enum",

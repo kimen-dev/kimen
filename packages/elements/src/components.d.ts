@@ -688,6 +688,11 @@ export namespace Components {
      */
     interface KiInput {
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
         "autocomplete"?: string;
@@ -697,7 +702,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -712,6 +717,18 @@ export namespace Components {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
@@ -730,6 +747,11 @@ export namespace Components {
           * @default false
          */
         "required": boolean;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -1375,6 +1397,11 @@ export namespace Components {
      */
     interface KiTextarea {
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
          */
         "autocomplete"?: string;
@@ -1384,7 +1411,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -1399,6 +1426,23 @@ export namespace Components {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
+          * @default 'Shorten the text to fit the character limit.'
+         */
+        "maxlengthErrorText"?: string;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
@@ -1422,6 +1466,11 @@ export namespace Components {
           * @default 2
          */
         "rows": number;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -3128,6 +3177,11 @@ declare namespace LocalJSX {
      */
     interface KiInput {
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
         "autocomplete"?: string;
@@ -3137,7 +3191,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -3157,6 +3211,18 @@ declare namespace LocalJSX {
          */
         "labelHint"?: string;
         /**
+          * Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
+        /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
         "name"?: string;
@@ -3174,6 +3240,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "required"?: boolean;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -3839,6 +3910,11 @@ declare namespace LocalJSX {
      */
     interface KiTextarea {
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
          */
         "autocomplete"?: string;
@@ -3848,7 +3924,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -3867,6 +3943,23 @@ declare namespace LocalJSX {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
+          * @default 'Shorten the text to fit the character limit.'
+         */
+        "maxlengthErrorText"?: string;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
@@ -3890,6 +3983,11 @@ declare namespace LocalJSX {
           * @default 2
          */
         "rows"?: number;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -4153,6 +4251,10 @@ declare namespace LocalJSX {
     interface KiInputAttributes {
         "type": KiInputType;
         "size": KiInputSize;
+        "appearance": 'default' | 'outlined' | 'filled';
+        "maxlength": number;
+        "minlength": number;
+        "showCount": boolean;
         "label": string;
         "labelHint": string;
         "placeholder": string;
@@ -4280,6 +4382,11 @@ declare namespace LocalJSX {
         "size": KiTabsSize;
     }
     interface KiTextareaAttributes {
+        "appearance": 'default' | 'outlined' | 'filled';
+        "maxlength": number;
+        "minlength": number;
+        "showCount": boolean;
+        "maxlengthErrorText": string;
         "label": string;
         "labelHint": string;
         "placeholder": string;

@@ -4040,6 +4040,10 @@
         },
         {
           "name": "part",
+          "text": "count - Current character count and maximum at the end of the field message row."
+        },
+        {
+          "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
         {
@@ -4068,9 +4072,50 @@
         }
       ],
       "usage": {
-        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
+        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n\n## Appearance and character limits\n\nSet `appearance` to `outlined` for a full border or `filled` for a\ntinted surface with a bottom indicator. Both keep the label above the field.\nThe default appearance follows the theme.\n\nSet `minlength` and `maxlength` to use the native input limits. With\na maximum, `show-count` adds the current length to the field description\nand announces when the user reaches the limit.\n\n```html\n<ki-input label=\"Workspace name\" appearance=\"outlined\" minlength=\"3\" maxlength=\"30\" show-count help-text=\"Shown to members\" value=\"Kimen design\"></ki-input>\n<ki-input label=\"Price\" appearance=\"filled\" value=\"49.00\"><span slot=\"start\">EUR</span><span slot=\"end\">/ month</span></ki-input>\n```\n"
       },
       "props": [
+        {
+          "name": "appearance",
+          "type": "\"default\" | \"filled\" | \"outlined\" | undefined",
+          "complexType": {
+            "original": "'default' | 'outlined' | 'filled'",
+            "resolved": "\"default\" | \"filled\" | \"outlined\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "appearance",
+          "reflectToAttr": true,
+          "docs": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "filled",
+              "type": "string"
+            },
+            {
+              "value": "outlined",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "autocomplete",
           "type": "string | undefined",
@@ -4137,7 +4182,7 @@
           "mutable": false,
           "attr": "error-text",
           "reflectToAttr": true,
-          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
           "docsTags": [],
           "values": [
             {
@@ -4217,6 +4262,76 @@
           "values": [
             {
               "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength",
+          "reflectToAttr": true,
+          "docs": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minlength",
+          "reflectToAttr": true,
+          "docs": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
             },
             {
               "type": "undefined"
@@ -4333,6 +4448,38 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-count",
+          "reflectToAttr": true,
+          "docs": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -4496,6 +4643,10 @@
         }
       ],
       "parts": [
+        {
+          "name": "count",
+          "docs": "Current character count and maximum at the end of the field message row."
+        },
         {
           "name": "error",
           "docs": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
@@ -8340,6 +8491,10 @@
         },
         {
           "name": "part",
+          "text": "count - Current character count and maximum at the end of the field message row."
+        },
+        {
+          "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
         {
@@ -8368,9 +8523,50 @@
         }
       ],
       "usage": {
-        "examples": "A labeled multiline field in a form (`label` is mandatory — the visible label and accessible name); `rows` sets the stable visible line count (default `2`, no auto-grow in v1):\n\n```html\n<form>\n  <ki-textarea label=\"Comments\" name=\"comments\" rows=\"4\"></ki-textarea>\n  <ki-button variant=\"primary\">Send</ki-button>\n</form>\n```\n\nInitial text is declared through the `value` attribute — element text content is ignored — and Enter inserts a line break, never submitting the enclosing form:\n\n```html\n<ki-textarea label=\"Bio\" name=\"bio\" value=\"Web components enthusiast.\"></ki-textarea>\n```\n\n`required` blocks submission while empty, and an `autocomplete` purpose such as `street-address` exposes the entry's meaning to autofill:\n\n```html\n<ki-textarea\n  label=\"Shipping address\"\n  name=\"address\"\n  rows=\"3\"\n  autocomplete=\"street-address\"\n  required\n></ki-textarea>\n```\n\nRead-only and disabled are distinct states — `readonly` stays focusable, selectable, submitted and validation-exempt; `disabled` is none of those:\n\n```html\n<ki-textarea label=\"Accepted policy\" value=\"Version 2.1, accepted 2026-05-02.\" readonly></ki-textarea>\n<ki-textarea label=\"Legacy notes\" value=\"Migrated from v1.\" disabled></ki-textarea>\n```\n"
+        "examples": "A labeled multiline field in a form (`label` is mandatory — the visible label and accessible name); `rows` sets the stable visible line count (default `2`, no auto-grow in v1):\n\n```html\n<form>\n  <ki-textarea label=\"Comments\" name=\"comments\" rows=\"4\"></ki-textarea>\n  <ki-button variant=\"primary\">Send</ki-button>\n</form>\n```\n\nInitial text is declared through the `value` attribute — element text content is ignored — and Enter inserts a line break, never submitting the enclosing form:\n\n```html\n<ki-textarea label=\"Bio\" name=\"bio\" value=\"Web components enthusiast.\"></ki-textarea>\n```\n\n`required` blocks submission while empty, and an `autocomplete` purpose such as `street-address` exposes the entry's meaning to autofill:\n\n```html\n<ki-textarea\n  label=\"Shipping address\"\n  name=\"address\"\n  rows=\"3\"\n  autocomplete=\"street-address\"\n  required\n></ki-textarea>\n```\n\nRead-only and disabled are distinct states — `readonly` stays focusable, selectable, submitted and validation-exempt; `disabled` is none of those:\n\n```html\n<ki-textarea label=\"Accepted policy\" value=\"Version 2.1, accepted 2026-05-02.\" readonly></ki-textarea>\n<ki-textarea label=\"Legacy notes\" value=\"Migrated from v1.\" disabled></ki-textarea>\n```\n\n## Appearance and character limits\n\nSet `appearance` to `outlined` for a full border or `filled` for a\ntinted surface with a bottom indicator. Both keep the label above the field.\nThe default appearance follows the theme.\n\n`minlength` uses native minimum-length validation. The textarea keeps edits\npast `maxlength` and blocks submission until the value fits. With a maximum,\n`show-count` adds the current length to the field description and announces\nwhen the user reaches or exceeds the limit. Use `maxlength-error-text` to\nlocalize the default length error.\n\n```html\n<ki-textarea label=\"Bio\" appearance=\"outlined\" minlength=\"3\" maxlength=\"24\" show-count help-text=\"Keep it short\" value=\"Designer and front-end developer\"></ki-textarea>\n<ki-textarea label=\"Short bio\" appearance=\"filled\" maxlength=\"12\" show-count help-text=\"Keep it short\" value=\"Designs generative interfaces.\"></ki-textarea>\n```\n"
       },
       "props": [
+        {
+          "name": "appearance",
+          "type": "\"default\" | \"filled\" | \"outlined\" | undefined",
+          "complexType": {
+            "original": "'default' | 'outlined' | 'filled'",
+            "resolved": "\"default\" | \"filled\" | \"outlined\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "appearance",
+          "reflectToAttr": true,
+          "docs": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "filled",
+              "type": "string"
+            },
+            {
+              "value": "outlined",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "autocomplete",
           "type": "string | undefined",
@@ -8437,7 +8633,7 @@
           "mutable": false,
           "attr": "error-text",
           "reflectToAttr": true,
-          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
           "docsTags": [],
           "values": [
             {
@@ -8517,6 +8713,108 @@
           "values": [
             {
               "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength",
+          "reflectToAttr": true,
+          "docs": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlengthErrorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength-error-text",
+          "reflectToAttr": true,
+          "docs": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Shorten the text to fit the character limit.'"
+            }
+          ],
+          "default": "'Shorten the text to fit the character limit.'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minlength",
+          "reflectToAttr": true,
+          "docs": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
             },
             {
               "type": "undefined"
@@ -8667,6 +8965,38 @@
           "setter": false
         },
         {
+          "name": "showCount",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-count",
+          "reflectToAttr": true,
+          "docs": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "size",
           "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
           "complexType": {
@@ -8760,6 +9090,10 @@
       "styles": [],
       "slots": [],
       "parts": [
+        {
+          "name": "count",
+          "docs": "Current character count and maximum at the end of the field message row."
+        },
         {
           "name": "error",
           "docs": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."

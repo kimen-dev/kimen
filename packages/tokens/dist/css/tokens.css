@@ -1624,6 +1624,24 @@
   --ki-indicator-dot-current-hole-block-size:var(--ki-space-sm);
   --ki-indicator-motion-duration:var(--ki-motion-duration-fast);
   --ki-indicator-motion-easing:var(--ki-motion-easing-standard);
+  --ki-input-appearance-border-width:var(--ki-control-border-width);
+  --ki-input-outlined-bg:var(--ki-surface-transparent);
+  --ki-input-outlined-fg:var(--ki-text-high-em);
+  --ki-input-outlined-placeholder-fg:var(--ki-text-supporting);
+  --ki-input-outlined-border:var(--ki-outline-control);
+  --ki-input-outlined-radius:var(--ki-radius-component-sm);
+  --ki-input-filled-bg:var(--ki-surface-s2);
+  --ki-input-filled-fg:var(--ki-text-high-em);
+  --ki-input-filled-placeholder-fg:var(--ki-text-supporting);
+  --ki-input-filled-bg-image:var(--ki-surface-image-none);
+  --ki-input-filled-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-input-filled-indicator:var(--ki-outline-control);
+  --ki-input-filled-radius:var(--ki-radius-component-sm);
+  --ki-input-filled-focus-width:var(--ki-focus-ring-width);
+  --ki-input-count-bg:var(--ki-surface-transparent);
+  --ki-input-count-fg:var(--ki-text-supporting);
+  --ki-input-count-over-bg:var(--ki-surface-transparent);
+  --ki-input-count-over-fg:var(--ki-text-danger-high-em);
   --ki-input-height:var(--ki-space-12xl);
   --ki-input-min-target:var(--ki-space-7xl); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-input-height */
   --ki-input-padding-inline:var(--ki-space-lg);

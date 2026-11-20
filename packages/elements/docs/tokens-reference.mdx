@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 408 semantic
-and 1319 component tokens. Values are the resolved **onmars light**
+and 1337 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1234,16 +1234,29 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-input-appearance-border-width` | `1px` | Resting stroke width of both explicit text field appearances. |
 | `--ki-input-border-block-end-width` | `1px` | dimension used by the input component for border block end width. |
 | `--ki-input-border-block-start-width` | `1px` | dimension used by the input component for border block start width. |
 | `--ki-input-border-inline-end-width` | `1px` | dimension used by the input component for border inline end width. |
 | `--ki-input-border-inline-start-width` | `1px` | dimension used by the input component for border inline start width. |
 | `--ki-input-border-width` | `1px` | dimension used by the input component for border width (MarsUI Input_cell stroke: 1px hairline; the border color stays ki.outline.control per the 2026-07-25 declared a11y deviation). |
+| `--ki-input-count-bg` | `rgba(0, 0, 0, 0)` | Resting character count surface over the surrounding page. |
+| `--ki-input-count-fg` | `#5e5953` | Character count when the value fits the maximum. |
+| `--ki-input-count-over-bg` | `rgba(0, 0, 0, 0)` | Over-limit character count surface over the surrounding page. |
+| `--ki-input-count-over-fg` | `#c21a45` | Character count when the value exceeds the maximum. |
 | `--ki-input-disabled-bg` | `#f3f0eb` | color used by the input component for disabled background. |
 | `--ki-input-disabled-border` | `rgba(24, 22, 19, 0.1)` | color used by the input component for disabled border. |
 | `--ki-input-disabled-fg` | `#cbc7bf` | color used by the input component for disabled foreground (MarsUI disabled text Text/base_em; disabled cells are exempt from the contrast sweep). |
 | `--ki-input-disabled-label-fg` | `#cbc7bf` | color used by the input component for disabled label foreground. |
 | `--ki-input-disabled-placeholder-fg` | `#cbc7bf` | color used by the input component for disabled placeholder foreground. |
+| `--ki-input-filled-backdrop-filter` | `none` | Optional backdrop filter of a filled field. |
+| `--ki-input-filled-bg` | `#f3f0eb` | Surface of a filled text field. |
+| `--ki-input-filled-bg-image` | `none` | Optional background image of a filled field. |
+| `--ki-input-filled-fg` | `#181613` | Entered text on a filled field. |
+| `--ki-input-filled-focus-width` | `0.125rem` | Stroke width of the block-end indicator while focused. |
+| `--ki-input-filled-indicator` | `#86827b` | Continuous block-end edge of an enabled filled text field. |
+| `--ki-input-filled-placeholder-fg` | `#5e5953` | Placeholder on a filled field. |
+| `--ki-input-filled-radius` | `8px` | Block-start corner radius of a filled text field. |
 | `--ki-input-focus-bg` | `#ffffff` | color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0). |
 | `--ki-input-focus-border` | `#bc4c26` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-input-focus-ring-color. color used by the input component for focus border. |
 | `--ki-input-focus-fg` | `#181613` | color used by the input component for focus foreground. |
@@ -1288,6 +1301,11 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-lg-text-padding-inline` | `0.25rem` | dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token). |
 | `--ki-input-line-height` | `1.5rem` | dimension used by the input component for line height. |
 | `--ki-input-min-target` | `1.5rem` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-input-height. dimension used by the input component for min target. |
+| `--ki-input-outlined-bg` | `rgba(0, 0, 0, 0)` | Surface of an outlined text field. |
+| `--ki-input-outlined-border` | `#86827b` | Full outline of an enabled outlined text field. |
+| `--ki-input-outlined-fg` | `#181613` | Entered text on an outlined field. |
+| `--ki-input-outlined-placeholder-fg` | `#5e5953` | Placeholder on an outlined field. |
+| `--ki-input-outlined-radius` | `8px` | Corner radius of an outlined text field. |
 | `--ki-input-padding-inline` | `0.625rem` | dimension used by the input component for padding inline. |
 | `--ki-input-radius` | `10px` | dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it). |
 | `--ki-input-readonly-bg` | `#f9f7f4` | color used by the input component for readonly background (retires the deprecated ki.surface.raised alias; same resolved value). |

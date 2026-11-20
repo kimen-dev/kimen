@@ -489,6 +489,7 @@
   --ki-indicator-dot-current-block-size:var(--ki-space-md);
   --ki-indicator-dot-current-color:var(--ki-surface-inverse-white);
   --ki-indicator-dot-current-hole-block-size:var(--ki-space-zero);
+  --ki-input-filled-radius:var(--ki-radius-component-xs);
   --ki-input-height:var(--ki-space-14xl);
   --ki-input-padding-inline:var(--ki-space-3xl);
   --ki-input-gap:var(--ki-space-sm);

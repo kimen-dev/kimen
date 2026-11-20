@@ -31,18 +31,37 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 <ki-input label="Legacy ID" value="A-1042" disabled></ki-input>
 ```
 
+## Appearance and character limits
+
+Set `appearance` to `outlined` for a full border or `filled` for a
+tinted surface with a bottom indicator. Both keep the label above the field.
+The default appearance follows the theme.
+
+Set `minlength` and `maxlength` to use the native input limits. With
+a maximum, `show-count` adds the current length to the field description
+and announces when the user reaches the limit.
+
+```html
+<ki-input label="Workspace name" appearance="outlined" minlength="3" maxlength="30" show-count help-text="Shown to members" value="Kimen design"></ki-input>
+<ki-input label="Price" appearance="filled" value="49.00"><span slot="start">EUR</span><span slot="end">/ month</span></ki-input>
+```
+
 ## Attributes
 
+- `appearance` ("default" | "filled" | "outlined" | undefined, default 'default'): Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
 - `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
 - `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
-- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the field, read with it as its description: the format expected, or why the answer is asked. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
 - `label-hint` (string | undefined): Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+- `maxlength` (number | undefined, minimum 0, maximum 2147483647): Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
+- `minlength` (number | undefined, minimum 0, maximum 2147483647): Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
 - `name` (string | undefined): Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
 - `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
 - `readonly` (boolean, default false): Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
 - `required` (boolean, default false): Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+- `show-count` (boolean | undefined, default false): Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `type` ("email" | "password" | "search" | "tel" | "text" | "url", default 'text'): Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
 - `value` (string, default ''): Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
@@ -54,6 +73,7 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 
 ## Parts
 
+- `count`: Current character count and maximum at the end of the field message row.
 - `error`: Error line shown in place of the help text while the field is invalid after the person answered or submitted; a polite live region, starting with a decorative error symbol.
 - `field`: Enclosure wrapper for background, border, radius and focus ring.
 - `help`: Help line under the field, read as the field's description.
@@ -73,15 +93,28 @@ None.
 
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-input-appearance-border-width`: Resting stroke width of both explicit text field appearances.
 - `--ki-input-border-block-end-width`: dimension used by the input component for border block end width.
 - `--ki-input-border-block-start-width`: dimension used by the input component for border block start width.
 - `--ki-input-border-inline-end-width`: dimension used by the input component for border inline end width.
 - `--ki-input-border-inline-start-width`: dimension used by the input component for border inline start width.
+- `--ki-input-count-bg`: Resting character count surface over the surrounding page.
+- `--ki-input-count-fg`: Character count when the value fits the maximum.
+- `--ki-input-count-over-bg`: Over-limit character count surface over the surrounding page.
+- `--ki-input-count-over-fg`: Character count when the value exceeds the maximum.
 - `--ki-input-disabled-bg`: color used by the input component for disabled background.
 - `--ki-input-disabled-border`: color used by the input component for disabled border.
 - `--ki-input-disabled-fg`: color used by the input component for disabled foreground (MarsUI disabled text Text/base_em; disabled cells are exempt from the contrast sweep).
 - `--ki-input-disabled-label-fg`: color used by the input component for disabled label foreground.
 - `--ki-input-disabled-placeholder-fg`: color used by the input component for disabled placeholder foreground.
+- `--ki-input-filled-backdrop-filter`: Optional backdrop filter of a filled field.
+- `--ki-input-filled-bg`: Surface of a filled text field.
+- `--ki-input-filled-bg-image`: Optional background image of a filled field.
+- `--ki-input-filled-fg`: Entered text on a filled field.
+- `--ki-input-filled-focus-width`: Stroke width of the block-end indicator while focused.
+- `--ki-input-filled-indicator`: Continuous block-end edge of an enabled filled text field.
+- `--ki-input-filled-placeholder-fg`: Placeholder on a filled field.
+- `--ki-input-filled-radius`: Block-start corner radius of a filled text field.
 - `--ki-input-focus-bg`: color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0).
 - `--ki-input-focus-fg`: color used by the input component for focus foreground.
 - `--ki-input-focus-label-fg`: color used by the input component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
@@ -124,6 +157,11 @@ None.
 - `--ki-input-lg-radius`: dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg).
 - `--ki-input-lg-text-padding-inline`: dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token).
 - `--ki-input-line-height`: dimension used by the input component for line height.
+- `--ki-input-outlined-bg`: Surface of an outlined text field.
+- `--ki-input-outlined-border`: Full outline of an enabled outlined text field.
+- `--ki-input-outlined-fg`: Entered text on an outlined field.
+- `--ki-input-outlined-placeholder-fg`: Placeholder on an outlined field.
+- `--ki-input-outlined-radius`: Corner radius of an outlined text field.
 - `--ki-input-padding-inline`: dimension used by the input component for padding inline.
 - `--ki-input-radius`: dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it).
 - `--ki-input-readonly-bg`: color used by the input component for readonly background (retires the deprecated ki.surface.raised alias; same resolved value).
@@ -173,4 +211,6 @@ None.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.

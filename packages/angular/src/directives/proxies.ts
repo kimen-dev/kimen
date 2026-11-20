@@ -457,14 +457,14 @@ export declare interface KiIndicator extends Components.KiIndicator {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiInput,
-  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'size', 'type', 'value']
+  inputs: ['appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'showCount', 'size', 'type', 'value']
 })
 @Component({
   selector: 'ki-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'size', 'type', 'value'],
+  inputs: ['appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'showCount', 'size', 'type', 'value'],
 })
 export class KiInput {
   protected el: HTMLKiInputElement;
@@ -952,14 +952,14 @@ first-render fallback are silent.
 
 @ProxyCmp({
   defineCustomElementFn: defineKiTextarea,
-  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'rows', 'size', 'value']
+  inputs: ['appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'maxlength', 'maxlengthErrorText', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'showCount', 'size', 'value']
 })
 @Component({
   selector: 'ki-textarea',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'rows', 'size', 'value'],
+  inputs: ['appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'maxlength', 'maxlengthErrorText', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'showCount', 'size', 'value'],
 })
 export class KiTextarea {
   protected el: HTMLKiTextareaElement;
