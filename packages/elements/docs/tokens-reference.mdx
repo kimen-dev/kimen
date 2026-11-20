@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 428 semantic
-and 1371 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 435 semantic
+and 1386 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -69,6 +69,8 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-corner-action-frame` | `10px` | Outside corner of an action surface. |
+| `--ki-corner-action-seam` | `0px` | Square corner at an edge shared by two actions. |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
@@ -336,6 +338,11 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-spacing-action-compact-gap` | `0.125rem` | Compact gap between adjacent toolbar actions. |
+| `--ki-spacing-action-gap` | `0.5rem` | Gap between distinct actions in a horizontal group. |
+| `--ki-spacing-action-hairline` | `1px` | Width of the frame and divider in an action surface. |
+| `--ki-spacing-action-inset` | `0.25rem` | Interior space at the edge of an action surface or divider. |
+| `--ki-spacing-action-joined-gap` | `0rem` | Space between actions that share an edge. |
 | `--ki-spacing-activity-dot-gap` | `0.25rem` | Gap between typing dots. |
 | `--ki-spacing-activity-label-gap` | `0.5rem` | Gap between an inline activity mark and its label. |
 | `--ki-spacing-block` | `0.75rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. |
@@ -1013,6 +1020,26 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-xs-padding-inline` | `0.375rem` | dimension used by the button component for xs padding inline. |
 | `--ki-button-xs-radius` | `6px` | dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns). |
 | `--ki-button-xs-spinner-size` | `0.875rem` | dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
+
+### `ki-button-group`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-button-group-attached-gap` | `0rem` | Gap between joined actions. |
+| `--ki-button-group-attached-radius` | `0px` | Radius of the logical corners along a shared button edge. |
+| `--ki-button-group-backdrop-filter` | `none` | Complete optional backdrop filter for the toolbar surface. |
+| `--ki-button-group-bg` | `#f9f7f4` | Toolbar surface colour. |
+| `--ki-button-group-bg-image` | `none` | Optional decorative image over the toolbar surface. |
+| `--ki-button-group-border-color` | `rgba(24, 22, 19, 0.1)` | Thin toolbar frame colour. |
+| `--ki-button-group-border-width` | `1px` | Thickness of the toolbar frame and divider. |
+| `--ki-button-group-divider` | `rgba(24, 22, 19, 0.1)` | Decorative toolbar separator ink. |
+| `--ki-button-group-divider-size` | `1.25rem` | Block size of a vertical toolbar separator. |
+| `--ki-button-group-fg` | `#181613` | Default toolbar foreground on its raised surface. |
+| `--ki-button-group-gap` | `0.5rem` | Gap between actions in a spaced group. |
+| `--ki-button-group-padding` | `0.25rem` | Toolbar frame inset and divider margin. |
+| `--ki-button-group-radius` | `10px` | Logical outside radius of the toolbar frame. |
+| `--ki-button-group-seam-overlap` | `1px` | Shared-edge overlap between adjacent attached actions. |
+| `--ki-button-group-toolbar-gap` | `0.125rem` | Gap between toolbar actions. |
 
 ### `ki-card`
 

@@ -2304,6 +2304,204 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-button-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiButtonGroup",
+          "customElement": true,
+          "tagName": "ki-button-group",
+          "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+          "whenToUse": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop.",
+          "whenNotToUse": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation.",
+          "attributes": [
+            {
+              "name": "attached",
+              "fieldName": "attached",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+              "required": true
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined"
+              },
+              "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode."
+            },
+            {
+              "name": "toolbar",
+              "fieldName": "toolbar",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "attached",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+              "attribute": "attached",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+              "attribute": "label",
+              "reflects": true,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined"
+              },
+              "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "toolbar",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+              "attribute": "toolbar",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "group",
+              "description": "The named group or toolbar surface."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-button-group-attached-gap",
+              "description": "Gap between joined actions."
+            },
+            {
+              "name": "--ki-button-group-attached-radius",
+              "description": "Radius of the logical corners along a shared button edge."
+            },
+            {
+              "name": "--ki-button-group-backdrop-filter",
+              "description": "Complete optional backdrop filter for the toolbar surface."
+            },
+            {
+              "name": "--ki-button-group-bg",
+              "description": "Toolbar surface colour."
+            },
+            {
+              "name": "--ki-button-group-bg-image",
+              "description": "Optional decorative image over the toolbar surface."
+            },
+            {
+              "name": "--ki-button-group-border-color",
+              "description": "Thin toolbar frame colour."
+            },
+            {
+              "name": "--ki-button-group-border-width",
+              "description": "Thickness of the toolbar frame and divider."
+            },
+            {
+              "name": "--ki-button-group-divider",
+              "description": "Decorative toolbar separator ink."
+            },
+            {
+              "name": "--ki-button-group-divider-size",
+              "description": "Block size of a vertical toolbar separator."
+            },
+            {
+              "name": "--ki-button-group-fg",
+              "description": "Default toolbar foreground on its raised surface."
+            },
+            {
+              "name": "--ki-button-group-gap",
+              "description": "Gap between actions in a spaced group."
+            },
+            {
+              "name": "--ki-button-group-padding",
+              "description": "Toolbar frame inset and divider margin."
+            },
+            {
+              "name": "--ki-button-group-radius",
+              "description": "Logical outside radius of the toolbar frame."
+            },
+            {
+              "name": "--ki-button-group-seam-overlap",
+              "description": "Shared-edge overlap between adjacent attached actions."
+            },
+            {
+              "name": "--ki-button-group-toolbar-gap",
+              "description": "Gap between toolbar actions."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiButtonGroup",
+          "declaration": {
+            "name": "KiButtonGroup",
+            "module": "dist/components/ki-button-group.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-button-group",
+          "declaration": {
+            "name": "KiButtonGroup",
+            "module": "dist/components/ki-button-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-card.js",
       "declarations": [
         {
@@ -5006,7 +5204,7 @@
           "tagName": "ki-icon-button",
           "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
           "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it.",
-          "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+          "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
           "attributes": [
             {
               "name": "disabled",
@@ -5016,6 +5214,14 @@
               },
               "default": "false",
               "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`."
+            },
+            {
+              "name": "expanded",
+              "fieldName": "expanded",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions."
             },
             {
               "name": "label",
@@ -5043,6 +5249,14 @@
               },
               "default": "'Loading'",
               "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus."
+            },
+            {
+              "name": "pressed",
+              "fieldName": "pressed",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
             },
             {
               "name": "size",
@@ -5090,6 +5304,17 @@
             },
             {
               "kind": "field",
+              "name": "expanded",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions.",
+              "attribute": "expanded",
+              "reflects": false
+            },
+            {
+              "kind": "field",
               "name": "label",
               "privacy": "public",
               "type": {
@@ -5123,6 +5348,17 @@
               "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
               "attribute": "loading-label",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "pressed",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
+              "attribute": "pressed",
+              "reflects": false
             },
             {
               "kind": "field",
