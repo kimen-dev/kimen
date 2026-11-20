@@ -53,4 +53,6 @@ export { KiTextarea } from './ki-textarea.js';
 export { KiToast } from './ki-toast.js';
 export { KiToaster } from './ki-toaster.js';
 export { KiTooltip } from './ki-tooltip.js';
+export { KiTree } from './ki-tree.js';
+export { KiTreeItem } from './ki-tree-item.js';
 export { KiVideo } from './ki-video.js';

@@ -15103,6 +15103,483 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-tree.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTree",
+          "customElement": true,
+          "tagName": "ki-tree",
+          "description": "A named hierarchy with collapsible branches and independent keyboard focus.",
+          "whenToUse": "browse nested files, categories or an outline, select items in\na hierarchy, or navigate through linked destinations.",
+          "whenNotToUse": "flat lists of peers, menus of commands, or submitted form values.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Tree'",
+              "description": "Accessible name of the hierarchy. Localize it and make it distinct among nearby trees."
+            },
+            {
+              "name": "selection",
+              "fieldName": "selection",
+              "type": {
+                "text": "\"multiple\" | \"none\" | \"single\""
+              },
+              "default": "'single'",
+              "description": "Use none for navigation, single for one selected item, or multiple for checkable branches."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Tree'",
+              "description": "Accessible name of the hierarchy. Localize it and make it distinct among nearby trees.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "selection",
+              "privacy": "public",
+              "type": {
+                "text": "\"multiple\" | \"none\" | \"single\""
+              },
+              "default": "'single'",
+              "description": "Use none for navigation, single for one selected item, or multiple for checkable branches.",
+              "attribute": "selection",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-selection-change",
+              "type": {
+                "text": "CustomEvent<{ selectedItems: HTMLKiTreeItemElement[] }>"
+              },
+              "description": "Emitted after a user selection changes. Selected items are in tree order."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Direct ki-tree-item children in reading order."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The surface around the hierarchy."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-tree-backdrop-filter",
+              "description": "Complete backdrop filter behind the surface."
+            },
+            {
+              "name": "--ki-tree-bg",
+              "description": "Base surface of the hierarchy."
+            },
+            {
+              "name": "--ki-tree-bg-image",
+              "description": "Optional image layered over the tree surface."
+            },
+            {
+              "name": "--ki-tree-edge",
+              "description": "Perimeter color of the hierarchy surface."
+            },
+            {
+              "name": "--ki-tree-edge-width",
+              "description": "Width of the surface and checkbox outlines."
+            },
+            {
+              "name": "--ki-tree-fg",
+              "description": "Text on the base surface."
+            },
+            {
+              "name": "--ki-tree-padding",
+              "description": "Interior padding of the hierarchy surface."
+            },
+            {
+              "name": "--ki-tree-radius",
+              "description": "Rounding of the hierarchy surface."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTree",
+          "declaration": {
+            "name": "KiTree",
+            "module": "dist/components/ki-tree.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-tree",
+          "declaration": {
+            "name": "KiTree",
+            "module": "dist/components/ki-tree.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-tree-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTreeItem",
+          "customElement": true,
+          "tagName": "ki-tree-item",
+          "description": "An item or expandable branch inside a ki-tree.",
+          "whenToUse": "label a file, category or destination in a hierarchy. Nest more\nki-tree-item children for a branch.",
+          "whenNotToUse": "standalone controls, form checkboxes, or a row with other\ninteractive descendants.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keep the row discoverable by keyboard while preventing user activation."
+            },
+            {
+              "name": "expanded",
+              "fieldName": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a branch reveals its children. Has no visible effect on a leaf."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native destination of the row. Prefer selection=\"none\" for navigation trees.",
+              "format": "url"
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional decorative icon. Import the named Kimen glyph before mounting the tree."
+            },
+            {
+              "name": "lazy",
+              "fieldName": "lazy",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Request children on the first empty expansion. Clear it to finish an empty load."
+            },
+            {
+              "name": "loading-label",
+              "fieldName": "loadingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'",
+              "description": "Localized text for the spinner status during an outstanding lazy request."
+            },
+            {
+              "name": "selected",
+              "fieldName": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Selected state. The tree keeps it in sync with single selection or fully checked branches."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keep the row discoverable by keyboard while preventing user activation.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a branch reveals its children. Has no visible effect on a leaf.",
+              "attribute": "expanded",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native destination of the row. Prefer selection=\"none\" for navigation trees.",
+              "attribute": "href",
+              "reflects": false,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional decorative icon. Import the named Kimen glyph before mounting the tree.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "lazy",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Request children on the first empty expansion. Clear it to finish an empty load.",
+              "attribute": "lazy",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loadingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'",
+              "description": "Localized text for the spinner status during an outstanding lazy request.",
+              "attribute": "loading-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Selected state. The tree keeps it in sync with single selection or fully checked branches.",
+              "attribute": "selected",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-collapse",
+              "type": {
+                "text": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
+              },
+              "description": "Emitted when an existing branch collapses."
+            },
+            {
+              "name": "ki-expand",
+              "type": {
+                "text": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
+              },
+              "description": "Emitted when an existing branch expands."
+            },
+            {
+              "name": "ki-load",
+              "type": {
+                "text": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
+              },
+              "description": "Emitted once when an empty lazy branch first opens. The listener supplies the children."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The row label and directly nested ki-tree-item children."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "checkbox",
+              "description": "Check-state indicator and hit area in multiple selection."
+            },
+            {
+              "name": "disclosure",
+              "description": "Leading hit area and direction indicator of a branch."
+            },
+            {
+              "name": "group",
+              "description": "The region containing the expanded child items."
+            },
+            {
+              "name": "label",
+              "description": "Visible row text or native destination link."
+            },
+            {
+              "name": "row",
+              "description": "The painted and focus-highlighted item row."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-tree-disclosure-duration",
+              "description": "Disclosure turn duration."
+            },
+            {
+              "name": "--ki-tree-disclosure-easing",
+              "description": "Disclosure turn easing."
+            },
+            {
+              "name": "--ki-tree-edge-width",
+              "description": "Width of the surface and checkbox outlines."
+            },
+            {
+              "name": "--ki-tree-focus-ring-color",
+              "description": "Ink of the focused row outline."
+            },
+            {
+              "name": "--ki-tree-focus-ring-width",
+              "description": "Width of the focused row outline."
+            },
+            {
+              "name": "--ki-tree-hover-bg",
+              "description": "Fill of an unselected row hovered by a fine pointer."
+            },
+            {
+              "name": "--ki-tree-hover-fg",
+              "description": "Text of an unselected row hovered by a fine pointer."
+            },
+            {
+              "name": "--ki-tree-icon-fg",
+              "description": "Default ink of the decorative row icons."
+            },
+            {
+              "name": "--ki-tree-indent",
+              "description": "Inline indentation per hierarchy level."
+            },
+            {
+              "name": "--ki-tree-item-box-radius",
+              "description": "Rounding of the visual checkbox indicator."
+            },
+            {
+              "name": "--ki-tree-item-box-size",
+              "description": "Size of the visual checkbox indicator."
+            },
+            {
+              "name": "--ki-tree-item-gap",
+              "description": "Space between an optional item icon and its label."
+            },
+            {
+              "name": "--ki-tree-item-padding",
+              "description": "Inline-end inset of an item row."
+            },
+            {
+              "name": "--ki-tree-item-radius",
+              "description": "Rounding of a highlighted item row."
+            },
+            {
+              "name": "--ki-tree-item-target",
+              "description": "Minimum inline target of a disclosure or checkbox."
+            },
+            {
+              "name": "--ki-tree-row-height",
+              "description": "Minimum block size before density adjustment."
+            },
+            {
+              "name": "--ki-tree-selected-bg",
+              "description": "Fill of a selected or checked row."
+            },
+            {
+              "name": "--ki-tree-selected-fg",
+              "description": "Text and glyph ink on a selected row."
+            },
+            {
+              "name": "--ki-tree-touch-row-min",
+              "description": "Minimum row block size on a coarse pointer."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTreeItem",
+          "declaration": {
+            "name": "KiTreeItem",
+            "module": "dist/components/ki-tree-item.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-tree-item",
+          "declaration": {
+            "name": "KiTreeItem",
+            "module": "dist/components/ki-tree-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-video.js",
       "declarations": [
         {

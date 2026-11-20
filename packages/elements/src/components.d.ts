@@ -44,6 +44,7 @@ import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toas
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
+import { KiTreeSelection } from "./components/ki-tree/ki-tree";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
@@ -83,6 +84,7 @@ export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toas
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
+export { KiTreeSelection } from "./components/ki-tree/ki-tree";
 export namespace Components {
     /**
      * A persistent inline status message with token-backed tone semantics.
@@ -1841,6 +1843,68 @@ export namespace Components {
         "placement": KiTooltipPlacement;
     }
     /**
+     * A named hierarchy with collapsible branches and independent keyboard focus.
+     * @whenToUse browse nested files, categories or an outline, select items in
+     * a hierarchy, or navigate through linked destinations.
+     * @whenNotToUse flat lists of peers, menus of commands, or submitted form values.
+     */
+    interface KiTree {
+        /**
+          * Accessible name of the hierarchy. Localize it and make it distinct among nearby trees.
+          * @default 'Tree'
+         */
+        "label": string;
+        /**
+          * Use none for navigation, single for one selected item, or multiple for checkable branches.
+          * @default 'single'
+         */
+        "selection": KiTreeSelection;
+    }
+    /**
+     * An item or expandable branch inside a ki-tree.
+     * @whenToUse label a file, category or destination in a hierarchy. Nest more
+     * ki-tree-item children for a branch.
+     * @whenNotToUse standalone controls, form checkboxes, or a row with other
+     * interactive descendants.
+     * @managedSlot children - Direct child items are projected into the branch group by ki-tree.
+     */
+    interface KiTreeItem {
+        /**
+          * Keep the row discoverable by keyboard while preventing user activation.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Whether a branch reveals its children. Has no visible effect on a leaf.
+          * @default false
+         */
+        "expanded": boolean;
+        /**
+          * Native destination of the row. Prefer selection="none" for navigation trees.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Optional decorative icon. Import the named Kimen glyph before mounting the tree.
+         */
+        "iconName"?: string;
+        /**
+          * Request children on the first empty expansion. Clear it to finish an empty load.
+          * @default false
+         */
+        "lazy": boolean;
+        /**
+          * Localized text for the spinner status during an outstanding lazy request.
+          * @default 'Loading'
+         */
+        "loadingLabel": string;
+        /**
+          * Selected state. The tree keeps it in sync with single selection or fully checked branches.
+          * @default false
+         */
+        "selected": boolean;
+    }
+    /**
      * A themed video surface: a calm poster facade with exactly one accessible
      * play control over a slotted native `<video>` element. From the first
      * activation on, playback, scrubbing, volume, captions and fullscreen belong
@@ -1911,6 +1975,14 @@ export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
 export interface KiToastCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiToastElement;
+}
+export interface KiTreeCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiTreeElement;
+}
+export interface KiTreeItemCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiTreeItemElement;
 }
 declare global {
     interface HTMLKiAlertElementEventMap {
@@ -2856,6 +2928,56 @@ declare global {
         prototype: HTMLKiTooltipElement;
         new (): HTMLKiTooltipElement;
     };
+    interface HTMLKiTreeElementEventMap {
+        "ki-selection-change": { selectedItems: HTMLKiTreeItemElement[] };
+    }
+    /**
+     * A named hierarchy with collapsible branches and independent keyboard focus.
+     * @whenToUse browse nested files, categories or an outline, select items in
+     * a hierarchy, or navigate through linked destinations.
+     * @whenNotToUse flat lists of peers, menus of commands, or submitted form values.
+     */
+    interface HTMLKiTreeElement extends Components.KiTree, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiTreeElementEventMap>(type: K, listener: (this: HTMLKiTreeElement, ev: KiTreeCustomEvent<HTMLKiTreeElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiTreeElementEventMap>(type: K, listener: (this: HTMLKiTreeElement, ev: KiTreeCustomEvent<HTMLKiTreeElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiTreeElement: {
+        prototype: HTMLKiTreeElement;
+        new (): HTMLKiTreeElement;
+    };
+    interface HTMLKiTreeItemElementEventMap {
+        "ki-expand": { item: HTMLKiTreeItemElement };
+        "ki-collapse": { item: HTMLKiTreeItemElement };
+        "ki-load": { item: HTMLKiTreeItemElement };
+    }
+    /**
+     * An item or expandable branch inside a ki-tree.
+     * @whenToUse label a file, category or destination in a hierarchy. Nest more
+     * ki-tree-item children for a branch.
+     * @whenNotToUse standalone controls, form checkboxes, or a row with other
+     * interactive descendants.
+     * @managedSlot children - Direct child items are projected into the branch group by ki-tree.
+     */
+    interface HTMLKiTreeItemElement extends Components.KiTreeItem, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiTreeItemElementEventMap>(type: K, listener: (this: HTMLKiTreeItemElement, ev: KiTreeItemCustomEvent<HTMLKiTreeItemElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiTreeItemElementEventMap>(type: K, listener: (this: HTMLKiTreeItemElement, ev: KiTreeItemCustomEvent<HTMLKiTreeItemElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiTreeItemElement: {
+        prototype: HTMLKiTreeItemElement;
+        new (): HTMLKiTreeItemElement;
+    };
     /**
      * A themed video surface: a calm poster facade with exactly one accessible
      * play control over a slotted native `<video>` element. From the first
@@ -2933,6 +3055,8 @@ declare global {
         "ki-toast": HTMLKiToastElement;
         "ki-toaster": HTMLKiToasterElement;
         "ki-tooltip": HTMLKiTooltipElement;
+        "ki-tree": HTMLKiTreeElement;
+        "ki-tree-item": HTMLKiTreeItemElement;
         "ki-video": HTMLKiVideoElement;
     }
 }
@@ -4772,6 +4896,84 @@ declare namespace LocalJSX {
         "placement"?: KiTooltipPlacement;
     }
     /**
+     * A named hierarchy with collapsible branches and independent keyboard focus.
+     * @whenToUse browse nested files, categories or an outline, select items in
+     * a hierarchy, or navigate through linked destinations.
+     * @whenNotToUse flat lists of peers, menus of commands, or submitted form values.
+     */
+    interface KiTree {
+        /**
+          * Accessible name of the hierarchy. Localize it and make it distinct among nearby trees.
+          * @default 'Tree'
+         */
+        "label"?: string;
+        /**
+          * Emitted after a user selection changes. Selected items are in tree order.
+         */
+        "onKi-selection-change"?: (event: KiTreeCustomEvent<{ selectedItems: HTMLKiTreeItemElement[] }>) => void;
+        /**
+          * Use none for navigation, single for one selected item, or multiple for checkable branches.
+          * @default 'single'
+         */
+        "selection"?: KiTreeSelection;
+    }
+    /**
+     * An item or expandable branch inside a ki-tree.
+     * @whenToUse label a file, category or destination in a hierarchy. Nest more
+     * ki-tree-item children for a branch.
+     * @whenNotToUse standalone controls, form checkboxes, or a row with other
+     * interactive descendants.
+     * @managedSlot children - Direct child items are projected into the branch group by ki-tree.
+     */
+    interface KiTreeItem {
+        /**
+          * Keep the row discoverable by keyboard while preventing user activation.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Whether a branch reveals its children. Has no visible effect on a leaf.
+          * @default false
+         */
+        "expanded"?: boolean;
+        /**
+          * Native destination of the row. Prefer selection="none" for navigation trees.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Optional decorative icon. Import the named Kimen glyph before mounting the tree.
+         */
+        "iconName"?: string;
+        /**
+          * Request children on the first empty expansion. Clear it to finish an empty load.
+          * @default false
+         */
+        "lazy"?: boolean;
+        /**
+          * Localized text for the spinner status during an outstanding lazy request.
+          * @default 'Loading'
+         */
+        "loadingLabel"?: string;
+        /**
+          * Emitted when an existing branch collapses.
+         */
+        "onKi-collapse"?: (event: KiTreeItemCustomEvent<{ item: HTMLKiTreeItemElement }>) => void;
+        /**
+          * Emitted when an existing branch expands.
+         */
+        "onKi-expand"?: (event: KiTreeItemCustomEvent<{ item: HTMLKiTreeItemElement }>) => void;
+        /**
+          * Emitted once when an empty lazy branch first opens. The listener supplies the children.
+         */
+        "onKi-load"?: (event: KiTreeItemCustomEvent<{ item: HTMLKiTreeItemElement }>) => void;
+        /**
+          * Selected state. The tree keeps it in sync with single selection or fully checked branches.
+          * @default false
+         */
+        "selected"?: boolean;
+    }
+    /**
      * A themed video surface: a calm poster facade with exactly one accessible
      * play control over a slotted native `<video>` element. From the first
      * activation on, playback, scrubbing, volume, captions and fullscreen belong
@@ -5129,6 +5331,19 @@ declare namespace LocalJSX {
         "label": string;
         "placement": KiTooltipPlacement;
     }
+    interface KiTreeAttributes {
+        "label": string;
+        "selection": KiTreeSelection;
+    }
+    interface KiTreeItemAttributes {
+        "expanded": boolean;
+        "selected": boolean;
+        "disabled": boolean;
+        "lazy": boolean;
+        "href": string;
+        "iconName": string;
+        "loadingLabel": string;
+    }
     interface KiVideoAttributes {
         "label": string;
     }
@@ -5183,6 +5398,8 @@ declare namespace LocalJSX {
         "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
         "ki-toaster": Omit<KiToaster, keyof KiToasterAttributes> & { [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K] };
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
+        "ki-tree": Omit<KiTree, keyof KiTreeAttributes> & { [K in keyof KiTree & keyof KiTreeAttributes]?: KiTree[K] } & { [K in keyof KiTree & keyof KiTreeAttributes as `attr:${K}`]?: KiTreeAttributes[K] } & { [K in keyof KiTree & keyof KiTreeAttributes as `prop:${K}`]?: KiTree[K] };
+        "ki-tree-item": Omit<KiTreeItem, keyof KiTreeItemAttributes> & { [K in keyof KiTreeItem & keyof KiTreeItemAttributes]?: KiTreeItem[K] } & { [K in keyof KiTreeItem & keyof KiTreeItemAttributes as `attr:${K}`]?: KiTreeItemAttributes[K] } & { [K in keyof KiTreeItem & keyof KiTreeItemAttributes as `prop:${K}`]?: KiTreeItem[K] };
         "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] } & OneOf<"label", KiVideo["label"], KiVideoAttributes["label"]>;
     }
 }
@@ -5761,6 +5978,22 @@ declare module "@stencil/core" {
              * pattern for those cases.
              */
             "ki-tooltip": LocalJSX.IntrinsicElements["ki-tooltip"] & JSXBase.HTMLAttributes<HTMLKiTooltipElement>;
+            /**
+             * A named hierarchy with collapsible branches and independent keyboard focus.
+             * @whenToUse browse nested files, categories or an outline, select items in
+             * a hierarchy, or navigate through linked destinations.
+             * @whenNotToUse flat lists of peers, menus of commands, or submitted form values.
+             */
+            "ki-tree": LocalJSX.IntrinsicElements["ki-tree"] & JSXBase.HTMLAttributes<HTMLKiTreeElement>;
+            /**
+             * An item or expandable branch inside a ki-tree.
+             * @whenToUse label a file, category or destination in a hierarchy. Nest more
+             * ki-tree-item children for a branch.
+             * @whenNotToUse standalone controls, form checkboxes, or a row with other
+             * interactive descendants.
+             * @managedSlot children - Direct child items are projected into the branch group by ki-tree.
+             */
+            "ki-tree-item": LocalJSX.IntrinsicElements["ki-tree-item"] & JSXBase.HTMLAttributes<HTMLKiTreeItemElement>;
             /**
              * A themed video surface: a calm poster facade with exactly one accessible
              * play control over a slotted native `<video>` element. From the first

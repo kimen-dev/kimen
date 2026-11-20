@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 448 semantic
-and 1453 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 454 semantic
+and 1479 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -531,6 +531,17 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-transparent-inverse` | `rgba(255, 255, 255, 0)` | semantic color for transparent inverse. |
+
+### `ki.tree-layout`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-tree-layout-indent` | `1.25rem` | Inline step between hierarchy levels. |
+| `--ki-tree-layout-item-target` | `24px` | Minimum inline target of a tree disclosure or checkbox. |
+| `--ki-tree-layout-row-min` | `2rem` | Default minimum block size of a tree row. |
+| `--ki-tree-layout-row-radius` | `8px` | Default rounding of a highlighted tree row. |
+| `--ki-tree-layout-surface-radius` | `12px` | Default rounding of a tree surface. |
+| `--ki-tree-layout-touch-row-min` | `44px` | Minimum block size of a row on a coarse pointer. |
 
 ### `ki.typography`
 
@@ -2256,6 +2267,37 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tooltip-radius` | `8px` | dimension used by the tooltip component for radius (MarsUI Tooltip master 12089:7621 List_wrap: Radius/big_component/radius_xs 16px). |
 | `--ki-tooltip-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap). |
 | `--ki-tooltip-show-delay` | `500ms` | duration used by the tooltip component for tooltip show delay. |
+
+### `ki-tree`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-tree-backdrop-filter` | `none` | Complete backdrop filter behind the surface. |
+| `--ki-tree-bg` | `#ffffff` | Base surface of the hierarchy. |
+| `--ki-tree-bg-image` | `none` | Optional image layered over the tree surface. |
+| `--ki-tree-disclosure-duration` | `150ms` | Disclosure turn duration. |
+| `--ki-tree-disclosure-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Disclosure turn easing. |
+| `--ki-tree-edge` | `rgba(24, 22, 19, 0.1)` | Perimeter color of the hierarchy surface. |
+| `--ki-tree-edge-width` | `1px` | Width of the surface and checkbox outlines. |
+| `--ki-tree-fg` | `#181613` | Text on the base surface. |
+| `--ki-tree-focus-ring-color` | `#bb4e2a` | Ink of the focused row outline. |
+| `--ki-tree-focus-ring-width` | `0.125rem` | Width of the focused row outline. |
+| `--ki-tree-hover-bg` | `#f3f0eb` | Fill of an unselected row hovered by a fine pointer. |
+| `--ki-tree-hover-fg` | `#181613` | Text of an unselected row hovered by a fine pointer. |
+| `--ki-tree-icon-fg` | `#5e5953` | Default ink of the decorative row icons. |
+| `--ki-tree-indent` | `1.25rem` | Inline indentation per hierarchy level. |
+| `--ki-tree-item-box-radius` | `2px` | Rounding of the visual checkbox indicator. |
+| `--ki-tree-item-box-size` | `1rem` | Size of the visual checkbox indicator. |
+| `--ki-tree-item-gap` | `0.25rem` | Space between an optional item icon and its label. |
+| `--ki-tree-item-padding` | `0.5rem` | Inline-end inset of an item row. |
+| `--ki-tree-item-radius` | `8px` | Rounding of a highlighted item row. |
+| `--ki-tree-item-target` | `24px` | Minimum inline target of a disclosure or checkbox. |
+| `--ki-tree-padding` | `0.25rem` | Interior padding of the hierarchy surface. |
+| `--ki-tree-radius` | `12px` | Rounding of the hierarchy surface. |
+| `--ki-tree-row-height` | `2rem` | Minimum block size before density adjustment. |
+| `--ki-tree-selected-bg` | `#ffebe5` | Fill of a selected or checked row. |
+| `--ki-tree-selected-fg` | `#9a3715` | Text and glyph ink on a selected row. |
+| `--ki-tree-touch-row-min` | `44px` | Minimum row block size on a coarse pointer. |
 
 ### `ki-video`
 

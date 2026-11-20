@@ -55,6 +55,8 @@ import { defineCustomElement as defineKiTextarea } from '@kimen/elements/compone
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
+import { defineCustomElement as defineKiTree } from '@kimen/elements/components/ki-tree.js';
+import { defineCustomElement as defineKiTreeItem } from '@kimen/elements/components/ki-tree-item.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
 @ProxyCmp({
   defineCustomElementFn: defineKiAlert,
@@ -1265,6 +1267,68 @@ export class KiTooltip {
 
 
 export declare interface KiTooltip extends Components.KiTooltip {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiTree,
+  inputs: ['label', 'selection']
+})
+@Component({
+  selector: 'ki-tree',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label', 'selection'],
+})
+export class KiTree {
+  protected el: HTMLKiTreeElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiTree extends Components.KiTree {
+  /**
+   * Emitted after a user selection changes. Selected items are in tree order.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiTreeItem,
+  inputs: ['disabled', 'expanded', 'href', 'iconName', 'lazy', 'loadingLabel', 'selected']
+})
+@Component({
+  selector: 'ki-tree-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'expanded', 'href', 'iconName', 'lazy', 'loadingLabel', 'selected'],
+})
+export class KiTreeItem {
+  protected el: HTMLKiTreeItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiTreeItem extends Components.KiTreeItem {
+  /**
+   * Emitted when an existing branch expands.
+   */
+  /**
+   * Emitted when an existing branch collapses.
+   */
+  /**
+   * Emitted once when an empty lazy branch first opens. The listener supplies the children.
+   */
+}
 
 
 @ProxyCmp({

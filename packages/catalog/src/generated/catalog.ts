@@ -2267,6 +2267,85 @@ export const catalogData = {
       "whenNotToUse": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases.",
       "whenToUse": "add a brief clarifying hint for an icon-only, abbreviated, or\notherwise ambiguous control when the same information is discoverable\nelsewhere in the interface."
     },
+    "ki-tree": {
+      "description": "A named hierarchy with collapsible branches and independent keyboard focus.",
+      "events": {
+        "ki-selection-change": "Emitted after a user selection changes. Selected items are in tree order."
+      },
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the hierarchy. Localize it and make it distinct among nearby trees.",
+          "default": "Tree"
+        },
+        "selection": {
+          "type": "enum",
+          "values": [
+            "multiple",
+            "none",
+            "single"
+          ],
+          "description": "Use none for navigation, single for one selected item, or multiple for checkable branches.",
+          "default": "single"
+        }
+      },
+      "slots": {
+        "": "Direct ki-tree-item children in reading order."
+      },
+      "tag": "ki-tree",
+      "whenNotToUse": "flat lists of peers, menus of commands, or submitted form values.",
+      "whenToUse": "browse nested files, categories or an outline, select items in\na hierarchy, or navigate through linked destinations."
+    },
+    "ki-tree-item": {
+      "description": "An item or expandable branch inside a ki-tree.",
+      "events": {
+        "ki-collapse": "Emitted when an existing branch collapses.",
+        "ki-expand": "Emitted when an existing branch expands.",
+        "ki-load": "Emitted once when an empty lazy branch first opens. The listener supplies the children."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Keep the row discoverable by keyboard while preventing user activation.",
+          "default": false
+        },
+        "expanded": {
+          "type": "boolean",
+          "description": "Whether a branch reveals its children. Has no visible effect on a leaf.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Native destination of the row. Prefer selection=\"none\" for navigation trees.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Optional decorative icon. Import the named Kimen glyph before mounting the tree."
+        },
+        "lazy": {
+          "type": "boolean",
+          "description": "Request children on the first empty expansion. Clear it to finish an empty load.",
+          "default": false
+        },
+        "loading-label": {
+          "type": "string",
+          "description": "Localized text for the spinner status during an outstanding lazy request.",
+          "default": "Loading"
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "Selected state. The tree keeps it in sync with single selection or fully checked branches.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "The row label and directly nested ki-tree-item children."
+      },
+      "tag": "ki-tree-item",
+      "whenNotToUse": "standalone controls, form checkboxes, or a row with other\ninteractive descendants.",
+      "whenToUse": "label a file, category or destination in a hierarchy. Nest more\nki-tree-item children for a branch."
+    },
     "ki-video": {
       "description": "A themed video surface: a calm poster facade with exactly one accessible\nplay control over a slotted native `<video>` element. From the first\nactivation on, playback, scrubbing, volume, captions and fullscreen belong\nto the native player — Kimen ships no custom chrome.",
       "events": {},

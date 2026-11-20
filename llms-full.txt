@@ -5097,6 +5097,199 @@ CSS custom properties:
 - `--ki-tooltip-shadow`: shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
+### ki-tree
+
+A named hierarchy with collapsible branches and independent keyboard focus.
+
+When to use: browse nested files, categories or an outline, select items in
+a hierarchy, or navigate through linked destinations.
+When NOT to use: flat lists of peers, menus of commands, or submitted form values.
+
+Examples:
+
+# Tree examples
+
+Give the tree a label and put the item text before any nested items. Set
+`expanded` to show a branch's children and `selected` to mark the initial
+selection. The tree defaults to single selection.
+
+```html
+<ki-tree label="Project files">
+  <ki-tree-item expanded>
+    src
+    <ki-tree-item selected>ki-dialog.ts</ki-tree-item>
+    <ki-tree-item>ki-menu.ts</ki-tree-item>
+  </ki-tree-item>
+  <ki-tree-item>README.md</ki-tree-item>
+</ki-tree>
+```
+
+Set `selection="multiple"` to show checkboxes. The Reports branch starts
+mixed because Summary is the only checked child. Toggling Reports also
+updates its enabled descendants. The `ki-selection-change` event reports
+the committed selection in `detail.selectedItems`, including fully checked
+branches.
+
+```html
+<ki-tree label="Export files" selection="multiple">
+  <ki-tree-item expanded>
+    Reports
+    <ki-tree-item selected>Summary</ki-tree-item>
+    <ki-tree-item>Appendix</ki-tree-item>
+    <ki-tree-item disabled>Draft</ki-tree-item>
+  </ki-tree-item>
+</ki-tree>
+```
+
+Use `selection="none"` with `href` to build a navigation tree.
+
+```html
+<ki-tree label="Documentation" selection="none">
+  <ki-tree-item expanded>
+    Guides
+    <ki-tree-item href="./quick-start/">Quick start</ki-tree-item>
+    <ki-tree-item href="./theming/">Theming</ki-tree-item>
+  </ki-tree-item>
+</ki-tree>
+```
+
+A lazy branch emits `ki-load` the first time it opens. Append its child
+items to `event.detail.item` to replace the spinner. Set `item.lazy = false`
+to finish the wait if there are no children.
+
+```html
+<ki-tree label="Project files">
+  <ki-tree-item lazy loading-label="Loading tokens">tokens</ki-tree-item>
+</ki-tree>
+```
+
+```js
+document.querySelector('ki-tree')?.addEventListener('ki-load', ({ detail: { item } }) => {
+  const child = document.createElement('ki-tree-item');
+  child.textContent = 'palette.tokens.json';
+  item.append(child);
+});
+```
+
+Attributes:
+- `label` (string, default 'Tree'): Accessible name of the hierarchy. Localize it and make it distinct among nearby trees.
+- `selection` ("multiple" | "none" | "single", default 'single'): Use none for navigation, single for one selected item, or multiple for checkable branches.
+
+Slots:
+- (default): Direct ki-tree-item children in reading order.
+
+Parts:
+- `base`: The surface around the hierarchy.
+
+Events:
+- `ki-selection-change` (CustomEvent<{ selectedItems: HTMLKiTreeItemElement[] }>): Emitted after a user selection changes. Selected items are in tree order.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-tree-backdrop-filter`: Complete backdrop filter behind the surface.
+- `--ki-tree-bg`: Base surface of the hierarchy.
+- `--ki-tree-bg-image`: Optional image layered over the tree surface.
+- `--ki-tree-edge`: Perimeter color of the hierarchy surface.
+- `--ki-tree-edge-width`: Width of the surface and checkbox outlines.
+- `--ki-tree-fg`: Text on the base surface.
+- `--ki-tree-padding`: Interior padding of the hierarchy surface.
+- `--ki-tree-radius`: Rounding of the hierarchy surface.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+
+### ki-tree-item
+
+An item or expandable branch inside a ki-tree.
+
+When to use: label a file, category or destination in a hierarchy. Nest more
+ki-tree-item children for a branch.
+When NOT to use: standalone controls, form checkboxes, or a row with other
+interactive descendants.
+
+Examples:
+
+# Tree item examples
+
+Place each item directly in a `ki-tree` or another `ki-tree-item`. Put the
+label text before the child items. A disabled item stays in the tree's
+arrow-key sequence and cannot be activated.
+
+```html
+<ki-tree label="Project files">
+  <ki-tree-item expanded>
+    src
+    <ki-tree-item selected>ki-dialog.ts</ki-tree-item>
+    <ki-tree-item disabled>Archived code</ki-tree-item>
+  </ki-tree-item>
+</ki-tree>
+```
+
+Import the decorative glyph before the tree mounts if you set `icon-name`.
+
+```js
+import '@kimen/elements/icons/file-code';
+```
+
+```html
+<ki-tree label="Project files">
+  <ki-tree-item icon-name="file-code">ki-dialog.ts</ki-tree-item>
+</ki-tree>
+```
+
+Attributes:
+- `disabled` (boolean, default false): Keep the row discoverable by keyboard while preventing user activation.
+- `expanded` (boolean, default false): Whether a branch reveals its children. Has no visible effect on a leaf.
+- `href` (string | undefined, URL): Native destination of the row. Prefer selection="none" for navigation trees.
+- `icon-name` (string | undefined): Optional decorative icon. Import the named Kimen glyph before mounting the tree.
+- `lazy` (boolean, default false): Request children on the first empty expansion. Clear it to finish an empty load.
+- `loading-label` (string, default 'Loading'): Localized text for the spinner status during an outstanding lazy request.
+- `selected` (boolean, default false): Selected state. The tree keeps it in sync with single selection or fully checked branches.
+
+Slots:
+- (default): The row label and directly nested ki-tree-item children.
+
+Parts:
+- `checkbox`: Check-state indicator and hit area in multiple selection.
+- `disclosure`: Leading hit area and direction indicator of a branch.
+- `group`: The region containing the expanded child items.
+- `label`: Visible row text or native destination link.
+- `row`: The painted and focus-highlighted item row.
+
+Events:
+- `ki-collapse` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch collapses.
+- `ki-expand` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch expands.
+- `ki-load` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted once when an empty lazy branch first opens. The listener supplies the children.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-tree-disclosure-duration`: Disclosure turn duration.
+- `--ki-tree-disclosure-easing`: Disclosure turn easing.
+- `--ki-tree-edge-width`: Width of the surface and checkbox outlines.
+- `--ki-tree-focus-ring-color`: Ink of the focused row outline.
+- `--ki-tree-focus-ring-width`: Width of the focused row outline.
+- `--ki-tree-hover-bg`: Fill of an unselected row hovered by a fine pointer.
+- `--ki-tree-hover-fg`: Text of an unselected row hovered by a fine pointer.
+- `--ki-tree-icon-fg`: Default ink of the decorative row icons.
+- `--ki-tree-indent`: Inline indentation per hierarchy level.
+- `--ki-tree-item-box-radius`: Rounding of the visual checkbox indicator.
+- `--ki-tree-item-box-size`: Size of the visual checkbox indicator.
+- `--ki-tree-item-gap`: Space between an optional item icon and its label.
+- `--ki-tree-item-padding`: Inline-end inset of an item row.
+- `--ki-tree-item-radius`: Rounding of a highlighted item row.
+- `--ki-tree-item-target`: Minimum inline target of a disclosure or checkbox.
+- `--ki-tree-row-height`: Minimum block size before density adjustment.
+- `--ki-tree-selected-bg`: Fill of a selected or checked row.
+- `--ki-tree-selected-fg`: Text and glyph ink on a selected row.
+- `--ki-tree-touch-row-min`: Minimum row block size on a coarse pointer.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+
 ### ki-video
 
 A themed video surface: a calm poster facade with exactly one accessible play control over a slotted native `<video>` element. From the first activation on, playback, scrubbing, volume, captions and fullscreen belong to the native player — Kimen ships no custom chrome.
