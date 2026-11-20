@@ -97,6 +97,14 @@
         "$value": "{ki.space.xs}",
         "$description": "dimension used by the input component for gap."
       },
+      "action-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "Gap between the input action and the preceding control or adornment."
+      },
+      "action-padding-end": {
+        "$value": "{ki.space.xs}",
+        "$description": "Inline-end inset between the input action and the inside edge of the field border."
+      },
       "label-gap": {
         "$value": "{ki.space.xs}",
         "$description": "dimension used by the input component for label gap."

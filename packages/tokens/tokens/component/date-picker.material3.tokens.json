@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "date-picker": {
+      "radius": {
+        "$value": "{ki.menu-layout.surface-radius}",
+        "$description": "Material 3 anchored surface corner radius."
+      }
+    }
+  }
+}

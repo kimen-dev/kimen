@@ -7,6 +7,20 @@ export const settleFrames = async (count: number): Promise<void> => {
   }
 };
 
+export async function checkTextFieldGalleryFit(wrapper: HTMLElement): Promise<void> {
+  // The accessibility audit uses the same fixtures at narrower widths.
+  const width = 640;
+  const height = 700;
+  if (window.innerWidth !== width || window.innerHeight !== height) return;
+
+  await document.fonts.ready;
+  if (wrapper.scrollWidth > width || wrapper.scrollHeight > height) {
+    throw new Error(
+      `Text field gallery exceeds the capture: ${String(wrapper.scrollWidth)} × ${String(wrapper.scrollHeight)} px`,
+    );
+  }
+}
+
 export const buttonVariants = ['primary', 'secondary', 'tertiary', 'quaternary', 'ghost'] as const;
 
 export const buttonSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;

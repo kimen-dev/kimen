@@ -1,0 +1,22 @@
+{
+  "ki": {
+    "mobile-nav": {
+      "bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Fixed bar surface."
+      },
+      "floating-bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Floating bar surface."
+      },
+      "indicator-bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Fill behind the current destination icon."
+      },
+      "indicator-fg": {
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Icon ink on the current destination fill."
+      }
+    }
+  }
+}

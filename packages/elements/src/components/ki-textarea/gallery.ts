@@ -1,7 +1,8 @@
+import { checkTextFieldGalleryFit } from '../../../browser-tests/visual/fixtures';
 import type { VisualGallery } from '../../../browser-tests/visual/galleries';
 
 export default {
-  fitViewport: true,
+  prepare: checkTextFieldGalleryFit,
   html: [
     // Keep the single-column fixtures inside the narrow accessibility audit.
     '<style>.textarea-gallery{display:grid;align-items:start;gap:16px;max-inline-size:368px;grid-template-columns:minmax(0,1fr)}@media (min-width:600px){.textarea-gallery{max-inline-size:none;grid-template-columns:repeat(2,minmax(0,1fr))}}</style>',

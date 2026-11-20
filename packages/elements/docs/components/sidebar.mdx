@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-sidebar" />
+
+# Sidebar
+
+Use a sidebar for more than five top-level destinations or a set of grouped
+destinations. Use top navigation for a few sections and mobile navigation or a
+drawer at narrow widths.
+
+```html
+<ki-sidebar label="Main" collapsible>
+  <span slot="brand">Kimen</span>
+  <ki-sidebar-item href="/" icon-name="house" current>Home</ki-sidebar-item>
+  <ki-sidebar-item href="/inbox" icon-name="inbox" count="12">Inbox</ki-sidebar-item>
+  <ki-sidebar-group label="Workspace">
+    <ki-sidebar-item href="/members" icon-name="users">Members</ki-sidebar-item>
+  </ki-sidebar-group>
+  <button slot="footer" type="button" aria-label="Account: Ana Garcia">AG</button>
+</ki-sidebar>
+```
+
+Import each named glyph via `@kimen/elements/icons/<name>` before rendering.
+The `start` slot accepts one decorative glyph and overrides `icon-name`.
+In the rail, items without an icon display the first character of their label.
+Keep the destination name in the default slot in both modes.
+For direct component imports, register `@kimen/elements/ki-tooltip` alongside
+the three Sidebar tags. The full element loader registers it for you.
+
+## Mode and account menu
+
+`collapsible` provides a native toggle. The application may also assign
+`collapsed` directly. The toggle announces its state and retains focus.
+Each link retains its destination and focus when the layout changes. The
+rail shows a tooltip on hover and keyboard focus.
+
+Set the JavaScript `preference` property with a stable `storageKey` scoped to the signed-in profile and sidebar
+to remember mode in this browser. Use `ki-sidebar-change` and
+`event.detail.collapsed` when persisting the preference in the application.
+Localize toggle strings with `collapse-label` and `expand-label`. Use
+`count-label` for localized `{label}` and `{count}` wording.
+
+Put an accessible account trigger in the `footer` slot and wire it to your
+account menu. Keep the same trigger mounted in both modes and use the host's
+reflected `[collapsed]` attribute to adapt its contents. Use `brand` for
+presentational branding.
+
+## Styling
+
+Override `--ki-sidebar-width` and `--ki-sidebar-collapsed-width` for the
+panel and rail. Keep enough room for touch targets when setting a custom
+rail width. `data-ki-density="touch"` on the surrounding region applies
+the larger target floor. The navigation follows inherited direction.

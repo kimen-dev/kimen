@@ -52,6 +52,25 @@ RTL:
 </ki-input>`}
 />
 
+### Submit action inside the field
+
+Use `action` for a one-field form with a single submit button. The button sits
+after the `end` adornment and has its own tab stop. Pressing Enter in the
+entry also submits the form.
+
+<Demo
+  layout="block"
+  code={`<form role="search" onsubmit="event.preventDefault()">
+  <ki-input type="search" name="q" label="Search docs" placeholder="Components, tokens…">
+    <ki-button slot="action" size="sm" variant="secondary" type="submit">Search</ki-button>
+  </ki-input>
+</form>`}
+/>
+
+For an icon-only action, give `ki-icon-button size="sm"` a `label` and call
+`form.requestSubmit()` from its click handler. Place form-wide or unrelated
+actions beside the field. Use `end` for clear or reveal controls.
+
 ### Appearance and character limits
 
 Set `appearance` to `outlined` for a full border or `filled` for a

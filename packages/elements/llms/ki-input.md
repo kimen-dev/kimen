@@ -24,6 +24,20 @@ A labeled field participating in native form submission (`label` is mandatory; i
 </form>
 ```
 
+Place a one-field form's only submit action inside the field.
+
+```html
+<form role="search">
+  <ki-input type="search" name="q" label="Search docs" placeholder="Components, tokens…">
+    <ki-button slot="action" size="sm" variant="secondary" type="submit">Search</ki-button>
+  </ki-input>
+</form>
+```
+
+The action has a separate tab stop. Enter in the entry also submits the form.
+For an icon-only action, give `ki-icon-button size="sm"` a `label` and call
+`form.requestSubmit()` from its click handler.
+
 Read-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:
 
 ```html
@@ -48,6 +62,7 @@ and announces when the user reaches the limit.
 
 ## Attributes
 
+- `ai-suggestion-text` (string, default 'Suggested by AI'): Localized provenance description read alongside help or an error when the end slot contains an AI label. Use this to translate the description.
 - `appearance` ("default" | "filled" | "outlined" | undefined, default 'default'): Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
 - `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
 - `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
@@ -68,7 +83,8 @@ and announces when the user reaches the limit.
 
 ## Slots
 
-- `end`: Trailing icon or text affix inside the field. Follows writing direction.
+- `action`: One small submit action inside the field after the end adornment. Use for one-field forms such as search or subscribe. Place a named `ki-button size="sm" type="submit"` here, or wire a labeled `ki-icon-button size="sm"` to request form submission. The action has its own tab stop. Use the end slot for clear or reveal controls.
+- `end`: Trailing icon or text affix inside the field. Follows writing direction. A directly slotted AI label also describes the field as suggested by AI.
 - `start`: Leading icon or text affix inside the field. Follows writing direction.
 
 ## Parts
@@ -93,6 +109,8 @@ None.
 
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-input-action-gap`: Gap between the input action and the preceding control or adornment.
+- `--ki-input-action-padding-end`: Inline-end inset between the input action and the inside edge of the field border.
 - `--ki-input-appearance-border-width`: Resting stroke width of both explicit text field appearances.
 - `--ki-input-border-block-end-width`: dimension used by the input component for border block end width.
 - `--ki-input-border-block-start-width`: dimension used by the input component for border block start width.

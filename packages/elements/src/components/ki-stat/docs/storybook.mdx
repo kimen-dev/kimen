@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-stat" />
+
+# Stat
+
+Use `<ki-stat>` for one number. The sign of the change picks the glyph.
+Set `direction="lower-is-better"` when a drop is favorable, or
+`direction="neutral"` when the card should show a change without grading it.
+
+```html
+<ki-stat label="Median render time" value="84" unit="ms" delta="-9" delta-label="vs last week" direction="lower-is-better"></ki-stat>
+```
+
+Assign `format` and `deltaFormat` as `Intl.NumberFormatOptions` properties. The
+metric uses the surrounding locale. `unit` supplies a suffix to decimals, and
+the remaining styles supply their own symbols.
+
+Supply localized text for `label`, `delta-label`, `up-label` and `down-label`.
+Give an informative sparkline a text equivalent and pass it into the
+`chart` slot. The stat adds no tab stop.
+
+Customize the surface through `--ki-stat-bg`, `--ki-stat-bg-image` and
+`--ki-stat-backdrop-filter`. The `card`, `label`, `value`, `comparison`,
+`delta`, `trend` and `reference` parts expose the visible structure.

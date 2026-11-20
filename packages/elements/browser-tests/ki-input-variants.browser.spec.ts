@@ -119,6 +119,18 @@ it.for(tags)('S2 shows an empty count after removing the value attribute on %s',
   await expect.element(textbox).toHaveAccessibleDescription('0 / 10');
 });
 
+it('S4 describes a suggested input with its help, character count and AI provenance', async () => {
+  await mount(`
+    <ki-input label="Summary" help-text="Keep it short" value="Kimen" maxlength="10" show-count>
+      <ki-ai-label slot="end"></ki-ai-label>
+    </ki-input>
+  `);
+
+  await expect
+    .element(page.getByRole('textbox', { name: 'Summary' }))
+    .toHaveAccessibleDescription('Keep it short 5 / 10 Suggested by AI');
+});
+
 it('S3 tabs to the native input and keeps its focus ring at the typing cap', async () => {
   const fixture = await mount(`
     <button tabindex="0" type="button">Start</button>

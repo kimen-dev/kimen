@@ -13,6 +13,7 @@ type PauseReason = 'focus' | 'hidden' | 'pointer';
 type LeaveReason = KiToastDismissDetail['reason'];
 
 const TOASTER_TAG = 'ki-toaster';
+const SCOPE_EVENTS = ['pointerover', 'pointerout', 'focusin', 'focusout'] as const;
 
 // One glyph per tone (I-6), drawn in the tone's icon ink. Decorative: the
 // message carries the meaning, so the icon is hidden from assistive
@@ -26,8 +27,7 @@ const TONE_GLYPHS: Record<KiToastTone, string> = {
   danger: 'M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm-.75 4h1.5v5.5h-1.5V6Zm0 7h1.5v1.5h-1.5V13Z',
 };
 
-const isTone = (value: string | undefined): value is KiToastTone =>
-  value !== undefined && Object.hasOwn(TONE_GLYPHS, value);
+const isTone = (value: string): value is KiToastTone => Object.hasOwn(TONE_GLYPHS, value);
 
 /**
  * A short, transient message about something the person just did, shown
@@ -172,59 +172,67 @@ export class KiToast {
 
   @State() private hasAction = false;
 
-  /** Milliseconds left while the time is held. */
-  private remainingMs = 0;
+  /** Milliseconds left while the time is held, or null if it never expires. */
+  #remainingMs: number | null = null;
 
   /** When the time runs out, while it runs; null while held or waiting. */
-  private deadline: number | null = null;
+  #deadline: number | null = null;
 
-  /** The effective duration of the current appearance; null = waits. */
-  private total: number | null = null;
+  #expiryTimer: ReturnType<typeof setTimeout> | undefined;
 
-  private expiryTimer: ReturnType<typeof setTimeout> | undefined;
+  readonly #pauses = new Set<PauseReason>();
 
-  private readonly pauses = new Set<PauseReason>();
+  #scope: HTMLElement | null = null;
 
-  private scope: HTMLElement | null = null;
+  #listeners?: AbortController;
 
-  private loaded = false;
+  #loaded = false;
 
   @Watch('dismissed')
   protected dismissedChanged(dismissed: boolean): void {
     if (dismissed) {
       // Focus inside goes on before the subtree does (FR-011).
-      this.handOffFocus();
-      this.stop();
+      this.#handOffFocus();
+      this.#stop();
       return;
     }
-    this.restart();
+    this.#restart();
   }
 
   @Watch('queued')
   @Watch('duration')
   @Watch('tone')
+  @Watch('hasAction')
   protected timingChanged(): void {
-    this.restart();
+    this.#restart();
   }
 
   connectedCallback(): void {
+    this.#listeners?.abort();
+    const controller = new AbortController();
+    this.#listeners = controller;
+    const options = { signal: controller.signal };
+
     // Escape and the action's click reach the host from the shadow tree and
     // from slotted content alike.
-    this.host.addEventListener('keydown', this.handleKeyDown);
-    this.host.addEventListener('click', this.handleClick);
-    this.attachScope();
-    document.addEventListener('visibilitychange', this.handleVisibility);
-    if (this.loaded) {
-      this.restart();
+    this.host.addEventListener('keydown', this.#handleKeyDown, options);
+    this.host.addEventListener('click', this.#handleClick, options);
+    document.addEventListener('visibilitychange', this.#handleVisibility, options);
+
+    // Interaction anywhere in the toaster pauses the whole stack.
+    this.#scope = this.#toaster ?? this.host;
+    for (const event of SCOPE_EVENTS) {
+      this.#scope.addEventListener(event, this.#handleScopeEvent, options);
+    }
+    if (this.#loaded) {
+      this.#restart();
     }
   }
 
   disconnectedCallback(): void {
-    this.host.removeEventListener('keydown', this.handleKeyDown);
-    this.host.removeEventListener('click', this.handleClick);
-    this.detachScope();
-    document.removeEventListener('visibilitychange', this.handleVisibility);
-    this.stop();
+    this.#listeners?.abort();
+    this.#scope = null;
+    this.#stop();
   }
 
   componentWillLoad(): void {
@@ -234,144 +242,106 @@ export class KiToast {
   }
 
   componentDidLoad(): void {
-    this.loaded = true;
-    this.restart();
+    this.#loaded = true;
+    this.#restart();
   }
 
-  private get shown(): boolean {
+  get #shown(): boolean {
     return this.host.isConnected && !this.dismissed && !this.queued;
   }
 
   /** The whole time again, under the current tone, duration and action. */
-  private restart(): void {
-    this.stop();
-    this.total = effectiveDuration(this.duration, this.tone, this.hasAction);
-    this.remainingMs = this.total ?? 0;
-    if (!this.loaded || !this.shown || this.total === null) {
+  #restart(): void {
+    this.#stop();
+    this.#remainingMs = effectiveDuration(this.duration, this.tone, this.hasAction);
+    if (!this.#loaded || !this.#shown || this.#remainingMs === null) {
       return;
     }
-    this.syncPauses();
-    this.run();
+    this.#syncPauses();
+    this.#run();
   }
 
-  private run(): void {
-    if (!this.shown || this.total === null || this.pauses.size > 0 || this.deadline !== null) {
+  #run(): void {
+    if (
+      !this.#shown ||
+      this.#remainingMs === null ||
+      this.#pauses.size ||
+      this.#deadline !== null
+    ) {
       return;
     }
-    this.deadline = Date.now() + this.remainingMs;
-    this.expiryTimer = setTimeout(() => {
-      this.leave('timeout');
-    }, this.remainingMs);
+    this.#deadline = Date.now() + this.#remainingMs;
+    this.#expiryTimer = setTimeout(() => {
+      this.#leave('timeout');
+    }, this.#remainingMs);
   }
 
-  private hold(): void {
-    if (this.deadline === null) {
-      return;
+  #hold(): void {
+    if (this.#deadline !== null) {
+      this.#remainingMs = Math.max(0, this.#deadline - Date.now());
+      this.#stop();
     }
-    this.remainingMs = Math.max(0, this.deadline - Date.now());
-    this.stop();
   }
 
-  private stop(): void {
-    this.deadline = null;
-    clearTimeout(this.expiryTimer);
-    this.expiryTimer = undefined;
+  #stop(): void {
+    this.#deadline = null;
+    clearTimeout(this.#expiryTimer);
+    this.#expiryTimer = undefined;
   }
 
-  private leave(reason: LeaveReason): void {
+  #leave(reason: LeaveReason): void {
     if (this.dismissed) {
       return;
     }
-    this.stop();
-    this.leaveReason = reason;
+    this.#stop();
+    this.#leaveReason = reason;
     this.dismissed = true;
-    this.leaveReason = undefined;
+    this.#leaveReason = undefined;
     this.kiDismiss.emit({ reason });
   }
 
   /** Why the toast is leaving, while the dismissed watcher hands focus on. */
-  private leaveReason: LeaveReason | undefined;
+  #leaveReason: LeaveReason | undefined;
 
-  private pause(reason: PauseReason): void {
-    this.pauses.add(reason);
-    this.hold();
-  }
-
-  private resume(reason: PauseReason): void {
-    this.pauses.delete(reason);
-    this.run();
+  #setPaused(reason: PauseReason, paused: boolean): void {
+    if (paused) {
+      this.#pauses.add(reason);
+      this.#hold();
+    } else {
+      this.#pauses.delete(reason);
+      this.#run();
+    }
   }
 
   /** The state of the world when the time starts: no event says so. */
-  private syncPauses(): void {
-    this.pauses.clear();
-    const scope = this.scope ?? this.host;
+  #syncPauses(): void {
+    this.#pauses.clear();
+    const scope = this.#scope ?? this.host;
     if (scope.matches(':hover')) {
-      this.pauses.add('pointer');
+      this.#pauses.add('pointer');
     }
     if (scope.matches(':focus-within')) {
-      this.pauses.add('focus');
+      this.#pauses.add('focus');
     }
     if (document.visibilityState === 'hidden') {
-      this.pauses.add('hidden');
+      this.#pauses.add('hidden');
     }
   }
 
-  // Inside a toaster, the pointer or the focus on any toast holds every toast
-  // of that toaster: one leaving under a reader would reflow the stack.
-  private attachScope(): void {
-    this.detachScope();
-    const parent = this.host.parentElement;
-    this.scope = parent?.localName === TOASTER_TAG ? parent : this.host;
-    this.scope.addEventListener('pointerover', this.handlePointerOver);
-    this.scope.addEventListener('pointerout', this.handlePointerOut);
-    this.scope.addEventListener('focusin', this.handleFocusIn);
-    this.scope.addEventListener('focusout', this.handleFocusOut);
-  }
-
-  private detachScope(): void {
-    this.scope?.removeEventListener('pointerover', this.handlePointerOver);
-    this.scope?.removeEventListener('pointerout', this.handlePointerOut);
-    this.scope?.removeEventListener('focusin', this.handleFocusIn);
-    this.scope?.removeEventListener('focusout', this.handleFocusOut);
-    this.scope = null;
-  }
-
-  /** Whether an event's related target stays inside the pause scope. */
-  private staysInScope(event: FocusEvent | PointerEvent): boolean {
+  readonly #handleScopeEvent = (event: FocusEvent | PointerEvent): void => {
+    const reason = event.type.startsWith('focus') ? 'focus' : 'pointer';
+    const leaving = event.type.endsWith('out');
     const to = event.relatedTarget;
-    return to instanceof Node && (this.scope?.contains(to) ?? false);
-  }
-
-  private readonly handlePointerOver = (): void => {
-    this.pause('pointer');
-  };
-
-  private readonly handlePointerOut = (event: PointerEvent): void => {
-    if (!this.staysInScope(event)) {
-      this.resume('pointer');
+    if (!leaving || !(to instanceof Node && this.#scope?.contains(to))) {
+      this.#setPaused(reason, !leaving);
     }
   };
 
-  private readonly handleFocusIn = (): void => {
-    this.pause('focus');
+  readonly #handleVisibility = (): void => {
+    this.#setPaused('hidden', document.visibilityState === 'hidden');
   };
 
-  private readonly handleFocusOut = (event: FocusEvent): void => {
-    if (!this.staysInScope(event)) {
-      this.resume('focus');
-    }
-  };
-
-  private readonly handleVisibility = (): void => {
-    if (document.visibilityState === 'hidden') {
-      this.pause('hidden');
-    } else {
-      this.resume('hidden');
-    }
-  };
-
-  private get toaster(): HTMLElement | null {
+  get #toaster(): HTMLElement | null {
     const parent = this.host.parentElement;
     return parent?.localName === TOASTER_TAG ? parent : null;
   }
@@ -383,16 +353,16 @@ export class KiToast {
    * else where it came from, else the next focusable element after the toast
    * (I-8).
    */
-  private handOffFocus(): void {
+  #handOffFocus(): void {
     if (!this.host.matches(':focus-within')) {
       return;
     }
-    const toaster = this.toaster;
+    const toaster = this.#toaster;
     const origin = toaster ? focusOriginOf(toaster) : null;
     const target =
-      this.leaveReason === 'escape' && origin
+      this.#leaveReason === 'escape' && origin
         ? origin
-        : ((toaster ? this.neighbourControl(toaster) : null) ??
+        : ((toaster ? this.#neighbourControl() : null) ??
           origin ??
           resolveDismissFocusTarget(this.host));
     if (target) {
@@ -400,53 +370,48 @@ export class KiToast {
     }
   }
 
-  private neighbourControl(toaster: HTMLElement): HTMLElement | null {
-    const others = [...toaster.children].filter(
-      (element): element is HTMLElement =>
-        element !== this.host &&
-        element.localName === 'ki-toast' &&
-        !element.hasAttribute('dismissed') &&
-        !element.hasAttribute('queued'),
-    );
-    const following = others.find(
-      (element) => this.host.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING,
-    );
-    const toast = following ?? others.at(-1);
-    return toast ? firstControlOf(toast) : null;
+  #neighbourControl(): HTMLElement | null {
+    const live = 'ki-toast:not([dismissed], [queued])';
+    for (let next = this.host.nextElementSibling; next; next = next.nextElementSibling) {
+      if (next.matches(live)) return firstControlOf(next as HTMLElement);
+    }
+    for (let prev = this.host.previousElementSibling; prev; prev = prev.previousElementSibling) {
+      if (prev.matches(live)) return firstControlOf(prev as HTMLElement);
+    }
+    return null;
   }
 
-  private readonly handleDismiss = (): void => {
-    this.leave('button');
+  readonly #handleDismiss = (): void => {
+    this.#leave('button');
   };
 
-  private readonly handleKeyDown = (event: KeyboardEvent): void => {
+  readonly #handleKeyDown = (event: KeyboardEvent): void => {
     if (event.key === 'Escape' && !event.defaultPrevented) {
       event.preventDefault();
-      this.leave('escape');
+      this.#leave('escape');
     }
   };
 
   // The action's own handlers run first (target phase), then the toast
   // leaves; the host listener sits after them on the bubbling path.
-  private readonly handleClick = (event: MouseEvent): void => {
+  readonly #handleClick = (event: MouseEvent): void => {
     const action = event
       .composedPath()
-      .find(
-        (node): node is HTMLElement =>
+      .some(
+        (node) =>
           node instanceof HTMLElement && node.parentElement === this.host && node.slot === 'action',
       );
-    if (action !== undefined) {
-      this.leave('action');
+    if (action) {
+      this.#leave('action');
     }
   };
 
-  private readonly syncSlotState = (): void => {
-    const slot = this.host.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="action"]');
-    const hadAction = this.hasAction;
-    this.hasAction = slotHoldsContent(slot);
-    if (hadAction !== this.hasAction) {
-      this.restart();
-    }
+  readonly #syncSlotState = (event: Event): void => {
+    const slot = event.currentTarget as HTMLSlotElement;
+    // A slot holding only whitespace counts as empty.
+    this.hasAction = slot
+      .assignedNodes({ flatten: true })
+      .some((node) => node.nodeType === Node.ELEMENT_NODE || Boolean(node.textContent?.trim()));
   };
 
   render() {
@@ -455,7 +420,10 @@ export class KiToast {
     }
 
     const heading = this.heading?.trim();
-    const glyph = TONE_GLYPHS[isTone(this.tone) ? this.tone : 'neutral'];
+    const tone = this.tone;
+    const glyph = TONE_GLYPHS[isTone(tone) ? tone : 'neutral'];
+    const onSlotchange = this.#syncSlotState;
+    const onDismiss = this.#handleDismiss;
 
     // DOM order is reading order (I-5, C27): icon, text, action, dismiss.
     return (
@@ -472,7 +440,7 @@ export class KiToast {
           </div>
         </div>
         <div part="action">
-          <slot name="action" onSlotchange={this.syncSlotState} />
+          <slot name="action" onSlotchange={onSlotchange} />
         </div>
         {this.dismissible ? (
           <ki-icon-button
@@ -480,7 +448,7 @@ export class KiToast {
             size="xs"
             variant="ghost"
             label={this.dismissLabel}
-            onClick={this.handleDismiss}
+            onClick={onDismiss}
           >
             <svg aria-hidden="true" viewBox="0 0 16 16">
               <path
@@ -493,16 +461,4 @@ export class KiToast {
       </div>
     );
   }
-}
-
-/** A slot holding only whitespace counts as empty. */
-function slotHoldsContent(slot: HTMLSlotElement | null | undefined): boolean {
-  return (
-    slot?.assignedNodes({ flatten: true }).some((node) => {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        return true;
-      }
-      return (node.textContent ?? '').trim().length > 0;
-    }) ?? false
-  );
 }

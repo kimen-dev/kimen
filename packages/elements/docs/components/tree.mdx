@@ -1,0 +1,44 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TreeStories from '../../src/components/ki-tree/ki-tree.stories';
+
+<Meta title="Docs/Components/ki-tree" />
+
+# Tree
+
+Use a labelled `ki-tree` for a file browser, category hierarchy, or outline.
+Nest `ki-tree-item` children directly under their parent item. A branch's
+disclosure opens and closes its children. The row shows a decorative glyph
+when its `icon-name` has been imported.
+
+<Canvas of={TreeStories.Playground} />
+
+Set `selection="multiple"` to show checkboxes. Checking a branch also checks
+its enabled descendants. A mixed checkbox shows that some descendants are
+checked. Disabled items stay in the arrow-key sequence.
+
+<Canvas of={TreeStories.Multiple} />
+
+Use the `ki-selection-change` event's `detail.selectedItems` to read the
+selected item elements. The `ki-expand`, `ki-collapse`, and `ki-load`
+events identify the branch in `detail.item`.
+
+## Customization
+
+| Token | Controls |
+| --- | --- |
+| `--ki-tree-indent` | Indentation per level |
+| `--ki-tree-row-height` | Minimum row height |
+| `--ki-tree-hover-bg` | Hover fill |
+| `--ki-tree-selected-bg`, `--ki-tree-selected-fg` | Selected fill and text |
+| `--ki-tree-icon-fg` | Decorative icon color |
+
+Item shadow parts include `row`, `disclosure`, `checkbox`, `label`, and
+`group`.
+
+## Keyboard
+
+Tab enters the tree once. Move across visible items with Up, Down, Home,
+End, or type-ahead. Use the arrow toward the children to expand a branch or
+move to a child, and the opposite arrow to collapse or return to a parent.
+Space selects or checks an item. Set `selection="none"` and use `href` to
+follow links with Enter.

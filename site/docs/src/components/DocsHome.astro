@@ -1,0 +1,85 @@
+---
+import { Code } from '@astrojs/starlight/components';
+import ComponentIndex from './ComponentIndex.astro';
+
+const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
+const install = 'pnpm add @kimen/elements @kimen/tokens';
+const example = `import { defineCustomElement } from '@kimen/elements/ki-button';
+import '@kimen/tokens/css';
+
+defineCustomElement();
+
+// In your markup:
+<ki-button variant="primary">Save</ki-button>`;
+const paths = [
+  {
+    title: 'By hand, in any framework',
+    description:
+      'Import the elements you use, load the token stylesheet and write markup. React, Vue and Angular also have typed wrappers.',
+    links: [
+      ['getting-started', 'Getting started'],
+      ['guides/frameworks', 'Framework integration'],
+      ['guides/theming', 'Themes and color schemes'],
+      ['guides/tokens', 'Design tokens'],
+      ['guides/accessibility', 'Accessibility'],
+    ],
+  },
+  {
+    title: 'By agents, through the catalog',
+    description:
+      'Your agent emits a JSON spec. The catalog validates it before rendering the same elements.',
+    links: [
+      ['guides/ui-spec', 'The UI spec format'],
+      ['guides/emitting-specs', 'Emitting specs with any LLM'],
+      ['guides/a2ui', 'A2UI adapter'],
+      ['guides/mcp-apps', 'MCP Apps adapter'],
+      ['resources/working-with-ai', 'Working with AI'],
+    ],
+  },
+];
+---
+
+<div class="kimen-home not-content">
+  <header>
+    <h1 id="_top">Start building with Kimen.</h1>
+    <p class="kimen-home-lede">
+      Standards-first <code>ki-*</code> elements, two themes and a guarded catalog for
+      agent-written UI. Install it, pick your path, find your component.
+    </p>
+  </header>
+
+  <section aria-labelledby="docs-start-title">
+    <h2 id="docs-start-title">Two steps to a working element</h2>
+    <ol class="kimen-home-steps">
+      <li>
+        <h3>Install</h3>
+        <Code code={install} lang="sh" />
+        <p class="kimen-home-note">
+          While Kimen is pre-v1, <a href="https://github.com/kimen-dev/kimen">build it from the repository</a>.
+          This command will work once the packages publish.
+        </p>
+      </li>
+      <li>
+        <h3>Import and use</h3>
+        <Code code={example} lang="js" />
+      </li>
+    </ol>
+  </section>
+
+  <section class="kimen-home-paths" aria-labelledby="docs-paths-title">
+    <h2 id="docs-paths-title" class="visually-hidden">Pick your path</h2>
+    {
+      paths.map(({ title, description, links }) => (
+        <div class="kimen-home-path">
+          <h3>{title}</h3>
+          <p>{description}</p>
+          <ul>
+            {links.map(([path, label]) => <li><a href={`${docsBase}${path}/`}>{label}</a></li>)}
+          </ul>
+        </div>
+      ))
+    }
+  </section>
+
+  <ComponentIndex />
+</div>

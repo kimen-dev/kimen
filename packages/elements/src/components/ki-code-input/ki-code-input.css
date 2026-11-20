@@ -1,0 +1,169 @@
+:host {
+  --_size: var(--ki-code-input-cell-size);
+
+  display: block;
+  min-inline-size: 0;
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([size="sm"]) {
+  --_size: var(--ki-code-input-cell-size-sm);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.root {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ki-layout-spacing-xs);
+  overflow-wrap: anywhere;
+}
+
+[part="label"] {
+  font-size: var(--ki-typography-size-body-1);
+  font-weight: var(--ki-typography-weight-body-medium);
+  line-height: var(--ki-typography-line-height-body-1);
+}
+
+[part="field"] {
+  --_cell-size: max(
+    var(--ki-density-target-min),
+    calc(var(--_size) + var(--ki-density-control-offset))
+  );
+
+  position: relative;
+  container-type: inline-size;
+  justify-self: start;
+  min-inline-size: 0;
+  inline-size: min(
+    100%,
+    calc(var(--_cell-size) * var(--_length) + var(--ki-code-input-gap) * (var(--_length) - 1))
+  );
+}
+
+[part="input"] {
+  /* Lay out the invisible glyphs at cell centres so the browser owns pointer
+     placement, drag selection, touch selection, keyboard editing and undo. */
+  --_pitch: calc((100cqi + var(--ki-code-input-gap)) / var(--_length));
+
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 0;
+  padding-inline-start: max(0px, calc((var(--_pitch) - var(--ki-code-input-gap) - 1ch) / 2));
+  border: 0;
+  opacity: 0;
+  font: inherit;
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-code-input-font-size);
+  letter-spacing: calc(var(--_pitch) - 1ch);
+}
+
+@media (pointer: coarse) {
+  [part="input"] {
+    font-size: max(var(--ki-code-input-font-size), var(--ki-code-input-touch-font-size));
+  }
+}
+
+.cells {
+  display: grid;
+  grid-template-columns: repeat(var(--_length), minmax(0, 1fr));
+  gap: var(--ki-code-input-gap);
+}
+
+[part="cell"] {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-block-size: var(--_cell-size);
+  border: var(--ki-control-border-width) solid var(--ki-code-input-border);
+  border-radius: var(--ki-code-input-radius);
+  background-color: var(--ki-code-input-bg);
+  background-image: var(--ki-code-input-bg-image);
+  backdrop-filter: var(--ki-code-input-backdrop-filter);
+  color: var(--ki-code-input-fg);
+  font-size: var(--ki-code-input-font-size);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+:host(:disabled) [part="cell"] {
+  border-style: dashed;
+  color: var(--ki-code-input-disabled-fg);
+}
+
+[part="field"][data-invalid="true"] [part="cell"] {
+  border-color: var(--ki-code-input-error-border);
+}
+
+[part="field"]:focus-within [data-active="true"],
+[part="field"]:focus-within [data-selected="true"] {
+  outline: var(--ki-focus-ring-width) solid var(--ki-code-input-active-border);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+[part="field"]:focus-within [data-selected="true"] {
+  background-color: var(--ki-code-input-selection-bg);
+  color: var(--ki-code-input-selection-fg);
+}
+
+[part="field"]:focus-within [data-active="true"]:empty::after {
+  content: "";
+  inline-size: var(--ki-focus-ring-width);
+  block-size: var(--ki-typography-line-height-body-1);
+  background-color: var(--ki-code-input-fg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [part="field"]:focus-within [data-active="true"]:empty::after {
+    animation: code-input-blink var(--ki-code-input-blink-duration) steps(1) 4;
+  }
+}
+
+@keyframes code-input-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (forced-colors: active) {
+  [part="cell"] {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    background-image: none;
+    backdrop-filter: none;
+    border-color: CanvasText;
+    color: CanvasText;
+  }
+
+  [part="field"]:focus-within [data-active="true"]:empty::after {
+    background-color: CanvasText;
+    animation: none;
+  }
+
+  :host(:disabled) [part="cell"] {
+    border-color: GrayText;
+    color: GrayText;
+  }
+
+  [part="field"][data-invalid="true"] [part="cell"] {
+    border-color: LinkText;
+    border-style: dashed;
+  }
+
+  [part="field"]:focus-within [data-active="true"],
+  [part="field"]:focus-within [data-selected="true"] {
+    outline-color: Highlight;
+  }
+
+  [part="field"]:focus-within [data-selected="true"] {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

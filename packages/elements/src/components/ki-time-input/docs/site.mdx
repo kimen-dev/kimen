@@ -1,0 +1,56 @@
+---
+title: ki-time-input
+description: Enter a time of day in the page language or choose a suggested slot.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-time-input` to collect a time of day. Set the surrounding `lang`
+to choose the hour cycle and the time shown in the field and suggestions.
+The public `value` and submitted form value use 24-hour `HH:mm`.
+
+<Demo
+  layout="block"
+  code={`<ki-time-input
+  lang="en-GB"
+  label="Start time"
+  name="start"
+  value="09:30"
+  min="08:00"
+  max="18:00"
+  step="30"
+  help-text="Local office time"
+  time-zone="Europe/Madrid"
+></ki-time-input>`}
+/>
+
+Use `min` and `max` to set inclusive bounds within one day. `step`
+controls the interval between suggestions, starting at `min` or midnight.
+For example, the field above accepts a typed value of `09:17`. A time zone
+appears in the help line and provides context for the wall-clock value.
+
+## Keyboard and validation
+
+Provide a visible `label`. Down Arrow opens the suggestions without moving
+focus from the text field. Arrow keys navigate, Enter chooses a suggestion
+and Escape closes the list while preserving typed text. Validation errors
+appear after the person leaves the field or attempts to submit invalid data.
+
+## Customization
+
+`--ki-input-*` tokens style the field. `--ki-time-input-list-max-height`
+limits the scrolling list. Customize selected slot colours through
+`--ki-time-input-selected-bg` and `--ki-time-input-selected-fg`.
+Decorative leading content goes in the `start` slot.
+
+Listen for `ki-change` to consume `event.detail.value` after an edit is
+committed. In a form, add `name` and use `required` where applicable.
+
+## API reference
+
+<CemApi tag="ki-time-input" />
+
+## Workshop
+
+[Open ki-time-input in Storybook](/storybook/?path=/docs/docs-components-ki-time-input--docs)

@@ -1,0 +1,104 @@
+{
+  "component": {
+    "attributes": {
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional supporting text displayed below the title.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "recent": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Display in the removable recent-search group.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Query to run. When omitted, the trimmed title is used.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-search-suggestion-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inherited body typeface on the declarative suggestion host.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Declarative search suggestion or recent query rendered by its owning ki-search.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional supporting text displayed below the title.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "recent": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Display in the removable recent-search group.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Query to run. When omitted, the trimmed title is used.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Plain text title displayed in the owning search view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-search-suggestion.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-search-suggestion.d.ts",
+    "symbols": {
+      "KiSearchSuggestion": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSearchSuggestion extends Components.KiSearchSuggestion, HTMLElement {\n}\nexport const KiSearchSuggestion: {\n    prototype: KiSearchSuggestion;\n    new (): KiSearchSuggestion;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-search-suggestion.js"
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "ki": {
+    "sidebar": {
+      "width": {
+        "$value": "{ki.side-navigation.width}",
+        "$description": "Expanded navigation panel inline size."
+      },
+      "collapsed-width": {
+        "$value": "{ki.side-navigation.rail-width}",
+        "$description": "Compact rail inline size."
+      },
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s1}",
+        "$description": "Navigation panel background."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Navigation panel text and brand ink."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image over the panel background."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for the panel."
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.low-em}",
+        "$description": "Navigation panel outline."
+      },
+      "border-width": {
+        "$value": "{ki.typography.underline.thickness}",
+        "$description": "Width of the panel outline."
+      },
+      "radius": {
+        "$value": "{ki.corner.navigation-panel}",
+        "$description": "Navigation panel corner."
+      },
+      "padding": {
+        "$value": "{ki.space.md}",
+        "$description": "Inset between the panel border and its content."
+      },
+      "gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Space between panel regions and between row contents."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Typeface of sidebar controls and copy."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Font size of navigation labels."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Line height of navigation labels."
+      },
+      "brand-weight": {
+        "$value": "{ki.typography.weight.display.semibold}",
+        "$description": "Weight of the optional brand label."
+      },
+      "icon-size": {
+        "$value": "{ki.glyph.size.md}",
+        "$description": "Leading and toggle icon edge."
+      },
+      "item": {
+        "height": {
+          "$value": "{ki.side-navigation.row-height}",
+          "$description": "Base row and toggle height before density adjustment."
+        },
+        "radius": {
+          "$value": "{ki.corner.navigation-row}",
+          "$description": "Corner of a row or toggle."
+        },
+        "padding": {
+          "$value": "{ki.space.md}",
+          "$description": "Inline inset of an expanded row."
+        },
+        "gap": {
+          "$value": "{ki.space.xxs}",
+          "$description": "Gap between rows."
+        },
+        "weight": {
+          "$value": "{ki.typography.weight.body.medium}",
+          "$description": "Weight of the navigation label."
+        },
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s1}",
+          "$description": "Resting row background."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.supporting}",
+          "$description": "Resting row ink, with contrast-more support."
+        },
+        "bg-image": {
+          "$type": "other",
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image over navigation row and toggle backgrounds."
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$description": "Complete backdrop filter for the row or toggle."
+        },
+        "hover": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.s3}",
+            "$description": "Hovered navigation row background."
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.high-em}",
+            "$description": "Hovered navigation row ink."
+          }
+        },
+        "current": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.primary-low-em}",
+            "$description": "Current destination background."
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.primary-on-primary-light}",
+            "$description": "Current destination ink."
+          }
+        },
+        "count": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.s3}",
+            "$description": "Expanded count pill background."
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.high-em}",
+            "$description": "Expanded count digits."
+          },
+          "bg-image": {
+            "$type": "other",
+            "$value": "{ki.surface-image.none}",
+            "$description": "Optional image over the count background."
+          },
+          "backdrop-filter": {
+            "$type": "other",
+            "$value": "{ki.effect.component.no-backdrop-filter}",
+            "$description": "Complete backdrop filter behind the count."
+          }
+        },
+        "dot": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.text.high-em}",
+            "$description": "Unread dot fill in rail mode."
+          },
+          "ring": {
+            "$type": "color",
+            "$value": "{ki.surface.s1}",
+            "$description": "Outer ring that separates the rail dot from the row."
+          },
+          "offset": {
+            "$value": "{ki.space.xxs}",
+            "$description": "Inset of the dot from the row block-start and inline-end edges."
+          }
+        }
+      },
+      "group": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s1}",
+          "$description": "Group heading background."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.supporting}",
+          "$description": "Group heading ink, with contrast-more support."
+        },
+        "bg-image": {
+          "$type": "other",
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image over the heading background."
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$description": "Complete backdrop filter behind the group heading."
+        },
+        "gap": {
+          "$value": "{ki.space.sm}",
+          "$description": "Space before a group of routes."
+        },
+        "font-family": {
+          "$value": "{ki.typography.family.heading}",
+          "$description": "Group heading typeface."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "Group heading font size."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "Group heading line height."
+        }
+      }
+    }
+  }
+}

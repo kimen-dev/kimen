@@ -1,0 +1,22 @@
+{
+  "ki": {
+    "format-date": {
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Default body font family for ki-format-date on a bare page."
+      }
+    },
+    "format-number": {
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Default body font family for ki-format-number on a bare page."
+      }
+    },
+    "relative-time": {
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Default body font family for ki-relative-time on a bare page."
+      }
+    }
+  }
+}

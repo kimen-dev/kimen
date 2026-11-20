@@ -1,0 +1,298 @@
+{
+  "component": {
+    "attributes": {
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A nonempty destination renders a native link and preserves relative URL resolution.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "icon-name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Registered Lucide glyph. Import the desired icon before rendering.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stable selection identifier. When omitted, the menu reports the trimmed visible label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-forced-colors-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Boundary width for the FAB in forced colors.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete optional filter behind the action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tinted surface of a floating action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted above the action fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-content-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the action glyph and label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label and icon ink on the tinted action surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface for action labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text size for action labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text weight of an action label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum block size and inline target of an action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Elevation of a hovered action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the glyph preceding an action label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of an action label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block padding for a wrapping action label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-padding-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline-end padding of an action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-padding-start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline-start padding of an action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Pill radius of an action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Elevation of a resting action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A labeled command or native link within a floating action menu.",
+    "events": {
+      "ki-select": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Local command selection for a direct action binding. Links use native navigation.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiFabMenuSelectDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "control": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native action button or link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The decorative glyph next to the label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A nonempty destination renders a native link and preserves relative URL resolution.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "iconName": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Registered Lucide glyph. Import the desired icon before rendering.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stable selection identifier. When omitted, the menu reports the trimmed visible label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The visible action label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-fab-menu-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-fab-menu-item.d.ts",
+    "symbols": {
+      "KiFabMenuItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiFabMenuItem extends Components.KiFabMenuItem, HTMLElement {\n}\nexport const KiFabMenuItem: {\n    prototype: KiFabMenuItem;\n    new (): KiFabMenuItem;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-fab-menu-item.js"
+  }
+}

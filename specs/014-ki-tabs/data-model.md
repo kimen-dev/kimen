@@ -178,8 +178,9 @@ reduced motion satisfied by construction and measured under emulation
   material3 overrides the tab ink matrix + indicator in
   `tab.material3.tokens.json` (M3 primary-tab mapping); the strip and
   panel files have no material3 override (structure and semantic surface
-  references inherit — research D8; the M3 primary/secondary distinction
-  is expressed entirely in these cells, never as an attribute, FR-009).
+  references inherit in the initial design, research D8).
+- [Spec 113](../113-tabs-variants/spec.md) adds variant and icon layout
+  inputs plus token-backed indicator geometry and secondary colours.
 - Contrast gate sweeps the `{selected|unselected}-{rest|hover|active}`
   fg-on-bg label pairs at the 4.5:1 TEXT minimum plus the
   indicator-on-selected-bg pair at the 3:1 non-text minimum (WCAG 1.4.11,

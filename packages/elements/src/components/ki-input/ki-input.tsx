@@ -9,6 +9,10 @@ import { fieldInvalid, fieldText, fieldValidationMessage } from '../../utils/fie
 import { LabelHint } from '../../utils/label-hint';
 import { normalizeKiInputType } from './ki-input.form';
 
+// Keep the description integration independent of the label's registration.
+const aiLabelTag = ['ki', 'ai', 'label'].join('-');
+const aiSuggestionId = 'ai-suggestion';
+
 export type KiInputSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
@@ -29,6 +33,12 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  *
  * @slot start - Leading icon or text affix inside the field. Follows writing direction.
  * @slot end - Trailing icon or text affix inside the field. Follows writing direction.
+ * A directly slotted AI label also describes the field as suggested by AI.
+ * @slot action - One small submit action inside the field after the end adornment.
+ * Use for one-field forms such as search or subscribe. Place a named
+ * `ki-button size="sm" type="submit"` here, or wire a labeled
+ * `ki-icon-button size="sm"` to request form submission. The action has its own tab
+ * stop. Use the end slot for clear or reveal controls.
  * @part count - Current character count and maximum at the end of the field message row.
  * @part error - Error line shown in place of the help text while the field is invalid
  * after the person answered or submitted; a polite live region, starting with a
@@ -66,6 +76,7 @@ export class KiInput {
   @AttachInternals() private readonly internals!: ElementInternals;
 
   @State() private formDisabled = false;
+  @State() private hasAiLabel = false;
   // Mirrors the `user-invalid` custom state, which a render cannot observe.
   @State() private userInvalid = false;
   // The validation message last handed to ElementInternals (D4).
@@ -218,6 +229,13 @@ export class KiInput {
    * messages; use `error-text`.
    */
   @Prop({ reflect: true }) helpText?: string;
+
+  /**
+   * Localized provenance description read alongside help or an error when
+   * the end slot contains an AI label. Use this to translate the description.
+   * @default 'Suggested by AI'
+   */
+  @Prop() aiSuggestionText = 'Suggested by AI';
 
   /**
    * Message shown in place of the help text once the person's answer fails a
@@ -496,6 +514,11 @@ export class KiInput {
     return fieldCountAnnouncement(this.lengthOf(previous), this.lengthOf(value), this.countLimit);
   }
 
+  private syncAiLabels = (event: Event): void => {
+    const slot = event.currentTarget as HTMLSlotElement;
+    this.hasAiLabel = slot.assignedElements().some((element) => element.localName === aiLabelTag);
+  };
+
   render() {
     const minimum = normalizeLengthLimit(this.minlength);
     const type = normalizeKiInputType(this.type);
@@ -504,6 +527,12 @@ export class KiInput {
       help: fieldText(this.helpText),
       error: this.userInvalid ? this.message : '',
     };
+
+    const suggestion = this.hasAiLabel ? fieldText(this.aiSuggestionText) : '';
+    const messageId = countedFieldDescription(messages, this.countLimit);
+    const description = [messageId, suggestion ? aiSuggestionId : undefined]
+      .filter(Boolean)
+      .join(' ');
 
     return (
       <div class="root">
@@ -529,7 +558,7 @@ export class KiInput {
             required={this.required}
             readOnly={this.readonly}
             disabled={this.effectiveDisabled}
-            aria-describedby={countedFieldDescription(messages, this.countLimit)}
+            aria-describedby={description || undefined}
             aria-invalid={fieldInvalid(messages)}
             {...(this.name !== undefined ? { name: this.name } : {})}
             {...(this.placeholder !== undefined ? { placeholder: this.placeholder } : {})}
@@ -538,7 +567,8 @@ export class KiInput {
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}
           />
-          <slot name="end" />
+          <slot name="end" onSlotchange={this.syncAiLabels} />
+          <slot name="action" />
         </div>
         <CountedFieldMessage
           {...messages}
@@ -546,6 +576,11 @@ export class KiInput {
           limit={this.countLimit}
           announcement={this.countAnnouncement}
         />
+        {suggestion ? (
+          <span id={aiSuggestionId} hidden>
+            {suggestion}
+          </span>
+        ) : null}
       </div>
     );
   }

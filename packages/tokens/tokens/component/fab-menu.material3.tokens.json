@@ -1,0 +1,12 @@
+{
+  "ki": {
+    "fab-menu": {
+      "scrim": {
+        "bg": {
+          "$value": "{ki.overlay.high-em}",
+          "$description": "Dimming fill behind the Material 3 menu and its trigger."
+        }
+      }
+    }
+  }
+}

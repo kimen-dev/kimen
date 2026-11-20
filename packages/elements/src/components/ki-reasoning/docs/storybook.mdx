@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-reasoning" />
+
+# ki-reasoning
+
+Keep an assistant's plan or supporting steps available on demand. The default
+summary reads “Thinking…” and opens a native disclosure.
+
+```html
+<ki-reasoning status="done" duration="12000">
+  <ol>
+    <li>Check the inputs.</li>
+    <li>Compare the available outcomes.</li>
+  </ol>
+</ki-reasoning>
+```
+
+While the assistant is thinking, add steps to the default slot. Set `open` to
+display them immediately. `status="done"` displays the elapsed time when
+supplied, and “Thought” when the elapsed time is unavailable.
+
+The summary responds to Enter and Space. Status transitions update a polite
+announcement. Override `thinking-label`, `done-label`, `singular-duration-label`,
+and `duration-label` to localize the summary. Include `{seconds}` in duration
+labels to insert the rounded number of seconds.
+
+Customize the text with `--ki-reasoning-fg` and the inline-start rule with
+`--ki-reasoning-border`. The `summary` and `body` parts allow additional styling.

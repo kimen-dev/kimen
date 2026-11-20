@@ -1,0 +1,14 @@
+{
+  "ki": {
+    "breadcrumb": {
+      "menu-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Material 3 raised surface behind overflow menu entries."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s3}",
+        "$description": "Material 3 state backing for the overflow trigger and highlighted menu entries."
+      }
+    }
+  }
+}

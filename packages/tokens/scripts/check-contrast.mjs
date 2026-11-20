@@ -17,6 +17,8 @@ const NON_TEXT_MIN_RATIO = 3;
 // because the fill happened to be dark enough, and that accident is what hid
 // the checked fill sitting at 2.35:1 against a dark page.
 const NON_TEXT_COMPONENTS = new Set(['checkbox', 'radio']);
+// Rating has both graphic and text pairs. Only the glyphs use WCAG 1.4.11.
+const NON_TEXT_RATING_INKS = new Set(['--ki-rating-on-fg', '--ki-rating-off-fg']);
 // A theme is the default stylesheet plus, for an opt-in theme, the stylesheet of
 // its overrides loaded after it — exactly what a consumer page loads.
 const DEFAULT_STYLESHEET = new URL('../dist/css/tokens.css', import.meta.url);
@@ -42,6 +44,18 @@ const CONTRAST_PAIRS = [
   { text: '--ki-text-danger', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
 ];
+
+// Both variants share the destination inks. Check each ink against both
+// surfaces since the item and its painted background have distinct stems.
+const MOBILE_NAV_SURFACES = ['--ki-mobile-nav-bg', '--ki-mobile-nav-floating-bg'];
+const MOBILE_NAV_TEXT_PAIRS = MOBILE_NAV_SURFACES.flatMap((surface) =>
+  ['--ki-mobile-nav-item-fg', '--ki-mobile-nav-item-current-fg'].map((text) => ({ text, surface })),
+);
+const MOBILE_NAV_STATE_PAIRS = MOBILE_NAV_SURFACES.map((surface) => ({
+  text: '--ki-mobile-nav-indicator-fg',
+  surface,
+  minRatio: NON_TEXT_MIN_RATIO,
+}));
 
 export function parseColor(value) {
   const color = value.trim().toLowerCase();
@@ -266,7 +280,7 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // GENERIC by construction (was per-component and silently ignored every new
 // matrix — Codex review of 003/016): any `--ki-<component>-…-bg` whose name is
 // NOT a semantic/primitive layer, paired with its `-fg` sibling when one
-// exists. New components are swept automatically, with no regex to extend.
+// exists. New adjacent component pairs are swept automatically.
 // Disabled cells are excluded (exempt), as are `-bg` tokens with no `-fg`
 // counterpart (non-text affordances measured elsewhere, not a text pair).
 const SEMANTIC_LAYERS = new Set([
@@ -297,6 +311,29 @@ const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)(?:-[\w-]+)?-bg$/u;
 // guard is defeated once any other component contributes a pair).
 const CANARY_COMPONENT = 'button';
 
+// Several text roles share the same painted surfaces.
+const CODE_INKS = [
+  '--ki-code-keyword',
+  '--ki-code-string',
+  '--ki-code-number',
+  '--ki-code-function',
+  '--ki-code-comment',
+  '--ki-code-line-number',
+];
+
+const SHARED_SURFACE_FOREGROUNDS = {
+  '--ki-code-bg': ['--ki-code-header-fg', ...CODE_INKS],
+  '--ki-code-highlight-bg': ['--ki-code-fg', ...CODE_INKS],
+  '--ki-stat-bg': [
+    '--ki-stat-label-fg',
+    '--ki-stat-value-fg',
+    '--ki-stat-delta-neutral-fg',
+    '--ki-stat-delta-success-fg',
+    '--ki-stat-delta-danger-fg',
+  ],
+  '--ki-tooltip-rich-bg': ['--ki-tooltip-rich-heading-fg'],
+};
+
 export function componentPairs(declarations) {
   const pairs = [];
 
@@ -305,14 +342,19 @@ export function componentPairs(declarations) {
     if (!match || SEMANTIC_LAYERS.has(match[1]) || /-disabled-/u.test(name)) {
       continue;
     }
-    const fg = name.replace(/-bg$/u, '-fg');
-    if (declarations.has(fg)) {
-      pairs.push({
-        component: match[1],
-        text: fg,
-        surface: name,
-        minRatio: NON_TEXT_COMPONENTS.has(match[1]) ? NON_TEXT_MIN_RATIO : MIN_RATIO,
-      });
+    const foregrounds = [name.replace(/-bg$/u, '-fg'), ...(SHARED_SURFACE_FOREGROUNDS[name] ?? [])];
+    for (const text of foregrounds) {
+      if (declarations.has(text)) {
+        pairs.push({
+          component: match[1],
+          text,
+          surface: name,
+          minRatio:
+            NON_TEXT_COMPONENTS.has(match[1]) || NON_TEXT_RATING_INKS.has(text)
+              ? NON_TEXT_MIN_RATIO
+              : MIN_RATIO,
+        });
+      }
     }
   }
 
@@ -915,6 +957,44 @@ function sweepControlBoundaries(theme, scheme, declarations, minRatio = NON_TEXT
   return failures;
 }
 
+const TOGGLE_BUTTON_SELECTED_FILL = /^(--ki-(?:icon-)?button-([a-z]+))-selected-bg$/u;
+const QUIET_TOGGLE_BUTTON_VARIANTS = new Set(['ghost', 'quaternary']);
+
+function sweepToggleButtonFills(theme, scheme, declarations) {
+  const failures = [];
+  const resolveColor = (name) => parseColor(resolveCustomProperty(name, declarations));
+  const pages = CONTROL_PAGE_SURFACES.map((surface) => [surface, resolveColor(surface)]);
+
+  // Spec 094 S9 requires 3:1 between states in addition to the shape cue.
+  // Paint each fill over the page first so a transparent state shows that page.
+  for (const selected of declarations.keys()) {
+    const match = TOGGLE_BUTTON_SELECTED_FILL.exec(selected);
+    if (match === null) continue;
+
+    const [, stem, variant] = match;
+    const sharedFill = QUIET_TOGGLE_BUTTON_VARIANTS.has(variant)
+      ? '--ki-button-toggle-quiet-bg'
+      : '--ki-button-toggle-unselected-bg';
+    const unselected = variant === 'outline' ? `${stem}-rest-bg` : sharedFill;
+    const selectedFill = resolveColor(selected);
+    const unselectedFill = resolveColor(unselected);
+
+    for (const [surface, page] of pages) {
+      const ratio = contrastRatio(
+        compositeOver(selectedFill, page),
+        compositeOver(unselectedFill, page),
+      );
+      if (ratio < NON_TEXT_MIN_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${selected} against ${unselected} over ${surface}: ${ratio} (min ${NON_TEXT_MIN_RATIO})`,
+        );
+      }
+    }
+  }
+
+  return failures;
+}
+
 function sweepSwitchGlyphs(theme, scheme, declarations) {
   const failures = [];
   const resolveColor = (name) => parseColor(resolveCustomProperty(name, declarations));
@@ -1042,6 +1122,7 @@ function sweepEnhancedContrast(theme, scheme, declarations) {
   // disabled ink draws from it and stays as it is.
   const textPairs = [
     ...ENHANCED_TEXT_PAIRS,
+    ...MOBILE_NAV_TEXT_PAIRS,
     ...componentPairs(declarations).filter((pair) => pair.minRatio === MIN_RATIO),
   ];
   for (const pair of textPairs) {
@@ -1142,6 +1223,7 @@ function evaluateContext(theme, scheme, declarations) {
   const failures = [];
   const swept = componentPairs(declarations);
   failures.push(...sweepControlBoundaries(theme, scheme, declarations));
+  failures.push(...sweepToggleButtonFills(theme, scheme, declarations));
   failures.push(...sweepSwitchGlyphs(theme, scheme, declarations));
   failures.push(...sweepRatioReadouts(theme, scheme, declarations));
   failures.push(...sweepOverlayRamps(theme, scheme, declarations));
@@ -1157,17 +1239,25 @@ function evaluateContext(theme, scheme, declarations) {
   }
 
   // A translucent component cell composites over the page. Inline links
-  // can also sit directly on higher surface levels, including inside cards.
+  // and rating glyphs can also sit directly on higher surface levels, including inside cards.
   // A component's -icon ink sits on its -bg at the non-text minimum.
   const icons = swept.flatMap(({ surface }) => {
     const ink = surface.replace(/-bg$/u, '-icon');
     return declarations.has(ink) ? [{ text: ink, surface, minRatio: NON_TEXT_MIN_RATIO }] : [];
   });
-  for (const pair of [...CONTRAST_PAIRS, ...swept, ...icons]) {
+  for (const pair of [
+    ...CONTRAST_PAIRS,
+    ...MOBILE_NAV_TEXT_PAIRS,
+    ...MOBILE_NAV_STATE_PAIRS,
+    ...swept,
+    ...icons,
+  ]) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
     const backdrops =
-      pair.component === 'link' && rawSurface.a < 1 ? CONTROL_PAGE_SURFACES : ['--ki-surface-s0'];
+      (pair.component === 'link' || pair.component === 'rating') && rawSurface.a < 1
+        ? CONTROL_PAGE_SURFACES
+        : ['--ki-surface-s0'];
     const min = pair.minRatio ?? MIN_RATIO;
 
     for (const backdrop of backdrops) {

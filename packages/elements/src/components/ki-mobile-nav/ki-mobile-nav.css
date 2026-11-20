@@ -1,0 +1,69 @@
+:host {
+  --_mobile-nav-padding-end: env(safe-area-inset-bottom, 0px);
+  --_mobile-nav-inset-end: 0px;
+  --_mobile-nav-border-height: var(--ki-mobile-nav-border-width);
+  --_mobile-nav-default-height: calc(
+    var(--ki-mobile-nav-height) +
+    var(--_mobile-nav-border-height) +
+    var(--_mobile-nav-padding-end)
+  );
+
+  display: block;
+  flex-shrink: 0;
+  block-size: calc(
+    var(--_mobile-nav-measured-height, var(--_mobile-nav-default-height)) +
+    var(--_mobile-nav-inset-end)
+  );
+  font-family: var(--ki-mobile-nav-font-family);
+}
+
+:host([hidden]),
+:host([data-keyboard-open]),
+nav[hidden] {
+  display: none;
+}
+
+:host([variant="floating"]) {
+  --_mobile-nav-padding-end: 0px;
+  --_mobile-nav-inset-end: calc(
+    var(--ki-mobile-nav-floating-inset) +
+    env(safe-area-inset-bottom, 0px)
+  );
+  --_mobile-nav-border-height: calc(2 * var(--ki-mobile-nav-border-width));
+}
+
+nav {
+  position: fixed;
+  z-index: 1;
+  inset-inline: 0;
+  inset-block-end: var(--_mobile-nav-inset-end);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(var(--ki-mobile-nav-item-target-min), 1fr);
+  box-sizing: content-box;
+  min-block-size: var(--ki-mobile-nav-height);
+  padding-block-end: var(--_mobile-nav-padding-end);
+  border-block-start: var(--ki-mobile-nav-border-width) solid var(--ki-mobile-nav-border);
+  background-color: var(--ki-mobile-nav-bg);
+  background-image: var(--ki-mobile-nav-bg-image);
+  backdrop-filter: var(--ki-mobile-nav-backdrop-filter);
+}
+
+:host([variant="floating"]) nav {
+  inset-inline: var(--ki-mobile-nav-floating-inset);
+  padding-inline: var(--ki-mobile-nav-floating-padding);
+  border: var(--ki-mobile-nav-border-width) solid var(--ki-mobile-nav-border);
+  border-radius: var(--ki-mobile-nav-floating-radius);
+  background-color: var(--ki-mobile-nav-floating-bg);
+  box-shadow: var(--ki-mobile-nav-floating-shadow);
+}
+
+@media (forced-colors: active) {
+  nav,
+  :host([variant="floating"]) nav {
+    border-color: CanvasText;
+    background-color: Canvas;
+    background-image: none;
+    backdrop-filter: none;
+  }
+}

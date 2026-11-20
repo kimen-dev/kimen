@@ -82,6 +82,52 @@ export const Adornments: Story = {
   ),
 };
 
+/** A one-field search form with its submit action inside the field. */
+export const SearchAction: Story = {
+  render: () => (
+    <form
+      role="search"
+      onSubmit={(event) => {
+        event.preventDefault();
+      }}
+    >
+      <ki-input type="search" name="q" label="Search docs" placeholder="Components, tokens…">
+        <svg slot="start" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+          <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <ki-button slot="action" size="sm" variant="secondary" type="submit">
+          Search
+        </ki-button>
+      </ki-input>
+    </form>
+  ),
+};
+
+/** A one-field email form with native constraint validation. */
+export const SubscribeAction: Story = {
+  render: () => (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+      }}
+    >
+      <ki-input
+        type="email"
+        name="email"
+        label="Email"
+        autocomplete="email"
+        placeholder="you@example.com"
+        required
+      >
+        <ki-button slot="action" size="sm" variant="primary" type="submit">
+          Subscribe
+        </ki-button>
+      </ki-input>
+    </form>
+  ),
+};
+
 /** The :focus-within active treatment: field ring and focus palette. */
 export const Focused: Story = {
   play: async ({ canvasElement }) => {

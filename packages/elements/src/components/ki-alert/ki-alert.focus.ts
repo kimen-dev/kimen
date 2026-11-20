@@ -15,16 +15,12 @@ export function resolveDismissFocusTarget(host: HTMLElement): HTMLElement | null
   const shadowActive = root?.activeElement;
   const active = shadowActive ?? document.activeElement;
 
-  if (!shadowActive && active !== host && !host.contains(active)) {
+  if (!shadowActive && (active === host || !host.contains(active))) {
     return null;
   }
 
-  if (active === host && !shadowActive) {
-    return null;
-  }
-
-  const before: HTMLElement[] = [];
-  const after: HTMLElement[] = [];
+  let before: HTMLElement | undefined;
+  let after: HTMLElement | undefined;
   let seenHost = false;
 
   const visit = (element: HTMLElement): void => {
@@ -37,14 +33,16 @@ export function resolveDismissFocusTarget(host: HTMLElement): HTMLElement | null
     // and is not descended into, so a following ki-button is reachable even
     // though the host itself matches no native focusable selector (codex
     // review). The caller focuses it through that control.
-    if (shadowFocusTarget(element) !== null) {
-      if (!isHidden(element)) {
-        (seenHost ? after : before).push(element);
+    const shadowControl = shadowFocusTarget(element);
+    if ((shadowControl || isFocusable(element)) && !isHidden(element)) {
+      if (seenHost) {
+        after ??= element;
+      } else {
+        before = element;
       }
-      return;
     }
-    if (isFocusable(element)) {
-      (seenHost ? after : before).push(element);
+    if (shadowControl) {
+      return;
     }
     for (const child of element.children) {
       visit(child as HTMLElement);
@@ -59,11 +57,11 @@ export function resolveDismissFocusTarget(host: HTMLElement): HTMLElement | null
   };
   visit(document.body);
 
-  return after[0] ?? before.at(-1) ?? document.body;
+  return after ?? before ?? document.body;
 }
 
 function isFocusable(element: HTMLElement): boolean {
-  return element.matches(FOCUSABLE) && !element.hasAttribute('disabled') && !isHidden(element);
+  return element.matches(FOCUSABLE) && !element.hasAttribute('disabled');
 }
 
 // A candidate that cannot actually receive focus — focus() on it is a no-op, so

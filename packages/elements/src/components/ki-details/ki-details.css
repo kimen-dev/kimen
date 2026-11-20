@@ -1,0 +1,98 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.panel {
+  border: var(--ki-details-border-width) solid var(--ki-details-border);
+  border-radius: var(--ki-details-radius);
+  overflow: clip;
+  background-color: var(--ki-details-bg);
+  background-image: var(--ki-details-bg-image);
+  backdrop-filter: var(--ki-details-backdrop-filter);
+  color: var(--ki-details-fg);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-body-1);
+  overflow-wrap: anywhere;
+}
+
+:host([data-ki-accordion-member]) > .panel {
+  border: 0;
+  border-radius: 0;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ki-details-padding);
+  min-block-size: var(--ki-density-target-min);
+  box-sizing: border-box;
+  padding-block: calc(var(--ki-details-summary-padding-block) * var(--ki-density-space-scale));
+  padding-inline: calc(var(--ki-details-padding) * var(--ki-density-space-scale));
+  cursor: pointer;
+  list-style: none;
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+.summary[aria-disabled="true"] {
+  color: var(--ki-details-disabled-fg);
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .summary:not([aria-disabled="true"]):hover {
+    background-color: var(--ki-details-summary-hover-bg);
+    color: var(--ki-details-summary-hover-fg);
+  }
+}
+
+.chevron {
+  flex: none;
+}
+
+.panel[open] > .summary > .chevron {
+  rotate: 180deg;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chevron {
+    transition: rotate var(--ki-details-motion-duration) var(--ki-details-motion-easing);
+  }
+}
+
+.body {
+  padding-block-end: calc(var(--ki-details-padding) * var(--ki-density-space-scale));
+  padding-inline: calc(var(--ki-details-padding) * var(--ki-density-space-scale));
+  background-color: var(--ki-details-body-bg);
+  color: var(--ki-details-body-fg);
+  line-height: var(--ki-typography-line-height-para);
+}
+
+@media (forced-colors: active) {
+  .panel {
+    border-color: CanvasText;
+  }
+
+  .summary:focus-visible {
+    outline-color: Highlight;
+  }
+
+  .summary[aria-disabled="true"] {
+    color: GrayText;
+  }
+}

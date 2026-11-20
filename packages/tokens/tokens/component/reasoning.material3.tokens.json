@@ -1,0 +1,14 @@
+{
+  "ki": {
+    "reasoning": {
+      "fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Material 3 supporting ink for the summary and steps."
+      },
+      "border": {
+        "$value": "{ki.outline.med-em}",
+        "$description": "Material 3 decorative rule at the start of the steps."
+      }
+    }
+  }
+}

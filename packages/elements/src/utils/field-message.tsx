@@ -56,16 +56,17 @@ export function fieldInvalid({ error }: FieldMessageState): 'false' | 'true' {
  * The help line, when there is help and no error, and the error line. The
  * error line is ALWAYS rendered, empty while there is no error: it is a polite
  * live region, and a region created together with its text is not announced
- * (D6, WCAG 4.1.3). Its decorative glyph keeps the error distinct from help
+ * (D6, WCAG 4.1.3). Stable keys preserve the live region when help is removed.
+ * Its decorative glyph keeps the error distinct from help
  * without relying on color (D8, WCAG 1.4.1).
  */
 export const FieldMessage: FunctionalComponent<FieldMessageState> = ({ help, error }) => [
   error === '' && help !== '' ? (
-    <div id={fieldHelpId} part="help">
+    <div key={fieldHelpId} id={fieldHelpId} part="help">
       {help}
     </div>
   ) : null,
-  <div id={fieldErrorId} part="error" aria-live="polite" aria-atomic="true">
+  <div key={fieldErrorId} id={fieldErrorId} part="error" aria-live="polite" aria-atomic="true">
     {error === ''
       ? null
       : [

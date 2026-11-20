@@ -6,5 +6,20 @@
     "hoverWitness": false
   },
   "catalog": true,
-  "formBinding": "text"
+  "formBinding": "text",
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 820,
+      "gzip": 250,
+      "brotli": 137
+    },
+    "mcpServer": {
+      "raw": 1505,
+      "gzip": 451,
+      "brotli": 175
+    },
+    "tokenStylesheets": {
+      "onmars": 84
+    }
+  }
 }

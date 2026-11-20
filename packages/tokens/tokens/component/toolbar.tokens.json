@@ -1,0 +1,86 @@
+{
+  "ki": {
+    "toolbar": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "Background of the standard toolbar."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Foreground of the standard toolbar."
+      },
+      "vibrant-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Accent background of the vibrant toolbar."
+      },
+      "vibrant-fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Foreground on the vibrant toolbar."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image above the solid surface color."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter behind the surface."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.round}",
+        "$description": "Radius of the floating pill."
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{ki.elevation.e3}",
+        "$description": "Resting elevation of the floating pill."
+      },
+      "height": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.18xl}",
+        "$description": "Minimum height of the docked toolbar before its safe area."
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Toolbar surface padding."
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Gap between toolbar actions."
+      },
+      "fab-gap": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Gap between a floating pill and its companion FAB."
+      },
+      "docked-radius": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.zero}",
+        "$description": "Corner radius of the docked toolbar."
+      },
+      "docked-padding-inline": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Inline insets for docked actions."
+      },
+      "scroll-duration": {
+        "$type": "duration",
+        "$value": "{ki.motion.duration.medium-1}",
+        "$description": "Duration of the scroll visibility transition."
+      },
+      "scroll-easing": {
+        "$type": "cubicBezier",
+        "$value": "{ki.motion.easing.standard}",
+        "$description": "Easing of the scroll visibility transition."
+      }
+    }
+  }
+}

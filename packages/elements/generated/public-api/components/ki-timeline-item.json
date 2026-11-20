@@ -1,0 +1,423 @@
+{
+  "component": {
+    "attributes": {
+      "datetime": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ISO date or date-time. Invalid or missing dates have no time label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "details-label": {
+        "default": "'Details'",
+        "deprecatedSince": null,
+        "description": "Label of the details control when the details slot is populated.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "icon-name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative Lucide icon name, registered by the caller's per-icon import.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Marker tone. The event text carries the meaning.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xxs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xxs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind a timeline marker, off by default.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the neutral timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative image over the timeline marker fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-danger-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the danger timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-danger-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color on the danger timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color on the neutral timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the decorative glyph inside the timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-primary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the primary timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color on the primary timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Round corners of the timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Diameter of the timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-success-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the success timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-success-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color on the success timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-warning-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the warning timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-dot-warning-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color on the warning timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between marker and text and between timeline entries.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text color of the event summary and details.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-line-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hairline width of the timeline connector.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-time-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The timestamp shows the surrounding surface through its transparent background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-time-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text color of the timeline timestamp.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-para": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height para.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "One event in a timeline, with an optional time and details disclosure.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "content": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Event summary, time and disclosure container.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "details": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native details disclosure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "dot": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative event marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "summary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Keyboard-accessible details control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "time": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native time element for a valid ISO date.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "datetime": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ISO date or date-time. Invalid or missing dates have no time label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "detailsLabel": {
+        "default": "'Details'",
+        "deprecatedSince": null,
+        "description": "Label of the details control when the details slot is populated.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "iconName": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative Lucide icon name, registered by the caller's per-icon import.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Marker tone. The event text carries the meaning.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Event summary. Include important status information in the text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "details": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Additional event information in a native details disclosure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative avatar or other noninteractive marker in place of the icon.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-timeline-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-timeline-item.d.ts",
+    "symbols": {
+      "KiTimelineItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiTimelineItem extends Components.KiTimelineItem, HTMLElement {\n}\nexport const KiTimelineItem: {\n    prototype: KiTimelineItem;\n    new (): KiTimelineItem;\n};"
+      },
+      "TimelineTone": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-timeline-item.js"
+  }
+}

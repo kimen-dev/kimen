@@ -1,0 +1,14 @@
+{
+  "ki": {
+    "fab-menu-item": {
+      "bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Material 3 primary container fill."
+      },
+      "fg": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Material 3 on-primary-container ink."
+      }
+    }
+  }
+}

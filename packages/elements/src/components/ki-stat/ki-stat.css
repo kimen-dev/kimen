@@ -1,0 +1,101 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="card"] {
+  position: relative;
+  min-inline-size: 0;
+  padding: calc(var(--ki-stat-padding) * var(--ki-density-space-scale));
+  color: var(--ki-stat-value-fg);
+  background-color: var(--ki-stat-bg);
+  background-image: var(--ki-stat-bg-image);
+  backdrop-filter: var(--ki-stat-backdrop-filter);
+  border: var(--ki-stat-border-width) solid var(--ki-stat-border);
+  border-radius: var(--ki-stat-radius);
+  overflow-wrap: anywhere;
+}
+
+[part="label"],
+[part="value"],
+.summary {
+  margin: 0;
+}
+
+[part="label"] {
+  color: var(--ki-stat-label-fg);
+  font-size: var(--ki-stat-label-size);
+  line-height: var(--ki-stat-label-line-height);
+}
+
+[part="value"] {
+  font-family: var(--ki-stat-value-font-family);
+  font-size: var(--ki-stat-value-size);
+  font-weight: var(--ki-stat-emphasis-weight);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ki-stat-value-line-height);
+  letter-spacing: var(--ki-stat-value-letter-spacing);
+}
+
+[part="comparison"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 calc(var(--ki-stat-gap) * var(--ki-density-space-scale));
+  margin-block-start: calc(var(--ki-stat-gap) * var(--ki-density-space-scale));
+  color: var(--ki-stat-label-fg);
+  font-size: var(--ki-stat-delta-size);
+  line-height: var(--ki-stat-delta-line-height);
+}
+
+[part="delta"] {
+  display: inline-flex;
+  min-inline-size: 0;
+  align-items: center;
+  gap: calc(var(--ki-stat-trend-gap) * var(--ki-density-space-scale));
+  color: var(--ki-stat-delta-neutral-fg);
+  font-weight: var(--ki-stat-emphasis-weight);
+  font-variant-numeric: tabular-nums;
+}
+
+[part="delta"][data-tone="success"] {
+  color: var(--ki-stat-delta-success-fg);
+}
+
+[part="delta"][data-tone="danger"] {
+  color: var(--ki-stat-delta-danger-fg);
+}
+
+[part="trend"] {
+  flex: none;
+  font-size: var(--ki-stat-trend-size);
+}
+
+slot[name="chart"]::slotted(*) {
+  display: block;
+  max-inline-size: 100%;
+  margin-block-start: calc(var(--ki-stat-gap) * var(--ki-density-space-scale));
+}
+
+/* The single spoken sentence should not take up room in the layout. */
+.summary {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  [part="card"] {
+    border-color: CanvasText;
+    background-image: none;
+    backdrop-filter: none;
+  }
+}

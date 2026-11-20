@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Recipes/Mobile navigation layout" />
+
+# Mobile navigation layout
+
+Place MobileNav after the content in normal flow. The host reserves the
+height of the painted bar, including the safe area or floating inset. Give it
+the same app breakpoint that reveals the desktop navigation.
+
+```html
+<div class="desktop-nav">
+  <!-- Desktop navigation -->
+</div>
+<main>
+  <!-- App content -->
+</main>
+<ki-mobile-nav label="Main" variant="floating">
+  <ki-mobile-nav-item href="/" icon-name="house" current>Home</ki-mobile-nav-item>
+  <ki-mobile-nav-item href="/search" icon-name="search">Search</ki-mobile-nav-item>
+  <ki-mobile-nav-item href="/inbox" icon-name="inbox" count="3">Inbox</ki-mobile-nav-item>
+</ki-mobile-nav>
+```
+
+Register `@kimen/elements/icons/house`, `@kimen/elements/icons/search` and
+`@kimen/elements/icons/inbox` before rendering this example. Use
+`viewport-fit=cover` in the page's viewport metadata for an edge-to-edge app.
+
+```css
+.desktop-nav {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .desktop-nav {
+    display: block;
+  }
+
+  ki-mobile-nav {
+    display: none;
+  }
+}
+```
+
+Use your app's breakpoint in place of the example's `48rem`. Update the
+marked destination as the route changes.

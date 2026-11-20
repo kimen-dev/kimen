@@ -1,0 +1,347 @@
+{
+  "component": {
+    "attributes": {
+      "shape": {
+        "default": "'square'",
+        "deprecatedSince": null,
+        "description": "Rounded square or circle. Unknown values use square.",
+        "replacement": null,
+        "required": false,
+        "type": "\"circle\" | \"square\""
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Colour pair for the tile and its glyph. Unknown values use neutral.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+      }
+    },
+    "cssProperties": {
+      "--ki-feature-icon-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter applied behind the feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background color of a neutral feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional background image painted over the feature icon tile color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-circle-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a circular feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-danger-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background color of a danger feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-danger-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color of a danger feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color of a neutral feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-info-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background color of an info feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-info-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color of an info feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-lg-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a large square feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-lg-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge length of a large feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-primary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background color of a primary feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color of a primary feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-primary-light-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background color of a primary-light feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-primary-light-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color of a primary-light feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default corner radius of a square feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default edge length of a feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-sm-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a small square feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-sm-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge length of a small feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-success-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background color of a success feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-success-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color of a success feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-warning-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background color of a warning feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-warning-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph color of a warning feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-xl-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of an extra-large square feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-xl-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge length of an extra-large feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-xs-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of an extra-small square feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-feature-icon-xs-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge length of an extra-small feature icon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A decorative glyph centered on a tinted tile.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "tile": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The painted tile that centers the glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "shape": {
+        "default": "'square'",
+        "deprecatedSince": null,
+        "description": "Rounded square or circle. Unknown values use square.",
+        "replacement": null,
+        "required": false,
+        "type": "\"circle\" | \"square\""
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Colour pair for the tile and its glyph. Unknown values use neutral.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One Lucide glyph. Supply an inline SVG using currentColor or a ki-icon with inherited size. Guarded surfaces use a registered ki-icon.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-feature-icon.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-feature-icon.d.ts",
+    "symbols": {
+      "KiFeatureIcon": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiFeatureIcon extends Components.KiFeatureIcon, HTMLElement {\n}\nexport const KiFeatureIcon: {\n    prototype: KiFeatureIcon;\n    new (): KiFeatureIcon;\n};"
+      },
+      "KiFeatureIconShape": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiFeatureIconShape = 'square' | 'circle';"
+      },
+      "KiFeatureIconSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiFeatureIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
+      },
+      "KiFeatureIconTone": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiFeatureIconTone = 'neutral' | 'primary' | 'primary-light' | 'info' | 'success' | 'warning' | 'danger';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-feature-icon.js"
+  }
+}

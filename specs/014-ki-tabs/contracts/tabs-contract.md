@@ -35,6 +35,8 @@ an undocumented member is a build failure).
 |---|---|---|---|
 | `value` | `string` | `""` | PROJECTION of the RESOLVED selection: always equals the selected tab's value, or `""` when none is selected (FR-002). The attribute declares the initial selection. Resolution: the requested value's owner tab when it exists and is enabled; else the first non-disabled owner tab in document order (S3, S12); else none — no selection, no visible panel, no tab stop (S18). Assigning the property re-runs the same resolution, SILENTLY (no `ki-change`; FR-004, native-`change` parity). Not reflected: serialized markup keeps the initial declaration; live state is read from the property. Duplicate values resolve first-in-document-order (FR-014). |
 | `label` | `string` | — | The tablist's accessible name (S7, FR-008), applied as `aria-label` on the internal tablist wrapper when provided. Not rendered as visible text (the tabs are the visible labels). Documented guidance: always label a tab group. |
+| `variant` | `"primary" \| "secondary"` | `"primary"` | Primary for screen-level tabs, secondary for tabs inside content. See [spec 113](../../113-tabs-variants/contracts/tabs-variants.md) for presentation. |
+| `icon-layout` | `"stacked" \| "inline"` | Stacked in primary, inline in secondary | Controls the position of the dedicated `icon` slot relative to the label. |
 
 ## Attributes / properties — `ki-tab`
 
@@ -62,7 +64,8 @@ attribute-visible, explicitly outside this contract and never authored
 |---|---|---|
 | `ki-tabs` | (default) | The `ki-tab` and `ki-tab-panel` children, as slotted children; document order is strip order and navigation order (S11: the order follows the writing direction). Malformed composition (orphans, duplicates, stray content) never breaks rendering (FR-014). |
 | `ki-tab` | (default) | The tab label: accessible-name source (S7). Mandatory for valid usage. |
-| `ki-tab` | `start` / `end` | Leading/trailing icons or media; positions follow the writing direction (FR-012). M3's stacked icon-above-label primary layout is a theme-layer presentation concern (spec assumption). |
+| `ki-tab` | `start` / `end` | Leading/trailing icons or media; positions follow the writing direction (FR-012). |
+| `ki-tab` | `icon` | Decorative SVG. Keep a visible label in the default slot. The group omits an icon tab that lacks its text label. |
 | `ki-tab-panel` | (default) | Arbitrary panel content. Panels stay in the document while hidden — no lazy mounting (spec assumption). |
 
 ## Parts
@@ -106,9 +109,8 @@ Guarantees:
 - Every visual property of strip, tabs, indicator and panels — every
   selection × interaction state — resolves from `--ki-tabs-*` /
   `--ki-tab-*` / `--ki-tab-panel-*`; those resolve from the semantic
-  layer (Art. VI, FR-009). Zero hardcoded visual values; the M3
-  primary/secondary tab styles are THEME token decisions, never
-  attributes.
+  layer (Art. VI, FR-009). Spec 113 lets authors select variant and icon
+  layout while keeping each visual treatment token-backed.
 - Interaction states (hover, focus-visible, active, disabled) are CSS
   states styled through tokens, never attributes/props (FR-010);
   `selected` is the only reflected managed state, and it is output-only.

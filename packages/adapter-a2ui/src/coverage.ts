@@ -164,7 +164,7 @@ const CHECKS = 'checks';
  * `unmapped` one.
  */
 export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
-  Text: { kind: 'inline', properties: ['text', 'variant'] },
+  Text: { catalog: ['ki-markdown'], kind: 'mapped', properties: ['text', 'variant'] },
   Row: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   Column: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   List: {
@@ -195,7 +195,14 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     properties: ['label', 'value', CHECKS],
   },
   ChoicePicker: {
-    catalog: ['ki-radio-group', 'ki-radio', 'ki-checkbox-group', 'ki-checkbox'],
+    catalog: [
+      'ki-radio-group',
+      'ki-radio',
+      'ki-checkbox-group',
+      'ki-checkbox',
+      'ki-combobox',
+      'ki-option',
+    ],
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', CHECKS],
   },
@@ -205,18 +212,21 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     kind: 'unmapped',
     reason: 'ki-video needs a native video child the spec cannot carry',
   },
-  AudioPlayer: {
-    kind: 'unmapped',
-    reason: 'no audio component in the catalog',
-  },
+  AudioPlayer: { catalog: ['ki-audio'], kind: 'mapped', properties: ['url', 'description'] },
   Modal: {
-    kind: 'unmapped',
-    reason: 'opening ki-dialog from a trigger needs host code',
+    catalog: ['ki-button', 'ki-dialog'],
+    kind: 'mapped',
+    properties: ['trigger', 'content'],
   },
-  Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
+  Slider: {
+    catalog: ['ki-slider'],
+    kind: 'mapped',
+    properties: ['label', 'min', 'max', 'value', CHECKS],
+  },
   DateTimeInput: {
-    kind: 'unmapped',
-    reason: 'no date or time input in the catalog',
+    catalog: ['ki-time-input'],
+    kind: 'mapped',
+    properties: ['label', 'value', 'enableDate', 'enableTime', CHECKS],
   },
   // Security-forbidden types: raw-markup and code carriers reject the message.
   html: { kind: 'forbidden', reason: 'raw HTML is a markup-injection vector' },
@@ -319,7 +329,7 @@ const V1_CHECKS = '@checks';
  * `TextField.placeholder`, no `validationRegexp`).
  */
 export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
-  Text: { kind: 'inline', properties: ['text', 'variant'] },
+  Text: { catalog: ['ki-markdown'], kind: 'mapped', properties: ['text', 'variant'] },
   Row: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   Column: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   List: {
@@ -350,7 +360,14 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     properties: ['label', 'value', V1_CHECKS],
   },
   ChoicePicker: {
-    catalog: ['ki-radio-group', 'ki-radio', 'ki-checkbox-group', 'ki-checkbox'],
+    catalog: [
+      'ki-radio-group',
+      'ki-radio',
+      'ki-checkbox-group',
+      'ki-checkbox',
+      'ki-combobox',
+      'ki-option',
+    ],
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', V1_CHECKS],
   },
@@ -360,18 +377,21 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     kind: 'unmapped',
     reason: 'ki-video needs a native video child the spec cannot carry',
   },
-  AudioPlayer: {
-    kind: 'unmapped',
-    reason: 'no audio component in the catalog',
-  },
+  AudioPlayer: { catalog: ['ki-audio'], kind: 'mapped', properties: ['url', 'description'] },
   Modal: {
-    kind: 'unmapped',
-    reason: 'opening ki-dialog from a trigger needs host code',
+    catalog: ['ki-button', 'ki-dialog'],
+    kind: 'mapped',
+    properties: ['trigger', 'content'],
   },
-  Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
+  Slider: {
+    catalog: ['ki-slider'],
+    kind: 'mapped',
+    properties: ['label', 'min', 'max', 'steps', 'value', V1_CHECKS],
+  },
   DateTimeInput: {
-    kind: 'unmapped',
-    reason: 'no date or time input in the catalog',
+    catalog: ['ki-time-input'],
+    kind: 'mapped',
+    properties: ['label', 'value', 'enableDate', 'enableTime', V1_CHECKS],
   },
   html: { kind: 'forbidden', reason: 'raw HTML is a markup-injection vector' },
   RawHtml: {

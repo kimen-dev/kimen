@@ -5,7 +5,8 @@
 ## When to use
 
 switch between small sets of peer views inside the same page,
-with one visible panel at a time.
+with one visible panel at a time. Use primary for the screen-level group
+and secondary inside content.
 
 ## When not to use
 
@@ -37,11 +38,31 @@ A disabled tab stays visible but cannot be selected by any modality; user select
 </ki-tabs>
 ```
 
+Use a primary group for tabs at screen level. In content, use
+`variant="secondary"` for a full-width selection indicator. A decorative
+SVG in a tab's `icon` slot stacks above the label in primary tabs and
+appears before the label in secondary tabs. Set `icon-layout="inline"` or
+`icon-layout="stacked"` to override the layout for the group.
+
+```html
+<ki-tabs label="Mail sections" variant="secondary">
+  <ki-tab value="inbox">
+    <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M3 5h18v14H3zM3 5l9 7 9-7" />
+    </svg>
+    Inbox
+  </ki-tab>
+  <ki-tab-panel value="inbox">Incoming messages</ki-tab-panel>
+</ki-tabs>
+```
+
 ## Attributes
 
+- `icon-layout` ("inline" | "stacked" | undefined): Positions the decorative icon relative to its tab label. When omitted, primary stacks the icon above the label and secondary puts it inline.
 - `label` (string | undefined): Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed strip size: every `ki-tab` it holds is 24, 32, 40, 48 or 56px tall in onmars, with its text, and the gap between tabs follows. The strip decides for all its tabs; a tab has no size of its own. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the controls around the strip. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
+- `variant` ("primary" | "secondary" | undefined, default 'primary'): Visual treatment for the group. Use one primary group per screen and secondary groups within content.
 
 ## Slots
 
@@ -61,9 +82,14 @@ None.
 
 ## CSS custom properties
 
+- `--ki-tab-icon-stacked-gap`: Gap from a stacked tab icon to its label.
+- `--ki-tab-icon-stacked-min-block-size`: Minimum block size for a tab with a stacked icon.
 - `--ki-tab-lg-font-size`: dimension used by the tab component for lg font size (Tab-nav-item 10048:1068 lg: UI/body-2).
 - `--ki-tab-lg-line-height`: dimension used by the tab component for lg line height (Tab-nav-item 10048:1068 lg: UI/body-2).
 - `--ki-tab-lg-min-block-size`: dimension used by the tab component for lg min block size (Tab-nav-item 10048:1068 lg: 48px).
+- `--ki-tab-padding-block-end`: dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes).
+- `--ki-tab-primary-indicator-height`: Height of the content-width indicator on a primary icon tab.
+- `--ki-tab-secondary-indicator-height`: Height of the full-width indicator on a secondary tab.
 - `--ki-tab-sm-font-size`: dimension used by the tab component for sm font size (Tab-nav-item 10048:1068 sm: UI/para).
 - `--ki-tab-sm-line-height`: dimension used by the tab component for sm line height (Tab-nav-item 10048:1068 sm: UI/para).
 - `--ki-tab-sm-min-block-size`: dimension used by the tab component for sm min block size (Tab-nav-item 10048:1068 sm: 32px).
@@ -77,6 +103,10 @@ None.
 - `--ki-tabs-divider-width`: dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override).
 - `--ki-tabs-gap`: dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding).
 - `--ki-tabs-lg-gap`: dimension used by the tabs component for the lg gap between tabs (Tab-nav 10048:1249 lg binds Space/9xl, 28px).
+- `--ki-tabs-secondary-selected-rest-bg`: Selected secondary tab background at rest.
+- `--ki-tabs-secondary-selected-rest-fg`: Selected secondary tab label foreground at rest.
+- `--ki-tabs-secondary-unselected-rest-bg`: Secondary tab background at rest.
+- `--ki-tabs-secondary-unselected-rest-fg`: Secondary tab label foreground at rest.
 - `--ki-tabs-sm-gap`: dimension used by the tabs component for the sm gap between tabs (Tab-nav 10048:1249 sm binds Space/7xl, 24px).
 - `--ki-tabs-xl-gap`: dimension used by the tabs component for the xl gap between tabs (Tab-nav 10048:1249 xl binds Space/10xl, 32px).
 - `--ki-tabs-xs-gap`: dimension used by the tabs component for the xs gap between tabs (Tab-nav 10048:1249 xs binds Space/5xl, 20px).
