@@ -1,11 +1,52 @@
 {
   "component": {
-    "attributes": {},
+    "attributes": {
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination for the card's title link. Supply a text heading in the\nheader slot. A nonblank href takes precedence over interactive.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "interactive": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Gives a titled card a primary button that emits ki-activate. Use href\nfor navigation. Keep other actions in separate controls in the card.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
+      },
+      "variant": {
+        "default": "'default'",
+        "deprecatedSince": null,
+        "description": "Surface treatment. Choose elevated for a raised panel, filled for a\ntinted group or outlined for a bordered surface. Use default to follow\nthe theme's existing card treatment.",
+        "replacement": null,
+        "required": false,
+        "type": "\"default\" | \"elevated\" | \"filled\" | \"outlined\" | undefined"
+      }
+    },
     "cssProperties": {
+      "--ki-card-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete card backdrop filter, off by default.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-card-bg": {
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the card component for background (MarsUI Dashboard masters bind Surface/special/light-s0_dark-s1: white light / Dark/900 dark; #f9f9fa is the nested media panel, so the old s1 value inverted the surface hierarchy).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative image over the card background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -34,6 +75,30 @@
         "required": false,
         "type": null
       },
+      "--ki-card-elevated-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised card background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-elevated-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on the elevated card background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-elevated-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting shadow for an elevated card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-card-elevation": {
         "default": null,
         "deprecatedSince": null,
@@ -46,6 +111,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the card component for foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-filled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tinted card background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-filled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on the filled card background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -74,6 +155,22 @@
         "required": false,
         "type": null
       },
+      "--ki-card-hover-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Pointer hover state layer on a primary-action card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hover shadow of a primary-action card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-card-media-padding": {
         "default": null,
         "deprecatedSince": null,
@@ -86,6 +183,38 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the card component for slotted media corner radius (MarsUI nested media panel Radius/big_component/radius_sm 20px; formalizes the fallback ki-card.css already consumes).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-outlined-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Page-coloured background for an outlined card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-outlined-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Boundary colour for an outlined card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-outlined-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hairline width for an outlined card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-card-outlined-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on the outlined card background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -106,6 +235,14 @@
         "required": false,
         "type": null
       },
+      "--ki-card-title-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Family used for a clickable card title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-density-space-scale": {
         "default": null,
         "deprecatedSince": null,
@@ -114,10 +251,50 @@
         "required": false,
         "type": null
       },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-elevation-e2": {
         "default": null,
         "deprecatedSince": null,
         "description": "MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-elevation-none": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Flat surfaces carry no resting shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
         "replacement": null,
         "required": false,
         "type": null
@@ -169,10 +346,35 @@
         "replacement": null,
         "required": false,
         "type": null
+      },
+      "--ki-typography-line-height-title-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height title 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-title-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size title 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
       }
     },
-    "description": "A non-interactive card surface for grouping related content.",
-    "events": {},
+    "description": "A card surface for grouping related content, with an optional primary link or action.",
+    "events": {
+      "ki-activate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fires once when the user activates an action card by pointer or keyboard.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      }
+    },
     "methods": {},
     "parts": {
       "body": {
@@ -214,9 +416,42 @@
         "replacement": null,
         "required": false,
         "type": null
+      },
+      "trigger": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native link or action button in a clickable card’s heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
       }
     },
-    "properties": {},
+    "properties": {
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination for the card's title link. Supply a text heading in the\nheader slot. A nonblank href takes precedence over interactive.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "interactive": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Gives a titled card a primary button that emits ki-activate. Use href\nfor navigation. Keep other actions in separate controls in the card.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
+      },
+      "variant": {
+        "default": "'default'",
+        "deprecatedSince": null,
+        "description": "Surface treatment. Choose elevated for a raised panel, filled for a\ntinted group or outlined for a bordered surface. Use default to follow\nthe theme's existing card treatment.",
+        "replacement": null,
+        "required": false,
+        "type": "\"default\" | \"elevated\" | \"filled\" | \"outlined\" | undefined"
+      }
+    },
     "slots": {
       "": {
         "default": null,
@@ -237,7 +472,7 @@
       "header": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics.",
+        "description": "Title region. Supply one nonempty text heading at the surrounding document level for a clickable card.",
         "replacement": null,
         "required": false,
         "type": null
