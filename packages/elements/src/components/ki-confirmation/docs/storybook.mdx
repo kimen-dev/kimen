@@ -1,0 +1,25 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ConfirmationStories from '../ki-confirmation.stories';
+
+<Meta title="Docs/Components/ki-confirmation" />
+
+# ki-confirmation
+
+Use the default slot for the facts the person needs to decide. Describe any
+lasting effect in `consequence`, and set `tone="danger"` when approval is
+destructive.
+
+<Canvas of={ConfirmationStories.Playground} />
+<Controls of={ConfirmationStories.Playground} />
+
+<Canvas of={ConfirmationStories.Destructive} />
+<Canvas of={ConfirmationStories.Resolved} />
+<Canvas of={ConfirmationStories.RightToLeft} />
+
+## Customization
+
+Use `--ki-confirmation-bg` and `--ki-confirmation-fg` for the surface and
+text. Use `--ki-confirmation-border`, `--ki-confirmation-radius` and
+`--ki-confirmation-padding` for its frame. The optional
+`--ki-confirmation-bg-image` and `--ki-confirmation-backdrop-filter`
+default to `none`.

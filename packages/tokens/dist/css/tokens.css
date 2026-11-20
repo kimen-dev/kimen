@@ -1740,6 +1740,17 @@
   --ki-code-font-family:var(--ki-typography-family-mono);
   --ki-code-font-size:var(--ki-typography-size-caption-2);
   --ki-code-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-confirmation-bg:var(--ki-surface-s1);
+  --ki-confirmation-fg:var(--ki-text-high-em);
+  --ki-confirmation-bg-image:var(--ki-surface-image-none);
+  --ki-confirmation-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-confirmation-border:var(--ki-outline-med-em);
+  --ki-confirmation-radius:var(--ki-radius-big-component-xs);
+  --ki-confirmation-padding:var(--ki-space-3xl);
+  --ki-confirmation-heading-font-family:var(--ki-typography-family-heading);
+  --ki-confirmation-border-width:var(--ki-size-border-hairline);
+  --ki-confirmation-gap:var(--ki-space-xl);
+  --ki-confirmation-inline-gap:var(--ki-space-md);
   --ki-conversation-max-width:var(--ki-layout-conversation-max-width);
   --ki-conversation-gap:var(--ki-layout-spacing-3xl);
   --ki-message-user-bg:var(--ki-surface-s2);

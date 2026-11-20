@@ -21,6 +21,7 @@ import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/co
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
 import { defineCustomElement as defineKiCodeBlock } from '@kimen/elements/components/ki-code-block.js';
+import { defineCustomElement as defineKiConfirmation } from '@kimen/elements/components/ki-confirmation.js';
 import { defineCustomElement as defineKiConversation } from '@kimen/elements/components/ki-conversation.js';
 import { defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
@@ -466,6 +467,38 @@ export declare interface KiCodeBlock extends Components.KiCodeBlock {
    */
   /**
    * CopyButton reports an unsuccessful clipboard write.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiConfirmation,
+  inputs: ['action', 'approveLabel', 'approvedLabel', 'consequence', 'deniedLabel', 'denyLabel', 'expiredLabel', 'heading', 'remember', 'rememberLabel', 'resolvedAt', 'resolvedBy', 'state', 'tone'],
+  methods: ['focusPrompt']
+})
+@Component({
+  selector: 'ki-confirmation',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [{ name: 'action', required: true }, { name: 'approveLabel', required: true }, 'approvedLabel', 'consequence', 'deniedLabel', { name: 'denyLabel', required: true }, 'expiredLabel', { name: 'heading', required: true }, 'remember', 'rememberLabel', 'resolvedAt', 'resolvedBy', 'state', 'tone'],
+})
+export class KiConfirmation {
+  protected el: HTMLKiConfirmationElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiConfirmation extends Components.KiConfirmation {
+  /**
+   * Explicit approval, with the conversation preference at the time of the decision.
+   */
+  /**
+   * Explicit refusal of the pending request.
    */
 }
 

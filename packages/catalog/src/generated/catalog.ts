@@ -868,6 +868,98 @@ export const catalogData = {
       "whenNotToUse": "when the reader should edit the source or when the code belongs\ninline in a sentence. Use an editor or a native inline code element.",
       "whenToUse": "display a multiline example, generated code or a tool result that\nreaders should be able to inspect and copy."
     },
+    "ki-confirmation": {
+      "description": "An inline prompt for a decision about a proposed assistant action.",
+      "events": {
+        "ki-approve": "Explicit approval, with the conversation preference at the time of the decision.",
+        "ki-deny": "Explicit refusal of the pending request."
+      },
+      "props": {
+        "action": {
+          "type": "string",
+          "description": "Tool identifier shown to the person and available for reporting by the host.",
+          "required": true
+        },
+        "approve-label": {
+          "type": "string",
+          "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+          "required": true
+        },
+        "approved-label": {
+          "type": "string",
+          "description": "Localized outcome text when the host marks the request approved.",
+          "default": "Approved"
+        },
+        "consequence": {
+          "type": "string",
+          "description": "Cost or irreversible effect to read before deciding, displayed as a warning note."
+        },
+        "denied-label": {
+          "type": "string",
+          "description": "Localized outcome text when the host marks the request denied.",
+          "default": "Denied"
+        },
+        "deny-label": {
+          "type": "string",
+          "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
+          "required": true
+        },
+        "expired-label": {
+          "type": "string",
+          "description": "Localized outcome text when the host marks the request expired.",
+          "default": "Expired"
+        },
+        "heading": {
+          "type": "string",
+          "description": "Question naming the proposed action. Provide it before asking for a decision.",
+          "required": true
+        },
+        "remember": {
+          "type": "boolean",
+          "description": "Offers an unchecked preference limited to this action in the current conversation.",
+          "default": false
+        },
+        "remember-label": {
+          "type": "string",
+          "description": "Localized conversation permission label. Name the specific permission when possible.",
+          "default": "Allow this action for the rest of this conversation"
+        },
+        "resolved-at": {
+          "type": "string",
+          "description": "Display-ready, localized resolution time from the host, if known."
+        },
+        "resolved-by": {
+          "type": "string",
+          "description": "Display-ready name of the person or service that resolved the request, if known."
+        },
+        "state": {
+          "type": "enum",
+          "values": [
+            "approved",
+            "denied",
+            "expired",
+            "pending"
+          ],
+          "description": "Host-controlled outcome. Resolve after recording a decision or expiring the request.",
+          "default": "pending"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral"
+          ],
+          "description": "Use danger when approval is destructive. Unknown values use neutral.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
+      },
+      "tag": "ki-confirmation",
+      "whenNotToUse": "Report a completed action without a preceding request, or\nblock the rest of the interface with a modal decision (use ki-dialog).\nThe displayed action identifier is text and carries no execution authority.",
+      "whenToUse": "Show the exact action and the details a person needs before\ngranting permission. A trusted host maps the two decision events to its\ndeclared actions and records the outcome in state."
+    },
     "ki-conversation": {
       "description": "An accessible chat transcript with optional following as messages arrive.",
       "events": {},
