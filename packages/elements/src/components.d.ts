@@ -33,6 +33,7 @@ import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
+import { KiTimeInputChangeDetail } from "./components/ki-time-input/ki-time-input";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
@@ -65,6 +66,7 @@ export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
+export { KiTimeInputChangeDetail } from "./components/ki-time-input/ki-time-input";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
@@ -1371,6 +1373,81 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A time-of-day field with locale-aware typing and suggested slots. The shadow
+     * root keeps the combobox and listbox in the same accessibility ID scope.
+     * The host owns native form participation.
+     * @whenToUse collect an exact time of day or offer regular appointment slots.
+     * Provide a visible label and set bounding times when the schedule is limited.
+     * @whenNotToUse durations, dates or timestamps. Pair with a date field when
+     * the day matters. Timezone conversion belongs to the application.
+     * @event change - Native-style composed event for a changed user commit.
+     */
+    interface KiTimeInput {
+        /**
+          * Disables typing, suggestions and form participation.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Validation message to show after blur or a blocked form submission.
+         */
+        "errorText"?: string;
+        /**
+          * Guidance read with the field until a validation error replaces it.
+         */
+        "helpText"?: string;
+        /**
+          * Fallback validation message for invalid time syntax or bounds.
+          * @default 'Enter a valid time within the allowed range.'
+         */
+        "invalidTimeText": string;
+        /**
+          * Visible text naming the time field. Provide it for every use.
+         */
+        "label": string;
+        /**
+          * Accessible name of the suggestion listbox.
+          * @default 'Suggested times'
+         */
+        "listLabel": string;
+        /**
+          * Latest allowed wall-clock time in HH:mm, inclusive.
+         */
+        "max"?: string;
+        /**
+          * Earliest allowed wall-clock time in HH:mm, inclusive.
+         */
+        "min"?: string;
+        /**
+          * Name under which the canonical time is submitted.
+         */
+        "name"?: string;
+        /**
+          * Accessible name of the button that opens suggestions.
+          * @default 'Choose time'
+         */
+        "pickerLabel": string;
+        /**
+          * Empty values block form submission when true.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Suggested slot interval in whole minutes. Typed times keep their exact minutes.
+          * @default 30
+         */
+        "step": number;
+        /**
+          * IANA timezone shown alongside help. Does not change wall-clock values.
+         */
+        "timeZone"?: string;
+        /**
+          * Committed wall-clock time in HH:mm, or empty. The attribute sets the form reset value.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
      * A short, transient message about something the person just did, shown
      * without blocking the page. It leaves on its own after its time, which stops
      * while the person points at the toaster, works inside it or is away from the
@@ -1530,6 +1607,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiTabsElement;
+}
+export interface KiTimeInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiTimeInputElement;
 }
 export interface KiToastCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2226,6 +2307,33 @@ declare global {
         prototype: HTMLKiTextareaElement;
         new (): HTMLKiTextareaElement;
     };
+    interface HTMLKiTimeInputElementEventMap {
+        "ki-change": KiTimeInputChangeDetail;
+    }
+    /**
+     * A time-of-day field with locale-aware typing and suggested slots. The shadow
+     * root keeps the combobox and listbox in the same accessibility ID scope.
+     * The host owns native form participation.
+     * @whenToUse collect an exact time of day or offer regular appointment slots.
+     * Provide a visible label and set bounding times when the schedule is limited.
+     * @whenNotToUse durations, dates or timestamps. Pair with a date field when
+     * the day matters. Timezone conversion belongs to the application.
+     * @event change - Native-style composed event for a changed user commit.
+     */
+    interface HTMLKiTimeInputElement extends Components.KiTimeInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiTimeInputElementEventMap>(type: K, listener: (this: HTMLKiTimeInputElement, ev: KiTimeInputCustomEvent<HTMLKiTimeInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiTimeInputElementEventMap>(type: K, listener: (this: HTMLKiTimeInputElement, ev: KiTimeInputCustomEvent<HTMLKiTimeInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiTimeInputElement: {
+        prototype: HTMLKiTimeInputElement;
+        new (): HTMLKiTimeInputElement;
+    };
     interface HTMLKiToastElementEventMap {
         "ki-dismiss": KiToastDismissDetail;
     }
@@ -2362,6 +2470,7 @@ declare global {
         "ki-tab-panel": HTMLKiTabPanelElement;
         "ki-tabs": HTMLKiTabsElement;
         "ki-textarea": HTMLKiTextareaElement;
+        "ki-time-input": HTMLKiTimeInputElement;
         "ki-toast": HTMLKiToastElement;
         "ki-toaster": HTMLKiToasterElement;
         "ki-tooltip": HTMLKiTooltipElement;
@@ -3716,6 +3825,89 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A time-of-day field with locale-aware typing and suggested slots. The shadow
+     * root keeps the combobox and listbox in the same accessibility ID scope.
+     * The host owns native form participation.
+     * @whenToUse collect an exact time of day or offer regular appointment slots.
+     * Provide a visible label and set bounding times when the schedule is limited.
+     * @whenNotToUse durations, dates or timestamps. Pair with a date field when
+     * the day matters. Timezone conversion belongs to the application.
+     * @event change - Native-style composed event for a changed user commit.
+     */
+    interface KiTimeInput {
+        /**
+          * Disables typing, suggestions and form participation.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Validation message to show after blur or a blocked form submission.
+         */
+        "errorText"?: string;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Guidance read with the field until a validation error replaces it.
+         */
+        "helpText"?: string;
+        /**
+          * Fallback validation message for invalid time syntax or bounds.
+          * @default 'Enter a valid time within the allowed range.'
+         */
+        "invalidTimeText"?: string;
+        /**
+          * Visible text naming the time field. Provide it for every use.
+         */
+        "label": string;
+        /**
+          * Accessible name of the suggestion listbox.
+          * @default 'Suggested times'
+         */
+        "listLabel"?: string;
+        /**
+          * Latest allowed wall-clock time in HH:mm, inclusive.
+         */
+        "max"?: string;
+        /**
+          * Earliest allowed wall-clock time in HH:mm, inclusive.
+         */
+        "min"?: string;
+        /**
+          * Name under which the canonical time is submitted.
+         */
+        "name"?: string;
+        /**
+          * Emitted when a person commits a different canonical time or clears it.
+         */
+        "onKi-change"?: (event: KiTimeInputCustomEvent<KiTimeInputChangeDetail>) => void;
+        /**
+          * Accessible name of the button that opens suggestions.
+          * @default 'Choose time'
+         */
+        "pickerLabel"?: string;
+        /**
+          * Empty values block form submission when true.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Suggested slot interval in whole minutes. Typed times keep their exact minutes.
+          * @default 30
+         */
+        "step"?: number;
+        /**
+          * IANA timezone shown alongside help. Does not change wall-clock values.
+         */
+        "timeZone"?: string;
+        /**
+          * Committed wall-clock time in HH:mm, or empty. The attribute sets the form reset value.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
      * A short, transient message about something the person just did, shown
      * without blocking the page. It leaves on its own after its time, which stops
      * while the person points at the toaster, works inside it or is away from the
@@ -4092,6 +4284,22 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiTimeInputAttributes {
+        "label": string;
+        "helpText": string;
+        "errorText": string;
+        "name": string;
+        "required": boolean;
+        "disabled": boolean;
+        "value": string;
+        "step": number;
+        "min": string;
+        "max": string;
+        "timeZone": string;
+        "pickerLabel": string;
+        "listLabel": string;
+        "invalidTimeText": string;
+    }
     interface KiToastAttributes {
         "tone": KiToastTone | (string & {});
         "heading": string;
@@ -4151,6 +4359,7 @@ declare namespace LocalJSX {
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
         "ki-tabs": Omit<KiTabs, keyof KiTabsAttributes> & { [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
+        "ki-time-input": Omit<KiTimeInput, keyof KiTimeInputAttributes> & { [K in keyof KiTimeInput & keyof KiTimeInputAttributes]?: KiTimeInput[K] } & { [K in keyof KiTimeInput & keyof KiTimeInputAttributes as `attr:${K}`]?: KiTimeInputAttributes[K] } & { [K in keyof KiTimeInput & keyof KiTimeInputAttributes as `prop:${K}`]?: KiTimeInput[K] } & OneOf<"label", KiTimeInput["label"], KiTimeInputAttributes["label"]>;
         "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
         "ki-toaster": Omit<KiToaster, keyof KiToasterAttributes> & { [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K] };
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
@@ -4616,6 +4825,17 @@ declare module "@stencil/core" {
              * event carries those.
              */
             "ki-textarea": LocalJSX.IntrinsicElements["ki-textarea"] & JSXBase.HTMLAttributes<HTMLKiTextareaElement>;
+            /**
+             * A time-of-day field with locale-aware typing and suggested slots. The shadow
+             * root keeps the combobox and listbox in the same accessibility ID scope.
+             * The host owns native form participation.
+             * @whenToUse collect an exact time of day or offer regular appointment slots.
+             * Provide a visible label and set bounding times when the schedule is limited.
+             * @whenNotToUse durations, dates or timestamps. Pair with a date field when
+             * the day matters. Timezone conversion belongs to the application.
+             * @event change - Native-style composed event for a changed user commit.
+             */
+            "ki-time-input": LocalJSX.IntrinsicElements["ki-time-input"] & JSXBase.HTMLAttributes<HTMLKiTimeInputElement>;
             /**
              * A short, transient message about something the person just did, shown
              * without blocking the page. It leaves on its own after its time, which stops

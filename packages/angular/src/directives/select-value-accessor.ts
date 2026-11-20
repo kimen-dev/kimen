@@ -5,7 +5,7 @@ import { ValueAccessor } from './value-accessor';
 
 @Directive({
   /* tslint:disable-next-line:directive-selector */
-  selector: 'ki-radio-group, ki-select',
+  selector: 'ki-radio-group, ki-select, ki-time-input',
   host: {
     '(change)': 'handleChangeEvent($event.target?.["value"])'
   },

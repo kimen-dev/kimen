@@ -1697,6 +1697,85 @@ export const catalogData = {
       "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
       "whenToUse": "free-form text longer than one line, such as comments,\ndescriptions, messages, delivery notes, or addresses when paired with a\nmatching `autocomplete` purpose."
     },
+    "ki-time-input": {
+      "description": "A time-of-day field with locale-aware typing and suggested slots. The shadow\nroot keeps the combobox and listbox in the same accessibility ID scope.\nThe host owns native form participation.",
+      "events": {
+        "change": "Native-style composed event for a changed user commit.",
+        "ki-change": "Emitted when a person commits a different canonical time or clears it."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Disables typing, suggestions and form participation.",
+          "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Validation message to show after blur or a blocked form submission."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Guidance read with the field until a validation error replaces it."
+        },
+        "invalid-time-text": {
+          "type": "string",
+          "description": "Fallback validation message for invalid time syntax or bounds.",
+          "default": "Enter a valid time within the allowed range."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible text naming the time field. Provide it for every use.",
+          "required": true
+        },
+        "list-label": {
+          "type": "string",
+          "description": "Accessible name of the suggestion listbox.",
+          "default": "Suggested times"
+        },
+        "max": {
+          "type": "string",
+          "description": "Latest allowed wall-clock time in HH:mm, inclusive."
+        },
+        "min": {
+          "type": "string",
+          "description": "Earliest allowed wall-clock time in HH:mm, inclusive."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name under which the canonical time is submitted."
+        },
+        "picker-label": {
+          "type": "string",
+          "description": "Accessible name of the button that opens suggestions.",
+          "default": "Choose time"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Empty values block form submission when true.",
+          "default": false
+        },
+        "step": {
+          "type": "number",
+          "description": "Suggested slot interval in whole minutes. Typed times keep their exact minutes.",
+          "default": 30
+        },
+        "time-zone": {
+          "type": "string",
+          "description": "IANA timezone shown alongside help. Does not change wall-clock values."
+        },
+        "value": {
+          "type": "string",
+          "description": "Committed wall-clock time in HH:mm, or empty. The attribute sets the form reset value.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "start": "Optional leading adornment, outside the input's accessible name."
+      },
+      "tag": "ki-time-input",
+      "whenNotToUse": "durations, dates or timestamps. Pair with a date field when\nthe day matters. Timezone conversion belongs to the application.",
+      "whenToUse": "collect an exact time of day or offer regular appointment slots.\nProvide a visible label and set bounding times when the schedule is limited."
+    },
     "ki-toast": {
       "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
       "events": {

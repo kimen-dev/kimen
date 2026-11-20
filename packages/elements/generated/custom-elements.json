@@ -11735,6 +11735,691 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-time-input.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTimeInput",
+          "customElement": true,
+          "tagName": "ki-time-input",
+          "description": "A time-of-day field with locale-aware typing and suggested slots. The shadow\nroot keeps the combobox and listbox in the same accessibility ID scope.\nThe host owns native form participation.",
+          "whenToUse": "collect an exact time of day or offer regular appointment slots.\nProvide a visible label and set bounding times when the schedule is limited.",
+          "whenNotToUse": "durations, dates or timestamps. Pair with a date field when\nthe day matters. Timezone conversion belongs to the application.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables typing, suggestions and form participation."
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Validation message to show after blur or a blocked form submission."
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Guidance read with the field until a validation error replaces it."
+            },
+            {
+              "name": "invalid-time-text",
+              "fieldName": "invalidTimeText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Enter a valid time within the allowed range.'",
+              "description": "Fallback validation message for invalid time syntax or bounds."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible text naming the time field. Provide it for every use.",
+              "required": true
+            },
+            {
+              "name": "list-label",
+              "fieldName": "listLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Suggested times'",
+              "description": "Accessible name of the suggestion listbox."
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Latest allowed wall-clock time in HH:mm, inclusive."
+            },
+            {
+              "name": "min",
+              "fieldName": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Earliest allowed wall-clock time in HH:mm, inclusive."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Name under which the canonical time is submitted."
+            },
+            {
+              "name": "picker-label",
+              "fieldName": "pickerLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Choose time'",
+              "description": "Accessible name of the button that opens suggestions."
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Empty values block form submission when true."
+            },
+            {
+              "name": "step",
+              "fieldName": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "30",
+              "description": "Suggested slot interval in whole minutes. Typed times keep their exact minutes."
+            },
+            {
+              "name": "time-zone",
+              "fieldName": "timeZone",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "IANA timezone shown alongside help. Does not change wall-clock values."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Committed wall-clock time in HH:mm, or empty. The attribute sets the form reset value."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables typing, suggestions and form participation.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Validation message to show after blur or a blocked form submission.",
+              "attribute": "error-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Guidance read with the field until a validation error replaces it.",
+              "attribute": "help-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "invalidTimeText",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Enter a valid time within the allowed range.'",
+              "description": "Fallback validation message for invalid time syntax or bounds.",
+              "attribute": "invalid-time-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible text naming the time field. Provide it for every use.",
+              "attribute": "label",
+              "reflects": true,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "listLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Suggested times'",
+              "description": "Accessible name of the suggestion listbox.",
+              "attribute": "list-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Latest allowed wall-clock time in HH:mm, inclusive.",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Earliest allowed wall-clock time in HH:mm, inclusive.",
+              "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Name under which the canonical time is submitted.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "pickerLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Choose time'",
+              "description": "Accessible name of the button that opens suggestions.",
+              "attribute": "picker-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Empty values block form submission when true.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "30",
+              "description": "Suggested slot interval in whole minutes. Typed times keep their exact minutes.",
+              "attribute": "step",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "timeZone",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "IANA timezone shown alongside help. Does not change wall-clock values.",
+              "attribute": "time-zone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Committed wall-clock time in HH:mm, or empty. The attribute sets the form reset value.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<KiTimeInputChangeDetail>"
+              },
+              "description": "Emitted when a person commits a different canonical time or clears it."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Native-style composed event for a changed user commit."
+            }
+          ],
+          "slots": [
+            {
+              "name": "start",
+              "description": "Optional leading adornment, outside the input's accessible name."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "error",
+              "description": "Polite validation message that replaces help."
+            },
+            {
+              "name": "field",
+              "description": "Field enclosure and anchor for the suggestions."
+            },
+            {
+              "name": "help",
+              "description": "Help and timezone describing the field."
+            },
+            {
+              "name": "input",
+              "description": "Editable text combobox."
+            },
+            {
+              "name": "label",
+              "description": "Visible label naming the editable combobox."
+            },
+            {
+              "name": "listbox",
+              "description": "Scrollable list of suggested times."
+            },
+            {
+              "name": "option",
+              "description": "Individual suggested time."
+            },
+            {
+              "name": "trigger",
+              "description": "Button that opens suggested times."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-input-border-block-end-width",
+              "description": "dimension used by the input component for border block end width."
+            },
+            {
+              "name": "--ki-input-border-block-start-width",
+              "description": "dimension used by the input component for border block start width."
+            },
+            {
+              "name": "--ki-input-border-inline-end-width",
+              "description": "dimension used by the input component for border inline end width."
+            },
+            {
+              "name": "--ki-input-border-inline-start-width",
+              "description": "dimension used by the input component for border inline start width."
+            },
+            {
+              "name": "--ki-input-disabled-bg",
+              "description": "color used by the input component for disabled background."
+            },
+            {
+              "name": "--ki-input-disabled-border",
+              "description": "color used by the input component for disabled border."
+            },
+            {
+              "name": "--ki-input-disabled-fg",
+              "description": "color used by the input component for disabled foreground (MarsUI disabled text Text/base_em; disabled cells are exempt from the contrast sweep)."
+            },
+            {
+              "name": "--ki-input-disabled-label-fg",
+              "description": "color used by the input component for disabled label foreground."
+            },
+            {
+              "name": "--ki-input-focus-bg",
+              "description": "color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0)."
+            },
+            {
+              "name": "--ki-input-focus-fg",
+              "description": "color used by the input component for focus foreground."
+            },
+            {
+              "name": "--ki-input-focus-label-fg",
+              "description": "color used by the input component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
+            },
+            {
+              "name": "--ki-input-focus-ring-color",
+              "description": "color used by the input component for focus ring color."
+            },
+            {
+              "name": "--ki-input-focus-ring-offset",
+              "description": "dimension used by the input component for focus ring offset."
+            },
+            {
+              "name": "--ki-input-focus-ring-shadow",
+              "description": "shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
+            },
+            {
+              "name": "--ki-input-focus-ring-width",
+              "description": "dimension used by the input component for focus ring width."
+            },
+            {
+              "name": "--ki-input-font-size",
+              "description": "dimension used by the input component for font size."
+            },
+            {
+              "name": "--ki-input-font-size-touch",
+              "description": "dimension used by the input component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step."
+            },
+            {
+              "name": "--ki-input-font-weight",
+              "description": "font weight used by the input component for font weight."
+            },
+            {
+              "name": "--ki-input-gap",
+              "description": "dimension used by the input component for gap."
+            },
+            {
+              "name": "--ki-input-height",
+              "description": "dimension used by the input component for height (MarsUI Input_field md cell: min-height 40px; consume as min-block-size so the field can grow)."
+            },
+            {
+              "name": "--ki-input-hover-bg",
+              "description": "color used by the input component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token)."
+            },
+            {
+              "name": "--ki-input-hover-border",
+              "description": "color used by the input component for hover border."
+            },
+            {
+              "name": "--ki-input-hover-fg",
+              "description": "color used by the input component for hover foreground."
+            },
+            {
+              "name": "--ki-input-hover-label-fg",
+              "description": "color used by the input component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
+            },
+            {
+              "name": "--ki-input-icon-size",
+              "description": "dimension used by the input component for icon size."
+            },
+            {
+              "name": "--ki-input-invalid-bg",
+              "description": "color used by the input component for invalid background (MarsUI danger state keeps the white active fill; the ring and hint carry the signal)."
+            },
+            {
+              "name": "--ki-input-invalid-border",
+              "description": "color used by the input component for invalid border."
+            },
+            {
+              "name": "--ki-input-invalid-fg",
+              "description": "color used by the input component for invalid foreground."
+            },
+            {
+              "name": "--ki-input-invalid-label-fg",
+              "description": "color used by the input component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
+            },
+            {
+              "name": "--ki-input-invalid-ring",
+              "description": "shadow used by the input component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid))."
+            },
+            {
+              "name": "--ki-input-label-font-size",
+              "description": "dimension used by the input component for label font size (MarsUI UI/Para/medium: body_1 13px)."
+            },
+            {
+              "name": "--ki-input-label-font-weight",
+              "description": "font weight used by the input component for label font weight."
+            },
+            {
+              "name": "--ki-input-label-gap",
+              "description": "dimension used by the input component for label gap."
+            },
+            {
+              "name": "--ki-input-label-line-height",
+              "description": "dimension used by the input component for label line height (MarsUI line_height/para 20px)."
+            },
+            {
+              "name": "--ki-input-label-padding-inline",
+              "description": "dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius)."
+            },
+            {
+              "name": "--ki-input-line-height",
+              "description": "dimension used by the input component for line height."
+            },
+            {
+              "name": "--ki-input-padding-inline",
+              "description": "dimension used by the input component for padding inline."
+            },
+            {
+              "name": "--ki-input-radius",
+              "description": "dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it)."
+            },
+            {
+              "name": "--ki-input-rest-bg",
+              "description": "color used by the input component for rest background (MarsUI Input_field rest fill Surface/s2: the fill identifies the field, not the outline)."
+            },
+            {
+              "name": "--ki-input-rest-border",
+              "description": "color used by the input component for rest border."
+            },
+            {
+              "name": "--ki-input-rest-fg",
+              "description": "color used by the input component for rest foreground."
+            },
+            {
+              "name": "--ki-input-rest-label-fg",
+              "description": "color used by the input component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-text-danger-high-em",
+              "description": "semantic color for text danger high em."
+            },
+            {
+              "name": "--ki-text-supporting",
+              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
+            },
+            {
+              "name": "--ki-time-input-field-backdrop-filter",
+              "description": "Complete filter applied behind the surface."
+            },
+            {
+              "name": "--ki-time-input-field-bg-image",
+              "description": "Image painted over the surface background."
+            },
+            {
+              "name": "--ki-time-input-list-backdrop-filter",
+              "description": "Complete filter applied behind the surface."
+            },
+            {
+              "name": "--ki-time-input-list-bg",
+              "description": "Background of the suggested times list."
+            },
+            {
+              "name": "--ki-time-input-list-bg-image",
+              "description": "Image painted over the surface background."
+            },
+            {
+              "name": "--ki-time-input-list-border-color",
+              "description": "Border colour of the suggested times list."
+            },
+            {
+              "name": "--ki-time-input-list-border-width",
+              "description": "Border width of the suggested times list."
+            },
+            {
+              "name": "--ki-time-input-list-fg",
+              "description": "Text colour of the suggested times list."
+            },
+            {
+              "name": "--ki-time-input-list-max-height",
+              "description": "Maximum block size of the scrolling suggestions."
+            },
+            {
+              "name": "--ki-time-input-list-padding",
+              "description": "Padding on the inside edge of the suggested times list."
+            },
+            {
+              "name": "--ki-time-input-list-radius",
+              "description": "Corner radius of the suggested times list."
+            },
+            {
+              "name": "--ki-time-input-list-shadow",
+              "description": "Elevation of the suggested times list."
+            },
+            {
+              "name": "--ki-time-input-option-height",
+              "description": "Minimum block size of a suggestion at standard density."
+            },
+            {
+              "name": "--ki-time-input-option-hover-bg",
+              "description": "Background of a hovered suggestion."
+            },
+            {
+              "name": "--ki-time-input-option-hover-fg",
+              "description": "Text colour of a hovered suggestion."
+            },
+            {
+              "name": "--ki-time-input-option-padding-inline",
+              "description": "Inline padding of a suggestion."
+            },
+            {
+              "name": "--ki-time-input-option-radius",
+              "description": "Corner radius of a suggestion."
+            },
+            {
+              "name": "--ki-time-input-selected-bg",
+              "description": "Background of the committed suggestion."
+            },
+            {
+              "name": "--ki-time-input-selected-fg",
+              "description": "Text and check mark of the committed suggestion."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-normal",
+              "description": "semantic font weight for typography weight body normal."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTimeInput",
+          "declaration": {
+            "name": "KiTimeInput",
+            "module": "dist/components/ki-time-input.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-time-input",
+          "declaration": {
+            "name": "KiTimeInput",
+            "module": "dist/components/ki-time-input.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-toast.js",
       "declarations": [
         {

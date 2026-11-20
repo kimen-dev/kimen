@@ -2993,9 +2993,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-time-input"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-time-input": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -8335,6 +8341,536 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-time-input/ki-time-input.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-time-input",
+      "docs": "A time-of-day field with locale-aware typing and suggested slots. The shadow\nroot keeps the combobox and listbox in the same accessibility ID scope.\nThe host owns native form participation.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "collect an exact time of day or offer regular appointment slots.\nProvide a visible label and set bounding times when the schedule is limited."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "durations, dates or timestamps. Pair with a date field when\nthe day matters. Timezone conversion belongs to the application."
+        },
+        {
+          "name": "slot",
+          "text": "start - Optional leading adornment, outside the input's accessible name."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible label naming the editable combobox."
+        },
+        {
+          "name": "part",
+          "text": "field - Field enclosure and anchor for the suggestions."
+        },
+        {
+          "name": "part",
+          "text": "input - Editable text combobox."
+        },
+        {
+          "name": "part",
+          "text": "trigger - Button that opens suggested times."
+        },
+        {
+          "name": "part",
+          "text": "listbox - Scrollable list of suggested times."
+        },
+        {
+          "name": "part",
+          "text": "option - Individual suggested time."
+        },
+        {
+          "name": "part",
+          "text": "help - Help and timezone describing the field."
+        },
+        {
+          "name": "part",
+          "text": "error - Polite validation message that replaces help."
+        },
+        {
+          "name": "event",
+          "text": "change - Native-style composed event for a changed user commit."
+        }
+      ],
+      "usage": {
+        "examples": "Display 12-hour time for a US English form and keep the value in canonical\n24-hour form. The person can type any time from 08:00 through 18:00, including\nminutes between the half-hour suggestions.\n\n```html\n<ki-time-input\n  lang=\"en-US\"\n  label=\"Pickup time\"\n  name=\"pickup\"\n  required\n  value=\"09:30\"\n  min=\"08:00\"\n  max=\"18:00\"\n  step=\"30\"\n  help-text=\"Store hours\"\n  time-zone=\"America/New_York\"\n  error-text=\"Choose a pickup time between 8:00 AM and 6:00 PM.\"\n></ki-time-input>\n```\n\nSet the language on a surrounding element to localize the time, and pass\ntranslated labels for the suggestion controls. Touch density increases the\nfield and suggestion hit areas.\n\n```html\n<div lang=\"es-ES\" data-ki-density=\"touch\">\n  <ki-time-input\n    label=\"Hora de la cita\"\n    picker-label=\"Elige una hora\"\n    list-label=\"Horas sugeridas\"\n    error-text=\"Introduce una hora válida.\"\n  ></ki-time-input>\n</div>\n```\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disables typing, suggestions and form participation.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Validation message to show after blur or a blocked form submission.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "Guidance read with the field until a validation error replaces it.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "invalidTimeText",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "invalid-time-text",
+          "reflectToAttr": true,
+          "docs": "Fallback validation message for invalid time syntax or bounds.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Enter a valid time within the allowed range.'"
+            }
+          ],
+          "default": "'Enter a valid time within the allowed range.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Visible text naming the time field. Provide it for every use.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "listLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "list-label",
+          "reflectToAttr": true,
+          "docs": "Accessible name of the suggestion listbox.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Suggested times'"
+            }
+          ],
+          "default": "'Suggested times'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": true,
+          "docs": "Latest allowed wall-clock time in HH:mm, inclusive.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "min",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min",
+          "reflectToAttr": true,
+          "docs": "Earliest allowed wall-clock time in HH:mm, inclusive.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Name under which the canonical time is submitted.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pickerLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "picker-label",
+          "reflectToAttr": true,
+          "docs": "Accessible name of the button that opens suggestions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Choose time'"
+            }
+          ],
+          "default": "'Choose time'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Empty values block form submission when true.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "step",
+          "reflectToAttr": true,
+          "docs": "Suggested slot interval in whole minutes. Typed times keep their exact minutes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "30"
+            }
+          ],
+          "default": "30",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "timeZone",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "time-zone",
+          "reflectToAttr": true,
+          "docs": "IANA timezone shown alongside help. Does not change wall-clock values.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Committed wall-clock time in HH:mm, or empty. The attribute sets the form reset value.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "KiTimeInputChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiTimeInputChangeDetail",
+            "resolved": "KiTimeInputChangeDetail",
+            "references": {
+              "KiTimeInputChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-time-input/ki-time-input.tsx",
+                "id": "src/components/ki-time-input/ki-time-input.tsx::KiTimeInputChangeDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted when a person commits a different canonical time or clears it.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "pointerdown",
+          "target": "document",
+          "capture": false,
+          "passive": true
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "start",
+          "docs": "Optional leading adornment, outside the input's accessible name."
+        }
+      ],
+      "parts": [
+        {
+          "name": "error",
+          "docs": "Polite validation message that replaces help."
+        },
+        {
+          "name": "field",
+          "docs": "Field enclosure and anchor for the suggestions."
+        },
+        {
+          "name": "help",
+          "docs": "Help and timezone describing the field."
+        },
+        {
+          "name": "input",
+          "docs": "Editable text combobox."
+        },
+        {
+          "name": "label",
+          "docs": "Visible label naming the editable combobox."
+        },
+        {
+          "name": "listbox",
+          "docs": "Scrollable list of suggested times."
+        },
+        {
+          "name": "option",
+          "docs": "Individual suggested time."
+        },
+        {
+          "name": "trigger",
+          "docs": "Button that opens suggested times."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-time-input": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-toast/ki-toast.tsx",
       "encapsulation": "shadow",
       "tag": "ki-toast",
@@ -9304,6 +9840,11 @@
       "declaration": "export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-textarea/ki-textarea.tsx"
+    },
+    "src/components/ki-time-input/ki-time-input.tsx::KiTimeInputChangeDetail": {
+      "declaration": "export interface KiTimeInputChangeDetail {\n  value: string;\n}",
+      "docstring": "",
+      "path": "src/components/ki-time-input/ki-time-input.tsx"
     },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",

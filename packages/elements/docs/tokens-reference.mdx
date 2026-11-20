@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 400 semantic
-and 1274 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 405 semantic
+and 1293 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -47,6 +47,9 @@ every component at once.
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
+| `--ki-corner-popup` | `12px` | Corner radius of a floating menu or suggestions panel. |
+| `--ki-corner-popup-option` | `8px` | Corner radius of an option inside a floating panel. |
+| `--ki-corner-popup-tight` | `6px` | Extra-small corner radius for a tightly shaped popup. |
 
 ### `ki.density`
 
@@ -86,6 +89,13 @@ every component at once.
 | `--ki-elevation-shadow` | `rgba(0, 0, 0, 0.03)` | semantic color for elevation shadow. |
 | `--ki-elevation-shadow-dark` | `rgba(0, 0, 0, 0.32)` | semantic color for elevation shadow dark. |
 | `--ki-elevation-shadow-med` | `rgba(0, 0, 0, 0.05)` | semantic color for elevation shadow med. |
+
+### `ki.floating-list`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-floating-list-compact-max-block-size` | `12rem` | Maximum block size for compact scrolling suggestions. |
+| `--ki-floating-list-option-min-block-size` | `2rem` | Minimum block size for a row in a floating list, before density adjustments. |
 
 ### `ki.focus`
 
@@ -1920,6 +1930,30 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-xs-padding-block` | `0.5rem` | dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px). |
 | `--ki-textarea-xs-padding-inline` | `0.375rem` | dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px). |
 | `--ki-textarea-xs-radius` | `6px` | dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs). |
+
+### `ki-time-input`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-time-input-field-backdrop-filter` | `none` | Complete filter applied behind the surface. |
+| `--ki-time-input-field-bg-image` | `none` | Image painted over the surface background. |
+| `--ki-time-input-list-backdrop-filter` | `none` | Complete filter applied behind the surface. |
+| `--ki-time-input-list-bg` | `#f9f7f4` | Background of the suggested times list. |
+| `--ki-time-input-list-bg-image` | `none` | Image painted over the surface background. |
+| `--ki-time-input-list-border-color` | `rgba(24, 22, 19, 0.1)` | Border colour of the suggested times list. |
+| `--ki-time-input-list-border-width` | `2` | Border width of the suggested times list. |
+| `--ki-time-input-list-fg` | `#181613` | Text colour of the suggested times list. |
+| `--ki-time-input-list-max-height` | `12rem` | Maximum block size of the scrolling suggestions. |
+| `--ki-time-input-list-padding` | `0.25rem` | Padding on the inside edge of the suggested times list. |
+| `--ki-time-input-list-radius` | `12px` | Corner radius of the suggested times list. |
+| `--ki-time-input-list-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the suggested times list. |
+| `--ki-time-input-option-height` | `2rem` | Minimum block size of a suggestion at standard density. |
+| `--ki-time-input-option-hover-bg` | `#ebe7e1` | Background of a hovered suggestion. |
+| `--ki-time-input-option-hover-fg` | `#181613` | Text colour of a hovered suggestion. |
+| `--ki-time-input-option-padding-inline` | `0.5rem` | Inline padding of a suggestion. |
+| `--ki-time-input-option-radius` | `8px` | Corner radius of a suggestion. |
+| `--ki-time-input-selected-bg` | `#ffebe5` | Background of the committed suggestion. |
+| `--ki-time-input-selected-fg` | `#9a3715` | Text and check mark of the committed suggestion. |
 
 ### `ki-toast`
 

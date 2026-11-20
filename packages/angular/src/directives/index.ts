@@ -38,6 +38,7 @@ export const DIRECTIVES = [
   d.KiTabPanel,
   d.KiTabs,
   d.KiTextarea,
+  d.KiTimeInput,
   d.KiToast,
   d.KiToaster,
   d.KiTooltip,

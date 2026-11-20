@@ -42,6 +42,7 @@ import { defineCustomElement as defineKiTab } from '@kimen/elements/components/k
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/ki-tabs.js';
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
+import { defineCustomElement as defineKiTimeInput } from '@kimen/elements/components/ki-time-input.js';
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
@@ -912,6 +913,34 @@ export class KiTextarea {
 
 
 export declare interface KiTextarea extends Components.KiTextarea {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiTimeInput,
+  inputs: ['disabled', 'errorText', 'helpText', 'invalidTimeText', 'label', 'listLabel', 'max', 'min', 'name', 'pickerLabel', 'required', 'step', 'timeZone', 'value']
+})
+@Component({
+  selector: 'ki-time-input',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'errorText', 'helpText', 'invalidTimeText', { name: 'label', required: true }, 'listLabel', 'max', 'min', 'name', 'pickerLabel', 'required', 'step', 'timeZone', 'value'],
+})
+export class KiTimeInput {
+  protected el: HTMLKiTimeInputElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiTimeInput extends Components.KiTimeInput {
+  /**
+   * Emitted when a person commits a different canonical time or clears it.
+   */
+}
 
 
 @ProxyCmp({
