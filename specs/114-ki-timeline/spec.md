@@ -93,13 +93,13 @@ Feature: Timeline presents a chronological activity history
 
 ## Scenario family coverage
 
-| Family | Scenarios |
-| --- | --- |
-| Core behavior | S1, S2, S3, S4 |
-| Keyboard | S5 |
-| Assistive technology | S6, S7 |
-| Form participation | N/A. Timeline reports activity and its disclosure holds no form value. |
-| Theming and input modes | S8, S9, S10, S11, S12 |
+| Family | Scenarios | N/A justification |
+| --- | --- | --- |
+| Core behavior | S1, S2, S3, S4 | |
+| Keyboard path | S5 | |
+| Assistive-tech outcome | S6, S7 | |
+| Form participation | N/A | Timeline reports activity and its disclosure holds no form value. |
+| Theming | S8, S9, S10, S11, S12 | |
 
 ## Interpretations pending founder confirmation
 
@@ -108,3 +108,5 @@ Feature: Timeline presents a chronological activity history
 - Agent's choice, pending founder confirmation. The optional details slot uses a collapsed native disclosure with a localizable `details-label` prop defaulting to “Details”. The event summary stays outside the disclosure so it can contain links. The start slot provides a decorative marker replacement.
 - Agent's choice, pending founder confirmation. After the initial history renders, coalesce newly inserted items for 200 ms and announce their event summaries in display order in a polite atomic region. A change of order or timestamp alone leaves that region unchanged.
 - Agent's choice, pending founder confirmation. Catalog entries expose both tags. Disclosure is local UI and emits no surface action.
+
+- Agent's choice, pending founder confirmation. Use shipped badge roles for success and warning, including opaque Material 3 tonal containers for success, warning and danger. Strengthen the neutral icon, timestamp and connector under contrast-more.
