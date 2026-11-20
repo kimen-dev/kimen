@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/Format" />
+
+# Format
+
+Use Format elements to display raw values in tables, timelines and prose.
+They use the closest HTML `lang` declaration and fall back to the browser locale.
+
+```html
+<section lang="es-ES">
+  <ki-format-date date="2026-11-19" date-style="long"></ki-format-date>
+  <ki-format-number value="49" currency="EUR"></ki-format-number>
+  <ki-relative-time date="2026-11-19T08:41:00Z" sync threshold="86400"></ki-relative-time>
+</section>
+```
+
+| Element | Options |
+| --- | --- |
+| `ki-format-date` | ISO `date`, date and time styles, IANA `time-zone` for timestamps and an optional `lang` override. Calendar dates keep their day. |
+| `ki-format-number` | Finite `value`, currency, decimal/percent/unit `format-style`, compact notation and fraction-digit bounds. |
+| `ki-relative-time` | ISO `date`, `numeric="auto"` or `numeric="always"`, optional synchronization and a threshold in seconds. |
+
+Dates use native `time` markup. For a relative timestamp, the tooltip and
+assistive text show the absolute time. Synchronized text changes without a
+live announcement. Numbers use tabular figures. All three elements inherit
+the surrounding ink, size and direction and use the Kimen body family by
+default.

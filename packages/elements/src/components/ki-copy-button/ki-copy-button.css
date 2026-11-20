@@ -1,0 +1,51 @@
+:host {
+  --_ki-copy-button-square-size: min(
+    var(--_ki-button-height),
+    max(
+      var(--ki-density-target-min),
+      calc(var(--_ki-button-height) + var(--ki-density-control-offset))
+    )
+  );
+
+  font-family: var(--ki-typography-family-body);
+}
+
+/* Match the square icon-button treatment while keeping a single native control. */
+button[data-icon-only] {
+  block-size: var(--_ki-copy-button-square-size);
+  box-sizing: border-box;
+  inline-size: var(--_ki-copy-button-square-size);
+  min-block-size: var(--_ki-copy-button-square-size);
+  min-inline-size: var(--_ki-copy-button-square-size);
+  padding-block: 0;
+  padding-inline: 0;
+}
+
+[part="icon"] {
+  align-items: center;
+  block-size: var(--_ki-button-icon-size);
+  display: inline-flex;
+  flex: none;
+  font-size: var(--_ki-button-icon-size);
+  inline-size: var(--_ki-button-icon-size);
+  justify-content: center;
+}
+
+[part="icon"][data-feedback="success"] {
+  color: var(--ki-copy-button-success-fg);
+}
+
+[part="icon"][data-feedback="error"] {
+  color: var(--ki-copy-button-error-fg);
+}
+
+/* Give the feedback ink a contrast-tested ground over the filled variant. */
+:host([variant="primary"]) [part="icon"][data-feedback="success"] {
+  background-color: var(--ki-copy-button-success-bg);
+  border-radius: var(--_ki-button-radius);
+}
+
+:host([variant="primary"]) [part="icon"][data-feedback="error"] {
+  background-color: var(--ki-copy-button-error-bg);
+  border-radius: var(--_ki-button-radius);
+}

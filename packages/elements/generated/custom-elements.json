@@ -4314,6 +4314,1023 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-copy-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCopyButton",
+          "customElement": true,
+          "tagName": "ki-copy-button",
+          "description": "Copies text to the clipboard and confirms the result in the same button.",
+          "whenToUse": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root.",
+          "whenNotToUse": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions.",
+          "attributes": [
+            {
+              "name": "copied-label",
+              "fieldName": "copiedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Polite announcement after a successful write. Override for localized interfaces."
+            },
+            {
+              "name": "copy-error-label",
+              "fieldName": "copyErrorLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Polite announcement after a failed write or missing source. Override for localized interfaces."
+            },
+            {
+              "name": "feedback-duration",
+              "fieldName": "feedbackDuration",
+              "type": {
+                "text": "number"
+              },
+              "default": "1500",
+              "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+              "minimum": 0
+            },
+            {
+              "name": "from",
+              "fieldName": "from",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copy'",
+              "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Token-backed button size. Match the size of adjacent controls."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\""
+              },
+              "default": "'ghost'",
+              "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "copiedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Polite announcement after a successful write. Override for localized interfaces.",
+              "attribute": "copied-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "copyErrorLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
+              "attribute": "copy-error-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "feedbackDuration",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1500",
+              "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+              "attribute": "feedback-duration",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "from",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
+              "attribute": "from",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copy'",
+              "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Token-backed button size. Match the size of adjacent controls.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly.",
+              "attribute": "value",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\""
+              },
+              "default": "'ghost'",
+              "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-copy",
+              "type": {
+                "text": "CustomEvent<{ value: string }>"
+              },
+              "description": "Fired after a successful clipboard write. The detail carries the exact text copied."
+            },
+            {
+              "name": "ki-copy-error",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Fired when the source cannot be read or clipboard writing is unavailable or fails."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "button",
+              "description": "Native copy control with keyboard and pointer activation."
+            },
+            {
+              "name": "icon",
+              "description": "Fixed-size decorative feedback glyph box inside the button."
+            },
+            {
+              "name": "label",
+              "description": "Wrapper around the visible slotted label."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-button-backdrop-filter",
+              "description": "Complete backdrop filter for glass button and icon-button variants."
+            },
+            {
+              "name": "--ki-button-border-width",
+              "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
+            },
+            {
+              "name": "--ki-button-focus-ring-color",
+              "description": "color used by the button component for focus ring color."
+            },
+            {
+              "name": "--ki-button-focus-ring-offset",
+              "description": "dimension used by the button component for focus ring offset."
+            },
+            {
+              "name": "--ki-button-focus-ring-shadow",
+              "description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring)."
+            },
+            {
+              "name": "--ki-button-focus-ring-width",
+              "description": "dimension used by the button component for focus ring width."
+            },
+            {
+              "name": "--ki-button-font-family",
+              "description": "font family used by the button component for font family."
+            },
+            {
+              "name": "--ki-button-font-weight",
+              "description": "font weight used by the button component for font weight."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-bg",
+              "description": "color used by the button component for ghost danger hover background."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-border",
+              "description": "color used by the button component for ghost danger hover border."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-fg",
+              "description": "color used by the button component for ghost danger hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-bg",
+              "description": "color used by the button component for ghost danger rest background."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-border",
+              "description": "color used by the button component for ghost danger rest border."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-fg",
+              "description": "color used by the button component for ghost danger rest foreground."
+            },
+            {
+              "name": "--ki-button-ghost-disabled-shadow",
+              "description": "value used by the button component for ghost disabled shadow."
+            },
+            {
+              "name": "--ki-button-ghost-hover-shadow",
+              "description": "value used by the button component for ghost hover shadow."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-bg",
+              "description": "color used by the button component for ghost neutral disabled background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-border",
+              "description": "color used by the button component for ghost neutral disabled border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-fg",
+              "description": "color used by the button component for ghost neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-bg",
+              "description": "color used by the button component for ghost neutral hover background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-border",
+              "description": "color used by the button component for ghost neutral hover border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-fg",
+              "description": "color used by the button component for ghost neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-bg",
+              "description": "color used by the button component for ghost neutral rest background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-border",
+              "description": "color used by the button component for ghost neutral rest border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-fg",
+              "description": "color used by the button component for ghost neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-ghost-rest-shadow",
+              "description": "value used by the button component for ghost rest shadow."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-bg",
+              "description": "color used by the button component for ghost success hover background."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-border",
+              "description": "color used by the button component for ghost success hover border."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-fg",
+              "description": "color used by the button component for ghost success hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-bg",
+              "description": "color used by the button component for ghost success rest background."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-border",
+              "description": "color used by the button component for ghost success rest border."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-fg",
+              "description": "color used by the button component for ghost success rest foreground."
+            },
+            {
+              "name": "--ki-button-label-padding-inline",
+              "description": "dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance)."
+            },
+            {
+              "name": "--ki-button-lg-font-size",
+              "description": "dimension used by the button component for lg font size."
+            },
+            {
+              "name": "--ki-button-lg-gap",
+              "description": "dimension used by the button component for lg gap."
+            },
+            {
+              "name": "--ki-button-lg-height",
+              "description": "dimension used by the button component for lg height."
+            },
+            {
+              "name": "--ki-button-lg-icon-size",
+              "description": "dimension used by the button component for lg icon size."
+            },
+            {
+              "name": "--ki-button-lg-line-height",
+              "description": "dimension used by the button component for lg line height."
+            },
+            {
+              "name": "--ki-button-lg-min-target",
+              "description": "dimension used by the button component for lg min target."
+            },
+            {
+              "name": "--ki-button-lg-padding-inline",
+              "description": "dimension used by the button component for lg padding inline."
+            },
+            {
+              "name": "--ki-button-lg-radius",
+              "description": "dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-lg-spinner-size",
+              "description": "dimension used by the button component for the lg loading spinner box (20px, the lg icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-md-font-size",
+              "description": "dimension used by the button component for md font size."
+            },
+            {
+              "name": "--ki-button-md-gap",
+              "description": "dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px)."
+            },
+            {
+              "name": "--ki-button-md-height",
+              "description": "dimension used by the button component for md height."
+            },
+            {
+              "name": "--ki-button-md-icon-size",
+              "description": "dimension used by the button component for md icon size."
+            },
+            {
+              "name": "--ki-button-md-line-height",
+              "description": "dimension used by the button component for md line height."
+            },
+            {
+              "name": "--ki-button-md-min-target",
+              "description": "dimension used by the button component for md min target."
+            },
+            {
+              "name": "--ki-button-md-padding-inline",
+              "description": "dimension used by the button component for md padding inline."
+            },
+            {
+              "name": "--ki-button-md-radius",
+              "description": "dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-md-spinner-size",
+              "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-padding-block",
+              "description": "dimension used by the button component for padding block (MarsUI: 4px in every size)."
+            },
+            {
+              "name": "--ki-button-primary-active-overlay",
+              "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-bg",
+              "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-border",
+              "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-fg",
+              "description": "color used by the button component for primary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-bg",
+              "description": "color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-border",
+              "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-fg",
+              "description": "color used by the button component for primary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-disabled-shadow",
+              "description": "value used by the button component for primary disabled shadow."
+            },
+            {
+              "name": "--ki-button-primary-hover-overlay",
+              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
+            },
+            {
+              "name": "--ki-button-primary-hover-shadow",
+              "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-bg",
+              "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-border",
+              "description": "color used by the button component for primary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-fg",
+              "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-bg",
+              "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-border",
+              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-fg",
+              "description": "color used by the button component for primary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-bg",
+              "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-border",
+              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-fg",
+              "description": "color used by the button component for primary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-rest-border-bottom",
+              "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
+            },
+            {
+              "name": "--ki-button-primary-rest-shadow",
+              "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-bg",
+              "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-border",
+              "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-fg",
+              "description": "color used by the button component for primary success hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-bg",
+              "description": "color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-border",
+              "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-fg",
+              "description": "color used by the button component for primary success rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-bg",
+              "description": "color used by the button component for quaternary danger hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-border",
+              "description": "color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-fg",
+              "description": "color used by the button component for quaternary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-bg",
+              "description": "color used by the button component for quaternary danger rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-border",
+              "description": "color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-fg",
+              "description": "color used by the button component for quaternary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-disabled-shadow",
+              "description": "value used by the button component for quaternary disabled shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-hover-shadow",
+              "description": "value used by the button component for quaternary hover shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-bg",
+              "description": "color used by the button component for quaternary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-border",
+              "description": "color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-fg",
+              "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-bg",
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-border",
+              "description": "color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-fg",
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-bg",
+              "description": "color used by the button component for quaternary neutral rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-border",
+              "description": "color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-fg",
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+            },
+            {
+              "name": "--ki-button-quaternary-rest-shadow",
+              "description": "value used by the button component for quaternary rest shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-bg",
+              "description": "color used by the button component for quaternary success hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-border",
+              "description": "color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-fg",
+              "description": "color used by the button component for quaternary success hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-bg",
+              "description": "color used by the button component for quaternary success rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-border",
+              "description": "color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-fg",
+              "description": "color used by the button component for quaternary success rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-active-overlay",
+              "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-bg",
+              "description": "color used by the button component for secondary danger hover background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-border",
+              "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-fg",
+              "description": "color used by the button component for secondary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-bg",
+              "description": "color used by the button component for secondary danger rest background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-border",
+              "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-fg",
+              "description": "color used by the button component for secondary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-disabled-shadow",
+              "description": "value used by the button component for secondary disabled shadow."
+            },
+            {
+              "name": "--ki-button-secondary-hover-overlay",
+              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
+            },
+            {
+              "name": "--ki-button-secondary-hover-shadow",
+              "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-bg",
+              "description": "color used by the button component for secondary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-border",
+              "description": "color used by the button component for secondary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-fg",
+              "description": "color used by the button component for secondary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-bg",
+              "description": "color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-border",
+              "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-fg",
+              "description": "color used by the button component for secondary neutral hover foreground (MarsUI text/high_em)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-bg",
+              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-border",
+              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-fg",
+              "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em)."
+            },
+            {
+              "name": "--ki-button-secondary-rest-border-bottom",
+              "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
+            },
+            {
+              "name": "--ki-button-secondary-rest-shadow",
+              "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-bg",
+              "description": "color used by the button component for secondary success hover background."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-border",
+              "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-fg",
+              "description": "color used by the button component for secondary success hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-bg",
+              "description": "color used by the button component for secondary success rest background."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-border",
+              "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-fg",
+              "description": "color used by the button component for secondary success rest foreground."
+            },
+            {
+              "name": "--ki-button-sm-font-size",
+              "description": "dimension used by the button component for sm font size."
+            },
+            {
+              "name": "--ki-button-sm-gap",
+              "description": "dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text)."
+            },
+            {
+              "name": "--ki-button-sm-height",
+              "description": "dimension used by the button component for sm height."
+            },
+            {
+              "name": "--ki-button-sm-icon-size",
+              "description": "dimension used by the button component for sm icon size."
+            },
+            {
+              "name": "--ki-button-sm-line-height",
+              "description": "dimension used by the button component for sm line height."
+            },
+            {
+              "name": "--ki-button-sm-min-target",
+              "description": "dimension used by the button component for sm min target."
+            },
+            {
+              "name": "--ki-button-sm-padding-inline",
+              "description": "dimension used by the button component for sm padding inline."
+            },
+            {
+              "name": "--ki-button-sm-radius",
+              "description": "dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-sm-spinner-size",
+              "description": "dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-spinner-duration",
+              "description": "duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference."
+            },
+            {
+              "name": "--ki-button-spinner-stroke-width",
+              "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-bg",
+              "description": "Tertiary alias of the secondary danger hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-border",
+              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-fg",
+              "description": "color used by the button component for tertiary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-bg",
+              "description": "Tertiary alias of the secondary danger rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-border",
+              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-fg",
+              "description": "color used by the button component for tertiary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-disabled-shadow",
+              "description": "value used by the button component for tertiary disabled shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-hover-overlay",
+              "description": "Hover overlay for neutral tertiary buttons, shared with secondary by default."
+            },
+            {
+              "name": "--ki-button-tertiary-hover-shadow",
+              "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-bg",
+              "description": "color used by the button component for tertiary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-border",
+              "description": "color used by the button component for tertiary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-fg",
+              "description": "color used by the button component for tertiary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-bg",
+              "description": "Tertiary alias of the secondary neutral hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-border",
+              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-fg",
+              "description": "Tertiary alias of the secondary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-bg",
+              "description": "Tertiary alias of the secondary neutral rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-border",
+              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-fg",
+              "description": "Tertiary alias of the secondary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-rest-border-bottom",
+              "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
+            },
+            {
+              "name": "--ki-button-tertiary-rest-shadow",
+              "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-bg",
+              "description": "Tertiary alias of the secondary success hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-border",
+              "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-fg",
+              "description": "color used by the button component for tertiary success hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-bg",
+              "description": "Tertiary alias of the secondary success rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-border",
+              "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-fg",
+              "description": "color used by the button component for tertiary success rest foreground."
+            },
+            {
+              "name": "--ki-button-xl-font-size",
+              "description": "dimension used by the button component for xl font size."
+            },
+            {
+              "name": "--ki-button-xl-gap",
+              "description": "dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px)."
+            },
+            {
+              "name": "--ki-button-xl-height",
+              "description": "dimension used by the button component for xl height."
+            },
+            {
+              "name": "--ki-button-xl-icon-size",
+              "description": "dimension used by the button component for xl icon size."
+            },
+            {
+              "name": "--ki-button-xl-line-height",
+              "description": "dimension used by the button component for xl line height."
+            },
+            {
+              "name": "--ki-button-xl-min-target",
+              "description": "dimension used by the button component for xl min target."
+            },
+            {
+              "name": "--ki-button-xl-padding-inline",
+              "description": "dimension used by the button component for xl padding inline (MarsUI 14px)."
+            },
+            {
+              "name": "--ki-button-xl-radius",
+              "description": "dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-xl-spinner-size",
+              "description": "dimension used by the button component for the xl loading spinner box (24px, the xl icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-xs-font-size",
+              "description": "dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px."
+            },
+            {
+              "name": "--ki-button-xs-gap",
+              "description": "dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px)."
+            },
+            {
+              "name": "--ki-button-xs-height",
+              "description": "dimension used by the button component for xs height."
+            },
+            {
+              "name": "--ki-button-xs-icon-size",
+              "description": "dimension used by the button component for xs icon size (MarsUI 14px)."
+            },
+            {
+              "name": "--ki-button-xs-line-height",
+              "description": "dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1)."
+            },
+            {
+              "name": "--ki-button-xs-min-target",
+              "description": "dimension used by the button component for xs min target."
+            },
+            {
+              "name": "--ki-button-xs-padding-inline",
+              "description": "dimension used by the button component for xs padding inline."
+            },
+            {
+              "name": "--ki-button-xs-radius",
+              "description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-xs-spinner-size",
+              "description": "dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-copy-button-error-bg",
+              "description": "Contrast ground for the error glyph on filled primary copy buttons."
+            },
+            {
+              "name": "--ki-copy-button-error-fg",
+              "description": "Copy failure glyph ink."
+            },
+            {
+              "name": "--ki-copy-button-success-bg",
+              "description": "Contrast ground for the success glyph on filled primary copy buttons."
+            },
+            {
+              "name": "--ki-copy-button-success-fg",
+              "description": "Confirmation check ink."
+            },
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCopyButton",
+          "declaration": {
+            "name": "KiCopyButton",
+            "module": "dist/components/ki-copy-button.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-copy-button",
+          "declaration": {
+            "name": "KiCopyButton",
+            "module": "dist/components/ki-copy-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-counter.js",
       "declarations": [
         {
@@ -5687,6 +6704,330 @@
           "declaration": {
             "name": "KiFab",
             "module": "dist/components/ki-fab.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-format-date.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFormatDate",
+          "customElement": true,
+          "tagName": "ki-format-date",
+          "description": "Displays an ISO date or timestamp in the reader's language.",
+          "whenToUse": "For raw date and timestamp values in tables, records and prose.",
+          "whenNotToUse": "For an editable date or an elapsed time that should change as the clock advances.",
+          "attributes": [
+            {
+              "name": "date",
+              "fieldName": "date",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time."
+            },
+            {
+              "name": "date-style",
+              "fieldName": "dateStyle",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Date detail. Defaults to medium when neither date style nor time style is supplied."
+            },
+            {
+              "name": "lang",
+              "fieldName": "locale",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted."
+            },
+            {
+              "name": "time-style",
+              "fieldName": "timeStyle",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Time detail. Omit to show the date alone."
+            },
+            {
+              "name": "time-zone",
+              "fieldName": "timeZone",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "date",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.",
+              "attribute": "date",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "dateStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Date detail. Defaults to medium when neither date style nor time style is supplied.",
+              "attribute": "date-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.",
+              "attribute": "lang",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "timeStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Time detail. Omit to show the date alone.",
+              "attribute": "time-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "timeZone",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone.",
+              "attribute": "time-zone",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-format-date-font-family",
+              "description": "Default body font family for ki-format-date on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFormatDate",
+          "declaration": {
+            "name": "KiFormatDate",
+            "module": "dist/components/ki-format-date.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-format-date",
+          "declaration": {
+            "name": "KiFormatDate",
+            "module": "dist/components/ki-format-date.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-format-number.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFormatNumber",
+          "customElement": true,
+          "tagName": "ki-format-number",
+          "description": "Displays a raw number using local number conventions and tabular figures.",
+          "whenToUse": "For numeric data, currency amounts, ratios and measurements in content.",
+          "whenNotToUse": "For numeric input or values that already include localized formatting.",
+          "attributes": [
+            {
+              "name": "currency",
+              "fieldName": "currency",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted."
+            },
+            {
+              "name": "format-style",
+              "fieldName": "formatStyle",
+              "type": {
+                "text": "\"decimal\" | \"percent\" | \"unit\" | undefined"
+              },
+              "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal."
+            },
+            {
+              "name": "maximum-fraction-digits",
+              "fieldName": "maximumFractionDigits",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of fraction digits.",
+              "minimum": 0
+            },
+            {
+              "name": "minimum-fraction-digits",
+              "fieldName": "minimumFractionDigits",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Minimum number of fraction digits.",
+              "minimum": 0
+            },
+            {
+              "name": "notation",
+              "fieldName": "notation",
+              "type": {
+                "text": "\"compact\" | undefined"
+              },
+              "description": "Use compact notation for abbreviated large numbers. Omit for standard notation."
+            },
+            {
+              "name": "unit",
+              "fieldName": "unit",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\"."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "currency",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.",
+              "attribute": "currency",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "formatStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"decimal\" | \"percent\" | \"unit\" | undefined"
+              },
+              "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.",
+              "attribute": "format-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "maximumFractionDigits",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of fraction digits.",
+              "attribute": "maximum-fraction-digits",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "minimumFractionDigits",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Minimum number of fraction digits.",
+              "attribute": "minimum-fraction-digits",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "notation",
+              "privacy": "public",
+              "type": {
+                "text": "\"compact\" | undefined"
+              },
+              "description": "Use compact notation for abbreviated large numbers. Omit for standard notation.",
+              "attribute": "notation",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "unit",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\".",
+              "attribute": "unit",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-format-number-font-family",
+              "description": "Default body font family for ki-format-number on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFormatNumber",
+          "declaration": {
+            "name": "KiFormatNumber",
+            "module": "dist/components/ki-format-number.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-format-number",
+          "declaration": {
+            "name": "KiFormatNumber",
+            "module": "dist/components/ki-format-number.js"
           }
         }
       ]
@@ -10781,6 +12122,134 @@
           "declaration": {
             "name": "KiRadioGroup",
             "module": "dist/components/ki-radio-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-relative-time.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiRelativeTime",
+          "customElement": true,
+          "tagName": "ki-relative-time",
+          "description": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
+          "whenToUse": "For timestamps whose distance from the present matters, such as timeline entries or recent changes.",
+          "whenNotToUse": "For an interactive countdown or a date that should always show an absolute value.",
+          "attributes": [
+            {
+              "name": "date",
+              "fieldName": "date",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date or date-time. A timestamp without an offset uses local time."
+            },
+            {
+              "name": "numeric",
+              "fieldName": "numeric",
+              "type": {
+                "text": "\"always\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "Auto can show words such as yesterday. Always uses a number."
+            },
+            {
+              "name": "sync",
+              "fieldName": "sync",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Refresh the visible wording as the clock crosses a formatting boundary."
+            },
+            {
+              "name": "threshold",
+              "fieldName": "threshold",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+              "minimum": 0
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "date",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date or date-time. A timestamp without an offset uses local time.",
+              "attribute": "date",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "numeric",
+              "privacy": "public",
+              "type": {
+                "text": "\"always\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "Auto can show words such as yesterday. Always uses a number.",
+              "attribute": "numeric",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "sync",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Refresh the visible wording as the clock crosses a formatting boundary.",
+              "attribute": "sync",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "threshold",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+              "attribute": "threshold",
+              "reflects": false,
+              "minimum": 0
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-relative-time-font-family",
+              "description": "Default body font family for ki-relative-time on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiRelativeTime",
+          "declaration": {
+            "name": "KiRelativeTime",
+            "module": "dist/components/ki-relative-time.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-relative-time",
+          "declaration": {
+            "name": "KiRelativeTime",
+            "module": "dist/components/ki-relative-time.js"
           }
         }
       ]
