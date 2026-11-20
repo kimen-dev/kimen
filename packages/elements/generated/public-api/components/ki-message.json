@@ -12,7 +12,7 @@
       "author": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+        "description": "Accessible article name. Override the role-specific label to name a speaker or localize it.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -52,7 +52,7 @@
       "icon-name": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+        "description": "Decorative event icon. Search is built in. Import other icons before use.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -60,7 +60,7 @@
       "message-role": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+        "description": "Trailing user bubble, leading assistant avatar or centered event.",
         "replacement": null,
         "required": false,
         "type": "\"assistant\" | \"event\" | \"user\" | undefined"
@@ -84,7 +84,7 @@
       "streaming": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Show the caret and mark the article busy until this message is complete.",
+        "description": "Show a caret and mark the article busy.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -476,7 +476,7 @@
         "type": null
       }
     },
-    "description": "A named chat article styled as a person’s message, assistant reply or event.",
+    "description": "A user message, assistant reply or event.",
     "events": {
       "ki-branch-change": {
         "default": null,
@@ -508,7 +508,7 @@
       "actions": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The group containing slotted follow-up controls.",
+        "description": "Follow-up controls.",
         "replacement": null,
         "required": false,
         "type": null
@@ -516,7 +516,7 @@
       "avatar": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The leading assistant avatar container.",
+        "description": "Assistant avatar.",
         "replacement": null,
         "required": false,
         "type": null
@@ -532,7 +532,7 @@
       "caret": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The decorative marker displayed while a message is streaming.",
+        "description": "Decorative streaming marker.",
         "replacement": null,
         "required": false,
         "type": null
@@ -540,7 +540,7 @@
       "content": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The body of the article, including any event icon.",
+        "description": "Body and optional event icon.",
         "replacement": null,
         "required": false,
         "type": null
@@ -548,7 +548,7 @@
       "message": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The named article and role-specific layout.",
+        "description": "Named article.",
         "replacement": null,
         "required": false,
         "type": null
@@ -566,7 +566,7 @@
       "author": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+        "description": "Accessible article name. Override the role-specific label to name a speaker or localize it.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -606,7 +606,7 @@
       "iconName": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+        "description": "Decorative event icon. Search is built in. Import other icons before use.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -614,7 +614,7 @@
       "messageRole": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+        "description": "Trailing user bubble, leading assistant avatar or centered event.",
         "replacement": null,
         "required": false,
         "type": "\"assistant\" | \"event\" | \"user\" | undefined"
@@ -638,7 +638,7 @@
       "streaming": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Show the caret and mark the article busy until this message is complete.",
+        "description": "Show a caret and mark the article busy.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -648,7 +648,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Message content, including text or formatted elements.",
+        "description": "Text or formatted content.",
         "replacement": null,
         "required": false,
         "type": null
@@ -656,7 +656,7 @@
       "actions": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Follow-up controls supplied by the consumer after the content.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls.",
+        "description": "App controls below the message.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls.",
         "replacement": null,
         "required": false,
         "type": null
@@ -664,7 +664,7 @@
       "avatar": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Optional avatar replacing the assistant’s decorative default.",
+        "description": "Overrides the decorative assistant avatar.",
         "replacement": null,
         "required": false,
         "type": null

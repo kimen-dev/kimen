@@ -27,24 +27,23 @@ const authorLabels: Readonly<Record<KiMessageRole, string>> = {
 };
 
 /**
- * A named chat article styled as a person’s message, assistant reply or event.
+ * A user message, assistant reply or event.
  *
- * @whenToUse Display a transcript entry inside ki-conversation. Pass
- * formatted content through the default slot and set streaming during a reply.
- * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+ * @whenToUse Display an entry in ki-conversation.
+ * @whenNotToUse Collect prompts, announce alerts or execute tools.
  *
- * @slot - Message content, including text or formatted elements.
- * @slot avatar - Optional avatar replacing the assistant’s decorative default.
- * @slot actions - Follow-up controls supplied by the consumer after the content.
+ * @slot - Text or formatted content.
+ * @slot avatar - Overrides the decorative assistant avatar.
+ * @slot actions - App controls below the message.
  * With actions-label, use direct buttons or buttons inside a layout-only
  * ki-button-group. Mark Regenerate and rating buttons with data-message-action.
  * The toolbar manages their tab order and includes any reply branch controls.
- * @part message - The named article and role-specific layout.
- * @part avatar - The leading assistant avatar container.
- * @part content - The body of the article, including any event icon.
- * @part actions - The group containing slotted follow-up controls.
+ * @part message - Named article.
+ * @part avatar - Assistant avatar.
+ * @part content - Body and optional event icon.
+ * @part actions - Follow-up controls.
  * @part branches - The previous and next controls and the visible branch position.
- * @part caret - The decorative marker displayed while a message is streaming.
+ * @part caret - Decorative streaming marker.
  */
 @Component({
   tag: 'ki-message',
@@ -55,24 +54,21 @@ export class KiMessage {
   @Element() private readonly host!: HTMLElement;
 
   /**
-   * The speaker or event kind. The user has a trailing bubble, the assistant has
-   * a leading avatar, and an event is a centered note.
+   * Trailing user bubble, leading assistant avatar or centered event.
    * @default 'assistant'
    */
   @Prop({ mutable: true, reflect: true }) messageRole?: KiMessageRole;
 
-  /** Show the caret and mark the article busy until this message is complete. */
+  /** Show a caret and mark the article busy. */
   @Prop({ reflect: true }) streaming = false;
 
   /**
-   * Full accessible name for this article, such as "Ava said". Override it to
-   * identify the speaker or localize the default role-specific name.
+   * Accessible article name. Override the role-specific label to name a speaker or localize it.
    */
   @Prop() author?: string;
 
   /**
-   * Decorative event glyph from the ki-icon registry. Search is available
-   * directly. Import other per-icon modules before setting their names.
+   * Decorative event icon. Search is built in. Import other icons before use.
    */
   @Prop() iconName?: string;
 

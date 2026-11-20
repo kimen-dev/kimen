@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
 import { parkPointer } from '../../../browser-tests/axe';
+import { actionsOpacity, showTranscript } from '../../../browser-tests/ki-message-actions.fixture';
 import { defineCustomElement as defineConversation } from '../../../dist/components/ki-conversation.js';
 import { defineCustomElement as defineIconButton } from '../../../dist/components/ki-icon-button.js';
 import { defineCustomElement as defineMessage } from '../../../dist/components/ki-message.js';
@@ -31,29 +32,14 @@ afterAll(() => {
   style.remove();
 });
 
-function actionsOpacity(id: string): string {
-  const actions = fixture.querySelector(id)?.shadowRoot?.querySelector('[part="actions"]');
-  return actions ? getComputedStyle(actions).opacity : '';
-}
-
-async function transcript(): Promise<void> {
-  fixture.innerHTML = `
-    <button type="button" tabindex="0">Before</button>
-    <ki-conversation label="Project chat">
-      <ki-message id="earlier" author="First answer" actions-label="First reply actions">
-        Start with the export guide.
-        <button type="button" slot="actions">Copy earlier</button>
-        <button type="button" slot="actions" data-message-action="regenerate">Retry earlier</button>
-      </ki-message>
-      <ki-message id="latest" author="Second answer" actions-label="Second reply actions">
-        Choose the JSON format.
-        <button type="button" slot="actions">Copy latest</button>
-      </ki-message>
-      <ki-message message-role="user">Thanks.</ki-message>
-    </ki-conversation>
-    <button type="button" tabindex="0">After</button>
-  `;
-  await expect.element(page.getByRole('toolbar', { name: 'Second reply actions' })).toBeVisible();
+async function expectFocus(element: Element): Promise<void> {
+  const root = element.getRootNode();
+  await expect
+    .poll(
+      () =>
+        (root instanceof ShadowRoot || root instanceof Document) && root.activeElement === element,
+    )
+    .toBe(true);
 }
 
 async function reply(options = '') {
@@ -78,20 +64,18 @@ async function reply(options = '') {
   return message;
 }
 
-it('S1 shows the latest assistant toolbar even after a user turn', async () => {
-  await transcript();
+it('keeps both reply toolbars visible on a device without hover', async (test) => {
+  if (!matchMedia('(hover: none)').matches) {
+    test.skip('This light project has a hovering pointer');
+  }
+  await showTranscript(fixture);
 
-  await expect.poll(() => actionsOpacity('#earlier')).toBe('0');
-  expect(actionsOpacity('#latest')).toBe('1');
-});
-
-it('S2 reveals the earlier reply toolbar when the reply is hovered', async () => {
-  await transcript();
-  await expect.poll(() => actionsOpacity('#earlier')).toBe('0');
-
-  await userEvent.hover(page.getByRole('article', { name: 'First answer' }).element());
-
-  await expect.poll(() => actionsOpacity('#earlier')).toBe('1');
+  await expect
+    .poll(
+      () =>
+        actionsOpacity(fixture, '#earlier') === '1' && actionsOpacity(fixture, '#latest') === '1',
+    )
+    .toBe(true);
 });
 
 it('S3 emits one regenerate request from a slotted icon action', async () => {
@@ -145,22 +129,20 @@ it('S6 leaves custom slotted actions visible without toolbar opt-in', async () =
   `;
 
   await expect.element(button('Show source')).toBeVisible();
-  expect(actionsOpacity('#earlier')).toBe('1');
+  expect(actionsOpacity(fixture, '#earlier')).toBe('1');
 });
 
-it('S7 reveals an earlier toolbar on keyboard entry and leaves on the next Tab', async () => {
-  await transcript();
+it('S7 enters an earlier toolbar and leaves it on the next Tab', async () => {
+  await showTranscript(fixture);
   (button('Before').element() as HTMLElement).focus();
   await userEvent.tab();
-  await expect.element(page.getByRole('log')).toHaveFocus();
+  await expectFocus(page.getByRole('log').element());
   await userEvent.tab();
   await expect.element(button('Copy earlier')).toHaveFocus();
-  await expect.poll(() => actionsOpacity('#earlier')).toBe('1');
 
   await userEvent.tab();
 
   await expect.element(button('Copy latest')).toHaveFocus();
-  await expect.poll(() => actionsOpacity('#earlier')).toBe('0');
 });
 
 it('S8 uses horizontal arrows and Home to move across actions and branch controls', async () => {
@@ -169,7 +151,7 @@ it('S8 uses horizontal arrows and Home to move across actions and branch control
 
   await userEvent.keyboard('{ArrowRight}');
 
-  await expect.element(button('Previous response')).toHaveFocus();
+  await expectFocus(button('Previous response').element());
   await userEvent.keyboard('{Home}');
   await expect.element(button('Copy')).toHaveFocus();
 });
@@ -194,7 +176,9 @@ it('S9 exposes mutually exclusive pressed states and reports bad feedback immedi
 it('S10 updates the polite branch status and keeps focus at the boundary', async () => {
   const message = await reply('branch-index="2" branch-count="3"');
   const next = button('Next response');
-  (next.element() as HTMLElement).focus();
+  const focused = next.element() as HTMLElement;
+  focused.focus();
+  await expectFocus(focused);
 
   message.branchIndex = 3;
 
@@ -202,7 +186,7 @@ it('S10 updates the polite branch status and keeps focus at the boundary', async
     .element(page.getByText('Response 3 of 3', { exact: true }))
     .toHaveAttribute('role', 'status');
   await expect.element(next).toHaveAttribute('aria-disabled', 'true');
-  await expect.element(next).toHaveFocus();
+  await expectFocus(focused);
 });
 
 it('S11 places the previous control at the inline start in RTL', async () => {

@@ -1,15 +1,14 @@
 # ki-message
 
-> A named chat article styled as a person’s message, assistant reply or event.
+> A user message, assistant reply or event.
 
 ## When to use
 
-Display a transcript entry inside ki-conversation. Pass
-formatted content through the default slot and set streaming during a reply.
+Display an entry in ki-conversation.
 
 ## When not to use
 
-Collect a prompt, announce a page alert, or execute a tool.
+Collect prompts, announce alerts or execute tools.
 
 ## Examples
 
@@ -62,31 +61,31 @@ guide includes the complete Message actions recipe.
 ## Attributes
 
 - `actions-label` (string | undefined): Accessible name that opts this assistant reply into the message actions toolbar.
-- `author` (string | undefined): Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
+- `author` (string | undefined): Accessible article name. Override the role-specific label to name a speaker or localize it.
 - `branch-count` (number | undefined, default 1): Number of reply alternatives. The controls appear when there are at least two.
 - `branch-index` (number | undefined, default 1): One-based index of the displayed reply. Update it after accepting a branch request.
 - `branch-status-label` (string | undefined, default 'Response {index} of {count}'): Localized branch status template. Use {index} and {count} for the reply position.
 - `feedback` ("bad" | "good" | undefined): Current rating for this reply. Assign the saved rating when displaying a different branch. Select good or bad with the corresponding action control.
-- `icon-name` (string | undefined): Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
-- `message-role` ("assistant" | "event" | "user" | undefined): The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
+- `icon-name` (string | undefined): Decorative event icon. Search is built in. Import other icons before use.
+- `message-role` ("assistant" | "event" | "user" | undefined): Trailing user bubble, leading assistant avatar or centered event.
 - `next-branch-label` (string | undefined, default 'Next response'): Accessible name for the next branch control.
 - `previous-branch-label` (string | undefined, default 'Previous response'): Accessible name for the previous branch control.
-- `streaming` (boolean, default false): Show the caret and mark the article busy until this message is complete.
+- `streaming` (boolean, default false): Show a caret and mark the article busy.
 
 ## Slots
 
-- (default): Message content, including text or formatted elements.
-- `actions`: Follow-up controls supplied by the consumer after the content. With actions-label, use direct buttons or buttons inside a layout-only ki-button-group. Mark Regenerate and rating buttons with data-message-action. The toolbar manages their tab order and includes any reply branch controls.
-- `avatar`: Optional avatar replacing the assistant’s decorative default.
+- (default): Text or formatted content.
+- `actions`: App controls below the message. With actions-label, use direct buttons or buttons inside a layout-only ki-button-group. Mark Regenerate and rating buttons with data-message-action. The toolbar manages their tab order and includes any reply branch controls.
+- `avatar`: Overrides the decorative assistant avatar.
 
 ## Parts
 
-- `actions`: The group containing slotted follow-up controls.
-- `avatar`: The leading assistant avatar container.
+- `actions`: Follow-up controls.
+- `avatar`: Assistant avatar.
 - `branches`: The previous and next controls and the visible branch position.
-- `caret`: The decorative marker displayed while a message is streaming.
-- `content`: The body of the article, including any event icon.
-- `message`: The named article and role-specific layout.
+- `caret`: Decorative streaming marker.
+- `content`: Body and optional event icon.
+- `message`: Named article.
 
 ## Events
 

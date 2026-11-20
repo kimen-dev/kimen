@@ -923,10 +923,9 @@ export namespace Components {
         "size": KiListItemSize;
     }
     /**
-     * A named chat article styled as a person’s message, assistant reply or event.
-     * @whenToUse Display a transcript entry inside ki-conversation. Pass
-     * formatted content through the default slot and set streaming during a reply.
-     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     * A user message, assistant reply or event.
+     * @whenToUse Display an entry in ki-conversation.
+     * @whenNotToUse Collect prompts, announce alerts or execute tools.
      */
     interface KiMessage {
         /**
@@ -934,7 +933,7 @@ export namespace Components {
          */
         "actionsLabel"?: string;
         /**
-          * Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
+          * Accessible article name. Override the role-specific label to name a speaker or localize it.
          */
         "author"?: string;
         /**
@@ -957,11 +956,11 @@ export namespace Components {
          */
         "feedback"?: KiMessageFeedback;
         /**
-          * Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
+          * Decorative event icon. Search is built in. Import other icons before use.
          */
         "iconName"?: string;
         /**
-          * The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
+          * Trailing user bubble, leading assistant avatar or centered event.
           * @default 'assistant'
          */
         "messageRole"?: KiMessageRole;
@@ -976,7 +975,7 @@ export namespace Components {
          */
         "previousBranchLabel"?: string;
         /**
-          * Show the caret and mark the article busy until this message is complete.
+          * Show a caret and mark the article busy.
           * @default false
          */
         "streaming": boolean;
@@ -2253,10 +2252,9 @@ declare global {
         "ki-regenerate": void;
     }
     /**
-     * A named chat article styled as a person’s message, assistant reply or event.
-     * @whenToUse Display a transcript entry inside ki-conversation. Pass
-     * formatted content through the default slot and set streaming during a reply.
-     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     * A user message, assistant reply or event.
+     * @whenToUse Display an entry in ki-conversation.
+     * @whenNotToUse Collect prompts, announce alerts or execute tools.
      */
     interface HTMLKiMessageElement extends Components.KiMessage, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiMessageElementEventMap>(type: K, listener: (this: HTMLKiMessageElement, ev: KiMessageCustomEvent<HTMLKiMessageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -3650,10 +3648,9 @@ declare namespace LocalJSX {
         "size"?: KiListItemSize;
     }
     /**
-     * A named chat article styled as a person’s message, assistant reply or event.
-     * @whenToUse Display a transcript entry inside ki-conversation. Pass
-     * formatted content through the default slot and set streaming during a reply.
-     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     * A user message, assistant reply or event.
+     * @whenToUse Display an entry in ki-conversation.
+     * @whenNotToUse Collect prompts, announce alerts or execute tools.
      */
     interface KiMessage {
         /**
@@ -3661,7 +3658,7 @@ declare namespace LocalJSX {
          */
         "actionsLabel"?: string;
         /**
-          * Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
+          * Accessible article name. Override the role-specific label to name a speaker or localize it.
          */
         "author"?: string;
         /**
@@ -3684,11 +3681,11 @@ declare namespace LocalJSX {
          */
         "feedback"?: KiMessageFeedback;
         /**
-          * Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
+          * Decorative event icon. Search is built in. Import other icons before use.
          */
         "iconName"?: string;
         /**
-          * The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
+          * Trailing user bubble, leading assistant avatar or centered event.
           * @default 'assistant'
          */
         "messageRole"?: KiMessageRole;
@@ -3715,7 +3712,7 @@ declare namespace LocalJSX {
          */
         "previousBranchLabel"?: string;
         /**
-          * Show the caret and mark the article busy until this message is complete.
+          * Show a caret and mark the article busy.
           * @default false
          */
         "streaming"?: boolean;
@@ -5129,10 +5126,9 @@ declare module "@stencil/core" {
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
             /**
-             * A named chat article styled as a person’s message, assistant reply or event.
-             * @whenToUse Display a transcript entry inside ki-conversation. Pass
-             * formatted content through the default slot and set streaming during a reply.
-             * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+             * A user message, assistant reply or event.
+             * @whenToUse Display an entry in ki-conversation.
+             * @whenNotToUse Collect prompts, announce alerts or execute tools.
              */
             "ki-message": LocalJSX.IntrinsicElements["ki-message"] & JSXBase.HTMLAttributes<HTMLKiMessageElement>;
             /**

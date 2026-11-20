@@ -1196,7 +1196,7 @@ export const catalogData = {
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
     },
     "ki-message": {
-      "description": "A named chat article styled as a person’s message, assistant reply or event.",
+      "description": "A user message, assistant reply or event.",
       "events": {
         "ki-branch-change": "Requests the alternative reply at the one-based index in the event detail.",
         "ki-feedback": "Reports the selected rating. Persist it or offer optional feedback in the app.",
@@ -1209,7 +1209,7 @@ export const catalogData = {
         },
         "author": {
           "type": "string",
-          "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
+          "description": "Accessible article name. Override the role-specific label to name a speaker or localize it."
         },
         "branch-count": {
           "type": "number",
@@ -1236,7 +1236,7 @@ export const catalogData = {
         },
         "icon-name": {
           "type": "string",
-          "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names."
+          "description": "Decorative event icon. Search is built in. Import other icons before use."
         },
         "message-role": {
           "type": "enum",
@@ -1245,7 +1245,7 @@ export const catalogData = {
             "event",
             "user"
           ],
-          "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
+          "description": "Trailing user bubble, leading assistant avatar or centered event."
         },
         "next-branch-label": {
           "type": "string",
@@ -1259,18 +1259,18 @@ export const catalogData = {
         },
         "streaming": {
           "type": "boolean",
-          "description": "Show the caret and mark the article busy until this message is complete.",
+          "description": "Show a caret and mark the article busy.",
           "default": false
         }
       },
       "slots": {
-        "": "Message content, including text or formatted elements.",
-        "actions": "Follow-up controls supplied by the consumer after the content.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls.",
-        "avatar": "Optional avatar replacing the assistant’s decorative default."
+        "": "Text or formatted content.",
+        "actions": "App controls below the message.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls.",
+        "avatar": "Overrides the decorative assistant avatar."
       },
       "tag": "ki-message",
-      "whenNotToUse": "Collect a prompt, announce a page alert, or execute a tool.",
-      "whenToUse": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply."
+      "whenNotToUse": "Collect prompts, announce alerts or execute tools.",
+      "whenToUse": "Display an entry in ki-conversation."
     },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",

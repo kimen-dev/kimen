@@ -7926,9 +7926,9 @@
           "name": "KiMessage",
           "customElement": true,
           "tagName": "ki-message",
-          "description": "A named chat article styled as a person’s message, assistant reply or event.",
-          "whenToUse": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply.",
-          "whenNotToUse": "Collect a prompt, announce a page alert, or execute a tool.",
+          "description": "A user message, assistant reply or event.",
+          "whenToUse": "Display an entry in ki-conversation.",
+          "whenNotToUse": "Collect prompts, announce alerts or execute tools.",
           "attributes": [
             {
               "name": "actions-label",
@@ -7944,7 +7944,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
+              "description": "Accessible article name. Override the role-specific label to name a speaker or localize it."
             },
             {
               "name": "branch-count",
@@ -7987,7 +7987,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names."
+              "description": "Decorative event icon. Search is built in. Import other icons before use."
             },
             {
               "name": "message-role",
@@ -7995,7 +7995,7 @@
               "type": {
                 "text": "\"assistant\" | \"event\" | \"user\" | undefined"
               },
-              "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
+              "description": "Trailing user bubble, leading assistant avatar or centered event."
             },
             {
               "name": "next-branch-label",
@@ -8022,7 +8022,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Show the caret and mark the article busy until this message is complete."
+              "description": "Show a caret and mark the article busy."
             }
           ],
           "members": [
@@ -8044,7 +8044,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+              "description": "Accessible article name. Override the role-specific label to name a speaker or localize it.",
               "attribute": "author",
               "reflects": false
             },
@@ -8102,7 +8102,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+              "description": "Decorative event icon. Search is built in. Import other icons before use.",
               "attribute": "icon-name",
               "reflects": false
             },
@@ -8113,7 +8113,7 @@
               "type": {
                 "text": "\"assistant\" | \"event\" | \"user\" | undefined"
               },
-              "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+              "description": "Trailing user bubble, leading assistant avatar or centered event.",
               "attribute": "message-role",
               "reflects": true
             },
@@ -8149,7 +8149,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Show the caret and mark the article busy until this message is complete.",
+              "description": "Show a caret and mark the article busy.",
               "attribute": "streaming",
               "reflects": true
             }
@@ -8180,25 +8180,25 @@
           "slots": [
             {
               "name": "",
-              "description": "Message content, including text or formatted elements."
+              "description": "Text or formatted content."
             },
             {
               "name": "actions",
-              "description": "Follow-up controls supplied by the consumer after the content.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls."
+              "description": "App controls below the message.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls."
             },
             {
               "name": "avatar",
-              "description": "Optional avatar replacing the assistant’s decorative default."
+              "description": "Overrides the decorative assistant avatar."
             }
           ],
           "cssParts": [
             {
               "name": "actions",
-              "description": "The group containing slotted follow-up controls."
+              "description": "Follow-up controls."
             },
             {
               "name": "avatar",
-              "description": "The leading assistant avatar container."
+              "description": "Assistant avatar."
             },
             {
               "name": "branches",
@@ -8206,15 +8206,15 @@
             },
             {
               "name": "caret",
-              "description": "The decorative marker displayed while a message is streaming."
+              "description": "Decorative streaming marker."
             },
             {
               "name": "content",
-              "description": "The body of the article, including any event icon."
+              "description": "Body and optional event icon."
             },
             {
               "name": "message",
-              "description": "The named article and role-specific layout."
+              "description": "Named article."
             }
           ],
           "cssProperties": [
