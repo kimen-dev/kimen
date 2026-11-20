@@ -1,0 +1,25 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as CodeInputStories from '../ki-code-input.stories';
+
+<Meta title="Docs/Components/ki-code-input examples" />
+
+# Code input examples
+
+## Numeric verification
+
+Paste a six-digit code, including a leading zero, or type it one digit at a time.
+
+<Canvas of={CodeInputStories.Playground} />
+
+## Alphanumeric verification
+
+The four characters belong to one field. Try replacing the first character.
+
+<Canvas of={CodeInputStories.Alphanumeric} />
+
+## Resend control placement
+
+Use a ghost button for an in-page resend action. The application connects it to
+the verification service and updates the delivery instructions after success.
+
+<Canvas of={CodeInputStories.VerificationWithResend} />

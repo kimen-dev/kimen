@@ -673,6 +673,76 @@ export const catalogData = {
       "whenNotToUse": "choose exactly one option or submit a form value.",
       "whenToUse": "label related chips or let people change their reading order."
     },
+    "ki-code-input": {
+      "description": "A form-associated verification field with one native text input and a visual box per character.",
+      "events": {
+        "ki-complete": "Emitted after the input event when the edited code fills all the cells.",
+        "ki-input": "Emitted when a user edit changes the code."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Disable editing, sequential focus and form participation.",
+          "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Message for a failing code constraint. Omit to use the browser's message."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Instructions saying where the code was sent and how long it is valid."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible accessible name. Supply a label in the language of the form.",
+          "required": true
+        },
+        "length": {
+          "type": "number",
+          "description": "Number of cells and maximum code length. Unsupported lengths fall back to six.",
+          "default": 6,
+          "minimum": 4,
+          "maximum": 8
+        },
+        "name": {
+          "type": "string",
+          "description": "Key for the single value submitted to the enclosing form."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Require a complete code before submitting. An optional field may be empty.",
+          "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Medium or small cells. The form region's density adjusts both sizes.",
+          "default": "md"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "alphanumeric",
+            "numeric"
+          ],
+          "description": "Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.",
+          "default": "numeric"
+        },
+        "value": {
+          "type": "string",
+          "description": "The current code, including leading zeros. Use the attribute to declare\nthe reset value. Programmatic assignments are normalized and silent.",
+          "default": ""
+        }
+      },
+      "slots": {},
+      "tag": "ki-code-input",
+      "whenNotToUse": "Use ki-input for passwords, long codes or free text.",
+      "whenToUse": "Collect a one-time code of four to eight characters for sign-in or verification."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},
@@ -1214,68 +1284,120 @@ export const catalogData = {
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
     },
-    "ki-mobile-nav": {
-      "description": "A fixed or floating navigation bar for the main destinations of a phone layout.",
+    "ki-menu": {
+      "description": "A popup of actions opened by a button in the same document or shadow root.",
+      "events": {
+        "ki-select": "Reports the selected action and, for a checkbox or radio, its new checked state."
+      },
+      "props": {
+        "anchor": {
+          "type": "string",
+          "description": "Literal ID of the menu button in the same document or containing shadow root.",
+          "default": ""
+        },
+        "filter-label": {
+          "type": "string",
+          "description": "Accessible name and placeholder of the filter. Omit to hide the field.",
+          "default": ""
+        },
+        "filter-results-label": {
+          "type": "string",
+          "description": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+          "default": "Matching actions: {count}"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom-end",
+            "bottom-start",
+            "top-end",
+            "top-start"
+          ],
+          "description": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+          "default": "bottom-start"
+        }
+      },
+      "slots": {
+        "": "Place ki-menu-item, ki-menu-group, and ki-divider here.",
+        "header": "Informational content above the actions, such as account details."
+      },
+      "tag": "ki-menu",
+      "whenNotToUse": "form values, navigation destinations, or long action lists.",
+      "whenToUse": "row actions, account commands, split buttons, and overflow actions."
+    },
+    "ki-menu-group": {
+      "description": "A named group of related actions in a ki-menu.",
       "events": {},
       "props": {
         "label": {
           "type": "string",
-          "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
-          "default": "Main"
-        },
-        "variant": {
-          "type": "enum",
-          "values": [
-            "fixed",
-            "floating"
-          ],
-          "description": "Place the bar edge to edge or inset it as a raised pill.",
-          "default": "fixed"
+          "description": "Visible and accessible group name.",
+          "default": ""
         }
       },
       "slots": {
-        "": "Three to five direct ki-mobile-nav-item destinations."
+        "": "The ki-menu-item and ki-divider children of the group."
       },
-      "tag": "ki-mobile-nav",
-      "whenNotToUse": "Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.",
-      "whenToUse": "Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow."
+      "tag": "ki-menu-group",
+      "whenNotToUse": "standalone sections or nested menus.",
+      "whenToUse": "name a set of related actions or scope exclusive radio items in a menu."
     },
-    "ki-mobile-nav-item": {
-      "description": "An icon and visible label for one mobile navigation destination.",
+    "ki-menu-item": {
+      "description": "A pointer and keyboard action within a ki-menu.",
       "events": {},
       "props": {
-        "count": {
-          "type": "number",
-          "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99."
-        },
-        "count-label": {
-          "type": "string",
-          "description": "Localized suffix for the link name. Use {count} for the full rounded count.",
-          "default": "{count} new"
-        },
-        "current": {
+        "checked": {
           "type": "boolean",
-          "description": "Marks this link as the current page.",
+          "description": "Checked state for checkbox and radio actions.",
           "default": false
         },
-        "href": {
-          "type": "string",
-          "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
-          "required": true,
-          "format": "url"
+        "disabled": {
+          "type": "boolean",
+          "description": "Disabled actions remain discoverable via menu navigation.",
+          "default": false
         },
-        "icon-name": {
+        "shortcut": {
           "type": "string",
-          "description": "Registered icon name. The visible destination text supplies the link name.",
-          "required": true
+          "description": "Display-only keyboard shortcut. Applications own shortcut registration.",
+          "default": ""
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral"
+          ],
+          "description": "Apply the danger tone to a destructive action.",
+          "default": "neutral"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "checkbox",
+            "item",
+            "radio"
+          ],
+          "description": "Action role. A checkbox stays open. A radio selects one action within its group.",
+          "default": "item"
+        },
+        "value": {
+          "type": "string",
+          "description": "Action identifier reported by the parent menu.",
+          "default": ""
         }
       },
       "slots": {
-        "": "Visible destination text. Use plain text or noninteractive phrasing content."
+        "": "The action's visible label.",
+        "start": "One decorative icon or avatar before the label."
       },
-      "tag": "ki-mobile-nav-item",
-      "whenNotToUse": "For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.",
-      "whenToUse": "Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation."
+      "tag": "ki-menu-item",
+      "whenNotToUse": "standalone controls, navigational links, or form options.",
+      "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu."
     },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",

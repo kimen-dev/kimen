@@ -1461,6 +1461,127 @@ CSS custom properties:
 - `--ki-chip-height-sm`: Small height of a compact pill.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 
+### ki-code-input
+
+A form-associated verification field with one native text input and a visual box per character.
+
+When to use: Collect a one-time code of four to eight characters for sign-in or verification.
+When NOT to use: Use ki-input for passwords, long codes or free text.
+
+Examples:
+
+# ki-code-input examples
+
+Use `ki-code-input` for fixed one-time codes of four to eight characters. Use
+`ki-input` for passwords, longer codes and free text.
+
+## Numeric verification with a resend action
+
+```html
+<form id="verification">
+  <ki-code-input
+    label="Verification code"
+    name="otp"
+    required
+    help-text="We sent a code to ana@example.com. It is valid for ten minutes."
+    error-text="Enter all six digits."
+  ></ki-code-input>
+  <ki-button type="submit">Verify</ki-button>
+  <ki-button id="resend-code" type="button" variant="ghost">Resend code</ki-button>
+</form>
+```
+
+Read `new FormData(form).get('otp')` in the submit handler and send the string
+to the verification service. The application knows the expiration time and
+owns the resend request. On successful resend, clear the old value and any
+custom validity error, update the help text, and focus the field. Offer a
+visible and announced status if a request is still pending or fails.
+
+On the custom-elements build, use `field.setCustomValidity(message)` and
+`field.reportValidity()` to display a server rejection. Clear the message
+with `field.setCustomValidity('')` once the person edits or resends the code.
+
+## Four-character recovery code
+
+```html
+<ki-code-input
+  label="Recovery code"
+  name="recovery"
+  type="alphanumeric"
+  length="4"
+  size="sm"
+  help-text="Use the four characters from your verification email."
+></ki-code-input>
+```
+
+Both `ki-input` and `ki-complete` carry `{ value }`. Listen for
+`ki-complete` if filling the last box enables the next step. Leave submission
+to the form unless completing the code can safely advance the flow.
+
+Attributes:
+- `disabled` (boolean, default false): Disable editing, sequential focus and form participation.
+- `error-text` (string | undefined): Message for a failing code constraint. Omit to use the browser's message.
+- `help-text` (string | undefined): Instructions saying where the code was sent and how long it is valid.
+- `label` (string, required): Visible accessible name. Supply a label in the language of the form.
+- `length` (number, default 6, minimum 4, maximum 8): Number of cells and maximum code length. Unsupported lengths fall back to six.
+- `name` (string | undefined): Key for the single value submitted to the enclosing form.
+- `required` (boolean, default false): Require a complete code before submitting. An optional field may be empty.
+- `size` ("md" | "sm", default 'md'): Medium or small cells. The form region's density adjusts both sizes.
+- `type` ("alphanumeric" | "numeric", default 'numeric'): Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.
+- `value` (string, default ''): The current code, including leading zeros. Use the attribute to declare the reset value. Programmatic assignments are normalized and silent.
+
+Slots: none
+
+Parts:
+- `cell`: Decorative box for one code character.
+- `error`: Polite validation message that replaces the instructions.
+- `field`: Enclosure of the native input and its visual boxes.
+- `help`: Delivery and validity instructions read with the field.
+- `input`: Single native text input, responsible for editing and autofill.
+- `label`: Visible label supplying the native input's accessible name.
+
+Events:
+- `ki-complete` (CustomEvent<KiCodeInputDetail>): Emitted after the input event when the edited code fills all the cells.
+- `ki-input` (CustomEvent<KiCodeInputDetail>): Emitted when a user edit changes the code.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-code-input-active-border`: Focus outline around the active or selected cells.
+- `--ki-code-input-backdrop-filter`: Optional compositing filter behind a code cell.
+- `--ki-code-input-bg`: Resting code cell fill.
+- `--ki-code-input-bg-image`: Optional image painted over the code cell fill.
+- `--ki-code-input-blink-duration`: Duration of one code caret blink.
+- `--ki-code-input-border`: Resting code cell boundary.
+- `--ki-code-input-cell-size`: Default code cell edge before applying control density.
+- `--ki-code-input-cell-size-sm`: Small code cell edge before applying control density.
+- `--ki-code-input-disabled-fg`: Code character ink while the field is disabled.
+- `--ki-code-input-error-border`: Code cell boundary after failed validation.
+- `--ki-code-input-fg`: Resting code character ink.
+- `--ki-code-input-font-size`: Code character size.
+- `--ki-code-input-gap`: Inline space between code cells.
+- `--ki-code-input-radius`: Code cell corner radius.
+- `--ki-code-input-selection-bg`: Background of a selected code character.
+- `--ki-code-input-selection-fg`: Ink of a selected code character.
+- `--ki-code-input-touch-font-size`: Minimum native input text size on a coarse pointer.
+- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
+- `--ki-text-danger-high-em`: semantic color for text danger high em.
+- `--ki-text-high-em`: semantic color for text high em.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-family-mono`: semantic font family for typography family mono.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+
 ### ki-counter
 
 A decorative count or dot over a trigger or avatar.
@@ -2681,133 +2802,232 @@ CSS custom properties:
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
-### ki-mobile-nav
+### ki-menu
 
-A fixed or floating navigation bar for the main destinations of a phone layout.
+A popup of actions opened by a button in the same document or shadow root.
 
-When to use: Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
-When NOT to use: Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+When to use: row actions, account commands, split buttons, and overflow actions.
+When NOT to use: form values, navigation destinations, or long action lists.
 
 Examples:
 
-# Using ki-mobile-nav
+# Menu examples
 
-Use one bottom navigation bar for the three to five top-level destinations in
-the phone layout. Place it after the content. The host reserves space in the
-app shell so the last content can scroll above the links.
+## Row actions
+
+Register `ki-button`, `ki-menu`, `ki-menu-item`, `ki-menu-group`, and
+`ki-divider` when using the elements individually.
+
+```html
+<ki-button id="row-actions" type="button">Actions</ki-button>
+<ki-menu id="row-menu" anchor="row-actions" filter-label="Filter actions">
+  <ki-menu-group label="Edit">
+    <ki-menu-item value="rename" shortcut="F2">Rename</ki-menu-item>
+    <ki-menu-item value="duplicate">Duplicate</ki-menu-item>
+    <ki-menu-item value="move" disabled>Move to…</ki-menu-item>
+    <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+  </ki-menu-group>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="delete" tone="danger">Delete</ki-menu-item>
+</ki-menu>
+```
 
 ```js
-import '@kimen/elements/icons/house';
-import '@kimen/elements/icons/search';
-import '@kimen/elements/icons/inbox';
+const menu = document.getElementById('row-menu');
+menu.addEventListener('ki-select', ({ detail: { value, checked } }) => {
+  dispatchRowAction(value, checked);
+});
 ```
+
+A plain action emits its value and closes the popup. A checkbox also emits its
+new checked state and keeps the popup open. A radio selection emits
+`checked: true`, clears its peer radios and closes the popup. Place independent
+radio sets in distinct groups.
+
+## Account menu
 
 ```html
-<main>
-  <!-- App content -->
-</main>
-<ki-mobile-nav label="Main" variant="floating">
-  <ki-mobile-nav-item href="/" icon-name="house" current>Home</ki-mobile-nav-item>
-  <ki-mobile-nav-item href="/search" icon-name="search">Search</ki-mobile-nav-item>
-  <ki-mobile-nav-item href="/inbox" icon-name="inbox" count="3">Inbox</ki-mobile-nav-item>
-</ki-mobile-nav>
+<button id="account" type="button" aria-label="Account for Ana García">AG</button>
+<ki-menu anchor="account" placement="bottom-end">
+  <p slot="header">Ana García<br />ana@example.com</p>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="profile">Profile</ki-menu-item>
+  <ki-menu-item value="sign-out">Sign out</ki-menu-item>
+</ki-menu>
 ```
 
-Omit `variant` for an edge-to-edge bar. When switching to TopNav or Sidebar,
-use one app breakpoint to hide this bar and show the wider navigation.
+Give a glyph-only trigger an accessible name. Keep header content informational
+and put actions in `ki-menu-item`. A `start` slot can hold a decorative SVG or
+avatar. The application owns the shortcuts displayed by `shortcut`.
+
+With a filter, supply `filter-label` and optionally localize
+`filter-results-label`, retaining `{count}` where the number should appear.
+
+# When to use Menu
+
+Use Menu for commands on the same object, account actions, split buttons and
+overflow actions. Keep destructive actions at the end after a divider. Pick
+a select for a form value, links for navigation, or a dialog or page for
+long action lists.
+
+Supply a host-authored trigger with an ID in the same DOM tree. Bind the
+catalog action on the menu's declared `ki-select` event. Application DOM
+listeners can read the selected item's `value` and optional `checked` from
+the event detail.
 
 Attributes:
-- `label` (string, default 'Main'): Accessible name of the landmark. Supply a distinct name when the page has more than one navigation landmark.
-- `variant` ("fixed" | "floating", default 'fixed'): Place the bar edge to edge or inset it as a raised pill.
+- `anchor` (string, default ''): Literal ID of the menu button in the same document or containing shadow root.
+- `filter-label` (string, default ''): Accessible name and placeholder of the filter. Omit to hide the field.
+- `filter-results-label` (string, default 'Matching actions: {count}'): Polite results message. The menu substitutes the number of matches for `{count}`.
+- `open` (boolean, default false): Whether the popup is open. Reflected when the user opens or dismisses it.
+- `placement` ("bottom-end" | "bottom-start" | "top-end" | "top-start", default 'bottom-start'): Preferred side and logical alignment. Flips when the opposite side has more room.
 
 Slots:
-- (default): Three to five direct ki-mobile-nav-item destinations.
+- (default): Place ki-menu-item, ki-menu-group, and ki-divider here.
+- `header`: Informational content above the actions, such as account details.
 
 Parts:
-- `bar`: The native navigation landmark and painted bar.
+- `filter`: The filter field.
+- `header`: The informational header.
+- `menu`: The named menu containing the actions.
+- `popup`: The anchored surface.
 
-Events: none
+Events:
+- `ki-select` (CustomEvent<KiMenuSelectDetail>): Reports the selected action and, for a checkbox or radio, its new checked state.
 
 Methods: none
 
 CSS custom properties:
-- `--ki-mobile-nav-backdrop-filter`: Complete optional backdrop filter for either bar variant.
-- `--ki-mobile-nav-bg`: Fixed bar surface.
-- `--ki-mobile-nav-bg-image`: Optional decorative image for either bar variant.
-- `--ki-mobile-nav-border`: Stroke along the fixed bar or around the floating bar.
-- `--ki-mobile-nav-border-width`: Bar border width.
-- `--ki-mobile-nav-floating-bg`: Floating bar surface.
-- `--ki-mobile-nav-floating-inset`: Space beside and below the floating bar.
-- `--ki-mobile-nav-floating-padding`: Inline padding inside the floating bar.
-- `--ki-mobile-nav-floating-radius`: Floating bar pill shape.
-- `--ki-mobile-nav-floating-shadow`: Elevation of the floating bar.
-- `--ki-mobile-nav-font-family`: Typeface for the bar and its destination labels.
-- `--ki-mobile-nav-height`: Minimum height before the safe area and border are added.
-- `--ki-mobile-nav-item-target-min`: Minimum block and inline link target size.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-menu-backdrop-filter`: Complete backdrop filter applied to the popup.
+- `--ki-menu-bg`: Base fill of the popup surface.
+- `--ki-menu-bg-image`: Optional image composited over the popup fill.
+- `--ki-menu-border`: Popup edge and the filter divider.
+- `--ki-menu-border-width`: Thickness of menu border and dividers.
+- `--ki-menu-fg`: Text over the popup surface.
+- `--ki-menu-filter-icon-size`: Size of the search icon.
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-font-size`: Text size for action labels and the filter.
+- `--ki-menu-gap`: Inline space between the parts of a row.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-height`: Default action row minimum height.
+- `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-line-height`: Line height for action labels and the filter.
+- `--ki-menu-max-block-size`: Maximum popup height, bounded by the viewport.
+- `--ki-menu-max-inline-size`: Maximum popup width, bounded by the viewport.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
+- `--ki-menu-min-inline-size`: Default minimum popup width, bounded by the viewport.
+- `--ki-menu-padding`: Space inside the popup.
+- `--ki-menu-radius`: Popup corner radius.
+- `--ki-menu-shadow`: Popup elevation shadow.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
 
-### ki-mobile-nav-item
+### ki-menu-group
 
-An icon and visible label for one mobile navigation destination.
+A named group of related actions in a ki-menu.
 
-When to use: Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
-When NOT to use: For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
+When to use: name a set of related actions or scope exclusive radio items in a menu.
+When NOT to use: standalone sections or nested menus.
 
 Examples:
 
-# Using ki-mobile-nav-item
+# Menu group
 
-Use a short label, a registered icon and a destination URL for each native
-link inside `ki-mobile-nav`.
+Provide a group label and place menu items or dividers in its default slot. A group scopes its own exclusive radio selection.
 
 ```html
-<ki-mobile-nav-item href="/" icon-name="house" current>Home</ki-mobile-nav-item>
-<ki-mobile-nav-item href="/inbox" icon-name="inbox" count="125" count-label="{count} unread">
-  Inbox
-</ki-mobile-nav-item>
+<ki-menu anchor="actions">
+  <ki-menu-group label="Edit"><ki-menu-item value="rename">Rename</ki-menu-item></ki-menu-group>
+</ki-menu>
 ```
 
-Mark the active destination with `current`. The second link shows `99+` in the
-badge and is announced as “Inbox, 125 unread”. A zero count hides the badge.
-
 Attributes:
-- `count` (number | undefined): Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.
-- `count-label` (string, default '{count} new'): Localized suffix for the link name. Use {count} for the full rounded count.
-- `current` (boolean, default false): Marks this link as the current page.
-- `href` (string, required, URL): Destination URL. Relative paths and fragments use native anchor resolution.
-- `icon-name` (string, required): Registered icon name. The visible destination text supplies the link name.
+- `label` (string, default ''): Visible and accessible group name.
 
 Slots:
-- (default): Visible destination text. Use plain text or noninteractive phrasing content.
+- (default): The ki-menu-item and ki-divider children of the group.
 
 Parts:
-- `indicator`: The icon well painted on the current destination.
-- `label`: The always-visible destination label.
-- `link`: The native anchor and focus target.
+- `label`: The visible group name.
 
 Events: none
 
 Methods: none
 
 CSS custom properties:
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-mobile-nav-border-width`: Bar border width.
-- `--ki-mobile-nav-font-family`: Typeface for the bar and its destination labels.
-- `--ki-mobile-nav-indicator-bg`: Fill behind the current destination icon.
-- `--ki-mobile-nav-indicator-block-size`: Current icon pill height.
-- `--ki-mobile-nav-indicator-fg`: Icon ink on the current destination fill.
-- `--ki-mobile-nav-indicator-inline-size`: Current icon pill width.
-- `--ki-mobile-nav-indicator-radius`: Current icon pill corner radius.
-- `--ki-mobile-nav-item-current-fg`: Label ink of the current destination on the fixed or floating bar.
-- `--ki-mobile-nav-item-fg`: Foreground ink of an inactive destination on the fixed or floating bar.
-- `--ki-mobile-nav-item-focus-radius`: Corner radius of the keyboard focus indication.
-- `--ki-mobile-nav-item-font-size`: Destination label font size.
-- `--ki-mobile-nav-item-font-weight`: Destination label font weight.
-- `--ki-mobile-nav-item-gap`: Gap between the glyph and its label.
-- `--ki-mobile-nav-item-icon-size`: Destination glyph size.
-- `--ki-mobile-nav-item-line-height`: Destination label line height.
-- `--ki-mobile-nav-item-target-min`: Minimum block and inline link target size.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-group-fg`: Foreground for group labels.
+- `--ki-menu-group-label-weight`: Weight of group labels.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-line-height`: Line height of metadata and group labels.
+- `--ki-menu-padding`: Space inside the popup.
+
+### ki-menu-item
+
+A pointer and keyboard action within a ki-menu.
+
+When to use: a command, independent checkbox action, or exclusive radio action in a menu.
+When NOT to use: standalone controls, navigational links, or form options.
+
+Examples:
+
+# Menu item
+
+Give each item a value and a visible label. Use `type="checkbox"` for independent toggles or `type="radio"` for exclusive choices. Set `disabled` to keep an unavailable action discoverable by keyboard.
+
+```html
+<ki-menu anchor="actions">
+  <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+</ki-menu>
+```
+
+Attributes:
+- `checked` (boolean, default false): Checked state for checkbox and radio actions.
+- `disabled` (boolean, default false): Disabled actions remain discoverable via menu navigation.
+- `shortcut` (string, default ''): Display-only keyboard shortcut. Applications own shortcut registration.
+- `tone` ("danger" | "neutral", default 'neutral'): Apply the danger tone to a destructive action.
+- `type` ("checkbox" | "item" | "radio", default 'item'): Action role. A checkbox stays open. A radio selects one action within its group.
+- `value` (string, default ''): Action identifier reported by the parent menu.
+
+Slots:
+- (default): The action's visible label.
+- `start`: One decorative icon or avatar before the label.
+
+Parts:
+- `check`: The indicator of a checked action.
+- `item`: The focusable action row.
+- `shortcut`: The display-only shortcut hint.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-gap`: Inline space between the parts of a row.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-danger-fg`: Foreground for destructive actions.
+- `--ki-menu-item-danger-hover-fg`: Foreground for hovered or keyboard-focused destructive actions.
+- `--ki-menu-item-disabled-fg`: Muted ink of disabled actions.
+- `--ki-menu-item-fg`: Foreground for resting actions.
+- `--ki-menu-item-height`: Default action row minimum height.
+- `--ki-menu-item-hover-bg`: Background behind hovered or keyboard-focused actions.
+- `--ki-menu-item-hover-fg`: Foreground for hovered or keyboard-focused actions.
+- `--ki-menu-item-icon-size`: Size of an action glyph and the check indicator.
+- `--ki-menu-item-padding`: Vertical inset used when an action wraps.
+- `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-hover-fg`: Foreground for shortcut hints on a hovered or focused action.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
 
 ### ki-note
 

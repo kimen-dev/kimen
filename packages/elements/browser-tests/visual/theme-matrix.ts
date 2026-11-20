@@ -11,6 +11,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-chip',
   'ki-chip-group',
   'ki-code-block',
+  'ki-code-input',
   'ki-combobox',
   'ki-confirmation',
   'ki-conversation',

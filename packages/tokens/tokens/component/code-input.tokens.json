@@ -1,0 +1,74 @@
+{
+  "ki": {
+    "code-input": {
+      "cell-size": {
+        "$value": "{ki.layout.spacing.14xl}",
+        "$description": "Default code cell edge before applying control density."
+      },
+      "cell-size-sm": {
+        "$value": "{ki.control.size.md}",
+        "$description": "Small code cell edge before applying control density."
+      },
+      "gap": {
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Inline space between code cells."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Code cell corner radius."
+      },
+      "bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Resting code cell fill."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image painted over the code cell fill."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Optional compositing filter behind a code cell."
+      },
+      "border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Resting code cell boundary."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Resting code character ink."
+      },
+      "disabled-fg": {
+        "$value": "{ki.text.med-em}",
+        "$description": "Code character ink while the field is disabled."
+      },
+      "active-border": {
+        "$value": "{ki.focus.ring-color}",
+        "$description": "Focus outline around the active or selected cells."
+      },
+      "error-border": {
+        "$value": "{ki.outline.danger-high-em}",
+        "$description": "Code cell boundary after failed validation."
+      },
+      "selection-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Background of a selected code character."
+      },
+      "selection-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink of a selected code character."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.title-2}",
+        "$description": "Code character size."
+      },
+      "touch-font-size": {
+        "$value": "{ki.layout.spacing.3xl}",
+        "$description": "Minimum native input text size on a coarse pointer."
+      },
+      "blink-duration": {
+        "$value": "{ki.motion.duration.activity-pulse}",
+        "$description": "Duration of one code caret blink."
+      }
+    }
+  }
+}

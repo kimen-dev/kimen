@@ -17,6 +17,7 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
+import { defineCustomElement as defineKiCodeInput } from '@kimen/elements/components/ki-code-input.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
@@ -29,8 +30,9 @@ import { defineCustomElement as defineKiInput } from '@kimen/elements/components
 import { defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
-import { defineCustomElement as defineKiMobileNav } from '@kimen/elements/components/ki-mobile-nav.js';
-import { defineCustomElement as defineKiMobileNavItem } from '@kimen/elements/components/ki-mobile-nav-item.js';
+import { defineCustomElement as defineKiMenu } from '@kimen/elements/components/ki-menu.js';
+import { defineCustomElement as defineKiMenuGroup } from '@kimen/elements/components/ki-menu-group.js';
+import { defineCustomElement as defineKiMenuItem } from '@kimen/elements/components/ki-menu-item.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
@@ -345,6 +347,37 @@ export declare interface KiChipGroup extends Components.KiChipGroup {
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiCodeInput,
+  inputs: ['disabled', 'errorText', 'helpText', 'label', 'length', 'name', 'required', 'size', 'type', 'value']
+})
+@Component({
+  selector: 'ki-code-input',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'length', 'name', 'required', 'size', 'type', 'value'],
+})
+export class KiCodeInput {
+  protected el: HTMLKiCodeInputElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCodeInput extends Components.KiCodeInput {
+  /**
+   * Emitted when a user edit changes the code.
+   */
+  /**
+   * Emitted after the input event when the edited code fills all the cells.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiCounter,
   inputs: ['dot', 'for', 'max', 'tone', 'value']
 })
@@ -638,18 +671,18 @@ export declare interface KiListItem extends Components.KiListItem {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiMobileNav,
-  inputs: ['label', 'variant']
+  defineCustomElementFn: defineKiMenu,
+  inputs: ['anchor', 'filterLabel', 'filterResultsLabel', 'open', 'placement']
 })
 @Component({
-  selector: 'ki-mobile-nav',
+  selector: 'ki-menu',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['label', 'variant'],
+  inputs: ['anchor', 'filterLabel', 'filterResultsLabel', 'open', 'placement'],
 })
-export class KiMobileNav {
-  protected el: HTMLKiMobileNavElement;
+export class KiMenu {
+  protected el: HTMLKiMenuElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -657,22 +690,27 @@ export class KiMobileNav {
 }
 
 
-export declare interface KiMobileNav extends Components.KiMobileNav {}
+
+export declare interface KiMenu extends Components.KiMenu {
+  /**
+   * Reports the selected action and, for a checkbox or radio, its new checked state.
+   */
+}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiMobileNavItem,
-  inputs: ['count', 'countLabel', 'current', 'href', 'iconName']
+  defineCustomElementFn: defineKiMenuGroup,
+  inputs: ['label']
 })
 @Component({
-  selector: 'ki-mobile-nav-item',
+  selector: 'ki-menu-group',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['count', 'countLabel', 'current', { name: 'href', required: true }, { name: 'iconName', required: true }],
+  inputs: ['label'],
 })
-export class KiMobileNavItem {
-  protected el: HTMLKiMobileNavItemElement;
+export class KiMenuGroup {
+  protected el: HTMLKiMenuGroupElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -680,7 +718,30 @@ export class KiMobileNavItem {
 }
 
 
-export declare interface KiMobileNavItem extends Components.KiMobileNavItem {}
+export declare interface KiMenuGroup extends Components.KiMenuGroup {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMenuItem,
+  inputs: ['checked', 'disabled', 'shortcut', 'tone', 'type', 'value']
+})
+@Component({
+  selector: 'ki-menu-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['checked', 'disabled', 'shortcut', 'tone', 'type', 'value'],
+})
+export class KiMenuItem {
+  protected el: HTMLKiMenuItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMenuItem extends Components.KiMenuItem {}
 
 
 @ProxyCmp({

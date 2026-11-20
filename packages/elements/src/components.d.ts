@@ -16,6 +16,7 @@ import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 import { KiChipSize } from "./components/ki-chip/ki-chip";
 import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+import { KiCodeInputDetail, KiCodeInputType } from "./components/ki-code-input/ki-code-input";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -26,7 +27,8 @@ import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
-import { KiMobileNavVariant } from "./components/ki-mobile-nav/ki-mobile-nav";
+import { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
+import { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -54,6 +56,7 @@ export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 export { KiChipSize } from "./components/ki-chip/ki-chip";
 export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+export { KiCodeInputDetail, KiCodeInputType } from "./components/ki-code-input/ki-code-input";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -64,7 +67,8 @@ export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
-export { KiMobileNavVariant } from "./components/ki-mobile-nav/ki-mobile-nav";
+export { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
+export { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -505,6 +509,61 @@ export namespace Components {
         "type": KiChipType;
     }
     /**
+     * A form-associated verification field with one native text input and a visual box per character.
+     * @whenToUse Collect a one-time code of four to eight characters for sign-in or verification.
+     * @whenNotToUse Use ki-input for passwords, long codes or free text.
+     */
+    interface KiCodeInput {
+        /**
+          * Disable editing, sequential focus and form participation.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Message for a failing code constraint. Omit to use the browser's message.
+         */
+        "errorText"?: string;
+        /**
+          * Instructions saying where the code was sent and how long it is valid.
+         */
+        "helpText"?: string;
+        /**
+          * Visible accessible name. Supply a label in the language of the form.
+         */
+        "label": string;
+        /**
+          * Number of cells and maximum code length. Unsupported lengths fall back to six.
+          * @minimum 4
+          * @maximum 8
+          * @default 6
+         */
+        "length": number;
+        /**
+          * Key for the single value submitted to the enclosing form.
+         */
+        "name"?: string;
+        /**
+          * Require a complete code before submitting. An optional field may be empty.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Medium or small cells. The form region's density adjusts both sizes.
+          * @default 'md'
+         */
+        "size": 'sm' | 'md';
+        /**
+          * Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.
+          * @default 'numeric'
+         */
+        "type": KiCodeInputType;
+        /**
+          * The current code, including leading zeros. Use the attribute to declare the reset value. Programmatic assignments are normalized and silent.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -936,52 +995,85 @@ export namespace Components {
         "size": KiListItemSize;
     }
     /**
-     * A fixed or floating navigation bar for the main destinations of a phone layout.
-     * @whenToUse Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
-     * @whenNotToUse Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+     * A popup of actions opened by a button in the same document or shadow root.
+     * @whenToUse row actions, account commands, split buttons, and overflow actions.
+     * @whenNotToUse form values, navigation destinations, or long action lists.
      */
-    interface KiMobileNav {
+    interface KiMenu {
         /**
-          * Accessible name of the landmark. Supply a distinct name when the page has more than one navigation landmark.
-          * @default 'Main'
+          * Literal ID of the menu button in the same document or containing shadow root.
+          * @default ''
          */
-        "label": string;
+        "anchor": string;
         /**
-          * Place the bar edge to edge or inset it as a raised pill.
-          * @default 'fixed'
+          * Accessible name and placeholder of the filter. Omit to hide the field.
+          * @default ''
          */
-        "variant": KiMobileNavVariant;
-    }
-    /**
-     * An icon and visible label for one mobile navigation destination.
-     * @whenToUse Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
-     * @whenNotToUse For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
-     */
-    interface KiMobileNavItem {
+        "filterLabel": string;
         /**
-          * Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.
-          * @default undefined
+          * Polite results message. The menu substitutes the number of matches for `{count}`.
+          * @default 'Matching actions: {count}'
          */
-        "count"?: number;
+        "filterResultsLabel": string;
         /**
-          * Localized suffix for the link name. Use {count} for the full rounded count.
-          * @default '{count} new'
-         */
-        "countLabel": string;
-        /**
-          * Marks this link as the current page.
+          * Whether the popup is open. Reflected when the user opens or dismisses it.
           * @default false
          */
-        "current": boolean;
+        "open": boolean;
         /**
-          * Destination URL. Relative paths and fragments use native anchor resolution.
-          * @format url
+          * Preferred side and logical alignment. Flips when the opposite side has more room.
+          * @default 'bottom-start'
          */
-        "href": string;
+        "placement": KiMenuPlacement;
+    }
+    /**
+     * A named group of related actions in a ki-menu.
+     * @whenToUse name a set of related actions or scope exclusive radio items in a menu.
+     * @whenNotToUse standalone sections or nested menus.
+     */
+    interface KiMenuGroup {
         /**
-          * Registered icon name. The visible destination text supplies the link name.
+          * Visible and accessible group name.
+          * @default ''
          */
-        "iconName": string;
+        "label": string;
+    }
+    /**
+     * A pointer and keyboard action within a ki-menu.
+     * @whenToUse a command, independent checkbox action, or exclusive radio action in a menu.
+     * @whenNotToUse standalone controls, navigational links, or form options.
+     */
+    interface KiMenuItem {
+        /**
+          * Checked state for checkbox and radio actions.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Disabled actions remain discoverable via menu navigation.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Display-only keyboard shortcut. Applications own shortcut registration.
+          * @default ''
+         */
+        "shortcut": string;
+        /**
+          * Apply the danger tone to a destructive action.
+          * @default 'neutral'
+         */
+        "tone": KiMenuItemTone;
+        /**
+          * Action role. A checkbox stays open. A radio selects one action within its group.
+          * @default 'item'
+         */
+        "type": KiMenuItemType;
+        /**
+          * Action identifier reported by the parent menu.
+          * @default ''
+         */
+        "value": string;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -1800,6 +1892,10 @@ export interface KiChipGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiChipGroupElement;
 }
+export interface KiCodeInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCodeInputElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -1807,6 +1903,10 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
 export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
+}
+export interface KiMenuCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiMenuElement;
 }
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2064,6 +2164,29 @@ declare global {
         prototype: HTMLKiChipGroupElement;
         new (): HTMLKiChipGroupElement;
     };
+    interface HTMLKiCodeInputElementEventMap {
+        "ki-input": KiCodeInputDetail;
+        "ki-complete": KiCodeInputDetail;
+    }
+    /**
+     * A form-associated verification field with one native text input and a visual box per character.
+     * @whenToUse Collect a one-time code of four to eight characters for sign-in or verification.
+     * @whenNotToUse Use ki-input for passwords, long codes or free text.
+     */
+    interface HTMLKiCodeInputElement extends Components.KiCodeInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCodeInputElementEventMap>(type: K, listener: (this: HTMLKiCodeInputElement, ev: KiCodeInputCustomEvent<HTMLKiCodeInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCodeInputElementEventMap>(type: K, listener: (this: HTMLKiCodeInputElement, ev: KiCodeInputCustomEvent<HTMLKiCodeInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCodeInputElement: {
+        prototype: HTMLKiCodeInputElement;
+        new (): HTMLKiCodeInputElement;
+    };
     /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
@@ -2284,27 +2407,49 @@ declare global {
         prototype: HTMLKiListItemElement;
         new (): HTMLKiListItemElement;
     };
-    /**
-     * A fixed or floating navigation bar for the main destinations of a phone layout.
-     * @whenToUse Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
-     * @whenNotToUse Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
-     */
-    interface HTMLKiMobileNavElement extends Components.KiMobileNav, HTMLStencilElement {
+    interface HTMLKiMenuElementEventMap {
+        "ki-select": KiMenuSelectDetail;
     }
-    var HTMLKiMobileNavElement: {
-        prototype: HTMLKiMobileNavElement;
-        new (): HTMLKiMobileNavElement;
+    /**
+     * A popup of actions opened by a button in the same document or shadow root.
+     * @whenToUse row actions, account commands, split buttons, and overflow actions.
+     * @whenNotToUse form values, navigation destinations, or long action lists.
+     */
+    interface HTMLKiMenuElement extends Components.KiMenu, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiMenuElementEventMap>(type: K, listener: (this: HTMLKiMenuElement, ev: KiMenuCustomEvent<HTMLKiMenuElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiMenuElementEventMap>(type: K, listener: (this: HTMLKiMenuElement, ev: KiMenuCustomEvent<HTMLKiMenuElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiMenuElement: {
+        prototype: HTMLKiMenuElement;
+        new (): HTMLKiMenuElement;
     };
     /**
-     * An icon and visible label for one mobile navigation destination.
-     * @whenToUse Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
-     * @whenNotToUse For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
+     * A named group of related actions in a ki-menu.
+     * @whenToUse name a set of related actions or scope exclusive radio items in a menu.
+     * @whenNotToUse standalone sections or nested menus.
      */
-    interface HTMLKiMobileNavItemElement extends Components.KiMobileNavItem, HTMLStencilElement {
+    interface HTMLKiMenuGroupElement extends Components.KiMenuGroup, HTMLStencilElement {
     }
-    var HTMLKiMobileNavItemElement: {
-        prototype: HTMLKiMobileNavItemElement;
-        new (): HTMLKiMobileNavItemElement;
+    var HTMLKiMenuGroupElement: {
+        prototype: HTMLKiMenuGroupElement;
+        new (): HTMLKiMenuGroupElement;
+    };
+    /**
+     * A pointer and keyboard action within a ki-menu.
+     * @whenToUse a command, independent checkbox action, or exclusive radio action in a menu.
+     * @whenNotToUse standalone controls, navigational links, or form options.
+     */
+    interface HTMLKiMenuItemElement extends Components.KiMenuItem, HTMLStencilElement {
+    }
+    var HTMLKiMenuItemElement: {
+        prototype: HTMLKiMenuItemElement;
+        new (): HTMLKiMenuItemElement;
     };
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -2767,6 +2912,7 @@ declare global {
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-code-input": HTMLKiCodeInputElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
@@ -2779,8 +2925,9 @@ declare global {
         "ki-link": HTMLKiLinkElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
-        "ki-mobile-nav": HTMLKiMobileNavElement;
-        "ki-mobile-nav-item": HTMLKiMobileNavItemElement;
+        "ki-menu": HTMLKiMenuElement;
+        "ki-menu-group": HTMLKiMenuGroupElement;
+        "ki-menu-item": HTMLKiMenuItemElement;
         "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
@@ -3276,6 +3423,73 @@ declare namespace LocalJSX {
         "type"?: KiChipType;
     }
     /**
+     * A form-associated verification field with one native text input and a visual box per character.
+     * @whenToUse Collect a one-time code of four to eight characters for sign-in or verification.
+     * @whenNotToUse Use ki-input for passwords, long codes or free text.
+     */
+    interface KiCodeInput {
+        /**
+          * Disable editing, sequential focus and form participation.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Message for a failing code constraint. Omit to use the browser's message.
+         */
+        "errorText"?: string;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Instructions saying where the code was sent and how long it is valid.
+         */
+        "helpText"?: string;
+        /**
+          * Visible accessible name. Supply a label in the language of the form.
+         */
+        "label": string;
+        /**
+          * Number of cells and maximum code length. Unsupported lengths fall back to six.
+          * @minimum 4
+          * @maximum 8
+          * @default 6
+         */
+        "length"?: number;
+        /**
+          * Key for the single value submitted to the enclosing form.
+         */
+        "name"?: string;
+        /**
+          * Emitted after the input event when the edited code fills all the cells.
+         */
+        "onKi-complete"?: (event: KiCodeInputCustomEvent<KiCodeInputDetail>) => void;
+        /**
+          * Emitted when a user edit changes the code.
+         */
+        "onKi-input"?: (event: KiCodeInputCustomEvent<KiCodeInputDetail>) => void;
+        /**
+          * Require a complete code before submitting. An optional field may be empty.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Medium or small cells. The form region's density adjusts both sizes.
+          * @default 'md'
+         */
+        "size"?: 'sm' | 'md';
+        /**
+          * Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.
+          * @default 'numeric'
+         */
+        "type"?: KiCodeInputType;
+        /**
+          * The current code, including leading zeros. Use the attribute to declare the reset value. Programmatic assignments are normalized and silent.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -3711,52 +3925,89 @@ declare namespace LocalJSX {
         "size"?: KiListItemSize;
     }
     /**
-     * A fixed or floating navigation bar for the main destinations of a phone layout.
-     * @whenToUse Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
-     * @whenNotToUse Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+     * A popup of actions opened by a button in the same document or shadow root.
+     * @whenToUse row actions, account commands, split buttons, and overflow actions.
+     * @whenNotToUse form values, navigation destinations, or long action lists.
      */
-    interface KiMobileNav {
+    interface KiMenu {
         /**
-          * Accessible name of the landmark. Supply a distinct name when the page has more than one navigation landmark.
-          * @default 'Main'
+          * Literal ID of the menu button in the same document or containing shadow root.
+          * @default ''
          */
-        "label"?: string;
+        "anchor"?: string;
         /**
-          * Place the bar edge to edge or inset it as a raised pill.
-          * @default 'fixed'
+          * Accessible name and placeholder of the filter. Omit to hide the field.
+          * @default ''
          */
-        "variant"?: KiMobileNavVariant;
-    }
-    /**
-     * An icon and visible label for one mobile navigation destination.
-     * @whenToUse Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
-     * @whenNotToUse For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
-     */
-    interface KiMobileNavItem {
+        "filterLabel"?: string;
         /**
-          * Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.
-          * @default undefined
+          * Polite results message. The menu substitutes the number of matches for `{count}`.
+          * @default 'Matching actions: {count}'
          */
-        "count"?: number;
+        "filterResultsLabel"?: string;
         /**
-          * Localized suffix for the link name. Use {count} for the full rounded count.
-          * @default '{count} new'
+          * Reports the selected action and, for a checkbox or radio, its new checked state.
          */
-        "countLabel"?: string;
+        "onKi-select"?: (event: KiMenuCustomEvent<KiMenuSelectDetail>) => void;
         /**
-          * Marks this link as the current page.
+          * Whether the popup is open. Reflected when the user opens or dismisses it.
           * @default false
          */
-        "current"?: boolean;
+        "open"?: boolean;
         /**
-          * Destination URL. Relative paths and fragments use native anchor resolution.
-          * @format url
+          * Preferred side and logical alignment. Flips when the opposite side has more room.
+          * @default 'bottom-start'
          */
-        "href": string;
+        "placement"?: KiMenuPlacement;
+    }
+    /**
+     * A named group of related actions in a ki-menu.
+     * @whenToUse name a set of related actions or scope exclusive radio items in a menu.
+     * @whenNotToUse standalone sections or nested menus.
+     */
+    interface KiMenuGroup {
         /**
-          * Registered icon name. The visible destination text supplies the link name.
+          * Visible and accessible group name.
+          * @default ''
          */
-        "iconName": string;
+        "label"?: string;
+    }
+    /**
+     * A pointer and keyboard action within a ki-menu.
+     * @whenToUse a command, independent checkbox action, or exclusive radio action in a menu.
+     * @whenNotToUse standalone controls, navigational links, or form options.
+     */
+    interface KiMenuItem {
+        /**
+          * Checked state for checkbox and radio actions.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Disabled actions remain discoverable via menu navigation.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Display-only keyboard shortcut. Applications own shortcut registration.
+          * @default ''
+         */
+        "shortcut"?: string;
+        /**
+          * Apply the danger tone to a destructive action.
+          * @default 'neutral'
+         */
+        "tone"?: KiMenuItemTone;
+        /**
+          * Action role. A checkbox stays open. A radio selects one action within its group.
+          * @default 'item'
+         */
+        "type"?: KiMenuItemType;
+        /**
+          * Action identifier reported by the parent menu.
+          * @default ''
+         */
+        "value"?: string;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -4660,6 +4911,18 @@ declare namespace LocalJSX {
         "focusTarget": string;
         "reorderAnnouncement": string;
     }
+    interface KiCodeInputAttributes {
+        "label": string;
+        "helpText": string;
+        "errorText": string;
+        "name": string;
+        "required": boolean;
+        "disabled": boolean;
+        "length": number;
+        "type": KiCodeInputType;
+        "size": 'sm' | 'md';
+        "value": string;
+    }
     interface KiCounterAttributes {
         "value": number;
         "max": number;
@@ -4739,16 +5002,23 @@ declare namespace LocalJSX {
     interface KiListItemAttributes {
         "size": KiListItemSize;
     }
-    interface KiMobileNavAttributes {
-        "label": string;
-        "variant": KiMobileNavVariant;
+    interface KiMenuAttributes {
+        "anchor": string;
+        "open": boolean;
+        "placement": KiMenuPlacement;
+        "filterLabel": string;
+        "filterResultsLabel": string;
     }
-    interface KiMobileNavItemAttributes {
-        "href": string;
-        "iconName": string;
-        "current": boolean;
-        "count": number;
-        "countLabel": string;
+    interface KiMenuGroupAttributes {
+        "label": string;
+    }
+    interface KiMenuItemAttributes {
+        "value": string;
+        "type": KiMenuItemType;
+        "checked": boolean;
+        "disabled": boolean;
+        "tone": KiMenuItemTone;
+        "shortcut": string;
     }
     interface KiNoteAttributes {
         "tone": KiNoteTone;
@@ -4908,6 +5178,7 @@ declare namespace LocalJSX {
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-code-input": Omit<KiCodeInput, keyof KiCodeInputAttributes> & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes]?: KiCodeInput[K] } & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes as `attr:${K}`]?: KiCodeInputAttributes[K] } & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes as `prop:${K}`]?: KiCodeInput[K] } & OneOf<"label", KiCodeInput["label"], KiCodeInputAttributes["label"]>;
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
@@ -4920,8 +5191,9 @@ declare namespace LocalJSX {
         "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
         "ki-list": KiList;
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
-        "ki-mobile-nav": Omit<KiMobileNav, keyof KiMobileNavAttributes> & { [K in keyof KiMobileNav & keyof KiMobileNavAttributes]?: KiMobileNav[K] } & { [K in keyof KiMobileNav & keyof KiMobileNavAttributes as `attr:${K}`]?: KiMobileNavAttributes[K] } & { [K in keyof KiMobileNav & keyof KiMobileNavAttributes as `prop:${K}`]?: KiMobileNav[K] };
-        "ki-mobile-nav-item": Omit<KiMobileNavItem, keyof KiMobileNavItemAttributes> & { [K in keyof KiMobileNavItem & keyof KiMobileNavItemAttributes]?: KiMobileNavItem[K] } & { [K in keyof KiMobileNavItem & keyof KiMobileNavItemAttributes as `attr:${K}`]?: KiMobileNavItemAttributes[K] } & { [K in keyof KiMobileNavItem & keyof KiMobileNavItemAttributes as `prop:${K}`]?: KiMobileNavItem[K] } & OneOf<"href", KiMobileNavItem["href"], KiMobileNavItemAttributes["href"]> & OneOf<"iconName", KiMobileNavItem["iconName"], KiMobileNavItemAttributes["iconName"]>;
+        "ki-menu": Omit<KiMenu, keyof KiMenuAttributes> & { [K in keyof KiMenu & keyof KiMenuAttributes]?: KiMenu[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `attr:${K}`]?: KiMenuAttributes[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `prop:${K}`]?: KiMenu[K] };
+        "ki-menu-group": Omit<KiMenuGroup, keyof KiMenuGroupAttributes> & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes]?: KiMenuGroup[K] } & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes as `attr:${K}`]?: KiMenuGroupAttributes[K] } & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes as `prop:${K}`]?: KiMenuGroup[K] };
+        "ki-menu-item": Omit<KiMenuItem, keyof KiMenuItemAttributes> & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes]?: KiMenuItem[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `attr:${K}`]?: KiMenuItemAttributes[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `prop:${K}`]?: KiMenuItem[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
@@ -5079,6 +5351,12 @@ declare module "@stencil/core" {
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
             /**
+             * A form-associated verification field with one native text input and a visual box per character.
+             * @whenToUse Collect a one-time code of four to eight characters for sign-in or verification.
+             * @whenNotToUse Use ki-input for passwords, long codes or free text.
+             */
+            "ki-code-input": LocalJSX.IntrinsicElements["ki-code-input"] & JSXBase.HTMLAttributes<HTMLKiCodeInputElement>;
+            /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an
              * avatar. Supply the full meaning in the host's accessible name and use a
@@ -5217,17 +5495,23 @@ declare module "@stencil/core" {
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
             /**
-             * A fixed or floating navigation bar for the main destinations of a phone layout.
-             * @whenToUse Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
-             * @whenNotToUse Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+             * A popup of actions opened by a button in the same document or shadow root.
+             * @whenToUse row actions, account commands, split buttons, and overflow actions.
+             * @whenNotToUse form values, navigation destinations, or long action lists.
              */
-            "ki-mobile-nav": LocalJSX.IntrinsicElements["ki-mobile-nav"] & JSXBase.HTMLAttributes<HTMLKiMobileNavElement>;
+            "ki-menu": LocalJSX.IntrinsicElements["ki-menu"] & JSXBase.HTMLAttributes<HTMLKiMenuElement>;
             /**
-             * An icon and visible label for one mobile navigation destination.
-             * @whenToUse Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
-             * @whenNotToUse For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
+             * A named group of related actions in a ki-menu.
+             * @whenToUse name a set of related actions or scope exclusive radio items in a menu.
+             * @whenNotToUse standalone sections or nested menus.
              */
-            "ki-mobile-nav-item": LocalJSX.IntrinsicElements["ki-mobile-nav-item"] & JSXBase.HTMLAttributes<HTMLKiMobileNavItemElement>;
+            "ki-menu-group": LocalJSX.IntrinsicElements["ki-menu-group"] & JSXBase.HTMLAttributes<HTMLKiMenuGroupElement>;
+            /**
+             * A pointer and keyboard action within a ki-menu.
+             * @whenToUse a command, independent checkbox action, or exclusive radio action in a menu.
+             * @whenNotToUse standalone controls, navigational links, or form options.
+             */
+            "ki-menu-item": LocalJSX.IntrinsicElements["ki-menu-item"] & JSXBase.HTMLAttributes<HTMLKiMenuItemElement>;
             /**
              * A compact, static explanation beside a control or inside a card.
              * @whenToUse Add a short constraint, tip or consequence next to the content

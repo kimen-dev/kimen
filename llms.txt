@@ -53,6 +53,7 @@ methods, CSS custom properties and examples.
 - [ki-checkbox-group](https://kimen.dev/llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
 - [ki-chip](https://kimen.dev/llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
 - [ki-chip-group](https://kimen.dev/llms/ki-chip-group.md): label related chips or let people change their reading order.
+- [ki-code-input](https://kimen.dev/llms/ki-code-input.md): Collect a one-time code of four to eight characters for sign-in or verification.
 - [ki-counter](https://kimen.dev/llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](https://kimen.dev/llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](https://kimen.dev/llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
@@ -65,8 +66,9 @@ methods, CSS custom properties and examples.
 - [ki-link](https://kimen.dev/llms/ki-link.md): navigate to a page, section, or resource.
 - [ki-list](https://kimen.dev/llms/ki-list.md): settings, contacts, results or activity feeds where each item composes leading media, primary text, optional secondary text and trailing meta or a slotted control.
 - [ki-list-item](https://kimen.dev/llms/ki-list-item.md): only as a child of `ki-list`, for one read-only entry in a similar vertical collection.
-- [ki-mobile-nav](https://kimen.dev/llms/ki-mobile-nav.md): Place after the main content of a narrow layout.
-- [ki-mobile-nav-item](https://kimen.dev/llms/ki-mobile-nav-item.md): Place directly in ki-mobile-nav.
+- [ki-menu](https://kimen.dev/llms/ki-menu.md): row actions, account commands, split buttons, and overflow actions.
+- [ki-menu-group](https://kimen.dev/llms/ki-menu-group.md): name a set of related actions or scope exclusive radio items in a menu.
+- [ki-menu-item](https://kimen.dev/llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-note](https://kimen.dev/llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
 - [ki-option](https://kimen.dev/llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-progress](https://kimen.dev/llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
