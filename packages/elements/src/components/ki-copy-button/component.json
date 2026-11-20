@@ -1,10 +1,22 @@
 {
-  "barePage": { "keyboardPressed": true },
-  "pointer": { "hoverWitness": true },
+  "barePage": {
+    "keyboardPressed": true
+  },
+  "pointer": {
+    "hoverWitness": true
+  },
   "catalog": true,
   "catalogAction": "ki-copy",
   "sizeBudget": {
-    "mcpApps": { "gzip": 4394 },
-    "mcpServer": { "raw": 66499, "gzip": 8916 }
+    "mcpApps": {
+      "raw": 25830,
+      "gzip": 4119,
+      "brotli": 1733
+    },
+    "mcpServer": {
+      "raw": 66951,
+      "gzip": 8904,
+      "brotli": 1967
+    }
   }
 }
