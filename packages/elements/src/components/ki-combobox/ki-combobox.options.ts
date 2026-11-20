@@ -6,13 +6,26 @@ export function labelMatcher(query: string, filter: ComboboxFilter) {
     return () => [0, 0] as const;
   }
 
-  // Use a literal pattern so match indices refer to the original label even
-  // when lowercasing a preceding character would change its UTF-16 length.
-  const escaped = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp(filter === 'starts-with' ? `^${escaped}` : escaped, 'iu');
+  const needle = text.toLowerCase();
   return (label: string): readonly [number, number] | null => {
-    const match = pattern.exec(label);
-    return match ? [match.index, match.index + match[0].length] : null;
+    const folded = label.toLowerCase();
+    const start = folded.indexOf(needle);
+    if (start < 0 || (filter === 'starts-with' && start !== 0)) return null;
+    const end = start + needle.length;
+    if (folded.length === label.length) return [start, end];
+
+    // If folding expands a letter, map each highlight boundary back to
+    // the original character rather than slicing the folded string.
+    let offset = 0;
+    let index = 0;
+    let first = 0;
+    for (const character of label) {
+      if (offset <= start) first = index;
+      offset += character.toLowerCase().length;
+      index += character.length;
+      if (offset >= end) break;
+    }
+    return [first, index];
   };
 }
 

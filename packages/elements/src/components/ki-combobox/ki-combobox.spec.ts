@@ -8,6 +8,11 @@ describe('labelMatch', () => {
     expect(labelMatcher('AN', 'starts-with')('Juan Antón')).toBeNull();
   });
 
+  it('treats punctuation in the query as literal text', () => {
+    expect(labelMatcher('[.', 'contains')('A [. choice')).toEqual([2, 4]);
+    expect(labelMatcher('[.', 'contains')('A choice')).toBeNull();
+  });
+
   it('retains all options without emphasis for empty or server queries', () => {
     expect(labelMatcher('missing', 'none')('Ana Ruiz')).toEqual([0, 0]);
     expect(labelMatcher(' ', 'contains')('Ana Ruiz')).toEqual([0, 0]);
