@@ -24,7 +24,10 @@ async function put(root, path, contents = `${path}\n`) {
 test('S9 a hand-edited committed catalog artifact fails the catalog sync gate', async (t) => {
   const subject = await import(subjectUrl.href);
   const group = subject.generatedGroups.catalog;
-  assert.deepEqual(group.required, ['packages/catalog/src/generated/catalog.ts']);
+  assert.deepEqual(group.required, [
+    'packages/catalog/src/generated/catalog.ts',
+    'packages/catalog/src/generated/url-scheme.ts',
+  ]);
 
   const root = await mkdtemp(join(tmpdir(), 'kimen-catalog-sync-'));
   t.after(() => rm(root, { force: true, recursive: true }));
@@ -57,6 +60,7 @@ test('S10 catalog regeneration from checkouts at different paths is byte-identic
     for (const path of [
       ...metadata,
       'packages/elements/scripts/component-metadata.mjs',
+      'packages/elements/src/utils/url-scheme.ts',
       'packages/elements/generated/custom-elements.json',
       'packages/elements/package.json',
       'packages/catalog/scripts/generate-catalog.mjs',
@@ -71,15 +75,20 @@ test('S10 catalog regeneration from checkouts at different paths is byte-identic
       [join(checkout, 'packages/catalog/scripts/generate-catalog.mjs'), checkout],
       { encoding: 'utf8', stdio: 'pipe' },
     );
+    const paths = ['catalog.ts', 'url-scheme.ts'];
     outputs.push(
-      await readFile(join(checkout, 'packages/catalog/src/generated/catalog.ts'), 'utf8'),
+      await Promise.all(
+        paths.map((file) =>
+          readFile(join(checkout, 'packages/catalog/src/generated', file), 'utf8'),
+        ),
+      ),
     );
   }
-  assert.equal(outputs[0], outputs[1]);
-  // ...and both match the committed artifact exactly (the sync-gate bar).
-  const committed = await readFile(
-    join(repoRoot, 'packages/catalog/src/generated/catalog.ts'),
-    'utf8',
+  assert.deepEqual(outputs[0], outputs[1]);
+  const committed = await Promise.all(
+    ['catalog.ts', 'url-scheme.ts'].map((file) =>
+      readFile(join(repoRoot, 'packages/catalog/src/generated', file), 'utf8'),
+    ),
   );
-  assert.equal(outputs[0], committed);
+  assert.deepEqual(outputs[0], committed);
 });

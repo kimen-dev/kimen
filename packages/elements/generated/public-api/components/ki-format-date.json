@@ -1,0 +1,127 @@
+{
+  "component": {
+    "attributes": {
+      "date": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "date-style": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Date detail. Defaults to medium when neither date style nor time style is supplied.",
+        "replacement": null,
+        "required": false,
+        "type": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+      },
+      "lang": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "time-style": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Time detail. Omit to show the date alone.",
+        "replacement": null,
+        "required": false,
+        "type": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+      },
+      "time-zone": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-format-date-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default body font family for ki-format-date on a bare page.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Displays an ISO date or timestamp in the reader's language.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "date": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "dateStyle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Date detail. Defaults to medium when neither date style nor time style is supplied.",
+        "replacement": null,
+        "required": false,
+        "type": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+      },
+      "locale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "timeStyle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Time detail. Omit to show the date alone.",
+        "replacement": null,
+        "required": false,
+        "type": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+      },
+      "timeZone": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-format-date.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-format-date.d.ts",
+    "symbols": {
+      "KiFormatDate": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiFormatDate extends Components.KiFormatDate, HTMLElement {\n}\nexport const KiFormatDate: {\n    prototype: KiFormatDate;\n    new (): KiFormatDate;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-format-date.js"
+  }
+}

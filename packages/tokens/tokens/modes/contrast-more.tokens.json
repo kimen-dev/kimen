@@ -38,6 +38,12 @@
         "$description": "The card edge at 3:1 or more against the page, in every theme."
       }
     },
+    "image": {
+      "fallback-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Strengthened neutral ink keeps the unavailable-image symbol legible on the media surface."
+      }
+    },
     "indicator": {
       "dot": {
         "color": {

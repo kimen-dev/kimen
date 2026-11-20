@@ -11,15 +11,20 @@ import React from 'react';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import type { Components } from '@kimen/elements/components';
 import { KiCard as KiCardElement, defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { KiCardCustomEvent } from '@kimen/elements/components';
+import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
-export type KiCardEvents = NonNullable<unknown>;
+export type KiCardEvents = {
+  onKiActivate: EventName<KiCardCustomEvent<void>>
+};
 
 export const KiCard: StencilReactComponent<KiCardElement, KiCardEvents, Components.KiCard> = /*@__PURE__*/ createComponent<KiCardElement, KiCardEvents, Components.KiCard>({
     tagName: 'ki-card',
     elementClass: KiCardElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: {} as KiCardEvents,
+    events: {
+      onKiActivate: 'ki-activate'
+    } as KiCardEvents,
     defineCustomElement: defineKiCard,
 });

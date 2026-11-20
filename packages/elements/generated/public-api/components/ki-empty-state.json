@@ -1,0 +1,489 @@
+{
+  "component": {
+    "attributes": {
+      "announce": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "heading-level": {
+        "default": "3",
+        "deprecatedSince": null,
+        "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "icon-name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+      }
+    },
+    "cssProperties": {
+      "--ki-empty-state-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter applied behind the empty view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind the empty view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image above the background color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-description-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background layer behind the supporting copy.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-description-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text ink, strengthened in contrast-more mode.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-description-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the supporting copy.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-description-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font size of the supporting copy.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground ink for the heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the decorative media, message and action row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-gap-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between regions in a compact empty view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-heading-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface for the native heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-heading-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Heading line height in a regular empty view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-heading-line-height-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Heading line height in a compact empty view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-heading-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Heading font size in a regular empty view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-heading-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Heading font size in a compact empty view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-heading-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of the heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-max-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum inline size of the centered content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-danger-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the danger decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-danger-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink on the danger decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-info-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the info decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-info-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink on the info decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-neutral-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the neutral decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-neutral-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink on the neutral decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-primary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the primary decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink on the primary decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-primary-light-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the primary-light decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-primary-light-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink on the primary-light decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the regular fallback tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-radius-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the compact fallback tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Regular FeatureIcon fallback tile size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Compact FeatureIcon fallback tile size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-success-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the success decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-success-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink on the success decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-warning-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the warning decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-empty-state-tile-warning-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink on the warning decorative tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A short explanation and next step for an empty view.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapping row of consumer-supplied controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "container": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Centered layout for the illustration, message and actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapper for the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native heading at the selected document level.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "media": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative illustration or FeatureIcon tile.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "announce": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "headingLevel": {
+        "default": "3",
+        "deprecatedSince": null,
+        "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "iconName": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized supporting text with a reason or recovery advice.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "media": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-empty-state.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-empty-state.d.ts",
+    "symbols": {
+      "KiEmptyState": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiEmptyState extends Components.KiEmptyState, HTMLElement {\n}\nexport const KiEmptyState: {\n    prototype: KiEmptyState;\n    new (): KiEmptyState;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-empty-state.js"
+  }
+}

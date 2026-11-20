@@ -28,7 +28,7 @@ Breadcrumbs show the path from the top of a hierarchy to the current page. Earli
 - **Agent's choice, pending founder confirmation.** Infer the last level as current, including when it has an `href`. Accept the proposed `current` marker on the final level. The same marker on earlier levels leaves their link behavior intact.
 - **Agent's choice, pending founder confirmation.** Item content supplies a plain-text label. A hidden item is omitted. An ancestor without a destination remains readable inline and appears as an unavailable menu item when collapsed.
 - **Agent's choice, pending founder confirmation.** Expose the `more-label` template for localization using `{n}` as the placeholder. Follow the repository density contract so that `data-ki-density="touch"` provides 44 CSS pixel targets.
-- **Agent's choice, pending founder confirmation.** Use a component-owned navigation menu backed by Kimen's anchored-overlay utilities. This branch has no shared Menu component and the reference Menu API describes command values. Hidden levels need native link destinations.
+- **Agent's choice, pending founder confirmation.** Use a component-owned navigation menu backed by Kimen's anchored-overlay utilities. Breadcrumb overflow uses native links for page destinations. The shared `ki-menu` renders command buttons and emits `ki-select`.
 
 - **Agent's choice, pending founder confirmation.** Alias the ancestor foreground to the semantic supporting ink. It preserves medium emphasis in standard mode and reaches the contrast-more threshold.
 
