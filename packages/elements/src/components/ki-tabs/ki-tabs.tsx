@@ -132,7 +132,7 @@ export class KiTabs {
    *
    * @default 'primary'
    */
-  @Prop({ reflect: true }) variant: KiTabsVariant = 'primary';
+  @Prop({ reflect: true }) variant?: KiTabsVariant = 'primary';
 
   /**
    * Positions the decorative icon relative to its tab label. When omitted,

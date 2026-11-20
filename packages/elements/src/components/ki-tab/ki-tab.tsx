@@ -75,7 +75,7 @@ export class KiTab {
   }
 
   @Watch('data-ki-tab-with-icon')
-  protected updateIcon(): void {
+  private updateIcon(): void {
     forceUpdate(this.host);
   }
 

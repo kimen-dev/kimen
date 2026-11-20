@@ -382,17 +382,17 @@ Feature: Tabs
   per-tag component token families — `--ki-tabs-*` (strip/tablist),
   `--ki-tab-*` (tab metrics, indicator and states) and `--ki-tab-panel-*`
   (panel) — layered over the semantic layer; zero
-  hardcoded visual values. The M3 primary/secondary tab styles are theme
-  token decisions, never attributes.
+  hardcoded visual values. Spec 113 adds a `variant` attribute that selects
+  the primary or secondary token-backed presentation.
 - **FR-010**: Interaction states (hover, focus-visible, active, disabled)
   MUST be styled exclusively through tokens and CSS states; they are never
   attributes/props. Selection is the only reflected managed state.
 - **FR-011**: Any motion (indicator transition, panel switch animation) MUST
   be suppressed when the user prefers reduced motion.
 - **FR-012**: Content MUST compose through slots: `ki-tab` default slot for
-  the label plus `start`/`end` slots for icons or media; `ki-tab-panel`
-  default slot for arbitrary content. Order and layout follow the document's
-  writing direction (logical properties only).
+  the label, `icon` for a decorative SVG and `start`/`end` for leading and
+  trailing media. The `ki-tab-panel` default slot accepts panel content.
+  Order and layout follow the document's writing direction.
 - **FR-013**: The components MUST expose parts for the customization ladder
   (tokens first, then parts, then slots): `tablist` on `ki-tabs`, `tab` and
   `indicator` on `ki-tab`, `panel` on `ki-tab-panel`.
