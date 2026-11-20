@@ -1,0 +1,18 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "c0597cf55040ea985d6e0ae836b6595ffa64ab4ec90f4a9adcef5d4055362449",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "f93b95eab948440d04920e47b15cb157dfa2c1a7e3e3aa5684f5656c4e76aadc",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "8c5ed80f1ff8ed8041601069eda24015f10221c50ea9abbe6a50b3a4c32dbe21",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "95148f591ffc5c1ace3a4bd1f9db7477ee63eb718edefbfcf07f6a8b90d31c94"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "Land document 2 components in one batch. The generated loader and components Components and JSX namespaces grow to include every component in the batch; each component's own declaration covers its other deltas.",
+  "release": "major",
+  "schemaVersion": 2
+}

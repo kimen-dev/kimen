@@ -55,13 +55,9 @@
     "/packages/@kimen~1elements/components/ki-message/slots/": "644020353b6f90cb9304bd1366f5a85ccb7e23ebfdda2526b094f5e6170cd894",
     "/packages/@kimen~1elements/components/ki-message/slots/actions": "1ba9c32f602e6b819f1f3db00ca8916b344b20bda609efa42b9f47ef2bc87642",
     "/packages/@kimen~1elements/components/ki-message/slots/avatar": "8f493c56079718f7744afcccec31890af272475dcf0b69b7c1ce0f31e35eb97a",
-    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "ef348832d9b22e1c789f46b1d0c9ff1cab40531e86f7d1650cc5e8abebcee173",
-    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "0e9f87e63d237b7ce375362e4d7b26f34c577a4c63e00986ebafdf24c356803d",
     "/packages/@kimen~1elements/modules/.~1components/symbols/KiMessageCustomEvent": "a7edb1be9ab5268ca639b35c8d7a53257131b6d1e89324d75b1237fb6e18df3b",
     "/packages/@kimen~1elements/modules/.~1components/symbols/KiMessageFeedback": "5b9fd901c5a6ab81671e5f7829f33db4fe597820a0ace8a2990ffbe347242624",
     "/packages/@kimen~1elements/modules/.~1ki-message/symbols/KiMessageFeedback": "5b9fd901c5a6ab81671e5f7829f33db4fe597820a0ace8a2990ffbe347242624",
-    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "e502ed44d2483ed3af29a2c5399f9d41e5837daf4227d8bf2000d527162b7ea2",
-    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "333e1589adc52edc88fef84dcba1949436c4d270ad18eed089e451f75538390f",
     "/packages/@kimen~1elements/modules/.~1loader/symbols/KiMessageCustomEvent": "a7edb1be9ab5268ca639b35c8d7a53257131b6d1e89324d75b1237fb6e18df3b",
     "/packages/@kimen~1elements/modules/.~1loader/symbols/KiMessageFeedback": "5b9fd901c5a6ab81671e5f7829f33db4fe597820a0ace8a2990ffbe347242624"
   },
