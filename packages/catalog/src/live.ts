@@ -36,6 +36,7 @@ import {
   declaredEvents,
   type GuardState,
   guardNode,
+  hasToggleActivation,
   payloadBytes,
   pinButtonType,
   readLiveScalar,
@@ -701,7 +702,7 @@ function applySet(
     node.dom !== undefined &&
     node.action !== undefined &&
     Object.hasOwn(op.props, 'type') &&
-    declaredEvents(entry).length === 0
+    (declaredEvents(entry).length === 0 || hasToggleActivation(entry))
   ) {
     pinButtonType(node.dom, entry, node.props);
   }

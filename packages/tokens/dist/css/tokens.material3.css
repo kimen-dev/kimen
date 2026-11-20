@@ -439,6 +439,7 @@
   --ki-button-quaternary-danger-hover-border:var(--ki-outline-danger-high-em);
   --ki-button-quaternary-danger-active-border:var(--ki-outline-danger-high-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-danger-rest-border */
   --ki-button-quaternary-danger-disabled-border:var(--ki-outline-low-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-neutral-disabled-border */
+  --ki-button-ghost-selected-bg:var(--ki-surface-primary-high-em);
   --ki-button-border-width:0.0625rem;
   --ki-card-bg:var(--ki-surface-s1);
   --ki-card-border-color:var(--ki-outline-none);
@@ -487,6 +488,7 @@
   --ki-divider-radius:var(--ki-radius-0);
   --ki-divider-spacing:var(--ki-space-zero);
   --ki-empty-state-heading-weight:var(--ki-typography-weight-body-medium);
+  --ki-icon-button-ghost-selected-bg:var(--ki-surface-primary-high-em);
   --ki-indicator-gap:var(--ki-space-md);
   --ki-indicator-dot-color:var(--ki-outline-control);
   --ki-indicator-dot-current-inline-size:var(--ki-space-md);

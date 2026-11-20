@@ -50,7 +50,7 @@ methods, CSS custom properties and examples.
 - [ki-badge](https://kimen.dev/llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.
 - [ki-breadcrumb](https://kimen.dev/llms/ki-breadcrumb.md): show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
 - [ki-breadcrumb-item](https://kimen.dev/llms/ki-breadcrumb-item.md): declare a direct child of ki-breadcrumb in hierarchy order.
-- [ki-button](https://kimen.dev/llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.
+- [ki-button](https://kimen.dev/llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, or persistent actions such as Bold with `toggle`.
 - [ki-button-group](https://kimen.dev/llms/ki-button-group.md): place two to five related actions together, present a primary action with a menu of alternatives, or give formatting tools one Tab stop.
 - [ki-card](https://kimen.dev/llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
 - [ki-checkbox](https://kimen.dev/llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.

@@ -287,7 +287,7 @@ describe('language-model index and documents', () => {
       expect(whenToUse.slice(note.length)).toMatch(/^$|^\s+[A-Z]/u);
     }
     expect(components.find((link) => link.name === 'ki-button')?.note).toBe(
-      'trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.',
+      'trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, or persistent actions such as Bold with `toggle`.',
     );
   });
 

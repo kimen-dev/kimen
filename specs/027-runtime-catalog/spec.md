@@ -61,8 +61,8 @@ the emitted spec mechanically against the catalog.
 3. **Given** a manifest entry with when-to-use guidance, **When** the catalog
    is generated, **Then** the guidance appears verbatim in the entry.
 4. **Given** the manifest marks `tertiary` as a deprecated button variant,
-   **When** the catalog is generated, **Then** the agent is offered the four
-   recommended variants and existing specs using `tertiary` still work (S23).
+   **When** the catalog is generated, **Then** the agent is offered the current
+   variants, including `outline`, and specs using `tertiary` still work (S23).
 
 ---
 
@@ -177,7 +177,7 @@ types/identifiers; read the generated artifact's version metadata.
 Agent's choice, pending founder confirmation: publish catalog schema 1.4.0
 with optional deprecated enum metadata. Existing declarations with
 `variant="tertiary"` remain valid for both button components. Prompts and
-generated JSON Schema offer the four recommended variants (S23). S2 keeps
+generated JSON Schema offer the current variants, including `outline` (S23). S2 keeps
 the general rule, now shown on `tone`, whose values are all offered.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
@@ -366,7 +366,7 @@ Feature: Neutral runtime catalog
   Scenario: A deprecated enum value is not offered to agents but still validates
     Given the manifest documents "tertiary" as a deprecated button variant
     When the catalog is generated
-    Then the catalog offers exactly "primary", "secondary", "quaternary" and "ghost" for both button variants
+    Then the catalog offers exactly "primary", "secondary", "quaternary", "ghost" and "outline" for both button components
     And existing UI specs using "tertiary" still validate and render
 ```
 
