@@ -205,4 +205,37 @@ describe('guarded dialog commands', () => {
     expect(event.defaultPrevented).toBe(false);
     expect(onAction).not.toHaveBeenCalled();
   });
+
+  it('S10 lets a toggle invoke its dialog and dispatch only the selection action', () => {
+    const onAction = vi.fn();
+    const input = spec(
+      { ...trigger, action: 'preview-selected', props: { ...trigger.props, toggle: true } },
+      dialog,
+    );
+    expect(
+      renderUiSpec(
+        {
+          ...input,
+          actions: ['card-action', 'preview-selected'],
+          root: { ...input.root, action: 'card-action' },
+        },
+        { onAction, surface },
+      ).ok,
+    ).toBe(true);
+    const button = surface.querySelector('ki-button');
+    if (!button) throw new Error('Expected preview button');
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+    button.dispatchEvent(click);
+    expect(click.defaultPrevented).toBe(false);
+    expect(onAction).not.toHaveBeenCalled();
+
+    Reflect.set(button, 'selected', true);
+    button.dispatchEvent(new CustomEvent('ki-change', { bubbles: true, composed: true }));
+    expect(onAction).toHaveBeenCalledExactlyOnceWith({
+      action: 'preview-selected',
+      data: { ...trigger.props, selected: true, toggle: true },
+      path: 'root.slots.[0]',
+    });
+  });
 });

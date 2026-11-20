@@ -167,7 +167,7 @@ below what most platforms treat as a floor for informative text.
 
 Use `primary` for the filled main action, `secondary` for an outlined
 surface action, `quaternary` for a neutral text action, and `ghost` for an
-accent text action. The catalog offers these four variants to agents.
+accent text action. The catalog also offers the outline variant added by #376.
 
 The button still accepts `tertiary` in existing markup and code. It
 shares the secondary role's tokens by default, with a development-only
@@ -180,6 +180,13 @@ transparent in Material 3.
 
 Agent's choice, pending founder confirmation: keep `quaternary` in this
 release. Whether to rename it to `text` remains open for the next major.
+
+## Amendment: persistent toggle selection (#376)
+
+The optional `toggle` mode reflects `selected` and exposes `aria-pressed`
+on the native control. Activation emits `ki-change` with the new state.
+The `outline` variant is available to both momentary and toggle buttons.
+A toggle activation leaves its form untouched. See the [toggle contract](../094-toggle-icon-button/spec.md) for both states.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
@@ -305,17 +312,24 @@ Feature: Button
     Then the developer sees a deprecation warning recommending secondary
 
   # S18
-  Scenario: The catalog offers four recommended variants
+  Scenario: The catalog offers the current variants
     Given an agent choosing a button variant
     When the agent reads the catalog schema
-    Then the available variants are primary, secondary, quaternary and ghost
+    Then the available variants are primary, secondary, quaternary, ghost and outline
+
+  # S19
+  Scenario: A button can retain selection
+    Given an unselected button in toggle mode
+    When the person activates it
+    Then the button becomes selected and reports the new pressed state
+    And the button emits a change carrying the new state
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S11, S17, S18 | |
+| Core behavior | S1, S2, S11, S17, S18, S19 | |
 | Keyboard path | S3, S4 | |
 | Assistive-tech outcome | S5, S6, S14 | |
 | Form participation | S7, S8, S12 | |
@@ -326,8 +340,8 @@ Feature: Button
 ### Functional Requirements
 
 - **FR-001**: The button MUST expose a `variant` attribute defaulting
-  to `secondary`. The four recommended variants are `primary`, `secondary`,
-  `quaternary` and `ghost`. The component MUST still accept the deprecated
+  to `secondary`. The current variants are `primary`, `secondary`,
+  `quaternary`, `ghost` and `outline`. The component MUST still accept the deprecated
   `tertiary` value as described in the #344 amendment.
 - **FR-002**: The button MUST expose a `tone` attribute with values
   `neutral` (default), `success`, `danger`, orthogonal to `variant`.

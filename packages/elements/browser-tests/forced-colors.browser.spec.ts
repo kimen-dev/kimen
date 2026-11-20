@@ -2,6 +2,7 @@
 // @spec:104-ki-fab
 // @spec:092-ki-stepper
 // @spec:101-input-action
+// @spec:085-ki-details
 // Forced-colors contract (Art. III: the reproduction IS a failing test).
 //
 // A forced palette — Windows Contrast themes, `forced-colors: active` — is the
@@ -671,6 +672,25 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(getComputedStyle(current).borderBlockStartStyle).not.toBe(
       getComputedStyle(upcoming).borderBlockStartStyle,
     );
+  });
+
+  it('S14: ki-details keeps its edge and keyboard focus under forced colors', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<button tabindex="0">Before</button><ki-details summary="Permissions">Invite users.</ki-details>',
+    );
+    const details = fixture.querySelector('ki-details');
+    const findPanel = () => details?.shadowRoot?.querySelector('details') ?? null;
+    await expect.poll(findPanel).not.toBeNull();
+    const panel = findPanel();
+    const summary = panel?.querySelector('summary');
+    if (!panel || !summary) throw new Error('Missing native disclosure');
+
+    fixture.querySelector('button')?.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(details?.shadowRoot?.activeElement).toBe(summary);
+    expect(edgeOf(panel)).not.toBeNull();
+    expect(edgeOf(summary)).not.toBeNull();
   });
 
   it.for([
