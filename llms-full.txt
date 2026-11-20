@@ -1696,9 +1696,11 @@ CSS custom properties:
 - `--ki-state-layer-pressed`: Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark).
 - `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-family-heading`: Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy.
 - `--ki-typography-line-height-para`: semantic dimension for typography line height para.
 - `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
 
 ### ki-divider
 

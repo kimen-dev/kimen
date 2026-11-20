@@ -64,6 +64,16 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The fullscreen variant uses the shared heading family at every width. */
+:host([fullscreen="compact"]),
+:host([fullscreen="always"]) {
+  --_ki-dialog-heading-font-family: var(
+    --ki-typography-family-heading,
+    var(--ki-typography-family-body)
+  );
+  --_ki-dialog-heading-font-weight: var(--ki-typography-weight-body-semibold);
+}
+
 /* The modal dialog is fixed in the top layer, so its containing block is the
  * viewport and percentages measure the window it opens in, as the UA's own
  * `dialog:modal` limits do. Not viewport units: WebKit resolves those in a

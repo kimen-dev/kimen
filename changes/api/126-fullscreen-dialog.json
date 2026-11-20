@@ -26,6 +26,8 @@
     "/packages/@kimen~1elements/components/ki-dialog/cssProperties/--ki-state-layer-hover": "d24f6913cde8a1ac885ba2cddbb56cadf83221bb566f113775dfe796de39c9c7",
     "/packages/@kimen~1elements/components/ki-dialog/cssProperties/--ki-state-layer-pressed": "024a487fe7c9b916f4625309bb376bf45e35903ccd656c91c1ae814516e246dc",
     "/packages/@kimen~1elements/components/ki-dialog/cssProperties/--ki-surface-transparent": "76d5620ebcb389db7f4f0347fb96363e58aa53f22592fc745df04c299bf16a0a",
+    "/packages/@kimen~1elements/components/ki-dialog/cssProperties/--ki-typography-family-heading": "1f70cb53c255772618fe37f836702f325f8297b39fb7d7db98af194b327855a6",
+    "/packages/@kimen~1elements/components/ki-dialog/cssProperties/--ki-typography-weight-body-semibold": "ec02091e3ef4138f49c9b7b10bfc9fa5c30f0841ff9b001f6ec27f3ecd48ecd3",
     "/packages/@kimen~1elements/components/ki-dialog/description": "1d4f5bd63eb135ab208caca1eeb4caee75fa335f52d0dd513e4f7cc8449b3cfb",
     "/packages/@kimen~1elements/components/ki-dialog/events/ki-close/description": "2d00742e32097af200887ac6747bea2ee3bd922e4c9434bd2db87674c1919ecc",
     "/packages/@kimen~1elements/components/ki-dialog/events/ki-confirm": "f02a01ccd7ddb24fdb2c9b016e007c32e6ecc1be5a227ddf3223284e807db59a",
@@ -169,7 +171,7 @@
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Add opt-in fullscreen dialog controls. The API gate classifies the changed published TypeScript signatures as major.",
+  "reason": "Add opt-in fullscreen dialog controls and heading typography. The API gate classifies the changed published TypeScript signatures as major.",
   "release": "major",
   "schemaVersion": 2
 }

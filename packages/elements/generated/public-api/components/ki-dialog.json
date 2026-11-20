@@ -515,6 +515,14 @@
         "required": false,
         "type": null
       },
+      "--ki-typography-family-heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-typography-line-height-para": {
         "default": null,
         "deprecatedSince": null,
@@ -535,6 +543,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
         "replacement": null,
         "required": false,
         "type": null

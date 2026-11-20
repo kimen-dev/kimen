@@ -304,13 +304,29 @@ it.each([
   ['onmars', 'dark'],
   ['material3', 'light'],
   ['material3', 'dark'],
-] as const)('S15 applies the %s %s palette at compact and wide widths', async (theme, scheme) => {
+] as const)('S15 applies %s %s palette and title type at both widths', async (theme, scheme) => {
   document.documentElement.setAttribute('data-ki-theme', theme);
   document.documentElement.setAttribute('data-ki-color-scheme', scheme);
   await page.viewport(360, 650);
   const dialog = mount('compact', 'Save');
   await openDialog();
   await expect.poll(() => fillsViewport(dialog)).toBe(true);
+
+  const headingTypography =
+    theme === 'onmars'
+      ? {
+          family: /^["']?Instrument Sans["']?, system-ui, sans-serif$/u,
+          size: '18px',
+          weight: '700',
+        }
+      : { family: /^["']?Roboto["']?, system-ui, sans-serif$/u, size: '22px', weight: '500' };
+  const assertHeadingTypography = () => {
+    const style = getComputedStyle(part(dialog, 'heading'));
+    expect(style.fontFamily).toMatch(headingTypography.family);
+    expect(style.fontSize).toBe(headingTypography.size);
+    expect(style.fontWeight).toBe(headingTypography.weight);
+  };
+  assertHeadingTypography();
 
   const surface = part(dialog, 'dialog');
   const expected = document.createElement('div');
@@ -326,6 +342,7 @@ it.each([
   await page.viewport(1024, 650);
   await expect.poll(() => dialog.shadowRoot?.querySelector('[part~="header"]')).toBeNull();
   await expect.poll(() => fillsViewport(dialog)).toBe(false);
+  assertHeadingTypography();
   await expect.element(confirm()).toBeVisible();
   expect(part(dialog, 'footer').querySelector('ki-button')).toHaveAttribute('variant', 'primary');
 });

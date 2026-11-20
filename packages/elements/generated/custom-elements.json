@@ -4984,6 +4984,10 @@
               "description": "semantic font family for typography family body."
             },
             {
+              "name": "--ki-typography-family-heading",
+              "description": "Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy."
+            },
+            {
               "name": "--ki-typography-line-height-para",
               "description": "semantic dimension for typography line height para."
             },
@@ -4994,6 +4998,10 @@
             {
               "name": "--ki-typography-weight-body-normal",
               "description": "semantic font weight for typography weight body normal."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
             }
           ]
         }
