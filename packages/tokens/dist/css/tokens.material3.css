@@ -463,6 +463,7 @@
   --ki-checkbox-indeterminate-active-border:var(--ki-outline-none);
   --ki-checkbox-indeterminate-disabled-bg:var(--ki-surface-disabled-low-em);
   --ki-checkbox-indeterminate-disabled-fg:var(--ki-text-muted);
+  --ki-combobox-listbox-shadow:var(--ki-elevation-e2);
   --ki-dialog-radius:var(--ki-radius-big-component-lg);
   --ki-dialog-gap:var(--ki-space-5xl);
   --ki-dialog-bg:var(--ki-surface-s3);

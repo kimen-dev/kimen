@@ -80,6 +80,8 @@ export interface CatalogEntry {
   readonly props: Readonly<Record<string, CatalogPropConstraint>>;
   readonly slots: Readonly<Record<string, string>>;
   readonly events: Readonly<Record<string, string>>;
+  /** Which declared event dispatches an action when the component has several events. */
+  readonly activationEvent?: string;
 }
 
 /**

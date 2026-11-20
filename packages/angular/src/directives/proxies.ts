@@ -22,6 +22,8 @@ import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/co
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
 import { defineCustomElement as defineKiCodeBlock } from '@kimen/elements/components/ki-code-block.js';
+import { defineCustomElement as defineKiCombobox } from '@kimen/elements/components/ki-combobox.js';
+import { defineCustomElement as defineKiConfirmation } from '@kimen/elements/components/ki-confirmation.js';
 import { defineCustomElement as defineKiConversation } from '@kimen/elements/components/ki-conversation.js';
 import { defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
@@ -491,6 +493,66 @@ export declare interface KiCodeBlock extends Components.KiCodeBlock {
    */
   /**
    * CopyButton reports an unsuccessful clipboard write.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiCombobox,
+  inputs: ['addLabel', 'allowCustom', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', 'label', 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value']
+})
+@Component({
+  selector: 'ki-combobox',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['addLabel', 'allowCustom', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', { name: 'label', required: true }, 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value'],
+})
+export class KiCombobox {
+  protected el: HTMLKiComboboxElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCombobox extends Components.KiCombobox {
+  /**
+   * Reports a raw text edit in `detail.value`. Listen to it to request remote results.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiConfirmation,
+  inputs: ['action', 'approveLabel', 'approvedLabel', 'consequence', 'deniedLabel', 'denyLabel', 'expiredLabel', 'heading', 'remember', 'rememberLabel', 'resolvedAt', 'resolvedBy', 'state', 'tone'],
+  methods: ['focusPrompt']
+})
+@Component({
+  selector: 'ki-confirmation',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [{ name: 'action', required: true }, { name: 'approveLabel', required: true }, 'approvedLabel', 'consequence', 'deniedLabel', { name: 'denyLabel', required: true }, 'expiredLabel', { name: 'heading', required: true }, 'remember', 'rememberLabel', 'resolvedAt', 'resolvedBy', 'state', 'tone'],
+})
+export class KiConfirmation {
+  protected el: HTMLKiConfirmationElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiConfirmation extends Components.KiConfirmation {
+  /**
+   * Explicit approval, with the conversation preference at the time of the decision.
+   */
+  /**
+   * Explicit refusal of the pending request.
    */
 }
 
@@ -1107,14 +1169,14 @@ export declare interface KiNote extends Components.KiNote {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiOption,
-  inputs: ['disabled', 'value']
+  inputs: ['description', 'disabled', 'value']
 })
 @Component({
   selector: 'ki-option',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'value'],
+  inputs: ['description', 'disabled', 'value'],
 })
 export class KiOption {
   protected el: HTMLKiOptionElement;

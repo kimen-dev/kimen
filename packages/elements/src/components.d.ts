@@ -18,6 +18,8 @@ import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 import { KiChipSize } from "./components/ki-chip/ki-chip";
 import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+import { ComboboxFilter } from "./components/ki-combobox/ki-combobox.options";
+import { KiConfirmationState, KiConfirmationTone } from "./components/ki-confirmation/ki-confirmation";
 import { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDetailsToggleDetail } from "./components/ki-details/ki-details";
@@ -69,6 +71,8 @@ export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 export { KiChipSize } from "./components/ki-chip/ki-chip";
 export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+export { ComboboxFilter } from "./components/ki-combobox/ki-combobox.options";
+export { KiConfirmationState, KiConfirmationTone } from "./components/ki-confirmation/ki-confirmation";
 export { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDetailsToggleDetail } from "./components/ki-details/ki-details";
@@ -715,6 +719,183 @@ export namespace Components {
           * @default false
          */
         "wrap": boolean;
+    }
+    /**
+     * An editable, form-associated combobox with local or remote filtering,
+     * single or multiple selection, and optional free entry.
+     * @whenToUse choose from a long list of options, let people search an option
+     * source, or allow multiple selections that remain visible as tags.
+     * @whenNotToUse use a select-only control for a short closed set or a plain
+     * text field for unrestricted input with no choices.
+     * @event change - Composed event after a user changes the committed selection.
+     * Read the committed value from the host.
+     * @catalogAction change
+     */
+    interface KiCombobox {
+        /**
+          * Localizable free-entry offer. {text} is replaced by the trimmed query.
+          * @default 'Add “{text}”'
+         */
+        "addLabel": string;
+        /**
+          * Offers to add trimmed query text when no known or selected choice already matches it.
+          * @default false
+         */
+        "allowCustom": boolean;
+        /**
+          * Disables editing, navigation and form submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Localizable status when there are no choices to display.
+          * @default 'No results'
+         */
+        "emptyLabel": string;
+        /**
+          * Message used when a required selection is missing, in place of the browser's message.
+         */
+        "errorText"?: string;
+        /**
+          * Filters by label. Set to none when the application provides results from a remote search.
+          * @default 'contains'
+         */
+        "filter": ComboboxFilter;
+        /**
+          * Guidance shown below the field and read as its description.
+         */
+        "helpText"?: string;
+        /**
+          * Visible label and accessible name. Supply it even when placeholder text is also set.
+         */
+        "label": string;
+        /**
+          * Replaces visible options with a loading indicator while a search is pending.
+          * @default false
+         */
+        "loading": boolean;
+        /**
+          * Localizable status while waiting for a result set.
+          * @default 'Loading results'
+         */
+        "loadingLabel": string;
+        /**
+          * Enables ordered multiple selection and renders selected values as tags.
+          * @default false
+         */
+        "multiple": boolean;
+        /**
+          * Form-data key. Multiple choices contribute one entry each under this name.
+         */
+        "name"?: string;
+        /**
+          * Hint shown in the text input when it is empty.
+          * @default ''
+         */
+        "placeholder": string;
+        /**
+          * Localizable removal button label. {label} is replaced by the selected label.
+          * @default 'Remove {label}'
+         */
+        "removeLabel": string;
+        /**
+          * Requires a committed choice to submit the form.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Localizable status for several choices. {count} is replaced by the result count.
+          * @default '{count} results'
+         */
+        "resultCountLabel": string;
+        /**
+          * Localizable status for one available choice.
+          * @default '1 result'
+         */
+        "resultOneLabel": string;
+        /**
+          * Committed value. Use a string for single selection and an array of strings for multiple selection. In HTML and catalog specs, encode multiple values as a JSON array string in the value attribute, or supply one literal value. Assign a new array to change multiple selections programmatically.
+          * @default ''
+         */
+        "value": string | string[];
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface KiConfirmation {
+        /**
+          * Tool identifier shown to the person and available for reporting by the host.
+         */
+        "action": string;
+        /**
+          * Verb or short phrase that describes what approval does, such as "Send email".
+         */
+        "approveLabel": string;
+        /**
+          * Localized outcome text when the host marks the request approved.
+          * @default 'Approved'
+         */
+        "approvedLabel": string;
+        /**
+          * Cost or irreversible effect to read before deciding, displayed as a warning note.
+         */
+        "consequence"?: string;
+        /**
+          * Localized outcome text when the host marks the request denied.
+          * @default 'Denied'
+         */
+        "deniedLabel": string;
+        /**
+          * Verb or short phrase for refusal, such as "Keep draft".
+         */
+        "denyLabel": string;
+        /**
+          * Localized outcome text when the host marks the request expired.
+          * @default 'Expired'
+         */
+        "expiredLabel": string;
+        /**
+          * Moves focus to the pending group and reports success. Call only when the host knows the person was waiting for this request. A focused editor keeps its focus, including editors inside open shadow roots.
+         */
+        "focusPrompt": () => Promise<boolean>;
+        /**
+          * Question naming the proposed action. Provide it before asking for a decision.
+         */
+        "heading": string;
+        /**
+          * Offers an unchecked preference limited to this action in the current conversation.
+          * @default false
+         */
+        "remember": boolean;
+        /**
+          * Localized conversation permission label. Name the specific permission when possible.
+          * @default 'Allow this action for the rest of this conversation'
+         */
+        "rememberLabel": string;
+        /**
+          * Display-ready, localized resolution time from the host, if known.
+         */
+        "resolvedAt"?: string;
+        /**
+          * Display-ready name of the person or service that resolved the request, if known.
+         */
+        "resolvedBy"?: string;
+        /**
+          * Host-controlled outcome. Resolve after recording a decision or expiring the request.
+          * @default 'pending'
+         */
+        "state": KiConfirmationState;
+        /**
+          * Use danger when approval is destructive. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone": KiConfirmationTone;
     }
     /**
      * An accessible chat transcript with optional following as messages arrive.
@@ -1581,13 +1762,17 @@ export namespace Components {
         "tone": KiNoteTone;
     }
     /**
-     * A declarative data option rendered by its owning `ki-select`.
-     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
+     * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
      * @whenNotToUse `ki-option` standalone, authoring selection
      * on an option, or expecting it to paint its own row.
      */
     interface KiOption {
+        /**
+          * Secondary text shown below the label in a combobox choice row.
+         */
+        "description"?: string;
         /**
           * Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
           * @default false
@@ -2723,6 +2908,14 @@ export interface KiCodeBlockCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCodeBlockElement;
 }
+export interface KiComboboxCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiComboboxElement;
+}
+export interface KiConfirmationCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiConfirmationElement;
+}
 export interface KiCopyButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCopyButtonElement;
@@ -3092,6 +3285,61 @@ declare global {
     var HTMLKiCodeBlockElement: {
         prototype: HTMLKiCodeBlockElement;
         new (): HTMLKiCodeBlockElement;
+    };
+    interface HTMLKiComboboxElementEventMap {
+        "ki-input": { value: string };
+    }
+    /**
+     * An editable, form-associated combobox with local or remote filtering,
+     * single or multiple selection, and optional free entry.
+     * @whenToUse choose from a long list of options, let people search an option
+     * source, or allow multiple selections that remain visible as tags.
+     * @whenNotToUse use a select-only control for a short closed set or a plain
+     * text field for unrestricted input with no choices.
+     * @event change - Composed event after a user changes the committed selection.
+     * Read the committed value from the host.
+     * @catalogAction change
+     */
+    interface HTMLKiComboboxElement extends Components.KiCombobox, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiComboboxElementEventMap>(type: K, listener: (this: HTMLKiComboboxElement, ev: KiComboboxCustomEvent<HTMLKiComboboxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiComboboxElementEventMap>(type: K, listener: (this: HTMLKiComboboxElement, ev: KiComboboxCustomEvent<HTMLKiComboboxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiComboboxElement: {
+        prototype: HTMLKiComboboxElement;
+        new (): HTMLKiComboboxElement;
+    };
+    interface HTMLKiConfirmationElementEventMap {
+        "ki-approve": { remember: boolean };
+        "ki-deny": void;
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface HTMLKiConfirmationElement extends Components.KiConfirmation, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiConfirmationElementEventMap>(type: K, listener: (this: HTMLKiConfirmationElement, ev: KiConfirmationCustomEvent<HTMLKiConfirmationElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiConfirmationElementEventMap>(type: K, listener: (this: HTMLKiConfirmationElement, ev: KiConfirmationCustomEvent<HTMLKiConfirmationElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiConfirmationElement: {
+        prototype: HTMLKiConfirmationElement;
+        new (): HTMLKiConfirmationElement;
     };
     /**
      * An accessible chat transcript with optional following as messages arrive.
@@ -3514,8 +3762,8 @@ declare global {
         new (): HTMLKiNoteElement;
     };
     /**
-     * A declarative data option rendered by its owning `ki-select`.
-     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
+     * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
      * @whenNotToUse `ki-option` standalone, authoring selection
      * on an option, or expecting it to paint its own row.
@@ -4107,6 +4355,8 @@ declare global {
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
         "ki-code-block": HTMLKiCodeBlockElement;
+        "ki-combobox": HTMLKiComboboxElement;
+        "ki-confirmation": HTMLKiConfirmationElement;
         "ki-conversation": HTMLKiConversationElement;
         "ki-copy-button": HTMLKiCopyButtonElement;
         "ki-counter": HTMLKiCounterElement;
@@ -4829,6 +5079,195 @@ declare namespace LocalJSX {
           * @default false
          */
         "wrap"?: boolean;
+    }
+    /**
+     * An editable, form-associated combobox with local or remote filtering,
+     * single or multiple selection, and optional free entry.
+     * @whenToUse choose from a long list of options, let people search an option
+     * source, or allow multiple selections that remain visible as tags.
+     * @whenNotToUse use a select-only control for a short closed set or a plain
+     * text field for unrestricted input with no choices.
+     * @event change - Composed event after a user changes the committed selection.
+     * Read the committed value from the host.
+     * @catalogAction change
+     */
+    interface KiCombobox {
+        /**
+          * Localizable free-entry offer. {text} is replaced by the trimmed query.
+          * @default 'Add “{text}”'
+         */
+        "addLabel"?: string;
+        /**
+          * Offers to add trimmed query text when no known or selected choice already matches it.
+          * @default false
+         */
+        "allowCustom"?: boolean;
+        /**
+          * Disables editing, navigation and form submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Localizable status when there are no choices to display.
+          * @default 'No results'
+         */
+        "emptyLabel"?: string;
+        /**
+          * Message used when a required selection is missing, in place of the browser's message.
+         */
+        "errorText"?: string;
+        /**
+          * Filters by label. Set to none when the application provides results from a remote search.
+          * @default 'contains'
+         */
+        "filter"?: ComboboxFilter;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Guidance shown below the field and read as its description.
+         */
+        "helpText"?: string;
+        /**
+          * Visible label and accessible name. Supply it even when placeholder text is also set.
+         */
+        "label": string;
+        /**
+          * Replaces visible options with a loading indicator while a search is pending.
+          * @default false
+         */
+        "loading"?: boolean;
+        /**
+          * Localizable status while waiting for a result set.
+          * @default 'Loading results'
+         */
+        "loadingLabel"?: string;
+        /**
+          * Enables ordered multiple selection and renders selected values as tags.
+          * @default false
+         */
+        "multiple"?: boolean;
+        /**
+          * Form-data key. Multiple choices contribute one entry each under this name.
+         */
+        "name"?: string;
+        /**
+          * Reports a raw text edit in `detail.value`. Listen to it to request remote results.
+         */
+        "onKi-input"?: (event: KiComboboxCustomEvent<{ value: string }>) => void;
+        /**
+          * Hint shown in the text input when it is empty.
+          * @default ''
+         */
+        "placeholder"?: string;
+        /**
+          * Localizable removal button label. {label} is replaced by the selected label.
+          * @default 'Remove {label}'
+         */
+        "removeLabel"?: string;
+        /**
+          * Requires a committed choice to submit the form.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Localizable status for several choices. {count} is replaced by the result count.
+          * @default '{count} results'
+         */
+        "resultCountLabel"?: string;
+        /**
+          * Localizable status for one available choice.
+          * @default '1 result'
+         */
+        "resultOneLabel"?: string;
+        /**
+          * Committed value. Use a string for single selection and an array of strings for multiple selection. In HTML and catalog specs, encode multiple values as a JSON array string in the value attribute, or supply one literal value. Assign a new array to change multiple selections programmatically.
+          * @default ''
+         */
+        "value"?: string | string[];
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface KiConfirmation {
+        /**
+          * Tool identifier shown to the person and available for reporting by the host.
+         */
+        "action": string;
+        /**
+          * Verb or short phrase that describes what approval does, such as "Send email".
+         */
+        "approveLabel": string;
+        /**
+          * Localized outcome text when the host marks the request approved.
+          * @default 'Approved'
+         */
+        "approvedLabel"?: string;
+        /**
+          * Cost or irreversible effect to read before deciding, displayed as a warning note.
+         */
+        "consequence"?: string;
+        /**
+          * Localized outcome text when the host marks the request denied.
+          * @default 'Denied'
+         */
+        "deniedLabel"?: string;
+        /**
+          * Verb or short phrase for refusal, such as "Keep draft".
+         */
+        "denyLabel": string;
+        /**
+          * Localized outcome text when the host marks the request expired.
+          * @default 'Expired'
+         */
+        "expiredLabel"?: string;
+        /**
+          * Question naming the proposed action. Provide it before asking for a decision.
+         */
+        "heading": string;
+        /**
+          * Explicit approval, with the conversation preference at the time of the decision.
+         */
+        "onKi-approve"?: (event: KiConfirmationCustomEvent<{ remember: boolean }>) => void;
+        /**
+          * Explicit refusal of the pending request.
+         */
+        "onKi-deny"?: (event: KiConfirmationCustomEvent<void>) => void;
+        /**
+          * Offers an unchecked preference limited to this action in the current conversation.
+          * @default false
+         */
+        "remember"?: boolean;
+        /**
+          * Localized conversation permission label. Name the specific permission when possible.
+          * @default 'Allow this action for the rest of this conversation'
+         */
+        "rememberLabel"?: string;
+        /**
+          * Display-ready, localized resolution time from the host, if known.
+         */
+        "resolvedAt"?: string;
+        /**
+          * Display-ready name of the person or service that resolved the request, if known.
+         */
+        "resolvedBy"?: string;
+        /**
+          * Host-controlled outcome. Resolve after recording a decision or expiring the request.
+          * @default 'pending'
+         */
+        "state"?: KiConfirmationState;
+        /**
+          * Use danger when approval is destructive. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone"?: KiConfirmationTone;
     }
     /**
      * An accessible chat transcript with optional following as messages arrive.
@@ -5715,13 +6154,17 @@ declare namespace LocalJSX {
         "tone"?: KiNoteTone;
     }
     /**
-     * A declarative data option rendered by its owning `ki-select`.
-     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
+     * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
      * @whenNotToUse `ki-option` standalone, authoring selection
      * on an option, or expecting it to paint its own row.
      */
     interface KiOption {
+        /**
+          * Secondary text shown below the label in a combobox choice row.
+         */
+        "description"?: string;
         /**
           * Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
           * @default false
@@ -6994,6 +7437,42 @@ declare namespace LocalJSX {
         "copiedLabel": string;
         "copyErrorLabel": string;
     }
+    interface KiComboboxAttributes {
+        "label": string;
+        "placeholder": string;
+        "helpText": string;
+        "errorText": string;
+        "name": string;
+        "value": string | string[];
+        "multiple": boolean;
+        "allowCustom": boolean;
+        "filter": ComboboxFilter;
+        "loading": boolean;
+        "required": boolean;
+        "disabled": boolean;
+        "addLabel": string;
+        "removeLabel": string;
+        "loadingLabel": string;
+        "emptyLabel": string;
+        "resultOneLabel": string;
+        "resultCountLabel": string;
+    }
+    interface KiConfirmationAttributes {
+        "heading": string;
+        "action": string;
+        "approveLabel": string;
+        "denyLabel": string;
+        "tone": KiConfirmationTone;
+        "consequence": string;
+        "remember": boolean;
+        "rememberLabel": string;
+        "state": KiConfirmationState;
+        "approvedLabel": string;
+        "deniedLabel": string;
+        "expiredLabel": string;
+        "resolvedBy": string;
+        "resolvedAt": string;
+    }
     interface KiConversationAttributes {
         "label": string;
         "stickToBottom": boolean;
@@ -7174,6 +7653,7 @@ declare namespace LocalJSX {
     interface KiOptionAttributes {
         "value": string;
         "disabled": boolean;
+        "description": string;
     }
     interface KiPopoverAttributes {
         "for": string;
@@ -7394,6 +7874,8 @@ declare namespace LocalJSX {
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
         "ki-code-block": Omit<KiCodeBlock, keyof KiCodeBlockAttributes> & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes]?: KiCodeBlock[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `attr:${K}`]?: KiCodeBlockAttributes[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `prop:${K}`]?: KiCodeBlock[K] };
+        "ki-combobox": Omit<KiCombobox, keyof KiComboboxAttributes> & { [K in keyof KiCombobox & keyof KiComboboxAttributes]?: KiCombobox[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `attr:${K}`]?: KiComboboxAttributes[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `prop:${K}`]?: KiCombobox[K] } & OneOf<"label", KiCombobox["label"], KiComboboxAttributes["label"]>;
+        "ki-confirmation": Omit<KiConfirmation, keyof KiConfirmationAttributes> & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes]?: KiConfirmation[K] } & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes as `attr:${K}`]?: KiConfirmationAttributes[K] } & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes as `prop:${K}`]?: KiConfirmation[K] } & OneOf<"heading", KiConfirmation["heading"], KiConfirmationAttributes["heading"]> & OneOf<"action", KiConfirmation["action"], KiConfirmationAttributes["action"]> & OneOf<"approveLabel", KiConfirmation["approveLabel"], KiConfirmationAttributes["approveLabel"]> & OneOf<"denyLabel", KiConfirmation["denyLabel"], KiConfirmationAttributes["denyLabel"]>;
         "ki-conversation": Omit<KiConversation, keyof KiConversationAttributes> & { [K in keyof KiConversation & keyof KiConversationAttributes]?: KiConversation[K] } & { [K in keyof KiConversation & keyof KiConversationAttributes as `attr:${K}`]?: KiConversationAttributes[K] } & { [K in keyof KiConversation & keyof KiConversationAttributes as `prop:${K}`]?: KiConversation[K] };
         "ki-copy-button": Omit<KiCopyButton, keyof KiCopyButtonAttributes> & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes]?: KiCopyButton[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `attr:${K}`]?: KiCopyButtonAttributes[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `prop:${K}`]?: KiCopyButton[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
@@ -7619,6 +8101,28 @@ declare module "@stencil/core" {
              * inline in a sentence. Use an editor or a native inline code element.
              */
             "ki-code-block": LocalJSX.IntrinsicElements["ki-code-block"] & JSXBase.HTMLAttributes<HTMLKiCodeBlockElement>;
+            /**
+             * An editable, form-associated combobox with local or remote filtering,
+             * single or multiple selection, and optional free entry.
+             * @whenToUse choose from a long list of options, let people search an option
+             * source, or allow multiple selections that remain visible as tags.
+             * @whenNotToUse use a select-only control for a short closed set or a plain
+             * text field for unrestricted input with no choices.
+             * @event change - Composed event after a user changes the committed selection.
+             * Read the committed value from the host.
+             * @catalogAction change
+             */
+            "ki-combobox": LocalJSX.IntrinsicElements["ki-combobox"] & JSXBase.HTMLAttributes<HTMLKiComboboxElement>;
+            /**
+             * An inline prompt for a decision about a proposed assistant action.
+             * @whenToUse Show the exact action and the details a person needs before
+             * granting permission. A trusted host maps the two decision events to its
+             * declared actions and records the outcome in state.
+             * @whenNotToUse Report a completed action without a preceding request, or
+             * block the rest of the interface with a modal decision (use ki-dialog).
+             * The displayed action identifier is text and carries no execution authority.
+             */
+            "ki-confirmation": LocalJSX.IntrinsicElements["ki-confirmation"] & JSXBase.HTMLAttributes<HTMLKiConfirmationElement>;
             /**
              * An accessible chat transcript with optional following as messages arrive.
              * @whenToUse Display chronological user, assistant and event messages. Give
@@ -7859,8 +8363,8 @@ declare module "@stencil/core" {
              */
             "ki-note": LocalJSX.IntrinsicElements["ki-note"] & JSXBase.HTMLAttributes<HTMLKiNoteElement>;
             /**
-             * A declarative data option rendered by its owning `ki-select`.
-             * @whenToUse declare one choice inside a `ki-select`; its text is the
+             * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
+             * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
              * human-facing label and its `value` is the submitted value.
              * @whenNotToUse `ki-option` standalone, authoring selection
              * on an option, or expecting it to paint its own row.

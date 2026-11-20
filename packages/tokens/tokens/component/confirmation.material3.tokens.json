@@ -1,0 +1,11 @@
+{
+  "ki": {
+    "confirmation": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Confirmation shape on the Material 3 radius scale."
+      }
+    }
+  }
+}

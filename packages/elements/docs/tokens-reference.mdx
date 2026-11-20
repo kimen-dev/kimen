@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 497 semantic
-and 1741 component tokens. Values are the resolved **onmars light**
+and 1773 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1374,6 +1374,46 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-code-radius` | `12px` | Corner radius of the figure. |
 | `--ki-code-string` | `#2c6a2b` | Syntax ink for strings. |
 
+### `ki-combobox`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-combobox-field-bg` | `#f9f7f4` | Fill for the editable field. |
+| `--ki-combobox-field-border` | `#86827b` | Outline around the editable field. |
+| `--ki-combobox-field-fg` | `#181613` | Text on the editable field. |
+| `--ki-combobox-field-height` | `2.5rem` | Resting minimum block size of the field. |
+| `--ki-combobox-icon-size` | `1rem` | Size of search, selection and remove glyphs. |
+| `--ki-combobox-input-basis` | `3.5rem` | Preferred text-entry width before a row of tags wraps. |
+| `--ki-combobox-input-touch-font-size` | `1rem` | Minimum editable text size for coarse-pointer input. |
+| `--ki-combobox-listbox-backdrop-filter` | `none` | Complete backdrop filter for the floating listbox. |
+| `--ki-combobox-listbox-bg` | `#f9f7f4` | Fill for the floating listbox. |
+| `--ki-combobox-listbox-bg-image` | `none` | Optional image layered over the floating listbox. |
+| `--ki-combobox-listbox-border` | `rgba(24, 22, 19, 0.1)` | Outline around the floating listbox. |
+| `--ki-combobox-listbox-fg` | `#181613` | Text on the floating listbox. |
+| `--ki-combobox-listbox-max-block-size` | `20rem` | Maximum listbox block size before options scroll. |
+| `--ki-combobox-listbox-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the floating listbox. |
+| `--ki-combobox-match-fg` | `#181613` | Foreground of the first bolded query match. |
+| `--ki-combobox-option-active-bg` | `#f3f0eb` | Fill for the active option. |
+| `--ki-combobox-option-active-fg` | `#181613` | Text on the active option. |
+| `--ki-combobox-tag-bg` | `#f3f0eb` | Fill for the selected tag. |
+| `--ki-combobox-tag-fg` | `#181613` | Text on the selected tag. |
+
+### `ki-confirmation`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-confirmation-backdrop-filter` | `none` | Complete backdrop effect behind the confirmation. |
+| `--ki-confirmation-bg` | `#f9f7f4` | Solid raised background of the confirmation prompt and summary. |
+| `--ki-confirmation-bg-image` | `none` | Optional image painted over the solid confirmation background. |
+| `--ki-confirmation-border` | `rgba(24, 22, 19, 0.16)` | Boundary of the confirmation surface. |
+| `--ki-confirmation-border-width` | `1px` | Stroke width of the confirmation boundary. |
+| `--ki-confirmation-fg` | `#181613` | Text on the confirmation surface. |
+| `--ki-confirmation-gap` | `0.75rem` | Block separation between confirmation rows. |
+| `--ki-confirmation-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the pending question. |
+| `--ki-confirmation-inline-gap` | `0.5rem` | Space between text and controls in a row. |
+| `--ki-confirmation-padding` | `1rem` | Space between the prompt's edge and its content. |
+| `--ki-confirmation-radius` | `16px` | Corner radius of the confirmation surface. |
+
 ### `ki-conversation`
 
 | Token | Value (onmars light) | Description |
@@ -1681,6 +1721,8 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-input-action-gap` | `0.25rem` | Gap between the input action and the preceding control or adornment. |
+| `--ki-input-action-padding-end` | `0.25rem` | Inline-end inset between the input action and the inside edge of the field border. |
 | `--ki-input-border-block-end-width` | `1px` | dimension used by the input component for border block end width. |
 | `--ki-input-border-block-start-width` | `1px` | dimension used by the input component for border block start width. |
 | `--ki-input-border-inline-end-width` | `1px` | dimension used by the input component for border inline end width. |

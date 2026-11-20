@@ -8,17 +8,17 @@
   "catalog": true,
   "sizeBudget": {
     "mcpApps": {
-      "raw": 9193,
-      "gzip": 2180,
-      "brotli": 1611
+      "raw": 9018,
+      "gzip": 2178,
+      "brotli": 1750
     },
     "mcpServer": {
-      "raw": 16124,
-      "gzip": 2951,
-      "brotli": 2017
+      "raw": 15949,
+      "gzip": 3036,
+      "brotli": 2046
     },
     "tokenStylesheets": {
-      "onmars": 150
+      "onmars": 136
     }
   }
 }
