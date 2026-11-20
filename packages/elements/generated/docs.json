@@ -2637,9 +2637,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-search"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-search": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -5288,6 +5294,823 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-search/ki-search.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-search",
+      "docs": "A query field with a responsive view for suggestions, recent searches and results.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "accept free-text searches and let the user run a typed or suggested\nquery. Listen for ki-input to update suggestions, and ki-search to render results."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "selecting one value from a fixed set belongs in ki-select.\nUse ki-input when a plain search field is enough."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-search-suggestion children supply suggestion and recent-query data."
+        },
+        {
+          "name": "slot",
+          "text": "leading - A control or decorative icon at the start of the collapsed or docked bar."
+        },
+        {
+          "name": "slot",
+          "text": "trailing - A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search."
+        },
+        {
+          "name": "slot",
+          "text": "results - Host-rendered results beneath suggestions and recent searches."
+        },
+        {
+          "name": "part",
+          "text": "bar - Collapsed and docked search bar."
+        },
+        {
+          "name": "part",
+          "text": "dialog-bar - Search bar inside the full-screen view."
+        },
+        {
+          "name": "part",
+          "text": "input - Native query input in each presentation."
+        },
+        {
+          "name": "part",
+          "text": "view - Docked popover or full-screen dialog surface."
+        },
+        {
+          "name": "part",
+          "text": "option - A selectable suggestion in the listbox."
+        },
+        {
+          "name": "part",
+          "text": "recent - Labelled group of recent searches."
+        },
+        {
+          "name": "part",
+          "text": "results - Container around host-rendered results."
+        }
+      ],
+      "usage": {
+        "examples": "# Search examples\n\n```html\n<ki-search label=\"Search Kimen\" placeholder=\"Search Kimen\" name=\"q\">\n  <ki-search-suggestion value=\"ki-dialog\" description=\"Component\">\n    Dialog\n  </ki-search-suggestion>\n  <ki-search-suggestion recent>button tokens</ki-search-suggestion>\n  <section slot=\"results\" aria-label=\"Results\"></section>\n</ki-search>\n```\n\n```js\nconst search = document.querySelector('ki-search');\n\nsearch.addEventListener('ki-input', ({ detail }) => {\n  // Load suggestions for detail.value and update the direct children.\n});\n\nsearch.addEventListener('ki-search', ({ detail }) => {\n  search.querySelector('[slot=\"results\"]').textContent = `Query: ${detail.value}`;\n});\n```\n\nUse `ki-clear` to clear host-rendered content and `ki-remove-recent` to\nupdate saved history. Set `loading` during a request. The results slot stays\nvisible while suggestions load. To offer voice search, supply a button\nwith an accessible name in the trailing slot and handle its activation.\n"
+      },
+      "props": [
+        {
+          "name": "backLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "back-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the full-screen Back button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Back'"
+            }
+          ],
+          "default": "'Back'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "clearLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "clear-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the query clear button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Clear search'"
+            }
+          ],
+          "default": "'Clear search'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "highlight",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "highlight",
+          "reflectToAttr": false,
+          "docs": "Emphasize literal, case-insensitive matches in suggestion titles.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the search landmark, input and full-screen dialog.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Search'"
+            }
+          ],
+          "default": "'Search'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading",
+          "reflectToAttr": false,
+          "docs": "Show a loading indicator while the host fetches suggestions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loadingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the loading indicator.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Loading suggestions'"
+            }
+          ],
+          "default": "'Loading suggestions'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "mode",
+          "type": "\"auto\" | \"docked\" | \"fullscreen\"",
+          "complexType": {
+            "original": "KiSearchMode",
+            "resolved": "\"auto\" | \"docked\" | \"fullscreen\"",
+            "references": {
+              "KiSearchMode": {
+                "location": "local",
+                "path": "src/components/ki-search/ki-search.tsx",
+                "id": "src/components/ki-search/ki-search.tsx::KiSearchMode"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "mode",
+          "reflectToAttr": true,
+          "docs": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'auto'"
+            }
+          ],
+          "default": "'auto'",
+          "values": [
+            {
+              "value": "auto",
+              "type": "string"
+            },
+            {
+              "value": "docked",
+              "type": "string"
+            },
+            {
+              "value": "fullscreen",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Name under which the current query is included in form data.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the search view is open. The field opens it on focus, click or input.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "placeholder",
+          "reflectToAttr": false,
+          "docs": "Optional hint displayed inside the empty search field.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "recentLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "recent-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible name of the recent-search group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Recent searches'"
+            }
+          ],
+          "default": "'Recent searches'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removeRecentLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remove-recent-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name template for recent-query removal. Use {value} for the query title.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Remove {value}'"
+            }
+          ],
+          "default": "'Remove {value}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "suggestionCountPlural",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "suggestion-count-plural",
+          "reflectToAttr": false,
+          "docs": "Polite announcement for zero or multiple suggestions. Use {count} for the number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} suggestions'"
+            }
+          ],
+          "default": "'{count} suggestions'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "suggestionCountSingular",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "suggestion-count-singular",
+          "reflectToAttr": false,
+          "docs": "Polite announcement when the list contains one suggestion.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'1 suggestion'"
+            }
+          ],
+          "default": "'1 suggestion'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "suggestionsLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "suggestions-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the suggestion listbox.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Suggestions'"
+            }
+          ],
+          "default": "'Suggestions'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current query. Edits and selected suggestions update this property.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-clear",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "The user cleared the query with the clear control or with Escape.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-input",
+          "detail": "KiSearchValueDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiSearchValueDetail",
+            "resolved": "KiSearchValueDetail",
+            "references": {
+              "KiSearchValueDetail": {
+                "location": "local",
+                "path": "src/components/ki-search/ki-search.tsx",
+                "id": "src/components/ki-search/ki-search.tsx::KiSearchValueDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "The current query after 200 ms of inactivity following an edit.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-remove-recent",
+          "detail": "KiSearchValueDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiSearchValueDetail",
+            "resolved": "KiSearchValueDetail",
+            "references": {
+              "KiSearchValueDetail": {
+                "location": "local",
+                "path": "src/components/ki-search/ki-search.tsx",
+                "id": "src/components/ki-search/ki-search.tsx::KiSearchValueDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "The removed recent query. Hosts can use this to persist the updated history.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-search",
+          "detail": "KiSearchValueDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiSearchValueDetail",
+            "resolved": "KiSearchValueDetail",
+            "references": {
+              "KiSearchValueDetail": {
+                "location": "local",
+                "path": "src/components/ki-search/ki-search.tsx",
+                "id": "src/components/ki-search/ki-search.tsx::KiSearchValueDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "The query to run, emitted on Enter or activation of a suggestion or recent search.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "pointerdown",
+          "capture": false,
+          "passive": true
+        },
+        {
+          "event": "focusout",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-search-suggestion children supply suggestion and recent-query data."
+        },
+        {
+          "name": "leading",
+          "docs": "A control or decorative icon at the start of the collapsed or docked bar."
+        },
+        {
+          "name": "results",
+          "docs": "Host-rendered results beneath suggestions and recent searches."
+        },
+        {
+          "name": "trailing",
+          "docs": "A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search."
+        }
+      ],
+      "parts": [
+        {
+          "name": "bar",
+          "docs": "Collapsed and docked search bar."
+        },
+        {
+          "name": "dialog-bar",
+          "docs": "Search bar inside the full-screen view."
+        },
+        {
+          "name": "input",
+          "docs": "Native query input in each presentation."
+        },
+        {
+          "name": "option",
+          "docs": "A selectable suggestion in the listbox."
+        },
+        {
+          "name": "recent",
+          "docs": "Labelled group of recent searches."
+        },
+        {
+          "name": "results",
+          "docs": "Container around host-rendered results."
+        },
+        {
+          "name": "view",
+          "docs": "Docked popover or full-screen dialog surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-spinner"
+      ],
+      "dependencyGraph": {
+        "ki-search": [
+          "ki-icon",
+          "ki-spinner"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-search-suggestion/ki-search-suggestion.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-search-suggestion",
+      "docs": "Declarative search suggestion or recent query rendered by its owning ki-search.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "supply one suggested or recent query as a direct ki-search child."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "standalone display, form options or arbitrary results content.\nUse the results slot of ki-search for independently rendered results."
+        },
+        {
+          "name": "slot",
+          "text": "- Plain text title displayed in the owning search view."
+        }
+      ],
+      "usage": {
+        "examples": "# Search suggestion examples\n\n```html\n<ki-search label=\"Search components\">\n  <ki-search-suggestion value=\"ki-dialog\" description=\"Component\">Dialog</ki-search-suggestion>\n  <ki-search-suggestion recent>button tokens</ki-search-suggestion>\n</ki-search>\n```\n\nThe child text is the title. When `value` is omitted, that title supplies the\nquery. Use `recent` for a removable history item.\n"
+      },
+      "props": [
+        {
+          "name": "description",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "description",
+          "reflectToAttr": true,
+          "docs": "Optional supporting text displayed below the title.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "recent",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "recent",
+          "reflectToAttr": true,
+          "docs": "Display in the removable recent-search group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Query to run. When omitted, the trimmed title is used.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Plain text title displayed in the owning search view."
+        }
+      ],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-select/ki-select.tsx",
       "encapsulation": "shadow",
       "tag": "ki-select",
@@ -5881,9 +6704,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-search"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-search": [
+          "ki-spinner"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-stack/ki-stack.tsx",
@@ -8484,6 +9313,16 @@
       "declaration": "export type KiScrollerOrientation = 'vertical' | 'horizontal';",
       "docstring": "",
       "path": "src/components/ki-scroller/ki-scroller.tsx"
+    },
+    "src/components/ki-search/ki-search.tsx::KiSearchMode": {
+      "declaration": "export type KiSearchMode = 'auto' | 'docked' | 'fullscreen';",
+      "docstring": "",
+      "path": "src/components/ki-search/ki-search.tsx"
+    },
+    "src/components/ki-search/ki-search.tsx::KiSearchValueDetail": {
+      "declaration": "export interface KiSearchValueDetail {\n  value: string;\n}",
+      "docstring": "",
+      "path": "src/components/ki-search/ki-search.tsx"
     },
     "src/components/ki-select/ki-select.tsx::KiSelectSize": {
       "declaration": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",

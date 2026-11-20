@@ -1139,6 +1139,135 @@ export const catalogData = {
       "whenNotToUse": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis.",
       "whenToUse": "a bounded region inside a view whose content can outgrow it:\nchat or message panes, code and log blocks, tag rows, sidebar navigation,\ntall menus inside cards. Give it bounds (its size comes entirely from your\nlayout) and a `label` (required: the accessible name of the scroll\nregion). Scrolling stays native — wheel, touch, keyboard and indicator\ndrag operate the viewport directly."
     },
+    "ki-search": {
+      "description": "A query field with a responsive view for suggestions, recent searches and results.",
+      "events": {
+        "ki-clear": "The user cleared the query with the clear control or with Escape.",
+        "ki-input": "The current query after 200 ms of inactivity following an edit.",
+        "ki-remove-recent": "The removed recent query. Hosts can use this to persist the updated history.",
+        "ki-search": "The query to run, emitted on Enter or activation of a suggestion or recent search."
+      },
+      "props": {
+        "back-label": {
+          "type": "string",
+          "description": "Accessible name of the full-screen Back button.",
+          "default": "Back"
+        },
+        "clear-label": {
+          "type": "string",
+          "description": "Accessible name of the query clear button.",
+          "default": "Clear search"
+        },
+        "highlight": {
+          "type": "boolean",
+          "description": "Emphasize literal, case-insensitive matches in suggestion titles.",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the search landmark, input and full-screen dialog.",
+          "default": "Search"
+        },
+        "loading": {
+          "type": "boolean",
+          "description": "Show a loading indicator while the host fetches suggestions.",
+          "default": false
+        },
+        "loading-label": {
+          "type": "string",
+          "description": "Accessible name of the loading indicator.",
+          "default": "Loading suggestions"
+        },
+        "mode": {
+          "type": "enum",
+          "values": [
+            "auto",
+            "docked",
+            "fullscreen"
+          ],
+          "description": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels.",
+          "default": "auto"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name under which the current query is included in form data."
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the search view is open. The field opens it on focus, click or input.",
+          "default": false
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Optional hint displayed inside the empty search field.",
+          "default": ""
+        },
+        "recent-label": {
+          "type": "string",
+          "description": "Visible and accessible name of the recent-search group.",
+          "default": "Recent searches"
+        },
+        "remove-recent-label": {
+          "type": "string",
+          "description": "Accessible name template for recent-query removal. Use {value} for the query title.",
+          "default": "Remove {value}"
+        },
+        "suggestion-count-plural": {
+          "type": "string",
+          "description": "Polite announcement for zero or multiple suggestions. Use {count} for the number.",
+          "default": "{count} suggestions"
+        },
+        "suggestion-count-singular": {
+          "type": "string",
+          "description": "Polite announcement when the list contains one suggestion.",
+          "default": "1 suggestion"
+        },
+        "suggestions-label": {
+          "type": "string",
+          "description": "Accessible name of the suggestion listbox.",
+          "default": "Suggestions"
+        },
+        "value": {
+          "type": "string",
+          "description": "Current query. Edits and selected suggestions update this property.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "Direct ki-search-suggestion children supply suggestion and recent-query data.",
+        "leading": "A control or decorative icon at the start of the collapsed or docked bar.",
+        "results": "Host-rendered results beneath suggestions and recent searches.",
+        "trailing": "A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search."
+      },
+      "tag": "ki-search",
+      "whenNotToUse": "selecting one value from a fixed set belongs in ki-select.\nUse ki-input when a plain search field is enough.",
+      "whenToUse": "accept free-text searches and let the user run a typed or suggested\nquery. Listen for ki-input to update suggestions, and ki-search to render results."
+    },
+    "ki-search-suggestion": {
+      "description": "Declarative search suggestion or recent query rendered by its owning ki-search.",
+      "events": {},
+      "props": {
+        "description": {
+          "type": "string",
+          "description": "Optional supporting text displayed below the title."
+        },
+        "recent": {
+          "type": "boolean",
+          "description": "Display in the removable recent-search group.",
+          "default": false
+        },
+        "value": {
+          "type": "string",
+          "description": "Query to run. When omitted, the trimmed title is used."
+        }
+      },
+      "slots": {
+        "": "Plain text title displayed in the owning search view."
+      },
+      "tag": "ki-search-suggestion",
+      "whenNotToUse": "standalone display, form options or arbitrary results content.\nUse the results slot of ki-search for independently rendered results.",
+      "whenToUse": "supply one suggested or recent query as a direct ki-search child."
+    },
     "ki-select": {
       "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {

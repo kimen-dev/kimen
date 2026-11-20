@@ -25,6 +25,7 @@ import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
+import { KiSearchMode, KiSearchValueDetail } from "./components/ki-search/ki-search";
 import { KiSelectSize } from "./components/ki-select/ki-select";
 import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 import { KiStatusTone } from "./components/ki-status/ki-status";
@@ -55,6 +56,7 @@ export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
+export { KiSearchMode, KiSearchValueDetail } from "./components/ki-search/ki-search";
 export { KiSelectSize } from "./components/ki-select/ki-select";
 export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 export { KiStatusTone } from "./components/ki-status/ki-status";
@@ -915,6 +917,115 @@ export namespace Components {
         "orientation": KiScrollerOrientation;
     }
     /**
+     * A query field with a responsive view for suggestions, recent searches and results.
+     * @whenToUse accept free-text searches and let the user run a typed or suggested
+     * query. Listen for ki-input to update suggestions, and ki-search to render results.
+     * @whenNotToUse selecting one value from a fixed set belongs in ki-select.
+     * Use ki-input when a plain search field is enough.
+     */
+    interface KiSearch {
+        /**
+          * Accessible name of the full-screen Back button.
+          * @default 'Back'
+         */
+        "backLabel": string;
+        /**
+          * Accessible name of the query clear button.
+          * @default 'Clear search'
+         */
+        "clearLabel": string;
+        /**
+          * Emphasize literal, case-insensitive matches in suggestion titles.
+          * @default true
+         */
+        "highlight": boolean;
+        /**
+          * Accessible name of the search landmark, input and full-screen dialog.
+          * @default 'Search'
+         */
+        "label": string;
+        /**
+          * Show a loading indicator while the host fetches suggestions.
+          * @default false
+         */
+        "loading": boolean;
+        /**
+          * Accessible name of the loading indicator.
+          * @default 'Loading suggestions'
+         */
+        "loadingLabel": string;
+        /**
+          * View presentation. Auto uses a full-screen dialog below 600 CSS pixels.
+          * @default 'auto'
+         */
+        "mode": KiSearchMode;
+        /**
+          * Name under which the current query is included in form data.
+         */
+        "name"?: string;
+        /**
+          * Whether the search view is open. The field opens it on focus, click or input.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Optional hint displayed inside the empty search field.
+          * @default ''
+         */
+        "placeholder": string;
+        /**
+          * Visible and accessible name of the recent-search group.
+          * @default 'Recent searches'
+         */
+        "recentLabel": string;
+        /**
+          * Accessible name template for recent-query removal. Use {value} for the query title.
+          * @default 'Remove {value}'
+         */
+        "removeRecentLabel": string;
+        /**
+          * Polite announcement for zero or multiple suggestions. Use {count} for the number.
+          * @default '{count} suggestions'
+         */
+        "suggestionCountPlural": string;
+        /**
+          * Polite announcement when the list contains one suggestion.
+          * @default '1 suggestion'
+         */
+        "suggestionCountSingular": string;
+        /**
+          * Accessible name of the suggestion listbox.
+          * @default 'Suggestions'
+         */
+        "suggestionsLabel": string;
+        /**
+          * Current query. Edits and selected suggestions update this property.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
+     * Declarative search suggestion or recent query rendered by its owning ki-search.
+     * @whenToUse supply one suggested or recent query as a direct ki-search child.
+     * @whenNotToUse standalone display, form options or arbitrary results content.
+     * Use the results slot of ki-search for independently rendered results.
+     */
+    interface KiSearchSuggestion {
+        /**
+          * Optional supporting text displayed below the title.
+         */
+        "description"?: string;
+        /**
+          * Display in the removable recent-search group.
+          * @default false
+         */
+        "recent": boolean;
+        /**
+          * Query to run. When omitted, the trimmed title is used.
+         */
+        "value"?: string;
+    }
+    /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -1415,6 +1526,10 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
 }
+export interface KiSearchCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiSearchElement;
+}
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiTabsElement;
@@ -1890,6 +2005,45 @@ declare global {
         prototype: HTMLKiScrollerElement;
         new (): HTMLKiScrollerElement;
     };
+    interface HTMLKiSearchElementEventMap {
+        "ki-input": KiSearchValueDetail;
+        "ki-search": KiSearchValueDetail;
+        "ki-clear": void;
+        "ki-remove-recent": KiSearchValueDetail;
+    }
+    /**
+     * A query field with a responsive view for suggestions, recent searches and results.
+     * @whenToUse accept free-text searches and let the user run a typed or suggested
+     * query. Listen for ki-input to update suggestions, and ki-search to render results.
+     * @whenNotToUse selecting one value from a fixed set belongs in ki-select.
+     * Use ki-input when a plain search field is enough.
+     */
+    interface HTMLKiSearchElement extends Components.KiSearch, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiSearchElementEventMap>(type: K, listener: (this: HTMLKiSearchElement, ev: KiSearchCustomEvent<HTMLKiSearchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiSearchElementEventMap>(type: K, listener: (this: HTMLKiSearchElement, ev: KiSearchCustomEvent<HTMLKiSearchElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiSearchElement: {
+        prototype: HTMLKiSearchElement;
+        new (): HTMLKiSearchElement;
+    };
+    /**
+     * Declarative search suggestion or recent query rendered by its owning ki-search.
+     * @whenToUse supply one suggested or recent query as a direct ki-search child.
+     * @whenNotToUse standalone display, form options or arbitrary results content.
+     * Use the results slot of ki-search for independently rendered results.
+     */
+    interface HTMLKiSearchSuggestionElement extends Components.KiSearchSuggestion, HTMLStencilElement {
+    }
+    var HTMLKiSearchSuggestionElement: {
+        prototype: HTMLKiSearchSuggestionElement;
+        new (): HTMLKiSearchSuggestionElement;
+    };
     /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
@@ -2188,6 +2342,8 @@ declare global {
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-scroller": HTMLKiScrollerElement;
+        "ki-search": HTMLKiSearchElement;
+        "ki-search-suggestion": HTMLKiSearchSuggestionElement;
         "ki-select": HTMLKiSelectElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
@@ -3071,6 +3227,139 @@ declare namespace LocalJSX {
         "orientation"?: KiScrollerOrientation;
     }
     /**
+     * A query field with a responsive view for suggestions, recent searches and results.
+     * @whenToUse accept free-text searches and let the user run a typed or suggested
+     * query. Listen for ki-input to update suggestions, and ki-search to render results.
+     * @whenNotToUse selecting one value from a fixed set belongs in ki-select.
+     * Use ki-input when a plain search field is enough.
+     */
+    interface KiSearch {
+        /**
+          * Accessible name of the full-screen Back button.
+          * @default 'Back'
+         */
+        "backLabel"?: string;
+        /**
+          * Accessible name of the query clear button.
+          * @default 'Clear search'
+         */
+        "clearLabel"?: string;
+        /**
+          * If `true`, the user cannot interact with the element.
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Emphasize literal, case-insensitive matches in suggestion titles.
+          * @default true
+         */
+        "highlight"?: boolean;
+        /**
+          * Accessible name of the search landmark, input and full-screen dialog.
+          * @default 'Search'
+         */
+        "label"?: string;
+        /**
+          * Show a loading indicator while the host fetches suggestions.
+          * @default false
+         */
+        "loading"?: boolean;
+        /**
+          * Accessible name of the loading indicator.
+          * @default 'Loading suggestions'
+         */
+        "loadingLabel"?: string;
+        /**
+          * View presentation. Auto uses a full-screen dialog below 600 CSS pixels.
+          * @default 'auto'
+         */
+        "mode"?: KiSearchMode;
+        /**
+          * Name under which the current query is included in form data.
+         */
+        "name"?: string;
+        /**
+          * The user cleared the query with the clear control or with Escape.
+         */
+        "onKi-clear"?: (event: KiSearchCustomEvent<void>) => void;
+        /**
+          * The current query after 200 ms of inactivity following an edit.
+         */
+        "onKi-input"?: (event: KiSearchCustomEvent<KiSearchValueDetail>) => void;
+        /**
+          * The removed recent query. Hosts can use this to persist the updated history.
+         */
+        "onKi-remove-recent"?: (event: KiSearchCustomEvent<KiSearchValueDetail>) => void;
+        /**
+          * The query to run, emitted on Enter or activation of a suggestion or recent search.
+         */
+        "onKi-search"?: (event: KiSearchCustomEvent<KiSearchValueDetail>) => void;
+        /**
+          * Whether the search view is open. The field opens it on focus, click or input.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Optional hint displayed inside the empty search field.
+          * @default ''
+         */
+        "placeholder"?: string;
+        /**
+          * Visible and accessible name of the recent-search group.
+          * @default 'Recent searches'
+         */
+        "recentLabel"?: string;
+        /**
+          * Accessible name template for recent-query removal. Use {value} for the query title.
+          * @default 'Remove {value}'
+         */
+        "removeRecentLabel"?: string;
+        /**
+          * Polite announcement for zero or multiple suggestions. Use {count} for the number.
+          * @default '{count} suggestions'
+         */
+        "suggestionCountPlural"?: string;
+        /**
+          * Polite announcement when the list contains one suggestion.
+          * @default '1 suggestion'
+         */
+        "suggestionCountSingular"?: string;
+        /**
+          * Accessible name of the suggestion listbox.
+          * @default 'Suggestions'
+         */
+        "suggestionsLabel"?: string;
+        /**
+          * Current query. Edits and selected suggestions update this property.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
+     * Declarative search suggestion or recent query rendered by its owning ki-search.
+     * @whenToUse supply one suggested or recent query as a direct ki-search child.
+     * @whenNotToUse standalone display, form options or arbitrary results content.
+     * Use the results slot of ki-search for independently rendered results.
+     */
+    interface KiSearchSuggestion {
+        /**
+          * Optional supporting text displayed below the title.
+         */
+        "description"?: string;
+        /**
+          * Display in the removable recent-search group.
+          * @default false
+         */
+        "recent"?: boolean;
+        /**
+          * Query to run. When omitted, the trimmed title is used.
+         */
+        "value"?: string;
+    }
+    /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -3729,6 +4018,29 @@ declare namespace LocalJSX {
         "orientation": KiScrollerOrientation;
         "label": string;
     }
+    interface KiSearchAttributes {
+        "label": string;
+        "placeholder": string;
+        "value": string;
+        "name": string;
+        "mode": KiSearchMode;
+        "open": boolean;
+        "highlight": boolean;
+        "loading": boolean;
+        "backLabel": string;
+        "clearLabel": string;
+        "suggestionsLabel": string;
+        "recentLabel": string;
+        "loadingLabel": string;
+        "suggestionCountSingular": string;
+        "suggestionCountPlural": string;
+        "removeRecentLabel": string;
+    }
+    interface KiSearchSuggestionAttributes {
+        "value": string;
+        "description": string;
+        "recent": boolean;
+    }
     interface KiSelectAttributes {
         "label": string;
         "labelHint": string;
@@ -3843,6 +4155,8 @@ declare namespace LocalJSX {
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
+        "ki-search": Omit<KiSearch, keyof KiSearchAttributes> & { [K in keyof KiSearch & keyof KiSearchAttributes]?: KiSearch[K] } & { [K in keyof KiSearch & keyof KiSearchAttributes as `attr:${K}`]?: KiSearchAttributes[K] } & { [K in keyof KiSearch & keyof KiSearchAttributes as `prop:${K}`]?: KiSearch[K] };
+        "ki-search-suggestion": Omit<KiSearchSuggestion, keyof KiSearchSuggestionAttributes> & { [K in keyof KiSearchSuggestion & keyof KiSearchSuggestionAttributes]?: KiSearchSuggestion[K] } & { [K in keyof KiSearchSuggestion & keyof KiSearchSuggestionAttributes as `attr:${K}`]?: KiSearchSuggestionAttributes[K] } & { [K in keyof KiSearchSuggestion & keyof KiSearchSuggestionAttributes as `prop:${K}`]?: KiSearchSuggestion[K] };
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
@@ -4181,6 +4495,21 @@ declare module "@stencil/core" {
              * the other — wrap or size content on the cross axis.
              */
             "ki-scroller": LocalJSX.IntrinsicElements["ki-scroller"] & JSXBase.HTMLAttributes<HTMLKiScrollerElement>;
+            /**
+             * A query field with a responsive view for suggestions, recent searches and results.
+             * @whenToUse accept free-text searches and let the user run a typed or suggested
+             * query. Listen for ki-input to update suggestions, and ki-search to render results.
+             * @whenNotToUse selecting one value from a fixed set belongs in ki-select.
+             * Use ki-input when a plain search field is enough.
+             */
+            "ki-search": LocalJSX.IntrinsicElements["ki-search"] & JSXBase.HTMLAttributes<HTMLKiSearchElement>;
+            /**
+             * Declarative search suggestion or recent query rendered by its owning ki-search.
+             * @whenToUse supply one suggested or recent query as a direct ki-search child.
+             * @whenNotToUse standalone display, form options or arbitrary results content.
+             * Use the results slot of ki-search for independently rendered results.
+             */
+            "ki-search-suggestion": LocalJSX.IntrinsicElements["ki-search-suggestion"] & JSXBase.HTMLAttributes<HTMLKiSearchSuggestionElement>;
             /**
              * A form-associated select-only combobox for choosing one option from
              * declarative `ki-option` children.

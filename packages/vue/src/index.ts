@@ -30,6 +30,8 @@ export { KiQr } from './ki-qr.js';
 export { KiRadio } from './ki-radio.js';
 export { KiRadioGroup } from './ki-radio-group.js';
 export { KiScroller } from './ki-scroller.js';
+export { KiSearch } from './ki-search.js';
+export { KiSearchSuggestion } from './ki-search-suggestion.js';
 export { KiSelect } from './ki-select.js';
 export { KiSpinner } from './ki-spinner.js';
 export { KiStack } from './ki-stack.js';

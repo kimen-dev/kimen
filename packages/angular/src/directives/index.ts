@@ -27,6 +27,8 @@ export const DIRECTIVES = [
   d.KiRadio,
   d.KiRadioGroup,
   d.KiScroller,
+  d.KiSearch,
+  d.KiSearchSuggestion,
   d.KiSelect,
   d.KiSpinner,
   d.KiStack,
