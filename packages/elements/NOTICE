@@ -54,40 +54,41 @@ MIT License (applies to the upstream material identified above):
   DEALINGS IN THE SOFTWARE.
 
 ================================================================================
-Third-party notices: Stencil client runtime (MIT)
+Third-party notices: @stencil/core@4.45.3 (MIT)
 ================================================================================
 
-The lazy-loading builds of @kimen/elements (dist/esm, dist/cjs and
-dist/kimen) embed the client runtime of the Stencil compiler, which loads and
-renders the components in the browser:
+The lazy-loading builds of @kimen/elements and the MCP Apps surface embedded
+in @kimen/adapter-mcp-apps and @kimen/mcp-server distribute Stencil's client
+runtime (internal/client). The per-component element modules import it from
+the @stencil/core dependency.
 
-    Stencil — https://stenciljs.com (https://github.com/stenciljs/core)
-    Embedded from: @stencil/core, internal/client
-    Copyright (c) 2019-present Drifty Co.
-    License: MIT
+The MIT License (MIT)
 
-  The per-component modules (dist/components) import that runtime from the
-  @stencil/core dependency instead of embedding it.
+Copyright (c) 2019-present Drifty Co.
 
-The MIT License (MIT) (applies to the upstream material identified above):
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  THE SOFTWARE.
+-----------------------------------------
+Third-party components, software, and/or libraries (collectively, "components")
+are included under the licenses specified by their authors. For information
+about these third-party licenses, refer to the separate legal notices governing
+such components at NOTICE file at the top level of the package.
 
 ================================================================================
 Third-party notices: Lucide 1.63.0 and Feather icons (ISC and MIT)

@@ -1,4 +1,5 @@
 // @spec:018-project-integrity-hardening#S7
+// @spec:151-release-automation
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -17,6 +18,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 
 import { canonicalJson } from '../lib/canonical-json.mjs';
+import { mcpFixtureFields, writeMcpFixtureFiles } from './fixtures/mcp-package.mjs';
 
 const subjectUrl = new URL('../release/build-candidate.mjs', import.meta.url);
 const version = '1.2.3';
@@ -25,6 +27,10 @@ const artifactId = 73_311;
 const candidateSha256 = 'a'.repeat(64);
 const elementsIntegrity = `sha512-${Buffer.alloc(64, 1).toString('base64')}`;
 const tokensIntegrity = `sha512-${Buffer.alloc(64, 2).toString('base64')}`;
+const mcpIntegrity = `sha512-${Buffer.alloc(64, 3).toString('base64')}`;
+const mcpName = '@kimen/mcp-server';
+const mcpBin = 'dist/kimen-mcp.mjs';
+const packageNames = ['@kimen/elements', '@kimen/tokens', mcpName];
 const repositoryUrl = 'git+https://github.com/kimen-dev/kimen.git';
 
 async function loadSubject() {
@@ -91,6 +97,12 @@ function packageFixture(name, directory, options) {
       license: 'Apache-2.0',
       repository: repositoryMetadata(directory, options.repositoryOverrides?.[name]),
       files: ['dist', 'NOTICE'],
+      ...(name === mcpName
+        ? {
+            ...mcpFixtureFields,
+            ...options.mcpManifest,
+          }
+        : {}),
       ...(options.scripts?.[name] === undefined ? {} : { scripts: options.scripts[name] }),
     },
     legalFiles: { ...defaultLegalFiles, ...options.legalFiles?.[name] },
@@ -117,6 +129,9 @@ async function writePackage(root, fixture) {
       .filter(([, contents]) => contents !== null)
       .map(([name, contents]) => writeFile(join(directory, name), contents)),
   ]);
+  if (fixture.manifest.name === mcpName) {
+    await writeMcpFixtureFiles(directory, fixture.manifest.version);
+  }
   return directory;
 }
 
@@ -138,6 +153,7 @@ async function createRepositoryFixture(t, overrides = {}) {
   const fixtures = [
     packageFixture('@kimen/elements', 'elements', options),
     packageFixture('@kimen/tokens', 'tokens', options),
+    packageFixture(mcpName, 'mcp-server', options),
     ...options.extraPackages.map(({ name, directory, manifest = {} }) => ({
       directory,
       manifest: {
@@ -231,6 +247,7 @@ function aCandidateManifest(overrides = {}) {
     packages: [
       packageRecord('@kimen/elements', `kimen-elements-${version}.tgz`, elementsIntegrity),
       packageRecord('@kimen/tokens', `kimen-tokens-${version}.tgz`, tokensIntegrity),
+      packageRecord(mcpName, `kimen-mcp-server-${version}.tgz`, mcpIntegrity),
     ],
     ...overrides,
   };
@@ -260,6 +277,7 @@ function publicationInput(overrides = {}) {
     registry: {
       '@kimen/elements': { exists: true, versions: {} },
       '@kimen/tokens': { exists: true, versions: {} },
+      [mcpName]: { exists: true, versions: {} },
     },
     trustedPublishers: {
       '@kimen/elements': {
@@ -268,6 +286,11 @@ function publicationInput(overrides = {}) {
         environment: 'npm',
       },
       '@kimen/tokens': {
+        configured: true,
+        workflow: '.github/workflows/release.yml',
+        environment: 'npm',
+      },
+      [mcpName]: {
         configured: true,
         workflow: '.github/workflows/release.yml',
         environment: 'npm',
@@ -296,11 +319,26 @@ test('S7 accepts the canonical release-candidate-v1 manifest', async () => {
 
 test('S7 rejects a candidate missing @kimen/tokens', async () => {
   const { validateCandidateManifest } = await loadSubject();
-  const elementsOnly = aCandidateManifest({ packages: [aCandidateManifest().packages[0]] });
+  const missingTokens = aCandidateManifest({
+    packages: aCandidateManifest().packages.filter(({ name }) => name !== '@kimen/tokens'),
+  });
 
   assert.throws(
-    () => validateCandidateManifest(elementsOnly),
+    () => validateCandidateManifest(missingTokens),
     /exact.*(?:elements.*tokens|package set)|missing.*tokens/i,
+  );
+});
+
+test('S7 rejects a candidate missing the MCP server or placing it out of canonical order', async () => {
+  const { validateCandidateManifest } = await loadSubject();
+  const [elements, tokens, mcp] = aCandidateManifest().packages;
+  assert.throws(
+    () => validateCandidateManifest(aCandidateManifest({ packages: [elements, tokens] })),
+    /exact.*package set/i,
+  );
+  assert.throws(
+    () => validateCandidateManifest(aCandidateManifest({ packages: [elements, mcp, tokens] })),
+    /canonical order/i,
   );
 });
 
@@ -372,7 +410,7 @@ test('S7 dry-run accepts private packages, preserves versions and emits a null t
   assert.equal(result.manifest.version, '0.0.0');
   assert.deepEqual(
     result.manifest.packages.map(({ name }) => name),
-    ['@kimen/elements', '@kimen/tokens'],
+    packageNames,
   );
 });
 
@@ -418,7 +456,7 @@ test('S7 dry-run rejects a release tag instead of advancing release state', asyn
   );
 });
 
-test('S7 release binds source SHA, tag and both package versions', async (t) => {
+test('S7 release binds source SHA, tag and all three package versions', async (t) => {
   const fixture = await createRepositoryFixture(t);
   const result = await buildFixture(t, fixture);
 
@@ -428,7 +466,7 @@ test('S7 release binds source SHA, tag and both package versions', async (t) => 
   assert.equal(result.manifest.version, version);
   assert.deepEqual(
     result.manifest.packages.map(({ name }) => name),
-    ['@kimen/elements', '@kimen/tokens'],
+    packageNames,
   );
 });
 
@@ -476,6 +514,7 @@ test('S7 candidate archive is canonical and records exact SHA-256, SHA-512 SRI a
   const expectedFiles = [
     'SHA256SUMS',
     `kimen-elements-${version}.tgz`,
+    `kimen-mcp-server-${version}.tgz`,
     `kimen-tokens-${version}.tgz`,
     'manifest.json',
   ];
@@ -537,7 +576,7 @@ for (const [file, contents, state] of [
   });
 }
 
-test('S7 a candidate built from complete packages carries LICENSE and NOTICE in both tarballs', async (t) => {
+test('S7 a candidate built from complete packages carries LICENSE and NOTICE in all three tarballs', async (t) => {
   const fixture = await createRepositoryFixture(t);
   const result = await buildFixture(t, fixture);
   const { directory } = await extractCandidate(t, result.archivePath);
@@ -573,6 +612,47 @@ test('S7 rejects publish lifecycle hooks in candidate manifests', async (t) => {
   await assert.rejects(buildFixture(t, fixture), /lifecycle|publish|postpublish/i);
 });
 
+test('S7 packs the MCP executable without publishing its development workspace dependencies', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  const candidate = await buildFixture(t, fixture);
+  const { directory } = await extractCandidate(t, candidate.archivePath);
+  const packed = JSON.parse(
+    run('tar', ['-xOzf', `kimen-mcp-server-${version}.tgz`, 'package/package.json'], directory),
+  );
+  assert.equal(packed.license, 'Apache-2.0');
+  assert.equal(packed.bin['kimen-mcp'], `./${mcpBin}`);
+  assert.deepEqual(packed.files, [mcpBin, 'COMPAT.md', 'NOTICE']);
+  assert.deepEqual(packed.repository, repositoryMetadata('mcp-server'));
+  assert.equal(packed.dependencies, undefined);
+  assert.doesNotMatch(JSON.stringify(packed), /workspace:/u);
+});
+
+for (const field of ['dependencies', 'optionalDependencies', 'peerDependencies']) {
+  test(`S7 rejects MCP runtime ${field} before packing`, async (t) => {
+    const fixture = await createRepositoryFixture(t, {
+      mcpManifest: { [field]: { zod: '4.6.7' } },
+    });
+    await assert.rejects(buildFixture(t, fixture), new RegExp(`mcp-server.*${field}`, 'u'));
+  });
+}
+
+test('S7 candidate building rejects a binary that reports a different release version', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  await writeMcpFixtureFiles(fixture.packages[mcpName], '1.2.2');
+  await assert.rejects(buildFixture(t, fixture), /serverInfo kimen@1\.2\.3/u);
+});
+
+test('S8 candidate building rejects a bundled npm package absent from the packed notice', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  await writeMcpFixtureFiles(fixture.packages[mcpName], version, [
+    { name: 'new-library', version: '1.0.0', license: 'MIT' },
+  ]);
+  await assert.rejects(
+    buildFixture(t, fixture),
+    /missing the notice section for new-library@1\.0\.0/u,
+  );
+});
+
 test('S7 independent verification accepts the exact immutable candidate', async (t) => {
   const fixture = await createRepositoryFixture(t);
   const candidate = await buildFixture(t, fixture);
@@ -585,6 +665,11 @@ test('S7 independent verification accepts the exact immutable candidate', async 
 
   assert.equal(verified.candidateSha256, candidate.candidateSha256);
   assert.deepEqual(verified.manifest, candidate.manifest);
+  assert.deepEqual(verified.mcpServer, {
+    name: mcpName,
+    source: 'tarball',
+    workspaceLinked: false,
+  });
 });
 
 test('S7 independent verification blocks candidate-byte tampering', async (t) => {
@@ -647,6 +732,7 @@ test('S7 publication accepts complete same-artifact evidence and npm 11.5.1', as
     [
       { name: '@kimen/elements', action: 'publish' },
       { name: '@kimen/tokens', action: 'publish' },
+      { name: mcpName, action: 'publish' },
     ],
   );
 });
@@ -728,6 +814,7 @@ test('S7 partial retry skips the identical published package and publishes only 
     [
       { name: '@kimen/elements', action: 'skip' },
       { name: '@kimen/tokens', action: 'publish' },
+      { name: mcpName, action: 'publish' },
     ],
   );
 });
@@ -744,12 +831,13 @@ test('S7 partial retry treats conflicting registry integrity as a security failu
   );
 });
 
-test('S7 idempotent retry skips both packages when both immutable versions already match', async () => {
+test('S7 idempotent retry skips all packages when their immutable versions already match', async () => {
   const input = publicationInput();
   input.registry['@kimen/elements'].versions[version] = {
     integrity: elementsIntegrity,
   };
   input.registry['@kimen/tokens'].versions[version] = { integrity: tokensIntegrity };
+  input.registry[mcpName].versions[version] = { integrity: mcpIntegrity };
 
   const result = await evaluate(input);
 
@@ -759,6 +847,7 @@ test('S7 idempotent retry skips both packages when both immutable versions alrea
     [
       { name: '@kimen/elements', action: 'skip' },
       { name: '@kimen/tokens', action: 'skip' },
+      { name: mcpName, action: 'skip' },
     ],
   );
 });

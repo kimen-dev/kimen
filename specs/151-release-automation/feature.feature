@@ -16,7 +16,7 @@ Feature: Kimen prepares and tags releases through a pull request
 
   # S3
   Scenario: Merging the release pull request tags its merge commit
-    Given the release pull request for v0.2.0 declares that version in both packages
+    Given the release pull request for v0.2.0 declares that version in all three release packages
     When the release pull request merges into main
     Then the annotated tag v0.2.0 points to the merge commit
     And the GitHub Release contains the changelog entry for 0.2.0
@@ -35,8 +35,21 @@ Feature: Kimen prepares and tags releases through a pull request
     Then it preserves the existing tag and its target
 
   # S6
-  Scenario: A release pull request versions only elements and tokens
+  Scenario: A release pull request versions only the publication scope
     Given the workspace includes private packages outside the publication scope
     When release preparation proposes a version
-    Then only @kimen/elements and @kimen/tokens receive that version and become publishable
-    And neither published package has a workspace protocol in a consumer dependency
+    Then only @kimen/elements, @kimen/tokens and @kimen/mcp-server receive that version and become publishable
+    And none of the published packages has a workspace protocol in a consumer dependency
+
+  # S7
+  Scenario: The packed MCP server serves Kimen tools over stdio
+    Given a candidate includes the @kimen/mcp-server tarball for its release version
+    When candidate verification installs and starts kimen-mcp in a clean consumer
+    Then the initialize handshake reports server name kimen and the candidate version
+    And tools/list lists the Kimen tools
+
+  # S8
+  Scenario: The packed MCP server carries its bundled dependency notices
+    Given the kimen-mcp bundle includes code from third-party npm packages
+    When packaging verifies the bundle against the package NOTICE
+    Then each bundled third-party package has its own notice section in the tarball

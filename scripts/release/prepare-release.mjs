@@ -59,7 +59,7 @@ async function prepareRelease() {
     Object.keys(preview.projectsVersionData).length !== releasePackages.size ||
     Object.keys(preview.projectsVersionData).some((name) => !releasePackages.has(name))
   ) {
-    throw new Error('Nx must plan exactly the two packages in the release scope');
+    throw new Error('Nx must plan exactly the packages in the release scope');
   }
   if (
     Object.values(preview.projectsVersionData).some(
