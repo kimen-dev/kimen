@@ -99,18 +99,21 @@ Complete these steps before merging the first release PR.
    `@kimen/elements` and `@kimen/tokens`, and build and validate their
    tarballs. Manually publish each tarball using your npm account with
    `npm publish <tarball> --access public --tag bootstrap --ignore-scripts`.
-   The `bootstrap` dist-tag reserves the names and leaves `latest` for the
-   first automated release. Keep these local manifest edits out of `main`.
-2. Within two days of the bootstrap publishes, configure the npm trusted
-   publisher on each package for repository `kimen-dev/kimen`, workflow
-   `release.yml`, and environment `npm`.
-3. Create and install a dedicated GitHub App on `kimen-dev/kimen` with
+   The placeholder only reserves the names; the first automated release
+   publishes under `latest` and replaces it there. Keep these local manifest
+   edits out of `main`.
+2. Create and install a dedicated GitHub App on `kimen-dev/kimen` with
    repository permissions **Contents: Read and write** and **Pull requests:
    Read and write**. Store its client ID as the `RELEASE_APP_ID` repository
    secret and its private key as `RELEASE_APP_PRIVATE_KEY`.
-4. Create the GitHub environment `npm` and choose its deployment policy.
+3. Create the GitHub environment `npm` and choose its deployment policy.
    Require founder approval to review each publication, or leave approval
    disabled for fully automatic publication after the release PR merges.
+4. Configure the npm trusted publisher on each package for repository
+   `kimen-dev/kimen`, workflow `release.yml`, and environment `npm`. Do this
+   last, when the first release PR is green and ready to merge: npm expires a
+   new trusted publisher configuration that has not completed a successful
+   publication within two days, and it must then be deleted and recreated.
 
 GitHub Actions uses OIDC for npm. Keep `NPM_TOKEN` and `NODE_AUTH_TOKEN` out
 of Actions. For the external steps, see the
