@@ -192,12 +192,26 @@ export default defineConfig({
           for (const frame of page.frames()) {
             const target = frame.locator(selector);
             if ((await target.count()) === 0) continue;
-            const bounds = await target.first().boundingBox();
+            // A synthesized gesture that starts outside the visible viewport is
+            // dropped, so bring the target into view and keep the stroke inside
+            // the part of it the viewport shows (CI runs a smaller window).
+            const element = target.first();
+            await element.scrollIntoViewIfNeeded();
+            const bounds = await element.boundingBox();
             if (!bounds) throw new Error(`Swipe target is not visible: ${selector}`);
+            const viewport = page.viewportSize();
+            const left = Math.max(bounds.x, 0);
+            const right = Math.min(bounds.x + bounds.width, viewport?.width ?? Infinity);
+            const top = Math.max(bounds.y, 0);
+            const bottom = Math.min(bounds.y + bounds.height, viewport?.height ?? Infinity);
+            const width = right - left;
+            if (width <= 0 || bottom <= top) {
+              throw new Error(`Swipe target is outside the viewport: ${selector}`);
+            }
             await session.send('Input.synthesizeScrollGesture', {
-              x: bounds.x + bounds.width * 0.9,
-              y: bounds.y + bounds.height / 2,
-              xDistance: -bounds.width * 0.8,
+              x: left + width * 0.9,
+              y: (top + bottom) / 2,
+              xDistance: -width * 0.8,
               preventFling: true,
               gestureSourceType: 'touch',
             });
