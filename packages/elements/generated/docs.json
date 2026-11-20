@@ -10679,6 +10679,21 @@
       "docstring": "",
       "path": "src/components/ki-status/ki-status.tsx"
     },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsVariant": {
+      "declaration": "export type KiSuggestionsVariant = 'chips' | 'cards';",
+      "docstring": "",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
+    },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsMode": {
+      "declaration": "export type KiSuggestionsMode = 'send' | 'fill';",
+      "docstring": "",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
+    },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsComposer": {
+      "declaration": "export interface KiSuggestionsComposer {\n  value: string;\n  focus(): void;\n}",
+      "docstring": "Application-owned editor used by a suggestions group.",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
+    },
     "src/components/ki-switch/ki-switch.tsx::KiSwitchSize": {
       "declaration": "export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
@@ -10703,21 +10718,6 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
-    },
-    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsVariant": {
-      "declaration": "export type KiSuggestionsVariant = 'chips' | 'cards';",
-      "docstring": "",
-      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
-    },
-    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsMode": {
-      "declaration": "export type KiSuggestionsMode = 'send' | 'fill';",
-      "docstring": "",
-      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
-    },
-    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsComposer": {
-      "declaration": "export interface KiSuggestionsComposer {\n  value: string;\n  focus(): void;\n}",
-      "docstring": "Application-owned editor used by a suggestions group.",
-      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",
