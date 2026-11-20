@@ -191,10 +191,11 @@ export default defineConfig({
         //
         // NOT Input.synthesizeScrollGesture: on Aura (Linux) Chromium hands the
         // touches it synthesizes for DevTools straight to the view, past the
-        // platform gesture recognizer, so the page receives touchstart, touchmove
-        // and touchend but no scroll gesture ever starts. Input.dispatchTouchEvent
-        // runs the touches through the browser's own gesture detection on every
-        // platform, the same path tapWithCoarsePointer relies on.
+        // platform gesture recognizer. Measured in CI, the page saw touchstart
+        // and touchend, no touchmove, and no scroll ever started; macOS routes the
+        // same gesture differently and scrolls. Input.dispatchTouchEvent runs the
+        // touches through the browser's own gesture detection on every platform,
+        // the same path tapWithCoarsePointer relies on.
         swipeWithCoarsePointer: defineBrowserCommand(async ({ page }, selector: string) => {
           const session = await cdpSessions.get(page);
           if (!session) throw new Error('Touch emulation must be enabled before swiping');
@@ -240,36 +241,6 @@ export default defineConfig({
             await pause(200);
             await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
             return;
-          }
-          throw new Error(`Swipe target not found: ${selector}`);
-        }),
-        // TEMPORARY DIAGNOSTIC (remove before the final commit): the previous
-        // synthesized gesture, reporting the stroke and the real window bounds.
-        synthesizedSwipeDiagnostic: defineBrowserCommand(async ({ page }, selector: string) => {
-          const session = await cdpSessions.get(page);
-          if (!session) throw new Error('Touch emulation must be enabled before swiping');
-          for (const frame of page.frames()) {
-            const target = frame.locator(selector);
-            if ((await target.count()) === 0) continue;
-            const bounds = await target.first().boundingBox();
-            if (!bounds) throw new Error(`Swipe target is not visible: ${selector}`);
-            const stroke = {
-              x: bounds.x + bounds.width * 0.9,
-              y: bounds.y + bounds.height / 2,
-              xDistance: -bounds.width * 0.8,
-            };
-            let windowBounds: unknown;
-            try {
-              windowBounds = await session.send('Browser.getWindowForTarget', {});
-            } catch (error) {
-              windowBounds = String(error);
-            }
-            await session.send('Input.synthesizeScrollGesture', {
-              ...stroke,
-              preventFling: true,
-              gestureSourceType: 'touch',
-            });
-            return { stroke, bounds, viewport: page.viewportSize(), windowBounds };
           }
           throw new Error(`Swipe target not found: ${selector}`);
         }),
