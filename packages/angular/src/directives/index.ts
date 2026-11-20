@@ -36,6 +36,7 @@ export const DIRECTIVES = [
   d.KiMenuItem,
   d.KiNote,
   d.KiOption,
+  d.KiPopover,
   d.KiProgress,
   d.KiQr,
   d.KiRadio,

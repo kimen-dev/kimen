@@ -76,6 +76,7 @@ methods, CSS custom properties and examples.
 - [ki-menu-item](https://kimen.dev/llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-note](https://kimen.dev/llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
 - [ki-option](https://kimen.dev/llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
+- [ki-popover](https://kimen.dev/llms/ki-popover.md): Show filters, details, a small form, or a text toggletip.
 - [ki-progress](https://kimen.dev/llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
 - [ki-qr](https://kimen.dev/llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.
 - [ki-radio](https://kimen.dev/llms/ki-radio.md): place inside `ki-radio-group` when a person must choose exactly one of a small visible set.
