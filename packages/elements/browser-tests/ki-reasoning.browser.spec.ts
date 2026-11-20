@@ -24,6 +24,7 @@ const fixture = document.createElement('main');
 const firstStep = 'Review the request.';
 const secondStep = 'Check the current behavior.';
 const stepList = `<ol><li>${firstStep}</li></ol>`;
+const disclosureSelector = '#reasoning-fixture ki-reasoning details';
 
 beforeAll(() => {
   defineCustomElement();
@@ -90,10 +91,12 @@ function thinkingLabel(summary: HTMLElement): HTMLElement {
 it('S1 starts collapsed with the thinking summary', async () => {
   const { host, panel, summary } = await mount(`<ki-reasoning>${stepList}</ki-reasoning>`);
 
-  await expect.element(page.getByText(firstStep)).not.toBeVisible();
   expect(summary.textContent.trim()).toBe('Thinking…');
   expect(panel.open).toBe(false);
   expect(host.open).toBe(false);
+  const disclosure = await browser.ariaSnapshot(disclosureSelector);
+  expect(disclosure).toContain('Thinking…');
+  expect(disclosure).not.toContain(firstStep);
 });
 
 it('S2 shows streamed steps in order while the disclosure stays open', async () => {
@@ -131,12 +134,15 @@ it('S4 synchronizes application writes to open without emitting user toggles', a
   host.open = true;
   await opened;
   await expect.element(page.getByText(firstStep)).toBeVisible();
+  expect(panel.open).toBe(true);
+  expect(await browser.ariaSnapshot(disclosureSelector)).toContain(firstStep);
   await expect.poll(() => host.hasAttribute('open')).toBe(true);
 
   const closed = nextToggle(panel);
   host.open = false;
   await closed;
-  await expect.element(page.getByText(firstStep)).not.toBeVisible();
+  expect(panel.open).toBe(false);
+  expect(await browser.ariaSnapshot(disclosureSelector)).not.toContain(firstStep);
   await expect.poll(() => host.hasAttribute('open')).toBe(false);
   expect(toggles).toEqual([]);
 });
@@ -179,11 +185,11 @@ it('S6 announces completion once while the native disclosure stays closed', asyn
     host.status = 'done';
 
     await expect.poll(() => announced.slice()).toEqual(['Thought']);
-    const disclosure = await browser.ariaSnapshot('#reasoning-fixture ki-reasoning summary');
+    const disclosure = await browser.ariaSnapshot(disclosureSelector);
     expect(disclosure).toContain('Thought');
     expect(disclosure).not.toContain('[expanded]');
+    expect(disclosure).not.toContain(firstStep);
     expect(panel.open).toBe(false);
-    await expect.element(page.getByText(firstStep)).not.toBeVisible();
     await expectAccessible(fixture);
 
     host.duration = 2000;
@@ -221,18 +227,25 @@ it('S8 applies the supplied summary ink, surface and step rule colors', async ()
 });
 
 it('S9 stops the thinking shimmer under reduced motion and keeps text readable', async () => {
-  await browser.emulateReducedMotion('no-preference');
   try {
     const { summary } = await mount('<ki-reasoning></ki-reasoning>');
     const label = thinkingLabel(summary);
     const animations = () => label.getAnimations({ subtree: true });
+    await browser.emulateReducedMotion('no-preference');
     await expect.poll(() => animations().length).toBeGreaterThan(0);
 
     await browser.emulateReducedMotion('reduce');
     await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
 
     await expect.poll(animations).toEqual([]);
-    await expect.element(page.getByText('Thinking…')).toBeVisible();
+    // Vitest's WebKit visibility matcher exempts the summary itself, so read the label's text box.
+    expect(label.textContent).toBe('Thinking…');
+    expect(label.checkVisibility({ opacityProperty: true, visibilityProperty: true })).toBe(true);
+    const textRange = document.createRange();
+    textRange.selectNodeContents(label);
+    const { width, height } = textRange.getBoundingClientRect();
+    expect(width).toBeGreaterThan(0);
+    expect(height).toBeGreaterThan(0);
     expect(textRatio(label)).toBeGreaterThanOrEqual(4.5);
   } finally {
     await browser.emulateReducedMotion(null);

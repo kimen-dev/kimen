@@ -58,6 +58,10 @@ details[open] .chevron {
   border-inline-start: var(--ki-reasoning-border-width) solid var(--ki-reasoning-border);
 }
 
+details:not([open]) > [part="body"] {
+  display: none;
+}
+
 ::slotted(ol),
 ::slotted(ul) {
   margin-block: 0;
