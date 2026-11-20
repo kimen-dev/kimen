@@ -446,19 +446,24 @@ export class KiFileUpload {
 
   render() {
     const error = this.fieldError;
+    // Explicit keys keep Stencil's build-wide counter stable for existing components.
     return (
       <div
+        key="field"
         class="field"
         role="group"
         aria-labelledby="label"
         aria-describedby={error ? 'error' : 'help'}
         aria-disabled={this.disabledForUser ? 'true' : undefined}
       >
-        <div part="label">
-          <span id="label">{this.label}</span>
+        <div key="label" part="label">
+          <span key="label-text" id="label">
+            {this.label}
+          </span>
           {this.required && <span class="required"> {this.requiredLabel}</span>}
         </div>
         <div
+          key="drop-zone"
           part="drop-zone"
           data-drag-active={this.dragActive ? '' : undefined}
           onDragEnter={this.onDragEnter}
@@ -466,10 +471,11 @@ export class KiFileUpload {
           onDragOver={this.onDragOver}
           onDrop={this.onDrop}
         >
-          <div>
+          <div key="instruction">
             {this.dropLabel}{' '}
             <button
               type="button"
+              key="browse"
               part="browse"
               disabled={this.disabledForUser}
               ref={(button) => {
@@ -482,6 +488,7 @@ export class KiFileUpload {
           </div>
           <input
             type="file"
+            key="input"
             part="input"
             hidden
             disabled={this.disabledForUser}
@@ -492,10 +499,12 @@ export class KiFileUpload {
             }}
             onChange={this.onSelection}
           />
-          <div id="help" part="help" hidden={Boolean(error)}>
-            <slot name="help">{this.helpText}</slot>
+          <div key="help" id="help" part="help" hidden={Boolean(error)}>
+            <slot key="help-slot" name="help">
+              {this.helpText}
+            </slot>
           </div>
-          <div id="error" part="error" aria-live="polite" aria-atomic="true">
+          <div key="error" id="error" part="error" aria-live="polite" aria-atomic="true">
             {error}
           </div>
         </div>
@@ -504,7 +513,13 @@ export class KiFileUpload {
             {Array.from(this.rows, ([key, file], index) => this.renderRow(file, index, key))}
           </ul>
         )}
-        <div class="announcement" role="status" aria-live="polite" aria-atomic="true">
+        <div
+          key="announcement"
+          class="announcement"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           <span key={this.announcementVersion}>{this.announcement}</span>
         </div>
       </div>
