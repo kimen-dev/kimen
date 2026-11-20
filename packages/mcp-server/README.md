@@ -51,6 +51,10 @@ For Claude Desktop, the same command goes in `claude_desktop_config.json`:
 }
 ```
 
+Codex, Antigravity, OpenCode, Gemini CLI, VS Code and Cursor take the same
+command in their own config formats: see
+[Connect your agent](https://kimen.dev/docs/guides/connect-agents/).
+
 `--permission` with read access to the binary alone is optional, and
 recommended: the binary embeds everything it serves, so Node's permission
 model can deny it every other file, child processes and — from Node 25 on —
