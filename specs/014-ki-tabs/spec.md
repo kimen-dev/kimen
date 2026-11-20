@@ -21,6 +21,14 @@ charter; 002-ki-button is the approved precedent."
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is complete. Behavior enters the system exactly once, here (Art. II).
 
+## Tabs presentation extension (#405)
+
+[Spec 113](../113-tabs-variants/spec.md) adds the `variant` and `icon-layout`
+attributes to `ki-tabs` and the decorative `icon` slot to `ki-tab`.
+It supersedes the original design-source decisions that left tab variants
+and stacked icons to theme styling. Selection, panel pairing and keyboard
+navigation continue to use the contract below.
+
 ## Design-source analysis (Figma)
 
 > **Correction (2026-07-25) — the "full-file sweep verified 2026-07-08" is a
@@ -477,7 +485,7 @@ Feature: Tabs
 - Activation is automatic (selection follows focus), per the charter and the
   M3 inventory notes; a manual-activation opt-in is a possible future
   enhancement, not v1 scope.
-- No `variant`, `tone` or `size` props: the M3 primary/secondary tab styles
+- Original v1 assumption, superseded for `variant` by spec 113 and for `size` by spec 050. No `variant`, `tone` or `size` props: the M3 primary/secondary tab styles
   are pure appearance resolved in the token layer (002 shape precedent), no
   semantic-intent axis exists for tabs, and neither source scales tabs
   through an author-facing size (should a future source surface a real scale
@@ -492,7 +500,8 @@ Feature: Tabs
 - Overflow behavior (scrollable tab strips) is out of v1 scope; authors keep
   tab sets small enough to fit. Documented in the catalog guidance.
 - M3's stacked icon-above-label primary-tab layout is a theme-layer
-  presentation concern; v1 composes leading icons in the `start` slot.
+  presentation concern in the original v1 scope. Spec 113 adds the dedicated
+  `icon` slot and layout controls. The `start` slot still accepts leading media.
 - `ki-change` fires only on user-driven selection changes; programmatic
   `value` writes update the state silently (native `change` parity).
 - Tabs are not form-associated: the charter's form-associated set (input,
