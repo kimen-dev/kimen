@@ -453,7 +453,7 @@ export async function discoverComponentInventory({ workspaceRoot }) {
     components.map(async (component) => {
       const sourcePath = join(absoluteWorkspaceRoot, component.sourceModule);
       const sourceText = await readFile(sourcePath, 'utf8');
-      const tokenSlug = component.tag.slice(3);
+      const tokenSlug = component.metadata.tokenNamespace ?? component.tag.slice(3);
       const tokenSources = await tokenSourcesFor(absoluteWorkspaceRoot, tokenSlug, component.tag);
       return {
         ...component,

@@ -1,0 +1,16 @@
+{
+  "ki": {
+    "ai-label": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Fill of the AI provenance mark."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Text and icon ink of the AI provenance mark."
+      }
+    }
+  }
+}

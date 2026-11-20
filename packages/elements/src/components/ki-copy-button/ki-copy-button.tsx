@@ -85,12 +85,14 @@ export class KiCopyButton {
   @State() private hasLabel = false;
   @State() private feedback: { result: CopyResult; attempt: number } | undefined;
 
-  private labelObserver?: MutationObserver;
+  private labelObserver: MutationObserver | undefined;
   private attempt = 0;
   private pending = false;
   private feedbackTimer: number | undefined;
 
   connectedCallback(): void {
+    // Reset feedback where a render can run against a connected host.
+    this.feedback = undefined;
     this.updateLabel();
     this.labelObserver ??= new MutationObserver(this.updateLabel);
     this.labelObserver.observe(this.host, {
@@ -104,9 +106,9 @@ export class KiCopyButton {
 
   disconnectedCallback(): void {
     this.labelObserver?.disconnect();
+    this.labelObserver = undefined;
     this.attempt += 1;
     this.pending = false;
-    this.feedback = undefined;
     window.clearTimeout(this.feedbackTimer);
     this.feedbackTimer = undefined;
   }
@@ -169,9 +171,11 @@ export class KiCopyButton {
   render() {
     const feedback = this.feedback;
     const iconLabel = (this.label || '').trim() || DEFAULT_LABEL;
+    // Keep the fixed control and status region identities stable as feedback changes.
     return (
-      <Host tone="neutral">
+      <Host key="copy-button" tone="neutral">
         <button
+          key="button"
           aria-label={this.hasLabel ? undefined : iconLabel}
           data-icon-only={this.hasLabel ? undefined : ''}
           onBlur={endKeyboardPress}
@@ -184,14 +188,14 @@ export class KiCopyButton {
           tabIndex={0}
           type="button"
         >
-          <span aria-hidden="true" data-feedback={feedback?.result} part="icon">
-            <ki-icon name={glyphs[feedback?.result ?? 'idle']} />
+          <span key="glyph" aria-hidden="true" data-feedback={feedback?.result} part="icon">
+            <ki-icon key="icon" name={glyphs[feedback?.result ?? 'idle']} />
           </span>
-          <span hidden={!this.hasLabel} part="label">
-            <slot />
+          <span key="label" hidden={!this.hasLabel} part="label">
+            <slot key="label-text" />
           </span>
         </button>
-        <span aria-atomic="true" aria-live="polite" class="status" role="status">
+        <span key="status" aria-atomic="true" aria-live="polite" class="status" role="status">
           {feedback && (
             <span key={feedback.attempt}>
               {feedback.result === 'success' ? this.copiedLabel : this.copyErrorLabel}

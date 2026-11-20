@@ -740,6 +740,11 @@
       "secondary-button-bottom": {
         "$value": "{ki.color.black.12}",
         "$description": "semantic color for outline secondary button bottom."
+      },
+      "hairline-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of a hairline component surface edge."
       }
     },
     "inverse-white": {
@@ -1748,6 +1753,14 @@
           "$value": "{ki.radius.round}",
           "$description": "Fully rounded corners of a circular feature tile."
         }
+      },
+      "compact-mark": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Corner radius of a compact inline mark."
+      },
+      "anchored-panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of an anchored explanation panel."
       }
     },
     "motion": {
@@ -2400,6 +2413,12 @@
         "$type": "dimension",
         "$value": "{ki.size.surface.xs}",
         "$description": "Maximum inline size of a small anchored surface."
+      }
+    },
+    "surface-size": {
+      "compact": {
+        "$value": "{ki.size.surface.xxs}",
+        "$description": "Inline size of a compact anchored surface."
       }
     }
   }

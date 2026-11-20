@@ -4,6 +4,7 @@
  */
 
 /* eslint-disable */
+export { KiAiLabel } from './ki-ai-label.js';
 export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';
@@ -17,6 +18,7 @@ export { KiCheckbox } from './ki-checkbox.js';
 export { KiCheckboxGroup } from './ki-checkbox-group.js';
 export { KiChip } from './ki-chip.js';
 export { KiChipGroup } from './ki-chip-group.js';
+export { KiCodeBlock } from './ki-code-block.js';
 export { KiConversation } from './ki-conversation.js';
 export { KiCopyButton } from './ki-copy-button.js';
 export { KiCounter } from './ki-counter.js';
