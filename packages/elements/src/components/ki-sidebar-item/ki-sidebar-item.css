@@ -77,7 +77,7 @@ ki-tooltip {
   overflow-wrap: anywhere;
 }
 
-.rail-label {
+.sr-only {
   position: absolute;
   inline-size: var(--ki-typography-visually-hidden-size);
   block-size: var(--ki-typography-visually-hidden-size);

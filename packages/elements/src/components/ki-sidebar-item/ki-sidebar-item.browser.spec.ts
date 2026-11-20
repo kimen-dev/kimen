@@ -7,6 +7,7 @@ import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 
 const fixture = document.createElement('main');
 const style = document.createElement('style');
+const countedInboxName = /^Inbox\s*,\s*12 new$/u;
 const media = commands as unknown as {
   emulateForcedColors: (value: 'active' | null) => Promise<void>;
 };
@@ -48,8 +49,11 @@ function part(item: HTMLElement, name: string): HTMLElement {
 
 it('S5 exposes the counted link name and its keyboard tooltip in the rail', async () => {
   const item = mount('collapsed');
-  const inbox = page.getByRole('link', { name: 'Inbox, 12 new', exact: true });
+  const inbox = page.getByRole('link', { name: countedInboxName });
+  const members = page.getByRole('link', { name: 'Members', exact: true });
   await expect.element(inbox).toBeVisible();
+  await expect.element(inbox).not.toHaveAttribute('aria-label');
+  await expect.element(members).not.toHaveAttribute('aria-label');
   (page.getByRole('button', { name: 'Before' }).element() as HTMLButtonElement).focus();
   await userEvent.keyboard('{Tab}');
   expect(item.shadowRoot?.activeElement).toBe(inbox.element());
@@ -58,6 +62,17 @@ it('S5 exposes the counted link name and its keyboard tooltip in the rail', asyn
   await userEvent.keyboard('{Escape}');
   await expect.element(page.getByRole('tooltip')).not.toBeInTheDocument();
   await expectAccessible(fixture);
+});
+
+it('keeps the full count and slotted name in a count-first translation', async () => {
+  const item = mount();
+  item.setAttribute('count', '120');
+  item.setAttribute('count-label', '{count} unread in {label}');
+
+  const inbox = page.getByRole('link', { name: '120 unread in Inbox', exact: true });
+  await expect.element(inbox).toBeVisible();
+  await expect.element(inbox).not.toHaveAttribute('aria-label');
+  await expect.element(page.getByText('99+', { exact: true })).toBeVisible();
 });
 
 it('S6 shows the destination tooltip on hover', async () => {
@@ -70,7 +85,7 @@ it('S6 shows the destination tooltip on hover', async () => {
 
 it('S7 repaints the current item and foreground using theme tokens', async () => {
   const item = mount();
-  await expect.element(page.getByRole('link', { name: 'Inbox, 12 new' })).toBeVisible();
+  await expect.element(page.getByRole('link', { name: countedInboxName })).toBeVisible();
   item.style.setProperty('--ki-sidebar-item-current-bg', 'rgb(223, 238, 235)');
   item.style.setProperty('--ki-sidebar-item-current-fg', 'rgb(11, 39, 39)');
   const link = part(item, 'item');
@@ -80,7 +95,7 @@ it('S7 repaints the current item and foreground using theme tokens', async () =>
 
 it('S8 mirrors the rail dot and keeps the icon centered in RTL', async () => {
   const item = mount('collapsed');
-  await expect.element(page.getByRole('link', { name: 'Inbox, 12 new' })).toBeVisible();
+  await expect.element(page.getByRole('link', { name: countedInboxName })).toBeVisible();
   const link = part(item, 'item');
   const dot = part(item, 'count');
   const icon = part(item, 'start');
@@ -100,7 +115,7 @@ it('S8 mirrors the rail dot and keeps the icon centered in RTL', async () => {
 
 it('S10 updates the count in the accessible name and removes the empty dot', async () => {
   const item = mount('collapsed');
-  await expect.element(page.getByRole('link', { name: 'Inbox, 12 new' })).toBeVisible();
+  await expect.element(page.getByRole('link', { name: countedInboxName })).toBeVisible();
   item.setAttribute('count', '0');
   await expect.element(page.getByRole('link', { name: 'Inbox', exact: true })).toBeVisible();
   expect(item.shadowRoot?.querySelector('[part="count"]')).toBeNull();
@@ -117,7 +132,7 @@ it('S11 preserves a current marker and the unread dot in forced colors', async (
       skip('This engine does not expose forced colors in Playwright.');
     }
     const item = mount('collapsed');
-    await expect.element(page.getByRole('link', { name: 'Inbox, 12 new' })).toBeVisible();
+    await expect.element(page.getByRole('link', { name: countedInboxName })).toBeVisible();
     const link = part(item, 'item');
     const counter = part(item, 'count').querySelector('ki-counter');
     const indicator = () => counter?.shadowRoot?.querySelector('[part="indicator"]');
@@ -134,7 +149,7 @@ it('S11 preserves a current marker and the unread dot in forced colors', async (
 
 it('keeps the focused link when collapsed is assigned by the application', async () => {
   const item = mount();
-  const inbox = page.getByRole('link', { name: 'Inbox, 12 new' });
+  const inbox = page.getByRole('link', { name: countedInboxName });
   await expect.element(inbox).toBeVisible();
   const link = inbox.element() as HTMLAnchorElement;
   link.focus();

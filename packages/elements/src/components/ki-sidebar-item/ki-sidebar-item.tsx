@@ -2,8 +2,8 @@ import { Component, Element, Prop, State, h } from '@stencil/core';
 import { getIcon } from '../../utils/icon-registry.mjs';
 import {
   DEFAULT_COUNT_LABEL,
-  formatSidebarLabel,
   normalizeSidebarCount,
+  sidebarCountLabelParts,
 } from './ki-sidebar-item.label';
 
 const sidebarTag = ['ki', 'sidebar'].join('-');
@@ -104,7 +104,7 @@ export class KiSidebarItem {
 
   render() {
     const count = normalizeSidebarCount(this.count);
-    const label = formatSidebarLabel(this.name, count, this.countLabel);
+    const [before, after] = sidebarCountLabelParts(this.name, count, this.countLabel);
     const icon = this.iconName && getIcon(this.iconName) ? this.iconName : undefined;
     const isLink = typeof this.href === 'string';
     const glyph = icon ? h('ki-icon', { name: icon }) : (Array.from(this.name)[0] ?? '');
@@ -114,7 +114,15 @@ export class KiSidebarItem {
       { part: 'start', 'aria-hidden': 'true', hidden: !this.hasStart && !icon && !this.rail },
       h('slot', { name: 'start' }, glyph),
     );
-    const text = h('span', { part: 'label', class: { 'rail-label': this.rail } }, h('slot'));
+    // Keep the live slot in the link's name in both modes. Counter only paints
+    // the pill or dot, so the localized full count comes from adjacent text.
+    const countText = (text: string) =>
+      isLink && text ? h('span', { class: { 'sr-only': true } }, text) : null;
+    const text = h('span', { part: 'label', class: { 'sr-only': this.rail } }, [
+      countText(before),
+      h('slot'),
+      countText(after),
+    ]);
     const marker =
       count === undefined
         ? null
@@ -131,12 +139,15 @@ export class KiSidebarItem {
         class: { rail: this.rail },
         href: this.href,
         tabIndex: isLink ? 0 : undefined,
-        'aria-label': isLink && (this.rail || count !== undefined) ? label : undefined,
         'aria-current': isLink && this.current ? 'page' : undefined,
       },
       [start, text, marker],
     );
 
-    return h(tooltipTag, { label: this.rail ? label : '', placement: 'end' }, item);
+    return h(
+      tooltipTag,
+      { label: this.rail ? `${before}${this.name}${after}` : '', placement: 'end' },
+      item,
+    );
   }
 }

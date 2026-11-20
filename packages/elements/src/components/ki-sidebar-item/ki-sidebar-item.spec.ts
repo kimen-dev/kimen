@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatSidebarLabel, normalizeSidebarCount } from './ki-sidebar-item.label';
+import { normalizeSidebarCount, sidebarCountLabelParts } from './ki-sidebar-item.label';
 
 describe('sidebar count and label', () => {
   it('keeps positive whole counts and treats non-finite and out-of-range counts as empty', () => {
@@ -15,12 +15,20 @@ describe('sidebar count and label', () => {
     ]);
   });
 
-  it('localizes the counted label without interpreting placeholders in the item text', () => {
-    expect(formatSidebarLabel('{count} items', 12, '{count} unread in {label}')).toBe(
-      '12 unread in {count} items',
-    );
-    expect(formatSidebarLabel('Inbox', undefined, '{label}, {count} new')).toBe('Inbox');
-    expect(formatSidebarLabel('Inbox', 2, '{count} pending')).toBe('Inbox, 2 new');
-    expect(formatSidebarLabel('Inbox', 2, '{label}')).toBe('Inbox, 2 new');
+  it('keeps the live label between the localized parts in the requested order', () => {
+    expect(sidebarCountLabelParts('Inbox', 12, '{count} unread in {label}')).toEqual([
+      '12 unread in ',
+      '',
+    ]);
+    expect(sidebarCountLabelParts('{count} items', 12, '{label}: {count} in {label}')).toEqual([
+      '',
+      ': 12 in {count} items',
+    ]);
+  });
+
+  it('uses the default count wording for an incomplete template and omits empty counts', () => {
+    expect(sidebarCountLabelParts('Inbox', undefined, '{label}, {count} new')).toEqual(['', '']);
+    expect(sidebarCountLabelParts('Inbox', 2, '{count} pending')).toEqual(['', ', 2 new']);
+    expect(sidebarCountLabelParts('Inbox', 2, '{label}')).toEqual(['', ', 2 new']);
   });
 });

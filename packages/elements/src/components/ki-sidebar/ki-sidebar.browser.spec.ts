@@ -51,9 +51,10 @@ it('S1 shows brand, expanded count and footer in layout order', async () => {
   await expect.element(page.getByRole('navigation', { name: 'Main' })).toBeVisible();
   await expect.element(page.getByText('Kimen')).toBeVisible();
   await expect.element(page.getByText('12', { exact: true })).toBeVisible();
-  const inbox = page.getByRole('link', { name: 'Inbox, 12 new' });
+  const inbox = page.getByRole('link', { name: /^Inbox\s*,\s*12 new$/u });
   const footer = page.getByRole('button', { name: 'Ana Garcia' });
   await expect.element(inbox).toBeVisible();
+  await expect.element(inbox).not.toHaveAttribute('aria-label');
   await expect.element(footer).toBeVisible();
   const footerBottom = footer.element().getBoundingClientRect().bottom;
   expect(footerBottom - inbox.element().getBoundingClientRect().bottom).toBeGreaterThan(24);

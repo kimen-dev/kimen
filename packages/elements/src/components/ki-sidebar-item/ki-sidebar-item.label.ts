@@ -5,15 +5,19 @@ export function normalizeSidebarCount(value: number | undefined): number | undef
   return Math.floor(value);
 }
 
-export function formatSidebarLabel(
+export function sidebarCountLabelParts(
   label: string,
   count: number | undefined,
   template: string | undefined,
-): string {
-  if (!label || count === undefined) return label;
+): [before: string, after: string] {
+  if (!label || count === undefined) return ['', ''];
+  const labelToken = '{label}';
   const pattern =
-    template?.includes('{label}') && template.includes('{count}') ? template : DEFAULT_COUNT_LABEL;
-  return pattern.replace(/\{(label|count)\}/gu, (_match, key: string) =>
-    key === 'label' ? label : String(count),
-  );
+    template?.includes(labelToken) && template.includes('{count}') ? template : DEFAULT_COUNT_LABEL;
+  const [before = '', ...after] = pattern.split(labelToken);
+  const substitute = (part: string) =>
+    part.replace(/\{(label|count)\}/gu, (_match, key: string) =>
+      key === 'label' ? label : String(count),
+    );
+  return [substitute(before), substitute(after.join(labelToken))];
 }
