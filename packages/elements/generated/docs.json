@@ -2208,6 +2208,130 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-citation/ki-citation.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-citation",
+      "docs": "A numbered inline link from an answer to a source card.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Next to a claim supported by a `ki-source` in the same document\nor shadow root. Repeat the same reference for subsequent mentions."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "To cite a source outside this tree or replace a standalone\nlink. Use `ki-link` for direct navigation."
+        },
+        {
+          "name": "part",
+          "text": "link - Focusable citation link."
+        },
+        {
+          "name": "part",
+          "text": "marker - Visible citation number."
+        },
+        {
+          "name": "part",
+          "text": "preview - Anchored title and hostname preview."
+        },
+        {
+          "name": "part",
+          "text": "preview-title - Title in the preview."
+        },
+        {
+          "name": "part",
+          "text": "preview-domain - Hostname in the preview."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-citation\n\nPlace a citation after its claim and set `ref` to the matching source identifier.\n\n```html\n<p>The methods account for the difference<ki-citation ref=\"methods\"></ki-citation>.</p>\n<ki-sources>\n  <ki-source id=\"methods\" title=\"Study design\" href=\"/methods\"></ki-source>\n</ki-sources>\n```\n\nUse `citationRef` in JSX. Tab to the link for a preview. Escape dismisses the\npreview, and Enter opens the list and moves focus to the source link.\n"
+      },
+      "props": [
+        {
+          "name": "citationRef",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "ref",
+          "reflectToAttr": true,
+          "docs": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelTemplate",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-template",
+          "reflectToAttr": false,
+          "docs": "Localized link name with `{number}` and `{title}` placeholders.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Source {number}: {title}'"
+            }
+          ],
+          "default": "'Source {number}: {title}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "link",
+          "docs": "Focusable citation link."
+        },
+        {
+          "name": "marker",
+          "docs": "Visible citation number."
+        },
+        {
+          "name": "preview",
+          "docs": "Anchored title and hostname preview."
+        },
+        {
+          "name": "preview-domain",
+          "docs": "Hostname in the preview."
+        },
+        {
+          "name": "preview-title",
+          "docs": "Title in the preview."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-counter/ki-counter.tsx",
       "encapsulation": "shadow",
       "tag": "ki-counter",
@@ -6575,6 +6699,342 @@
         {
           "name": "value",
           "docs": "Displayed selection or placeholder."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-source/ki-source.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-source",
+      "docs": "Declares one named web source for a `ki-sources` list.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "As a direct child of `ki-sources`. In HTML provide an `id`,\n`href` and `title`; in guarded specs provide `source-id`, `href` and\n`title`. Use the same identifier on any citation of the source."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For standalone links outside a source list; use `ki-link`."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-source\n\nDeclare a source directly inside the default slot of `ki-sources`.\n\n```html\n<ki-sources open>\n  <ki-source id=\"methods\" href=\"/methods\" title=\"Study design\" snippet=\"How the study ran.\"></ki-source>\n</ki-sources>\n```\n\nUse a unique identifier in the current document or shadow root. In a\nguarded spec, use the `source-id` prop instead of the native `id`. The\ndisclosure displays the hostname from the resolved URL.\n"
+      },
+      "props": [
+        {
+          "name": "href",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": true,
+          "docs": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "snippet",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "snippet",
+          "reflectToAttr": true,
+          "docs": "Optional plain-text excerpt displayed in the source card.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceId",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "source-id",
+          "reflectToAttr": true,
+          "docs": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceTitle",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "title",
+          "reflectToAttr": true,
+          "docs": "Required plain-text source title. In HTML use the `title` attribute.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-sources/ki-sources.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-sources",
+      "docs": "A disclosure with the ordered sources behind an answer.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "To show the evidence behind an answer. Add direct `ki-source`\nchildren and place `ki-citation` markers next to the claims they support."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For ordinary navigation, unrelated links, or form controls."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct `ki-source` definitions for this answer."
+        },
+        {
+          "name": "part",
+          "text": "disclosure - Native expandable section."
+        },
+        {
+          "name": "part",
+          "text": "summary - Disclosure control with the localized source count."
+        },
+        {
+          "name": "part",
+          "text": "list - Ordered list of sources."
+        },
+        {
+          "name": "part",
+          "text": "source - Source card link."
+        },
+        {
+          "name": "part",
+          "text": "number - Source order marker inside the card."
+        },
+        {
+          "name": "part",
+          "text": "title - Visible title of the link."
+        },
+        {
+          "name": "part",
+          "text": "domain - Hostname derived from the link destination."
+        },
+        {
+          "name": "part",
+          "text": "snippet - Optional excerpt."
+        }
+      ],
+      "usage": {
+        "examples": "# Using Sources\n\nPut a citation immediately after the clause it supports. Put the source\ndefinitions directly inside the corresponding disclosure. The list shows\nsources in order of first citation and adds uncited sources in declaration order.\n\n```html\n<p>The study design<ki-citation ref=\"methods\"></ki-citation> explains the results.</p>\n<ki-sources>\n  <ki-source\n    id=\"methods\"\n    href=\"https://example.org/methods\"\n    title=\"Study design\"\n    snippet=\"How the study ran.\"\n  ></ki-source>\n</ki-sources>\n```\n\nUse `open` to start with the list expanded. Use unique source identifiers\nwithin each document or shadow root. Hover or focus a citation to see its\ntitle and hostname. Activate it to expand the list and focus the title link.\nThe card links can be used independently of the inline markers.\n\nWhen importing individual elements, register all three tags with their\nrespective `defineCustomElement()` functions. Use `citationRef` and\n`sourceTitle` as component props in JSX. In a guarded spec, use keys\n`ref`, `source-id`, `title` and `href` on their respective nodes. Put\nthe citation in a `div` primitive if it shares a line with text.\n\nProvide the local language through `label-template`, `source-count-label`,\nand `sources-count-label`. Titles and snippets are plain text. HTTP(S) URLs\nand relative web references work in authored HTML. Guarded specs also follow\nthe application's allowed-origin policy.\n"
+      },
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the disclosure is expanded. Set to show the list initially.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceCountLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "source-count-label",
+          "reflectToAttr": false,
+          "docs": "Localized summary when there is one source. Use `{count}` for its number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} source'"
+            }
+          ],
+          "default": "'{count} source'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourcesCountLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "sources-count-label",
+          "reflectToAttr": false,
+          "docs": "Localized summary for multiple sources. Use `{count}` for their number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} sources'"
+            }
+          ],
+          "default": "'{count} sources'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct `ki-source` definitions for this answer."
+        }
+      ],
+      "parts": [
+        {
+          "name": "disclosure",
+          "docs": "Native expandable section."
+        },
+        {
+          "name": "domain",
+          "docs": "Hostname derived from the link destination."
+        },
+        {
+          "name": "list",
+          "docs": "Ordered list of sources."
+        },
+        {
+          "name": "number",
+          "docs": "Source order marker inside the card."
+        },
+        {
+          "name": "snippet",
+          "docs": "Optional excerpt."
+        },
+        {
+          "name": "source",
+          "docs": "Source card link."
+        },
+        {
+          "name": "summary",
+          "docs": "Disclosure control with the localized source count."
+        },
+        {
+          "name": "title",
+          "docs": "Visible title of the link."
         }
       ],
       "states": [],

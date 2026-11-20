@@ -392,6 +392,24 @@ export namespace Components {
         "value": string[];
     }
     /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface KiCitation {
+        /**
+          * ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.
+         */
+        "citationRef": string;
+        /**
+          * Localized link name with `{number}` and `{title}` placeholders.
+          * @default 'Source {number}: {title}'
+         */
+        "labelTemplate": string;
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -1098,6 +1116,57 @@ export namespace Components {
         "value": string;
     }
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface KiSource {
+        /**
+          * Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Optional plain-text excerpt displayed in the source card.
+          * @default undefined
+         */
+        "snippet"?: string;
+        /**
+          * Source identifier in this document or shadow root. Overrides the native HTML `id` when set. Use this value in guarded specs and in citation refs.
+          * @default undefined
+         */
+        "sourceId"?: string;
+        /**
+          * Required plain-text source title. In HTML use the `title` attribute.
+         */
+        "sourceTitle": string;
+    }
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface KiSources {
+        /**
+          * Whether the disclosure is expanded. Set to show the list initially.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Localized summary when there is one source. Use `{count}` for its number.
+          * @default '{count} source'
+         */
+        "sourceCountLabel": string;
+        /**
+          * Localized summary for multiple sources. Use `{count}` for their number.
+          * @default '{count} sources'
+         */
+        "sourcesCountLabel": string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -1733,6 +1802,19 @@ declare global {
         new (): HTMLKiCheckboxGroupElement;
     };
     /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface HTMLKiCitationElement extends Components.KiCitation, HTMLStencilElement {
+    }
+    var HTMLKiCitationElement: {
+        prototype: HTMLKiCitationElement;
+        new (): HTMLKiCitationElement;
+    };
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -2106,6 +2188,31 @@ declare global {
         new (): HTMLKiSelectElement;
     };
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface HTMLKiSourceElement extends Components.KiSource, HTMLStencilElement {
+    }
+    var HTMLKiSourceElement: {
+        prototype: HTMLKiSourceElement;
+        new (): HTMLKiSourceElement;
+    };
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface HTMLKiSourcesElement extends Components.KiSources, HTMLStencilElement {
+    }
+    var HTMLKiSourcesElement: {
+        prototype: HTMLKiSourcesElement;
+        new (): HTMLKiSourcesElement;
+    };
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -2362,6 +2469,7 @@ declare global {
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
+        "ki-citation": HTMLKiCitationElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
@@ -2382,6 +2490,8 @@ declare global {
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-select": HTMLKiSelectElement;
+        "ki-source": HTMLKiSourceElement;
+        "ki-sources": HTMLKiSourcesElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
@@ -2743,6 +2853,24 @@ declare namespace LocalJSX {
           * @default []
          */
         "value"?: string[];
+    }
+    /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface KiCitation {
+        /**
+          * ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.
+         */
+        "citationRef": string;
+        /**
+          * Localized link name with `{number}` and `{title}` placeholders.
+          * @default 'Source {number}: {title}'
+         */
+        "labelTemplate"?: string;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -3463,6 +3591,57 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface KiSource {
+        /**
+          * Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Optional plain-text excerpt displayed in the source card.
+          * @default undefined
+         */
+        "snippet"?: string;
+        /**
+          * Source identifier in this document or shadow root. Overrides the native HTML `id` when set. Use this value in guarded specs and in citation refs.
+          * @default undefined
+         */
+        "sourceId"?: string;
+        /**
+          * Required plain-text source title. In HTML use the `title` attribute.
+         */
+        "sourceTitle": string;
+    }
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface KiSources {
+        /**
+          * Whether the disclosure is expanded. Set to show the list initially.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Localized summary when there is one source. Use `{count}` for its number.
+          * @default '{count} source'
+         */
+        "sourceCountLabel"?: string;
+        /**
+          * Localized summary for multiple sources. Use `{count}` for their number.
+          * @default '{count} sources'
+         */
+        "sourcesCountLabel"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -3961,6 +4140,10 @@ declare namespace LocalJSX {
         "max": number;
         "orientation": KiCheckboxGroupOrientation;
     }
+    interface KiCitationAttributes {
+        "citationRef": string;
+        "labelTemplate": string;
+    }
     interface KiCounterAttributes {
         "value": number;
         "max": number;
@@ -4089,6 +4272,17 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiSourceAttributes {
+        "sourceId": string;
+        "href": string;
+        "sourceTitle": string;
+        "snippet": string;
+    }
+    interface KiSourcesAttributes {
+        "open": boolean;
+        "sourceCountLabel": string;
+        "sourcesCountLabel": string;
+    }
     interface KiSpinnerAttributes {
         "label": string;
         "variant": 'ring' | 'dots';
@@ -4174,6 +4368,7 @@ declare namespace LocalJSX {
         "ki-card": Omit<KiCard, keyof KiCardAttributes> & { [K in keyof KiCard & keyof KiCardAttributes]?: KiCard[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `attr:${K}`]?: KiCardAttributes[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `prop:${K}`]?: KiCard[K] };
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
+        "ki-citation": Omit<KiCitation, keyof KiCitationAttributes> & { [K in keyof KiCitation & keyof KiCitationAttributes]?: KiCitation[K] } & { [K in keyof KiCitation & keyof KiCitationAttributes as `attr:${K}`]?: KiCitationAttributes[K] } & { [K in keyof KiCitation & keyof KiCitationAttributes as `prop:${K}`]?: KiCitation[K] } & OneOf<"citationRef", KiCitation["citationRef"], KiCitationAttributes["citationRef"]>;
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
@@ -4194,6 +4389,8 @@ declare namespace LocalJSX {
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
+        "ki-source": Omit<KiSource, keyof KiSourceAttributes> & { [K in keyof KiSource & keyof KiSourceAttributes]?: KiSource[K] } & { [K in keyof KiSource & keyof KiSourceAttributes as `attr:${K}`]?: KiSourceAttributes[K] } & { [K in keyof KiSource & keyof KiSourceAttributes as `prop:${K}`]?: KiSource[K] } & OneOf<"href", KiSource["href"], KiSourceAttributes["href"]> & OneOf<"sourceTitle", KiSource["sourceTitle"], KiSourceAttributes["sourceTitle"]>;
+        "ki-sources": Omit<KiSources, keyof KiSourcesAttributes> & { [K in keyof KiSources & keyof KiSourcesAttributes]?: KiSources[K] } & { [K in keyof KiSources & keyof KiSourcesAttributes as `attr:${K}`]?: KiSourcesAttributes[K] } & { [K in keyof KiSources & keyof KiSourcesAttributes as `prop:${K}`]?: KiSources[K] };
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
@@ -4317,6 +4514,14 @@ declare module "@stencil/core" {
              * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
              */
             "ki-checkbox-group": LocalJSX.IntrinsicElements["ki-checkbox-group"] & JSXBase.HTMLAttributes<HTMLKiCheckboxGroupElement>;
+            /**
+             * A numbered inline link from an answer to a source card.
+             * @whenToUse Next to a claim supported by a `ki-source` in the same document
+             * or shadow root. Repeat the same reference for subsequent mentions.
+             * @whenNotToUse To cite a source outside this tree or replace a standalone
+             * link. Use `ki-link` for direct navigation.
+             */
+            "ki-citation": LocalJSX.IntrinsicElements["ki-citation"] & JSXBase.HTMLAttributes<HTMLKiCitationElement>;
             /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an
@@ -4568,6 +4773,21 @@ declare module "@stencil/core" {
              * are silent.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
+            /**
+             * Declares one named web source for a `ki-sources` list.
+             * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+             * `href` and `title`; in guarded specs provide `source-id`, `href` and
+             * `title`. Use the same identifier on any citation of the source.
+             * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+             */
+            "ki-source": LocalJSX.IntrinsicElements["ki-source"] & JSXBase.HTMLAttributes<HTMLKiSourceElement>;
+            /**
+             * A disclosure with the ordered sources behind an answer.
+             * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+             * children and place `ki-citation` markers next to the claims they support.
+             * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+             */
+            "ki-sources": LocalJSX.IntrinsicElements["ki-sources"] & JSXBase.HTMLAttributes<HTMLKiSourcesElement>;
             /**
              * A compact status for an indeterminate wait.
              * @whenToUse show brief inline activity such as saving a change or running a

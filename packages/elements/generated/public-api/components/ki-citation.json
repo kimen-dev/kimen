@@ -1,0 +1,328 @@
+{
+  "component": {
+    "attributes": {
+      "label-template": {
+        "default": "'Source {number}: {title}'",
+        "deprecatedSince": null,
+        "description": "Localized link name with `{number}` and `{title}` placeholders.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "ref": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-citation-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for a citation marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a citation marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative image over a citation marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on a citation marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a hovered citation marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on a hovered citation marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline padding of the citation number.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the citation preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the title and hostname preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative image over the citation preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge color of the citation preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge width of the citation preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on the citation preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-max-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum width of the citation preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset around the preview content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the citation preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-preview-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Elevation of the citation preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a citation marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-citation-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum painted edge of a citation marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A numbered inline link from an answer to a source card.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "link": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Focusable citation link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "marker": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible citation number.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "preview": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Anchored title and hostname preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "preview-domain": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hostname in the preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "preview-title": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Title in the preview.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "citationRef": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "labelTemplate": {
+        "default": "'Source {number}: {title}'",
+        "deprecatedSince": null,
+        "description": "Localized link name with `{number}` and `{title}` placeholders.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-citation.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-citation.d.ts",
+    "symbols": {
+      "KiCitation": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiCitation extends Components.KiCitation, HTMLElement {\n}\nexport const KiCitation: {\n    prototype: KiCitation;\n    new (): KiCitation;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-citation.js"
+  }
+}

@@ -532,6 +532,26 @@ export const catalogData = {
       "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
       "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits."
     },
+    "ki-citation": {
+      "description": "A numbered inline link from an answer to a source card.",
+      "events": {},
+      "props": {
+        "label-template": {
+          "type": "string",
+          "description": "Localized link name with `{number}` and `{title}` placeholders.",
+          "default": "Source {number}: {title}"
+        },
+        "ref": {
+          "type": "string",
+          "description": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
+          "required": true
+        }
+      },
+      "slots": {},
+      "tag": "ki-citation",
+      "whenNotToUse": "To cite a source outside this tree or replace a standalone\nlink. Use `ki-link` for direct navigation.",
+      "whenToUse": "Next to a claim supported by a `ki-source` in the same document\nor shadow root. Repeat the same reference for subsequent mentions."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},
@@ -1356,6 +1376,62 @@ export const catalogData = {
       "tag": "ki-select",
       "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
       "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited."
+    },
+    "ki-source": {
+      "description": "Declares one named web source for a `ki-sources` list.",
+      "events": {},
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
+          "required": true,
+          "format": "url"
+        },
+        "snippet": {
+          "type": "string",
+          "description": "Optional plain-text excerpt displayed in the source card."
+        },
+        "source-id": {
+          "type": "string",
+          "description": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs."
+        },
+        "title": {
+          "type": "string",
+          "description": "Required plain-text source title. In HTML use the `title` attribute.",
+          "required": true
+        }
+      },
+      "slots": {},
+      "tag": "ki-source",
+      "whenNotToUse": "For standalone links outside a source list; use `ki-link`.",
+      "whenToUse": "As a direct child of `ki-sources`. In HTML provide an `id`,\n`href` and `title`; in guarded specs provide `source-id`, `href` and\n`title`. Use the same identifier on any citation of the source."
+    },
+    "ki-sources": {
+      "description": "A disclosure with the ordered sources behind an answer.",
+      "events": {},
+      "props": {
+        "open": {
+          "type": "boolean",
+          "description": "Whether the disclosure is expanded. Set to show the list initially.",
+          "default": false
+        },
+        "source-count-label": {
+          "type": "string",
+          "description": "Localized summary when there is one source. Use `{count}` for its number.",
+          "default": "{count} source"
+        },
+        "sources-count-label": {
+          "type": "string",
+          "description": "Localized summary for multiple sources. Use `{count}` for their number.",
+          "default": "{count} sources"
+        }
+      },
+      "slots": {
+        "": "Direct `ki-source` definitions for this answer."
+      },
+      "tag": "ki-sources",
+      "whenNotToUse": "For ordinary navigation, unrelated links, or form controls.",
+      "whenToUse": "To show the evidence behind an answer. Add direct `ki-source`\nchildren and place `ki-citation` markers next to the claims they support."
     },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",

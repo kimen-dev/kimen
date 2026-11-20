@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 400 semantic
-and 1288 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 409 semantic
+and 1325 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -293,6 +293,20 @@ every component at once.
 | `--ki-overlay-high-em-inverse` | `rgba(255, 255, 255, 0.12)` | semantic color for overlay high em inverse. |
 | `--ki-overlay-med-em` | `rgba(0, 0, 0, 0.24)` | semantic color for overlay med em. |
 | `--ki-overlay-med-em-inverse` | `rgba(255, 255, 255, 0.03)` | semantic color for overlay med em inverse. |
+
+### `ki.source-reference`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-source-reference-card-padding` | `0.5rem` | Inset between a source reference card edge and its content. |
+| `--ki-source-reference-card-radius` | `10px` | Corner of a source reference card. |
+| `--ki-source-reference-hairline` | `1px` | Stroke width on reference surfaces. |
+| `--ki-source-reference-list-gap` | `0.25rem` | Spacing between source reference cards. |
+| `--ki-source-reference-list-width` | `32rem` | Comfortable maximum width of an answer source list. |
+| `--ki-source-reference-marker-padding` | `0.25rem` | Inline padding of a short reference marker. |
+| `--ki-source-reference-marker-radius` | `6px` | Corner of a numbered reference marker. |
+| `--ki-source-reference-marker-size` | `1.125rem` | Painted edge of an inline reference number. |
+| `--ki-source-reference-preview-width` | `18rem` | Maximum width of a source citation preview. |
 
 ### `ki.spacing`
 
@@ -1641,6 +1655,48 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-xs-line-height` | `1rem` | dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595). |
 | `--ki-select-xs-padding-inline` | `0.375rem` | dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px). |
 | `--ki-select-xs-radius` | `6px` | dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs). |
+
+### `ki-sources`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-citation-backdrop-filter` | `none` | Complete backdrop filter for a citation marker. |
+| `--ki-citation-bg` | `#f3f0eb` | Background of a citation marker. |
+| `--ki-citation-bg-image` | `none` | Optional decorative image over a citation marker. |
+| `--ki-citation-fg` | `#181613` | Text on a citation marker. |
+| `--ki-citation-hover-bg` | `#ebe7e1` | Background of a hovered citation marker. |
+| `--ki-citation-hover-fg` | `#181613` | Text on a hovered citation marker. |
+| `--ki-citation-padding` | `0.25rem` | Inline padding of the citation number. |
+| `--ki-citation-preview-backdrop-filter` | `none` | Complete backdrop filter for the citation preview. |
+| `--ki-citation-preview-bg` | `#ffffff` | Background of the title and hostname preview. |
+| `--ki-citation-preview-bg-image` | `none` | Optional decorative image over the citation preview. |
+| `--ki-citation-preview-border` | `rgba(24, 22, 19, 0.1)` | Edge color of the citation preview. |
+| `--ki-citation-preview-border-width` | `1px` | Edge width of the citation preview. |
+| `--ki-citation-preview-fg` | `#181613` | Text on the citation preview. |
+| `--ki-citation-preview-max-inline-size` | `18rem` | Maximum width of the citation preview. |
+| `--ki-citation-preview-padding` | `0.5rem` | Inset around the preview content. |
+| `--ki-citation-preview-radius` | `10px` | Corner radius of the citation preview. |
+| `--ki-citation-preview-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Elevation of the citation preview. |
+| `--ki-citation-radius` | `6px` | Corner radius of a citation marker. |
+| `--ki-citation-size` | `1.125rem` | Minimum painted edge of a citation marker. |
+| `--ki-source-card-backdrop-filter` | `none` | Complete backdrop filter for a source card. |
+| `--ki-source-card-bg` | `#ffffff` | Resting background of a source card. |
+| `--ki-source-card-bg-image` | `none` | Optional decorative image over a source card. |
+| `--ki-source-card-border` | `rgba(24, 22, 19, 0.1)` | Border color of a source card. |
+| `--ki-source-card-border-width` | `1px` | Border width of a source card. |
+| `--ki-source-card-fg` | `#181613` | Text on a resting source card. |
+| `--ki-source-card-hover-bg` | `#f9f7f4` | Background of a hovered source card. |
+| `--ki-source-card-hover-fg` | `#181613` | Text on a hovered source card. |
+| `--ki-source-card-padding` | `0.5rem` | Inset around source card content. |
+| `--ki-source-card-radius` | `10px` | Corner radius of a source card. |
+| `--ki-source-number-bg` | `#f3f0eb` | Background of the number in a source card. |
+| `--ki-source-number-fg` | `#181613` | Text color of the number in a source card. |
+| `--ki-source-number-radius` | `6px` | Corner radius of the number in a source card. |
+| `--ki-source-number-size` | `1.5rem` | Minimum size of the number in a source card. |
+| `--ki-sources-list-gap` | `0.25rem` | Gap between source cards. |
+| `--ki-sources-max-inline-size` | `32rem` | Maximum line length of the source disclosure. |
+| `--ki-sources-summary-bg` | `#ffffff` | Background of the source-count control. |
+| `--ki-sources-summary-fg` | `#181613` | Text on the source-count control. |
 
 ### `ki-spinner`
 
