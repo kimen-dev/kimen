@@ -53,3 +53,10 @@ Feature: Kimen prepares and tags releases through a pull request
     Given the kimen-mcp bundle includes code from third-party npm packages
     When packaging verifies the bundle against the package NOTICE
     Then each bundled third-party package has its own notice section in the tarball
+
+  # S9
+  Scenario: The release pull request moves the kimen-mcp pins to its version
+    Given the agent plugin, its guides and server.json pin @kimen/mcp-server to 0.1.0
+    When release preparation proposes v0.2.0
+    Then every listed @kimen/mcp-server pin and both server.json versions read 0.2.0 in that pull request
+    And no file outside the pin list changes
