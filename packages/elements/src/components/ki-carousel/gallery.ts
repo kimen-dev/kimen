@@ -16,12 +16,18 @@ const slides = `
 
 export default {
   width: 400,
-  html: `<div style="display:grid;gap:var(--ki-space-3xl)">
+  html: `<div style="
+    display:grid;
+    gap:var(--ki-space-md);
+    --ki-carousel-gap:var(--ki-space-md);
+    --ki-carousel-item-min-block-size:var(--ki-space-18xl);
+    --ki-carousel-item-padding:var(--ki-space-md)
+  ">
     <ki-carousel label="Kimen highlights" loop>${slides}</ki-carousel>
     <ki-carousel label="Browse highlights" layout="multi-browse">${slides}</ki-carousel>
     <ki-carousel label="Featured highlights" layout="hero" dir="rtl">${slides}</ki-carousel>
     <ki-carousel label="More highlights" layout="uncontained" current="2">${slides}</ki-carousel>
     <ki-carousel label="Highlights feed" layout="full-screen"
-      style="--ki-carousel-full-screen-block-size:var(--ki-space-24xl)">${slides}</ki-carousel>
+      style="--ki-carousel-full-screen-block-size:var(--ki-space-22xl)">${slides}</ki-carousel>
   </div>`,
 } satisfies VisualGallery;
