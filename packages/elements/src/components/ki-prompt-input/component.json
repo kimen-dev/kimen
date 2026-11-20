@@ -3,5 +3,11 @@
   "pointer": { "hoverWitness": false },
   "catalog": true,
   "formBinding": "text",
-  "visual": { "material3Dark": true }
+  "visual": { "material3Dark": true },
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 30320,
+      "gzip": 6272
+    }
+  }
 }
