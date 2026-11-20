@@ -1,5 +1,5 @@
-/* The button surface: the variant x tone x state paint that ki-button and
- * ki-icon-button share (specs/022-ki-icon-button/design-extraction.md: the
+/* The button surface: the variant x tone x state paint that ki-button,
+ * ki-icon-button and ki-copy-button share (specs/022-ki-icon-button/design-extraction.md: the
  * Icon_button set reuses the Button visual system 1:1). It is defined once,
  * here, fed by the --ki-button-* tokens, and both components load it through
  * `styleUrls` ahead of their own sheet. That sheet adds only what differs:
@@ -390,6 +390,28 @@ button:focus-visible {
   outline-color: var(--ki-button-focus-ring-color);
 }
 
+/* A group sizes neighboring hit areas up to the density minimum so small
+   buttons can sit side by side without overlapping invisible touch targets. */
+:host([data-ki-button-group-member]) button {
+  min-block-size: max(
+    calc(var(--_ki-button-height, 0px) + var(--ki-density-control-offset)),
+    var(--ki-density-target-min)
+  );
+  min-inline-size: max(var(--_ki-button-min-target, 0px), var(--ki-density-target-min));
+}
+
+/* ::slotted() cannot chain ::part(). The group passes the logical seams to
+   the two button components here, in the stylesheet that paints the part. */
+:host([data-ki-button-group-join~="start"]) button {
+  border-end-start-radius: var(--_ki-button-group-attached-radius);
+  border-start-start-radius: var(--_ki-button-group-attached-radius);
+}
+
+:host([data-ki-button-group-join~="end"]) button {
+  border-end-end-radius: var(--_ki-button-group-attached-radius);
+  border-start-end-radius: var(--_ki-button-group-attached-radius);
+}
+
 /* Pressed.
  *
  * Written against the inner control, NOT `:host(:active)`. `:active` lands on
@@ -563,11 +585,4 @@ button[aria-disabled="true"] {
   overflow: hidden;
   position: absolute;
   white-space: nowrap;
-}
-
-/* Compatibility with the deprecated length while the full filter uses its default. */
-@container style(--_ki-button-backdrop-filter: var(--_ki-backdrop-filter-default)) {
-  button {
-    --_ki-button-backdrop-filter: blur(var(--ki-button-backdrop-blur));
-  }
 }

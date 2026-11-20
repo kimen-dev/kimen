@@ -30,8 +30,10 @@ import { NATIVE_PRIMITIVES } from './primitives.mjs';
  * 1.3.0 spec rather than reading native tags it cannot guard.
  * 1.4.0 (issue #344): enum constraints can declare optional
  * `deprecatedValues` accepted in old specs and omitted from new schemas.
+ * 1.5.0 (issue #387): a numeric-or-string property preserves both scalar
+ * values and serialized intervals.
  */
-export const CATALOG_SCHEMA_VERSION = '1.4.0';
+export const CATALOG_SCHEMA_VERSION = '1.5.0';
 
 const isBlank = (text) => typeof text !== 'string' || text.trim() === '';
 
@@ -49,6 +51,13 @@ export function parseTypeText(text) {
     ['boolean', 'number', 'string'].includes(withoutUndefined[0])
   ) {
     return { type: withoutUndefined[0] };
+  }
+  if (
+    withoutUndefined.length === 2 &&
+    withoutUndefined.includes('number') &&
+    withoutUndefined.includes('string')
+  ) {
+    return { type: 'number-or-string' };
   }
   const quoted = withoutUndefined.filter((part) => /^"[^"]*"$/.test(part));
   const rest = withoutUndefined.filter((part) => !/^"[^"]*"$/.test(part));
@@ -72,10 +81,18 @@ export function parseDefault(source, constraint) {
   if (stringMatch !== null) {
     return stringMatch[1];
   }
+  if (source.startsWith('"')) {
+    try {
+      const value = JSON.parse(source);
+      return typeof value === 'string' ? value : undefined;
+    } catch {
+      return undefined;
+    }
+  }
   if (source === 'true' || source === 'false') {
     return source === 'true';
   }
-  if (constraint.type === 'number' && Number.isFinite(Number(source))) {
+  if (['number', 'number-or-string'].includes(constraint.type) && Number.isFinite(Number(source))) {
     return Number(source);
   }
   return undefined;
@@ -143,7 +160,12 @@ const sortedRecord = (entries) =>
  */
 export function buildCatalog(
   manifest,
-  { elementsVersion, catalogTags = new Set(), primitives = NATIVE_PRIMITIVES },
+  {
+    elementsVersion,
+    catalogTags = new Set(),
+    catalogActions = new Map(),
+    primitives = NATIVE_PRIMITIVES,
+  },
 ) {
   const violations = [];
   const components = new Map();
@@ -209,11 +231,16 @@ export function buildCatalog(
         }
         props.set(attribute.name, entry);
       }
+      const action = catalogActions.get(tag);
+      const publicEvents = declaration.events ?? [];
+      const events =
+        action === undefined ? publicEvents : publicEvents.filter(({ name }) => name === action);
+      if (action !== undefined && events.length !== 1) {
+        violations.push(`${tag}: catalog action ${action} is not a declared event`);
+      }
       components.set(tag, {
         description: declaration.description,
-        events: sortedRecord(
-          (declaration.events ?? []).map((event) => [event.name, event.description ?? '']),
-        ),
+        events: sortedRecord(events.map((event) => [event.name, event.description ?? ''])),
         props: sortedRecord(props),
         slots: sortedRecord(
           (declaration.slots ?? []).map((slot) => [slot.name ?? '', slot.description ?? '']),
@@ -282,7 +309,12 @@ if (
   const catalogTags = new Set(
     [...metadata].filter(([, entry]) => entry.catalog === true).map(([tag]) => tag),
   );
-  const output = buildCatalog(manifest, { elementsVersion, catalogTags });
+  const catalogActions = new Map(
+    [...metadata]
+      .filter(([, entry]) => entry.catalogAction !== undefined)
+      .map(([tag, entry]) => [tag, entry.catalogAction]),
+  );
+  const output = buildCatalog(manifest, { elementsVersion, catalogTags, catalogActions });
   const schemePolicy = readFileSync(
     join(repoRoot, 'packages/elements/src/utils/url-scheme.ts'),
     'utf8',

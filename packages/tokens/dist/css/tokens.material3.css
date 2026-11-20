@@ -363,6 +363,8 @@
   --ki-badge-info-bg:var(--ki-surface-info-base-em);
   --ki-badge-warning-bg:var(--ki-surface-warning-base-em);
   --ki-badge-xs-radius:var(--ki-radius-round);
+  --ki-breadcrumb-hover-bg:var(--ki-surface-s3);
+  --ki-breadcrumb-menu-bg:var(--ki-surface-s2);
   --ki-button-xs-radius:var(--ki-radius-round);
   --ki-button-sm-radius:var(--ki-radius-round);
   --ki-button-md-radius:var(--ki-radius-round);
@@ -483,6 +485,7 @@
   --ki-divider-color:var(--ki-outline-med-em);
   --ki-divider-radius:var(--ki-radius-0);
   --ki-divider-spacing:var(--ki-space-zero);
+  --ki-empty-state-heading-weight:var(--ki-typography-weight-body-medium);
   --ki-indicator-gap:var(--ki-space-md);
   --ki-indicator-dot-color:var(--ki-outline-control);
   --ki-indicator-dot-current-inline-size:var(--ki-space-md);
@@ -587,6 +590,7 @@
   --ki-select-lg-radius:var(--ki-radius-component-xs);
   --ki-select-xl-radius:var(--ki-radius-component-xs);
   --ki-spinner-indicator:var(--ki-surface-inverse-white);
+  --ki-stat-radius:var(--ki-radius-component-md);
   --ki-status-size:var(--ki-space-sm);
   --ki-status-shadow:0 0 0 0 var(--ki-color-transparent-black);
   --ki-switch-track-width:var(--ki-space-15xl);

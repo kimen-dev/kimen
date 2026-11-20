@@ -225,13 +225,14 @@ describe('ki-dialog live content and interaction boundaries', () => {
 
   it('S7 preserves forward and reverse tab order and ignores unrelated keys', async () => {
     cleanup();
+    // Explicit stops keep the native fixture buttons in macOS WebKit's Tab order.
     const el = await mountDialog(
       {},
       document.body,
       `
-      <button slot="footer">First</button>
-      <button slot="footer">Middle</button>
-      <button slot="footer">Last</button>
+      <button slot="footer" type="button" tabindex="0">First</button>
+      <button slot="footer" type="button" tabindex="0">Middle</button>
+      <button slot="footer" type="button" tabindex="0">Last</button>
     `,
     );
     await openDialog(el);
@@ -519,15 +520,28 @@ describe('ki-dialog in a real browser', () => {
       await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
       await expect.poll(() => activeElementDeep()).toBe(body);
       expect(getComputedStyle(body).outlineStyle).not.toBe('none');
-      await expectAccessible(main);
 
+      // Exercise the native scroll keys while the body still has the focus
+      // reached by Tab. Run the audit's pointer and motion setup afterwards.
+      expect(getComputedStyle(body).overflowY).toBe('auto');
       expect(body.scrollTop).toBe(0);
+      let arrowDown: KeyboardEvent | undefined;
+      body.addEventListener(
+        'keydown',
+        (event) => {
+          arrowDown = event;
+        },
+        { once: true },
+      );
       await userEvent.keyboard('{ArrowDown}');
+      expect(arrowDown).toMatchObject({ key: 'ArrowDown', defaultPrevented: false });
       await expect.poll(() => body.scrollTop).toBeGreaterThan(0);
       await userEvent.keyboard('{End}');
       await expect
         .poll(() => Math.ceil(body.scrollTop + body.clientHeight))
         .toBeGreaterThanOrEqual(body.scrollHeight);
+      body.scrollTop = 0;
+      await expectAccessible(main);
 
       // The cycle is body -> Cancel -> Delete -> body, in both directions.
       await userEvent.keyboard('{Tab}');
@@ -751,8 +765,8 @@ describe('ki-dialog in a real browser', () => {
       {},
       document.body,
       `<ki-alert dismissible heading="Heads up">Note</ki-alert>
-       <button slot="footer" type="button">Cancel</button>
-       <button slot="footer" type="button">Delete</button>`,
+       <button slot="footer" type="button" tabindex="0">Cancel</button>
+       <button slot="footer" type="button" tabindex="0">Delete</button>`,
     );
     const alert = requireEl(el, 'ki-alert');
     await waitFor(

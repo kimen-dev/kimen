@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "stat": {
+      "radius": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Material 3 medium card corner radius."
+      }
+    }
+  }
+}

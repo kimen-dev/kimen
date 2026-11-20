@@ -1,0 +1,22 @@
+{
+  "barePage": {
+    "keyboardPressed": true
+  },
+  "pointer": {
+    "hoverWitness": true
+  },
+  "catalog": true,
+  "catalogAction": "ki-copy",
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 25830,
+      "gzip": 4119,
+      "brotli": 1733
+    },
+    "mcpServer": {
+      "raw": 66951,
+      "gzip": 8904,
+      "brotli": 1967
+    }
+  }
+}

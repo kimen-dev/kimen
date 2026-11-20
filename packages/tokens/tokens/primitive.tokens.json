@@ -854,6 +854,14 @@
         "$value": "44px",
         "$description": "The pointer target of the touch density (spec 045 Amendment A1): WCAG 2.5.5 Target Size (Enhanced, AAA) and Apple's Human Interface Guidelines ask for 44 x 44 CSS px. In px for the same reason as target-min."
       },
+      "menu-inline-min": {
+        "$value": "14rem",
+        "$description": "Default minimum inline size from the menu reference, bounded by the viewport."
+      },
+      "slider-vertical": {
+        "$value": "8rem",
+        "$description": "Length of the vertical slider rail."
+      },
       "qr": {
         "$value": "8rem",
         "$description": "QR symbol edge: the Figma master's 128x128 symbol frame (nodes 12019:6059 / 16158:27560), as a dedicated surface size decoupled from ki.space (DNA brief section 3). Replaces the interim 120px ki.space.24xl declaration."
@@ -935,6 +943,36 @@
       }
     },
     "foundation": {
+      "placeholder": {
+        "line-size": {
+          "$type": "dimension",
+          "$value": "0.75rem"
+        },
+        "circle-size": {
+          "$type": "dimension",
+          "$value": "2.5rem"
+        },
+        "rect-size": {
+          "$type": "dimension",
+          "$value": "6rem"
+        },
+        "circle-radius": {
+          "$type": "other",
+          "$value": "50%"
+        },
+        "last-line-scale": {
+          "$type": "number",
+          "$value": 0.7
+        },
+        "shimmer-image": {
+          "$type": "other",
+          "$value": "linear-gradient(90deg, transparent, currentColor, transparent)"
+        },
+        "shimmer-duration": {
+          "$type": "duration",
+          "$value": "1400ms"
+        }
+      },
       "onmars-v1": {
         "$description": "Temporary onmars v1 glass images. Read the legacy stop properties on the theme scope during their deprecation window.",
         "dialog-bg-image": {
