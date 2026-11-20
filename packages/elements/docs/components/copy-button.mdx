@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-copy-button" />
+
+# ki-copy-button
+
+Copy a link, token, identifier or code sample and confirm the result at the
+button. Set `value` to copy a known string. Set `from` to read the current
+string value or text content from an element in the same document or shadow
+root. A missing source reports a copy error.
+
+```html
+<ki-copy-button value="https://kimen.dev/i/4f9a" label="Copy invite link"></ki-copy-button>
+<ki-copy-button from="token-field" variant="secondary">Copy token</ki-copy-button>
+```
+
+Use a descriptive `label` for icon-only buttons. Visible slot text supplies
+the accessible name when present. Press Enter or Space on the focused button
+to copy. A check or error glyph and a polite announcement report the outcome
+while the button keeps its name, size and focus.
+
+The default feedback duration is 1500 ms. Set `feedback-duration="0"` to
+keep the latest outcome visible until another copy attempt settles.
+Use `copied-label` and `copy-error-label` for localized announcements.
+
+`ki-copy` bubbles with the exact copied string in `detail.value`.
+`ki-copy-error` bubbles when the source is missing or the Clipboard API
+cannot write. A guarded surface can bind a declared action to `ki-copy`.
+
+## Customization
+
+The four variants and five sizes follow the Kimen button styles. Reassign
+the `--ki-copy-button-success-bg` and `--ki-copy-button-success-fg` pair or
+the corresponding `error` pair to theme feedback. The `button`, `icon`
+and `label` shadow parts expose the control, its glyph box and its visible
+label wrapper.

@@ -20,6 +20,8 @@
  * a consumer definition written before the field existed, or a hand-built
  * `Catalog` value — so a missing declaration can never open the policy.
  */
+import { isControlOrSpace, offendingScheme } from './generated/url-scheme.js';
+
 import type { CatalogPropConstraint } from './validate.js';
 
 /**
@@ -41,37 +43,9 @@ const URL_PROP_NAMES: ReadonlySet<string> = new Set([
   'xlink:href',
 ]);
 
-const SUPPORTED_SCHEMES: ReadonlySet<string> = new Set(['http', 'https']);
-
 /** Whether the policy applies to the prop `name` under `constraint`. */
 export function isUrlProp(name: string, constraint: CatalogPropConstraint): boolean {
   return constraint.format === 'url' || URL_PROP_NAMES.has(name.toLowerCase());
-}
-
-/** A C0 control or space, or a DEL/C1 control: what URL parsers trim or drop. */
-function isControlOrSpace(code: number): boolean {
-  return code <= 0x20 || (code >= 0x7f && code <= 0x9f);
-}
-
-/**
- * The scheme of a URL value that is NOT on the allowlist, or null when the
- * value is a relative reference or an http(s) URL. Control characters and
- * white space are stripped first, so `java\tscript:` and leading-newline
- * tricks cannot smuggle a live scheme past the check.
- */
-function offendingScheme(value: string): string | null {
-  let normalized = '';
-  for (const character of value) {
-    if (!isControlOrSpace(character.codePointAt(0) ?? 0)) {
-      normalized += character;
-    }
-  }
-  const match = /^([a-zA-Z][a-zA-Z0-9+.-]*):/u.exec(normalized);
-  if (match === null) {
-    return null;
-  }
-  const scheme = (match[1] ?? '').toLowerCase();
-  return SUPPORTED_SCHEMES.has(scheme) ? null : scheme;
 }
 
 /**

@@ -12,6 +12,13 @@
  * layer (Art. I, one source of truth). It is client-side (touches `document`);
  * SSR/DSD is a deferred bet.
  */
+import {
+  allocateDialogId,
+  type DialogIdFor,
+  isDialogCommand,
+  isDialogInvoker,
+  writeDialogId,
+} from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
@@ -141,22 +148,47 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
  * bound node activates on the only one (FR-003, S17) or, when there is none,
- * on the platform click. Multiple events require an explicit selection rule.
+ * on the platform click. Multiple events require a source-owned discriminator
+ * on a validated prop. Otherwise the guard rejects the binding (S19).
  */
 export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
 }
 
-const PAGINATION_EVENTS = ['ki-page-change', 'ki-load-more'] as const;
+const CHIP_ACTIVATIONS = ['ki-change', 'ki-remove', 'ki-activate'] as const;
+const PAGINATION_ACTIVATIONS = ['ki-page-change', 'ki-load-more'] as const;
 
-// The two pagination events describe mutually exclusive variants of one
-// control. Match its published event set before bypassing ambiguity.
-function hasPaginationEvents(entry: CatalogEntry | undefined, events: readonly string[]): boolean {
+function paginationActivations(tag: string, events: readonly string[]): boolean {
   return (
-    entry?.tag === 'ki-pagination' &&
-    events.length === PAGINATION_EVENTS.length &&
-    PAGINATION_EVENTS.every((type) => events.includes(type))
+    tag === 'ki-pagination' &&
+    events.length === PAGINATION_ACTIVATIONS.length &&
+    PAGINATION_ACTIVATIONS.every((event) => events.includes(event))
   );
+}
+
+function chipActivations(tag: string, events: readonly string[]): boolean {
+  return (
+    tag === 'ki-chip' &&
+    events.length === CHIP_ACTIVATIONS.length &&
+    CHIP_ACTIVATIONS.every((event) => events.includes(event))
+  );
+}
+
+function chipActivation(
+  element: Element,
+  props: Readonly<Record<string, Scalar>>,
+): (typeof CHIP_ACTIVATIONS)[number] | undefined {
+  const group = element.parentElement;
+  const type =
+    props['type'] ?? (group?.localName === 'ki-chip-group' ? group.getAttribute('type') : null);
+  switch (type) {
+    case 'assist':
+      return 'ki-activate';
+    case 'input':
+      return props['removable'] === true ? 'ki-remove' : undefined;
+    default:
+      return 'ki-change';
+  }
 }
 
 /**
@@ -165,7 +197,13 @@ function hasPaginationEvents(entry: CatalogEntry | undefined, events: readonly s
  * event, icon availability and the prop-name guards. Catalog membership,
  * prop types and limits, URL policy, actions and slots were enforced upstream.
  */
-export function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardState): void {
+export function guardNode(
+  node: UiSpecNode,
+  path: string,
+  depth: number,
+  state: GuardState,
+  parent?: UiSpecNode,
+): void {
   state.nodes += 1;
   if (depth > state.budgets.maxDepth) {
     state.diagnostics.push({
@@ -214,15 +252,26 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
       });
     }
   }
-  // Renderer-native activation guard (FR-003, S19): a bound action needs an
-  // unambiguous activation event. The pagination variant supplies that choice
-  // in button mode, where activation does not also navigate natively.
+  // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
+  // activation event. Chip type and pagination variant supply explicit
+  // discriminators. An action-bound pager must stay in button mode.
   if (node.action !== undefined) {
-    const entry = ownEntry(state.components, node.component);
-    const events = declaredEvents(entry);
-    const pagination = hasPaginationEvents(entry, events);
+    const events = declaredEvents(ownEntry(state.components, node.component));
+    const pagination = paginationActivations(node.component, events);
     const urlMode = pagination && ownEntry(node.props, 'href-template') !== undefined;
-    if (events.length > 1 && (!pagination || urlMode)) {
+    if (chipActivations(node.component, events)) {
+      const kind =
+        node.props?.['type'] ??
+        (parent?.component === 'ki-chip-group' ? parent.props?.['type'] : undefined);
+      if (kind === 'input' && node.props?.['removable'] !== true) {
+        state.diagnostics.push({
+          message: 'an input chip needs removable: true to bind a removal action',
+          path: `${path}.action`,
+          rule: 'ambiguous-activation-event',
+          value: node.action,
+        });
+      }
+    } else if (events.length > 1 && (!pagination || urlMode)) {
       state.diagnostics.push({
         message: urlMode
           ? 'ki-pagination uses native navigation when href-template is supplied; omit the URL template to bind an action'
@@ -254,7 +303,7 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
       if (typeof child !== 'string') {
-        guardNode(child, `${path}.slots.${slotName}[${String(index)}]`, depth + 1, state);
+        guardNode(child, `${path}.slots.${slotName}[${String(index)}]`, depth + 1, state, node);
       }
     });
   }
@@ -276,7 +325,7 @@ export function payloadBytes(data: unknown): number {
  * the prop and only when the live value has the declared type, so nothing
  * undeclared or mistyped ever crosses the action channel.
  */
-const LIVE_STATE_PROPS = ['checked', 'value'] as const;
+const LIVE_STATE_PROPS = ['checked', 'selected', 'value'] as const;
 
 export function matchesConstraint(
   value: unknown,
@@ -360,10 +409,16 @@ export function writeProp(
   component: string,
   name: string,
   value: Scalar | undefined,
+  idFor?: DialogIdFor,
 ): void {
-  if (value === undefined) {
+  let attributeValue = value;
+  // Resolve neutral IDs only for catalog dialog invokers.
+  if (name === 'commandfor' && isDialogInvoker(component)) {
+    attributeValue = typeof value === 'string' ? idFor?.(value) : undefined;
+  }
+  if (attributeValue === undefined) {
     element.removeAttribute(name);
-  } else if (value === false) {
+  } else if (attributeValue === false) {
     // Built-in Stencil props that default to true require an explicit false.
     // Registered components continue to use boolean attribute presence.
     const entry = ownEntry(builtInCatalog.components, component);
@@ -373,7 +428,7 @@ export function writeProp(
       element.removeAttribute(name);
     }
   } else {
-    element.setAttribute(name, value === true ? '' : String(value));
+    element.setAttribute(name, attributeValue === true ? '' : String(attributeValue));
   }
 }
 
@@ -397,12 +452,13 @@ export function writeProps(
   element: Element,
   component: string,
   props: Readonly<Record<string, Scalar>>,
+  idFor: DialogIdFor,
 ): void {
   if (writeNativeLayout(element, component, props)) {
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, component, name, value);
+    writeProp(element, component, name, value, idFor);
   }
 }
 
@@ -427,83 +483,98 @@ export function pinButtonType(
 }
 
 /**
- * Wires the ONE activation listener of a bound node (FR-003) onto a
- * dispatch callback. `currentProps` is read at activation time, so a caller
+ * Routes the bound node's activation event (FR-003) to a dispatch callback.
+ * `currentProps` is read at activation time, so a caller
  * whose props change after build (the live surface) reports the current
- * ones; `renderUiSpec` passes the props it built with.
+ * ones; `renderUiSpec` passes the props it built with. Without a dispatch
+ * callback, a dialog invoker still claims its click so a validated local
+ * command cannot activate an enclosing bound node.
  */
 export function wireActivation(
   element: Element,
   entry: CatalogEntry | undefined,
   currentProps: () => Readonly<Record<string, Scalar>>,
-  dispatch: (data: Readonly<Record<string, Scalar>>) => void,
+  dispatch: ((data: Readonly<Record<string, Scalar>>) => void) | undefined,
 ): void {
+  const invoker = isDialogInvoker(element.localName);
+  const invokesDialog = (props: Readonly<Record<string, Scalar>>): boolean =>
+    invoker && typeof props['commandfor'] === 'string' && isDialogCommand(props['command']);
+  if (dispatch === undefined) {
+    if (invoker) {
+      element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event) => {
+        if (invokesDialog(currentProps())) {
+          claim(event);
+        }
+      });
+    }
+    return;
+  }
   const events = declaredEvents(entry);
+  const chip = chipActivations(element.localName, events);
+  const pagination = paginationActivations(element.localName, events);
   const activation = events[0] ?? DEFAULT_ACTIVATION_EVENT;
-  if (activation === DEFAULT_ACTIVATION_EVENT) {
-    // A click-activated node (S4) dispatches the spec's data payload and
-    // suppresses the native default (a submit button's form submission)
-    // and the bubbling, so no other callback or code path runs.
-    element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-      if (!claim(event)) {
-        return;
-      }
+  const clickActivated = !chip && !pagination && activation === DEFAULT_ACTIVATION_EVENT;
+  const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
+  const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
+    const href = props['href'];
+    return typeof href === 'string' && href.trim() !== '';
+  };
+
+  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+    // Declared-event controls claim their click so it cannot activate an
+    // enclosing bound node. Their native interaction still runs.
+    if (!claim(event) || (!clickActivated && !hasOptInCardAction)) return;
+    const props = currentProps();
+    // Passive cards retain legacy click bindings. Linked cards keep native
+    // navigation, and interactive cards dispatch through ki-activate.
+    if (!clickActivated && (props['interactive'] === true || cardHasLink(props))) return;
+    // Validated local commands remain available alongside a declared action.
+    if (!invokesDialog(props)) {
       event.preventDefault();
-      event.stopPropagation();
-      dispatch({ ...currentProps() });
-    });
+    }
+    event.stopPropagation();
+    dispatch({ ...props });
+  });
+
+  if (clickActivated) {
     pinButtonType(element, entry, currentProps());
     return;
   }
-  // A declared-event node (S17) dispatches on the event its catalog entry
-  // declares, emitted by the component itself — a same-named event bubbling
-  // up from a descendant is not this control's activation (S18). Nothing is
-  // cancelled: the control must be able to change, and the payload carries
-  // its live state. The click that operates the control is claimed, never
-  // cancelled, so an enclosing click-bound node does not dispatch for it (S4).
-  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-    claim(event);
-  });
-  if (hasPaginationEvents(entry, events)) {
-    element.addEventListener('ki-page-change', (event: Event) => {
+
+  // Accept only the component's own event for its current mode (S17–S19).
+  // The control's default behavior remains intact, and actions carry its live state.
+  const activations = pagination ? PAGINATION_ACTIVATIONS : chip ? CHIP_ACTIVATIONS : [activation];
+  for (const name of activations) {
+    element.addEventListener(name, (event: Event) => {
+      if (event.target !== element || !claim(event)) return;
       const props = currentProps();
-      if (
-        event.target !== element ||
-        props['variant'] === 'load-more' ||
-        !('detail' in event) ||
-        !claim(event)
-      ) {
-        return;
+      if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
+      if (chip && chipActivation(element, props) !== name) return;
+      if (pagination) {
+        const active = props['variant'] === 'load-more' ? 'ki-load-more' : 'ki-page-change';
+        if (name !== active) return;
+        if (active === 'ki-page-change') {
+          const detail = 'detail' in event ? event.detail : undefined;
+          const page =
+            typeof detail === 'object' && detail !== null && 'page' in detail
+              ? detail.page
+              : undefined;
+          if (typeof page === 'number' && Number.isSafeInteger(page) && page >= 1) {
+            dispatch({ ...props, page });
+          }
+          return;
+        }
       }
-      const detail: unknown = event.detail;
-      const page: unknown =
-        typeof detail === 'object' && detail !== null && 'page' in detail ? detail.page : undefined;
-      if (typeof page === 'number' && Number.isSafeInteger(page) && page >= 1) {
-        dispatch({ ...props, page });
-      }
+      dispatch(liveData(element, props, entry));
     });
-    element.addEventListener('ki-load-more', (event: Event) => {
-      const props = currentProps();
-      if (event.target === element && props['variant'] === 'load-more' && claim(event)) {
-        dispatch({ ...props });
-      }
-    });
-    return;
   }
-  element.addEventListener(activation, (event: Event) => {
-    if (event.target !== element || !claim(event)) {
-      return;
-    }
-    dispatch(liveData(element, currentProps(), entry));
-  });
 }
 
 /**
- * Builds one validated node into a detached element (FR-004): props become
- * attributes, text children become inert text nodes
- * (never `innerHTML`), and a bound action wires exactly one activation
- * listener — derived from the catalog entry (FR-003) — onto the renderer's
- * single channel. No spec string is ever evaluated.
+ * Builds one validated node into a detached element (FR-004). Props become
+ * attributes, text children become inert text nodes, and a bound action
+ * routes the node's selected activation (FR-003) to the renderer's single
+ * channel. No spec string is ever evaluated.
  */
 function buildNode(
   node: UiSpecNode,
@@ -511,21 +582,23 @@ function buildNode(
   doc: Document,
   onAction: ((event: ActionEvent) => void) | undefined,
   entries: Readonly<Record<string, CatalogEntry>>,
+  idFor: DialogIdFor,
 ): Element {
   const element = createNodeElement(doc, node.component);
   const props = node.props ?? {};
-  writeProps(element, node.component, props);
-  if (node.action !== undefined && onAction !== undefined) {
-    const action = node.action;
-    wireActivation(
-      element,
-      ownEntry(entries, node.component),
-      () => props,
-      (data) => {
-        onAction({ action, data, path });
-      },
-    );
-  }
+  writeProps(element, node.component, props, idFor);
+  writeDialogId(element, node.id, idFor);
+  const action = node.action;
+  wireActivation(
+    element,
+    ownEntry(entries, node.component),
+    () => props,
+    action !== undefined && onAction !== undefined
+      ? (data) => {
+          onAction({ action, data, path });
+        }
+      : undefined,
+  );
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
       if (typeof child === 'string') {
@@ -537,6 +610,7 @@ function buildNode(
           doc,
           onAction,
           entries,
+          idFor,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -552,6 +626,15 @@ function ownerDocument(surface: Element): Document {
   // An element always carries its owner document (the client-side surface
   // the host mounts; SSR/DSD is a deferred bet).
   return surface.ownerDocument;
+}
+
+function scopedDialogIds(surface: Element): DialogIdFor {
+  const ids = new Map<string, string>();
+  return (nodeId) => {
+    const id = ids.get(nodeId) ?? allocateDialogId(surface);
+    ids.set(nodeId, id);
+    return id;
+  };
 }
 
 interface PreparedSpec {
@@ -705,7 +788,14 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
   }
   const doc = ownerDocument(options.surface);
   options.surface.replaceChildren(
-    buildNode(prepared.spec.root, 'root', doc, options.onAction, catalog.components),
+    buildNode(
+      prepared.spec.root,
+      'root',
+      doc,
+      options.onAction,
+      catalog.components,
+      scopedDialogIds(options.surface),
+    ),
   );
   return { diagnostics: [], ok: true };
 }
@@ -820,7 +910,14 @@ export function createStreamingRenderer(
       const chunkPath = `stream[${String(attachedChunks)}]`;
       attachedChunks += 1;
       options.surface.appendChild(
-        buildNode(report.spec.root, chunkPath, doc, options.onAction, catalog.components),
+        buildNode(
+          report.spec.root,
+          chunkPath,
+          doc,
+          options.onAction,
+          catalog.components,
+          scopedDialogIds(options.surface),
+        ),
       );
       return { diagnostics: [], ok: true };
     },

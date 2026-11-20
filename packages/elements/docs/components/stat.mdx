@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Data display/Stat" />
+
+# Stat
+
+`<ki-stat>` shows one measurement and an optional comparison. The magnitude,
+trend glyph and comparison period show what changed. The metric's `direction`
+decides whether the change is favorable.
+
+```html
+<ki-stat label="Median render time" value="84" unit="ms" delta="-9" delta-label="vs last week" direction="lower-is-better"></ki-stat>
+```
+
+The card uses the page's number locale. Use the JavaScript properties `format`
+and `deltaFormat` for `Intl.NumberFormatOptions`. Provide an accessible text
+equivalent for any informative sparkline in the `chart` slot.
+
+[Component workshop and customization](?path=/docs/docs-components-ki-stat--docs)

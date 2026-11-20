@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.shapes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ki-skeleton-line-gap);
+  max-inline-size: 100%;
+}
+
+[part="shape"] {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--ki-skeleton-bg);
+  background-image: var(--ki-skeleton-bg-image);
+  backdrop-filter: var(--ki-skeleton-backdrop-filter);
+  border-radius: var(--ki-skeleton-radius);
+}
+
+.text [part="shape"] {
+  block-size: var(--ki-skeleton-line-size);
+}
+
+.rect [part="shape"] {
+  block-size: var(--ki-skeleton-rect-size);
+}
+
+.circle {
+  inline-size: var(--ki-skeleton-circle-size);
+}
+
+.circle [part="shape"] {
+  inline-size: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--ki-skeleton-circle-radius);
+}
+
+.short {
+  inline-size: calc(100% * var(--ki-skeleton-last-line-scale));
+  justify-self: start;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animated [part="shape"]::after {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -100%;
+    inline-size: 100%;
+    color: var(--ki-skeleton-highlight);
+    background-image: var(--ki-skeleton-shimmer-image);
+    content: "";
+    animation: ki-skeleton-shimmer var(--ki-skeleton-shimmer-duration)
+      var(--ki-skeleton-shimmer-easing) 3;
+  }
+}
+
+@keyframes ki-skeleton-shimmer {
+  to {
+    inset-inline-start: 100%;
+  }
+}
+
+@media (forced-colors: active) {
+  [part="shape"] {
+    background-color: Canvas;
+    background-image: none;
+    backdrop-filter: none;
+    outline: thin solid CanvasText;
+  }
+
+  .animated [part="shape"]::after {
+    content: none;
+    animation: none;
+  }
+}

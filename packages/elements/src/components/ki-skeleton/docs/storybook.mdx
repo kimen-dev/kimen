@@ -1,0 +1,21 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-skeleton" />
+
+# ki-skeleton
+
+Use a skeleton to reserve space while real content loads. Match the shapes and dimensions to the expected layout.
+
+```html
+<section aria-busy="true" aria-label="Loading project">
+  <ki-skeleton shape="circle" size="2.5rem"></ki-skeleton>
+  <ki-skeleton shape="text" lines="3"></ki-skeleton>
+  <ki-skeleton shape="rect" block-size="6rem"></ki-skeleton>
+</section>
+```
+
+Text and rectangles fill available inline space by default. The default circle is 2.5rem across. `size` sets both logical axes and `inline-size` or `block-size` overrides its corresponding axis. For text, `block-size` sets the height of each line.
+
+The loading region owns its name, busy state and reveal timing. Wait about 300 ms before showing the shapes. The placeholder is decorative and stays out of the keyboard order and the accessibility tree.
+
+Set `animated="false"` to stop shimmer. Reduced motion and forced colours always use static shapes. Override `--ki-skeleton-bg`, `--ki-skeleton-highlight` or `--ki-skeleton-radius` for a custom theme. The `shape` CSS part exposes each painted shape.

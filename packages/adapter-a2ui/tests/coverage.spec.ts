@@ -99,15 +99,14 @@ describe('protocol gaps and churn degrade by declaration, never silently', () =>
           {
             id: 'col',
             component: 'Column',
-            children: ['known', 'picture', 'chart'],
+            children: ['known', 'audio', 'chart'],
           },
           { id: 'known', component: 'Text', text: 'Ready' },
-          // A basic-catalog type with no catalog counterpart (spec example 05_product-card).
+          // A basic-catalog type with no catalog counterpart.
           {
-            id: 'picture',
-            component: 'Image',
-            url: 'https://example.com/p.png',
-            fit: 'cover',
+            id: 'audio',
+            component: 'AudioPlayer',
+            url: 'https://example.com/clip.mp3',
           },
           // A type outside the basic catalog.
           { id: 'chart', component: 'FancyChart', data: [1, 2, 3] },
@@ -117,7 +116,7 @@ describe('protocol gaps and churn degrade by declaration, never silently', () =>
 
     expect(result.ok).toBe(true);
     expect(degradations.map((d) => [d.componentId, d.componentType, d.reason])).toStrictEqual([
-      ['picture', 'Image', 'unmapped-type'],
+      ['audio', 'AudioPlayer', 'unmapped-type'],
       ['chart', 'FancyChart', 'unmapped-type'],
     ]);
     expect(surface.textContent).toContain('Ready');

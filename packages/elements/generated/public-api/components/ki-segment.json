@@ -1,0 +1,321 @@
+{
+  "component": {
+    "attributes": {
+      "aria-label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Excludes the option from selection and keyboard navigation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required nonempty option identifier. Each value must be unique in its group.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segment-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text size of medium and small segments.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segment-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font weight of segment labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segment-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the leading icon and label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segment-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of leading artwork.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segment-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of medium and small segments.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segment-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline padding of a medium or small segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-control-track-size-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium track height before density adjustment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-item-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete CSS backdrop filter behind an unselected segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-item-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting surface of an unselected segment, matching the track by default.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-item-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over an unselected segment surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-item-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of an unavailable segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting ink of an unselected segment, strengthened in contrast-more.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of each segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-selected-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete CSS backdrop filter behind the selected segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised selected surface, lighter than the track in both schemes.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-selected-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over the selected segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-selected-border-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "High-contrast selection boundary when elevation or surface differences are subtle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-selected-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the selection boundary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the selected segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-selected-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Elevation of the selected segment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-segmented-track-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset between the track and its segments.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A single choice in a ki-segmented-control.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "button": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native option surface with radio semantics.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "accessibleLabel": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Excludes the option from selection and keyboard navigation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required nonempty option identifier. Each value must be unique in its group.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Noninteractive visible option label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative leading icon. Supply aria-label for an icon-only option.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-segment.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-segment.d.ts",
+    "symbols": {
+      "KiSegment": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSegment extends Components.KiSegment, HTMLElement {\n}\nexport const KiSegment: {\n    prototype: KiSegment;\n    new (): KiSegment;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-segment.js"
+  }
+}
