@@ -7316,7 +7316,7 @@
             "resolved": "boolean",
             "references": {}
           },
-          "mutable": false,
+          "mutable": true,
           "attr": "arrow",
           "reflectToAttr": false,
           "docs": "Shows the arrow toward the trigger.",

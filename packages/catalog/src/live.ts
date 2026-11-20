@@ -678,7 +678,7 @@ function applySet(
     // A native layout element's props are CSSOM layout (spec 037 D4): the
     // whole layout is re-derived and only changed style properties written.
     if (previous !== current && !writeNativeLayout(element, node.component, node.props)) {
-      writeProp(element, node.component, name, current, ctx.dom.dialogIdFor, entry);
+      writeProp(element, node.component, name, current, ctx.dom.dialogIdFor);
     }
     if (overriding) {
       const live = current ?? ownEntry(entry?.props, name)?.default;
@@ -932,9 +932,9 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       slots: new Map(),
       touched: false,
     };
-    const entry = ownEntry(components, node.component);
-    writeProps(element, node.component, model.props, dialogIdFor, entry);
+    writeProps(element, node.component, model.props, dialogIdFor);
     writeDialogId(element, node.id, dialogIdFor);
+    const entry = ownEntry(components, node.component);
     if (node.component === 'ki-chip') {
       // Live membership belongs to the patch model. The host can answer the
       // removal request with a remove operation, with or without a binding.

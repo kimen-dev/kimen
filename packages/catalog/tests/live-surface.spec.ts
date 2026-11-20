@@ -216,14 +216,20 @@ describe('035 — a batch changes only what it names', () => {
     });
     expect(inserted.ok).toBe(true);
     const popover = one('ki-popover');
-    expect(popover.getAttribute('arrow')).toBe('false');
+    expect(popover.outerHTML).toBe('<ki-popover arrow="false"></ki-popover>');
 
-    live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: true } }] });
-    expect(popover.getAttribute('arrow')).toBe('');
-    live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: false } }] });
-    expect(popover.getAttribute('arrow')).toBe('false');
-    live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: null } }] });
-    expect(popover.getAttribute('arrow')).toBe('');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: true } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover arrow=""></ki-popover>');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: false } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover arrow="false"></ki-popover>');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: null } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover></ki-popover>');
     expect(one('ki-popover')).toBe(popover);
     expect(canonical(surface)).toBe(freshHtml(live));
   });

@@ -390,16 +390,6 @@ export function attachText(
   return parent.insertBefore(holder, before);
 }
 
-function usesPopoverArrowDefault(
-  component: string,
-  name: string,
-  entry: CatalogEntry | undefined,
-): boolean {
-  return (
-    component === 'ki-popover' && name === 'arrow' && ownEntry(entry?.props, name)?.default === true
-  );
-}
-
 /** Writes one validated prop as an attribute. */
 export function writeProp(
   element: Element,
@@ -407,18 +397,13 @@ export function writeProp(
   name: string,
   value: Scalar | undefined,
   idFor?: DialogIdFor,
-  entry?: CatalogEntry,
 ): void {
   let attributeValue = value;
   // Resolve neutral IDs only for catalog dialog invokers.
   if (name === 'commandfor' && isDialogInvoker(component)) {
     attributeValue = typeof value === 'string' ? idFor?.(value) : undefined;
   }
-  if (usesPopoverArrowDefault(component, name, entry)) {
-    // Removing this Stencil attribute also turns the arrow off. Materialize
-    // the same true default on initial render and when a live patch unsets it.
-    element.setAttribute(name, attributeValue === false ? 'false' : '');
-  } else if (attributeValue === undefined) {
+  if (attributeValue === undefined) {
     element.removeAttribute(name);
   } else if (attributeValue === false) {
     // Built-in Stencil props that default to true require an explicit false.
@@ -455,19 +440,12 @@ export function writeProps(
   component: string,
   props: Readonly<Record<string, Scalar>>,
   idFor: DialogIdFor,
-  entry: CatalogEntry | undefined,
 ): void {
   if (writeNativeLayout(element, component, props)) {
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, component, name, value, idFor, entry);
-  }
-  if (
-    usesPopoverArrowDefault(component, 'arrow', entry) &&
-    ownEntry(props, 'arrow') === undefined
-  ) {
-    writeProp(element, component, 'arrow', undefined, idFor, entry);
+    writeProp(element, component, name, value, idFor);
   }
 }
 
@@ -578,13 +556,12 @@ function buildNode(
 ): Element {
   const element = createNodeElement(doc, node.component);
   const props = node.props ?? {};
-  const entry = ownEntry(entries, node.component);
-  writeProps(element, node.component, props, idFor, entry);
+  writeProps(element, node.component, props, idFor);
   writeDialogId(element, node.id, idFor);
   const action = node.action;
   wireActivation(
     element,
-    entry,
+    ownEntry(entries, node.component),
     () => props,
     action !== undefined && onAction !== undefined
       ? (data) => {

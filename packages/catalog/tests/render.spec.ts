@@ -54,13 +54,14 @@ describe('renderUiSpec — only catalog components render', () => {
     expect(button?.textContent).toBe('Pay now');
   });
 
-  it('renders explicit false for a Kimen boolean that defaults to true', () => {
-    const result = renderUiSpec(
-      { version: 1, root: { component: 'ki-popover', props: { arrow: false } } },
-      { surface },
-    );
-    expect(result.ok).toBe(true);
-    expect(surface.querySelector('ki-popover')?.getAttribute('arrow')).toBe('false');
+  it.each([
+    [{}, '<ki-popover></ki-popover>'],
+    [{ arrow: false }, '<ki-popover arrow="false"></ki-popover>'],
+  ])('renders the Popover host for props %j', (props, markup) => {
+    expect(
+      renderUiSpec({ version: 1, root: { component: 'ki-popover', props } }, { surface }).ok,
+    ).toBe(true);
+    expect(surface.innerHTML).toBe(markup);
   });
 
   it.each(['script', 'iframe', 'ki-not-in-catalog'])(
