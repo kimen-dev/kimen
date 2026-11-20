@@ -898,6 +898,73 @@ export const catalogData = {
       "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
       "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction."
     },
+    "ki-fab": {
+      "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
+      "events": {
+        "click": "Native activation click. The page or guarded renderer handles the declared action."
+      },
+      "props": {
+        "collapse-on-scroll": {
+          "type": "boolean",
+          "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+          "default": false
+        },
+        "extended": {
+          "type": "boolean",
+          "description": "Show the action label next to its icon.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the action. Also the visible text in the extended state.",
+          "required": true
+        },
+        "position": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "static"
+          ],
+          "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+          "default": "static"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "xl"
+          ],
+          "description": "Square footprint when icon-only, and minimum size when extended.",
+          "default": "md"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "primary",
+            "secondary",
+            "surface"
+          ],
+          "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+          "default": "secondary"
+        }
+      },
+      "slots": {
+        "icon": "Decorative, noninteractive icon replacing the named glyph."
+      },
+      "tag": "ki-fab",
+      "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
+      "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
+    },
     "ki-format-date": {
       "description": "Displays an ISO date or timestamp in the reader's language.",
       "events": {},

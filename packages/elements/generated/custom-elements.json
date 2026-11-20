@@ -6336,6 +6336,380 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-fab.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFab",
+          "customElement": true,
+          "tagName": "ki-fab",
+          "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
+          "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation.",
+          "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
+          "attributes": [
+            {
+              "name": "collapse-on-scroll",
+              "fieldName": "collapseOnScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Compact an extended FAB on viewport scroll down and restore on scroll up."
+            },
+            {
+              "name": "extended",
+              "fieldName": "extended",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the action label next to its icon."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+              "format": "url"
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the action. Also the visible text in the extended state.",
+              "required": true
+            },
+            {
+              "name": "position",
+              "fieldName": "position",
+              "type": {
+                "text": "\"fixed\" | \"static\""
+              },
+              "default": "'static'",
+              "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"xl\""
+              },
+              "default": "'md'",
+              "description": "Square footprint when icon-only, and minimum size when extended."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"primary\" | \"secondary\" | \"surface\""
+              },
+              "default": "'secondary'",
+              "description": "Surface and ink: strong primary, tinted secondary or raised surface."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "collapseOnScroll",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+              "attribute": "collapse-on-scroll",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "extended",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the action label next to its icon.",
+              "attribute": "extended",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+              "attribute": "href",
+              "reflects": false,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the action. Also the visible text in the extended state.",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "privacy": "public",
+              "type": {
+                "text": "\"fixed\" | \"static\""
+              },
+              "default": "'static'",
+              "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+              "attribute": "position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"xl\""
+              },
+              "default": "'md'",
+              "description": "Square footprint when icon-only, and minimum size when extended.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"primary\" | \"secondary\" | \"surface\""
+              },
+              "default": "'secondary'",
+              "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "click",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Native activation click. The page or guarded renderer handles the declared action."
+            }
+          ],
+          "slots": [
+            {
+              "name": "icon",
+              "description": "Decorative, noninteractive icon replacing the named glyph."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "control",
+              "description": "The native button or link, including its surface and focus ring."
+            },
+            {
+              "name": "icon",
+              "description": "Wrapper for the decorative named or slotted glyph."
+            },
+            {
+              "name": "label",
+              "description": "Visible label of an extended FAB."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-fab-backdrop-filter",
+              "description": "Complete optional filter behind the FAB."
+            },
+            {
+              "name": "--ki-fab-bg",
+              "description": "Tinted secondary FAB fill."
+            },
+            {
+              "name": "--ki-fab-bg-image",
+              "description": "Optional layer painted over the FAB fill."
+            },
+            {
+              "name": "--ki-fab-collapse-duration",
+              "description": "Duration of the extended FAB footprint change."
+            },
+            {
+              "name": "--ki-fab-collapse-easing",
+              "description": "Easing of the extended FAB footprint change."
+            },
+            {
+              "name": "--ki-fab-fg",
+              "description": "Ink on the tinted secondary FAB."
+            },
+            {
+              "name": "--ki-fab-font-family",
+              "description": "Typeface for FAB labels."
+            },
+            {
+              "name": "--ki-fab-font-size",
+              "description": "Text size for extended FAB labels."
+            },
+            {
+              "name": "--ki-fab-font-weight",
+              "description": "Text weight for extended FAB labels."
+            },
+            {
+              "name": "--ki-fab-forced-colors-border-width",
+              "description": "Boundary width for the FAB in forced colors."
+            },
+            {
+              "name": "--ki-fab-gap",
+              "description": "Space between icon and label in an extended FAB."
+            },
+            {
+              "name": "--ki-fab-hover-shadow",
+              "description": "FAB elevation for a pointer that can hover."
+            },
+            {
+              "name": "--ki-fab-icon-size",
+              "description": "Glyph size of the default FAB."
+            },
+            {
+              "name": "--ki-fab-lg-icon-size",
+              "description": "Glyph size of the medium FAB."
+            },
+            {
+              "name": "--ki-fab-lg-radius",
+              "description": "Corner radius of the medium FAB."
+            },
+            {
+              "name": "--ki-fab-lg-size",
+              "description": "Minimum footprint of the medium FAB."
+            },
+            {
+              "name": "--ki-fab-line-height",
+              "description": "Line height for extended FAB labels."
+            },
+            {
+              "name": "--ki-fab-mobile-nav-block-size",
+              "description": "Height to reserve for mobile navigation, excluding the safe-area inset."
+            },
+            {
+              "name": "--ki-fab-offset",
+              "description": "Fixed FAB gap to the viewport edge or mobile navigation."
+            },
+            {
+              "name": "--ki-fab-padding-inline-end",
+              "description": "Inline end padding of an extended FAB."
+            },
+            {
+              "name": "--ki-fab-padding-inline-start",
+              "description": "Inline start padding of an extended FAB."
+            },
+            {
+              "name": "--ki-fab-primary-bg",
+              "description": "Strong primary FAB fill."
+            },
+            {
+              "name": "--ki-fab-primary-fg",
+              "description": "Ink on the strong primary FAB."
+            },
+            {
+              "name": "--ki-fab-radius",
+              "description": "Corner radius of the default FAB size."
+            },
+            {
+              "name": "--ki-fab-shadow",
+              "description": "Resting FAB elevation."
+            },
+            {
+              "name": "--ki-fab-size",
+              "description": "Minimum FAB footprint in the default size."
+            },
+            {
+              "name": "--ki-fab-surface-bg",
+              "description": "Raised surface FAB fill."
+            },
+            {
+              "name": "--ki-fab-surface-fg",
+              "description": "Ink on the raised surface FAB."
+            },
+            {
+              "name": "--ki-fab-xl-icon-size",
+              "description": "Glyph size of the large FAB."
+            },
+            {
+              "name": "--ki-fab-xl-radius",
+              "description": "Corner radius of the large FAB."
+            },
+            {
+              "name": "--ki-fab-xl-size",
+              "description": "Minimum footprint of the large FAB."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFab",
+          "declaration": {
+            "name": "KiFab",
+            "module": "dist/components/ki-fab.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-fab",
+          "declaration": {
+            "name": "KiFab",
+            "module": "dist/components/ki-fab.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-format-date.js",
       "declarations": [
         {

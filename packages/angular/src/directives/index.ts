@@ -18,6 +18,7 @@ export const DIRECTIVES = [
   d.KiDialog,
   d.KiDivider,
   d.KiEmptyState,
+  d.KiFab,
   d.KiFormatDate,
   d.KiFormatNumber,
   d.KiGrid,
