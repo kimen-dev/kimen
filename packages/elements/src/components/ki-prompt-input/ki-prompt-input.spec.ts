@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { acceptsFile, selectAttachments, shouldSubmit } from './ki-prompt-input.files';
+import {
+  acceptsFile,
+  selectAttachments,
+  shouldSubmit,
+  transferFiles,
+} from './ki-prompt-input.files';
 
 const file = (name: string, type = '', size = 3): File =>
   new File(['a'.repeat(size)], name, { type });
@@ -7,6 +12,16 @@ const file = (name: string, type = '', size = 3): File =>
 const csv = file('report.CSV');
 const png = file('photo.png', 'image/png');
 const pdf = file('guide.pdf', 'application/pdf');
+
+it('uses the clipboard file list once when items also expose files', () => {
+  expect(transferFiles({ files: [csv], items: [{ getAsFile: () => csv }] })).toEqual([csv]);
+});
+
+it('reads clipboard files from items when the file list is empty', () => {
+  expect(
+    transferFiles({ files: [], items: [{ getAsFile: () => null }, { getAsFile: () => csv }] }),
+  ).toEqual([csv]);
+});
 
 it('matches extensions, exact MIME types and MIME wildcards without case sensitivity', () => {
   const accept = ' .csv , IMAGE/*, application/pdf ';

@@ -79,6 +79,14 @@ function drop(host: Composer, ...entries: File[]): void {
   );
 }
 
+function paste(host: Composer, clipboardData: DataTransfer): ClipboardEvent {
+  const event = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+  // Firefox can drop files when a drag DataTransfer passes through the clipboard constructor.
+  Object.defineProperty(event, 'clipboardData', { value: clipboardData });
+  textbox(host).dispatchEvent(event);
+  return event;
+}
+
 function requests(host: Composer, name: 'ki-submit' | 'ki-stop' = 'ki-submit') {
   const listener = vi.fn<(event: Event) => void>();
   host.addEventListener(name, listener);
@@ -144,22 +152,11 @@ it.each(['picker', 'drop', 'paste'])('S3 accepts CSV files using %s', async (sou
   } else if (source === 'drop') {
     drop(host, entry);
   } else {
-    const data = files(entry);
-    const paste = new ClipboardEvent('paste', {
-      clipboardData: data,
-      bubbles: true,
-      cancelable: true,
-    });
-    textbox(host).dispatchEvent(paste);
-    expect(paste.defaultPrevented).toBe(true);
-    data.setData('text/plain', 'Preserve ordinary paste');
-    const mixed = new ClipboardEvent('paste', {
-      clipboardData: data,
-      bubbles: true,
-      cancelable: true,
-    });
-    textbox(host).dispatchEvent(mixed);
-    expect(mixed.defaultPrevented).toBe(false);
+    expect(paste(host, files(entry)).defaultPrevented).toBe(true);
+    const mixed = files(file('notes.csv'));
+    mixed.setData('text/plain', 'Preserve ordinary paste');
+    expect(paste(host, mixed).defaultPrevented).toBe(false);
+    await expect.element(removeFile('notes.csv')).toBeVisible();
   }
   await expect.element(page.getByRole('list', { name: 'Attachments' })).toBeVisible();
   await expect.poll(() => part(host, 'attachments').textContent).toContain(entry.name);
@@ -226,9 +223,10 @@ it('supports the tools and attachments slots with caller-owned content', async (
   host.innerHTML =
     '<button type="button" slot="tools">Model: Standard</button><li slot="attachments">Context.csv</li>';
   await expect.element(page.getByRole('button', { name: 'Model: Standard' })).toBeVisible();
-  await expect
-    .element(page.getByRole('list', { name: 'Attachments' }).getByText('Context.csv'))
-    .toBeVisible();
+  await expect.element(page.getByRole('list', { name: 'Attachments' })).toBeVisible();
+  const attachment = page.getByText('Context.csv', { exact: true });
+  await expect.element(attachment).toBeVisible();
+  expect(attachment.element().assignedSlot?.parentElement).toBe(part(host, 'attachments'));
 });
 
 it('sends attachment-only drafts and disables empty or whitespace-only drafts', async () => {

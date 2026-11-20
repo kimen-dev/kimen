@@ -12,7 +12,13 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import { type RejectionReason, selectAttachments, shouldSubmit } from './ki-prompt-input.files';
+import {
+  type FileBatch,
+  type RejectionReason,
+  selectAttachments,
+  shouldSubmit,
+  transferFiles,
+} from './ki-prompt-input.files';
 
 export type KiPromptInputStatus = 'idle' | 'submitted' | 'streaming';
 export type KiPromptInputSubmitOn = 'enter' | 'mod-enter';
@@ -127,14 +133,14 @@ export class KiPromptInput {
   }
 
   private get attachmentsEnabled(): boolean {
-    return Boolean(this.accept?.trim());
+    return !!this.accept?.trim();
   }
 
   private get canSend(): boolean {
     return (
       !this.effectiveDisabled &&
       (this.status ?? 'idle') === 'idle' &&
-      (Boolean(this.value?.trim()) || this.attachments.length > 0)
+      (!!this.value?.trim() || this.attachments.length > 0)
     );
   }
 
@@ -196,16 +202,17 @@ export class KiPromptInput {
     this.send();
   };
 
-  private addFiles(files: FileList): void {
-    if (!this.attachmentsEnabled || this.effectiveDisabled || files.length === 0) return;
+  private handleFiles(files: FileBatch): boolean {
+    const accept = this.accept?.trim();
+    if (!accept || this.effectiveDisabled || files.length === 0) return false;
     const { accepted, rejected } = selectAttachments(
-      Array.from(files),
-      this.accept ?? '',
+      files,
+      accept,
       this.attachments.length,
       this.maxFiles,
       this.maxSize,
     );
-    this.attachments = [...this.attachments, ...accepted];
+    this.attachments = this.attachments.concat(accepted);
     const messages: Record<RejectionReason, string> = {
       type: this.fileTypeMessage,
       size: this.fileSizeMessage,
@@ -214,16 +221,17 @@ export class KiPromptInput {
     this.feedback = rejected
       .map(({ file, reason }) => messages[reason].replaceAll('{name}', () => file.name))
       .join(' ');
+    return true;
   }
 
   private readonly openPicker = (): void => {
     this.picker?.click();
   };
 
-  private readonly onPick = (): void => {
-    if (!this.picker?.files) return;
-    this.addFiles(this.picker.files);
-    this.picker.value = '';
+  private readonly onPick = (event: globalThis.Event): void => {
+    const picker = event.currentTarget as HTMLInputElement;
+    if (picker.files) this.handleFiles(picker.files);
+    picker.value = '';
   };
 
   private readonly onDragOver = (event: DragEvent): void => {
@@ -233,24 +241,20 @@ export class KiPromptInput {
     transfer.dropEffect = this.attachmentsEnabled && !this.effectiveDisabled ? 'copy' : 'none';
   };
 
-  private readonly onDrop = (event: DragEvent): void => {
-    const files = event.dataTransfer?.files;
-    if (!files?.length) return;
-    event.preventDefault();
-    this.addFiles(files);
-  };
-
-  private readonly onPaste = (event: ClipboardEvent): void => {
-    const clipboard = event.clipboardData;
-    if (!this.attachmentsEnabled || this.effectiveDisabled || !clipboard?.files.length) return;
-    if (!clipboard.getData('text/plain')) event.preventDefault();
-    this.addFiles(clipboard.files);
+  private readonly onFileTransfer = (event: ClipboardEvent | DragEvent): void => {
+    const dropped = 'dataTransfer' in event;
+    const transfer = dropped ? event.dataTransfer : event.clipboardData;
+    if (!transfer) return;
+    const files = transferFiles(transfer);
+    const handled = this.handleFiles(files);
+    if (dropped ? files.length : handled && !transfer.getData('text/plain')) {
+      event.preventDefault();
+    }
   };
 
   private readonly onAttachmentSlotChange = (event: globalThis.Event): void => {
-    if (event.target instanceof HTMLSlotElement) {
-      this.hasAttachmentSlot = event.target.assignedElements().length > 0;
-    }
+    const slot = event.currentTarget as HTMLSlotElement;
+    this.hasAttachmentSlot = slot.assignedElements().length > 0;
   };
 
   private removeAttachment(index: number, event: globalThis.Event): void {
@@ -269,15 +273,15 @@ export class KiPromptInput {
     const attachmentsEnabled = this.attachmentsEnabled;
     const text = this.value ?? '';
     // Safari omits list semantics when its markers are visually suppressed.
-    const listSemantics = { role: 'list', 'aria-label': this.attachmentsLabel };
-    const slotState = { inert: disabled };
+    const listRole = 'list';
     return (
-      <div key="field" part="field" onDragOver={this.onDragOver} onDrop={this.onDrop}>
+      <div key="field" part="field" onDragOver={this.onDragOver} onDrop={this.onFileTransfer}>
         {attachmentsEnabled && (
           <ul
             key="files"
             part="attachments"
-            {...listSemantics}
+            role={listRole}
+            aria-label={this.attachmentsLabel}
             hidden={this.attachments.length === 0 && !this.hasAttachmentSlot}
           >
             {this.attachments.map((file, index) => (
@@ -299,19 +303,19 @@ export class KiPromptInput {
             <slot
               key="extra"
               name="attachments"
-              {...slotState}
+              {...{ inert: disabled }}
               onSlotchange={this.onAttachmentSlotChange}
             />
           </ul>
         )}
         <div key="editor" class="editor">
           {/* A hidden sizer shares the wrapping metrics across browser engines. */}
-          <span key="sizer" class="sizer" aria-hidden="true">{`${text}\u200b`}</span>
+          <span key="sizer" class="sizer">{`${text}\u200b`}</span>
           <textarea
             key="textarea"
             part="textarea"
             aria-label={this.label}
-            {...(this.placeholder === undefined ? {} : { placeholder: this.placeholder })}
+            placeholder={this.placeholder ?? ''}
             disabled={disabled}
             value={text}
             rows={1}
@@ -320,7 +324,7 @@ export class KiPromptInput {
             }}
             onInput={this.onInput}
             onKeyDown={this.onKeyDown}
-            onPaste={this.onPaste}
+            onPaste={this.onFileTransfer}
           />
         </div>
         <div key="actions" part="actions">
@@ -341,7 +345,7 @@ export class KiPromptInput {
             <slot key="slot-tools" name="tools" />
           </div>
           <span key="status" part="status" role="status" aria-live="polite">
-            {streaming ? this.writingMessage : ''}
+            {streaming && this.writingMessage}
           </span>
           <button
             type="button"

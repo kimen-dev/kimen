@@ -4,13 +4,13 @@
   font-family: var(--ki-typography-family-body);
 }
 
-:host([hidden]) {
-  display: none;
+[part="field"],
+.editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 [part="field"] {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
   gap: calc(var(--ki-prompt-input-padding) * var(--ki-density-space-scale));
   min-inline-size: 0;
   padding: calc(var(--ki-prompt-input-padding) * var(--ki-density-space-scale));
@@ -26,17 +26,10 @@
   border-color: var(--ki-focus-ring-color);
 }
 
-.editor {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  min-inline-size: 0;
-}
-
 .sizer,
 textarea {
   grid-area: 1 / 1;
   box-sizing: border-box;
-  min-inline-size: 0;
   min-block-size: min(var(--ki-prompt-input-min-height), var(--ki-prompt-input-max-height));
   max-block-size: var(--ki-prompt-input-max-height);
   padding-block: var(--ki-prompt-input-editor-padding-block);
@@ -51,11 +44,9 @@ textarea {
 .sizer {
   visibility: hidden;
   overflow: hidden;
-  pointer-events: none;
 }
 
 textarea {
-  display: block;
   inline-size: 100%;
   margin: 0;
   border: 0;
@@ -91,6 +82,7 @@ textarea::placeholder {
   list-style: none;
 }
 
+:host([hidden]),
 [hidden] {
   display: none;
 }
@@ -103,10 +95,9 @@ li,
 }
 
 button {
-  display: inline-grid;
+  display: grid;
   flex: none;
   place-items: center;
-  box-sizing: border-box;
 
   --_action-size: max(
     var(--ki-density-target-min),
@@ -116,8 +107,11 @@ button {
   inline-size: var(--_action-size);
   block-size: var(--_action-size);
   padding: 0;
-  border: var(--ki-prompt-input-border-width) solid transparent;
+  border: var(--ki-prompt-input-border-width) solid var(--ki-button-secondary-neutral-rest-border);
   border-radius: var(--ki-button-sm-radius);
+  background-color: var(--ki-button-secondary-neutral-rest-bg);
+  color: var(--ki-button-secondary-neutral-rest-fg);
+  font-family: inherit;
   cursor: pointer;
 }
 
@@ -127,6 +121,7 @@ button ki-icon {
 }
 
 [part="attach"] {
+  border-color: transparent;
   background-color: var(--ki-button-ghost-neutral-rest-bg);
   color: var(--ki-button-ghost-neutral-rest-fg);
 }
@@ -135,12 +130,6 @@ button ki-icon {
   border-color: var(--ki-button-primary-neutral-rest-border);
   background-color: var(--ki-button-primary-neutral-rest-bg);
   color: var(--ki-button-primary-neutral-rest-fg);
-}
-
-[part="stop"] {
-  border-color: var(--ki-button-secondary-neutral-rest-border);
-  background-color: var(--ki-button-secondary-neutral-rest-bg);
-  color: var(--ki-button-secondary-neutral-rest-fg);
 }
 
 @media (hover: hover) {
