@@ -41,6 +41,10 @@ The application owns all file transfers and handles cancellation requests.
   The labels and rejection messages are overridable. Touch-sized targets use the existing
   opt-in density setting.
 
+- **Agent's choice, pending founder confirmation.** The visual treatment uses the reference's
+  dashed drop zone and stacked statuses with text-led rows, localized byte sizes and one shared
+  close icon for row actions. This keeps the full-runtime bundle within 25 kB.
+
 ## Gherkin
 
 ```gherkin

@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-file-upload" />
+
+# ki-file-upload
+
+Collect attachments, imports or media with a drop zone and a native file
+picker. Set a visible `label` and describe the constraints with `help-text`
+or the `help` slot.
+
+```html
+<ki-file-upload
+  label="Upload files"
+  name="attachments"
+  accept=".csv,.pdf"
+  max-size="10MB"
+  max-files="3"
+  help-text="Choose up to three CSV or PDF files, up to 10 MB each."
+  multiple
+></ki-file-upload>
+```
+
+The field keeps rejected files visible with a reason. A multipart form can
+submit each accepted original `File` under the field's name. A disabled field
+contributes no entries. Set `required` to require at least one accepted file.
+
+The host application can handle `ki-files-add` to begin a transfer. Assign a
+new `files` array to report `queued`, `uploading`, `done` or `error` for each
+row. Keep its original `file` when updating a local selection. Handle
+`ki-file-cancel` to stop a transfer. Use `ki-file-remove` to react to removal.
+
+Each row action includes the filename in its accessible name.
+Completion and failure messages are announced politely. Customize the drop
+zone with the `--ki-file-upload-bg` and `--ki-file-upload-active-bg` tokens
+or `::part(drop-zone)`.

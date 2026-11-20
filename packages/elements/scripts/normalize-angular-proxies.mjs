@@ -38,11 +38,15 @@ if (!source.includes('outputs: [') && !source.includes('@Output()')) {
 }
 
 const outputLine = /^ {2}@Output\(\) \w+ = new EventEmitter<.+>\(\);\n/gmu;
-const metadataLine = /^ {2}outputs: \[[^\]]+\],?\n/gmu;
+const metadataLine = /^ {2}outputs: \[('[a-z-]+'(?:, '[a-z-]+')*)\],?\n/gmu;
 const phantomField = /^ {2}'[a-z-]+': EventEmitter<.+>;\n/gmu;
 
 const orphanCount = [...source.matchAll(outputLine)].length;
-const metadataCount = [...source.matchAll(metadataLine)].length;
+// The upstream target groups the names of all events from one component on one line.
+const metadataCount = Array.from(
+  source.matchAll(metadataLine),
+  ([, names]) => names.split(', ').length,
+).reduce((count, entries) => count + entries, 0);
 const phantomCount = [...source.matchAll(phantomField)].length;
 if (orphanCount === 0 || orphanCount !== metadataCount || orphanCount !== phantomCount) {
   throw new Error(
