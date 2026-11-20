@@ -38,7 +38,6 @@
   margin: 0;
   font-family: var(--ki-confirmation-heading-font-family);
   font-size: var(--ki-typography-size-body-2);
-  line-height: var(--ki-typography-line-height-para);
 }
 
 code {
@@ -60,11 +59,12 @@ code {
   gap: calc(var(--ki-confirmation-inline-gap) * var(--ki-density-space-scale));
 }
 
-[part="remember"] input {
+input {
   flex: none;
   inline-size: var(--ki-density-target-min);
   block-size: var(--ki-density-target-min);
   margin: 0;
+  font: inherit;
   accent-color: var(--ki-surface-primary-med-em);
 }
 

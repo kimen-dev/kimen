@@ -149,11 +149,18 @@ it.each([
     host.resolvedBy = 'Mara';
     host.resolvedAt = '10:32';
     host.state = state;
-    const summary = group().getByText(label, { exact: true });
-    await expect.element(summary).toBeVisible();
-    await expect.element(group().getByText('send_email')).toBeVisible();
-    await expect.element(group().getByText('Mara')).toBeVisible();
-    await expect.element(group().getByText('10:32')).toBeVisible();
+    await expect
+      .poll(() => host.shadowRoot?.querySelector('[role="status"]')?.textContent)
+      .toBe(label);
+    const summaries = host.shadowRoot?.querySelectorAll('[part="summary"]');
+    expect(summaries).toHaveLength(1);
+    const summary = summaries?.[0];
+    if (!summary) throw new Error('Expected the resolved summary');
+    const row = page.elementLocator(summary);
+    await expect.element(row.getByText(label, { exact: true })).toBeVisible();
+    await expect.element(row.getByText('send_email')).toBeVisible();
+    await expect.element(row.getByText('Mara')).toBeVisible();
+    await expect.element(row.getByText('10:32')).toBeVisible();
     expect(host.querySelector('dd')?.getClientRects()).toHaveLength(0);
     await expect.element(approve()).not.toBeInTheDocument();
     await expect.element(deny()).not.toBeInTheDocument();
