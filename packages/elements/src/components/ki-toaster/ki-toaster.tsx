@@ -1,6 +1,6 @@
 import { Component, Element, h, Method, Prop, Watch } from '@stencil/core';
 import { focusThroughShadow } from '../../utils/shadow-focus.js';
-import { firstControlOf, rememberFocusOrigin } from './ki-toaster.focus.js';
+import { firstControlOf, interactionWithin, rememberFocusOrigin } from './ki-toaster.focus.js';
 import { type KiToasterPlacement, normalizeMax, queuedFlags } from './ki-toaster.queue.js';
 import type { KiToastShowOptions } from './ki-toaster.show.js';
 
@@ -243,7 +243,7 @@ export class KiToaster {
       event.metaKey ||
       event.shiftKey ||
       !this.showing ||
-      this.host.matches(':focus-within')
+      interactionWithin(this.host, ':focus-within')
     ) {
       return;
     }
