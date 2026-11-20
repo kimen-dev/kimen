@@ -6,7 +6,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import type { A2uiActionMessage, A2uiActionMetadata } from '../src/index.js';
-import { A2UI_BASIC_CATALOG_IDS, createA2uiAdapter } from '../src/index.js';
+import {
+  A2UI_BASIC_CATALOG_IDS,
+  A2UI_V1_BASIC_CATALOG_IDS,
+  createA2uiAdapter,
+} from '../src/index.js';
 import {
   childListTemplate,
   incremental,
@@ -339,4 +343,46 @@ describe('surface lifecycle, data binding and templates follow v0.9.1', () => {
     );
     expect(events.every((e) => !Number.isNaN(Date.parse(e.action.timestamp)))).toBe(true);
   });
+});
+
+// @spec:095-ki-combobox
+it.each([
+  ['v0.9.1', 'mutuallyExclusive'],
+  ['v0.9.1', 'multipleSelection'],
+  ['1.0', 'mutuallyExclusive'],
+  ['1.0', 'multipleSelection'],
+] as const)('S18 maps a long %s %s ChoicePicker to Combobox', (version, variant) => {
+  const adapter = createA2uiAdapter({ surface });
+  const catalogId = version === '1.0' ? (A2UI_V1_BASIC_CATALOG_IDS[0] ?? '') : BASIC;
+  expect(adapter.apply({ version, createSurface: { surfaceId: 'choices', catalogId } }).ok).toBe(
+    true,
+  );
+  const options = Array.from({ length: 16 }, (_, index) => ({
+    value: `v,${String(index)}`,
+    label: `Option ${String(index)}`,
+  }));
+  const result = adapter.apply({
+    version,
+    updateComponents: {
+      surfaceId: 'choices',
+      components: [
+        {
+          id: 'root',
+          component: 'ChoicePicker',
+          label: 'Pick an option',
+          variant,
+          options,
+          value: ['v,1', 'v,2'],
+        },
+      ],
+    },
+  });
+  expect(result).toMatchObject({ ok: true, diagnostics: [] });
+  const combo = surface.querySelector('ki-combobox');
+  expect(combo?.querySelectorAll('ki-option')).toHaveLength(16);
+  expect(combo?.querySelector('ki-option[value="v,2"]')?.textContent).toBe('Option 2');
+  expect(combo?.hasAttribute('multiple')).toBe(variant === 'multipleSelection');
+  expect(combo?.getAttribute('value')).toBe(
+    variant === 'multipleSelection' ? '["v,1","v,2"]' : 'v,1',
+  );
 });

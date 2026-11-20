@@ -17,6 +17,7 @@ export const DIRECTIVES = [
   d.KiChip,
   d.KiChipGroup,
   d.KiCodeBlock,
+  d.KiCombobox,
   d.KiConfirmation,
   d.KiConversation,
   d.KiCopyButton,

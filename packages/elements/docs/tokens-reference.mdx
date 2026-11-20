@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 491 semantic
-and 1737 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 494 semantic
+and 1756 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -92,6 +92,8 @@ every component at once.
 | `--ki-corner-feature-tile-sm` | `8px` | Corner radius of a small square feature tile. |
 | `--ki-corner-feature-tile-xl` | `16px` | Corner radius of an extra-large square feature tile. |
 | `--ki-corner-feature-tile-xs` | `6px` | Corner radius of an extra-small square feature tile. |
+| `--ki-corner-field-item` | `8px` | Corner radius for choices and tokens inside an editable field. |
+| `--ki-corner-field-surface` | `10px` | Corner radius for an editable field and its floating choice surface. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
 
 ### `ki.density`
@@ -425,6 +427,7 @@ every component at once.
 | `--ki-spacing-activity-dot-gap` | `0.25rem` | Gap between typing dots. |
 | `--ki-spacing-activity-label-gap` | `0.5rem` | Gap between an inline activity mark and its label. |
 | `--ki-spacing-block` | `0.75rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. |
+| `--ki-spacing-floating-surface-max-block` | `20rem` | Maximum block size of a compact floating surface before it scrolls. |
 | `--ki-spacing-inline` | `0.5rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. |
 | `--ki-spacing-media-caption` | `0.25rem` | Block spacing between a media frame and its caption. |
 
@@ -1361,6 +1364,30 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-code-padding` | `0.75rem` | Inset of the source and leading caption edge. |
 | `--ki-code-radius` | `12px` | Corner radius of the figure. |
 | `--ki-code-string` | `#2c6a2b` | Syntax ink for strings. |
+
+### `ki-combobox`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-combobox-field-bg` | `#f9f7f4` | Fill for the editable field. |
+| `--ki-combobox-field-border` | `#86827b` | Outline around the editable field. |
+| `--ki-combobox-field-fg` | `#181613` | Text on the editable field. |
+| `--ki-combobox-field-height` | `2.5rem` | Resting minimum block size of the field. |
+| `--ki-combobox-icon-size` | `1rem` | Size of search, selection and remove glyphs. |
+| `--ki-combobox-input-basis` | `3.5rem` | Preferred text-entry width before a row of tags wraps. |
+| `--ki-combobox-input-touch-font-size` | `1rem` | Minimum editable text size for coarse-pointer input. |
+| `--ki-combobox-listbox-backdrop-filter` | `none` | Complete backdrop filter for the floating listbox. |
+| `--ki-combobox-listbox-bg` | `#f9f7f4` | Fill for the floating listbox. |
+| `--ki-combobox-listbox-bg-image` | `none` | Optional image layered over the floating listbox. |
+| `--ki-combobox-listbox-border` | `rgba(24, 22, 19, 0.1)` | Outline around the floating listbox. |
+| `--ki-combobox-listbox-fg` | `#181613` | Text on the floating listbox. |
+| `--ki-combobox-listbox-max-block-size` | `20rem` | Maximum listbox block size before options scroll. |
+| `--ki-combobox-listbox-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the floating listbox. |
+| `--ki-combobox-match-fg` | `#181613` | Foreground of the first bolded query match. |
+| `--ki-combobox-option-active-bg` | `#f3f0eb` | Fill for the active option. |
+| `--ki-combobox-option-active-fg` | `#181613` | Text on the active option. |
+| `--ki-combobox-tag-bg` | `#f3f0eb` | Fill for the selected tag. |
+| `--ki-combobox-tag-fg` | `#181613` | Text on the selected tag. |
 
 ### `ki-confirmation`
 

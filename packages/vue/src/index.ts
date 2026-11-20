@@ -20,6 +20,7 @@ export { KiCheckboxGroup } from './ki-checkbox-group.js';
 export { KiChip } from './ki-chip.js';
 export { KiChipGroup } from './ki-chip-group.js';
 export { KiCodeBlock } from './ki-code-block.js';
+export { KiCombobox } from './ki-combobox.js';
 export { KiConfirmation } from './ki-confirmation.js';
 export { KiConversation } from './ki-conversation.js';
 export { KiCopyButton } from './ki-copy-button.js';

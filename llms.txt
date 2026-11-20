@@ -57,6 +57,7 @@ methods, CSS custom properties and examples.
 - [ki-chip](https://kimen.dev/llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
 - [ki-chip-group](https://kimen.dev/llms/ki-chip-group.md): label related chips or let people change their reading order.
 - [ki-code-block](https://kimen.dev/llms/ki-code-block.md): display a multiline example, generated code or a tool result that readers should be able to inspect and copy.
+- [ki-combobox](https://kimen.dev/llms/ki-combobox.md): choose from a long list of options, let people search an option source, or allow multiple selections that remain visible as tags.
 - [ki-confirmation](https://kimen.dev/llms/ki-confirmation.md): Show the exact action and the details a person needs before granting permission.
 - [ki-conversation](https://kimen.dev/llms/ki-conversation.md): Display chronological user, assistant and event messages.
 - [ki-copy-button](https://kimen.dev/llms/ki-copy-button.md): let a person copy a link, identifier, token or code sample.
@@ -82,7 +83,7 @@ methods, CSS custom properties and examples.
 - [ki-menu-item](https://kimen.dev/llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-message](https://kimen.dev/llms/ki-message.md): Display a transcript entry inside ki-conversation.
 - [ki-note](https://kimen.dev/llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
-- [ki-option](https://kimen.dev/llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
+- [ki-option](https://kimen.dev/llms/ki-option.md): declare one choice inside a `ki-select` or `ki-combobox`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-popover](https://kimen.dev/llms/ki-popover.md): Show filters, details, a small form, or a text toggletip.
 - [ki-progress](https://kimen.dev/llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
 - [ki-qr](https://kimen.dev/llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.

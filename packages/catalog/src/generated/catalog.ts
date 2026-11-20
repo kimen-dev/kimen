@@ -868,6 +868,114 @@ export const catalogData = {
       "whenNotToUse": "when the reader should edit the source or when the code belongs\ninline in a sentence. Use an editor or a native inline code element.",
       "whenToUse": "display a multiline example, generated code or a tool result that\nreaders should be able to inspect and copy."
     },
+    "ki-combobox": {
+      "description": "An editable, form-associated combobox with local or remote filtering,\nsingle or multiple selection, and optional free entry.",
+      "activationEvent": "change",
+      "events": {
+        "change": "Composed event after a user changes the committed selection.\nRead the committed value from the host.",
+        "ki-input": "Reports a raw text edit in `detail.value`. Listen to it to request remote results."
+      },
+      "props": {
+        "add-label": {
+          "type": "string",
+          "description": "Localizable free-entry offer. {text} is replaced by the trimmed query.",
+          "default": "Add “{text}”"
+        },
+        "allow-custom": {
+          "type": "boolean",
+          "description": "Offers to add trimmed query text when no known or selected choice already matches it.",
+          "default": false
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disables editing, navigation and form submission.",
+          "default": false
+        },
+        "empty-label": {
+          "type": "string",
+          "description": "Localizable status when there are no choices to display.",
+          "default": "No results"
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Message used when a required selection is missing, in place of the browser's message."
+        },
+        "filter": {
+          "type": "enum",
+          "values": [
+            "contains",
+            "none",
+            "starts-with"
+          ],
+          "description": "Filters by label. Set to none when the application provides results from a remote search.",
+          "default": "contains"
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Guidance shown below the field and read as its description."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible label and accessible name. Supply it even when placeholder text is also set.",
+          "required": true
+        },
+        "loading": {
+          "type": "boolean",
+          "description": "Replaces visible options with a loading indicator while a search is pending.",
+          "default": false
+        },
+        "loading-label": {
+          "type": "string",
+          "description": "Localizable status while waiting for a result set.",
+          "default": "Loading results"
+        },
+        "multiple": {
+          "type": "boolean",
+          "description": "Enables ordered multiple selection and renders selected values as tags.",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key. Multiple choices contribute one entry each under this name."
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Hint shown in the text input when it is empty.",
+          "default": ""
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Localizable removal button label. {label} is replaced by the selected label.",
+          "default": "Remove {label}"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Requires a committed choice to submit the form.",
+          "default": false
+        },
+        "result-count-label": {
+          "type": "string",
+          "description": "Localizable status for several choices. {count} is replaced by the result count.",
+          "default": "{count} results"
+        },
+        "result-one-label": {
+          "type": "string",
+          "description": "Localizable status for one available choice.",
+          "default": "1 result"
+        },
+        "value": {
+          "type": "string",
+          "description": "Committed value. Use a string for single selection and an array of strings\nfor multiple selection. In HTML and catalog specs, encode multiple values\nas a JSON array string in the value attribute, or supply one literal value.\nAssign a new array to change multiple selections programmatically.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "Declarative ki-option children. Supply unique values and a human-readable label."
+      },
+      "tag": "ki-combobox",
+      "whenNotToUse": "use a select-only control for a short closed set or a plain\ntext field for unrestricted input with no choices.",
+      "whenToUse": "choose from a long list of options, let people search an option\nsource, or allow multiple selections that remain visible as tags."
+    },
     "ki-confirmation": {
       "description": "An inline prompt for a decision about a proposed assistant action.",
       "events": {
@@ -2067,9 +2175,13 @@ export const catalogData = {
       "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
     },
     "ki-option": {
-      "description": "A declarative data option rendered by its owning `ki-select`.",
+      "description": "A declarative data option rendered by its owning `ki-select` or `ki-combobox`.",
       "events": {},
       "props": {
+        "description": {
+          "type": "string",
+          "description": "Secondary text shown below the label in a combobox choice row."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Makes this option unavailable. Disabled options cannot be selected, are\nskipped by keyboard highlight, and are exposed unavailable by the select.",
@@ -2081,11 +2193,12 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Text label mirrored by the owning select."
+        "": "Text label mirrored by the owning choice field.",
+        "start": "Decorative content shown before the label in a combobox row."
       },
       "tag": "ki-option",
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
-      "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
+      "whenToUse": "declare one choice inside a `ki-select` or `ki-combobox`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
     "ki-popover": {
       "description": "A non-modal popover anchored to a button.",

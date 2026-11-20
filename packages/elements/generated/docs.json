@@ -4259,6 +4259,690 @@
       }
     },
     {
+      "filePath": "src/components/ki-combobox/ki-combobox.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-combobox",
+      "docs": "An editable, form-associated combobox with local or remote filtering,\nsingle or multiple selection, and optional free entry.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "choose from a long list of options, let people search an option\nsource, or allow multiple selections that remain visible as tags."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "use a select-only control for a short closed set or a plain\ntext field for unrestricted input with no choices."
+        },
+        {
+          "name": "slot",
+          "text": "- Declarative ki-option children. Supply unique values and a human-readable label."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible label of the field and its listbox."
+        },
+        {
+          "name": "part",
+          "text": "field - Container for the text input and selected tags."
+        },
+        {
+          "name": "part",
+          "text": "input - Native text input with the combobox role."
+        },
+        {
+          "name": "part",
+          "text": "listbox - Floating listbox surface."
+        },
+        {
+          "name": "part",
+          "text": "option - A mirrored choice row."
+        },
+        {
+          "name": "part",
+          "text": "description - An option's secondary text."
+        },
+        {
+          "name": "part",
+          "text": "tag - A selected value in multiple mode."
+        },
+        {
+          "name": "part",
+          "text": "remove - A native button that removes a selected tag."
+        },
+        {
+          "name": "part",
+          "text": "help - Help below the field."
+        },
+        {
+          "name": "part",
+          "text": "error - Polite error message shown after failed validation."
+        },
+        {
+          "name": "event",
+          "text": "change - Composed event after a user changes the committed selection.\nRead the committed value from the host."
+        },
+        {
+          "name": "catalogAction",
+          "text": "change"
+        }
+      ],
+      "usage": {
+        "examples": "## Search people\n\nWhen importing custom elements individually, register both\n`@kimen/elements/ki-combobox` and `@kimen/elements/ki-option`.\n\n```html\n<ki-combobox label=\"Assignee\" name=\"assignee\" placeholder=\"Search people\" required>\n  <ki-option value=\"ana\" description=\"ana@example.com\">Ana Ruiz</ki-option>\n  <ki-option value=\"juan\" description=\"juan@example.com\">Juan Antón</ki-option>\n</ki-combobox>\n```\n\n## Pick or create multiple labels\n\n```html\n<ki-combobox label=\"Labels\" name=\"labels\" multiple allow-custom value='[\"bug\",\"search\"]'>\n  <ki-option>bug</ki-option>\n  <ki-option>search</ki-option>\n  <ki-option>documentation</ki-option>\n</ki-combobox>\n```\n\nAssign an array to the JavaScript `value` property to set multiple selections.\nUse a JSON array string in HTML or neutral catalog specs. Each selection\nsubmits under the same form name. Read them all with `FormData.getAll`.\n\n## Request server results\n\nSet `filter=\"none\"` to display the options supplied by your application.\nListen for `ki-input` and use `event.detail.value` as the query. Set `loading`\nwhile fetching, replace the field's `ki-option` children with the latest\nresults, and clear `loading`. Use `change` to respond to a committed selection.\n"
+      },
+      "props": [
+        {
+          "name": "addLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "add-label",
+          "reflectToAttr": false,
+          "docs": "Localizable free-entry offer. {text} is replaced by the trimmed query.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Add “{text}”'"
+            }
+          ],
+          "default": "'Add “{text}”'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "allowCustom",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "allow-custom",
+          "reflectToAttr": true,
+          "docs": "Offers to add trimmed query text when no known or selected choice already matches it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disables editing, navigation and form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "emptyLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "empty-label",
+          "reflectToAttr": false,
+          "docs": "Localizable status when there are no choices to display.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'No results'"
+            }
+          ],
+          "default": "'No results'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": false,
+          "docs": "Message used when a required selection is missing, in place of the browser's message.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "filter",
+          "type": "\"contains\" | \"none\" | \"starts-with\"",
+          "complexType": {
+            "original": "ComboboxFilter",
+            "resolved": "\"contains\" | \"none\" | \"starts-with\"",
+            "references": {
+              "ComboboxFilter": {
+                "location": "import",
+                "path": "./ki-combobox.options",
+                "id": "src/components/ki-combobox/ki-combobox.options.ts::ComboboxFilter",
+                "referenceLocation": "ComboboxFilter"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "filter",
+          "reflectToAttr": false,
+          "docs": "Filters by label. Set to none when the application provides results from a remote search.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'contains'"
+            }
+          ],
+          "default": "'contains'",
+          "values": [
+            {
+              "value": "contains",
+              "type": "string"
+            },
+            {
+              "value": "none",
+              "type": "string"
+            },
+            {
+              "value": "starts-with",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": false,
+          "docs": "Guidance shown below the field and read as its description.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible label and accessible name. Supply it even when placeholder text is also set.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading",
+          "reflectToAttr": true,
+          "docs": "Replaces visible options with a loading indicator while a search is pending.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loadingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading-label",
+          "reflectToAttr": false,
+          "docs": "Localizable status while waiting for a result set.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Loading results'"
+            }
+          ],
+          "default": "'Loading results'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "multiple",
+          "reflectToAttr": true,
+          "docs": "Enables ordered multiple selection and renders selected values as tags.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key. Multiple choices contribute one entry each under this name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "placeholder",
+          "reflectToAttr": false,
+          "docs": "Hint shown in the text input when it is empty.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remove-label",
+          "reflectToAttr": false,
+          "docs": "Localizable removal button label. {label} is replaced by the selected label.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Remove {label}'"
+            }
+          ],
+          "default": "'Remove {label}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires a committed choice to submit the form.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "resultCountLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "result-count-label",
+          "reflectToAttr": false,
+          "docs": "Localizable status for several choices. {count} is replaced by the result count.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} results'"
+            }
+          ],
+          "default": "'{count} results'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "resultOneLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "result-one-label",
+          "reflectToAttr": false,
+          "docs": "Localizable status for one available choice.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'1 result'"
+            }
+          ],
+          "default": "'1 result'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | string[]",
+          "complexType": {
+            "original": "string | string[]",
+            "resolved": "string | string[]",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Committed value. Use a string for single selection and an array of strings\nfor multiple selection. In HTML and catalog specs, encode multiple values\nas a JSON array string in the value attribute, or supply one literal value.\nAssign a new array to change multiple selections programmatically.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string[]"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-input",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: string }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports a raw text edit in `detail.value`. Listen to it to request remote results.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Declarative ki-option children. Supply unique values and a human-readable label."
+        }
+      ],
+      "parts": [
+        {
+          "name": "description",
+          "docs": "An option's secondary text."
+        },
+        {
+          "name": "error",
+          "docs": "Polite error message shown after failed validation."
+        },
+        {
+          "name": "field",
+          "docs": "Container for the text input and selected tags."
+        },
+        {
+          "name": "help",
+          "docs": "Help below the field."
+        },
+        {
+          "name": "input",
+          "docs": "Native text input with the combobox role."
+        },
+        {
+          "name": "label",
+          "docs": "Visible label of the field and its listbox."
+        },
+        {
+          "name": "listbox",
+          "docs": "Floating listbox surface."
+        },
+        {
+          "name": "option",
+          "docs": "A mirrored choice row."
+        },
+        {
+          "name": "remove",
+          "docs": "A native button that removes a selected tag."
+        },
+        {
+          "name": "tag",
+          "docs": "A selected value in multiple mode."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-spinner"
+      ],
+      "dependencyGraph": {
+        "ki-combobox": [
+          "ki-icon",
+          "ki-spinner"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-confirmation/ki-confirmation.tsx",
       "encapsulation": "shadow",
       "tag": "ki-confirmation",
@@ -7573,6 +8257,7 @@
       "dependents": [
         "ki-ai-label",
         "ki-breadcrumb",
+        "ki-combobox",
         "ki-copy-button",
         "ki-empty-state",
         "ki-fab",
@@ -7587,6 +8272,9 @@
           "ki-icon"
         ],
         "ki-breadcrumb": [
+          "ki-icon"
+        ],
+        "ki-combobox": [
           "ki-icon"
         ],
         "ki-copy-button": [
@@ -10736,11 +11424,11 @@
       "filePath": "src/components/ki-option/ki-option.tsx",
       "encapsulation": "shadow",
       "tag": "ki-option",
-      "docs": "A declarative data option rendered by its owning `ki-select`.",
+      "docs": "A declarative data option rendered by its owning `ki-select` or `ki-combobox`.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
+          "text": "declare one choice inside a `ki-select` or `ki-combobox`; its text is the\nhuman-facing label and its `value` is the submitted value."
         },
         {
           "name": "whenNotToUse",
@@ -10748,13 +11436,43 @@
         },
         {
           "name": "slot",
-          "text": "- Text label mirrored by the owning select."
+          "text": "- Text label mirrored by the owning choice field."
+        },
+        {
+          "name": "slot",
+          "text": "start - Decorative content shown before the label in a combobox row."
         }
       ],
       "usage": {
         "examples": "An option is meaningful only inside `ki-select`: it does not paint itself — the trimmed text is the visible label the select mirrors into its popup listbox, and `value` is what the form submits:\n\n```html\n<ki-select label=\"Language\" name=\"language\" placeholder=\"Choose a language\">\n  <ki-option value=\"en\">English</ki-option>\n  <ki-option value=\"es\">Spanish</ki-option>\n  <ki-option value=\"pt\">Portuguese</ki-option>\n</ki-select>\n```\n\nOmitting `value` submits the trimmed option text (native `<option>` parity); `disabled` options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select:\n\n```html\n<ki-select label=\"Priority\" name=\"priority\">\n  <ki-option>Low</ki-option>\n  <ki-option>Medium</ki-option>\n  <ki-option disabled>Urgent</ki-option>\n</ki-select>\n```\n\nNever author selection on the option — assign `ki-select.value` and the first matching option is selected silently:\n\n```html\n<ki-select id=\"language\" label=\"Language\" name=\"language\">\n  <ki-option value=\"en\">English</ki-option>\n  <ki-option value=\"es\">Spanish</ki-option>\n</ki-select>\n\n<script type=\"module\">\n  document.getElementById('language').value = 'es';\n</script>\n```\n"
       },
       "props": [
+        {
+          "name": "description",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "description",
+          "reflectToAttr": true,
+          "docs": "Secondary text shown below the label in a combobox choice row.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "disabled",
           "type": "boolean",
@@ -10818,7 +11536,11 @@
       "slots": [
         {
           "name": "",
-          "docs": "Text label mirrored by the owning select."
+          "docs": "Text label mirrored by the owning choice field."
+        },
+        {
+          "name": "start",
+          "docs": "Decorative content shown before the label in a combobox row."
         }
       ],
       "parts": [],
@@ -13911,9 +14633,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-combobox"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-combobox": [
+          "ki-spinner"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-stack/ki-stack.tsx",
@@ -18006,6 +18734,11 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
+    },
+    "src/components/ki-combobox/ki-combobox.options.ts::ComboboxFilter": {
+      "declaration": "export type ComboboxFilter = 'contains' | 'starts-with' | 'none';",
+      "docstring": "",
+      "path": "src/components/ki-combobox/ki-combobox.options.ts"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",
