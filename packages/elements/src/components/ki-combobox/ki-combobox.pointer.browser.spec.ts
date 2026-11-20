@@ -49,5 +49,6 @@ it('S17 keeps coarse-pointer field, choice and removal targets at least 24 pixel
   for (const element of [combo.element(), option.element(), remove.element()]) {
     expect(element.getBoundingClientRect().height).toBeGreaterThanOrEqual(24);
   }
+  expect(Number.parseFloat(getComputedStyle(combo.element()).fontSize)).toBeGreaterThanOrEqual(16);
   expect(remove.element().getBoundingClientRect().width).toBeGreaterThanOrEqual(24);
 });

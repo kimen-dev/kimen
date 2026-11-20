@@ -553,6 +553,11 @@
     },
     "outline": {
       "$type": "color",
+      "hairline-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Resting hairline for control and floating surface boundaries."
+      },
       "high-em": {
         "$value": "{ki.color.black.12}",
         "$description": "semantic color for outline high em."
@@ -1575,6 +1580,10 @@
         "$value": "{ki.space.xl}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
       },
+      "floating-surface-max-block": {
+        "$value": "{ki.size.surface.xs}",
+        "$description": "Maximum block size of a compact floating surface before it scrolls."
+      },
       "activity-label-gap": {
         "$value": "{ki.space.md}",
         "$description": "Gap between an inline activity mark and its label."
@@ -1648,6 +1657,14 @@
       "control": {
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
+      },
+      "field-surface": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Corner radius for an editable field and its floating choice surface."
+      },
+      "field-item": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner radius for choices and tokens inside an editable field."
       },
       "activity-mark": {
         "$value": "{ki.radius.round}",

@@ -56,7 +56,7 @@ it('S14 outlines the active choice in forced colors', async (context) => {
 it('S15 presents the loading text and slows its spinner under reduced motion', async () => {
   await browser.emulateReducedMotion('no-preference');
   await open('loading');
-  await expect.element(page.getByText('Loading results')).toBeVisible();
+  await expect.element(page.getByRole('option', { name: 'Loading results' })).toBeVisible();
   const spinner = fixture.firstElementChild?.shadowRoot?.querySelector('ki-spinner');
   await expect.poll(() => Boolean(spinner?.shadowRoot?.querySelector('[part="ring"]'))).toBe(true);
   const ring = spinner?.shadowRoot?.querySelector('[part="ring"]');

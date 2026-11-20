@@ -1,0 +1,245 @@
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ki-layout-spacing-xs);
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="label"] {
+  color: var(--ki-text-high-em);
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+[part="field"] {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ki-layout-spacing-xs);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-combobox-field-height) + var(--ki-density-control-offset))
+  );
+  padding-inline: calc(var(--ki-layout-spacing-md) * var(--ki-density-space-scale));
+  padding-block: var(--ki-layout-spacing-xxs);
+  background-color: var(--ki-combobox-field-bg);
+  color: var(--ki-combobox-field-fg);
+  border: var(--ki-outline-hairline-width) solid var(--ki-combobox-field-border);
+  border-radius: var(--ki-corner-field-surface);
+  anchor-name: --ki-combobox-field;
+}
+
+[part="field"]:has([aria-invalid="true"]) {
+  border-color: var(--ki-outline-danger-high-em);
+}
+
+[part="field"]:has(input:disabled) {
+  color: var(--ki-text-supporting);
+}
+
+[part="field"]:has([part="input"]:focus-visible) {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+[part="input"] {
+  flex: 1 1 var(--ki-combobox-input-basis);
+  align-self: stretch;
+  min-inline-size: 0;
+  min-block-size: var(--ki-density-target-min);
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  outline: none;
+  appearance: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+
+[part="label"],
+[part="input"],
+[part="option"] {
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-body-1);
+}
+
+[part="input"]::placeholder {
+  color: var(--ki-text-supporting);
+  opacity: 1;
+}
+
+[part="listbox"] {
+  position: fixed;
+  position-anchor: --ki-combobox-field;
+  position-area: block-end span-inline-end;
+  position-try-fallbacks:
+    flip-block,
+    flip-inline,
+    flip-block flip-inline;
+  position-try-order: most-block-size;
+  box-sizing: border-box;
+  inset: auto;
+  margin: 0;
+  margin-block-start: var(--ki-layout-spacing-xs);
+  inline-size: anchor-size(inline);
+  max-block-size: min(
+    var(--ki-combobox-listbox-max-block-size),
+    calc(100% - var(--ki-layout-spacing-xs))
+  );
+  overflow-block: auto;
+  overscroll-behavior-block: contain;
+  padding: calc(var(--ki-layout-spacing-xs) * var(--ki-density-space-scale));
+  border: var(--ki-outline-hairline-width) solid var(--ki-combobox-listbox-border);
+  border-radius: var(--ki-corner-field-surface);
+  background-color: var(--ki-combobox-listbox-bg);
+  background-image: var(--ki-combobox-listbox-bg-image);
+  backdrop-filter: var(--ki-combobox-listbox-backdrop-filter);
+  box-shadow: var(--ki-combobox-listbox-shadow);
+  color: var(--ki-combobox-listbox-fg);
+}
+
+[part="option"] {
+  display: flex;
+  align-items: center;
+  gap: var(--ki-layout-spacing-md);
+  min-block-size: var(--ki-density-target-min);
+  box-sizing: border-box;
+  padding-block: var(--ki-layout-spacing-xs);
+  padding-inline: calc(var(--ki-layout-spacing-md) * var(--ki-density-space-scale));
+  border-radius: var(--ki-corner-field-item);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+[part="option"][data-active] {
+  background-color: var(--ki-combobox-option-active-bg);
+  color: var(--ki-combobox-option-active-fg);
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+@media (hover: hover) {
+  [part="option"]:hover:not([aria-disabled="true"]) {
+    background-color: var(--ki-combobox-option-active-bg);
+    color: var(--ki-combobox-option-active-fg);
+  }
+}
+
+[part="option"][aria-disabled="true"] {
+  color: var(--ki-text-supporting);
+  cursor: default;
+}
+
+.choice-text {
+  display: grid;
+  flex: 1;
+  min-inline-size: 0;
+}
+
+[part="description"],
+[part="help"],
+[part="error"] {
+  color: var(--ki-text-supporting);
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+}
+
+[part="error"] {
+  color: var(--ki-text-danger-high-em);
+}
+
+[part="error"]:empty {
+  position: absolute;
+}
+
+[part="option"][aria-selected="true"] {
+  border-inline-start: var(--ki-focus-ring-width) solid currentcolor;
+}
+
+mark {
+  background: none;
+  color: var(--ki-combobox-match-fg);
+  font-weight: var(--ki-typography-weight-body-bold);
+}
+
+[part="tag"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ki-layout-spacing-xxs);
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  padding-inline-start: var(--ki-layout-spacing-md);
+  border-radius: var(--ki-corner-field-item);
+  background-color: var(--ki-combobox-tag-bg);
+  color: var(--ki-combobox-tag-fg);
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+  overflow-wrap: anywhere;
+}
+
+[part="remove"] {
+  display: grid;
+  flex: none;
+  place-items: center;
+  min-inline-size: var(--ki-density-target-min);
+  min-block-size: var(--ki-density-target-min);
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+[part="remove"]:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+[part="remove"]:disabled {
+  cursor: default;
+}
+
+ki-icon {
+  flex: none;
+  font-size: var(--ki-combobox-icon-size);
+}
+
+.status {
+  position: absolute;
+  inline-size: var(--ki-typography-visually-hidden-size);
+  block-size: var(--ki-typography-visually-hidden-size);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (pointer: coarse) {
+  [part="input"] {
+    font-size: max(var(--ki-typography-size-body-1), var(--ki-combobox-input-touch-font-size));
+  }
+}
+
+@media (forced-colors: active) {
+  [part="field"],
+  [part="listbox"] {
+    border-color: CanvasText;
+  }
+
+  [part="option"][data-active] {
+    outline-color: Highlight;
+  }
+
+  [part="option"][aria-disabled="true"],
+  [part="remove"]:disabled {
+    color: GrayText;
+  }
+}

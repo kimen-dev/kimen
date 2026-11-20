@@ -10,8 +10,6 @@ import { defineCustomElement as defineOption } from '../../../dist/components/ki
 type Combobox = HTMLElement & {
   value: string | string[];
   loading: boolean;
-  checkValidity(): boolean;
-  validity: ValidityState;
 };
 
 const styles = document.createElement('style');
@@ -19,7 +17,7 @@ const fixture = document.createElement('main');
 const options = `
   <ki-option value="ana" description="ana@example.com"><span slot="start">AR</span>Ana Ruiz</ki-option>
   <ki-option value="anabel">Anabel Soto</ki-option>
-  <ki-option value="juan">Juan Antón</ki-option>`;
+  <ki-option value="juan">Juan Ant\u00f3n</ki-option>`;
 
 beforeAll(() => {
   defineCustomElement();
@@ -76,29 +74,29 @@ it.each([
 });
 
 it('S2 commits an option with its description and decorative start content', async () => {
-  const { host, input, combo } = await mount();
-  const changes: unknown[] = [];
-  host.addEventListener('ki-change', (event) => changes.push((event as CustomEvent).detail));
-  await combo.fill('Ana Ruiz');
+  const { host, combo } = await mount();
+  const changes: (string | string[])[] = [];
+  host.addEventListener('change', () => changes.push(host.value));
+  await combo.fill('Ana R');
   const option = page.getByRole('option', { name: 'Ana Ruiz', exact: true });
   await expect.element(option).toHaveAccessibleDescription('ana@example.com');
   await expect.element(option.getByText('AR', { exact: true })).toBeVisible();
   await option.click();
   expect(host.value).toBe('ana');
-  expect(changes).toEqual([{ value: 'ana' }]);
-  expect(input.value).toBe('Ana Ruiz');
+  expect(changes).toEqual(['ana']);
+  await expect.element(combo).toHaveValue('Ana Ruiz');
   await expect.element(combo).toHaveAttribute('aria-expanded', 'false');
 });
 
 it('S3 creates a trimmed custom value and clears the query', async () => {
   const { host, input, combo } = await mount('multiple allow-custom', '');
   await combo.fill(' search ');
-  await page.getByRole('option', { name: 'Add “search”' }).click();
+  await page.getByRole('option', { name: 'Add \u201csearch\u201d' }).click();
   await expect.element(page.getByRole('button', { name: 'Remove search' })).toBeVisible();
   expect(host.value).toEqual(['search']);
   expect(input.value).toBe('');
   await combo.fill('SEARCH');
-  await expect.element(page.getByText('No results', { exact: true })).toBeVisible();
+  await expect.element(page.getByRole('option', { name: 'No results' })).toBeVisible();
 });
 
 it('S4 replaces open results while the server search loads', async () => {
@@ -106,18 +104,29 @@ it('S4 replaces open results while the server search loads', async () => {
   await combo.fill('An');
   await expect.element(page.getByRole('option', { name: 'Ana Ruiz' })).toBeVisible();
   host.loading = true;
-  await expect.element(page.getByText('Loading results')).toBeVisible();
+  await expect.element(page.getByRole('option', { name: 'Loading results' })).toBeVisible();
+  await expect.element(page.getByRole('status')).toHaveTextContent('Loading results');
   await expect.element(page.getByRole('option', { name: 'Ana Ruiz' })).not.toBeInTheDocument();
   await expectAccessible(fixture);
 });
 
-it('S5 opens with an arrow, skips disabled rows and commits without moving focus', async () => {
-  const { host, input } = await mount('', `<ki-option disabled>Unavailable</ki-option>${options}`);
-  input.focus();
-  await userEvent.keyboard('{ArrowDown}{Enter}');
-  await expect.poll(() => host.value).toBe('ana');
-  expect(host.shadowRoot?.activeElement).toBe(input);
-});
+it.each([
+  ['{ArrowDown}', 'ana'],
+  ['{ArrowUp}', 'juan'],
+])(
+  'S5 skips disabled rows when opening with %s and commits without moving focus',
+  async (arrow, value) => {
+    const disabled = '<ki-option disabled>Unavailable</ki-option>';
+    const { host, input } = await mount(
+      '',
+      disabled + options + '<ki-option disabled>Unavailable last</ki-option>',
+    );
+    input.focus();
+    await userEvent.keyboard(`${arrow}{Enter}`);
+    await expect.poll(() => host.value).toBe(value);
+    expect(host.shadowRoot?.activeElement).toBe(input);
+  },
+);
 
 it('S6 preserves the query on the first Escape and clears it on the second', async () => {
   const { input, combo } = await mount();
@@ -180,17 +189,17 @@ it('S10 submits multiple chosen values in order and omits a fieldset-disabled fi
 });
 
 it('S11 requires a chosen value even when the field has a query', async () => {
-  const { host, combo } = await mount('required error-text="Choose an assignee"');
+  const { form, host, combo } = await mount('required error-text="Choose an assignee"');
   await combo.fill('Something');
-  expect(host.checkValidity()).toBe(false);
-  expect(host.validity.valueMissing).toBe(true);
+  expect(form.checkValidity()).toBe(false);
+  expect(host.matches(':invalid')).toBe(true);
   await expect.element(combo).toHaveAccessibleDescription('Choose an assignee');
 });
 
 it('S12 resets the selection and display', async () => {
   const { form, host, combo } = await mount('name=assignee value=ana');
   host.value = 'juan';
-  await expect.element(combo).toHaveValue('Juan Antón');
+  await expect.element(combo).toHaveValue('Juan Ant\u00f3n');
   form.reset();
   expect(new FormData(form).get('assignee')).toBe('ana');
   await expect.element(combo).toHaveValue('Ana Ruiz');
@@ -233,6 +242,6 @@ it('keeps selected labels when remote results replace the authored options', asy
   await combo.fill('juan');
   host.querySelector('ki-option[value="ana"]')?.remove();
   await expect.element(page.getByRole('button', { name: 'Remove Ana Ruiz' })).toBeVisible();
-  await expect.element(page.getByRole('option', { name: 'Juan Antón' })).toBeVisible();
+  await expect.element(page.getByRole('option', { name: 'Juan Ant\u00f3n' })).toBeVisible();
   expect(host.value).toEqual(['ana']);
 });

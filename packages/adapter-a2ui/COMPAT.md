@@ -112,7 +112,7 @@ type rejects the message (`unknown-property`, scenario S9).
 | Button        | mapped    | ki-button                     |
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
-| ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
+| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-combobox, ki-option |
 | Image         | unmapped  | —                             |
 | Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
@@ -185,9 +185,12 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
 - `TextField.variant`: `longText` becomes `ki-textarea`, `obscured` becomes
   `ki-input type="password"`, `number` and `shortText` become `ki-input`;
   `validationRegexp` is not evaluated.
-- `ChoicePicker`: `mutuallyExclusive` becomes `ki-radio-group` with the first
-  selected value; `multipleSelection` degrades (reason `unsupported-variant`);
-  `displayStyle` and `filterable` are not rendered.
+- `ChoicePicker` with 16 or more options becomes `ki-combobox` with
+  `ki-option` children in both supported versions. Single selection uses the
+  first supplied value and multiple selection preserves the ordered values.
+  Smaller mutually exclusive lists use `ki-radio-group`. Smaller multiple
+  selection lists use the `unsupported-variant` fallback. The option count
+  determines searchability. The adapter ignores `displayStyle` and `filterable`.
 - `Icon.name` accepts static names and bindings in both versions. The host
   imports each Lucide module that its surface uses. For example, `check`
   uses `@kimen/elements/icons/check` and `warning` uses
@@ -223,7 +226,7 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | Button        | mapped    | ki-button                     |
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
-| ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
+| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-combobox, ki-option |
 | Image         | unmapped  | —                             |
 | Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |

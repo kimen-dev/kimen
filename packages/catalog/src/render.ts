@@ -140,9 +140,8 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
 
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
- * bound node activates on the only one (FR-003, S17) or, when there is none,
- * on the platform click; more than one is ambiguous and the guard rejects
- * the binding before any listener exists (S19).
+ * bound node uses its explicit activation event, its sole event, or the
+ * platform click. The guard rejects ambiguous bindings before wiring listeners.
  */
 export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
@@ -207,8 +206,17 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
   // activation event. An entry declaring several gives the spec no way to
   // say which, so the binding is rejected fail-closed instead of guessing.
   if (node.action !== undefined) {
-    const events = declaredEvents(ownEntry(state.components, node.component));
-    if (events.length > 1) {
+    const entry = ownEntry(state.components, node.component);
+    const events = declaredEvents(entry);
+    const activation = entry?.activationEvent;
+    if (activation !== undefined && !events.includes(activation)) {
+      state.diagnostics.push({
+        message: `${node.component} activationEvent must name a declared event`,
+        path: `${path}.action`,
+        rule: 'invalid-activation-event',
+        value: node.action,
+      });
+    } else if (activation === undefined && events.length > 1) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
@@ -262,7 +270,7 @@ export function payloadBytes(data: unknown): number {
  */
 const LIVE_STATE_PROPS = ['checked', 'value'] as const;
 
-export function matchesConstraint(
+function matchesConstraint(
   value: unknown,
   constraint: CatalogPropConstraint,
 ): value is boolean | number | string {
@@ -278,6 +286,52 @@ export function matchesConstraint(
   }
 }
 
+function isMultipleChoiceValue(element: Element, name: string): boolean {
+  return (
+    name === 'value' && element.localName === 'ki-combobox' && element.hasAttribute('multiple')
+  );
+}
+
+/** Reads a catalog-declared value without letting non-scalar objects cross the guard. */
+export function readLiveScalar(
+  element: Element,
+  name: string,
+  constraint: CatalogPropConstraint,
+): Scalar | undefined {
+  const value: unknown = Reflect.get(element, name);
+  if (matchesConstraint(value, constraint)) return value;
+  if (
+    constraint.type === 'string' &&
+    isMultipleChoiceValue(element, name) &&
+    Array.isArray(value)
+  ) {
+    const choices: unknown[] = Array.from(value);
+    if (choices.every((choice) => typeof choice === 'string')) return JSON.stringify(choices);
+  }
+  return undefined;
+}
+
+/** Match the combobox's multiple-value attribute semantics in live conflict checks. */
+export function authoredLiveScalar(
+  element: Element,
+  name: string,
+  value: Scalar | undefined,
+): Scalar | undefined {
+  if (typeof value !== 'string' || !isMultipleChoiceValue(element, name)) return value;
+  if (value === '') return '[]';
+  if (value.trimStart().startsWith('[')) {
+    try {
+      const choices: unknown = JSON.parse(value);
+      if (Array.isArray(choices) && choices.every((choice) => typeof choice === 'string')) {
+        return JSON.stringify([...new Set(choices)]);
+      }
+    } catch {
+      // A bracket can also be part of a literal option value.
+    }
+  }
+  return JSON.stringify([value]);
+}
+
 function liveData(
   element: Element,
   props: Readonly<Record<string, Scalar>>,
@@ -289,9 +343,8 @@ function liveData(
     if (constraint === undefined) {
       continue;
     }
-    // Reads the rendered component's own property (its code, never spec data).
-    const live: unknown = Reflect.get(element, name);
-    if (matchesConstraint(live, constraint)) {
+    const live = readLiveScalar(element, name, constraint);
+    if (live !== undefined) {
       data[name] = live;
     }
   }
@@ -422,8 +475,8 @@ export function wireActivation(
   currentProps: () => Readonly<Record<string, Scalar>>,
   dispatch: (data: Readonly<Record<string, Scalar>>) => void,
 ): void {
-  // The guard admitted at most one declared event (S19).
-  const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
+  // The guard admitted an unambiguous activation (S19).
+  const activation = entry?.activationEvent ?? declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
   if (activation === DEFAULT_ACTIVATION_EVENT) {
     // A click-activated node (S4) dispatches the spec's data payload and
     // suppresses the native default (a submit button's form submission)

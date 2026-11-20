@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { labelMatch, normalizedValues, offerCustom } from './ki-combobox.options';
+import { labelMatcher, normalizedValues, offerCustom } from './ki-combobox.options';
 
 describe('labelMatch', () => {
   it('finds matches case insensitively with indices into the original label', () => {
-    expect(labelMatch('Juan Antón', 'AN', 'contains')).toEqual([2, 4]);
-    expect(labelMatch('Ana Ruiz', 'AN', 'starts-with')).toEqual([0, 2]);
-    expect(labelMatch('Juan Antón', 'AN', 'starts-with')).toBeNull();
+    expect(labelMatcher('AN', 'contains')('Juan Antón')).toEqual([2, 4]);
+    expect(labelMatcher('AN', 'starts-with')('Ana Ruiz')).toEqual([0, 2]);
+    expect(labelMatcher('AN', 'starts-with')('Juan Antón')).toBeNull();
   });
 
   it('retains all options without emphasis for empty or server queries', () => {
-    expect(labelMatch('Ana Ruiz', 'missing', 'none')).toEqual([0, 0]);
-    expect(labelMatch('Ana Ruiz', ' ', 'contains')).toEqual([0, 0]);
+    expect(labelMatcher('missing', 'none')('Ana Ruiz')).toEqual([0, 0]);
+    expect(labelMatcher(' ', 'contains')('Ana Ruiz')).toEqual([0, 0]);
   });
 
   it('keeps highlight boundaries in UTF-16 coordinates when folding changes length', () => {
-    expect(labelMatch('İl Ana', 'ANA', 'contains')).toEqual([3, 6]);
+    expect(labelMatcher('ANA', 'contains')('İl Ana')).toEqual([3, 6]);
   });
 });
 

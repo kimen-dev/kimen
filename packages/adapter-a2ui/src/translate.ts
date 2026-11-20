@@ -491,16 +491,20 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     ];
   },
   ChoicePicker: (it) => {
-    if ((it.literal('variant') ?? 'mutuallyExclusive') !== 'mutuallyExclusive') {
-      throw new Degrade('unsupported-variant', 'multipleSelection');
-    }
+    const variant = it.literal('variant') ?? 'mutuallyExclusive';
     const options = it.body['options'];
     if (!Array.isArray(options)) {
       throw it.malformed('options', 'ChoicePicker options must be a list');
     }
+    const searchable = options.length > 15;
+    const multiple = variant === 'multipleSelection';
+    if (variant !== 'mutuallyExclusive' && !(searchable && multiple)) {
+      throw new Degrade('unsupported-variant', 'multipleSelection');
+    }
+
     const selected = it.value('value');
     const first = Array.isArray(selected) ? toText(selected[0]) : toText(selected);
-    const radios = options.map((option, index) => {
+    const choices = options.map((option, index) => {
       if (!isPlainObject(option) || typeof option['value'] !== 'string') {
         throw it.malformed(
           `options/${String(index)}`,
@@ -509,17 +513,25 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       }
       const label =
         option['label'] === undefined ? '' : toText(resolveOption(it, option['label'], index));
-      return node('ki-radio', { value: option['value'] }, label === '' ? [] : [label]);
+      return node(
+        searchable ? 'ki-option' : 'ki-radio',
+        { value: option['value'] },
+        label === '' ? [] : [label],
+      );
     });
     const label = it.text('label');
+    const value = multiple
+      ? JSON.stringify(Array.isArray(selected) ? selected.map(toText) : first === '' ? [] : [first])
+      : first;
     return [
       node(
-        'ki-radio-group',
+        searchable ? 'ki-combobox' : 'ki-radio-group',
         {
           ...(label === '' ? {} : { label }),
-          ...(first === '' ? {} : { value: first }),
+          ...(multiple ? { multiple: true } : {}),
+          ...(value === '' ? {} : { value }),
         },
-        radios,
+        choices,
       ),
     ];
   },

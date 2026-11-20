@@ -16,10 +16,12 @@ with a spinner. Labels for custom entry, removal, loading, empty state,
 required validation and result count are configurable.
 
 The composed `ki-input` event carries `{ value: string }` after a native
-query edit. The composed `ki-change` event carries
-`{ value: string | string[] }` after a user changes a committed selection.
+query edit. The composed `change` event fires after a user commits a
+different selection. Read the current `value` on the field.
 Programmatic assignments and form reset synchronize state without emitting
-these events. Submit the committed value through ElementInternals, once for a
+these events. The catalog's selection action projects an array back to a JSON
+array string so actions and streaming keep the scalar catalog representation.
+Submit the committed value through ElementInternals, once for a
 single choice or as repeated entries for multiple choices. Required validation
 uses the committed selection. Disabled fields are out of the tab and
 submission order.
