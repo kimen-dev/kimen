@@ -1,0 +1,11 @@
+{
+  "ki": {
+    "note": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.component.md}",
+        "$description": "Note surface corner radius on the Material 3 shape scale."
+      }
+    }
+  }
+}

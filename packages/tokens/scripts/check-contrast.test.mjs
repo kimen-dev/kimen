@@ -94,6 +94,23 @@ test('component sweep is generic: any component bg/fg pair, semantic layers and 
   ]);
 });
 
+test('Stat checks every text ink against its single card surface', () => {
+  const names = [
+    '--ki-stat-label-fg',
+    '--ki-stat-value-fg',
+    '--ki-stat-delta-neutral-fg',
+    '--ki-stat-delta-success-fg',
+    '--ki-stat-delta-danger-fg',
+  ];
+  const declarations = new Map(names.map((name) => [name, '#111111']));
+  declarations.set('--ki-stat-bg', '#ffffff');
+
+  assert.deepEqual(
+    componentPairs(declarations),
+    names.map((text) => ({ component: 'stat', text, surface: '--ki-stat-bg', minRatio: 4.5 })),
+  );
+});
+
 test('non-text control cells (radio ring/dot, checkbox mark) require 3:1, text cells 4.5:1', () => {
   const declarations = new Map([
     ['--ki-radio-selected-rest-bg', '#ffffff'],
@@ -705,4 +722,29 @@ test("more contrast thickens every component's focus ring, whichever theme overr
     ),
     failures.join('\n'),
   );
+});
+
+test('transparent link ink is checked on raised page surfaces', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root { --ki-link-bg: transparent; --ki-link-fg: #707070; }`,
+  );
+  assert.ok(failures.some((failure) => failure.includes('--ki-link-bg over --ki-surface-s2')));
+});
+
+test('component icon ink is checked against its adjacent component background at 3:1', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root {
+      --ki-note-warning-bg: #ffffff;
+      --ki-note-warning-fg: #111111;
+      --ki-note-warning-icon: #dddddd;
+      --ki-note-info-bg: #ffffff;
+      --ki-note-info-fg: #111111;
+      --ki-note-info-icon: #888888;
+    }`,
+  ).filter((failure) => failure.includes('--ki-note-') && failure.includes('-icon on'));
+
+  assert.equal(failures.length, 6);
+  assert.ok(failures.every((failure) => /--ki-note-warning-icon on .* \(min 3\)/u.test(failure)));
 });

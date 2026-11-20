@@ -7,17 +7,15 @@ discovered during implementation re-enters through the spec, not through code
 
 ## Element
 
-`<ki-card>` — non-interactive grouping container. Not form-associated, never
-focusable, no activation behavior. Registered by `@kimen/elements`;
-per-component export `dist/components/ki-card.js` (tree-shakable custom
-element build).
+`<ki-card>` groups related content and optionally offers a primary link or
+action. It is registered by `@kimen/elements` and exported individually at
+`dist/components/ki-card.js`.
 
 ## Attributes / properties
 
-None in v1. The element observes no attributes, so any attribute — including
-vocabulary copied from other design systems (e.g. `variant="elevated"`) — is
-ignored and the card renders its content with the default appearance (S3,
-FR-010, fallback by construction).
+`variant`, `href` and `interactive` follow the
+[CardVariants contract](../../079-card-variants/contracts/card-variants.md).
+An unrecognized variant renders the default appearance (S3, FR-010).
 
 ## Slots
 
@@ -28,7 +26,7 @@ space, no padding, no gap contribution (S2, FR-003).
 | Slot | Contract |
 |---|---|
 | `media` | Leading visual (image, video, illustration). Both shipped themes zero its padding (edge-to-edge media); a theme may pad it instead — `--ki-card-media-padding` decides, never markup. |
-| `header` | Title area. The author supplies the heading element itself (e.g. `h2`/`h3`, at the level the surrounding document outline requires): the card neither generates nor wraps a heading, so plain text here carries no heading semantics. |
+| `header` | Title area. The author supplies the heading at the surrounding document level. A clickable card uses one text heading as its primary control. |
 | *(default)* | Body: supporting text or arbitrary composed content. |
 | `footer` | Closing region; actions (e.g. `ki-button`) compose here. No dedicated `actions` slot in v1. |
 
@@ -46,16 +44,16 @@ Customization ladder: tokens first, then parts, then slots.
 
 ## Events
 
-No custom events, and no interception: pointer and keyboard events from
-slotted content pass through untouched — a page listening to a slotted
-button observes exactly one activation (S8, FR-005).
+Action cards emit `ki-activate`. Separate controls keep their pointer and
+keyboard behavior; a page listening to a slotted button observes exactly one
+activation (S8, FR-005).
 
 ## Accessibility contract
 
 The card contributes **no role, name or state of its own** — not `article`,
 not `group`, not `region` (S5, FR-006): its accessible structure derives
-entirely from the slotted content. It adds zero keyboard stops (S4, FR-001).
-No ARIA is better than wrong ARIA (Art. V).
+entirely from the slotted content. A passive card adds zero keyboard stops (S4, FR-001). A clickable card
+adds one named heading link or button; separate controls stay focusable.
 
 ## CSS custom properties (component token layer)
 
@@ -77,10 +75,8 @@ Guarantees:
 
 - Every visual property resolves from `--ki-card-*`; those resolve from the
   001 semantic layer (Art. VI). Zero hardcoded visual values.
-- The M3 elevated/filled/outlined style axis is a **theme decision** carried
-  entirely by `border-color`/`border-width` and `elevation` values in the
-  theme's component-layer file — no attribute exists (FR-008, 002 Round/
-  Square precedent).
+- The default treatment uses the theme's existing surface, border and
+  elevation. The CardVariants extension adds token-driven explicit variants.
 - Padding lives on the regions, never on the card surface (FR-009): a theme
   bleeds media by zeroing `--ki-card-media-padding`, pads it by setting it.
 - Missing theme values fall back through the cascade to onmars defaults
@@ -92,11 +88,10 @@ Guarantees:
   text, actions — into one scannable surface visually distinct from the
   page; the summary entry point to a detail. Fill any subset of regions.
   Supply the heading element yourself in the `header` slot.
-- **When NOT to use**: as a clickable or link target (the card is
-  non-interactive — slot a button or link inside instead; whole-card
-  interactivity is a possible future feature), as a form control or
-  fieldset, as a page landmark or section replacement, or nested inside
-  another card.
+- **When to use primary activation**: one destination or primary action
+  with a title. Secondary controls compose in the slots independently.
+- **Avoid using a card** as a form control, fieldset, page landmark, section
+  replacement or nested card.
 
 ## Compatibility
 

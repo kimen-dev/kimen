@@ -92,8 +92,7 @@ export const A2UI_CLIENT_FUNCTION_ALLOWLIST: readonly string[] = [];
 /**
  * Properties every basic-catalog component may carry
  * (`common_types.json#/$defs/ComponentCommon`, `catalog.json#/$defs/
- * CatalogComponentCommon`). `accessibility` and `weight` are accepted and not
- * rendered (COMPAT.md, lossy mappings).
+ * CatalogComponentCommon`). Only Image reads `accessibility` when rendering.
  */
 export const A2UI_COMMON_PROPERTIES: readonly string[] = [
   'id',
@@ -166,8 +165,8 @@ const CHECKS = 'checks';
  */
 export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
   Text: { kind: 'inline', properties: ['text', 'variant'] },
-  Row: { kind: 'layout', properties: ['children', 'justify', 'align'] },
-  Column: { kind: 'layout', properties: ['children', 'justify', 'align'] },
+  Row: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
+  Column: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   List: {
     catalog: ['ki-list', 'ki-list-item'],
     kind: 'mapped',
@@ -196,11 +195,11 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     properties: ['label', 'value', CHECKS],
   },
   ChoicePicker: {
-    catalog: ['ki-radio-group', 'ki-radio'],
+    catalog: ['ki-radio-group', 'ki-radio', 'ki-checkbox-group', 'ki-checkbox'],
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', CHECKS],
   },
-  Image: { kind: 'unmapped', reason: 'no image component in the catalog' },
+  Image: { catalog: ['ki-image'], kind: 'mapped', properties: ['url', 'fit', 'variant'] },
   Icon: { catalog: ['ki-icon'], kind: 'mapped', properties: ['name'] },
   Video: {
     kind: 'unmapped',
@@ -211,8 +210,9 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     reason: 'no audio component in the catalog',
   },
   Modal: {
-    kind: 'unmapped',
-    reason: 'opening ki-dialog from a trigger needs host code',
+    catalog: ['ki-button', 'ki-dialog'],
+    kind: 'mapped',
+    properties: ['trigger', 'content'],
   },
   Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
   DateTimeInput: {
@@ -245,10 +245,8 @@ export const FALLBACK_CATALOG_TAG = 'ki-badge';
 export const FALLBACK_TONE = 'warning';
 
 /**
- * The container used when the A2UI root does not translate to exactly one
- * catalog node (a `Column` or `Row` root with several children, or a `Text`
- * root): the guarded renderer renders one root node, and the catalog has no
- * neutral layout element yet (COMPAT.md, pending core work).
+ * The fallback container for an inline or empty A2UI root. The guarded
+ * renderer accepts one root catalog node.
  */
 export const ROOT_CONTAINER_TAG = 'ki-card';
 
@@ -301,8 +299,8 @@ export const A2UI_V1_EVALUATED_FUNCTIONS: readonly string[] = [
 /**
  * Envelope keys every 1.0 component may carry (`common_types.json#/$defs/
  * ComponentCommon`), plus `weight`, which every 1.0 basic-catalog component
- * declares. `@accessibility` and `@metadata` are accepted and not rendered;
- * `@catalogId` must name the 1.0 basic catalog (S19).
+ * declares. Only Image reads `@accessibility` when rendering. `@catalogId`
+ * must name the 1.0 basic catalog (S19).
  */
 export const A2UI_V1_COMMON_PROPERTIES: readonly string[] = [
   'id',
@@ -323,8 +321,8 @@ const V1_CHECKS = '@checks';
  */
 export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
   Text: { kind: 'inline', properties: ['text', 'variant'] },
-  Row: { kind: 'layout', properties: ['children', 'justify', 'align'] },
-  Column: { kind: 'layout', properties: ['children', 'justify', 'align'] },
+  Row: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
+  Column: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   List: {
     catalog: ['ki-list', 'ki-list-item'],
     kind: 'mapped',
@@ -353,11 +351,11 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     properties: ['label', 'value', V1_CHECKS],
   },
   ChoicePicker: {
-    catalog: ['ki-radio-group', 'ki-radio'],
+    catalog: ['ki-radio-group', 'ki-radio', 'ki-checkbox-group', 'ki-checkbox'],
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', V1_CHECKS],
   },
-  Image: { kind: 'unmapped', reason: 'no image component in the catalog' },
+  Image: { catalog: ['ki-image'], kind: 'mapped', properties: ['url', 'fit', 'variant'] },
   Icon: { catalog: ['ki-icon'], kind: 'mapped', properties: ['name'] },
   Video: {
     kind: 'unmapped',
@@ -368,8 +366,9 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     reason: 'no audio component in the catalog',
   },
   Modal: {
-    kind: 'unmapped',
-    reason: 'opening ki-dialog from a trigger needs host code',
+    catalog: ['ki-button', 'ki-dialog'],
+    kind: 'mapped',
+    properties: ['trigger', 'content'],
   },
   Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
   DateTimeInput: {

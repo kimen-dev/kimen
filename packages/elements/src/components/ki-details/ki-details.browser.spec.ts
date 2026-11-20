@@ -1,7 +1,8 @@
 // @spec:085-ki-details
 import tokensCss from '@kimen/tokens/css?raw';
+import type { CDPSession } from '@vitest/browser-playwright';
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
-import { commands, page, userEvent } from 'vitest/browser';
+import { cdp, commands, page, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement } from '../../../dist/components/ki-details.js';
@@ -10,7 +11,6 @@ const styles = document.createElement('style');
 const fixture = document.createElement('main');
 
 const browserCommands = commands as unknown as {
-  accessibilityTree: () => Promise<{ name: string; expanded: boolean | null }[] | null>;
   ariaSnapshot: (selector: string) => Promise<string>;
   emulateReducedMotion: (value: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
@@ -160,14 +160,25 @@ it('S9 preserves the rich heading and exposes native expansion without a named i
   expect(summary.hasAttribute('aria-expanded')).toBe(false);
   const expectExpanded = async (expanded: boolean): Promise<void> => {
     expect(panel.open).toBe(expanded);
-    const tree = await browserCommands.accessibilityTree();
-    // The Chromium AX tree exposes the browser's disclosure state. Other
-    // engines still exercise native semantics and the rich summary.
-    if (tree) {
-      expect(
-        tree.some((node) => node.name === 'Workspace settings' && node.expanded === expanded),
-      ).toBe(true);
-    }
+    if (!navigator.userAgent.includes('Chrome/')) return;
+
+    const session: CDPSession = cdp();
+    const { frameTree } = await session.send('Page.getFrameTree');
+    const testerUrl = window.location.href.split('#')[0];
+    const frameId = frameTree.childFrames?.find(({ frame }) => frame.url === testerUrl)?.frame.id;
+    if (!frameId) throw new Error('Missing the browser test frame');
+
+    const { nodes } = await session.send('Accessibility.getFullAXTree', { frameId });
+    expect(
+      nodes.some(
+        (node) =>
+          !node.ignored &&
+          node.name?.value === 'Workspace settings' &&
+          node.properties?.some(
+            ({ name, value }) => name === 'expanded' && value.value === expanded,
+          ),
+      ),
+    ).toBe(true);
   };
 
   await expectExpanded(false);

@@ -16,7 +16,7 @@
         "$description": "Optional image painted over the disclosure surface."
       },
       "backdrop-filter": {
-        "$value": "{ki.effect.backdrop-filter-none}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete filter for the backdrop behind the disclosure surface."
       },
       "border": {

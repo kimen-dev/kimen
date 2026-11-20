@@ -1,0 +1,64 @@
+:host {
+  --ki-grid-gap: var(--ki-layout-spacing-xl);
+  --ki-grid-min: var(--ki-layout-grid-min);
+
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="grid"] {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(100%, var(--ki-grid-min, var(--ki-layout-grid-min))), 1fr)
+    );
+  gap: var(--ki-grid-gap);
+}
+
+[part="grid"][data-fixed] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+[part="grid"][data-fixed][data-wide] {
+  grid-template-columns: repeat(var(--_grid-columns), minmax(0, 1fr));
+}
+
+slot {
+  display: contents;
+}
+
+/* A two-track span creates an implicit column if auto-placement has only
+ * one track. Measure the threshold in CSS so relative units use the same
+ * context as the tracks. Clip the probe so it cannot widen a scrollport. */
+.track-measure {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0;
+  overflow: clip;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.track-threshold {
+  display: block;
+  inline-size: calc(
+    2 *
+    max(1px, var(--ki-grid-min, var(--ki-layout-grid-min))) +
+    var(--ki-grid-gap)
+  );
+  block-size: 0;
+}
+
+[data-fixed] .track-threshold {
+  inline-size: var(--ki-layout-grid-fixed-breakpoint);
+}
+
+[data-span] ::slotted([data-span="2"]) {
+  grid-column-end: span 2;
+}
