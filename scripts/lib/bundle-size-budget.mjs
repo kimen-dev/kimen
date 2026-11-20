@@ -20,7 +20,10 @@ const BASE_BUDGETS = {
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
-  tokenStylesheets: { onmars: 12_850, material3: 5_600, base: 250 },
+  // Document 2's batch 2 (Sources, InteractiveList, InputVariants, FullscreenDialog)
+  // measured 20,246 B together with Carousel, 80 B more than the sum of the marginals
+  // each measured alone: minified and brotlied, the combined additions compress worse.
+  tokenStylesheets: { onmars: 12_930, material3: 5_600, base: 250 },
 };
 
 export function deriveBundleSizeBudgets(components) {
