@@ -183,12 +183,16 @@ describe('contracts when the theme or scheme changes at runtime', () => {
       const wrapper = await mountGallery(component);
       for (const combination of [...otherCombinations, defaultCombination]) {
         applyCombination(combination);
-        await nextFrame();
-        await nextFrame();
-        expect(
-          fingerprintDifferences(fresh.get(nameOf(combination)) ?? [], fingerprint(wrapper)),
-          `after switching live to ${nameOf(combination)}`,
-        ).toEqual([]);
+        // Restyling is asynchronous, and two frames are not always enough on a
+        // loaded CI runner. Poll until the live gallery matches the fresh mount,
+        // so a slow restyle is waited out while a stale one still fails.
+        await expect
+          .poll(
+            () =>
+              fingerprintDifferences(fresh.get(nameOf(combination)) ?? [], fingerprint(wrapper)),
+            { message: `after switching live to ${nameOf(combination)}`, timeout: 2000 },
+          )
+          .toEqual([]);
       }
     },
   );
