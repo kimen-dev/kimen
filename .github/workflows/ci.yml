@@ -161,11 +161,11 @@ jobs:
         if: steps.scope.outputs.scope == 'sandbox'
         run: node --test scripts/tests/sandbox-static-contract.test.mjs
 
-  # The browser gate of the complete suite, its elements files split in two:
-  # each shard runs half of them, and the last one also the Chromium-only
+  # The browser gate of the complete suite, its elements files split in four:
+  # each shard runs a quarter of them, and the last one also the Chromium-only
   # suites (scripts/gates/gates-browser.sh). Any other scope skips it.
   browser:
-    name: browser (chromium ${{ matrix.shard }}/2)
+    name: browser (chromium ${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
     timeout-minutes: 35
     permissions:
@@ -173,7 +173,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2]
+        shard: [1, 2, 3, 4]
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
@@ -277,7 +277,7 @@ jobs:
           github.event_name != 'pull_request' ||
           steps.scope.outputs.scope == 'full'
         env:
-          KIMEN_BROWSER_SHARD: ${{ matrix.shard }}/2
+          KIMEN_BROWSER_SHARD: ${{ matrix.shard }}/4
         run: bash scripts/gates/gates-browser.sh chromium
 
   # The one required result. It waits for every part and is green only when

@@ -307,15 +307,29 @@ append_executable_lines() {
 # "no lexer for <file>" the first time one is discovered. That failure is the
 # intended behavior: adding an extension here alone would hand an unknown
 # language to the JavaScript lexer.
+# Walk the declared roots ONCE and index every test file by the @spec: markers
+# it carries, one "<feature-id><TAB><ordinal><TAB><path>" line per marker. A
+# per-feature walk ran find and a grep per test file for every feature, so the
+# gate grew with features x test files (2.7 minutes in CI at 122 features).
+#
+# A marker token is the longest run of [A-Za-z0-9_-] after "@spec:", which is
+# exactly the old per-feature test: "@spec:<feature-id>" followed by a
+# character outside that set, or by the end of the line.
 discover_marked_tests() {
-  local feature_id="$1"
-  local root candidate
+  local root candidate marker ordinal=0
   for root in "${TEST_ROOTS[@]}"; do
     [ -d "$root" ] || continue
     while IFS= read -r -d '' candidate; do
-      if grep -qE "@spec:${feature_id}([^A-Za-z0-9_-]|$)" "$candidate"; then
-        printf '%s\0' "$candidate"
-      fi
+      case "$candidate" in
+        *$'\t'* | *$'\n'*)
+          echo "GATE traceability: FAIL — test path contains a tab or newline: $candidate"
+          exit 1
+          ;;
+      esac
+      ordinal=$((ordinal + 1))
+      while IFS= read -r marker; do
+        [ -n "$marker" ] && printf '%s\t%s\t%s\n' "${marker#@spec:}" "$ordinal" "$candidate"
+      done < <(grep -oE '@spec:[A-Za-z0-9_-]+' "$candidate" | sort -u)
     done < <(
       find "$root" \
         \( -type d \( \
@@ -365,6 +379,14 @@ if [ "${#FEATURES[@]}" -eq 0 ]; then
   exit 0
 fi
 
+WORK_DIR=$(mktemp -d)
+trap 'rm -rf "$WORK_DIR"' EXIT
+MARKER_INDEX="$WORK_DIR/markers.tsv"
+discover_marked_tests > "$MARKER_INDEX"
+# Each marked file is lexed at most once, into $WORK_DIR/lexed/<ordinal>,
+# however many features it traces.
+mkdir "$WORK_DIR/lexed"
+
 FAIL=0
 CHECKED=0
 for FEATURE in "${FEATURES[@]}"; do
@@ -377,9 +399,11 @@ for FEATURE in "${FEATURES[@]}"; do
   fi
   # Test files traceable to this feature: file-level @spec:<feature-dir> marker.
   MARKED=()
-  while IFS= read -r -d '' marked_file; do
+  MARKED_ORDINALS=()
+  while IFS=$'\t' read -r marked_ordinal marked_file; do
     MARKED+=("$marked_file")
-  done < <(discover_marked_tests "$FID")
+    MARKED_ORDINALS+=("$marked_ordinal")
+  done < <(awk -F '\t' -v id="$FID" '$1 == id { print $2 "\t" $3 }' "$MARKER_INDEX")
   if [ "${#MARKED[@]}" -eq 0 ]; then
     echo "  FAIL [$FID]: no test file under declared roots (${TEST_ROOTS[*]}) carries the marker '@spec:${FID}'"
     FAIL=1
@@ -396,8 +420,14 @@ for FEATURE in "${FEATURES[@]}"; do
   # FAILs on late-stream IDs; a flaky gate is a bug, Art. X).
   NON_COMMENT=$(mktemp)
   : > "$NON_COMMENT"
-  for marked_file in "${MARKED[@]}"; do
-    append_executable_lines "$marked_file" "$NON_COMMENT"
+  for index in "${!MARKED[@]}"; do
+    lexed="$WORK_DIR/lexed/${MARKED_ORDINALS[$index]}"
+    if [ ! -f "$lexed" ]; then
+      : > "$lexed.partial"
+      append_executable_lines "${MARKED[$index]}" "$lexed.partial"
+      mv "$lexed.partial" "$lexed"
+    fi
+    cat "$lexed" >> "$NON_COMMENT"
   done
   for id in $IDS; do
     if ! grep -qE "(^|[^A-Za-z0-9_])${id}([^A-Za-z0-9_]|$)" "$NON_COMMENT"; then
