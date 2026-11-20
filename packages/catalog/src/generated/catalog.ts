@@ -1457,6 +1457,55 @@ export const catalogData = {
       "whenNotToUse": "standalone, as lazy mounting, or for page\nnavigation; orphan and duplicate panels are hidden by the parent group.",
       "whenToUse": "hold the content for one peer tab view, sharing `value` with\nits `ki-tab`."
     },
+    "ki-table": {
+      "description": "A scrollable frame for a native data table with optional sorting and selection.",
+      "events": {
+        "ki-selection-change": "A person changes selection with a checkbox. The event supplies the selected\ndata-key values in displayed order.",
+        "ki-sort": "A person activates a sortable column. Use the key and direction to sort records\nand move aria-sort to the active header. The event is a request."
+      },
+      "props": {
+        "density": {
+          "type": "enum",
+          "values": [
+            "compact",
+            "default"
+          ],
+          "description": "Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.",
+          "default": "default"
+        },
+        "loading": {
+          "type": "boolean",
+          "description": "Makes the native table busy and adds a decorative loading row after the current records.",
+          "default": false
+        },
+        "row-selection-label": {
+          "type": "string",
+          "description": "Accessible name template for each row checkbox. Include {row} for the row header or key.",
+          "default": "Select {row}"
+        },
+        "select-all-label": {
+          "type": "string",
+          "description": "Accessible name for the bulk selection checkbox. Translate for the page language.",
+          "default": "Select all rows"
+        },
+        "selectable": {
+          "type": "boolean",
+          "description": "Adds a leading selection column with a checked, mixed or unchecked bulk control.\nGive each selectable body row a distinct, nonempty data-key. Register\nki-checkbox alongside ki-table when using individual component imports.",
+          "default": false
+        },
+        "sticky-header": {
+          "type": "boolean",
+          "description": "Keeps the native column header in view inside a vertically constrained frame.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "One native light-DOM table with a caption, head and body. Use data-sort\non sortable headers and data-key on each record available for selection."
+      },
+      "tag": "ki-table",
+      "whenNotToUse": "Lay out a screen, show a short one-line list, or present the\nname-value details of one record. Use CSS grid, ki-list or a description list.",
+      "whenToUse": "Show records with shared fields that people compare, scan or sort.\nSupply a native caption, column headers with scope=\"col\" and record headers\nwith scope=\"row\". Mark numeric cells with data-numeric and secondary cells\nwith data-meta. The host application supplies the native table markup."
+    },
     "ki-tabs": {
       "description": "A tab group for switching between peer content views.",
       "events": {
