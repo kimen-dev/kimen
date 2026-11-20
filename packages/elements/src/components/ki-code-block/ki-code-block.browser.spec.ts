@@ -230,6 +230,8 @@ it('S7 names the figure and region, describes highlights and hides line numbers 
   );
   const figure = part(host, 'figure');
   const scroll = part(host, 'scroll');
+  expect(figure.getAttribute('aria-label')).toBe('ts · main.ts');
+  expect(scroll.getAttribute('aria-label')).toBe('ts · main.ts');
   const tree = await browser.ariaSnapshot('main');
   expect(tree).toContain('figure "ts · main.ts"');
   expect(tree).toContain('region "ts · main.ts"');
