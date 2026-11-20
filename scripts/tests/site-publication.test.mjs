@@ -259,6 +259,52 @@ test('S8 every published documentation page can reach the privacy declaration', 
   );
 });
 
+// The live review of kimen.dev (#520, item 4): below 50rem the header drops
+// its section tabs and site links, and pages with a sidebar reach them through
+// Starlight's menu button. The docs home is a splash page with no sidebar, so
+// on a phone it had no way to the sections, Home or Playground at all. It
+// carries its own menu; pages with a sidebar must not get a second one.
+test('every documentation page reaches the sections, Home and Playground from a menu', async () => {
+  const documentationRoot = join(siteRoot, 'docs/dist');
+  const read = (page) =>
+    readFile(join(documentationRoot, page), 'utf8').catch((error) => {
+      assert.fail(
+        `site/docs/dist is missing: run \`pnpm --filter @kimen/docs build\` first (${error.message})`,
+      );
+    });
+  const linkTexts = (markup) =>
+    [...markup.matchAll(/<a\b[^>]*>([^<]+)<\/a>/gu)].map(([, text]) => text.trim());
+
+  const home = await read('index.html');
+  const menu = between(
+    home,
+    '<details class="kimen-docs-menu"',
+    '</details>',
+    'the docs home menu',
+  );
+  assert.deepEqual(linkTexts(menu), [
+    'Start',
+    'Guides',
+    'Generative UI',
+    'Components',
+    'Tokens',
+    'Resources',
+    'Home',
+    'Playground',
+    'GitHub',
+  ]);
+  assert.match(menu, /<span class="visually-hidden">Menu<\/span>/u, 'the menu button is named');
+
+  const component = await read('components/button/index.html');
+  assert.ok(
+    !component.includes('kimen-docs-menu'),
+    "a page with a sidebar keeps Starlight's menu button only",
+  );
+  assert.match(component, /class="sl-menu-button/u);
+  const footer = between(component, 'class="kimen-sidebar-sites"', '</ul>', 'the menu footer');
+  assert.deepEqual(linkTexts(footer), ['Home', 'Playground', 'GitHub']);
+});
+
 test('S8 the privacy page declares every category the Umami schema actually stores', async () => {
   // Verified against the running Umami instance's own `session` table schema
   // (not its docs): browser, os, device, screen, language, country, region,

@@ -4,6 +4,7 @@
 
 :root {
   --ki-site-docs-nav-height: var(--ki-space-18xl);
+  --ki-site-docs-strip-height: var(--ki-space-13xl);
   --ki-site-docs-sidebar-width: 16.5rem;
   --ki-site-docs-measure: 44rem;
   --ki-site-docs-home-width: 72rem;
@@ -246,6 +247,7 @@ body > .page > .header {
 
 .kimen-docs-search site-search > button,
 .kimen-docs-scheme-compact select,
+.kimen-docs-menu > summary,
 .sl-menu-button {
   min-block-size: var(--ki-space-11xl);
   border: var(--ki-site-docs-control-border);
@@ -276,6 +278,80 @@ body > .page > .header {
 
 .kimen-docs-scheme-compact {
   display: none;
+}
+
+/* The docs-home menu (Header.astro): shown below 50rem on pages without a sidebar. */
+.kimen-docs-menu {
+  display: none;
+  flex: none;
+}
+
+.kimen-docs-menu > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--sl-menu-button-size);
+  block-size: var(--sl-menu-button-size);
+  list-style: none;
+  cursor: pointer;
+}
+
+.kimen-docs-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.kimen-docs-menu > summary svg {
+  inline-size: var(--ki-space-5xl);
+  block-size: var(--ki-space-5xl);
+}
+
+.kimen-docs-menu[open] .kimen-docs-menu-open,
+.kimen-docs-menu:not([open]) .kimen-docs-menu-close {
+  display: none;
+}
+
+.kimen-docs-menu-panel {
+  position: fixed;
+  inset-block: var(--sl-nav-height) auto;
+  inset-inline: 0;
+  display: grid;
+  gap: var(--ki-space-7xl);
+  max-block-size: calc(100dvh - var(--sl-nav-height));
+  padding: var(--ki-space-7xl) var(--sl-nav-pad-x);
+  overflow-y: auto;
+  border-block-end: var(--ki-site-docs-hairline);
+  background-color: var(--ki-site-docs-paper);
+  box-shadow: var(--ki-elevation-e3);
+}
+
+.kimen-docs-menu-panel ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kimen-docs-menu-panel nav + nav {
+  padding-block-start: var(--ki-space-7xl);
+  border-block-start: var(--ki-site-docs-hairline);
+}
+
+.kimen-docs-menu-panel a {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--ki-space-13xl);
+  color: var(--ki-text-med-em);
+  font-size: var(--ki-typography-size-body-2);
+  text-decoration: none;
+}
+
+.kimen-docs-menu-panel a:hover,
+.kimen-docs-menu-panel a[aria-current] {
+  color: var(--ki-text-high-em);
+}
+
+.kimen-docs-menu-panel a[aria-current] {
+  font-weight: var(--ki-typography-weight-body-medium);
 }
 
 .kimen-docs-scheme,
@@ -783,15 +859,55 @@ footer .meta a {
   }
 }
 
+/* Below 90rem the header makes room for the section tabs and the Home and
+   Playground links: the stage badge goes first, then the search label (the
+   button keeps its icon, its "Search" accessible name and its shortcut). */
 @media (width < 90rem) {
-  .kimen-docs-primary-nav a:not(.kimen-docs-github) {
+  .kimen-docs-stage,
+  .kimen-docs-search site-search > button > :is(span, kbd) {
     display: none;
+  }
+
+  .kimen-docs-search {
+    flex: none;
+  }
+
+  .kimen-docs-search site-search > button {
+    inline-size: var(--sl-menu-button-size);
+    padding-inline: 0;
+    justify-content: center;
   }
 }
 
-@media (width < 72rem) {
+/* Below 72rem the section tabs no longer fit beside the site links: they
+   become a strip under the header row that scrolls sideways if it must.
+   --sl-nav-height grows by the strip, and Starlight positions the sidebar,
+   the mobile table of contents and the content from it. */
+@media (50rem <= width < 72rem) {
+  :root {
+    --sl-nav-height: calc(var(--ki-site-docs-nav-height) + var(--ki-site-docs-strip-height));
+  }
+
+  .kimen-docs-header {
+    display: grid;
+    grid-template-rows: var(--ki-site-docs-nav-height) var(--ki-site-docs-strip-height);
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    column-gap: var(--ki-space-xl);
+  }
+
+  .kimen-docs-search {
+    justify-self: end;
+  }
+
   .kimen-docs-tabs {
-    display: none;
+    grid-row: 2;
+    grid-column: 1 / -1;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .kimen-docs-tabs a:first-child {
+    padding-inline-start: 0;
   }
 }
 
@@ -800,10 +916,14 @@ footer .meta a {
     gap: var(--ki-space-md);
   }
 
-  .kimen-docs-stage,
+  .kimen-docs-tabs,
   .kimen-docs-scheme,
   .kimen-docs-primary-nav {
     display: none;
+  }
+
+  .kimen-docs-menu {
+    display: block;
   }
 
   .kimen-docs-scheme-compact {
@@ -813,14 +933,6 @@ footer .meta a {
   .kimen-docs-scheme-compact select {
     padding-inline: var(--ki-space-xs);
     font-size: var(--ki-typography-size-caption-2);
-  }
-
-  .kimen-docs-search {
-    flex: none;
-  }
-
-  .kimen-docs-search site-search > button {
-    padding-inline: var(--ki-space-md);
   }
 
   .ki-demo-surface {
