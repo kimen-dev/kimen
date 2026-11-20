@@ -13,6 +13,7 @@ import { defineCustomElement as defineKiBadge } from '@kimen/elements/components
 import { defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
+import { defineCustomElement as defineKiCombobox } from '@kimen/elements/components/ki-combobox.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
@@ -212,6 +213,34 @@ export class KiCheckbox {
 
 
 export declare interface KiCheckbox extends Components.KiCheckbox {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiCombobox,
+  inputs: ['addLabel', 'allowCustom', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', 'label', 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value']
+})
+@Component({
+  selector: 'ki-combobox',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['addLabel', 'allowCustom', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', { name: 'label', required: true }, 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value'],
+})
+export class KiCombobox {
+  protected el: HTMLKiComboboxElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCombobox extends Components.KiCombobox {
+  /**
+   * Reports a raw text edit in `detail.value`. Listen to it to request remote results.
+   */
+}
 
 
 @ProxyCmp({
@@ -480,14 +509,14 @@ export declare interface KiNote extends Components.KiNote {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiOption,
-  inputs: ['disabled', 'value']
+  inputs: ['description', 'disabled', 'value']
 })
 @Component({
   selector: 'ki-option',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'value'],
+  inputs: ['description', 'disabled', 'value'],
 })
 export class KiOption {
   protected el: HTMLKiOptionElement;

@@ -11,6 +11,7 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+import { ComboboxFilter } from "./components/ki-combobox/ki-combobox.options";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiLayoutGap } from "./utils/layout-gap";
@@ -40,6 +41,7 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+export { ComboboxFilter } from "./components/ki-combobox/ki-combobox.options";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiLayoutGap } from "./utils/layout-gap";
@@ -322,6 +324,105 @@ export namespace Components {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * An editable, form-associated combobox with local or remote filtering,
+     * single or multiple selection, and optional free entry.
+     * @whenToUse choose from a long list of options, let people search an option
+     * source, or allow multiple selections that remain visible as tags.
+     * @whenNotToUse use a select-only control for a short closed set or a plain
+     * text field for unrestricted input with no choices.
+     * @event change - Composed event after a user changes the committed selection.
+     * Read the committed value from the host.
+     * @catalogAction change
+     */
+    interface KiCombobox {
+        /**
+          * Localizable free-entry offer. {text} is replaced by the trimmed query.
+          * @default 'Add “{text}”'
+         */
+        "addLabel": string;
+        /**
+          * Offers to add trimmed query text when no known or selected choice already matches it.
+          * @default false
+         */
+        "allowCustom": boolean;
+        /**
+          * Disables editing, navigation and form submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Localizable status when there are no choices to display.
+          * @default 'No results'
+         */
+        "emptyLabel": string;
+        /**
+          * Message used when a required selection is missing, in place of the browser's message.
+         */
+        "errorText"?: string;
+        /**
+          * Filters by label. Set to none when the application provides results from a remote search.
+          * @default 'contains'
+         */
+        "filter": ComboboxFilter;
+        /**
+          * Guidance shown below the field and read as its description.
+         */
+        "helpText"?: string;
+        /**
+          * Visible label and accessible name. Supply it even when placeholder text is also set.
+         */
+        "label": string;
+        /**
+          * Replaces visible options with a loading indicator while a search is pending.
+          * @default false
+         */
+        "loading": boolean;
+        /**
+          * Localizable status while waiting for a result set.
+          * @default 'Loading results'
+         */
+        "loadingLabel": string;
+        /**
+          * Enables ordered multiple selection and renders selected values as tags.
+          * @default false
+         */
+        "multiple": boolean;
+        /**
+          * Form-data key. Multiple choices contribute one entry each under this name.
+         */
+        "name"?: string;
+        /**
+          * Hint shown in the text input when it is empty.
+          * @default ''
+         */
+        "placeholder": string;
+        /**
+          * Localizable removal button label. {label} is replaced by the selected label.
+          * @default 'Remove {label}'
+         */
+        "removeLabel": string;
+        /**
+          * Requires a committed choice to submit the form.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Localizable status for several choices. {count} is replaced by the result count.
+          * @default '{count} results'
+         */
+        "resultCountLabel": string;
+        /**
+          * Localizable status for one available choice.
+          * @default '1 result'
+         */
+        "resultOneLabel": string;
+        /**
+          * Committed value. Use a string for single selection and an array of strings for multiple selection. In HTML and catalog specs, encode multiple values as a JSON array string in the value attribute, or supply one literal value. Assign a new array to change multiple selections programmatically.
+          * @default ''
+         */
+        "value": string | string[];
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -685,13 +786,17 @@ export namespace Components {
         "tone": KiNoteTone;
     }
     /**
-     * A declarative data option rendered by its owning `ki-select`.
-     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
+     * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
      * @whenNotToUse `ki-option` standalone, authoring selection
      * on an option, or expecting it to paint its own row.
      */
     interface KiOption {
+        /**
+          * Secondary text shown below the label in a combobox choice row.
+         */
+        "description"?: string;
         /**
           * Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
           * @default false
@@ -1375,6 +1480,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiComboboxCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiComboboxElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -1531,6 +1640,34 @@ declare global {
     var HTMLKiCheckboxElement: {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
+    };
+    interface HTMLKiComboboxElementEventMap {
+        "ki-input": { value: string };
+    }
+    /**
+     * An editable, form-associated combobox with local or remote filtering,
+     * single or multiple selection, and optional free entry.
+     * @whenToUse choose from a long list of options, let people search an option
+     * source, or allow multiple selections that remain visible as tags.
+     * @whenNotToUse use a select-only control for a short closed set or a plain
+     * text field for unrestricted input with no choices.
+     * @event change - Composed event after a user changes the committed selection.
+     * Read the committed value from the host.
+     * @catalogAction change
+     */
+    interface HTMLKiComboboxElement extends Components.KiCombobox, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiComboboxElementEventMap>(type: K, listener: (this: HTMLKiComboboxElement, ev: KiComboboxCustomEvent<HTMLKiComboboxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiComboboxElementEventMap>(type: K, listener: (this: HTMLKiComboboxElement, ev: KiComboboxCustomEvent<HTMLKiComboboxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiComboboxElement: {
+        prototype: HTMLKiComboboxElement;
+        new (): HTMLKiComboboxElement;
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
@@ -1726,8 +1863,8 @@ declare global {
         new (): HTMLKiNoteElement;
     };
     /**
-     * A declarative data option rendered by its owning `ki-select`.
-     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
+     * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
      * @whenNotToUse `ki-option` standalone, authoring selection
      * on an option, or expecting it to paint its own row.
@@ -2121,6 +2258,7 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-combobox": HTMLKiComboboxElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-grid": HTMLKiGridElement;
@@ -2426,6 +2564,113 @@ declare namespace LocalJSX {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * An editable, form-associated combobox with local or remote filtering,
+     * single or multiple selection, and optional free entry.
+     * @whenToUse choose from a long list of options, let people search an option
+     * source, or allow multiple selections that remain visible as tags.
+     * @whenNotToUse use a select-only control for a short closed set or a plain
+     * text field for unrestricted input with no choices.
+     * @event change - Composed event after a user changes the committed selection.
+     * Read the committed value from the host.
+     * @catalogAction change
+     */
+    interface KiCombobox {
+        /**
+          * Localizable free-entry offer. {text} is replaced by the trimmed query.
+          * @default 'Add “{text}”'
+         */
+        "addLabel"?: string;
+        /**
+          * Offers to add trimmed query text when no known or selected choice already matches it.
+          * @default false
+         */
+        "allowCustom"?: boolean;
+        /**
+          * Disables editing, navigation and form submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Localizable status when there are no choices to display.
+          * @default 'No results'
+         */
+        "emptyLabel"?: string;
+        /**
+          * Message used when a required selection is missing, in place of the browser's message.
+         */
+        "errorText"?: string;
+        /**
+          * Filters by label. Set to none when the application provides results from a remote search.
+          * @default 'contains'
+         */
+        "filter"?: ComboboxFilter;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Guidance shown below the field and read as its description.
+         */
+        "helpText"?: string;
+        /**
+          * Visible label and accessible name. Supply it even when placeholder text is also set.
+         */
+        "label": string;
+        /**
+          * Replaces visible options with a loading indicator while a search is pending.
+          * @default false
+         */
+        "loading"?: boolean;
+        /**
+          * Localizable status while waiting for a result set.
+          * @default 'Loading results'
+         */
+        "loadingLabel"?: string;
+        /**
+          * Enables ordered multiple selection and renders selected values as tags.
+          * @default false
+         */
+        "multiple"?: boolean;
+        /**
+          * Form-data key. Multiple choices contribute one entry each under this name.
+         */
+        "name"?: string;
+        /**
+          * Reports a raw text edit in `detail.value`. Listen to it to request remote results.
+         */
+        "onKi-input"?: (event: KiComboboxCustomEvent<{ value: string }>) => void;
+        /**
+          * Hint shown in the text input when it is empty.
+          * @default ''
+         */
+        "placeholder"?: string;
+        /**
+          * Localizable removal button label. {label} is replaced by the selected label.
+          * @default 'Remove {label}'
+         */
+        "removeLabel"?: string;
+        /**
+          * Requires a committed choice to submit the form.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Localizable status for several choices. {count} is replaced by the result count.
+          * @default '{count} results'
+         */
+        "resultCountLabel"?: string;
+        /**
+          * Localizable status for one available choice.
+          * @default '1 result'
+         */
+        "resultOneLabel"?: string;
+        /**
+          * Committed value. Use a string for single selection and an array of strings for multiple selection. In HTML and catalog specs, encode multiple values as a JSON array string in the value attribute, or supply one literal value. Assign a new array to change multiple selections programmatically.
+          * @default ''
+         */
+        "value"?: string | string[];
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -2789,13 +3034,17 @@ declare namespace LocalJSX {
         "tone"?: KiNoteTone;
     }
     /**
-     * A declarative data option rendered by its owning `ki-select`.
-     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
+     * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
      * @whenNotToUse `ki-option` standalone, authoring selection
      * on an option, or expecting it to paint its own row.
      */
     interface KiOption {
+        /**
+          * Secondary text shown below the label in a combobox choice row.
+         */
+        "description"?: string;
         /**
           * Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
           * @default false
@@ -3539,6 +3788,26 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiComboboxAttributes {
+        "label": string;
+        "placeholder": string;
+        "helpText": string;
+        "errorText": string;
+        "name": string;
+        "value": string | string[];
+        "multiple": boolean;
+        "allowCustom": boolean;
+        "filter": ComboboxFilter;
+        "loading": boolean;
+        "required": boolean;
+        "disabled": boolean;
+        "addLabel": string;
+        "removeLabel": string;
+        "loadingLabel": string;
+        "emptyLabel": string;
+        "resultOneLabel": string;
+        "resultCountLabel": string;
+    }
     interface KiDialogAttributes {
         "open": boolean;
         "heading": string;
@@ -3607,6 +3876,7 @@ declare namespace LocalJSX {
     interface KiOptionAttributes {
         "value": string;
         "disabled": boolean;
+        "description": string;
     }
     interface KiProgressAttributes {
         "value": number;
@@ -3734,6 +4004,7 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-combobox": Omit<KiCombobox, keyof KiComboboxAttributes> & { [K in keyof KiCombobox & keyof KiComboboxAttributes]?: KiCombobox[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `attr:${K}`]?: KiComboboxAttributes[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `prop:${K}`]?: KiCombobox[K] } & OneOf<"label", KiCombobox["label"], KiComboboxAttributes["label"]>;
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
@@ -3869,6 +4140,18 @@ declare module "@stencil/core" {
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
             /**
+             * An editable, form-associated combobox with local or remote filtering,
+             * single or multiple selection, and optional free entry.
+             * @whenToUse choose from a long list of options, let people search an option
+             * source, or allow multiple selections that remain visible as tags.
+             * @whenNotToUse use a select-only control for a short closed set or a plain
+             * text field for unrestricted input with no choices.
+             * @event change - Composed event after a user changes the committed selection.
+             * Read the committed value from the host.
+             * @catalogAction change
+             */
+            "ki-combobox": LocalJSX.IntrinsicElements["ki-combobox"] & JSXBase.HTMLAttributes<HTMLKiComboboxElement>;
+            /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
@@ -3996,8 +4279,8 @@ declare module "@stencil/core" {
              */
             "ki-note": LocalJSX.IntrinsicElements["ki-note"] & JSXBase.HTMLAttributes<HTMLKiNoteElement>;
             /**
-             * A declarative data option rendered by its owning `ki-select`.
-             * @whenToUse declare one choice inside a `ki-select`; its text is the
+             * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
+             * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
              * human-facing label and its `value` is the submitted value.
              * @whenNotToUse `ki-option` standalone, authoring selection
              * on an option, or expecting it to paint its own row.

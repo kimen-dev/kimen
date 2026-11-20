@@ -11,6 +11,7 @@ export { KiBadge } from './ki-badge.js';
 export { KiButton } from './ki-button.js';
 export { KiCard } from './ki-card.js';
 export { KiCheckbox } from './ki-checkbox.js';
+export { KiCombobox } from './ki-combobox.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
 export { KiGrid } from './ki-grid.js';
