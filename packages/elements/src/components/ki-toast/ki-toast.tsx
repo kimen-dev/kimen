@@ -371,12 +371,12 @@ export class KiToast {
   }
 
   #neighbourControl(): HTMLElement | null {
-    for (const direction of ['nextElementSibling', 'previousElementSibling'] as const) {
-      for (let sibling = this.host[direction]; sibling; sibling = sibling[direction]) {
-        if (sibling.matches('ki-toast:not([dismissed], [queued])')) {
-          return firstControlOf(sibling as HTMLElement);
-        }
-      }
+    const live = 'ki-toast:not([dismissed], [queued])';
+    for (let next = this.host.nextElementSibling; next; next = next.nextElementSibling) {
+      if (next.matches(live)) return firstControlOf(next as HTMLElement);
+    }
+    for (let prev = this.host.previousElementSibling; prev; prev = prev.previousElementSibling) {
+      if (prev.matches(live)) return firstControlOf(prev as HTMLElement);
     }
     return null;
   }
