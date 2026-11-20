@@ -186,6 +186,10 @@ function minimalNode(tag: string): {
   if (tag === 'ki-icon') {
     props['name'] = 'circle-check';
   }
+  if (tag === 'ki-image') {
+    // An informative image needs alt text; the decorative form needs none.
+    props['decorative'] = true;
+  }
   return { component: tag, props };
 }
 
@@ -280,7 +284,13 @@ describe('the delivered document is a complete Kimen surface', () => {
     await expect
       .poll(() => view.document.querySelector('ki-icon')?.shadowRoot?.querySelector('svg path'))
       .toBeInstanceOf(view.SVGPathElement);
-    expect(host.violations).toEqual([]);
+    // The document's policy loads images from data: only, and the URL policy
+    // never lets a spec name one, so the sample image source is refused: that
+    // report is the policy working. Nothing else may be reported.
+    const sample = new URL('Sample', view.document.baseURI).href;
+    expect(
+      host.violations.filter((violation) => violation !== `img-src blocked ${sample}`),
+    ).toEqual([]);
   });
 
   it('S13 renders the stock glyph and rejects unselected names', async () => {

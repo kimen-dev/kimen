@@ -42,7 +42,7 @@ With individual imports or a framework wrapper, register `ki-checkbox` from
 `{row}` in the row label where the row name should appear.
 
 To add row actions, put a labelled `ki-icon-button size="xs" variant="ghost"`
-in a trailing cell and wire it to the page's action menu. Give the column
+in a trailing cell and point `ki-menu` at the trigger's ID with `anchor`. Give the column
 an accessible header such as "Actions". The table keeps every column
 available in its scroll frame. Set a maximum block size for a sticky header.
 

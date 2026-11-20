@@ -78,15 +78,19 @@ and a button whose name includes the row. Import
 ```html
 <td>
   <ki-icon-button
+    id="billing-actions"
     size="xs"
     variant="ghost"
     label="More actions for Billing API"
   >
     <ki-icon name="ellipsis"></ki-icon>
   </ki-icon-button>
+  <ki-menu anchor="billing-actions">
+    <ki-menu-item value="inspect">View service</ki-menu-item>
+  </ki-menu>
 </td>
 ```
 
-Connect the trigger and its menu state in the application. Translate the
-checkbox labels with `select-all-label="Sélectionner toutes les lignes"`
+Give each row trigger a unique ID and handle the menu's `ki-select` event in
+the application. Translate the checkbox labels with `select-all-label="Sélectionner toutes les lignes"`
 and `row-selection-label="Sélectionner {row}"` on a French page.
