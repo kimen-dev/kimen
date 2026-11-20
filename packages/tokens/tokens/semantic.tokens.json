@@ -1675,6 +1675,14 @@
       "activity-mark": {
         "$value": "{ki.radius.round}",
         "$description": "Round corners for rings and typing dots."
+      },
+      "search-bar": {
+        "$value": "{ki.radius.round}",
+        "$description": "Pill corner for a search bar."
+      },
+      "search-view": {
+        "$value": "{ki.radius.big-component.sm}",
+        "$description": "Corner for a docked search view."
       }
     },
     "motion": {

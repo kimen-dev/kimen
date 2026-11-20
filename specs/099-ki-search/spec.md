@@ -24,6 +24,9 @@ the visual anatomy. The issue defines the responsive and accessibility contract.
 - **Agent's choice, pending founder confirmation.** Text labels and the
   suggestion-count and removal-label templates are overridable for localization.
   Search highlights literal, case-insensitive matches in suggestion titles.
+- **Agent's choice, pending founder confirmation.** Placeholder and supporting
+  text use the semantic supporting-text ink. It preserves the standard
+  theme appearance and strengthens contrast when the user requests it.
 
 ## Scenario Family Coverage
 

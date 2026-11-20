@@ -250,7 +250,9 @@ it('S13 exposes expanded autocomplete, separately announces the current count, a
   await expect.element(combobox()).toHaveAttribute('aria-autocomplete', 'list');
   const listId = page.getByRole('listbox').element().id;
   await expect.element(combobox()).toHaveAttribute('aria-controls', listId);
-  await expect.element(page.getByRole('status')).toHaveTextContent('3 suggestions');
+  const count = page.getByRole('status');
+  await expect.element(count).toHaveAttribute('aria-live', 'polite');
+  await expect.element(count).toHaveTextContent('3 suggestions');
   await expect.element(page.getByRole('group', { name: 'Recent searches' })).toBeVisible();
   await expectAccessible(fixture);
 });
