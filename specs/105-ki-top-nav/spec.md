@@ -42,8 +42,8 @@ Link and action destinations belong to the consuming app.
 
   | Artifact | Raw bytes | Gzip bytes | Brotli bytes |
   | --- | ---: | ---: | ---: |
-  | MCP Apps self-contained document | 22905 | 5751 | 4778 |
-  | MCP server binary | 36052 | 8091 | 5661 |
+  | MCP Apps self-contained document | 23162 | 5790 | 4711 |
+  | MCP server binary | 36465 | 8167 | 5630 |
 
 ## Scenario Family Coverage
 

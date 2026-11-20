@@ -987,6 +987,7 @@
   --ki-layout-menu-radius-sm:var(--ki-radius-component-md);
   --ki-layout-border-width:var(--ki-size-border-hairline);
   --ki-layout-indicator-width:var(--ki-size-border-thin);
+  --ki-layout-touch-target:var(--ki-size-target-touch);
   --ki-layout-spacing-zero:var(--ki-space-zero);
   --ki-layout-spacing-xxs:var(--ki-space-xxs);
   --ki-layout-spacing-xs:var(--ki-space-xs);

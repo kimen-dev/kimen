@@ -1906,6 +1906,10 @@
         "$value": "{ki.size.border.thin}",
         "$description": "Thickness of the line identifying a selected navigation destination."
       },
+      "touch-target": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum target dimension for navigation controls on a coarse pointer."
+      },
       "spacing": {
         "zero": {
           "$value": "{ki.space.zero}",

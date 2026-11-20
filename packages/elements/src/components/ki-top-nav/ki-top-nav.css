@@ -288,6 +288,13 @@ nav {
   background-color: transparent;
 }
 
+@media (pointer: coarse) {
+  .menu-trigger {
+    min-inline-size: var(--ki-layout-touch-target);
+    min-block-size: var(--ki-layout-touch-target);
+  }
+}
+
 .overflow-item {
   min-block-size: var(--ki-density-target-min);
   padding-inline: var(--ki-layout-spacing-xl);
@@ -349,18 +356,20 @@ nav {
   background-color: var(--ki-top-nav-item-current-bg);
 }
 
-.overflow-item:hover,
 .overflow-item:focus-visible,
-.popup ::slotted(a[href]:hover),
 .popup ::slotted(a[href]:focus-visible) {
   background-color: var(--ki-top-nav-item-hover-bg);
   color: var(--ki-top-nav-item-hover-fg);
 }
 
-.menu-trigger:hover,
-.links:not(.nav-menu) ::slotted(a[href]:hover) {
-  background-color: var(--ki-top-nav-item-hover-bg);
-  color: var(--ki-top-nav-item-hover-fg);
+@media (hover: hover) {
+  .overflow-item:hover,
+  .popup ::slotted(a[href]:hover),
+  .menu-trigger:hover,
+  .links:not(.nav-menu) ::slotted(a[href]:hover) {
+    background-color: var(--ki-top-nav-item-hover-bg);
+    color: var(--ki-top-nav-item-hover-fg);
+  }
 }
 
 .overflow-item[aria-disabled="true"] {

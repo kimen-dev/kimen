@@ -12883,6 +12883,10 @@
               "description": "The xs spacing step for a stack or grid gap."
             },
             {
+              "name": "--ki-layout-touch-target",
+              "description": "Minimum target dimension for navigation controls on a coarse pointer."
+            },
+            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
             },

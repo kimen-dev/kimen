@@ -347,7 +347,8 @@ export class KiTopNav {
 
   private closeMenu(restoreFocus = false): void {
     this.open = false;
-    this.overlay.hide(restoreFocus || undefined);
+    this.overlay.hide();
+    if (restoreFocus) this.trigger?.focus();
   }
 
   private readonly toggleMenu = (): void => {
@@ -429,6 +430,8 @@ export class KiTopNav {
   }
 
   private renderMenuTrigger(label: string, icon: 'menu' | 'ellipsis') {
+    // Announce the menu before opening and reference the rendered menu once
+    // expanded. Axe treats aria-controls paired with aria-haspopup as unresolved.
     return (
       <button
         id={TRIGGER_ID}
@@ -437,8 +440,8 @@ export class KiTopNav {
         type="button"
         tabindex="0"
         aria-label={label}
-        aria-haspopup="menu"
-        aria-controls={MENU_ID}
+        aria-haspopup={this.open ? undefined : 'menu'}
+        aria-controls={this.open ? MENU_ID : undefined}
         aria-expanded={this.open ? 'true' : 'false'}
         ref={(element) => {
           if (element) this.trigger = element;

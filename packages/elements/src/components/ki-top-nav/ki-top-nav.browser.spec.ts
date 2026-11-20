@@ -278,14 +278,18 @@ it('S10: activates the original overflow control once and restores trigger focus
   const archive = required(
     [...host.querySelectorAll('button')].find((button) => button.textContent === 'Archive'),
   );
-  const activate = vi.fn();
+  const activate = vi.fn(() => host.shadowRoot?.activeElement);
   archive.addEventListener('click', activate);
   await overflow().click();
-  await expect.element(page.getByRole('menuitem', { name: 'Archive' })).toHaveFocus();
+  const item = page.getByRole('menuitem', { name: 'Archive' });
+  await expect.element(item).toBeVisible();
+  await expect.poll(() => host.shadowRoot?.activeElement === item.element()).toBe(true);
+  const trigger = nativeButton(host, 'More actions');
   await userEvent.keyboard('{Enter}');
   expect(activate).toHaveBeenCalledTimes(1);
+  expect(activate).toHaveReturnedWith(trigger);
   await expect.element(page.getByRole('menu')).not.toBeInTheDocument();
-  expect(host.shadowRoot?.activeElement).toBe(nativeButton(host, 'More actions'));
+  expect(host.shadowRoot?.activeElement).toBe(trigger);
 });
 
 it('S11: lets a page-owned first skip link bypass the header', async () => {
@@ -314,6 +318,8 @@ it('S13: connects the localized trigger to its menu and keeps aria-current', asy
   const host = narrowHeader('navigation-label="Abrir navegación"');
   const trigger = page.getByRole('button', { name: 'Abrir navegación' });
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
+  await expect.element(trigger).toHaveAttribute('aria-haspopup', 'menu');
+  expect(trigger.element().hasAttribute('aria-controls')).toBe(false);
   await trigger.click();
   const menu = page.getByRole('menu', { name: 'Abrir navegación' });
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');

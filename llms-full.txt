@@ -4280,6 +4280,7 @@ CSS custom properties:
 - `--ki-layout-spacing-7xl`: The 7xl spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
+- `--ki-layout-touch-target`: Minimum target dimension for navigation controls on a coarse pointer.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.

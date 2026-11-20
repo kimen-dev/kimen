@@ -299,6 +299,14 @@
         "required": false,
         "type": null
       },
+      "--ki-layout-touch-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum target dimension for navigation controls on a coarse pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-motion-duration-fast": {
         "default": null,
         "deprecatedSince": null,
