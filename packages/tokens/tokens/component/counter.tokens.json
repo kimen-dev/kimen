@@ -1,0 +1,97 @@
+{
+  "ki": {
+    "counter": {
+      "size": {
+        "$value": "{ki.notification-marker.count-size}",
+        "$description": "Minimum width and height of a count pill."
+      },
+      "dot-size": {
+        "$value": "{ki.notification-marker.dot-size}",
+        "$description": "Width and height of the presence dot."
+      },
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.danger-high-em}",
+        "$description": "Danger notification indicator fill."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-on-danger}",
+        "$description": "Danger notification count text."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image over the notification indicator fill."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for the indicator."
+      },
+      "ring": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Surface-colored ring that separates the indicator from the trigger."
+      },
+      "ring-width": {
+        "$value": "{ki.notification-marker.ring-width}",
+        "$description": "Thickness of the separating ring."
+      },
+      "radius": {
+        "$value": "{ki.notification-marker.radius}",
+        "$description": "Radius of the painted pill or dot."
+      },
+      "padding-inline": {
+        "$value": "{ki.notification-marker.padding-inline}",
+        "$description": "Horizontal padding of a count pill."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Font family for the count."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.overline}",
+        "$description": "Font size for the count."
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.semibold}",
+        "$description": "Font weight for the count."
+      },
+      "primary": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "Primary notification indicator fill."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.primary-on-primary}",
+          "$description": "Primary notification count text."
+        }
+      },
+      "success": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.text.success-high-em}",
+          "$description": "Success notification indicator fill."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.surface.s0}",
+          "$description": "Success notification count text."
+        }
+      },
+      "neutral": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.inverse-white}",
+          "$description": "Neutral notification indicator fill."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.inverse-black}",
+          "$description": "Neutral notification count text."
+        }
+      }
+    }
+  }
+}

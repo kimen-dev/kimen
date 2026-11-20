@@ -518,6 +518,10 @@
       "compact": {
         "$value": 0.75,
         "$description": "Compact density spacing multiplier (spec 045): 16px -> 12px."
+      },
+      "activity-pulse-min": {
+        "$value": 0.7,
+        "$description": "Smallest scale for a typing dot during a pulse."
       }
     },
     "radius": {
@@ -812,6 +816,34 @@
         "hairline": {
           "$value": "1px",
           "$description": "MarsUI hairline stroke: 1px divider/border width."
+        },
+        "thin": {
+          "$value": "2px",
+          "$description": "Thin stroke for small and medium activity rings."
+        },
+        "medium": {
+          "$value": "3px",
+          "$description": "Medium stroke for large activity rings."
+        }
+      },
+      "text-decoration": {
+        "thickness-hover": {
+          "$value": "2px",
+          "$description": "Emphasized underline stroke on hover."
+        },
+        "offset": {
+          "$value": "0.2em",
+          "$description": "Underline gap relative to the surrounding text size."
+        }
+      },
+      "inline-icon": {
+        "size": {
+          "$value": "0.9em",
+          "$description": "Inline glyph edge relative to text size."
+        },
+        "gap": {
+          "$value": "0.25em",
+          "$description": "Space between inline text and a trailing glyph."
         }
       },
       "target-min": {
@@ -822,9 +854,17 @@
         "$value": "44px",
         "$description": "The pointer target of the touch density (spec 045 Amendment A1): WCAG 2.5.5 Target Size (Enhanced, AAA) and Apple's Human Interface Guidelines ask for 44 x 44 CSS px. In px for the same reason as target-min."
       },
+      "menu-inline-min": {
+        "$value": "14rem",
+        "$description": "Default minimum inline size from the menu reference, bounded by the viewport."
+      },
       "qr": {
         "$value": "8rem",
         "$description": "QR symbol edge: the Figma master's 128x128 symbol frame (nodes 12019:6059 / 16158:27560), as a dedicated surface size decoupled from ki.space (DNA brief section 3). Replaces the interim 120px ki.space.24xl declaration."
+      },
+      "toast": {
+        "$value": "22.5rem",
+        "$description": "Width of a toast (issue #353, spec 049): one size of its own, between the surface steps xs (20rem) and sm (24rem)."
       },
       "surface": {
         "xxs": {
@@ -851,6 +891,16 @@
           "$value": "48rem",
           "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
         }
+      },
+      "layout": {
+        "grid-min": {
+          "$value": "15rem",
+          "$description": "Default minimum size of an automatic grid track."
+        },
+        "grid-fixed-breakpoint": {
+          "$value": "30rem",
+          "$description": "Inline size at which a fixed grid can distribute multiple tracks."
+        }
       }
     },
     "border": {
@@ -865,6 +915,36 @@
       }
     },
     "foundation": {
+      "placeholder": {
+        "line-size": {
+          "$type": "dimension",
+          "$value": "0.75rem"
+        },
+        "circle-size": {
+          "$type": "dimension",
+          "$value": "2.5rem"
+        },
+        "rect-size": {
+          "$type": "dimension",
+          "$value": "6rem"
+        },
+        "circle-radius": {
+          "$type": "other",
+          "$value": "50%"
+        },
+        "last-line-scale": {
+          "$type": "number",
+          "$value": 0.7
+        },
+        "shimmer-image": {
+          "$type": "other",
+          "$value": "linear-gradient(90deg, transparent, currentColor, transparent)"
+        },
+        "shimmer-duration": {
+          "$type": "duration",
+          "$value": "1400ms"
+        }
+      },
       "onmars-v1": {
         "$description": "Temporary onmars v1 glass images. Read the legacy stop properties on the theme scope during their deprecation window.",
         "dialog-bg-image": {
@@ -2610,6 +2690,22 @@
       "instant": {
         "$value": "0ms",
         "$description": "Zero-duration step: state changes that must not animate (reduced-motion fallbacks, immediate handoffs)."
+      },
+      "activity-rotation": {
+        "$value": "800ms",
+        "$description": "One revolution of the standard activity ring."
+      },
+      "activity-rotation-reduced": {
+        "$value": "2400ms",
+        "$description": "One revolution of the activity ring with reduced motion."
+      },
+      "activity-pulse": {
+        "$value": "1200ms",
+        "$description": "One pulse of a typing dot."
+      },
+      "activity-stagger": {
+        "$value": "150ms",
+        "$description": "Delay between consecutive typing dots."
       }
     },
     "easing": {
@@ -2627,6 +2723,14 @@
       "spring": {
         "$value": [0.34, 1.56, 0.64, 1],
         "$description": "Gentle overshoot curve for glass pops and playful state transfers (completes the MarsUI single-curve family; no Figma motion variable exists)."
+      },
+      "linear": {
+        "$value": [0, 0, 1, 1],
+        "$description": "Constant speed for continuous rotation."
+      },
+      "in-out": {
+        "$value": [0.42, 0, 0.58, 1],
+        "$description": "Symmetric easing for a pulse that returns to its starting size."
       }
     }
   }

@@ -118,7 +118,7 @@ function addAncestors(element: Element, nodes: Set<Node>): void {
 }
 
 /** Watch the two ancestor chains so moving an external trigger also repositions the popup. */
-function trackPosition(
+export function trackOverlayPosition(
   popup: HTMLElement,
   trigger: Element,
   view: Window,
@@ -200,7 +200,7 @@ export function anchoredOverlayPosition(options: OverlayPositionOptions): Overla
   return (popup, trigger, view, onMove, onDisconnect) => {
     const originalLeft = popup.style.left;
     const originalTop = popup.style.top;
-    const stop = trackPosition(popup, trigger, view, onMove, onDisconnect);
+    const stop = trackOverlayPosition(popup, trigger, view, onMove, onDisconnect);
     return {
       update() {
         movePopup(popup, trigger, view, options);

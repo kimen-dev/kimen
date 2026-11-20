@@ -53,12 +53,12 @@
       },
       "bg-image": {
         "$type": "other",
-        "$value": "{ki.anchored-surface.bg-image}",
+        "$value": "{ki.surface-image.none}",
         "$description": "Optional image layer over an anchored surface colour."
       },
       "backdrop-filter": {
         "$type": "other",
-        "$value": "{ki.anchored-surface.backdrop-filter}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete backdrop filter behind an anchored surface."
       }
     }

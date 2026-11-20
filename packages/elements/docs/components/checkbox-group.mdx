@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-checkbox-group" />
+
+# ki-checkbox-group
+
+Group several independent choices under one accessible name, description and
+form field. Use `ki-radio-group` for a single mutually exclusive choice.
+
+```html
+<form>
+  <ki-checkbox-group
+    label="Regions"
+    name="regions"
+    min="1"
+    max="2"
+    help-text="Choose the regions you serve."
+    error-text="Choose one or two regions."
+  >
+    <ki-checkbox value="eu" checked>Europe</ki-checkbox>
+    <ki-checkbox value="am">Americas</ki-checkbox>
+    <ki-checkbox value="apac">Asia-Pacific</ki-checkbox>
+  </ki-checkbox-group>
+  <button type="submit">Save regions</button>
+</form>
+```
+
+Place the field name and selection limits on the group. The selected options
+each contribute one entry, in option order, under that name. Disabled groups
+skip their options in the Tab order and omit the field from form data.
+
+The group uses a fieldset and legend. Help describes the group and an error
+takes its place when a validation attempt fails or focus leaves an invalid
+group. Each option retains its own accessible label and keyboard behavior.
+
+Set `orientation="horizontal"` for a row that wraps. Use
+`--ki-checkbox-group-gap` to customize the space between options and
+sections.
+
+Set the JavaScript `value` property to a fresh array of option values to
+change the selection silently. User toggles emit `ki-change` with
+`event.detail.value`. Catalog specs express initial selection through
+`checked` on the checkbox nodes.

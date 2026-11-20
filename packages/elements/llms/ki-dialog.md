@@ -6,35 +6,34 @@
 
 destructive confirmations, blocking choices, and brief
 critical input that must be resolved before returning to the page. Always
-provide a `heading`, place actions in the `footer` slot, wire each footer
-action to `close()`, and in destructive confirmations put `autofocus` on
+provide a `heading`, place actions in the `footer` slot, wire each
+dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
 the least destructive action.
 
 ## When not to use
 
-non-blocking feedback (`ki-alert`, future `ki-toast`),
+non-blocking feedback (`ki-alert`, `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows
 (navigate or use a future full-screen variant), menus, or pickers.
 
 ## Examples
 
-A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:
+A modal confirmation. `heading` names the dialog and actions go in the `footer`
+slot. Each invoker uses the dialog's ID within the same document or shadow root.
 
 ```html
+<ki-button commandfor="confirm-dialog" command="show-modal" tone="danger">Delete draft</ki-button>
 <ki-dialog heading="Delete draft?" id="confirm-dialog">
   <p>This permanently removes the draft.</p>
-  <ki-button slot="footer" type="button">Cancel</ki-button>
-  <ki-button slot="footer" tone="danger" variant="primary">Delete</ki-button>
+  <ki-button slot="footer" commandfor="confirm-dialog" command="request-close" autofocus>Cancel</ki-button>
+  <ki-button slot="footer" commandfor="confirm-dialog" command="close" tone="danger" variant="primary">Delete</ki-button>
 </ki-dialog>
 ```
 
-Open it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):
-
-```html
-<ki-button type="button" onclick="document.getElementById('confirm-dialog').show()">
-  Delete draft
-</ki-button>
-```
+`close` dismisses the dialog. `request-close` first gives the dialog a chance
+to cancel the request. After an accepted close command, the opening button
+regains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and
+`close()` remain available for programmatic control.
 
 ## Attributes
 
@@ -45,7 +44,7 @@ Open it with the `show()` method (and close with `close()`); the `ki-close` even
 ## Slots
 
 - (default): Dialog body content.
-- `footer`: Dialog actions; applications wire every action to `close()`.
+- `footer`: Dialog actions. Dismiss using an invoker command or `close()`.
 
 ## Parts
 
@@ -56,11 +55,11 @@ Open it with the `show()` method (and close with `close()`); the `ki-close` even
 
 ## Events
 
-- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
 
 ## Methods
 
-- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
+- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method or an invoker command. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
 - `show()` (Promise<void>): Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
 
 ## CSS custom properties

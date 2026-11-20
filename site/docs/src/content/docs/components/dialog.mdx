@@ -11,41 +11,41 @@ destructive confirmations, blocking choices, brief critical input.
 
 <Demo
   layout="block"
-  code={`<ki-button id="open-demo-dialog" type="button">Delete draft</ki-button>
+  code={`<ki-button tone="danger" commandfor="demo-dialog" command="show-modal">Delete draft</ki-button>
 
 <ki-dialog id="demo-dialog" heading="Delete draft?">
   <p>This permanently removes the draft.</p>
-  <ki-button slot="footer" type="button" autofocus id="demo-dialog-cancel">Cancel</ki-button>
-  <ki-button slot="footer" tone="danger" variant="primary" type="button" id="demo-dialog-confirm">Delete</ki-button>
-</ki-dialog>
-
-<script type="module">
-  const dialog = document.getElementById('demo-dialog');
-  document.getElementById('open-demo-dialog').addEventListener('click', () => dialog.show());
-  document.getElementById('demo-dialog-cancel').addEventListener('click', () => dialog.close());
-  document.getElementById('demo-dialog-confirm').addEventListener('click', () => dialog.close());
-</script>`}
+  <ki-button slot="footer" commandfor="demo-dialog" command="request-close" autofocus>Cancel</ki-button>
+  <ki-button slot="footer" commandfor="demo-dialog" command="close" tone="danger" variant="primary">Delete</ki-button>
+</ki-dialog>`}
 />
 
 ## Examples
 
+### Dialog commands
+
+`ki-button` and `ki-icon-button` can invoke a dialog by ID within the same
+document or shadow root. Once the elements are registered, the markup handles
+opening and closing. `show-modal` opens the dialog, `close` dismisses it, and
+`request-close` first gives the dialog a chance to cancel the request. Attach
+your application logic to the confirmation button to perform the deletion.
+
 ### The close contract
 
-Footer actions never close automatically — wire each one to `close()`.
+Use a footer command or call `close()` to dismiss programmatically.
 Every close path reports why in the `ki-close` event's `detail.reason`:
-`method` for `close()` calls, `escape` for the Escape key, `backdrop` for
-opt-in backdrop dismissal (`close-on-backdrop`). Update application state
-from `ki-close`, after focus has already returned through the native
-mechanism:
+`command` for `close` or an accepted `request-close`, `method` for `close()`
+calls, `escape` for the Escape key, and `backdrop` for opt-in backdrop
+dismissal (`close-on-backdrop`). Update application state from `ki-close`
+after focus has returned to the opener.
 
 ```ts
 dialog.addEventListener('ki-close', (event) => {
-  console.log(event.detail.reason); // 'method' | 'escape' | 'backdrop'
+  console.log(event.detail.reason); // 'command' | 'method' | 'escape' | 'backdrop'
 });
 ```
 
-`ki-close` is not cancelable — it reports a close that already happened,
-never a veto point.
+`ki-close` is a non-cancelable notification after dismissal.
 
 ## API reference
 
@@ -55,8 +55,9 @@ never a veto point.
 
 Always provide a `heading` — APG modal dialogs require an accessible name.
 In destructive confirmations put `autofocus` on the least destructive
-action. Call `show()` from the invoker that should receive focus again after
-close. Non-blocking feedback belongs to
+action. An opener with `command="show-modal"` exposes the dialog popup and
+its expanded state, then regains focus after close. When using `show()`, call
+it from the control that should receive focus again. Non-blocking feedback belongs to
 [ki-alert](/docs/components/alert/); supplementary hints to
 [ki-tooltip](/docs/components/tooltip/).
 

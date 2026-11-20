@@ -483,6 +483,7 @@
   --ki-divider-color:var(--ki-outline-med-em);
   --ki-divider-radius:var(--ki-radius-0);
   --ki-divider-spacing:var(--ki-space-zero);
+  --ki-empty-state-heading-weight:var(--ki-typography-weight-body-medium);
   --ki-indicator-gap:var(--ki-space-md);
   --ki-indicator-dot-color:var(--ki-outline-control);
   --ki-indicator-dot-current-inline-size:var(--ki-space-md);
@@ -586,6 +587,8 @@
   --ki-select-sm-radius:var(--ki-radius-component-xs);
   --ki-select-lg-radius:var(--ki-radius-component-xs);
   --ki-select-xl-radius:var(--ki-radius-component-xs);
+  --ki-spinner-indicator:var(--ki-surface-inverse-white);
+  --ki-stat-radius:var(--ki-radius-component-md);
   --ki-status-size:var(--ki-space-sm);
   --ki-status-shadow:0 0 0 0 var(--ki-color-transparent-black);
   --ki-switch-track-width:var(--ki-space-15xl);
@@ -693,6 +696,10 @@
   --ki-textarea-sm-radius:var(--ki-radius-component-xs);
   --ki-textarea-lg-radius:var(--ki-radius-component-xs);
   --ki-textarea-xl-radius:var(--ki-radius-component-xs);
+  --ki-toast-bg:var(--ki-surface-s2);
+  --ki-toast-border:var(--ki-outline-none);
+  --ki-toast-shadow:var(--ki-elevation-e3);
+  --ki-toast-radius:var(--ki-radius-component-xxs);
   --ki-tooltip-radius:var(--ki-radius-component-xs);
   --ki-tooltip-padding-inline:var(--ki-space-md);
   --ki-tooltip-padding-block:var(--ki-space-xs);

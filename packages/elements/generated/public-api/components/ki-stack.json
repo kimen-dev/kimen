@@ -1,0 +1,179 @@
+{
+  "component": {
+    "attributes": {
+      "align": {
+        "default": "'stretch'",
+        "deprecatedSince": null,
+        "description": "Cross-axis alignment, stretch by default.",
+        "replacement": null,
+        "required": false,
+        "type": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\""
+      },
+      "direction": {
+        "default": "'column'",
+        "deprecatedSince": null,
+        "description": "Main axis, column by default.",
+        "replacement": null,
+        "required": false,
+        "type": "\"column\" | \"row\""
+      },
+      "gap": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Kimen spacing step, md by default. Unsupported values keep the default gap.",
+        "replacement": null,
+        "required": false,
+        "type": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+      },
+      "justify": {
+        "default": "'start'",
+        "deprecatedSince": null,
+        "description": "Main-axis distribution, start by default. Use between to distribute spare space.",
+        "replacement": null,
+        "required": false,
+        "type": "\"between\" | \"center\" | \"end\" | \"start\""
+      },
+      "wrap": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Allow items to continue on a new line. Defaults to false.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-layout-spacing-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The md spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stack-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default gap of a stack.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A passive flex layout for content on one axis.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "stack": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The flex layout containing the slotted content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "align": {
+        "default": "'stretch'",
+        "deprecatedSince": null,
+        "description": "Cross-axis alignment, stretch by default.",
+        "replacement": null,
+        "required": false,
+        "type": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\""
+      },
+      "direction": {
+        "default": "'column'",
+        "deprecatedSince": null,
+        "description": "Main axis, column by default.",
+        "replacement": null,
+        "required": false,
+        "type": "\"column\" | \"row\""
+      },
+      "gap": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Kimen spacing step, md by default. Unsupported values keep the default gap.",
+        "replacement": null,
+        "required": false,
+        "type": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+      },
+      "justify": {
+        "default": "'start'",
+        "deprecatedSince": null,
+        "description": "Main-axis distribution, start by default. Use between to distribute spare space.",
+        "replacement": null,
+        "required": false,
+        "type": "\"between\" | \"center\" | \"end\" | \"start\""
+      },
+      "wrap": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Allow items to continue on a new line. Defaults to false.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The content in reading order. A direct child with data-grow takes a share of free space.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-stack.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-stack.d.ts",
+    "symbols": {
+      "KiStack": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiStack extends Components.KiStack, HTMLElement {\n}\nexport const KiStack: {\n    prototype: KiStack;\n    new (): KiStack;\n};"
+      },
+      "KiStackAlign": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiStackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';"
+      },
+      "KiStackDirection": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiStackDirection = 'column' | 'row';"
+      },
+      "KiStackJustify": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiStackJustify = 'start' | 'center' | 'end' | 'between';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-stack.js"
+  }
+}

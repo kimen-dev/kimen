@@ -13,7 +13,7 @@ only reinforces the text, it never replaces it.
 feedback that must be announced (that is
 ki-alert's job — the badge has no live region), an interactive
 chip, filter or button, empty content (the label IS the meaning), or a
-notification-counter overlay (a future, separate concern).
+notification-counter overlay (use ki-counter).
 
 ## Examples
 
