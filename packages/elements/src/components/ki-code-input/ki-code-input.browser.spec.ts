@@ -170,6 +170,45 @@ it('publishes a committed replacement carrying an IME marker without an active c
   ]);
 });
 
+it('defers metadata-free input between composition start and end', async () => {
+  const element = await mount();
+  const input = inputOf(element);
+  const events = codeEvents(element);
+
+  input.dispatchEvent(new CompositionEvent('compositionstart'));
+  input.value = 'é';
+  input.dispatchEvent(new Event('input'));
+  expect(input.value).toBe('é');
+  expect(events).toEqual([]);
+
+  input.value = '042911';
+  input.dispatchEvent(new CompositionEvent('compositionend'));
+
+  await expect
+    .poll(() =>
+      cellsOf(element)
+        .map((cell) => cell.textContent)
+        .join(''),
+    )
+    .toBe('042911');
+  expect(events).toEqual([
+    ['ki-input', '042911'],
+    ['ki-complete', '042911'],
+  ]);
+});
+
+it('commits the live native value before checking validity', async () => {
+  const form = formFixture();
+  const element = (await mount('name="otp" required', form)) as CodeInputElement & {
+    checkValidity(): boolean;
+  };
+  inputOf(element).value = '042911';
+
+  expect(element.checkValidity()).toBe(true);
+  expect(element.value).toBe('042911');
+  expect(new FormData(form).getAll('otp')).toEqual(['042911']);
+});
+
 it('S3: replaces a digit in a full code using the keyboard', async () => {
   const element = await mount('value="042911"');
   const events = codeEvents(element);

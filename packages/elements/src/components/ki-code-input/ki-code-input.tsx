@@ -106,11 +106,13 @@ export class KiCodeInput {
 
   /** Native validity flags, available on the custom-elements build. */
   get validity(): ValidityState {
+    this.acceptInput();
     return this.internals.validity;
   }
 
   /** The active validation message, available on the custom-elements build. */
   get validationMessage(): string {
+    this.acceptInput();
     return this.internals.validationMessage;
   }
 
@@ -121,16 +123,19 @@ export class KiCodeInput {
 
   /** Check validity and dispatch an invalid event when appropriate on the custom-elements build. */
   checkValidity(): boolean {
+    this.acceptInput();
     return this.internals.checkValidity();
   }
 
   /** Report validity and focus an invalid field on the custom-elements build. */
   reportValidity(): boolean {
+    this.acceptInput();
     return this.internals.reportValidity();
   }
 
   /** Set or clear an application error on the custom-elements build. */
   setCustomValidity(message: string): void {
+    this.acceptInput();
     this.customValidity = message;
     this.syncValidity();
   }
@@ -155,8 +160,7 @@ export class KiCodeInput {
       this.input.value = code;
     }
     this.syncSelection();
-    this.internals.setFormValue(this.effectiveDisabled ? null : code);
-    this.syncValidity();
+    this.syncFormState();
   }
 
   @Watch('type')
@@ -183,7 +187,10 @@ export class KiCodeInput {
     }
 
     input.setCustomValidity(this.customValidity);
-    if (input.validity.valid) {
+    // The committed code already satisfies the character constraint. Determine
+    // completeness from that snapshot and use the browser's messages on errors.
+    const complete = this.value.length === this.codeLength;
+    if (this.customValidity === '' && (complete || (!this.required && this.value === ''))) {
       this.internals.setValidity({});
       this.clearError();
       return;
@@ -223,7 +230,8 @@ export class KiCodeInput {
 
   @Listen('invalid')
   protected handleInvalid(): void {
-    if (this.effectiveDisabled) return;
+    this.acceptInput();
+    if (this.effectiveDisabled || this.internals.validity.valid) return;
     this.userInvalid = true;
     this.shownError = this.internals.validationMessage;
   }
@@ -234,7 +242,6 @@ export class KiCodeInput {
     if (
       event.inputType === 'insertText' &&
       !this.composing &&
-      !event.isComposing &&
       character?.length === 1 &&
       normalizeCode(character, this.type, this.codeLength) === ''
     ) {
@@ -271,8 +278,17 @@ export class KiCodeInput {
     this.selectionEnd = this.input?.selectionEnd ?? 0;
   };
 
+  private syncFormState(): void {
+    this.internals.setFormValue(this.effectiveDisabled ? null : this.value);
+    this.syncValidity();
+  }
+
   private applyUserCode(code: string): void {
-    if (this.effectiveDisabled || code === this.value) return;
+    if (this.effectiveDisabled) return;
+    if (code === this.value) {
+      this.syncFormState();
+      return;
+    }
     this.value = code;
     const complete = code.length === this.codeLength;
     this.kiInput.emit({ value: code });
@@ -283,7 +299,7 @@ export class KiCodeInput {
 
   private readonly acceptInput = (): void => {
     const input = this.input;
-    if (!input || this.effectiveDisabled) return;
+    if (!input || this.effectiveDisabled || this.composing) return;
 
     const raw = input.value;
     const code = normalizeCode(raw, this.type, this.codeLength);
@@ -301,12 +317,6 @@ export class KiCodeInput {
     this.applyUserCode(code);
   };
 
-  private readonly handleInput = (event: InputEvent): void => {
-    // A whole-value insertion can carry an IME marker in Gecko. Defer
-    // only pre-edit input received during an active composition session.
-    if (!this.composing || !event.isComposing) this.acceptInput();
-  };
-
   private readonly handleCompositionStart = (): void => {
     this.composing = true;
   };
@@ -317,8 +327,7 @@ export class KiCodeInput {
   };
 
   private readonly handleChange = (): void => {
-    this.acceptInput();
-    if (!this.internals.validity.valid) this.handleInvalid();
+    this.handleInvalid();
   };
 
   private readonly handlePaste = (event: ClipboardEvent): void => {
@@ -358,7 +367,6 @@ export class KiCodeInput {
       event.key !== 'Enter' ||
       event.defaultPrevented ||
       this.composing ||
-      event.isComposing ||
       event.altKey ||
       event.ctrlKey ||
       event.metaKey ||
@@ -408,12 +416,11 @@ export class KiCodeInput {
             inputMode={this.type === 'alphanumeric' ? 'text' : 'numeric'}
             maxLength={length}
             pattern={this.codePattern}
-            value={this.value}
             required={this.required}
             disabled={this.effectiveDisabled}
             aria-describedby={fieldDescribedBy(messages)}
             aria-invalid={fieldInvalid(messages)}
-            onInput={this.handleInput}
+            onInput={this.acceptInput}
             onCompositionstart={this.handleCompositionStart}
             onCompositionend={this.handleCompositionEnd}
             onChange={this.handleChange}
