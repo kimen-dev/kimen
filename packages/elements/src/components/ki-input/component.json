@@ -6,5 +6,10 @@
     "hoverWitness": false
   },
   "catalog": true,
-  "formBinding": "text"
+  "formBinding": "text",
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 1505
+    }
+  }
 }
