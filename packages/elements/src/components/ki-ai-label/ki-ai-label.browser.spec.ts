@@ -172,14 +172,19 @@ it('S5 Tabs from the explanation to its action and then out to the next control'
   await expect.element(dialog()).not.toBeInTheDocument();
 });
 
-it('S6 exposes the disclosure name, collapsed state and dialog relationship', async () => {
+it('S6 exposes the collapsed disclosure and opens its named dialog', async () => {
   const label = mountLabel(explanation);
 
   await expect.element(trigger()).toHaveAccessibleName(triggerName);
   await expect.element(trigger()).toHaveAttribute('aria-haspopup', 'dialog');
   await expect.element(trigger()).toHaveAttribute('aria-expanded', 'false');
-  const controls = part(label, 'trigger').getAttribute('aria-controls') ?? '';
-  expect(label.shadowRoot?.getElementById(controls)).toBe(part(label, 'popover'));
+  await expect.element(dialog()).not.toBeInTheDocument();
+
+  await trigger().click();
+
+  await expect.element(trigger()).toHaveAttribute('aria-expanded', 'true');
+  await expect.element(dialog()).toBeVisible();
+  expect(dialog().element()).toBe(part(label, 'popover'));
 });
 
 function describedText(input: HTMLElement): string {

@@ -29,7 +29,8 @@ export type KiAiLabelSize = 'sm' | 'md';
   shadow: true,
 })
 export class KiAiLabel {
-  @Element() private readonly host!: HTMLKiAiLabelElement;
+  // axe treats a node with a `host` property as a shadow root when scoping an audit.
+  @Element() private readonly hostElement!: HTMLKiAiLabelElement;
   @State() private open = false;
   private readonly overlay = new AnchoredOverlay();
   private trigger: HTMLButtonElement | undefined;
@@ -110,7 +111,7 @@ export class KiAiLabel {
     const gap = Number.parseFloat(getComputedStyle(popover).rowGap);
     this.open = this.overlay.show(popover, trigger, {
       position: anchoredOverlayPosition({ placement: 'bottom-start', offset: gap || 0 }),
-      outsidePointer: this.host,
+      outsidePointer: this.hostElement,
       escape: 'bubble',
       onDismiss: (reason) => {
         this.close(reason === 'escape');
@@ -156,7 +157,6 @@ export class KiAiLabel {
         aria-label={this.triggerLabel}
         aria-haspopup="dialog"
         aria-expanded={String(this.open)}
-        aria-controls="provenance"
         ref={(element) => {
           this.trigger = element;
         }}
@@ -167,7 +167,6 @@ export class KiAiLabel {
       </button>,
       <div
         key="provenance"
-        id="provenance"
         part="popover"
         role="dialog"
         aria-label={this.popoverLabel}
