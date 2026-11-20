@@ -1300,13 +1300,14 @@ body:has(.home-page) {
 
   .cell {
     position: relative;
-    display: grid;
-    align-content: center;
+    display: flex;
+    flex-direction: column;
     gap: var(--ki-space-3xl);
     min-block-size: var(--ki-site-wall-cell-height);
 
-    /* The block-end inset reserves the row the tag line sits in. */
-    padding: var(--ki-space-10xl) var(--ki-space-10xl) var(--ki-space-14xl);
+    /* With the gap and the tag line's 24px target, the foot keeps the reference's 3rem below
+       the specimen. */
+    padding: var(--ki-space-10xl) var(--ki-space-10xl) var(--ki-space-md);
     min-inline-size: 0;
     border-block-end: var(--ki-site-hairline);
     border-inline-end: var(--ki-site-hairline);
@@ -1340,10 +1341,15 @@ body:has(.home-page) {
     inset-inline-end: 0;
   }
 
+  /* The specimen centres in the space above the tag line, and the tag line sits at the cell's
+     foot, as in the reference. It stays in flow: a tag list that wraps grows the cell instead
+     of covering the specimen. */
+  .cell > :first-child,
   .tag {
-    position: absolute;
-    inset-block-end: var(--ki-space-3xl);
-    inset-inline: var(--ki-space-10xl);
+    margin-block-start: auto;
+  }
+
+  .tag {
     overflow-wrap: anywhere;
     color: var(--ki-text-low-em);
     font-family: var(--ki-typography-family-mono);
@@ -2027,16 +2033,6 @@ body:has(.home-page) {
 
     .cell-wide {
       grid-column: auto;
-    }
-
-    /* A long tag line may wrap in a single column, so it joins the cell's flow. */
-    .cell {
-      padding-block-end: var(--ki-space-10xl);
-    }
-
-    .tag {
-      position: static;
-      align-self: end;
     }
 
     .artifacts > div,
