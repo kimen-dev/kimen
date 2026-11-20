@@ -781,8 +781,18 @@ describe('ki-button in a real browser', () => {
     async (scheme) => {
       cleanup();
       document.documentElement.setAttribute('data-ki-color-scheme', scheme);
+      // No transitions: every hover read is a final frame, not a tween. The
+      // preference changes with a button already in the document, as it does
+      // for a person who turns it on: WebKit re-evaluates a component's media
+      // queries only in the shadow roots present at the change, so buttons
+      // mounted after a change made with none present keep the motion of
+      // before. Release dry run 44750568442 read the danger hover fill partway
+      // through its fade (rgb(75, 10, 24) between rgb(68, 9, 21) and
+      // rgb(114, 16, 38)).
+      const witness = requireButton(await mount('Save'));
       await browserCommands.emulateReducedMotion('reduce');
       try {
+        await expect.poll(() => getComputedStyle(witness).transitionDuration).toBe('0s');
         await expectTertiaryAlias(async (variant, tone, disabled) =>
           requireButton(await mount('Save', { variant, tone, disabled })),
         );
