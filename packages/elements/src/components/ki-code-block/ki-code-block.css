@@ -51,16 +51,11 @@ pre:focus-visible {
 }
 
 code {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: block;
   min-inline-size: 100%;
   inline-size: max-content;
   font-family: inherit;
   white-space: normal;
-}
-
-code[data-numbered] {
-  grid-template-columns: auto minmax(0, 1fr);
 }
 
 code[data-wrap] {
@@ -68,14 +63,13 @@ code[data-wrap] {
 }
 
 .line {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
+  display: flex;
   min-block-size: var(--ki-code-line-height);
   padding-inline: var(--ki-code-padding);
 }
 
 .line-text {
+  flex: auto;
   min-inline-size: 0;
   white-space: pre;
 }
@@ -86,6 +80,8 @@ code[data-wrap] .line-text {
 }
 
 .line-number {
+  flex: none;
+  inline-size: var(--_line-number-width);
   padding-inline-end: var(--ki-code-padding);
   color: var(--ki-code-line-number);
   text-align: end;

@@ -103,6 +103,27 @@ it('S1 displays language, filename, syntax colors, one-based numbers and line ra
   ]);
 });
 
+it.each([false, true])(
+  'S1 keeps the code column aligned across line numbers (wrap=%s)',
+  async (wrap) => {
+    const text = Array.from({ length: 12 }, (_unused, index) =>
+      index === 9 ? longSource : 'value',
+    );
+    const host = await mount(
+      `line-numbers highlight="10" copyable="false" ${wrap ? 'wrap' : ''}`,
+      text.join('\n'),
+    );
+    const lines = [...part(host, 'code').querySelectorAll('.line-text')];
+    expect(lines).toHaveLength(12);
+
+    const first = lines[0]?.getBoundingClientRect().left;
+    expect(first).toBeDefined();
+    for (const line of lines) {
+      expect(line.getBoundingClientRect().left).toBeCloseTo(first ?? 0, 0);
+    }
+  },
+);
+
 it('S2 renders unsupported languages and HTML-like input as literal text', async () => {
   const literal = '  <b data-test>literal</b>\n  text';
   const host = await mount('language="txt"', literal);

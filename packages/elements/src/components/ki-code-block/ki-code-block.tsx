@@ -1,13 +1,4 @@
-import {
-  Component,
-  Element,
-  type EventEmitter,
-  Event,
-  Fragment,
-  h,
-  Prop,
-  State,
-} from '@stencil/core';
+import { Component, Element, type EventEmitter, Event, h, Prop, State } from '@stencil/core';
 
 import { resolveHighlights, tokenizeCode } from './ki-code-block.behavior';
 
@@ -98,6 +89,7 @@ export class KiCodeBlock {
     const fallback = this.label?.trim() ?? '';
     const caption = metadata.join(' · ') || fallback || DEFAULT_LABEL;
     const lines = tokenizeCode(this.source, this.language);
+    const gutterWidth = `${String(String(lines.length).length)}ch`;
     const highlights = resolveHighlights(this.highlight, lines.length);
     const description = highlights.map(({ start, end }) =>
       start === end ? String(start) : [start, end].join('–'),
@@ -138,7 +130,7 @@ export class KiCodeBlock {
           <code
             key="code"
             part="code"
-            data-numbered={this.lineNumbers ? '' : undefined}
+            style={{ '--_line-number-width': gutterWidth }}
             data-wrap={this.wrap ? '' : undefined}
           >
             {lines.map((line, index) => {
