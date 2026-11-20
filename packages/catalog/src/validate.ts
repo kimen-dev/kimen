@@ -25,6 +25,7 @@ import { z } from 'zod';
 
 import { catalogData } from './generated/catalog.js';
 import { contentModelViolation, isNativePrimitive } from './primitives.js';
+import { sourceTags } from './source-reference.js';
 import { isUrlProp, urlViolation } from './url-policy.js';
 
 /** One prop constraint, exactly as narrow as the manifest documents. */
@@ -659,9 +660,9 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   }
   if (node.action !== undefined) {
     const native = isNativePrimitive(node.component);
-    if (native || node.component === 'ki-icon') {
+    if (native || node.component === 'ki-icon' || sourceTags.has(node.component)) {
       // A primitive (037 D7) or icon (069 S11) composes inside an activator
-      // when it accompanies an action.
+      // when it accompanies an action. Source links navigate natively.
       issues.push({
         code: 'action-not-allowed',
         message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,

@@ -1,0 +1,15 @@
+{
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": true
+  },
+  "catalog": true,
+  "budgetGroup": {
+    "members": ["ki-sources", "ki-citation", "ki-source"]
+  },
+  "visual": {
+    "material3Dark": true
+  }
+}

@@ -34,3 +34,8 @@ export function sourcesFixture(): HTMLElement {
   });
   return fixture;
 }
+
+export function shadowLinkHasFocus(element: Element | null): boolean {
+  const root = element?.getRootNode();
+  return root instanceof ShadowRoot && root.activeElement === element;
+}

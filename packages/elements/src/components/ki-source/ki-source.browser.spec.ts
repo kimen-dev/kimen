@@ -1,7 +1,7 @@
 // @spec:110-ki-sources
 import { expect, it } from 'vitest';
 import { page } from 'vitest/browser';
-import { sourcesFixture } from '../../../browser-tests/sources-fixture';
+import { shadowLinkHasFocus, sourcesFixture } from '../../../browser-tests/sources-fixture';
 
 const fixture = sourcesFixture();
 
@@ -31,5 +31,29 @@ it('resolves citations and source aliases within their own shadow tree', async (
     <ki-sources><ki-source source-id="r" title="Inside" href="https://example.net"></ki-source></ki-sources>`;
   await expect.element(page.getByRole('link', { name: 'Source 1: Inside' })).toBeVisible();
   await page.getByRole('link', { name: 'Source 1: Inside' }).click();
-  await expect.element(page.getByRole('link', { name: 'Inside', exact: true })).toHaveFocus();
+  const link = page.getByRole('link', { name: 'Inside', exact: true });
+  await expect.poll(() => shadowLinkHasFocus(link.query())).toBe(true);
+});
+
+it('S15 keeps each guarded answer and its navigation isolated on a shared page', async () => {
+  fixture.innerHTML = `
+    <section id="answer-one"><p><ki-citation ref="shared"></ki-citation></p>
+      <ki-sources><ki-source source-id="shared" title="First" href="https://one.example.org"></ki-source></ki-sources></section>
+    <section id="answer-two"><p><ki-citation ref="shared"></ki-citation></p>
+      <ki-sources><ki-source source-id="shared" title="Second" href="https://two.example.org"></ki-source></ki-sources></section>
+    <section id="answer-three"><p><ki-citation ref="shared"></ki-citation></p></section>`;
+  const key = Symbol.for('kimen.sources.render-scope.v1');
+  for (const answer of fixture.querySelectorAll('section')) {
+    const scope = Symbol();
+    for (const node of answer.querySelectorAll('ki-citation, ki-sources, ki-source')) {
+      Object.defineProperty(node, key, { value: scope });
+    }
+  }
+  await expect.element(page.getByRole('link', { name: 'Source 1: First' })).toBeVisible();
+  const second = page.getByRole('link', { name: 'Source 1: Second' });
+  await expect.element(second).toBeVisible();
+  expect(page.getByRole('link').elements()).toHaveLength(2);
+  await second.click();
+  const link = page.getByRole('link', { name: 'Second', exact: true });
+  await expect.poll(() => shadowLinkHasFocus(link.query())).toBe(true);
 });

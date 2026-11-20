@@ -16,6 +16,7 @@ import { catalogData } from './generated/catalog.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
 import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
+import { sourceTags } from './source-reference.js';
 import { renderableTagViolation } from './tag-grammar.js';
 import type {
   Catalog,
@@ -137,6 +138,10 @@ export interface GuardState {
  * produces on an activatable element.
  */
 const DEFAULT_ACTIVATION_EVENT = 'click';
+
+// Source references are local to one guarded render, even on a shared page.
+// The elements package reads this mark before joining a citation to a URL.
+const sourceScopeKey = Symbol.for('kimen.sources.render-scope.v1');
 
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
@@ -366,9 +371,12 @@ export function writeProp(
  * or a native primitive (spec 037), the latter with what the renderer pins
  * on it (an image's referrer policy and container-fit sizing).
  */
-export function createNodeElement(doc: Document, component: string): Element {
+export function createNodeElement(doc: Document, component: string, sourceScope: symbol): Element {
   const element = doc.createElement(component);
   pinNative(element, component);
+  if (sourceTags.has(component)) {
+    Object.defineProperty(element, sourceScopeKey, { value: sourceScope });
+  }
   return element;
 }
 
@@ -472,8 +480,9 @@ function buildNode(
   doc: Document,
   onAction: ((event: ActionEvent) => void) | undefined,
   entries: Readonly<Record<string, CatalogEntry>>,
+  sourceScope: symbol,
 ): Element {
-  const element = createNodeElement(doc, node.component);
+  const element = createNodeElement(doc, node.component, sourceScope);
   const props = node.props ?? {};
   writeProps(element, node.component, props);
   if (node.action !== undefined && onAction !== undefined) {
@@ -498,6 +507,7 @@ function buildNode(
           doc,
           onAction,
           entries,
+          sourceScope,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -666,7 +676,7 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
   }
   const doc = ownerDocument(options.surface);
   options.surface.replaceChildren(
-    buildNode(prepared.spec.root, 'root', doc, options.onAction, catalog.components),
+    buildNode(prepared.spec.root, 'root', doc, options.onAction, catalog.components, Symbol()),
   );
   return { diagnostics: [], ok: true };
 }
@@ -702,6 +712,7 @@ export function createStreamingRenderer(
   const context: ValidationContext = { allowedUrlOrigins: options.allowedUrlOrigins, catalog };
   const doc = ownerDocument(options.surface);
   const declaredActions = options.actions ?? [];
+  const sourceScope = Symbol();
   let accumulatedBytes = 0;
   let accumulatedNodes = 0;
   // Attach order of the next chunk: each top-level chunk is addressed as
@@ -781,7 +792,14 @@ export function createStreamingRenderer(
       const chunkPath = `stream[${String(attachedChunks)}]`;
       attachedChunks += 1;
       options.surface.appendChild(
-        buildNode(report.spec.root, chunkPath, doc, options.onAction, catalog.components),
+        buildNode(
+          report.spec.root,
+          chunkPath,
+          doc,
+          options.onAction,
+          catalog.components,
+          sourceScope,
+        ),
       );
       return { diagnostics: [], ok: true };
     },

@@ -1626,6 +1626,45 @@
         "$description": "Weight of a line icon's outline in viewBox units."
       }
     },
+    "source-reference": {
+      "$type": "dimension",
+      "marker-size": {
+        "$value": "{ki.space.4xl}",
+        "$description": "Painted edge of an inline reference number."
+      },
+      "marker-radius": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Corner of a numbered reference marker."
+      },
+      "card-radius": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Corner of a source reference card."
+      },
+      "hairline": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Stroke width on reference surfaces."
+      },
+      "marker-padding": {
+        "$value": "{ki.space.xs}",
+        "$description": "Inline padding of a short reference marker."
+      },
+      "card-padding": {
+        "$value": "{ki.space.md}",
+        "$description": "Inset between a source reference card edge and its content."
+      },
+      "list-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "Spacing between source reference cards."
+      },
+      "list-width": {
+        "$value": "{ki.size.surface.md}",
+        "$description": "Comfortable maximum width of an answer source list."
+      },
+      "preview-width": {
+        "$value": "{ki.size.surface.xxs}",
+        "$description": "Maximum width of a source citation preview."
+      }
+    },
     "notification-marker": {
       "$type": "dimension",
       "count-size": {

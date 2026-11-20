@@ -1,10 +1,11 @@
 // @spec:110-ki-sources
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { commands, page } from 'vitest/browser';
 import { definitions, sourcesFixture } from '../../../browser-tests/sources-fixture';
 
 const fixture = sourcesFixture();
 const browser = commands as unknown as {
+  tapWithCoarsePointer: (selector: string) => Promise<void>;
   emulateHoverCapability: (capability: 'hover' | 'none' | null) => Promise<boolean>;
 };
 
@@ -18,7 +19,18 @@ it('S14 activates on a coarse pointer without a hover preview and sizes list con
     fixture.innerHTML = `
       <p>Study<ki-citation ref="methods"></ki-citation>.</p>
       <ki-sources>${definitions}</ki-sources>`;
-    await page.getByRole('link', { name: 'Source 1: Methods' }).click();
+    const citation = page.getByRole('link', { name: 'Source 1: Methods' });
+    await expect.element(citation).toBeVisible();
+    const popup = fixture.querySelector('ki-citation')?.shadowRoot?.querySelector('[popover]');
+    expect(popup).toBeInstanceOf(HTMLElement);
+    const opening = vi.fn();
+    popup?.addEventListener('beforetoggle', (event) => {
+      if (event instanceof ToggleEvent && event.newState === 'open') {
+        opening();
+      }
+    });
+    await browser.tapWithCoarsePointer('ki-citation [part="link"]');
+    expect(opening).not.toHaveBeenCalled();
     const source = page.getByRole('link', { name: 'Methods', exact: true });
     await expect.element(source).toBeVisible();
     await expect.element(page.getByRole('tooltip')).not.toBeVisible();

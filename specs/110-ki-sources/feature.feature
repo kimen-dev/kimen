@@ -43,6 +43,13 @@ Feature: Sources
     When citations to the second list are displayed before citations to the first
     Then each list and its citations use their own numbering
 
+  # S15
+  Scenario: Guarded answers resolve only the sources in their own surface
+    Given two guarded answers in one page use the same reference identifier
+    When they are rendered with different permitted source origins
+    Then each citation resolves to the source in its own answer
+    And a reference without a source on its surface remains unavailable
+
   # Family: keyboard path
   # S7
   Scenario: Keyboard focus shows and dismisses the citation preview

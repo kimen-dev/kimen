@@ -13,7 +13,7 @@ title, domain, and optional snippet.
 
 | Family | Scenario IDs | Coverage |
 | --- | --- | --- |
-| Core behavior | S1–S6 | First citation order, disclosure, previews, unavailable URLs, streaming and independent lists. |
+| Core behavior | S1–S6, S15 | Citation order, disclosure, previews, URL policy, streaming and isolated lists. |
 | Keyboard path | S7, S8 | Focus opens the preview, Escape dismisses it, Enter opens the list and focuses the source. |
 | Assistive-tech outcome | S9 | Link names, ordered list and axe. |
 | Form participation | N/A | The elements display and navigate references. They have no value to submit, validate or reset. |
@@ -24,7 +24,8 @@ title, domain, and optional snippet.
 - **Agent's choice, pending founder confirmation.** Activating a citation opens
   its disclosure and focuses the matching title link, following the fragment
   target in the reference preview. The title link follows the source URL in
-  the current context. The citation preview contains the title and domain.
+  the current context. The citation preserves the source URL for native link
+  gestures such as opening in a new tab. The preview contains the title and domain.
 - **Agent's choice, pending founder confirmation.** Resolve references within
   the same document or shadow root. Identifiers must be unique in that root.
   Number each list independently, append uncited sources in declaration
@@ -34,10 +35,12 @@ title, domain, and optional snippet.
   `id` on a source. The catalog also exposes `sourceId` because the guarded
   renderer owns the DOM `id` attribute. `citationRef` is the property behind
   the HTML `ref` attribute so JSX and framework refs remain available.
+  Guarded renders scope references to their own surface. This keeps a
+  citation from borrowing a URL admitted by another surface’s policy.
 - **Agent's choice, pending founder confirmation.** Use the native Popover API
   and Kimen's anchored overlay while the separate Popover element is pending.
-  Native anchors supply the link semantics. The inline marker follows the
-  running-text target exception. List controls grow in touch density.
+  Native anchors supply the link semantics. The link target wraps the smaller
+  visible citation pill and scales with list controls under touch density.
 - **Agent's choice, pending founder confirmation.** Provide configurable count
   and citation label templates. The components declare no catalog actions.
 
@@ -88,6 +91,13 @@ Feature: Sources
     Given an answer has two source lists with distinct source identifiers
     When citations to the second list are displayed before citations to the first
     Then each list and its citations use their own numbering
+
+  # S15
+  Scenario: Guarded answers resolve only the sources in their own surface
+    Given two guarded answers in one page use the same reference identifier
+    When they are rendered with different permitted source origins
+    Then each citation resolves to the source in its own answer
+    And a reference without a source on its surface remains unavailable
 
   # Family: keyboard path
   # S7

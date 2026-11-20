@@ -842,6 +842,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   const actions: readonly string[] = Object.freeze([...(options.actions ?? [])]);
   const surface = options.surface;
   const doc = surface.ownerDocument;
+  const sourceScope = Symbol();
   const onAction = options.onAction;
   const allowUserStateOverride = options.allowUserStateOverride === true;
   const skew = versionDiagnostic(options.catalogSchemaVersion, catalog.catalogSchemaVersion);
@@ -896,7 +897,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
 
   /** Builds a validated node into a detached element subtree (FR-005). */
   const build = (node: UiSpecNode, parent: MNode | null, slot: string): MNode => {
-    const element = createNodeElement(doc, node.component);
+    const element = createNodeElement(doc, node.component, sourceScope);
     const model: MNode = {
       action: node.action,
       component: node.component,

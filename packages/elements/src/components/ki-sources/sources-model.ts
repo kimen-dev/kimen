@@ -1,22 +1,42 @@
-export function orderSources<T extends { id: string }>(
-  _sources: readonly T[],
-  _references: readonly string[],
-): T[] {
-  throw new Error(`Source ordering is pending (${String(_sources.length + _references.length)})`);
+import { offendingScheme } from '../../utils/url-scheme';
+
+export interface SourceDestination {
+  href: string;
+  domain: string;
 }
 
-export function readSourceUrl(
-  _href: string,
-  _base: string,
-): { href: string; domain: string } | undefined {
-  throw new Error(`Source URL resolution is pending (${String(_href.length + _base.length)})`);
+export function orderSources<T extends { id: string }>(
+  sources: readonly T[],
+  references: readonly string[],
+): T[] {
+  const pending = new Map(sources.map((source) => [source.id, source]));
+  const cited: T[] = [];
+  for (const id of references) {
+    const source = pending.get(id);
+    if (source) {
+      cited.push(source);
+      pending.delete(id);
+    }
+  }
+  return [...cited, ...pending.values()];
+}
+
+export function readSourceUrl(href: string, base: string): SourceDestination | undefined {
+  if (!href.trim() || offendingScheme(href)) {
+    return undefined;
+  }
+  const url = URL.parse(href, base);
+  if (url?.hostname && (url.protocol === 'https:' || url.protocol === 'http:')) {
+    return { href: url.href, domain: url.hostname };
+  }
+  return undefined;
 }
 
 export function formatSourceLabel(
-  _template: string,
-  _values: Readonly<Record<string, string>>,
+  template: string,
+  values: Readonly<Record<string, string>>,
 ): string {
-  throw new Error(
-    `Source label formatting is pending (${String(_template.length + Object.keys(_values).length)})`,
+  return template.replace(/\{(\w+)\}/gu, (match, key: string) =>
+    Object.hasOwn(values, key) ? (values[key] ?? match) : match,
   );
 }

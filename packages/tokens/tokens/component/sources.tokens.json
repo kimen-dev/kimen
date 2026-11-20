@@ -1,0 +1,158 @@
+{
+  "ki": {
+    "sources": {
+      "summary-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Background of the source-count control."
+      },
+      "summary-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on the source-count control."
+      },
+      "list-gap": {
+        "$value": "{ki.source-reference.list-gap}",
+        "$description": "Gap between source cards."
+      },
+      "max-inline-size": {
+        "$value": "{ki.source-reference.list-width}",
+        "$description": "Maximum line length of the source disclosure."
+      }
+    },
+    "citation": {
+      "bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Background of a citation marker."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on a citation marker."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s3}",
+        "$description": "Background of a hovered citation marker."
+      },
+      "hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on a hovered citation marker."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional decorative image over a citation marker."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for a citation marker."
+      },
+      "size": {
+        "$value": "{ki.source-reference.marker-size}",
+        "$description": "Minimum painted edge of a citation marker."
+      },
+      "radius": {
+        "$value": "{ki.source-reference.marker-radius}",
+        "$description": "Corner radius of a citation marker."
+      },
+      "padding": {
+        "$value": "{ki.source-reference.marker-padding}",
+        "$description": "Inline padding of the citation number."
+      },
+      "preview-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Background of the title and hostname preview."
+      },
+      "preview-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on the citation preview."
+      },
+      "preview-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional decorative image over the citation preview."
+      },
+      "preview-backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for the citation preview."
+      },
+      "preview-border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Edge color of the citation preview."
+      },
+      "preview-border-width": {
+        "$value": "{ki.source-reference.hairline}",
+        "$description": "Edge width of the citation preview."
+      },
+      "preview-radius": {
+        "$value": "{ki.source-reference.card-radius}",
+        "$description": "Corner radius of the citation preview."
+      },
+      "preview-padding": {
+        "$value": "{ki.source-reference.card-padding}",
+        "$description": "Inset around the preview content."
+      },
+      "preview-max-inline-size": {
+        "$value": "{ki.source-reference.preview-width}",
+        "$description": "Maximum width of the citation preview."
+      },
+      "preview-shadow": {
+        "$value": "{ki.elevation.e2}",
+        "$description": "Elevation of the citation preview."
+      }
+    },
+    "source": {
+      "card-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Resting background of a source card."
+      },
+      "card-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on a resting source card."
+      },
+      "card-hover-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Background of a hovered source card."
+      },
+      "card-hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on a hovered source card."
+      },
+      "card-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional decorative image over a source card."
+      },
+      "card-backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for a source card."
+      },
+      "card-border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Border color of a source card."
+      },
+      "card-border-width": {
+        "$value": "{ki.source-reference.hairline}",
+        "$description": "Border width of a source card."
+      },
+      "card-radius": {
+        "$value": "{ki.source-reference.card-radius}",
+        "$description": "Corner radius of a source card."
+      },
+      "card-padding": {
+        "$value": "{ki.source-reference.card-padding}",
+        "$description": "Inset around source card content."
+      },
+      "number-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Background of the number in a source card."
+      },
+      "number-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text color of the number in a source card."
+      },
+      "number-size": {
+        "$value": "{ki.glyph.size.lg}",
+        "$description": "Minimum size of the number in a source card."
+      },
+      "number-radius": {
+        "$value": "{ki.source-reference.marker-radius}",
+        "$description": "Corner radius of the number in a source card."
+      }
+    }
+  }
+}
