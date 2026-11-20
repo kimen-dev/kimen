@@ -11,6 +11,7 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
+import { CarouselLayout, CarouselSlideChangeDetail } from "./components/ki-carousel/ki-carousel";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
@@ -50,6 +51,7 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
+export { CarouselLayout, CarouselSlideChangeDetail } from "./components/ki-carousel/ki-carousel";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
@@ -317,6 +319,123 @@ export namespace Components {
           * @default 'default'
          */
         "variant"?: 'default' | 'elevated' | 'filled' | 'outlined';
+    }
+    /**
+     * An ordered, swipeable sequence with previous and next controls and position feedback.
+     * @whenToUse show a short set of related highlights, onboarding steps or media panels.
+     * Give the carousel a meaningful label and supply one ki-carousel-item per slide.
+     * @whenNotToUse hide essential content behind rotation, replace ordinary page navigation,
+     * or present slides that readers need to compare side by side at the same time.
+     */
+    interface KiCarousel {
+        /**
+          * Rotation interval in milliseconds. Omitting it leaves rotation off.
+          * @minimum 1
+          * @maximum 2147483647
+         */
+        "autoplay"?: number;
+        /**
+          * Accessible role description of the region.
+          * @default 'carousel'
+         */
+        "carouselRoleDescription": string;
+        /**
+          * One-based leading slide. Setting it moves the carousel and clamps the index to the available leading positions.
+          * @minimum 1
+          * @default 1
+         */
+        "current": number;
+        /**
+          * Moves to the requested one-based leading position within the available range.
+         */
+        "goTo": (index: number) => Promise<void>;
+        /**
+          * Required accessible name of the carousel region.
+         */
+        "label": string;
+        /**
+          * Item arrangement. Full-screen uses a vertical, full-viewport slide.
+          * @default 'single'
+         */
+        "layout": CarouselLayout;
+        /**
+          * Whether navigating past one endpoint wraps to the other.
+          * @default false
+         */
+        "loop": boolean;
+        /**
+          * Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.
+          * @default true
+         */
+        "navigation": boolean;
+        /**
+          * Advances by slidesPerMove.
+         */
+        "next": () => Promise<void>;
+        /**
+          * Accessible label of the Next button.
+          * @default 'Next slide'
+         */
+        "nextLabel": string;
+        /**
+          * Whether to show the noninteractive slide position indicator.
+          * @default true
+         */
+        "pagination": boolean;
+        /**
+          * Visible and accessible label of the Pause button.
+          * @default 'Pause'
+         */
+        "pauseLabel": string;
+        /**
+          * Visible and accessible label of the Play button.
+          * @default 'Play'
+         */
+        "playLabel": string;
+        /**
+          * Accessible label of the position indicator.
+          * @default 'Slide position'
+         */
+        "positionLabel": string;
+        /**
+          * Moves back by slidesPerMove.
+         */
+        "previous": () => Promise<void>;
+        /**
+          * Accessible label of the Previous button.
+          * @default 'Previous slide'
+         */
+        "previousLabel": string;
+        /**
+          * Spoken slide name and announcement. Use {index} and {count} as placeholders.
+          * @default '{index} of {count}'
+         */
+        "slideLabel": string;
+        /**
+          * Accessible role description of each slide group.
+          * @default 'slide'
+         */
+        "slideRoleDescription": string;
+        /**
+          * Number of positions advanced by Previous, Next and automatic rotation.
+          * @minimum 1
+          * @default 1
+         */
+        "slidesPerMove": number;
+        /**
+          * Number of slides visible together in the single layout. Material 3 layouts determine their own item widths.
+          * @minimum 1
+          * @default 1
+         */
+        "slidesPerView": number;
+    }
+    /**
+     * A slide in an ordered ki-carousel sequence.
+     * @whenToUse supply a single slide to a ki-carousel. Put the full slide in the
+     * default slot and optional decorative preview media in the preview slot.
+     * @whenNotToUse present a standalone card or a layout container outside a carousel.
+     */
+    interface KiCarouselItem {
     }
     /**
      * A form-associated checkbox for selecting independent options.
@@ -1876,6 +1995,10 @@ export interface KiCardCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCardElement;
 }
+export interface KiCarouselCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCarouselElement;
+}
 export interface KiCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCheckboxGroupElement;
@@ -2054,6 +2177,42 @@ declare global {
     var HTMLKiCardElement: {
         prototype: HTMLKiCardElement;
         new (): HTMLKiCardElement;
+    };
+    interface HTMLKiCarouselElementEventMap {
+        "ki-slide-change": CarouselSlideChangeDetail;
+    }
+    /**
+     * An ordered, swipeable sequence with previous and next controls and position feedback.
+     * @whenToUse show a short set of related highlights, onboarding steps or media panels.
+     * Give the carousel a meaningful label and supply one ki-carousel-item per slide.
+     * @whenNotToUse hide essential content behind rotation, replace ordinary page navigation,
+     * or present slides that readers need to compare side by side at the same time.
+     */
+    interface HTMLKiCarouselElement extends Components.KiCarousel, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCarouselElementEventMap>(type: K, listener: (this: HTMLKiCarouselElement, ev: KiCarouselCustomEvent<HTMLKiCarouselElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCarouselElementEventMap>(type: K, listener: (this: HTMLKiCarouselElement, ev: KiCarouselCustomEvent<HTMLKiCarouselElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCarouselElement: {
+        prototype: HTMLKiCarouselElement;
+        new (): HTMLKiCarouselElement;
+    };
+    /**
+     * A slide in an ordered ki-carousel sequence.
+     * @whenToUse supply a single slide to a ki-carousel. Put the full slide in the
+     * default slot and optional decorative preview media in the preview slot.
+     * @whenNotToUse present a standalone card or a layout container outside a carousel.
+     */
+    interface HTMLKiCarouselItemElement extends Components.KiCarouselItem, HTMLStencilElement {
+    }
+    var HTMLKiCarouselItemElement: {
+        prototype: HTMLKiCarouselItemElement;
+        new (): HTMLKiCarouselItemElement;
     };
     /**
      * A form-associated checkbox for selecting independent options.
@@ -2891,6 +3050,8 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-button-group": HTMLKiButtonGroupElement;
         "ki-card": HTMLKiCardElement;
+        "ki-carousel": HTMLKiCarouselElement;
+        "ki-carousel-item": HTMLKiCarouselItemElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
@@ -3184,6 +3345,115 @@ declare namespace LocalJSX {
           * @default 'default'
          */
         "variant"?: 'default' | 'elevated' | 'filled' | 'outlined';
+    }
+    /**
+     * An ordered, swipeable sequence with previous and next controls and position feedback.
+     * @whenToUse show a short set of related highlights, onboarding steps or media panels.
+     * Give the carousel a meaningful label and supply one ki-carousel-item per slide.
+     * @whenNotToUse hide essential content behind rotation, replace ordinary page navigation,
+     * or present slides that readers need to compare side by side at the same time.
+     */
+    interface KiCarousel {
+        /**
+          * Rotation interval in milliseconds. Omitting it leaves rotation off.
+          * @minimum 1
+          * @maximum 2147483647
+         */
+        "autoplay"?: number;
+        /**
+          * Accessible role description of the region.
+          * @default 'carousel'
+         */
+        "carouselRoleDescription"?: string;
+        /**
+          * One-based leading slide. Setting it moves the carousel and clamps the index to the available leading positions.
+          * @minimum 1
+          * @default 1
+         */
+        "current"?: number;
+        /**
+          * Required accessible name of the carousel region.
+         */
+        "label": string;
+        /**
+          * Item arrangement. Full-screen uses a vertical, full-viewport slide.
+          * @default 'single'
+         */
+        "layout"?: CarouselLayout;
+        /**
+          * Whether navigating past one endpoint wraps to the other.
+          * @default false
+         */
+        "loop"?: boolean;
+        /**
+          * Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.
+          * @default true
+         */
+        "navigation"?: boolean;
+        /**
+          * Accessible label of the Next button.
+          * @default 'Next slide'
+         */
+        "nextLabel"?: string;
+        /**
+          * Reports the one-based index when the leading slide changes.
+         */
+        "onKi-slide-change"?: (event: KiCarouselCustomEvent<CarouselSlideChangeDetail>) => void;
+        /**
+          * Whether to show the noninteractive slide position indicator.
+          * @default true
+         */
+        "pagination"?: boolean;
+        /**
+          * Visible and accessible label of the Pause button.
+          * @default 'Pause'
+         */
+        "pauseLabel"?: string;
+        /**
+          * Visible and accessible label of the Play button.
+          * @default 'Play'
+         */
+        "playLabel"?: string;
+        /**
+          * Accessible label of the position indicator.
+          * @default 'Slide position'
+         */
+        "positionLabel"?: string;
+        /**
+          * Accessible label of the Previous button.
+          * @default 'Previous slide'
+         */
+        "previousLabel"?: string;
+        /**
+          * Spoken slide name and announcement. Use {index} and {count} as placeholders.
+          * @default '{index} of {count}'
+         */
+        "slideLabel"?: string;
+        /**
+          * Accessible role description of each slide group.
+          * @default 'slide'
+         */
+        "slideRoleDescription"?: string;
+        /**
+          * Number of positions advanced by Previous, Next and automatic rotation.
+          * @minimum 1
+          * @default 1
+         */
+        "slidesPerMove"?: number;
+        /**
+          * Number of slides visible together in the single layout. Material 3 layouts determine their own item widths.
+          * @minimum 1
+          * @default 1
+         */
+        "slidesPerView"?: number;
+    }
+    /**
+     * A slide in an ordered ki-carousel sequence.
+     * @whenToUse supply a single slide to a ki-carousel. Put the full slide in the
+     * default slot and optional decorative preview media in the preview slot.
+     * @whenNotToUse present a standalone card or a layout container outside a carousel.
+     */
+    interface KiCarouselItem {
     }
     /**
      * A form-associated checkbox for selecting independent options.
@@ -4842,6 +5112,25 @@ declare namespace LocalJSX {
         "href": string;
         "interactive": boolean;
     }
+    interface KiCarouselAttributes {
+        "label": string;
+        "slidesPerView": number;
+        "slidesPerMove": number;
+        "loop": boolean;
+        "autoplay": number;
+        "navigation": boolean;
+        "pagination": boolean;
+        "current": number;
+        "layout": CarouselLayout;
+        "previousLabel": string;
+        "nextLabel": string;
+        "pauseLabel": string;
+        "playLabel": string;
+        "positionLabel": string;
+        "slideLabel": string;
+        "carouselRoleDescription": string;
+        "slideRoleDescription": string;
+    }
     interface KiCheckboxAttributes {
         "checked": boolean;
         "indeterminate": boolean;
@@ -5141,6 +5430,8 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-button-group": Omit<KiButtonGroup, keyof KiButtonGroupAttributes> & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes]?: KiButtonGroup[K] } & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes as `attr:${K}`]?: KiButtonGroupAttributes[K] } & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes as `prop:${K}`]?: KiButtonGroup[K] } & OneOf<"label", KiButtonGroup["label"], KiButtonGroupAttributes["label"]>;
         "ki-card": Omit<KiCard, keyof KiCardAttributes> & { [K in keyof KiCard & keyof KiCardAttributes]?: KiCard[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `attr:${K}`]?: KiCardAttributes[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `prop:${K}`]?: KiCard[K] };
+        "ki-carousel": Omit<KiCarousel, keyof KiCarouselAttributes> & { [K in keyof KiCarousel & keyof KiCarouselAttributes]?: KiCarousel[K] } & { [K in keyof KiCarousel & keyof KiCarouselAttributes as `attr:${K}`]?: KiCarouselAttributes[K] } & { [K in keyof KiCarousel & keyof KiCarouselAttributes as `prop:${K}`]?: KiCarousel[K] } & OneOf<"label", KiCarousel["label"], KiCarouselAttributes["label"]>;
+        "ki-carousel-item": KiCarouselItem;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
@@ -5275,6 +5566,21 @@ declare module "@stencil/core" {
              * supporting content.
              */
             "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
+            /**
+             * An ordered, swipeable sequence with previous and next controls and position feedback.
+             * @whenToUse show a short set of related highlights, onboarding steps or media panels.
+             * Give the carousel a meaningful label and supply one ki-carousel-item per slide.
+             * @whenNotToUse hide essential content behind rotation, replace ordinary page navigation,
+             * or present slides that readers need to compare side by side at the same time.
+             */
+            "ki-carousel": LocalJSX.IntrinsicElements["ki-carousel"] & JSXBase.HTMLAttributes<HTMLKiCarouselElement>;
+            /**
+             * A slide in an ordered ki-carousel sequence.
+             * @whenToUse supply a single slide to a ki-carousel. Put the full slide in the
+             * default slot and optional decorative preview media in the preview slot.
+             * @whenNotToUse present a standalone card or a layout container outside a carousel.
+             */
+            "ki-carousel-item": LocalJSX.IntrinsicElements["ki-carousel-item"] & JSXBase.HTMLAttributes<HTMLKiCarouselItemElement>;
             /**
              * A form-associated checkbox for selecting independent options.
              * Like a native field, it answers `checkValidity()`, `reportValidity()`,

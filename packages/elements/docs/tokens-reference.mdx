@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 448 semantic
-and 1453 component tokens. Values are the resolved **onmars light**
+and 1473 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1090,6 +1090,36 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-card-padding-block` | `1rem` | dimension used by the card component for the surface block padding (16px carried by the card surface itself so stacked region paddings no longer double to 32px; formalizes the fallback ki-card.css already consumes). |
 | `--ki-card-radius` | `14px` | dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px). |
 | `--ki-card-title-family` | `'Instrument Sans', system-ui, sans-serif` | Family used for a clickable card title. |
+
+### `ki-carousel`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-carousel-control-backdrop-filter` | `none` | Complete optional backdrop filter for the carousel controls. |
+| `--ki-carousel-control-bg` | `#f9f7f4` | Surface of the carousel navigation and rotation controls. |
+| `--ki-carousel-control-bg-image` | `none` | Optional image layered over the carousel control background color. |
+| `--ki-carousel-control-border` | `#86827b` | Visible control boundary against the surrounding surface. |
+| `--ki-carousel-control-fg` | `#181613` | Text and glyph ink against the carousel control surface. |
+| `--ki-carousel-control-gap` | `0.25rem` | Spacing between carousel controls. |
+| `--ki-carousel-control-icon-size` | `1.25rem` | Glyph size in the carousel navigation controls. |
+| `--ki-carousel-control-radius` | `1000px` | Corner radius of the carousel controls. |
+| `--ki-carousel-control-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Resting elevation of the carousel controls. |
+| `--ki-carousel-control-size` | `2rem` | Resting carousel control size before applying the density target floor. |
+| `--ki-carousel-full-screen-block-size` | `20rem` | Block size of the vertical carousel viewport. |
+| `--ki-carousel-gap` | `0.75rem` | Gap between carousel slides and between the viewport and the controls. |
+| `--ki-carousel-preview-min-inline-size` | `2rem` | Minimum inline size of a decorative carousel preview when space permits. |
+| `--ki-carousel-radius` | `16px` | Corner radius shared by the carousel viewport and slide surfaces. |
+
+### `ki-carousel-item`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-carousel-item-backdrop-filter` | `none` | Complete optional backdrop filter for the slide surface. |
+| `--ki-carousel-item-bg` | `#f3f0eb` | Surface for carousel slide content and its decorative preview. |
+| `--ki-carousel-item-bg-image` | `none` | Optional image layered over the slide background color. |
+| `--ki-carousel-item-fg` | `#181613` | Text on the carousel slide surface. |
+| `--ki-carousel-item-min-block-size` | `6rem` | Minimum block size of a full slide. |
+| `--ki-carousel-item-padding` | `1rem` | Inset of full slide content. |
 
 ### `ki-checkbox`
 

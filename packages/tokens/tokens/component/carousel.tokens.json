@@ -18,7 +18,7 @@
         "$description": "Block size of the vertical carousel viewport."
       },
       "control-bg": {
-        "$value": "{ki.surface.raised}",
+        "$value": "{ki.surface.s1}",
         "$description": "Surface of the carousel navigation and rotation controls."
       },
       "control-fg": {
