@@ -1,6 +1,22 @@
 {
   "component": {
     "attributes": {
+      "command": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
+        "replacement": null,
+        "required": false,
+        "type": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
+      },
+      "commandfor": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
@@ -8,6 +24,14 @@
         "replacement": null,
         "required": false,
         "type": "boolean"
+      },
+      "expanded": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
       },
       "label": {
         "default": null,
@@ -32,6 +56,14 @@
         "replacement": null,
         "required": false,
         "type": "string"
+      },
+      "pressed": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
       },
       "selected": {
         "default": "false",
@@ -1235,6 +1267,14 @@
         "required": false,
         "type": null
       },
+      "--ki-counter-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the separating ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-density-control-offset": {
         "default": null,
         "deprecatedSince": null,
@@ -1587,6 +1627,22 @@
       }
     },
     "properties": {
+      "command": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
+        "replacement": null,
+        "required": false,
+        "type": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
+      },
+      "commandfor": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
@@ -1594,6 +1650,14 @@
         "replacement": null,
         "required": false,
         "type": "boolean"
+      },
+      "expanded": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
       },
       "label": {
         "default": null,
@@ -1618,6 +1682,14 @@
         "replacement": null,
         "required": false,
         "type": "string"
+      },
+      "pressed": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
       },
       "selected": {
         "default": "false",
@@ -1665,6 +1737,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "counter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
         "replacement": null,
         "required": false,
         "type": null

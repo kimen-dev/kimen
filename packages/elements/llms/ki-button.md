@@ -46,6 +46,18 @@ Use `toggle` for a persistent action. `selected` sets the starting state and eac
 
 Programmatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.
 
+Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
+dialog and invoker share a document or shadow root. The command takes
+precedence over form submission or reset.
+
+```html
+<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
+<ki-dialog id="draft-preview" heading="Draft preview">
+  This draft is visible only to you.
+  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
+</ki-dialog>
+```
+
 Programmatic creation after registration; string attributes and properties are interchangeable:
 
 ```ts
@@ -82,6 +94,8 @@ While the action a button started is in progress, set `loading` on it instead of
 
 ## Attributes
 
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
@@ -90,7 +104,7 @@ While the action a button started is in progress, set `loading` on it instead of
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
 - `toggle` (boolean, default false): Enables persistent press state for an action such as Bold. The native button exposes `aria-pressed` and each activation switches `selected`. Use the same label in both states. A toggle does not submit or reset a form.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. Toggle palettes are specific to the variant. When NOT to use: do not use tone for visual hierarchy; use `variant`.
-- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Toggle mode takes precedence over this property. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, and `button` leaves the form alone. Toggle mode and configured dialog commands take precedence over form actions. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
 - `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
 - `variant` ("ghost" | "outline" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, `ghost` for accent text actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 

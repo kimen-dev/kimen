@@ -110,9 +110,26 @@ button {
   justify-content: center;
 }
 
-slot::slotted(*) {
+[part="icon"] slot::slotted(*) {
   block-size: var(--_ki-icon-button-icon-size);
   inline-size: var(--_ki-icon-button-icon-size);
+}
+
+.control {
+  display: inline-flex;
+  position: relative;
+}
+
+slot[name="counter"]::slotted(:not([for])) {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--ki-counter-ring-width));
+  inset-inline-end: calc(-1 * var(--ki-counter-ring-width));
+  pointer-events: none;
+}
+
+slot[name="counter"]::slotted([dot]:not([for])) {
+  inset-block-start: 0;
+  inset-inline-end: 0;
 }
 
 /* Loading (specs/046-button-loading D4): the icon stays laid out and turns
@@ -141,6 +158,6 @@ button[aria-disabled="true"] > [part="icon"] {
 
 /* The nested default slot is the fallback for an empty selected slot.
    Presentation attributes on a directly slotted SVG can take this fill. */
-button[aria-pressed="true"] slot:not([name])::slotted(svg) {
+:host([toggle][selected]) slot:not([name])::slotted(svg) {
   fill: var(--_ki-button-fg);
 }

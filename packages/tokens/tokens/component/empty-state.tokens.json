@@ -1,0 +1,146 @@
+{
+  "ki": {
+    "empty-state": {
+      "gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Gap between the decorative media, message and action row."
+      },
+      "gap-sm": {
+        "$value": "{ki.space.xs}",
+        "$description": "Gap between regions in a compact empty view."
+      },
+      "max-width": {
+        "$value": "{ki.empty-layout.max-width}",
+        "$description": "Maximum inline size of the centered content."
+      },
+      "bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Background behind the empty view."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image above the background color."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete filter applied behind the empty view."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Foreground ink for the heading."
+      },
+      "heading-font-family": {
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Typeface for the native heading."
+      },
+      "heading-size": {
+        "$value": "{ki.typography.size.heading-1}",
+        "$description": "Heading font size in a regular empty view."
+      },
+      "heading-size-sm": {
+        "$value": "{ki.typography.size.title-1}",
+        "$description": "Heading font size in a compact empty view."
+      },
+      "heading-weight": {
+        "$value": "{ki.typography.weight.body.semibold}",
+        "$description": "Weight of the heading."
+      },
+      "heading-line-height": {
+        "$value": "{ki.typography.line-height.heading-1}",
+        "$description": "Heading line height in a regular empty view."
+      },
+      "heading-line-height-sm": {
+        "$value": "{ki.typography.line-height.title-1}",
+        "$description": "Heading line height in a compact empty view."
+      },
+      "description-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Background layer behind the supporting copy."
+      },
+      "description-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Supporting text ink, strengthened in contrast-more mode."
+      },
+      "description-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Font size of the supporting copy."
+      },
+      "description-line-height": {
+        "$value": "{ki.typography.line-height.para}",
+        "$description": "Line height of the supporting copy."
+      },
+      "tile-size": {
+        "$value": "{ki.empty-layout.tile-regular}",
+        "$description": "Regular FeatureIcon fallback tile size."
+      },
+      "tile-size-sm": {
+        "$value": "{ki.empty-layout.tile-compact}",
+        "$description": "Compact FeatureIcon fallback tile size."
+      },
+      "tile-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of the regular fallback tile."
+      },
+      "tile-radius-sm": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Corner radius of the compact fallback tile."
+      },
+      "tile-neutral-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Background of the neutral decorative tile."
+      },
+      "tile-neutral-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Glyph ink on the neutral decorative tile."
+      },
+      "tile-primary-bg": {
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Background of the primary decorative tile."
+      },
+      "tile-primary-fg": {
+        "$value": "{ki.text.primary-on-primary}",
+        "$description": "Glyph ink on the primary decorative tile."
+      },
+      "tile-primary-light-bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Background of the primary-light decorative tile."
+      },
+      "tile-primary-light-fg": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Glyph ink on the primary-light decorative tile."
+      },
+      "tile-info-bg": {
+        "$value": "{ki.surface.info-tint}",
+        "$description": "Background of the info decorative tile."
+      },
+      "tile-info-fg": {
+        "$value": "{ki.text.info-high-em}",
+        "$description": "Glyph ink on the info decorative tile."
+      },
+      "tile-success-bg": {
+        "$value": "{ki.surface.success-tint}",
+        "$description": "Background of the success decorative tile."
+      },
+      "tile-success-fg": {
+        "$value": "{ki.text.success-high-em}",
+        "$description": "Glyph ink on the success decorative tile."
+      },
+      "tile-warning-bg": {
+        "$value": "{ki.surface.warning-tint}",
+        "$description": "Background of the warning decorative tile."
+      },
+      "tile-warning-fg": {
+        "$value": "{ki.text.warning-high-em}",
+        "$description": "Glyph ink on the warning decorative tile."
+      },
+      "tile-danger-bg": {
+        "$value": "{ki.surface.danger-tint}",
+        "$description": "Background of the danger decorative tile."
+      },
+      "tile-danger-fg": {
+        "$value": "{ki.text.danger-high-em}",
+        "$description": "Glyph ink on the danger decorative tile."
+      }
+    }
+  }
+}

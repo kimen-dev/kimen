@@ -3,6 +3,7 @@ import {
   booleanFromAttributePresence,
   observeAttributePresence,
 } from '../../utils/boolean-presence';
+import { checkboxGroupFor, checkboxGroupOptions } from '../../utils/checkbox-group-context';
 import {
   FieldMessage,
   fieldDescribedBy,
@@ -172,7 +173,7 @@ export class KiCheckbox {
   private presenceObserver: MutationObserver | undefined;
 
   private get effectiveDisabled(): boolean {
-    return this.disabled || this.formDisabled;
+    return this.disabled || this.formDisabled || Boolean(checkboxGroupFor(this.host)?.disabled);
   }
 
   // The application's own error (setCustomValidity); '' when none. It is
@@ -261,6 +262,7 @@ export class KiCheckbox {
       ['checked', 'indeterminate', 'disabled', 'required'],
       this.handlePresentAttribute,
     );
+    if (this.input) this.syncGroupState();
   }
 
   componentWillLoad(): void {
@@ -274,10 +276,18 @@ export class KiCheckbox {
   }
 
   componentDidLoad(): void {
+    checkboxGroupOptions.set(this.host, this.syncGroupState);
+    this.syncGroupState();
+    checkboxGroupFor(this.host)?.optionChanged(this.host);
+  }
+
+  private readonly syncGroupState = (): void => {
+    const group = checkboxGroupFor(this.host);
+    this.setState('fieldset-disabled', this.formDisabled || Boolean(group?.disabled));
     this.syncInputState();
     this.syncFormValue();
     this.syncValidity();
-  }
+  };
 
   disconnectedCallback(): void {
     this.presenceObserver?.disconnect();
@@ -308,6 +318,7 @@ export class KiCheckbox {
     this.syncFormValue();
     this.syncValidity();
     this.syncUserInvalidState(false);
+    checkboxGroupFor(this.host)?.optionChanged(this.host);
   }
 
   @Watch('indeterminate')
@@ -331,6 +342,7 @@ export class KiCheckbox {
   @Watch('value')
   protected valueChanged(): void {
     this.syncFormValue();
+    checkboxGroupFor(this.host)?.optionChanged(this.host);
   }
 
   @Watch('errorText')
@@ -346,12 +358,11 @@ export class KiCheckbox {
 
   formDisabledCallback(disabled: boolean): void {
     this.formDisabled = disabled;
-    this.setState('fieldset-disabled', disabled);
-    this.syncInputState();
-    this.syncValidity();
+    this.syncGroupState();
   }
 
   formResetCallback(): void {
+    if (checkboxGroupFor(this.host)) return;
     this.checked = this.resetBaseline;
     this.syncInputState();
     this.syncFormValue();
@@ -403,17 +414,21 @@ export class KiCheckbox {
     this.input.checked = this.checked;
     this.input.indeterminate = this.indeterminate;
     this.input.disabled = this.effectiveDisabled;
-    this.input.required = this.required;
+    this.input.tabIndex = this.effectiveDisabled ? -1 : 0;
+    this.input.required = this.required && !checkboxGroupFor(this.host);
     this.input.value = this.value ?? 'on';
   }
 
   private syncFormValue(): void {
-    this.internals.setFormValue(checkboxFormValue(this.checked, this.value));
+    const formValue = checkboxGroupFor(this.host)
+      ? null
+      : checkboxFormValue(this.checked, this.value);
+    this.internals.setFormValue(formValue);
   }
 
   private syncValidity(): void {
     this.input?.setCustomValidity(this.customValidity);
-    if (!this.input || this.effectiveDisabled) {
+    if (!this.input || this.effectiveDisabled || checkboxGroupFor(this.host)) {
       this.internals.setValidity({});
       this.message = '';
       this.setUserInvalid(false);
@@ -429,7 +444,7 @@ export class KiCheckbox {
   }
 
   private syncUserInvalidState(fromUserToggle: boolean): void {
-    if (!this.input) {
+    if (!this.input || checkboxGroupFor(this.host)) {
       return;
     }
 
@@ -471,7 +486,7 @@ export class KiCheckbox {
           tabIndex={this.effectiveDisabled ? -1 : 0}
           checked={this.checked}
           disabled={this.effectiveDisabled}
-          required={this.required}
+          required={this.required && !checkboxGroupFor(this.host)}
           value={this.value ?? 'on'}
           aria-describedby={fieldDescribedBy(messages)}
           aria-invalid={fieldInvalid(messages)}

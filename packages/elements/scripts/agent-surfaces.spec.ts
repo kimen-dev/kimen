@@ -321,7 +321,11 @@ describe('agent surfaces', () => {
         declaration: { name: 'KiButton', module: 'src/components/ki-button/ki-button.tsx' },
       },
     ]);
+    // Keep the full field list so accidental additions and missing
+    // members are both visible in the generated manifest.
     expect(declaration.members.map((member: ManifestMember) => member.name)).toEqual([
+      'command',
+      'commandfor',
       'disabled',
       'loading',
       'loadingLabel',
@@ -334,7 +338,7 @@ describe('agent surfaces', () => {
       'value',
       'variant',
     ]);
-    expect(declaration.attributes).toHaveLength(11);
+    expect(declaration.attributes).toHaveLength(13);
     expect(declaration.slots).toHaveLength(3);
     expect(declaration.cssParts.map((part: { name: string }) => part.name)).toEqual([
       'button',

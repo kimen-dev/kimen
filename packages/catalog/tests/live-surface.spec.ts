@@ -991,3 +991,70 @@ describe('035 — property: random batches keep the DOM equal to the snapshot (S
     expect(rejected).toBeGreaterThan(100);
   });
 });
+
+describe('live chip collections', () => {
+  it('keeps a remove request in the model until the host patches it', () => {
+    const { live, events } = mount({}, false);
+    expect(
+      live.apply({
+        ops: [
+          {
+            op: 'insert',
+            node: {
+              component: 'ki-chip',
+              id: 'ana',
+              action: 'pick',
+              props: { type: 'input', removable: true, value: 'ana' },
+              slots: { '': ['Ana'] },
+            },
+          },
+        ],
+      }).ok,
+    ).toBe(true);
+    const request = new CustomEvent('ki-remove', { cancelable: true });
+    expect(one('ki-chip').dispatchEvent(request)).toBe(false);
+    expect(events[0]?.action).toBe('pick');
+    expect(live.snapshot().nodes).toHaveLength(1);
+    expect(live.apply({ ops: [{ op: 'remove', id: 'ana' }] }).ok).toBe(true);
+    expect(surface.querySelector('ki-chip')).toBeNull();
+  });
+
+  it('updates a previously cached snapshot and action paths after a user move', () => {
+    const { live, events } = mount({}, false);
+    expect(
+      live.apply({
+        ops: [
+          {
+            op: 'insert',
+            node: {
+              component: 'ki-chip-group',
+              id: 'team',
+              props: { label: 'Team', reorderable: true },
+              slots: {
+                '': [
+                  {
+                    component: 'ki-chip',
+                    id: 'design',
+                    action: 'pick',
+                    props: { value: 'design' },
+                  },
+                  { component: 'ki-chip', id: 'eng', action: 'pick', props: { value: 'eng' } },
+                ],
+              },
+            },
+          },
+        ],
+      }).ok,
+    ).toBe(true);
+    const before = live.snapshot();
+    expect(before.nodes[0]?.slots?.['']?.[0]).toMatchObject({ id: 'design' });
+    const group = one('ki-chip-group');
+    const design = one('ki-chip[value="design"]');
+    group.append(design);
+    group.dispatchEvent(new CustomEvent('ki-reorder'));
+    expect(live.snapshot()).not.toBe(before);
+    expect(live.snapshot().nodes[0]?.slots?.['']?.[0]).toMatchObject({ id: 'eng' });
+    design.dispatchEvent(new CustomEvent('ki-change'));
+    expect(events[0]?.path).toBe('surface[0].slots.[1]');
+  });
+});

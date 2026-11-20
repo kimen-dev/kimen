@@ -103,3 +103,31 @@ export const Toggle: Story = {
     </ki-icon-button>
   ),
 };
+
+/** A named icon button in the dialog footer dismisses the modal. */
+export const CloseDialog: Story = {
+  args: { label: 'Close details' },
+  render: (args, { id }) => {
+    const dialogId = `${id}-dialog`;
+    return (
+      <div>
+        <ki-button commandfor={dialogId} command="show-modal">
+          Project details
+        </ki-button>
+        <ki-dialog id={dialogId} heading="Project details">
+          <p>This project is private.</p>
+          <ki-icon-button {...args} slot="footer" commandfor={dialogId} command="close">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M6 6l12 12M18 6L6 18"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </ki-icon-button>
+        </ki-dialog>
+      </div>
+    );
+  },
+};

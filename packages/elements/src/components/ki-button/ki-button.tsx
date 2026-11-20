@@ -10,6 +10,8 @@ import {
   Watch,
 } from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
+import { syncButtonAria } from '../../utils/button-aria';
+import type { KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -112,8 +114,8 @@ export class KiButton {
   /**
    * Native form action type: `submit` submits the owning form (running
    * constraint validation and contributing `name`/`value` to the form data),
-   * `reset` restores field defaults, `button` never touches the form. Toggle
-   * mode takes precedence over this property.
+   * `reset` restores field defaults, and `button` leaves the form alone.
+   * Toggle mode and configured dialog commands take precedence over form actions.
    * Cancel a submission from the form's `submit` event (`preventDefault()`);
    * unlike a native button, `preventDefault()` on the `click` event does not
    * cancel it. During submission `event.submitter` is a transient native
@@ -135,6 +137,23 @@ export class KiButton {
    * When NOT to use: omit when the default empty submitter value is intended.
    */
   @Prop({ reflect: true }) value?: string;
+
+  /**
+   * ID of a ki-dialog in the same document or shadow tree as this button.
+   * Set it together with `command` to connect a dialog declaratively.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) commandfor?: string;
+
+  /**
+   * Dialog action to run for `commandfor`. Use `show-modal` to open,
+   * `close` for direct dismissal, or `request-close` for guarded dismissal.
+   * Choose a command for local dialog control and omit it for other actions.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) command?: KiDialogCommand;
 
   /**
    * Prevents activation, removes the button from keyboard reach, and exposes
@@ -206,23 +225,13 @@ export class KiButton {
   }
 
   componentDidLoad(): void {
-    this.syncForwardedDescription();
+    this.forwardButtonAria();
   }
 
-  // Assistive tech announces the DELEGATED inner button, not this focus-
-  // delegating host, so an `aria-description` set on the host (e.g. by a
-  // wrapping ki-tooltip) is never announced. Mirror it onto the inner button.
-  // Done imperatively, not in JSX: aria-description is a valid ARIA 1.3 global
-  // (jsx-a11y's allow-list is stale and flags it), and Stencil's vdom never
-  // renders this attribute, so an imperative write survives re-renders intact.
   @Watch('aria-description')
-  protected syncForwardedDescription(): void {
-    const description = this.host.getAttribute('aria-description');
-    if (description === null) {
-      this.button?.removeAttribute('aria-description');
-    } else {
-      this.button?.setAttribute('aria-description', description);
-    }
+  @Watch('aria-haspopup')
+  protected forwardButtonAria(): void {
+    syncButtonAria(this.host, this.button);
   }
 
   // A disabled native button never dispatches a real click, but an
@@ -255,7 +264,12 @@ export class KiButton {
     }
 
     const type = normalizeKiButtonType(this.type);
-    if (type === 'button') {
+    // A configured invoker takes precedence over a form submit or reset.
+    const command = this.command;
+    const invokes =
+      this.commandfor &&
+      (command === 'show-modal' || command === 'close' || command === 'request-close');
+    if (type === 'button' || invokes) {
       return;
     }
 
@@ -285,6 +299,7 @@ export class KiButton {
 
   render() {
     const loading = this.effectiveLoading;
+    const pressed = this.toggle ? (this.selected ? 'true' : 'false') : undefined;
     // The status region is rendered always, empty until the button loads: a
     // polite region created together with its text is not announced (042
     // D6). It sits outside the native button, so its text never joins the
@@ -297,10 +312,12 @@ export class KiButton {
         }}
         part="button"
         type="button"
+        {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
+        {...(this.command === undefined ? {} : { command: this.command })}
         tabIndex={this.effectiveDisabled ? -1 : 0}
         disabled={this.effectiveDisabled}
         aria-disabled={loading ? 'true' : undefined}
-        aria-pressed={this.toggle ? (this.selected ? 'true' : 'false') : undefined}
+        aria-pressed={pressed}
         onClick={this.handleClick}
         onKeyDown={startKeyboardPress}
         onKeyUp={releaseKeyboardPress}

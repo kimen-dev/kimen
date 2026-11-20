@@ -1,0 +1,47 @@
+---
+title: ki-empty-state
+description: Explain an empty list, table, search result, or first-run view.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use EmptyState when a view has no items. Name what is empty and give a next
+step. Supply a primary action when the user can do something about it. Use
+[ki-spinner](../spinner/) while results are loading.
+
+## First run
+
+Choose a heading level that fits the surrounding page. The default is level
+three. Import the Lucide glyph by name before mounting an icon example.
+
+```ts
+import '@kimen/elements/icons/folder-plus';
+```
+
+<Demo live={false} code={`<ki-empty-state heading="No projects yet" icon-name="folder-plus" tone="primary-light">
+  Projects hold your surfaces, catalogs and themes.
+  <ki-button slot="actions" variant="primary">New project</ki-button>
+</ki-empty-state>`} />
+
+Slot an illustration into `media` to replace the icon. Use decorative media
+with empty alternative text and keep interactive controls in `actions`.
+
+## Search results
+
+Use `size="sm"` in a table or panel. Set `announce` before inserting the
+component to put the message in a polite status region. The action controls
+stay outside that region and retain their usual keyboard behavior.
+
+<Demo code={`<ki-empty-state heading="No results for webhok" heading-level="2" size="sm" announce>
+  Check the spelling or remove a filter.
+  <ki-button slot="actions" variant="secondary">Clear filters</ki-button>
+</ki-empty-state>`} />
+
+## API reference
+
+<CemApi tag="ki-empty-state" />
+
+## Workshop
+
+[Open ki-empty-state in Storybook](/storybook/?path=/docs/docs-components-ki-empty-state--docs)

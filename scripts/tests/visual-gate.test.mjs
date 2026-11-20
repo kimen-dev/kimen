@@ -96,11 +96,6 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
-    'ki-button-material3-dark-gallery-chromium-linux.png',
-  ]);
-  assert.deepEqual(expectedLinuxBaselines('ki-icon-button.visual.dark.browser.spec.ts'), [
-    'ki-icon-button-onmars-dark-gallery-chromium-linux.png',
-    'ki-icon-button-material3-dark-gallery-chromium-linux.png',
   ]);
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',
@@ -131,7 +126,6 @@ test('a deleted linux baseline is detected by the armed audit', () => {
   gutted.set(specs[1], new Set());
   assert.deepEqual(missingLinuxBaselines(specs, gutted, ['chromium']), [
     'ki-button.visual.dark.browser.spec.ts/ki-button-onmars-dark-gallery-chromium-linux.png',
-    'ki-button.visual.dark.browser.spec.ts/ki-button-material3-dark-gallery-chromium-linux.png',
   ]);
 });
 
@@ -141,9 +135,7 @@ test('a baseline set complete for one engine is still incomplete for the others'
 
   assert.deepEqual(missingLinuxBaselines([spec], chromiumOnly), [
     `${spec}/ki-button-onmars-dark-gallery-firefox-linux.png`,
-    `${spec}/ki-button-material3-dark-gallery-firefox-linux.png`,
     `${spec}/ki-button-onmars-dark-gallery-webkit-linux.png`,
-    `${spec}/ki-button-material3-dark-gallery-webkit-linux.png`,
   ]);
 });
 

@@ -18,6 +18,12 @@
  */
 import { z } from 'zod';
 
+import {
+  allocateDialogId,
+  DIALOG_TAG,
+  type DialogIdFor,
+  writeDialogId,
+} from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
 import { writeNativeLayout } from './primitives.js';
 import {
@@ -27,9 +33,9 @@ import {
   createNodeElement,
   DEFAULT_RENDER_BUDGETS,
   declaredEvents,
-  hasToggleActivation,
   type GuardState,
   guardNode,
+  hasToggleActivation,
   matchesConstraint,
   payloadBytes,
   pinButtonType,
@@ -45,11 +51,18 @@ import {
 import type {
   Catalog,
   CatalogEntry,
+  NodeValidationScope,
   UiSpecNode,
   ValidationContext,
   ValidationIssue,
 } from './validate.js';
-import { FORBIDDEN_KEYS, ownEntry, toPlainData, validatePlainData } from './validate.js';
+import {
+  checkCommandTargets,
+  FORBIDDEN_KEYS,
+  ownEntry,
+  toPlainData,
+  validatePlainData,
+} from './validate.js';
 
 type Scalar = boolean | number | string;
 
@@ -131,12 +144,7 @@ export interface LiveSurface {
  * The props that are a control's own value channel: once the user changed
  * one (D5), an agent `set` may not overwrite it implicitly.
  */
-const USER_STATE_PROPS: readonly string[] = ['checked', 'open', 'value'];
-const TOGGLE_BUTTON_USER_STATE_PROPS: readonly string[] = [...USER_STATE_PROPS, 'selected'];
-
-function userStateProps(entry: CatalogEntry | undefined): readonly string[] {
-  return hasToggleActivation(entry) ? TOGGLE_BUTTON_USER_STATE_PROPS : USER_STATE_PROPS;
-}
+const USER_STATE_PROPS: ReadonlySet<string> = new Set(['checked', 'open', 'selected', 'value']);
 
 // The interaction events that mark an element's user state as changed, on
 // top of the events its catalog entry declares.
@@ -390,7 +398,11 @@ function domAfter(state: MState, parent: MNode | null, slot: string, from: numbe
 /** Where a batch's ops write: nowhere (validation copy) or the live DOM. */
 interface ApplyContext {
   readonly materialize: (opIndex: number) => MNode;
-  readonly dom: { readonly surface: Element; readonly doc: Document } | null;
+  readonly dom: {
+    readonly surface: Element;
+    readonly doc: Document;
+    readonly dialogIdFor: DialogIdFor;
+  } | null;
   readonly components: Readonly<Record<string, CatalogEntry>>;
   readonly allowUserStateOverride: boolean;
 }
@@ -436,7 +448,7 @@ function heldUserState(
       continue;
     }
     const entry = ownEntry(ctx.components, member.component);
-    for (const name of userStateProps(entry)) {
+    for (const name of USER_STATE_PROPS) {
       const constraint = ownEntry(entry?.props, name);
       if (constraint === undefined) {
         continue;
@@ -583,10 +595,9 @@ function userStateConflict(
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
   const origin = node.origin;
-  const entry = ownEntry(ctx.components, node.component);
-  const constraint = ownEntry(entry?.props, name);
+  const constraint = ownEntry(ownEntry(ctx.components, node.component)?.props, name);
   if (
-    !userStateProps(entry).includes(name) ||
+    !USER_STATE_PROPS.has(name) ||
     origin?.dom === undefined ||
     !origin.touched ||
     constraint === undefined
@@ -659,16 +670,16 @@ function applySet(
     } else {
       defineOwn(node.props, name, value);
     }
-    const element = ctx.dom === null ? undefined : node.dom;
-    if (element === undefined) {
+    const element = node.dom;
+    if (ctx.dom === null || element === undefined) {
       continue;
     }
-    const overriding = force && ctx.allowUserStateOverride && userStateProps(entry).includes(name);
+    const overriding = force && ctx.allowUserStateOverride && USER_STATE_PROPS.has(name);
     const current = ownEntry(node.props, name);
     // A native layout element's props are CSSOM layout (spec 037 D4): the
     // whole layout is re-derived and only changed style properties written.
     if (previous !== current && !writeNativeLayout(element, node.component, node.props)) {
-      writeProp(element, node.component, name, current);
+      writeProp(element, node.component, name, current, ctx.dom.dialogIdFor);
     }
     if (overriding) {
       const live = current ?? ownEntry(entry?.props, name)?.default;
@@ -856,6 +867,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   // catalog and the URL origins are fixed at creation, never per batch.
   const context: ValidationContext = { allowedUrlOrigins: options.allowedUrlOrigins, catalog };
   const live: MState = { ids: new Map(), roots: [] };
+  let dialogIds = new Map<string, string>();
   let revision = 0;
   let cached: LiveSnapshot | null = null;
   // True while a batch is being applied: a component reacting to its own
@@ -888,7 +900,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   const trackUserState = (element: Element, entry: CatalogEntry | undefined, model: MNode) => {
     if (
       entry === undefined ||
-      !userStateProps(entry).some((name) => Object.hasOwn(entry.props, name))
+      ![...USER_STATE_PROPS].some((name) => Object.hasOwn(entry.props, name))
     ) {
       return;
     }
@@ -902,7 +914,12 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   };
 
   /** Builds a validated node into a detached element subtree (FR-005). */
-  const build = (node: UiSpecNode, parent: MNode | null, slot: string): MNode => {
+  const build = (
+    node: UiSpecNode,
+    parent: MNode | null,
+    slot: string,
+    dialogIdFor: DialogIdFor,
+  ): MNode => {
     const element = createNodeElement(doc, node.component);
     const model: MNode = {
       action: node.action,
@@ -916,29 +933,57 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       slots: new Map(),
       touched: false,
     };
-    writeProps(element, node.component, model.props);
+    writeProps(element, node.component, model.props, dialogIdFor);
+    writeDialogId(element, node.id, dialogIdFor);
     const entry = ownEntry(components, node.component);
-    if (node.action !== undefined && onAction !== undefined) {
-      const action = node.action;
-      wireActivation(
-        element,
-        entry,
-        () => model.props,
-        (data) => {
-          const path = pathOf(model);
-          if (path === null) {
-            return;
-          }
-          onAction({
-            action,
-            data,
-            ...(model.id === undefined ? {} : { id: model.id }),
-            path,
-            revision,
-          });
-        },
-      );
+    if (node.component === 'ki-chip') {
+      // Live membership belongs to the patch model. The host can answer the
+      // removal request with a remove operation, with or without a binding.
+      element.addEventListener('ki-remove', (event) => {
+        if (event.target === element) {
+          event.preventDefault();
+        }
+      });
+    } else if (node.component === 'ki-chip-group') {
+      // A chip group moves the actual node. Keep the live default slot in the
+      // same reading order so later placements and action paths use it.
+      element.addEventListener('ki-reorder', (event) => {
+        if (event.target !== element || applying) {
+          return;
+        }
+        const entries = model.slots.get('');
+        if (entries) {
+          const order = new Map<Node, number>(
+            Array.from(element.childNodes, (node, index) => [node, index]),
+          );
+          const indexOf = (entry: MEntry): number =>
+            entry.dom ? (order.get(entry.dom) ?? -1) : -1;
+          entries.sort((left, right) => indexOf(left) - indexOf(right));
+          cached = null;
+        }
+      });
     }
+    const action = node.action;
+    wireActivation(
+      element,
+      entry,
+      () => model.props,
+      action !== undefined && onAction !== undefined
+        ? (data) => {
+            const path = pathOf(model);
+            if (path === null) {
+              return;
+            }
+            onAction({
+              action,
+              data,
+              ...(model.id === undefined ? {} : { id: model.id }),
+              path,
+              revision,
+            });
+          }
+        : undefined,
+    );
     trackUserState(element, entry, model);
     for (const [slotName, children] of Object.entries(node.slots ?? {})) {
       const list: MEntry[] = [];
@@ -947,7 +992,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
         if (typeof child === 'string') {
           list.push({ dom: attachText(element, child, slotName, doc), kind: 'text', text: child });
         } else {
-          const built = build(child, model, slotName);
+          const built = build(child, model, slotName, dialogIdFor);
           if (slotName !== '' && built.dom !== undefined) {
             built.dom.setAttribute('slot', slotName);
           }
@@ -966,7 +1011,11 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     raw: unknown,
     at: string,
   ): { node?: UiSpecNode; diagnostics: RenderDiagnostic[] } => {
-    const report = validatePlainData({ actions, root: raw, version: 1 }, context);
+    // The prospective target can be in another root, or a later op.
+    const report = validatePlainData({ actions, root: raw, version: 1 }, context, {
+      commandTargets: [],
+      ids: new Map(),
+    });
     if (!report.ok || report.spec === undefined) {
       return { diagnostics: report.issues.map((issue) => rebase(issue, `${at}.node`)) };
     }
@@ -983,12 +1032,12 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   /** Validates the resulting state as a whole (FR-004). */
   const validateState = (state: MState): RenderDiagnostic[] => {
     const plain = state.roots.map(toPlain);
-    const ids = new Set<string>();
+    const scope: NodeValidationScope = { commandTargets: [], ids: new Map() };
     const guard: GuardState = { budgets, components, diagnostics: [], nodes: 0 };
     const diagnostics: RenderDiagnostic[] = [];
     plain.forEach((root, index) => {
       const at = `surface[${String(index)}]`;
-      const report = validatePlainData({ actions, root, version: 1 }, context, ids);
+      const report = validatePlainData({ actions, root, version: 1 }, context, scope, at);
       if (!report.ok || report.spec === undefined) {
         diagnostics.push(...report.issues.map((issue) => rebase(issue, at)));
         return;
@@ -1001,6 +1050,10 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     });
     if (diagnostics.length > 0) {
       return diagnostics;
+    }
+    const commandDiagnostics = checkCommandTargets(scope);
+    if (commandDiagnostics.length > 0) {
+      return commandDiagnostics.map(toDiagnostic);
     }
     // The state budgets bind the live MODEL (035 S20): the plain view is
     // only what the validators read, so a view that ever lost a node would
@@ -1159,10 +1212,17 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     }
     // 7. New subtrees built detached first: a component constructor that
     // throws rejects the batch before any attached node changes.
+    const nextDialogIds = new Map<string, string>();
+    for (const [id, node] of shadow.ids) {
+      if (node.component === DIALOG_TAG) {
+        nextDialogIds.set(id, dialogIds.get(id) ?? allocateDialogId(surface));
+      }
+    }
+    const dialogIdFor: DialogIdFor = (id) => nextDialogIds.get(id);
     const built = new Map<number, MNode>();
     try {
       for (const index of nodes.keys()) {
-        built.set(index, build(nodeAt(index), null, ''));
+        built.set(index, build(nodeAt(index), null, '', dialogIdFor));
       }
     } catch {
       return result([
@@ -1175,7 +1235,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     const diverged = applyOps(live, batch.ops, {
       allowUserStateOverride,
       components,
-      dom: { doc, surface },
+      dom: { dialogIdFor, doc, surface },
       materialize: (index) => {
         const node = built.get(index);
         if (node === undefined) {
@@ -1187,6 +1247,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     if (diverged !== null) {
       throw new Error(`live surface: commit diverged from validation at ${diverged.path}`);
     }
+    dialogIds = nextDialogIds;
     revision += 1;
     cached = null;
     return result([]);

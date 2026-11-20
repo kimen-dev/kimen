@@ -158,6 +158,7 @@ describe('renderUiSpec — bound actions fire on the declared activation event',
     );
     const button = rendered('ki-button');
     change(button);
+    change(button, 'ki-change');
     expect(onAction).not.toHaveBeenCalled();
     expect(click(button).defaultPrevented).toBe(true);
     expect(onAction).toHaveBeenCalledTimes(1);
@@ -304,5 +305,67 @@ describe('renderUiSpec — an ambiguous activation event fails closed', () => {
     expect(result.ok).toBe(false);
     expect(result.diagnostics[0]?.rule).toBe('ambiguous-activation-event');
     expect(surface.childNodes).toHaveLength(0);
+  });
+});
+
+describe('chip variant actions', () => {
+  it.each([
+    [{}, 'ki-change'],
+    [{ type: 'assist' }, 'ki-activate'],
+    [{ type: 'input', removable: true }, 'ki-remove'],
+  ] as const)('uses only the event declared for %j', (props, activation) => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    const result = renderUiSpec(
+      {
+        version: 1,
+        actions: ['pick'],
+        root: { component: 'ki-chip', props, action: 'pick', slots: { '': ['Design'] } },
+      },
+      { surface, onAction },
+    );
+    expect(result.ok).toBe(true);
+    const chip = rendered('ki-chip');
+    chip['selected'] = true;
+    for (const event of ['ki-change', 'ki-activate', 'ki-remove']) {
+      if (event !== activation) {
+        change(chip, event);
+      }
+    }
+    expect(onAction).not.toHaveBeenCalled();
+    change(chip, activation);
+    expect(onAction).toHaveBeenCalledTimes(1);
+    expect(onAction.mock.calls[0]?.[0]).toMatchObject({ action: 'pick', data: { selected: true } });
+  });
+
+  it('uses input collection type for a child with no explicit type', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    expect(
+      renderUiSpec(
+        {
+          version: 1,
+          actions: ['pick'],
+          root: {
+            component: 'ki-chip-group',
+            props: { label: 'Recipients', type: 'input' },
+            slots: {
+              '': [
+                {
+                  component: 'ki-chip',
+                  props: { removable: true },
+                  action: 'pick',
+                  slots: { '': ['Ana'] },
+                },
+              ],
+            },
+          },
+        },
+        { surface, onAction },
+      ).ok,
+    ).toBe(true);
+    const chip = rendered('ki-chip');
+    change(chip, 'ki-change');
+    expect(onAction).not.toHaveBeenCalled();
+    change(chip, 'ki-remove');
+    expect(onAction).toHaveBeenCalledTimes(1);
   });
 });

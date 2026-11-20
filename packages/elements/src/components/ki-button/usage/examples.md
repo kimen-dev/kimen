@@ -27,6 +27,18 @@ Use `toggle` for a persistent action. `selected` sets the starting state and eac
 
 Programmatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.
 
+Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
+dialog and invoker share a document or shadow root. The command takes
+precedence over form submission or reset.
+
+```html
+<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
+<ki-dialog id="draft-preview" heading="Draft preview">
+  This draft is visible only to you.
+  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
+</ki-dialog>
+```
+
 Programmatic creation after registration; string attributes and properties are interchangeable:
 
 ```ts

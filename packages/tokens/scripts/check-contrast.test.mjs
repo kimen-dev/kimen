@@ -94,6 +94,23 @@ test('component sweep is generic: any component bg/fg pair, semantic layers and 
   ]);
 });
 
+test('Stat checks every text ink against its single card surface', () => {
+  const names = [
+    '--ki-stat-label-fg',
+    '--ki-stat-value-fg',
+    '--ki-stat-delta-neutral-fg',
+    '--ki-stat-delta-success-fg',
+    '--ki-stat-delta-danger-fg',
+  ];
+  const declarations = new Map(names.map((name) => [name, '#111111']));
+  declarations.set('--ki-stat-bg', '#ffffff');
+
+  assert.deepEqual(
+    componentPairs(declarations),
+    names.map((text) => ({ component: 'stat', text, surface: '--ki-stat-bg', minRatio: 4.5 })),
+  );
+});
+
 test('non-text control cells (radio ring/dot, checkbox mark) require 3:1, text cells 4.5:1', () => {
   const declarations = new Map([
     ['--ki-radio-selected-rest-bg', '#ffffff'],

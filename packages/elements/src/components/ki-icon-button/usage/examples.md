@@ -53,6 +53,15 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 </ki-tooltip>
 ```
 
+An icon button in the dialog footer can dismiss it by ID. The dialog must be
+in the same document or shadow root as the icon button.
+
+```html
+<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+</ki-icon-button>
+```
+
 While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
 
 ```html
