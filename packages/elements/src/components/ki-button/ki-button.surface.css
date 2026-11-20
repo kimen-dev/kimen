@@ -67,6 +67,7 @@
 :host([variant="tertiary"]:is([tone="neutral"], [tone="success"], [tone="danger"])) {
   --_ki-button-rest-shadow: var(--ki-button-tertiary-rest-shadow);
   --_ki-button-hover-shadow: var(--ki-button-tertiary-hover-shadow);
+  --_ki-button-hover-overlay: var(--ki-button-tertiary-hover-overlay);
 }
 
 :host([variant="quaternary"]:is([tone="neutral"], [tone="success"], [tone="danger"])) {
@@ -131,7 +132,6 @@
   --_ki-button-rest-bg: var(--ki-button-tertiary-neutral-rest-bg);
   --_ki-button-rest-fg: var(--ki-button-tertiary-neutral-rest-fg);
   --_ki-button-rest-border: var(--ki-button-tertiary-neutral-rest-border);
-  --_ki-button-hover-overlay: var(--ki-button-tertiary-hover-overlay);
   --_ki-button-hover-bg: var(--ki-button-tertiary-neutral-hover-bg);
   --_ki-button-hover-fg: var(--ki-button-tertiary-neutral-hover-fg);
   --_ki-button-hover-border: var(--ki-button-tertiary-neutral-hover-border);
@@ -209,16 +209,11 @@
   --_ki-button-hover-border: var(--ki-button-ghost-danger-hover-border);
 }
 
-/* Non-glass variants: uniform border (the bottom edge follows the border
-   token through every state — quaternary resolves outline-none, so it draws
-   NO border in any state) and no glass backdrop — `initial` makes the
-   private filter property guaranteed-invalid so backdrop-filter takes its
-   `none` fallback (off the glass path entirely, not blur(0)). Tertiary left
-   this group in the pixel pass: it is a glass variant with the secondary
-   bevel (see above). */
+/* Non-glass variants bypass the backdrop. `initial` makes the private
+   filter property guaranteed-invalid so backdrop-filter takes its `none`
+   fallback (off the glass path entirely, not blur(0)). */
 :host([variant="quaternary"]),
 :host([variant="ghost"]) {
-  --_ki-button-border-bottom: var(--_ki-button-border);
   --_ki-button-backdrop-filter: initial;
 }
 
@@ -343,6 +338,13 @@ button:focus-visible {
   outline-color: var(--ki-button-focus-ring-color);
 }
 
+/* The non-glass bottom edge follows the current border, including while
+   the inner button restores the resting border during a press. */
+:host([variant="quaternary"]) button,
+:host([variant="ghost"]) button {
+  border-block-end-color: var(--_ki-button-border);
+}
+
 /* A group sizes neighboring hit areas up to the density minimum so small
    buttons can sit side by side without overlapping invisible touch targets. */
 :host([data-ki-button-group-member]) button {
@@ -451,15 +453,6 @@ button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
   --_ki-button-overlay: var(--ki-button-primary-active-overlay);
 }
 
-/* The non-glass bottom edge follows the border, but the host resolved that
-   from the HOVER border; re-derive it here from the restored one. */
-:host([variant="quaternary"])
-  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]),
-:host([variant="ghost"])
-  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
-  --_ki-button-border-bottom: var(--_ki-button-border);
-}
-
 /* Micro-motion (pixel pass): the hover lift, the pressed dip and the
    focus-ring fade ease over the fast/out motion tokens. Gated exactly like
    ki-checkbox/ki-switch so the visual harness (which emulates reduced
@@ -482,7 +475,6 @@ button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
    spinner through --_ki-button-spinner-size in its size ramp. */
 button[aria-disabled="true"] {
   cursor: progress;
-  position: relative;
 }
 
 /* The circular ki-progress geometry (D5): a 25-unit arc of the 100-unit

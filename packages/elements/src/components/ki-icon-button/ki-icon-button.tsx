@@ -193,10 +193,10 @@ export class KiIconButton {
    */
   @Prop() expanded?: boolean;
 
-  private button: HTMLButtonElement | undefined;
-
   componentWillLoad(): void {
-    this.warnDeprecatedVariant(this.variant);
+    if (process.env.NODE_ENV === 'development') {
+      this.warnDeprecatedVariant(this.variant);
+    }
   }
 
   @Watch('variant')
@@ -216,7 +216,7 @@ export class KiIconButton {
   @Watch('aria-description')
   @Watch('aria-haspopup')
   protected forwardButtonAria(): void {
-    syncButtonAria(this.host, this.button);
+    syncButtonAria(this.host, this.host.shadowRoot?.querySelector('button'));
   }
 
   // A real browser never dispatches click on a disabled native button, but
@@ -225,16 +225,14 @@ export class KiIconButton {
   // (002 precedent). An aria-disabled (loading) button does dispatch real
   // clicks, for the pointer and for Enter/Space: cancelled the same way (046
   // D3).
-  private readonly handleClick = (event: MouseEvent): void => {
+  readonly #handleClick = (event: MouseEvent): void => {
     if (this.disabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      return;
-    }
-
-    if (this.toggle) {
-      this.selected = !this.selected;
-      this.change.emit({ selected: this.selected });
+    } else if (this.toggle) {
+      const selected = !this.selected;
+      this.selected = selected;
+      this.change.emit({ selected });
     }
   };
 
@@ -243,9 +241,11 @@ export class KiIconButton {
     // native button is type="button" inside the shadow root, so activation
     // can never submit or reset an enclosing form.
     const loading = this.loading && !this.disabled;
-    const pressedState = this.toggle ? this.selected : this.pressed;
-    const pressed = pressedState == null ? undefined : pressedState ? 'true' : 'false';
+    const pressed = this.toggle ? this.selected : this.pressed;
+    const expanded = this.expanded;
     const defaultIcon = <slot key="glyph" />;
+    const { command, commandfor } = this;
+    const onClick = this.#handleClick;
     // The status region is rendered always, empty until the button loads: a
     // polite region created together with its text is not announced (042
     // D6). It sits outside the native button, next to it (046 D7).
@@ -256,30 +256,23 @@ export class KiIconButton {
       <span key="control" class="control">
         <button
           key="button"
-          ref={(el) => {
-            this.button = el;
-          }}
           part="button"
           type="button"
-          {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
-          {...(this.command === undefined ? {} : { command: this.command })}
+          {...(commandfor === undefined ? {} : { commandfor })}
+          {...(command === undefined ? {} : { command })}
           tabIndex={this.disabled ? -1 : 0}
           disabled={this.disabled}
           aria-disabled={loading ? 'true' : undefined}
           aria-label={this.label}
-          aria-pressed={pressed}
-          aria-expanded={this.expanded == null ? undefined : this.expanded ? 'true' : 'false'}
-          onClick={this.handleClick}
+          aria-pressed={pressed == null ? undefined : pressed ? 'true' : 'false'}
+          aria-expanded={expanded == null ? undefined : expanded ? 'true' : 'false'}
+          onClick={onClick}
           onKeyDown={startKeyboardPress}
           onKeyUp={releaseKeyboardPress}
           onBlur={endKeyboardPress}
         >
           <span key="icon" part="icon" aria-hidden="true">
-            {this.toggle && this.selected ? (
-              <slot name="selected">{defaultIcon}</slot>
-            ) : (
-              defaultIcon
-            )}
+            {this.toggle && pressed ? <slot name="selected">{defaultIcon}</slot> : defaultIcon}
           </span>
           {loading ? (
             // The circular ki-progress geometry (015), as in ki-button.
