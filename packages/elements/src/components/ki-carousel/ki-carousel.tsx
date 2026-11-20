@@ -250,7 +250,7 @@ export class KiCarousel {
     viewport.addEventListener('scrollend', this.onScrollEnd);
     viewport.addEventListener('keydown', this.onViewportKey);
     this.refreshSlides();
-    this.resizeObserver ??= new ResizeObserver(this.onScrollEnd);
+    this.resizeObserver ??= new ResizeObserver(this.onResize);
     this.resizeObserver.observe(viewport);
   }
 
@@ -369,7 +369,14 @@ export class KiCarousel {
     const edge = this.leadingEdge();
     const distance = item.getBoundingClientRect()[edge] - viewport.getBoundingClientRect()[edge];
     if (Math.abs(distance) < 0.5) return;
-    viewport.scrollBy(edge === 'top' ? { top: distance, behavior } : { left: distance, behavior });
+    // An absolute target: Firefox resolves a relative scroll against where a
+    // glide still under way will end, not against the offset the distance was
+    // measured from, and overshoots by the part of the glide not yet run.
+    viewport.scrollTo(
+      edge === 'top'
+        ? { top: viewport.scrollTop + distance, behavior }
+        : { left: viewport.scrollLeft + distance, behavior },
+    );
   }
 
   private readonly onScroll = (): void => {
@@ -379,9 +386,10 @@ export class KiCarousel {
     this.scrollTimer = window.setTimeout(this.onScrollEnd, SCROLL_SETTLE_MS);
   };
 
-  private readonly onScrollEnd = (): void => {
+  /** The position whose slide the viewport currently shows, or undefined while it has no size. */
+  private shownPosition(): number | undefined {
     const viewport = this.viewport;
-    if (!viewport?.clientWidth || this.alignAfterRender) return;
+    if (!viewport?.clientWidth) return undefined;
     const edge = this.leadingEdge();
     const origin = viewport.getBoundingClientRect()[edge];
     let closest = this.position;
@@ -399,11 +407,30 @@ export class KiCarousel {
       closest = offset + 1;
       distance = nextDistance;
     }
-    if (closest !== this.position) this.select(closest, 'scroll');
+    return closest;
+  }
+
+  private readonly onScrollEnd = (): void => {
+    if (this.alignAfterRender) return;
+    const shown = this.shownPosition();
+    if (shown === undefined) return;
+    if (shown !== this.position) this.select(shown, 'scroll');
     else {
       this.syncSlides();
       this.restartTimer();
     }
+  };
+
+  // A new size never chooses a slide: only a finished scroll does. The offset
+  // can lag the selection, because a move glides into place over several
+  // frames, and the first observation lands on the first frame after
+  // connection, whatever moved before it. Reading the selection back from that
+  // offset would undo the move, so keep the selection and put its slide back
+  // in place.
+  private readonly onResize = (): void => {
+    if (this.alignAfterRender) return;
+    const shown = this.shownPosition();
+    if (shown !== undefined && shown !== this.position) this.align('instant');
   };
 
   private readonly onViewportKey = (event: KeyboardEvent): void => {

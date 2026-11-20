@@ -194,6 +194,30 @@ it('S4 selects a slide via the API and emits once per effective change', async (
   await expect.poll(() => aligned(host, 2)).toBe(true);
 });
 
+it('S4 keeps the requested slide through a resize that lands while it glides into place', async () => {
+  await browser.emulateReducedMotion('no-preference');
+  try {
+    const host = await mount();
+    const change = vi.fn();
+    host.addEventListener('ki-slide-change', change);
+
+    // The smooth alignment toward slide 2 starts on the next frame, and the
+    // same frame delivers the resize observation, while the viewport offset
+    // still shows slide 1. A freshly connected carousel is in this state for
+    // its first frame: its initial observation lands on whatever moved first.
+    await host.next();
+    host.style.inlineSize = '20rem';
+
+    await expect.poll(() => aligned(host, 2)).toBe(true);
+    expect(host.current).toBe(2);
+    expect(
+      change.mock.calls.map(([event]) => (event as CustomEvent<{ index: number }>).detail),
+    ).toEqual([{ index: 2 }]);
+  } finally {
+    await browser.emulateReducedMotion(null);
+  }
+});
+
 it('S5 activates with Space and leaves focus on the navigation control', async () => {
   const host = await mount();
   const next = part(host, 'next');
