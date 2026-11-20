@@ -18,6 +18,7 @@ import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 import { KiChipSize } from "./components/ki-chip/ki-chip";
 import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
 import { ComboboxFilter } from "./components/ki-combobox/ki-combobox.options";
+import { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -59,6 +60,7 @@ export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 export { KiChipSize } from "./components/ki-chip/ki-chip";
 export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
 export { ComboboxFilter } from "./components/ki-combobox/ki-combobox.options";
+export { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -618,6 +620,54 @@ export namespace Components {
           * @default ''
          */
         "value": string | string[];
+    }
+    /**
+     * Copies text to the clipboard and confirms the result in the same button.
+     * @whenToUse let a person copy a link, identifier, token or code sample. Supply
+     * a direct value or point to a source in the same document or shadow root.
+     * @whenNotToUse submit a form, navigate, or trigger an action with no clipboard
+     * write. Use a button or link for those actions.
+     */
+    interface KiCopyButton {
+        /**
+          * Polite announcement after a successful write. Override for localized interfaces.
+          * @default 'Copied'
+         */
+        "copiedLabel": string;
+        /**
+          * Polite announcement after a failed write or missing source. Override for localized interfaces.
+          * @default "Couldn't copy"
+         */
+        "copyErrorLabel": string;
+        /**
+          * Milliseconds to show feedback after a write settles. Zero keeps the outcome visible until the next result. Invalid values use 1500 ms.
+          * @minimum 0
+          * @default 1500
+         */
+        "feedbackDuration": number;
+        /**
+          * ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+         */
+        "from"?: string;
+        /**
+          * Accessible name for the icon-only control. Visible slot text supplies the name when present.
+          * @default 'Copy'
+         */
+        "label": string;
+        /**
+          * Token-backed button size. Match the size of adjacent controls.
+          * @default 'md'
+         */
+        "size": KiButtonSize1;
+        /**
+          * Exact clipboard text, including whitespace. Supply it when the text is known directly.
+         */
+        "value"?: string;
+        /**
+          * Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.
+          * @default 'ghost'
+         */
+        "variant": KiCopyButtonVariant;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -2158,6 +2208,10 @@ export interface KiComboboxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiComboboxElement;
 }
+export interface KiCopyButtonCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCopyButtonElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -2453,6 +2507,31 @@ declare global {
     var HTMLKiComboboxElement: {
         prototype: HTMLKiComboboxElement;
         new (): HTMLKiComboboxElement;
+    };
+    interface HTMLKiCopyButtonElementEventMap {
+        "ki-copy": { value: string };
+        "ki-copy-error": void;
+    }
+    /**
+     * Copies text to the clipboard and confirms the result in the same button.
+     * @whenToUse let a person copy a link, identifier, token or code sample. Supply
+     * a direct value or point to a source in the same document or shadow root.
+     * @whenNotToUse submit a form, navigate, or trigger an action with no clipboard
+     * write. Use a button or link for those actions.
+     */
+    interface HTMLKiCopyButtonElement extends Components.KiCopyButton, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCopyButtonElementEventMap>(type: K, listener: (this: HTMLKiCopyButtonElement, ev: KiCopyButtonCustomEvent<HTMLKiCopyButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCopyButtonElementEventMap>(type: K, listener: (this: HTMLKiCopyButtonElement, ev: KiCopyButtonCustomEvent<HTMLKiCopyButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCopyButtonElement: {
+        prototype: HTMLKiCopyButtonElement;
+        new (): HTMLKiCopyButtonElement;
     };
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -3244,6 +3323,7 @@ declare global {
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
         "ki-combobox": HTMLKiComboboxElement;
+        "ki-copy-button": HTMLKiCopyButtonElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
@@ -3874,6 +3954,62 @@ declare namespace LocalJSX {
           * @default ''
          */
         "value"?: string | string[];
+    }
+    /**
+     * Copies text to the clipboard and confirms the result in the same button.
+     * @whenToUse let a person copy a link, identifier, token or code sample. Supply
+     * a direct value or point to a source in the same document or shadow root.
+     * @whenNotToUse submit a form, navigate, or trigger an action with no clipboard
+     * write. Use a button or link for those actions.
+     */
+    interface KiCopyButton {
+        /**
+          * Polite announcement after a successful write. Override for localized interfaces.
+          * @default 'Copied'
+         */
+        "copiedLabel"?: string;
+        /**
+          * Polite announcement after a failed write or missing source. Override for localized interfaces.
+          * @default "Couldn't copy"
+         */
+        "copyErrorLabel"?: string;
+        /**
+          * Milliseconds to show feedback after a write settles. Zero keeps the outcome visible until the next result. Invalid values use 1500 ms.
+          * @minimum 0
+          * @default 1500
+         */
+        "feedbackDuration"?: number;
+        /**
+          * ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+         */
+        "from"?: string;
+        /**
+          * Accessible name for the icon-only control. Visible slot text supplies the name when present.
+          * @default 'Copy'
+         */
+        "label"?: string;
+        /**
+          * Fired after a successful clipboard write. The detail carries the exact text copied.
+         */
+        "onKi-copy"?: (event: KiCopyButtonCustomEvent<{ value: string }>) => void;
+        /**
+          * Fired when the source cannot be read or clipboard writing is unavailable or fails.
+         */
+        "onKi-copy-error"?: (event: KiCopyButtonCustomEvent<void>) => void;
+        /**
+          * Token-backed button size. Match the size of adjacent controls.
+          * @default 'md'
+         */
+        "size"?: KiButtonSize1;
+        /**
+          * Exact clipboard text, including whitespace. Supply it when the text is known directly.
+         */
+        "value"?: string;
+        /**
+          * Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.
+          * @default 'ghost'
+         */
+        "variant"?: KiCopyButtonVariant;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -5525,6 +5661,16 @@ declare namespace LocalJSX {
         "resultOneLabel": string;
         "resultCountLabel": string;
     }
+    interface KiCopyButtonAttributes {
+        "value": string;
+        "from": string;
+        "label": string;
+        "variant": KiCopyButtonVariant;
+        "size": KiButtonSize;
+        "feedbackDuration": number;
+        "copiedLabel": string;
+        "copyErrorLabel": string;
+    }
     interface KiCounterAttributes {
         "value": number;
         "max": number;
@@ -5830,6 +5976,7 @@ declare namespace LocalJSX {
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
         "ki-combobox": Omit<KiCombobox, keyof KiComboboxAttributes> & { [K in keyof KiCombobox & keyof KiComboboxAttributes]?: KiCombobox[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `attr:${K}`]?: KiComboboxAttributes[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `prop:${K}`]?: KiCombobox[K] } & OneOf<"label", KiCombobox["label"], KiComboboxAttributes["label"]>;
+        "ki-copy-button": Omit<KiCopyButton, keyof KiCopyButtonAttributes> & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes]?: KiCopyButton[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `attr:${K}`]?: KiCopyButtonAttributes[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `prop:${K}`]?: KiCopyButton[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
@@ -6018,6 +6165,14 @@ declare module "@stencil/core" {
              * @catalogAction change
              */
             "ki-combobox": LocalJSX.IntrinsicElements["ki-combobox"] & JSXBase.HTMLAttributes<HTMLKiComboboxElement>;
+            /**
+             * Copies text to the clipboard and confirms the result in the same button.
+             * @whenToUse let a person copy a link, identifier, token or code sample. Supply
+             * a direct value or point to a source in the same document or shadow root.
+             * @whenNotToUse submit a form, navigate, or trigger an action with no clipboard
+             * write. Use a button or link for those actions.
+             */
+            "ki-copy-button": LocalJSX.IntrinsicElements["ki-copy-button"] & JSXBase.HTMLAttributes<HTMLKiCopyButtonElement>;
             /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an

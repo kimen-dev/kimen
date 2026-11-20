@@ -37,7 +37,11 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  */
 @Component({
   tag: 'ki-icon-button',
-  styleUrls: ['../ki-button/ki-button.surface.css', 'ki-icon-button.css'],
+  styleUrls: [
+    '../ki-button/ki-button.surface.css',
+    '../ki-button/ki-button.surface.legacy.css',
+    'ki-icon-button.css',
+  ],
   shadow: { delegatesFocus: true },
 })
 export class KiIconButton {

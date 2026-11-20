@@ -794,6 +794,72 @@ export const catalogData = {
       "whenNotToUse": "use a select-only control for a short closed set or a plain\ntext field for unrestricted input with no choices.",
       "whenToUse": "choose from a long list of options, let people search an option\nsource, or allow multiple selections that remain visible as tags."
     },
+    "ki-copy-button": {
+      "description": "Copies text to the clipboard and confirms the result in the same button.",
+      "events": {
+        "ki-copy": "Fired after a successful clipboard write. The detail carries the exact text copied."
+      },
+      "props": {
+        "copied-label": {
+          "type": "string",
+          "description": "Polite announcement after a successful write. Override for localized interfaces.",
+          "default": "Copied"
+        },
+        "copy-error-label": {
+          "type": "string",
+          "description": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
+          "default": "Couldn't copy"
+        },
+        "feedback-duration": {
+          "type": "number",
+          "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+          "default": 1500,
+          "minimum": 0
+        },
+        "from": {
+          "type": "string",
+          "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
+          "default": "Copy"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Token-backed button size. Match the size of adjacent controls.",
+          "default": "md"
+        },
+        "value": {
+          "type": "string",
+          "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly."
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "ghost",
+            "primary",
+            "quaternary",
+            "secondary"
+          ],
+          "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
+          "default": "ghost"
+        }
+      },
+      "slots": {
+        "": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
+      },
+      "tag": "ki-copy-button",
+      "whenNotToUse": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions.",
+      "whenToUse": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},

@@ -18,6 +18,7 @@ import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/co
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
 import { defineCustomElement as defineKiCombobox } from '@kimen/elements/components/ki-combobox.js';
+import { defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
@@ -375,6 +376,37 @@ export class KiCombobox {
 export declare interface KiCombobox extends Components.KiCombobox {
   /**
    * Reports a raw text edit in `detail.value`. Listen to it to request remote results.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiCopyButton,
+  inputs: ['copiedLabel', 'copyErrorLabel', 'feedbackDuration', 'from', 'label', 'size', 'value', 'variant']
+})
+@Component({
+  selector: 'ki-copy-button',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['copiedLabel', 'copyErrorLabel', 'feedbackDuration', 'from', 'label', 'size', 'value', 'variant'],
+})
+export class KiCopyButton {
+  protected el: HTMLKiCopyButtonElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCopyButton extends Components.KiCopyButton {
+  /**
+   * Fired after a successful clipboard write. The detail carries the exact text copied.
+   */
+  /**
+   * Fired when the source cannot be read or clipboard writing is unavailable or fails.
    */
 }
 
