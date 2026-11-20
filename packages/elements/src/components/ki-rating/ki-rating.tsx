@@ -122,7 +122,7 @@ export class KiRating {
       const anchor = this.host.shadowRoot?.querySelector('input') ?? undefined;
       this.internals.setValidity(
         { valueMissing: true },
-        this.requiredMessage || this.label || ' ',
+        this.requiredMessage || 'Select a rating.',
         anchor,
       );
     } else {
@@ -149,8 +149,11 @@ export class KiRating {
     return this.disabled || this.formDisabled;
   }
 
-  private format(pattern: string, value: number, max: number): string {
-    return pattern.replaceAll('{value}', String(value)).replaceAll('{max}', String(max));
+  private format(pattern: string | null, fallback: string, value: number, max: number): string {
+    // Stencil delivers null when the attribute that supplied a pattern is removed.
+    return (pattern ?? fallback)
+      .replaceAll('{value}', String(value))
+      .replaceAll('{max}', String(max));
   }
 
   private onChoiceChange = (event: Event): void => {
@@ -201,7 +204,10 @@ export class KiRating {
   }
 
   private renderChoice(value: number, tabStop: number, max: number) {
-    const label = value === 1 ? this.optionSingularLabel : this.optionLabel;
+    const label =
+      value === 1
+        ? this.format(this.optionSingularLabel, '{value} star', value, max)
+        : this.format(this.optionLabel, '{value} stars', value, max);
     return (
       <input
         key={value}
@@ -212,7 +218,7 @@ export class KiRating {
         checked={this.value === value}
         disabled={this.unavailable}
         tabIndex={!this.unavailable && value === tabStop ? 0 : -1}
-        aria-label={this.format(label, value, max)}
+        aria-label={label}
         onInput={this.stopNativeInput}
         onChange={this.onChoiceChange}
         onKeyDown={this.onChoiceKeyDown}
@@ -235,7 +241,7 @@ export class KiRating {
             key="image"
             part="scale"
             role="img"
-            aria-label={this.format(this.ratedLabel, this.value, max)}
+            aria-label={this.format(this.ratedLabel, 'Rated {value} out of {max}', this.value, max)}
             aria-describedby="rating-context"
           >
             <span key="glyphs" class="marks" aria-hidden="true">
@@ -275,7 +281,7 @@ export class KiRating {
             ))}
           </span>
           <span key="score" part="score" aria-hidden="true">
-            {this.format(this.scoreLabel, this.value, max)}
+            {this.format(this.scoreLabel, '{value} of {max}', this.value, max)}
           </span>
         </div>
       </div>

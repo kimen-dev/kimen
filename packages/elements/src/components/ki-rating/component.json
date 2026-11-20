@@ -4,6 +4,6 @@
   "visual": { "material3Dark": true },
   "catalog": true,
   "sizeBudget": {
-    "mcpServer": { "raw": 19539, "gzip": 4261 }
+    "mcpServer": { "raw": 19644, "gzip": 4275 }
   }
 }

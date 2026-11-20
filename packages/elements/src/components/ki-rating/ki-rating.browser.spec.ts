@@ -223,6 +223,21 @@ it('S9 exposes a named radiogroup and checked radio and passes axe', async () =>
   await expectAccessible(fixture);
 });
 
+it('restores default labels when localization attributes are removed', async () => {
+  const { rating } = await mount(
+    `<ki-rating label="Usefulness" value="3" option-label="{value} points" score-label="{value} / {max}"></ki-rating>`,
+    'Usefulness',
+  );
+  await expect.element(radio('3 points')).toBeChecked();
+  await expect.element(page.getByText('3 / 5', { exact: true })).toBeVisible();
+
+  rating.removeAttribute('option-label');
+  rating.removeAttribute('score-label');
+
+  await expect.element(radio('3 stars')).toBeChecked();
+  await expect.element(page.getByText('3 of 5', { exact: true })).toBeVisible();
+});
+
 it('S10 submits one decimal value for each named rating', async () => {
   await mount(
     `<form><ki-rating label="Usefulness" name="usefulness" precision="0.5" value="2.5"></ki-rating>
