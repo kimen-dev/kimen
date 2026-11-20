@@ -190,7 +190,7 @@ jobs:
           # 4.118.0 is the newest wrangler 4.x that has cleared the 7-day
           # minimumReleaseAge this workspace applies to every other package
           # (pnpm-workspace.yaml). Bump it deliberately, in a reviewed commit.
-          wranglerVersion: '4.161.0'
+          wranglerVersion: '4.162.0'
           command: >-
             pages deploy site-dist --project-name=kimen
             --branch=${{ steps.target.outputs.branch }}
