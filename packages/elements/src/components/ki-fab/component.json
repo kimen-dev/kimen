@@ -1,5 +1,8 @@
 {
   "barePage": { "keyboardPressed": false },
   "pointer": { "hoverWitness": true },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpServer": { "raw": 16862 }
+  }
 }

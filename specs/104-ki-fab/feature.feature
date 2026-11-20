@@ -46,6 +46,12 @@ Feature: Floating action button
     Then the FAB sits above the navigation at the bottom right of the viewport
     And the last content item can be reached above the FAB
 
+  # S15
+  Scenario: Turning off scroll collapse restores the label
+    Given an extended FAB compacted by downward scrolling
+    When the page disables collapse on scroll
+    Then the label becomes visible and stays visible during subsequent scrolling
+
   # Family: keyboard path
   # S7
   Scenario Outline: The action button supports native keyboard activation
@@ -101,12 +107,6 @@ Feature: Floating action button
     Given a FAB in compact density on a coarse-pointer screen
     When the FAB appears
     Then its target measures at least 56 by 56 pixels
-
-  # S15
-  Scenario: Turning off scroll collapse restores the label
-    Given an extended FAB compacted by downward scrolling
-    When the page disables collapse on scroll
-    Then the label becomes visible and stays visible during subsequent scrolling
 
   # S16
   Scenario: Forced colors preserve the control and its focus indication

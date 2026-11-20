@@ -59,6 +59,12 @@ Feature: Floating action button
     Then the FAB sits above the navigation at the bottom right of the viewport
     And the last content item can be reached above the FAB
 
+  # S15
+  Scenario: Turning off scroll collapse restores the label
+    Given an extended FAB compacted by downward scrolling
+    When the page disables collapse on scroll
+    Then the label becomes visible and stays visible during subsequent scrolling
+
   # Family: keyboard path
   # S7
   Scenario Outline: The action button supports native keyboard activation
@@ -115,12 +121,6 @@ Feature: Floating action button
     When the FAB appears
     Then its target measures at least 56 by 56 pixels
 
-  # S15
-  Scenario: Turning off scroll collapse restores the label
-    Given an extended FAB compacted by downward scrolling
-    When the page disables collapse on scroll
-    Then the label becomes visible and stays visible during subsequent scrolling
-
   # S16
   Scenario: Forced colors preserve the control and its focus indication
     Given the "Compose" FAB has keyboard focus
@@ -158,3 +158,4 @@ Each item is an agent's choice, pending founder confirmation.
 5. Use the current `surface.s1` alias for the raised variant. The sizes remain constant under coarse pointer and compact density.
 6. Hover follows the issue's elevation step. Optional background imagery stays theme-controlled.
 7. A blank `href` uses the button behavior. A nonempty destination uses native link resolution.
+8. The MCP server's aggregate raw allowance adds the measured 16,862 bytes. With the same dependencies, commit `f3ce33f` built to 2,622,614 raw bytes and the FAB branch built to 2,639,476 raw bytes. The compressed budgets have headroom.
