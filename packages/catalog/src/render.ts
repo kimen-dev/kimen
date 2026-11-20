@@ -1149,3 +1149,4 @@ export function createStreamingRenderer(
     },
   };
 }
+// CI scope probe: this line never lands.
