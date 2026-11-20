@@ -1,0 +1,7 @@
+:host {
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
