@@ -120,20 +120,20 @@ export class KiCarousel {
 
   private items: HTMLElement[] = [];
   private viewport: HTMLElement | undefined;
-  private slot: HTMLSlotElement | undefined;
+  private resizeObserver?: ResizeObserver;
   private motionQuery?: MediaQueryList;
   private rotationTimer?: number;
   private scrollTimer?: number;
   private rotationPointerIntent: boolean | undefined;
   private alignAfterRender = false;
-  private loaded = false;
 
   connectedCallback(): void {
-    if (this.loaded) this.observe();
+    this.observe();
   }
 
   componentDidLoad(): void {
-    this.loaded = true;
+    this.viewport =
+      this.host.shadowRoot?.querySelector<HTMLElement>('[part=viewport]') ?? undefined;
     this.observe();
   }
 
@@ -144,6 +144,7 @@ export class KiCarousel {
   }
 
   disconnectedCallback(): void {
+    this.resizeObserver?.disconnect();
     this.viewport?.removeEventListener('scrollend', this.onScrollEnd);
     this.viewport?.removeEventListener('keydown', this.onViewportKey);
     this.motionQuery?.removeEventListener('change', this.onMotionChange);
@@ -161,7 +162,7 @@ export class KiCarousel {
   @Watch('layout')
   @Watch('slidesPerView')
   protected layoutChanged(): void {
-    if (!this.loaded) return;
+    if (!this.viewport) return;
     this.alignAfterRender = true;
     this.select(this.current, 'layout');
   }
@@ -240,36 +241,36 @@ export class KiCarousel {
     return this.wantsRotation && !this.hovered && !this.reducedMotion;
   }
 
-  private readonly setViewport = (element?: HTMLElement): void => {
-    this.viewport = element;
-  };
-
-  private readonly setSlot = (element?: HTMLSlotElement): void => {
-    this.slot = element;
-  };
-
   private observe(): void {
+    const viewport = this.viewport;
+    if (!viewport) return;
     this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.motionQuery.addEventListener('change', this.onMotionChange);
     this.onMotionChange();
-    this.viewport?.addEventListener('scrollend', this.onScrollEnd);
-    this.viewport?.addEventListener('keydown', this.onViewportKey);
+    viewport.addEventListener('scrollend', this.onScrollEnd);
+    viewport.addEventListener('keydown', this.onViewportKey);
     this.refreshSlides();
+    this.resizeObserver ??= new ResizeObserver(this.onScrollEnd);
+    this.resizeObserver.observe(viewport);
   }
 
   private readonly refreshSlides = (): void => {
-    if (!this.loaded) return;
-    const items = (this.slot?.assignedElements() ?? []).filter(
-      (element): element is HTMLElement =>
-        element instanceof HTMLElement && element.localName === ITEM_TAG,
-    );
+    const slot = this.viewport?.querySelector('slot');
+    if (!slot) return;
+    const items = slot
+      .assignedElements()
+      .filter(
+        (element): element is HTMLElement =>
+          element instanceof HTMLElement && element.localName === ITEM_TAG,
+      );
     for (const item of this.items) {
       if (items.includes(item) || item.parentElement?.localName === this.host.localName) continue;
-      item.removeAttribute('role');
-      item.removeAttribute('aria-roledescription');
-      item.removeAttribute('aria-label');
+      item.role = null;
+      item.ariaRoleDescription = null;
+      item.ariaLabel = null;
       item.removeAttribute('data-ki-carousel-size');
       item.inert = false;
+      item.ariaHidden = null;
     }
     const previousCount = this.count;
     this.items = items;
@@ -314,9 +315,11 @@ export class KiCarousel {
       const visible = index >= this.position && index < upper;
       if (!visible && item.matches(':focus-within')) this.viewport?.focus({ preventScroll: true });
       item.inert = !visible;
-      item.setAttribute('role', 'group');
-      item.setAttribute('aria-roledescription', this.slideRoleDescription);
-      item.setAttribute('aria-label', this.positionText(index));
+      // DOM-based accessibility queries do not all account for inert.
+      item.ariaHidden = visible ? null : 'true';
+      item.role = 'group';
+      item.ariaRoleDescription = this.slideRoleDescription;
+      item.ariaLabel = this.positionText(index);
       item.dataset.kiCarouselSize = this.sizeAt(index);
     }
     if (this.viewport) this.viewport.dataset.endSize = this.sizeAt(this.count);
@@ -333,12 +336,10 @@ export class KiCarousel {
     this.syncSlides();
 
     if (source !== 'initial' && source !== 'layout') {
-      if (source !== 'scroll' || changed) {
-        const layout = this.arrangement;
-        const stableWidths = layout === 'single' || layout === 'full-screen';
-        const instant = this.reducedMotion || !stableWidths || source === 'scroll';
-        this.align(instant ? 'instant' : 'smooth');
-      }
+      const layout = this.arrangement;
+      const stableWidths = layout === 'single' || layout === 'full-screen';
+      const instant = this.reducedMotion || !stableWidths || source === 'scroll';
+      this.align(instant ? 'instant' : 'smooth');
     }
 
     if (changed && source !== 'initial' && this.count) {
@@ -380,7 +381,7 @@ export class KiCarousel {
 
   private readonly onScrollEnd = (): void => {
     const viewport = this.viewport;
-    if (!viewport) return;
+    if (!viewport?.clientWidth || this.alignAfterRender) return;
     const edge = this.leadingEdge();
     const origin = viewport.getBoundingClientRect()[edge];
     let closest = this.position;
@@ -399,7 +400,10 @@ export class KiCarousel {
       distance = nextDistance;
     }
     if (closest !== this.position) this.select(closest, 'scroll');
-    else this.restartTimer();
+    else {
+      this.syncSlides();
+      this.restartTimer();
+    }
   };
 
   private readonly onViewportKey = (event: KeyboardEvent): void => {
@@ -515,13 +519,12 @@ export class KiCarousel {
         )}
         <div
           part="viewport"
-          ref={this.setViewport}
           data-layout={this.arrangement}
           style={{ '--_ki-carousel-view': String(this.view) }}
           tabIndex={this.limit > 1 ? 0 : -1}
           onScroll={this.onScroll}
         >
-          <slot ref={this.setSlot} onSlotchange={this.refreshSlides} />
+          <slot onSlotchange={this.refreshSlides} />
         </div>
         {(pagination || (this.navigation && this.count > 1)) && (
           <div part="controls">

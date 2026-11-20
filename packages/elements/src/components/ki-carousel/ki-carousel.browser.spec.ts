@@ -151,7 +151,7 @@ it('S2 wraps in both directions across the endpoints', async () => {
   expect(host.current).toBe(3);
 });
 
-it('S3 tracks native viewport scrolling and synchronizes the indicator', async () => {
+it('S3 tracks native viewport scrolling and keeps the exposed slide through resize', async () => {
   const host = await mount();
   const viewport = part(host, 'viewport');
   const offset =
@@ -162,6 +162,21 @@ it('S3 tracks native viewport scrolling and synchronizes the indicator', async (
   await expect.poll(() => aligned(host, 2)).toBe(true);
   await expect.element(page.getByRole('img', { name: 'Slide position, 2 / 3' })).toBeVisible();
   expect(host.current).toBe(2);
+
+  const afterScroll = await browser.ariaSnapshot('#carousel-under-test');
+  expect(afterScroll).toContain('group "2 of 3"');
+  expect(afterScroll).not.toContain('group "1 of 3"');
+
+  host.style.inlineSize = '12rem';
+  await expect.poll(() => aligned(host, 2)).toBe(true);
+
+  const afterResize = await browser.ariaSnapshot('#carousel-under-test');
+  expect(afterResize).toContain('group "2 of 3"');
+  expect(afterResize).not.toContain('group "1 of 3"');
+  expect(afterResize).not.toContain('group "3 of 3"');
+  expect(slide(host, 1).inert).toBe(true);
+  expect(slide(host, 2).inert).toBe(false);
+  expect(slide(host, 3).inert).toBe(true);
 });
 
 it('S4 selects a slide via the API and emits once per effective change', async () => {
@@ -198,6 +213,7 @@ it('S6 exposes a named carousel and only the visible slide, without axe violatio
   expect(tree).toContain('region "Highlights"');
   expect(tree).toContain('group "1 of 3"');
   expect(tree).not.toContain('group "2 of 3"');
+  expect(tree).not.toContain('group "3 of 3"');
   expect(host.getAttribute('aria-roledescription')).toBe('carousel');
   expect(slide(host, 2).inert).toBe(true);
   await expectAccessible(fixture);
