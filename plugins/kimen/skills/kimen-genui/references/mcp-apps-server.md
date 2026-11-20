@@ -107,8 +107,9 @@ server.registerTool(
   fonts and colours are not.
 - The stock document registers the whole catalog and one icon
   (`circle-check`); it is large (over 1 MB raw), so hosts cache it.
-- Supported revision: MCP Apps `2026-01-26`. A host that negotiates another
-  revision shows only the text fallback.
+- Supported revision: MCP Apps `2026-01-26`. Under a host that negotiates
+  another revision the surface stays empty; the model still gets the text
+  result.
 - No production host has been verified by Kimen's CI yet; test in your
   target host (for example Claude Desktop or claude.ai with a custom
   connector) before you rely on it.

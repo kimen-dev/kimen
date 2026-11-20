@@ -123,9 +123,9 @@ followed by JSON; read it as data.
   Card, TextField, …); the rest of the Kimen catalog is not reachable through
   A2UI yet. User input does not flow back into the A2UI data model, and every
   update re-renders the whole surface.
-- **MCP Apps** support is pinned to the `2026-01-26` revision; a host that
-  negotiates another revision gets no surface (the tool's text outline still
-  shows).
+- **MCP Apps** support is pinned to the `2026-01-26` revision; under a host
+  that negotiates another revision the surface stays empty, and only the
+  tool's text result reaches the model.
 - Packages are pre-1.0. If `@kimen/*` does not resolve from npm, link them
   from a repository build (`references/install-from-source.md` in the
   `kimen-components` skill).
