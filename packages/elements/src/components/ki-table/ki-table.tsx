@@ -16,6 +16,7 @@ import {
   booleanFromAttributePresence,
   observeAttributePresence,
 } from '../../utils/boolean-presence';
+import tableStyles from './ki-table.css';
 import { TableSelection } from './ki-table.selection';
 import { nextSortDirection } from './ki-table.sort';
 
@@ -32,6 +33,7 @@ export interface KiTableSelectionDetail {
 }
 
 const booleanAttributes = ['selectable', 'sticky-header', 'loading'] as const;
+const styledRoots = new WeakSet<Document | ShadowRoot>();
 
 interface SortControl {
   button: HTMLButtonElement;
@@ -54,7 +56,6 @@ interface SortControl {
  */
 @Component({
   tag: 'ki-table',
-  styleUrl: 'ki-table.css',
 })
 export class KiTable {
   @Element() private readonly host!: HTMLElement;
@@ -108,6 +109,15 @@ export class KiTable {
   private frameLabel: string | undefined;
 
   connectedCallback(): void {
+    // Adopt the component's static CSS into the native table's root. A
+    // runtime-injected style element is blocked by hash-only policies.
+    const root = this.host.getRootNode() as Document | ShadowRoot;
+    if (!styledRoots.has(root)) {
+      const sheet = new CSSStyleSheet();
+      sheet.replaceSync(tableStyles());
+      root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+      styledRoots.add(root);
+    }
     this.selectable = booleanFromAttributePresence(
       this.selectable,
       this.host.hasAttribute('selectable'),
@@ -139,6 +149,11 @@ export class KiTable {
       this.syncFrame();
     });
     this.resize.observe(this.host);
+    this.sync();
+  }
+
+  componentWillLoad(): void {
+    // Attribute writes in the mounting turn can precede Stencil's watchers.
     this.sync();
   }
 
@@ -205,6 +220,29 @@ export class KiTable {
   protected changeSelection(event: Event): void {
     const keys = this.selection.change(event.target);
     if (keys) this.kiSelectionChange.emit({ keys });
+  }
+
+  @Listen('keydown')
+  protected scrollFrame(event: KeyboardEvent): void {
+    const { host } = this;
+    if (
+      event.defaultPrevented ||
+      event.composedPath()[0] !== host ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') ||
+      host.scrollWidth <= host.clientWidth
+    ) {
+      return;
+    }
+
+    // WebKit may focus the frame without panning it on horizontal arrows.
+    const before = host.scrollLeft;
+    const direction = event.key === 'ArrowLeft' ? -1 : 1;
+    host.scrollBy({ left: (direction * host.clientWidth) / 4, behavior: 'instant' });
+    if (host.scrollLeft !== before) event.preventDefault();
   }
 
   private syncSort(head: HTMLTableSectionElement | null): void {

@@ -90,23 +90,23 @@ export class TableSelection {
 
   private prepare(row: HTMLTableRowElement, isHeader: boolean, key?: string): SelectionCell {
     const previous = this.cells.get(row);
-    const tag = isHeader ? 'th' : 'td';
-    if (previous?.key === key && previous?.cell.localName === tag) {
+    const withCheckbox = isHeader || key !== undefined;
+    if (previous && previous.key === key && Boolean(previous.checkbox) === withCheckbox) {
       if (row.firstElementChild !== previous.cell) row.prepend(previous.cell);
       return previous;
     }
     if (previous) this.remove(row, previous);
 
-    const cell = document.createElement(tag);
+    // The bulk cell contains a control and leaves headings to the data columns.
+    const cell = document.createElement('td');
     cell.className = 'ki-table-selection';
-    if (isHeader) cell.scope = 'col';
 
     const control: SelectionCell = {
       cell,
       key,
       originalSelected: row.getAttribute('aria-selected'),
     };
-    if (key || isHeader) {
+    if (withCheckbox) {
       const checkbox = document.createElement(checkboxTag);
       checkbox.setAttribute('size', 'sm');
       // Selection control state is independent of any ancestor form.

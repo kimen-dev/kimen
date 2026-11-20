@@ -3,7 +3,7 @@
   "pointer": { "hoverWitness": false },
   "catalog": true,
   "sizeBudget": {
-    "mcpApps": { "raw": 17616, "gzip": 4903, "brotli": 3798 },
-    "mcpServer": { "raw": 25772, "gzip": 6430, "brotli": 4566 }
+    "mcpApps": { "raw": 18130, "gzip": 5061, "brotli": 3887 },
+    "mcpServer": { "raw": 26286, "gzip": 6626, "brotli": 4371 }
   }
 }

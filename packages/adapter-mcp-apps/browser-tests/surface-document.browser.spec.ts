@@ -269,10 +269,14 @@ describe('the delivered document is a complete Kimen surface', () => {
       return definition === undefined || !(element instanceof definition);
     });
     expect(unregistered).toEqual([]);
-    // Every definition rendered its own tree under the document's policy.
+    // Shadow components render their own tree. Table styles its host in light DOM.
+    const shadowTags = tags.filter((tag) => tag !== 'ki-table');
     await expect
-      .poll(() => tags.filter((tag) => view.document.querySelector(tag)?.shadowRoot == null))
+      .poll(() => shadowTags.filter((tag) => view.document.querySelector(tag)?.shadowRoot == null))
       .toEqual([]);
+    const table = view.document.querySelector('ki-card > ki-table');
+    if (!table) throw new Error('The guarded surface did not render the Table host');
+    await expect.poll(() => view.getComputedStyle(table).overflowX).toBe('auto');
     await expect
       .poll(() => view.document.querySelector('ki-icon')?.shadowRoot?.querySelector('svg path'))
       .toBeInstanceOf(view.SVGPathElement);

@@ -7211,6 +7211,11 @@
           "event": "change",
           "capture": false,
           "passive": false
+        },
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
         }
       ],
       "styles": [],
