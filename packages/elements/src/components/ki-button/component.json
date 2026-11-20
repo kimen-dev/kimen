@@ -5,5 +5,10 @@
   "pointer": {
     "hoverWitness": true
   },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 15890
+    }
+  }
 }

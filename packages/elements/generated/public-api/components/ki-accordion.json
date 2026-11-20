@@ -1,0 +1,113 @@
+{
+  "component": {
+    "attributes": {
+      "exclusive": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the accordion allows at most one direct member to be open.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-accordion-divider-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the separator between accordion rows.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-details-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of the disclosure frame and accordion separators.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-details-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the disclosure or accordion frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-details-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corners of a standalone disclosure or the accordion frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A set of native disclosure panels with a shared frame.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "group": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The frame around the disclosure rows.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "exclusive": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the accordion allows at most one direct member to be open.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct ki-details members in reading order.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-accordion.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-accordion.d.ts",
+    "symbols": {
+      "KiAccordion": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiAccordion extends Components.KiAccordion, HTMLElement {\n}\nexport const KiAccordion: {\n    prototype: KiAccordion;\n    new (): KiAccordion;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-accordion.js"
+  }
+}

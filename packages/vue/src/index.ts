@@ -5,6 +5,7 @@
  * Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+export { KiAccordion } from './ki-accordion.js';
 export { KiAiLabel } from './ki-ai-label.js';
 export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
@@ -25,6 +26,7 @@ export { KiConfirmation } from './ki-confirmation.js';
 export { KiConversation } from './ki-conversation.js';
 export { KiCopyButton } from './ki-copy-button.js';
 export { KiCounter } from './ki-counter.js';
+export { KiDetails } from './ki-details.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
 export { KiEmptyState } from './ki-empty-state.js';
@@ -46,7 +48,6 @@ export { KiMenuGroup } from './ki-menu-group.js';
 export { KiMenuItem } from './ki-menu-item.js';
 export { KiMessage } from './ki-message.js';
 export { KiNote } from './ki-note.js';
-export { KiNumberInput } from './ki-number-input.js';
 export { KiOption } from './ki-option.js';
 export { KiPopover } from './ki-popover.js';
 export { KiProgress } from './ki-progress.js';

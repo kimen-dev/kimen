@@ -6,6 +6,84 @@
   },
   "components": [
     {
+      "filePath": "src/components/ki-accordion/ki-accordion.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-accordion",
+      "docs": "A set of native disclosure panels with a shared frame.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "group related FAQ answers, settings or expandable sections.\nEnable exclusive when readers benefit from one open section at a time."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "switch between views or make the panels advance a workflow."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-details members in reading order."
+        },
+        {
+          "name": "part",
+          "text": "group - The frame around the disclosure rows."
+        }
+      ],
+      "usage": {
+        "examples": "### Workspace FAQ\n\nGroup direct disclosure children. Set `exclusive` when readers should see\none answer at a time.\n\n```html\n<ki-accordion exclusive>\n  <ki-details open summary=\"Who can see my workspace?\">\n    Only people you invite can see it.\n  </ki-details>\n  <ki-details summary=\"Can I export my data?\">\n    Open Settings, then select Data and Export.\n  </ki-details>\n</ki-accordion>\n```\n"
+      },
+      "props": [
+        {
+          "name": "exclusive",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "exclusive",
+          "reflectToAttr": true,
+          "docs": "Whether the accordion allows at most one direct member to be open.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-details members in reading order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The frame around the disclosure rows."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-ai-label/ki-ai-label.tsx",
       "encapsulation": "shadow",
       "tag": "ki-ai-label",
@@ -1559,11 +1637,11 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
         },
         {
           "name": "whenNotToUse",
-          "text": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress)."
+          "text": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress)."
         },
         {
           "name": "slot",
@@ -1591,7 +1669,7 @@
         }
       ],
       "usage": {
-        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\nIn momentary mode `type` defaults to `submit`. Use `type=\"button\"` for an independent action inside a form.\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nUse `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.\n\n```html\n<ki-button id=\"pin\" variant=\"outline\" toggle selected>Pin</ki-button>\n<script type=\"module\">\n  const button = document.getElementById('pin');\n  button.addEventListener('ki-change', ({ detail: { selected } }) => {\n    console.log('Pinned', selected);\n  });\n</script>\n```\n\nProgrammatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
       },
       "props": [
         {
@@ -1786,6 +1864,35 @@
           "setter": false
         },
         {
+          "name": "selected",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "selected",
+          "reflectToAttr": true,
+          "docs": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "size",
           "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
           "complexType": {
@@ -1838,6 +1945,35 @@
           "setter": false
         },
         {
+          "name": "toggle",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "toggle",
+          "reflectToAttr": true,
+          "docs": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "tone",
           "type": "\"danger\" | \"neutral\" | \"success\"",
           "complexType": {
@@ -1854,7 +1990,7 @@
           "mutable": false,
           "attr": "tone",
           "reflectToAttr": true,
-          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "docsTags": [
             {
               "name": "default",
@@ -1898,7 +2034,7 @@
           "mutable": false,
           "attr": "type",
           "reflectToAttr": true,
-          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "docsTags": [
             {
               "name": "default",
@@ -1953,10 +2089,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
           "complexType": {
             "original": "KiButtonVariant",
-            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
             "references": {
               "KiButtonVariant": {
                 "location": "local",
@@ -1968,7 +2104,7 @@
           "mutable": false,
           "attr": "variant",
           "reflectToAttr": true,
-          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "docsTags": [
             {
               "name": "default",
@@ -1983,6 +2119,10 @@
           "values": [
             {
               "value": "ghost",
+              "type": "string"
+            },
+            {
+              "value": "outline",
               "type": "string"
             },
             {
@@ -2009,7 +2149,22 @@
         }
       ],
       "methods": [],
-      "events": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "{ selected: boolean; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ selected: boolean }",
+            "resolved": "{ selected: boolean; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted after toggle activation with the new selected state.",
+          "docsTags": []
+        }
+      ],
       "listeners": [],
       "styles": [],
       "slots": [
@@ -5906,10 +6061,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
+          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\"",
           "complexType": {
             "original": "KiCopyButtonVariant",
-            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
+            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\"",
             "references": {
               "KiCopyButtonVariant": {
                 "location": "local",
@@ -5932,6 +6087,10 @@
           "values": [
             {
               "value": "ghost",
+              "type": "string"
+            },
+            {
+              "value": "outline",
               "type": "string"
             },
             {
@@ -6229,6 +6388,191 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-details/ki-details.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-details",
+      "docs": "A native disclosure for supporting information that can stay collapsed.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "hide the primary action or information needed to complete a task.\nFor script-free HTML, author native details and summary directly."
+        },
+        {
+          "name": "slot",
+          "text": "summary - Rich summary text or an authored heading, replacing the summary prop."
+        },
+        {
+          "name": "slot",
+          "text": "- Content shown when the disclosure is open."
+        }
+      ],
+      "usage": {
+        "examples": "### Workspace permissions\n\nUse one disclosure for an explanation the reader can reveal on demand.\nUse the plain `summary` prop for text or a heading in the `summary` slot.\nThe default slot contains the answer.\n\n```html\n<ki-details summary=\"Who can see my workspace?\">\n  <p>Only people you invite can see it.</p>\n</ki-details>\n```\n\nListen for `ki-toggle` on the disclosure to read `event.detail.open`.\nIn a catalog surface, bind the action to the individual Details node.\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disables summary activation. The page can still set open.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Nonempty name for exclusive disclosures in the same document or shadow root.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the panel is open. Native changes reflect back to this property.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "summary",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "summary",
+          "reflectToAttr": false,
+          "docs": "Plain label for the control. Supply the summary slot for a rich label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-toggle",
+          "detail": "KiDetailsToggleDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiDetailsToggleDetail",
+            "resolved": "KiDetailsToggleDetail",
+            "references": {
+              "KiDetailsToggleDetail": {
+                "location": "local",
+                "path": "src/components/ki-details/ki-details.tsx",
+                "id": "src/components/ki-details/ki-details.tsx::KiDetailsToggleDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted when the native disclosure toggles or an exclusive peer closes it.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Content shown when the disclosure is open."
+        },
+        {
+          "name": "summary",
+          "docs": "Rich summary text or an authored heading, replacing the summary prop."
+        }
+      ],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-details": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
@@ -8259,10 +8603,10 @@
         "ki-breadcrumb",
         "ki-combobox",
         "ki-copy-button",
+        "ki-details",
         "ki-empty-state",
         "ki-fab",
         "ki-message",
-        "ki-number-input",
         "ki-stat",
         "ki-stepper",
         "ki-table"
@@ -8281,6 +8625,9 @@
         "ki-copy-button": [
           "ki-icon"
         ],
+        "ki-details": [
+          "ki-icon"
+        ],
         "ki-empty-state": [
           "ki-icon"
         ],
@@ -8288,9 +8635,6 @@
           "ki-icon"
         ],
         "ki-message": [
-          "ki-icon"
-        ],
-        "ki-number-input": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -8312,15 +8656,19 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
+          "text": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. Enable `toggle` for persistent actions such as\nBookmark. While the action it started is in progress, set `loading`."
         },
         {
           "name": "whenNotToUse",
-          "text": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
+          "text": "whenever a visible label fits (use ki-button),\nnavigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
         },
         {
           "name": "slot",
           "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+        },
+        {
+          "name": "slot",
+          "text": "selected - Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
         },
         {
           "name": "slot",
@@ -8340,7 +8688,7 @@
         }
       ],
       "usage": {
-        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
+        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`). In the original momentary variants, `tone` (default `neutral`) carries semantic intent such as success or danger.\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nAdd `toggle` for an action such as Bookmark that stays pressed until the next activation. `variant=\"outline\"` uses an outline at rest and a fill when selected. Give the pressed version a decorative icon in the `selected` slot.\n\n```html\n<ki-icon-button toggle variant=\"outline\" label=\"Bookmark\">\n  <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" stroke=\"currentColor\" stroke-width=\"2\" />\n  </svg>\n  <svg slot=\"selected\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" />\n  </svg>\n</ki-icon-button>\n```\n\nWith an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
       },
       "props": [
         {
@@ -8568,7 +8916,7 @@
           "mutable": false,
           "attr": "pressed",
           "reflectToAttr": false,
-          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
+          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action.",
           "docsTags": [],
           "values": [
             {
@@ -8579,6 +8927,35 @@
             }
           ],
           "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "selected",
+          "reflectToAttr": true,
+          "docs": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
           "required": false,
           "getter": false,
           "setter": false
@@ -8636,6 +9013,35 @@
           "setter": false
         },
         {
+          "name": "toggle",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "toggle",
+          "reflectToAttr": true,
+          "docs": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "tone",
           "type": "\"danger\" | \"neutral\" | \"success\"",
           "complexType": {
@@ -8652,7 +9058,7 @@
           "mutable": false,
           "attr": "tone",
           "reflectToAttr": true,
-          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "docsTags": [
             {
               "name": "default",
@@ -8681,10 +9087,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
           "complexType": {
             "original": "KiIconButtonVariant",
-            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
             "references": {
               "KiIconButtonVariant": {
                 "location": "local",
@@ -8696,7 +9102,7 @@
           "mutable": false,
           "attr": "variant",
           "reflectToAttr": true,
-          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "docsTags": [
             {
               "name": "default",
@@ -8711,6 +9117,10 @@
           "values": [
             {
               "value": "ghost",
+              "type": "string"
+            },
+            {
+              "value": "outline",
               "type": "string"
             },
             {
@@ -8737,7 +9147,22 @@
         }
       ],
       "methods": [],
-      "events": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "{ selected: boolean; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ selected: boolean }",
+            "resolved": "{ selected: boolean; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted after toggle activation with the new selected state.",
+          "docsTags": []
+        }
+      ],
       "listeners": [],
       "styles": [],
       "slots": [
@@ -8748,6 +9173,10 @@
         {
           "name": "counter",
           "docs": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
+        },
+        {
+          "name": "selected",
+          "docs": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
         }
       ],
       "parts": [
@@ -11421,628 +11850,6 @@
       "dependencyGraph": {
         "ki-confirmation": [
           "ki-note"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-number-input/ki-number-input.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-number-input",
-      "docs": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue."
-        },
-        {
-          "name": "part",
-          "text": "label - Visible name of the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "field - Enclosure around the editor, unit and stepper buttons."
-        },
-        {
-          "name": "part",
-          "text": "input - Native text editor carrying the spinbutton role."
-        },
-        {
-          "name": "part",
-          "text": "unit - Visible unit referenced by the spinbutton's description."
-        },
-        {
-          "name": "part",
-          "text": "decrease - Button that subtracts one step."
-        },
-        {
-          "name": "part",
-          "text": "increase - Button that adds one step."
-        },
-        {
-          "name": "part",
-          "text": "help - Help message associated with the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "error - Polite validation feedback associated with the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "status - Polite feedback explaining a value adjustment."
-        },
-        {
-          "name": "event",
-          "text": "change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-number-input examples\n\n## Quantity with bounds\n\n```html\n<ki-number-input label=\"Seats\" name=\"seats\" value=\"3\" min=\"1\" max=\"50\" steppers required></ki-number-input>\n```\n\n## Plain field with a unit\n\n```html\n<ki-number-input label=\"Timeout\" name=\"timeout\" value=\"30\" unit=\"seconds\" min=\"0\"></ki-number-input>\n```\n\nThe form submits `timeout=30`.\n\n## Percentage with localized editing\n\n```html\n<ki-number-input\n  lang=\"de-DE\"\n  label=\"Discount\"\n  name=\"discount\"\n  min=\"0\"\n  max=\"1\"\n  step=\"0.005\"\n  value=\"0.125\"\n  format='{\"style\":\"percent\",\"maximumFractionDigits\":1}'\n></ki-number-input>\n```\n\nThe editor displays `12,5` while focused and formats it as a percentage on\nblur. The form submits `discount=0.125`.\n\n## Custom-elements entry point\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-number-input';\n\ndefineCustomElement();\nconst discount = document.querySelector('ki-number-input[name=\"discount\"]');\nif (discount) {\n  discount.format = { style: 'percent', maximumFractionDigits: 1 };\n}\n```\n"
-      },
-      "props": [
-        {
-          "name": "decreaseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "decrease-label",
-          "reflectToAttr": false,
-          "docs": "Stepper's accessible name. The field label replaces {label}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Decrease {label}'"
-            }
-          ],
-          "default": "'Decrease {label}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Prevents editing and excludes the control from form submission.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "errorText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "error-text",
-          "reflectToAttr": false,
-          "docs": "Validation hint to show when the entry fails a constraint.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "format",
-          "type": "NumberFormatOptions | undefined",
-          "complexType": {
-            "original": "Intl.NumberFormatOptions | undefined",
-            "resolved": "NumberFormatOptions | undefined",
-            "references": {
-              "Intl": {
-                "location": "global",
-                "id": "global::Intl"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "format",
-          "reflectToAttr": false,
-          "docs": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
-          "docsTags": [
-            {
-              "name": "attributeType",
-              "text": "string"
-            }
-          ],
-          "values": [
-            {
-              "type": "NumberFormatOptions"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": true,
-          "setter": true
-        },
-        {
-          "name": "helpText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "help-text",
-          "reflectToAttr": false,
-          "docs": "Context or instructions displayed beneath the field when it has no visible error.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "increaseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "increase-label",
-          "reflectToAttr": false,
-          "docs": "Stepper's accessible name. The field label replaces {label}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Increase {label}'"
-            }
-          ],
-          "default": "'Increase {label}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "invalidNumberMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "invalid-number-message",
-          "reflectToAttr": false,
-          "docs": "Default validation message for text that cannot be read as a number.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Enter a number.'"
-            }
-          ],
-          "default": "'Enter a number.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Visible accessible name. Supply a meaningful label in the page language.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "max",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max",
-          "reflectToAttr": false,
-          "docs": "Maximum permitted numeric value. Omit for an unbounded maximum.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "maximumMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "maximum-message",
-          "reflectToAttr": false,
-          "docs": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Value adjusted to the maximum of {value}.'"
-            }
-          ],
-          "default": "'Value adjusted to the maximum of {value}.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "min",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "min",
-          "reflectToAttr": false,
-          "docs": "Minimum permitted numeric value. Omit for an unbounded minimum.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "minimumMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "minimum-message",
-          "reflectToAttr": false,
-          "docs": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Value adjusted to the minimum of {value}.'"
-            }
-          ],
-          "default": "'Value adjusted to the minimum of {value}.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Form-data key for the plain numeric value.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required",
-          "reflectToAttr": true,
-          "docs": "Whether the user must enter a number before submitting the form.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "step",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "step",
-          "reflectToAttr": false,
-          "docs": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "steppers",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "steppers",
-          "reflectToAttr": false,
-          "docs": "Shows named decrease and increase buttons inside the field.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "unit",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "unit",
-          "reflectToAttr": false,
-          "docs": "Visible suffix such as seconds or seats, included in the accessible description.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number | undefined",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [
-        {
-          "event": "invalid",
-          "capture": false,
-          "passive": false
-        }
-      ],
-      "styles": [],
-      "slots": [],
-      "parts": [
-        {
-          "name": "decrease",
-          "docs": "Button that subtracts one step."
-        },
-        {
-          "name": "error",
-          "docs": "Polite validation feedback associated with the spinbutton."
-        },
-        {
-          "name": "field",
-          "docs": "Enclosure around the editor, unit and stepper buttons."
-        },
-        {
-          "name": "help",
-          "docs": "Help message associated with the spinbutton."
-        },
-        {
-          "name": "increase",
-          "docs": "Button that adds one step."
-        },
-        {
-          "name": "input",
-          "docs": "Native text editor carrying the spinbutton role."
-        },
-        {
-          "name": "label",
-          "docs": "Visible name of the spinbutton."
-        },
-        {
-          "name": "status",
-          "docs": "Polite feedback explaining a value adjustment."
-        },
-        {
-          "name": "unit",
-          "docs": "Visible unit referenced by the spinbutton's description."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-number-input": [
-          "ki-icon"
         ]
       }
     },
@@ -19027,7 +18834,7 @@
       "path": "src/components/ki-badge/ki-badge.tsx"
     },
     "src/components/ki-button/ki-button.tsx::KiButtonVariant": {
-      "declaration": "export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
+      "declaration": "export type KiButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'tertiary'\n  | 'quaternary'\n  | 'ghost'\n  | 'outline';",
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
     },
@@ -19101,6 +18908,11 @@
       "docstring": "",
       "path": "src/components/ki-counter/ki-counter.tsx"
     },
+    "src/components/ki-details/ki-details.tsx::KiDetailsToggleDetail": {
+      "declaration": "export interface KiDetailsToggleDetail {\n  open: boolean;\n}",
+      "docstring": "The resulting open state of a native disclosure.",
+      "path": "src/components/ki-details/ki-details.tsx"
+    },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
       "declaration": "export interface KiDialogCloseDetail {\n  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. */\n  reason: KiDialogCloseReason;\n}",
       "docstring": "Event payload for the post-close `ki-close` notification.",
@@ -19147,7 +18959,7 @@
       "path": "src/components/ki-icon/ki-icon.tsx"
     },
     "src/components/ki-icon-button/ki-icon-button.tsx::KiIconButtonVariant": {
-      "declaration": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
+      "declaration": "export type KiIconButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'tertiary'\n  | 'quaternary'\n  | 'ghost'\n  | 'outline';",
       "docstring": "",
       "path": "src/components/ki-icon-button/ki-icon-button.tsx"
     },

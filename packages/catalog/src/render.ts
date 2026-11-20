@@ -161,6 +161,14 @@ export function declaredEvents(entry: CatalogEntry | undefined): readonly string
   return Object.keys(entry?.events ?? {});
 }
 
+/** These buttons use their declared change only when the spec enables toggle mode. */
+export function hasToggleActivation(entry: CatalogEntry | undefined): boolean {
+  return (
+    (entry?.tag === 'ki-button' || entry?.tag === 'ki-icon-button') &&
+    Object.hasOwn(entry.events, 'ki-change')
+  );
+}
+
 const CHIP_ACTIVATIONS = ['ki-change', 'ki-remove', 'ki-activate'] as const;
 
 function chipActivations(tag: string, events: readonly string[]): boolean {
@@ -399,7 +407,8 @@ function liveData(
   entry: CatalogEntry | undefined,
 ): Record<string, boolean | number | string> {
   const data: Record<string, boolean | number | string> = { ...props };
-  for (const name of LIVE_STATE_PROPS) {
+  const stateProps = hasToggleActivation(entry) ? ['selected'] : LIVE_STATE_PROPS;
+  for (const name of stateProps) {
     const constraint = ownEntry(entry?.props, name);
     if (constraint === undefined) {
       continue;
@@ -570,6 +579,7 @@ export function wireActivation(
   const variantActivation = chipActivations(element.localName, events);
   const activation = entry?.activationEvent ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
   const clickActivated = !variantActivation && activation === DEFAULT_ACTIVATION_EVENT;
+  const toggleActivation = hasToggleActivation(entry);
   const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
   const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
     const href = props['href'];
@@ -579,11 +589,12 @@ export function wireActivation(
   element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
     // Declared-event controls claim their click so it cannot activate an
     // enclosing bound node. Their native interaction still runs.
-    if (!claim(event) || (!clickActivated && !hasOptInCardAction)) return;
+    if (!claim(event) || (!clickActivated && !hasOptInCardAction && !toggleActivation)) return;
     const props = currentProps();
     // Passive cards retain legacy click bindings. Linked cards keep native
     // navigation, and interactive cards dispatch through ki-activate.
-    if (!clickActivated && (props['interactive'] === true || cardHasLink(props))) return;
+    if (hasOptInCardAction && (props['interactive'] === true || cardHasLink(props))) return;
+    if (toggleActivation && props['toggle'] === true) return;
     // Validated local commands remain available alongside a declared action.
     if (!invokesDialog(props)) {
       event.preventDefault();
@@ -592,10 +603,8 @@ export function wireActivation(
     dispatch({ ...props });
   });
 
-  if (clickActivated) {
-    pinButtonType(element, entry, currentProps());
-    return;
-  }
+  if (clickActivated || toggleActivation) pinButtonType(element, entry, currentProps());
+  if (clickActivated) return;
 
   // Accept only the component's own event for its current mode (S17–S19).
   // The control's default behavior remains intact, and actions carry its live state.
@@ -605,6 +614,7 @@ export function wireActivation(
       const props = currentProps();
       if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
       if (variantActivation && chipActivation(element, props) !== name) return;
+      if (toggleActivation && props['toggle'] !== true) return;
       dispatch(liveData(element, props, entry));
     });
   }

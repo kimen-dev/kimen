@@ -1,13 +1,13 @@
-/* What is ki-icon-button's own. The variant x tone x state paint is the
- * shared button surface (../ki-button/ki-button.surface.css, loaded ahead of
- * this sheet, fed by the --ki-button-* tokens); here are only the square
- * size ramp, the padding-less box and the single icon
- * (specs/022-ki-icon-button/design-extraction.md: only the size ramp and the
- * icon ramp are component-specific).
+/* Icon-button sizing, toggle token mappings and decorative icon slots.
+ * The shared surface and toggle rules load ahead of this sheet.
  *
  * Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
+  --_ki-button-selected-bg: var(--ki-icon-button-secondary-selected-bg);
+  --_ki-button-selected-fg: var(--ki-icon-button-secondary-selected-fg);
+  --_ki-button-toggle-radius: var(--ki-icon-button-toggle-radius);
+  --_ki-button-selected-radius: var(--ki-icon-button-toggle-selected-radius);
   --_ki-icon-button-size: var(--ki-icon-button-md-size);
   --_ki-icon-button-icon-size: var(--ki-icon-button-md-icon-size);
   --_ki-button-spinner-size: var(--ki-icon-button-md-spinner-size);
@@ -42,6 +42,29 @@
   --_ki-icon-button-icon-size: var(--ki-icon-button-xl-icon-size);
   --_ki-button-spinner-size: var(--ki-icon-button-xl-spinner-size);
   --_ki-button-radius: var(--ki-button-xl-radius);
+}
+
+:host([variant="primary"]) {
+  --_ki-button-selected-bg: var(--ki-icon-button-primary-selected-bg);
+  --_ki-button-selected-fg: var(--ki-icon-button-primary-selected-fg);
+}
+
+:host([variant="quaternary"]) {
+  --_ki-button-selected-bg: var(--ki-icon-button-quaternary-selected-bg);
+  --_ki-button-selected-fg: var(--ki-icon-button-quaternary-selected-fg);
+}
+
+:host([variant="ghost"]) {
+  --_ki-button-selected-bg: var(--ki-icon-button-ghost-selected-bg);
+  --_ki-button-selected-fg: var(--ki-icon-button-ghost-selected-fg);
+}
+
+:host([variant="outline"]) {
+  --_ki-button-unselected-bg: var(--ki-icon-button-outline-rest-bg);
+  --_ki-button-unselected-fg: var(--ki-icon-button-outline-rest-fg);
+  --_ki-button-selected-bg: var(--ki-icon-button-outline-selected-bg);
+  --_ki-button-selected-fg: var(--ki-icon-button-outline-selected-fg);
+  --_ki-button-outline-border: var(--ki-icon-button-outline-rest-border);
 }
 
 button {
@@ -87,7 +110,7 @@ button {
   justify-content: center;
 }
 
-slot:not([name])::slotted(*) {
+[part="icon"] slot::slotted(*) {
   block-size: var(--_ki-icon-button-icon-size);
   inline-size: var(--_ki-icon-button-icon-size);
 }
@@ -131,4 +154,10 @@ button[aria-disabled="true"] > [part="icon"] {
   button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) [part="icon"] {
     transform: scale(0.92);
   }
+}
+
+/* The nested default slot is the fallback for an empty selected slot.
+   Presentation attributes on a directly slotted SVG can take this fill. */
+:host([toggle][selected]) slot:not([name])::slotted(svg) {
+  fill: var(--_ki-button-fg);
 }

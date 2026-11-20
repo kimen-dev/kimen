@@ -70,6 +70,90 @@
           "$value": "{ki.space.9xl}",
           "$description": "dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon)."
         }
+      },
+      "outline": {
+        "rest": {
+          "bg": {
+            "$value": "{ki.surface.transparent}",
+            "$description": "Background of the outline variant at rest."
+          },
+          "fg": {
+            "$value": "{ki.text.high-em}",
+            "$description": "Foreground of the outline variant at rest."
+          },
+          "border": {
+            "$value": "{ki.outline.control}",
+            "$description": "Visible outline of the outline variant at rest."
+          }
+        },
+        "selected": {
+          "bg": {
+            "$value": "{ki.surface.inverse-white}",
+            "$description": "Background of the selected outline icon button toggle."
+          },
+          "fg": {
+            "$value": "{ki.text.inverse-black}",
+            "$description": "Foreground of the selected outline icon button toggle."
+          }
+        }
+      },
+      "toggle": {
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Round shape for an unselected icon toggle button."
+        },
+        "selected-radius": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "Rounded square shape for a selected icon toggle button."
+        }
+      },
+      "primary": {
+        "selected": {
+          "bg": {
+            "$value": "{ki.surface.primary-med-em}",
+            "$description": "Background of the selected primary icon button toggle."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Foreground of the selected primary icon button toggle."
+          }
+        }
+      },
+      "secondary": {
+        "selected": {
+          "bg": {
+            "$value": "{ki.surface.secondary-med-em}",
+            "$description": "Background of the selected secondary icon button toggle."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-secondary}",
+            "$description": "Foreground of the selected secondary icon button toggle."
+          }
+        }
+      },
+      "quaternary": {
+        "selected": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Background of the selected quaternary icon button toggle."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Foreground of the selected quaternary icon button toggle."
+          }
+        }
+      },
+      "ghost": {
+        "selected": {
+          "bg": {
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "Background of the selected ghost icon button toggle."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Foreground of the selected ghost icon button toggle."
+          }
+        }
       }
     }
   }

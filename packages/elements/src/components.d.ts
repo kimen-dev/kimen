@@ -22,6 +22,7 @@ import { ComboboxFilter } from "./components/ki-combobox/ki-combobox.options";
 import { KiConfirmationState, KiConfirmationTone } from "./components/ki-confirmation/ki-confirmation";
 import { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
+import { KiDetailsToggleDetail } from "./components/ki-details/ki-details";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiFabPosition, KiFabSize, KiFabVariant } from "./components/ki-fab/ki-fab";
@@ -74,6 +75,7 @@ export { ComboboxFilter } from "./components/ki-combobox/ki-combobox.options";
 export { KiConfirmationState, KiConfirmationTone } from "./components/ki-confirmation/ki-confirmation";
 export { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
+export { KiDetailsToggleDetail } from "./components/ki-details/ki-details";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiFabPosition, KiFabSize, KiFabVariant } from "./components/ki-fab/ki-fab";
@@ -110,6 +112,19 @@ export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js"
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
+    /**
+     * A set of native disclosure panels with a shared frame.
+     * @whenToUse group related FAQ answers, settings or expandable sections.
+     * Enable exclusive when readers benefit from one open section at a time.
+     * @whenNotToUse switch between views or make the panels advance a workflow.
+     */
+    interface KiAccordion {
+        /**
+          * Whether the accordion allows at most one direct member to be open.
+          * @default false
+         */
+        "exclusive": boolean;
+    }
     /**
      * A compact provenance mark for AI-generated content, with optional details
      * and a user-initiated request to restore their original text.
@@ -339,10 +354,11 @@ export namespace Components {
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
-     * in descending hierarchy, or confirming/destructive actions through tone.
+     * in descending hierarchy, confirming/destructive actions through tone, or
+     * persistent actions such as Bold with `toggle`.
      * While the action a button started is in progress, set `loading` on that
      * button instead of disabling it.
-     * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+     * @whenNotToUse navigation, icon-only actions, form values, or the
      * progress of a page or region (use ki-progress).
      */
     interface KiButton {
@@ -376,17 +392,27 @@ export namespace Components {
          */
         "name"?: string;
         /**
+          * Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
+          * @default false
+         */
+        "selected": boolean;
+        /**
           * Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
           * @default 'md'
          */
         "size": KiButtonSize;
         /**
-          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * Enables persistent press state for an action such as Bold. The native button exposes `aria-pressed` and each activation switches `selected`. Use the same label in both states. A toggle does not submit or reset a form.
+          * @default false
+         */
+        "toggle": boolean;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. Toggle palettes are specific to the variant. When NOT to use: do not use tone for visual hierarchy; use `variant`.
           * @default 'neutral'
          */
         "tone": KiButtonTone;
         /**
-          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, and `button` leaves the form alone. Toggle mode and configured dialog commands take precedence over form actions. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
           * @default 'submit'
          */
         "type": KiButtonType;
@@ -395,7 +421,7 @@ export namespace Components {
          */
         "value"?: string;
         /**
-          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, `ghost` for accent text actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
           * @default 'secondary'
           * @deprecatedValue tertiary
          */
@@ -990,6 +1016,33 @@ export namespace Components {
         "value"?: number;
     }
     /**
+     * A native disclosure for supporting information that can stay collapsed.
+     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
+     * output on demand. Use ki-accordion for related disclosures.
+     * @whenNotToUse hide the primary action or information needed to complete a task.
+     * For script-free HTML, author native details and summary directly.
+     */
+    interface KiDetails {
+        /**
+          * Disables summary activation. The page can still set open.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Nonempty name for exclusive disclosures in the same document or shadow root.
+         */
+        "name"?: string;
+        /**
+          * Whether the panel is open. Native changes reflect back to this property.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Plain label for the control. Supply the summary slot for a rich label.
+         */
+        "summary"?: string;
+    }
+    /**
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
@@ -1285,10 +1338,10 @@ export namespace Components {
      * @whenToUse a compact, widely understood action where space precludes a
      * visible label: toolbars, card and dialog corners (close), media transport,
      * data-row actions. Always supply `label`; usually pair with ki-tooltip for
-     * sighted discoverability. While the action it started is in progress, set
-     * `loading` instead of disabling it.
-     * @whenNotToUse whenever a visible label fits (use ki-button), toggling
-     * state without supplying `pressed`, navigation (use a link), or form
+     * sighted discoverability. Enable `toggle` for persistent actions such as
+     * Bookmark. While the action it started is in progress, set `loading`.
+     * @whenNotToUse whenever a visible label fits (use ki-button),
+     * navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
      * visible label communicates the consequence).
      */
@@ -1327,21 +1380,31 @@ export namespace Components {
          */
         "loadingLabel": string;
         /**
-          * Application-owned toggle state. The native icon button exposes this as `aria-pressed`. Omit for a momentary action.
+          * Application-owned toggle state. The native icon button exposes this as `aria-pressed` when `toggle` is off. Omit for a momentary action.
          */
         "pressed"?: boolean;
+        /**
+          * Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
+          * @default false
+         */
+        "selected": boolean;
         /**
           * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
           * @default 'md'
          */
         "size": KiIconButtonSize;
         /**
-          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * Enables persistent press state for an action such as Bookmark. The native button exposes `aria-pressed` and each activation switches `selected`. Keep the same accessible label in both states.
+          * @default false
+         */
+        "toggle": boolean;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. Toggle palettes are specific to the variant. When NOT to use: do not use tone for visual hierarchy; use `variant`.
           * @default 'neutral'
          */
         "tone": KiIconButtonTone;
         /**
-          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, and `ghost` for accent icon actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, `ghost` for accent icon actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
           * @default 'secondary'
           * @deprecatedValue tertiary
          */
@@ -1718,99 +1781,6 @@ export namespace Components {
           * @default 'neutral'
          */
         "tone": KiNoteTone;
-    }
-    /**
-     * A form field for a numeric quantity with optional stepper buttons, bounds,
-     * locale-aware formatting, and a visible unit.
-     * @whenToUse Collect a number like a quantity, amount, or limit. Provide a
-     * visible label and choose bounds and an increment when they have meaning.
-     * @whenNotToUse Use ki-input for identifiers, codes, or other text that only
-     * looks numeric. Use a range control when relative position is the main cue.
-     * @event change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
-     */
-    interface KiNumberInput {
-        /**
-          * Stepper's accessible name. The field label replaces {label}.
-          * @default 'Decrease {label}'
-         */
-        "decreaseLabel": string;
-        /**
-          * Prevents editing and excludes the control from form submission.
-          * @default false
-         */
-        "disabled": boolean;
-        /**
-          * Validation hint to show when the entry fails a constraint.
-         */
-        "errorText"?: string;
-        /**
-          * Intl.NumberFormat options for display. In HTML or a catalog spec, supply these options as JSON text. The form value retains its original precision.
-          * @attributeType string
-         */
-        "format": Intl.NumberFormatOptions | undefined;
-        /**
-          * Context or instructions displayed beneath the field when it has no visible error.
-         */
-        "helpText"?: string;
-        /**
-          * Stepper's accessible name. The field label replaces {label}.
-          * @default 'Increase {label}'
-         */
-        "increaseLabel": string;
-        /**
-          * Default validation message for text that cannot be read as a number.
-          * @default 'Enter a number.'
-         */
-        "invalidNumberMessage": string;
-        /**
-          * Visible accessible name. Supply a meaningful label in the page language.
-         */
-        "label": string;
-        /**
-          * Maximum permitted numeric value. Omit for an unbounded maximum.
-         */
-        "max"?: number;
-        /**
-          * Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.
-          * @default 'Value adjusted to the maximum of {value}.'
-         */
-        "maximumMessage": string;
-        /**
-          * Minimum permitted numeric value. Omit for an unbounded minimum.
-         */
-        "min"?: number;
-        /**
-          * Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.
-          * @default 'Value adjusted to the minimum of {value}.'
-         */
-        "minimumMessage": string;
-        /**
-          * Form-data key for the plain numeric value.
-         */
-        "name"?: string;
-        /**
-          * Whether the user must enter a number before submitting the form.
-          * @default false
-         */
-        "required": boolean;
-        /**
-          * Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.
-          * @default 1
-         */
-        "step": number;
-        /**
-          * Shows named decrease and increase buttons inside the field.
-          * @default false
-         */
-        "steppers": boolean;
-        /**
-          * Visible suffix such as seconds or seats, included in the accessible description.
-         */
-        "unit"?: string;
-        /**
-          * Current numeric value, or undefined when empty or unparseable. Use the attribute for the form reset value. Property assignments are silent.
-         */
-        "value": number | undefined;
     }
     /**
      * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
@@ -2939,6 +2909,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiButtonCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiButtonElement;
+}
 export interface KiCardCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCardElement;
@@ -2971,9 +2945,17 @@ export interface KiCopyButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCopyButtonElement;
 }
+export interface KiDetailsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiDetailsElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
+}
+export interface KiIconButtonCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiIconButtonElement;
 }
 export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3004,6 +2986,18 @@ export interface KiToastCustomEvent<T> extends CustomEvent<T> {
     target: HTMLKiToastElement;
 }
 declare global {
+    /**
+     * A set of native disclosure panels with a shared frame.
+     * @whenToUse group related FAQ answers, settings or expandable sections.
+     * Enable exclusive when readers benefit from one open section at a time.
+     * @whenNotToUse switch between views or make the panels advance a workflow.
+     */
+    interface HTMLKiAccordionElement extends Components.KiAccordion, HTMLStencilElement {
+    }
+    var HTMLKiAccordionElement: {
+        prototype: HTMLKiAccordionElement;
+        new (): HTMLKiAccordionElement;
+    };
     interface HTMLKiAiLabelElementEventMap {
         "ki-revert": void;
     }
@@ -3139,16 +3133,28 @@ declare global {
         prototype: HTMLKiBreadcrumbItemElement;
         new (): HTMLKiBreadcrumbItemElement;
     };
+    interface HTMLKiButtonElementEventMap {
+        "ki-change": { selected: boolean };
+    }
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
-     * in descending hierarchy, or confirming/destructive actions through tone.
+     * in descending hierarchy, confirming/destructive actions through tone, or
+     * persistent actions such as Bold with `toggle`.
      * While the action a button started is in progress, set `loading` on that
      * button instead of disabling it.
-     * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+     * @whenNotToUse navigation, icon-only actions, form values, or the
      * progress of a page or region (use ki-progress).
      */
     interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiButtonElementEventMap>(type: K, listener: (this: HTMLKiButtonElement, ev: KiButtonCustomEvent<HTMLKiButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiButtonElementEventMap>(type: K, listener: (this: HTMLKiButtonElement, ev: KiButtonCustomEvent<HTMLKiButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiButtonElement: {
         prototype: HTMLKiButtonElement;
@@ -3428,6 +3434,30 @@ declare global {
         prototype: HTMLKiCounterElement;
         new (): HTMLKiCounterElement;
     };
+    interface HTMLKiDetailsElementEventMap {
+        "ki-toggle": KiDetailsToggleDetail;
+    }
+    /**
+     * A native disclosure for supporting information that can stay collapsed.
+     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
+     * output on demand. Use ki-accordion for related disclosures.
+     * @whenNotToUse hide the primary action or information needed to complete a task.
+     * For script-free HTML, author native details and summary directly.
+     */
+    interface HTMLKiDetailsElement extends Components.KiDetails, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiDetailsElementEventMap>(type: K, listener: (this: HTMLKiDetailsElement, ev: KiDetailsCustomEvent<HTMLKiDetailsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiDetailsElementEventMap>(type: K, listener: (this: HTMLKiDetailsElement, ev: KiDetailsCustomEvent<HTMLKiDetailsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiDetailsElement: {
+        prototype: HTMLKiDetailsElement;
+        new (): HTMLKiDetailsElement;
+    };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
     }
@@ -3571,20 +3601,31 @@ declare global {
         prototype: HTMLKiIconElement;
         new (): HTMLKiIconElement;
     };
+    interface HTMLKiIconButtonElementEventMap {
+        "ki-change": { selected: boolean };
+    }
     /**
      * A token-styled, icon-only action button with native button semantics and a
      * mandatory accessible name.
      * @whenToUse a compact, widely understood action where space precludes a
      * visible label: toolbars, card and dialog corners (close), media transport,
      * data-row actions. Always supply `label`; usually pair with ki-tooltip for
-     * sighted discoverability. While the action it started is in progress, set
-     * `loading` instead of disabling it.
-     * @whenNotToUse whenever a visible label fits (use ki-button), toggling
-     * state without supplying `pressed`, navigation (use a link), or form
+     * sighted discoverability. Enable `toggle` for persistent actions such as
+     * Bookmark. While the action it started is in progress, set `loading`.
+     * @whenNotToUse whenever a visible label fits (use ki-button),
+     * navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
      * visible label communicates the consequence).
      */
     interface HTMLKiIconButtonElement extends Components.KiIconButton, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiIconButtonElementEventMap>(type: K, listener: (this: HTMLKiIconButtonElement, ev: KiIconButtonCustomEvent<HTMLKiIconButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiIconButtonElementEventMap>(type: K, listener: (this: HTMLKiIconButtonElement, ev: KiIconButtonCustomEvent<HTMLKiIconButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiIconButtonElement: {
         prototype: HTMLKiIconButtonElement;
@@ -3771,21 +3812,6 @@ declare global {
     var HTMLKiNoteElement: {
         prototype: HTMLKiNoteElement;
         new (): HTMLKiNoteElement;
-    };
-    /**
-     * A form field for a numeric quantity with optional stepper buttons, bounds,
-     * locale-aware formatting, and a visible unit.
-     * @whenToUse Collect a number like a quantity, amount, or limit. Provide a
-     * visible label and choose bounds and an increment when they have meaning.
-     * @whenNotToUse Use ki-input for identifiers, codes, or other text that only
-     * looks numeric. Use a range control when relative position is the main cue.
-     * @event change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
-     */
-    interface HTMLKiNumberInputElement extends Components.KiNumberInput, HTMLStencilElement {
-    }
-    var HTMLKiNumberInputElement: {
-        prototype: HTMLKiNumberInputElement;
-        new (): HTMLKiNumberInputElement;
     };
     /**
      * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
@@ -4365,6 +4391,7 @@ declare global {
         new (): HTMLKiVideoElement;
     };
     interface HTMLElementTagNameMap {
+        "ki-accordion": HTMLKiAccordionElement;
         "ki-ai-label": HTMLKiAiLabelElement;
         "ki-alert": HTMLKiAlertElement;
         "ki-avatar": HTMLKiAvatarElement;
@@ -4385,6 +4412,7 @@ declare global {
         "ki-conversation": HTMLKiConversationElement;
         "ki-copy-button": HTMLKiCopyButtonElement;
         "ki-counter": HTMLKiCounterElement;
+        "ki-details": HTMLKiDetailsElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-empty-state": HTMLKiEmptyStateElement;
@@ -4406,7 +4434,6 @@ declare global {
         "ki-menu-item": HTMLKiMenuItemElement;
         "ki-message": HTMLKiMessageElement;
         "ki-note": HTMLKiNoteElement;
-        "ki-number-input": HTMLKiNumberInputElement;
         "ki-option": HTMLKiOptionElement;
         "ki-popover": HTMLKiPopoverElement;
         "ki-progress": HTMLKiProgressElement;
@@ -4441,6 +4468,19 @@ declare global {
 declare namespace LocalJSX {
     type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K]?: never };
 
+    /**
+     * A set of native disclosure panels with a shared frame.
+     * @whenToUse group related FAQ answers, settings or expandable sections.
+     * Enable exclusive when readers benefit from one open section at a time.
+     * @whenNotToUse switch between views or make the panels advance a workflow.
+     */
+    interface KiAccordion {
+        /**
+          * Whether the accordion allows at most one direct member to be open.
+          * @default false
+         */
+        "exclusive"?: boolean;
+    }
     /**
      * A compact provenance mark for AI-generated content, with optional details
      * and a user-initiated request to restore their original text.
@@ -4678,10 +4718,11 @@ declare namespace LocalJSX {
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
-     * in descending hierarchy, or confirming/destructive actions through tone.
+     * in descending hierarchy, confirming/destructive actions through tone, or
+     * persistent actions such as Bold with `toggle`.
      * While the action a button started is in progress, set `loading` on that
      * button instead of disabling it.
-     * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+     * @whenNotToUse navigation, icon-only actions, form values, or the
      * progress of a page or region (use ki-progress).
      */
     interface KiButton {
@@ -4719,17 +4760,31 @@ declare namespace LocalJSX {
          */
         "name"?: string;
         /**
+          * Emitted after toggle activation with the new selected state.
+         */
+        "onKi-change"?: (event: KiButtonCustomEvent<{ selected: boolean }>) => void;
+        /**
+          * Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
+          * @default false
+         */
+        "selected"?: boolean;
+        /**
           * Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
           * @default 'md'
          */
         "size"?: KiButtonSize;
         /**
-          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * Enables persistent press state for an action such as Bold. The native button exposes `aria-pressed` and each activation switches `selected`. Use the same label in both states. A toggle does not submit or reset a form.
+          * @default false
+         */
+        "toggle"?: boolean;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. Toggle palettes are specific to the variant. When NOT to use: do not use tone for visual hierarchy; use `variant`.
           * @default 'neutral'
          */
         "tone"?: KiButtonTone;
         /**
-          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, and `button` leaves the form alone. Toggle mode and configured dialog commands take precedence over form actions. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
           * @default 'submit'
          */
         "type"?: KiButtonType;
@@ -4738,7 +4793,7 @@ declare namespace LocalJSX {
          */
         "value"?: string;
         /**
-          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, `ghost` for accent text actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
           * @default 'secondary'
           * @deprecatedValue tertiary
          */
@@ -5397,6 +5452,37 @@ declare namespace LocalJSX {
         "value"?: number;
     }
     /**
+     * A native disclosure for supporting information that can stay collapsed.
+     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
+     * output on demand. Use ki-accordion for related disclosures.
+     * @whenNotToUse hide the primary action or information needed to complete a task.
+     * For script-free HTML, author native details and summary directly.
+     */
+    interface KiDetails {
+        /**
+          * Disables summary activation. The page can still set open.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Nonempty name for exclusive disclosures in the same document or shadow root.
+         */
+        "name"?: string;
+        /**
+          * Emitted when the native disclosure toggles or an exclusive peer closes it.
+         */
+        "onKi-toggle"?: (event: KiDetailsCustomEvent<KiDetailsToggleDetail>) => void;
+        /**
+          * Whether the panel is open. Native changes reflect back to this property.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Plain label for the control. Supply the summary slot for a rich label.
+         */
+        "summary"?: string;
+    }
+    /**
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
@@ -5688,10 +5774,10 @@ declare namespace LocalJSX {
      * @whenToUse a compact, widely understood action where space precludes a
      * visible label: toolbars, card and dialog corners (close), media transport,
      * data-row actions. Always supply `label`; usually pair with ki-tooltip for
-     * sighted discoverability. While the action it started is in progress, set
-     * `loading` instead of disabling it.
-     * @whenNotToUse whenever a visible label fits (use ki-button), toggling
-     * state without supplying `pressed`, navigation (use a link), or form
+     * sighted discoverability. Enable `toggle` for persistent actions such as
+     * Bookmark. While the action it started is in progress, set `loading`.
+     * @whenNotToUse whenever a visible label fits (use ki-button),
+     * navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
      * visible label communicates the consequence).
      */
@@ -5730,21 +5816,35 @@ declare namespace LocalJSX {
          */
         "loadingLabel"?: string;
         /**
-          * Application-owned toggle state. The native icon button exposes this as `aria-pressed`. Omit for a momentary action.
+          * Emitted after toggle activation with the new selected state.
+         */
+        "onKi-change"?: (event: KiIconButtonCustomEvent<{ selected: boolean }>) => void;
+        /**
+          * Application-owned toggle state. The native icon button exposes this as `aria-pressed` when `toggle` is off. Omit for a momentary action.
          */
         "pressed"?: boolean;
+        /**
+          * Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
+          * @default false
+         */
+        "selected"?: boolean;
         /**
           * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
           * @default 'md'
          */
         "size"?: KiIconButtonSize;
         /**
-          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * Enables persistent press state for an action such as Bookmark. The native button exposes `aria-pressed` and each activation switches `selected`. Keep the same accessible label in both states.
+          * @default false
+         */
+        "toggle"?: boolean;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. Toggle palettes are specific to the variant. When NOT to use: do not use tone for visual hierarchy; use `variant`.
           * @default 'neutral'
          */
         "tone"?: KiIconButtonTone;
         /**
-          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, and `ghost` for accent icon actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, `ghost` for accent icon actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
           * @default 'secondary'
           * @deprecatedValue tertiary
          */
@@ -6133,103 +6233,6 @@ declare namespace LocalJSX {
           * @default 'neutral'
          */
         "tone"?: KiNoteTone;
-    }
-    /**
-     * A form field for a numeric quantity with optional stepper buttons, bounds,
-     * locale-aware formatting, and a visible unit.
-     * @whenToUse Collect a number like a quantity, amount, or limit. Provide a
-     * visible label and choose bounds and an increment when they have meaning.
-     * @whenNotToUse Use ki-input for identifiers, codes, or other text that only
-     * looks numeric. Use a range control when relative position is the main cue.
-     * @event change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
-     */
-    interface KiNumberInput {
-        /**
-          * Stepper's accessible name. The field label replaces {label}.
-          * @default 'Decrease {label}'
-         */
-        "decreaseLabel"?: string;
-        /**
-          * Prevents editing and excludes the control from form submission.
-          * @default false
-         */
-        "disabled"?: boolean;
-        /**
-          * Validation hint to show when the entry fails a constraint.
-         */
-        "errorText"?: string;
-        /**
-          * The `id` of a `<form>` element to associate this element with.
-         */
-        "form"?: string;
-        /**
-          * Intl.NumberFormat options for display. In HTML or a catalog spec, supply these options as JSON text. The form value retains its original precision.
-          * @attributeType string
-         */
-        "format"?: Intl.NumberFormatOptions | undefined;
-        /**
-          * Context or instructions displayed beneath the field when it has no visible error.
-         */
-        "helpText"?: string;
-        /**
-          * Stepper's accessible name. The field label replaces {label}.
-          * @default 'Increase {label}'
-         */
-        "increaseLabel"?: string;
-        /**
-          * Default validation message for text that cannot be read as a number.
-          * @default 'Enter a number.'
-         */
-        "invalidNumberMessage"?: string;
-        /**
-          * Visible accessible name. Supply a meaningful label in the page language.
-         */
-        "label": string;
-        /**
-          * Maximum permitted numeric value. Omit for an unbounded maximum.
-         */
-        "max"?: number;
-        /**
-          * Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.
-          * @default 'Value adjusted to the maximum of {value}.'
-         */
-        "maximumMessage"?: string;
-        /**
-          * Minimum permitted numeric value. Omit for an unbounded minimum.
-         */
-        "min"?: number;
-        /**
-          * Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.
-          * @default 'Value adjusted to the minimum of {value}.'
-         */
-        "minimumMessage"?: string;
-        /**
-          * Form-data key for the plain numeric value.
-         */
-        "name"?: string;
-        /**
-          * Whether the user must enter a number before submitting the form.
-          * @default false
-         */
-        "required"?: boolean;
-        /**
-          * Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.
-          * @default 1
-         */
-        "step"?: number;
-        /**
-          * Shows named decrease and increase buttons inside the field.
-          * @default false
-         */
-        "steppers"?: boolean;
-        /**
-          * Visible suffix such as seconds or seats, included in the accessible description.
-         */
-        "unit"?: string;
-        /**
-          * Current numeric value, or undefined when empty or unparseable. Use the attribute for the form reset value. Property assignments are silent.
-         */
-        "value"?: number | undefined;
     }
     /**
      * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
@@ -7394,6 +7397,9 @@ declare namespace LocalJSX {
         "label": string;
     }
 
+    interface KiAccordionAttributes {
+        "exclusive": boolean;
+    }
     interface KiAiLabelAttributes {
         "explanation": string;
         "model": string;
@@ -7441,6 +7447,8 @@ declare namespace LocalJSX {
         "variant": KiButtonVariant;
         "tone": KiButtonTone;
         "size": KiButtonSize;
+        "toggle": boolean;
+        "selected": boolean;
         "type": KiButtonType;
         "name": string;
         "value": string;
@@ -7570,6 +7578,12 @@ declare namespace LocalJSX {
         "tone": KiCounterTone;
         "for": string;
     }
+    interface KiDetailsAttributes {
+        "summary": string;
+        "open": boolean;
+        "name": string;
+        "disabled": boolean;
+    }
     interface KiDialogAttributes {
         "open": boolean;
         "heading": string;
@@ -7638,6 +7652,8 @@ declare namespace LocalJSX {
         "tone": KiIconButtonTone;
         "size": KiIconButtonSize;
         "label": string;
+        "toggle": boolean;
+        "selected": boolean;
         "commandfor": string;
         "command": KiDialogCommand;
         "disabled": boolean;
@@ -7718,26 +7734,6 @@ declare namespace LocalJSX {
         "tone": KiNoteTone;
         "size": KiNoteSize;
         "icon": boolean;
-    }
-    interface KiNumberInputAttributes {
-        "label": string;
-        "helpText": string;
-        "errorText": string;
-        "required": boolean;
-        "disabled": boolean;
-        "name": string;
-        "value": number | undefined;
-        "min": number;
-        "max": number;
-        "step": number;
-        "steppers": boolean;
-        "unit": string;
-        "format": string;
-        "decreaseLabel": string;
-        "increaseLabel": string;
-        "minimumMessage": string;
-        "maximumMessage": string;
-        "invalidNumberMessage": string;
     }
     interface KiOptionAttributes {
         "value": string;
@@ -7947,6 +7943,7 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "ki-accordion": Omit<KiAccordion, keyof KiAccordionAttributes> & { [K in keyof KiAccordion & keyof KiAccordionAttributes]?: KiAccordion[K] } & { [K in keyof KiAccordion & keyof KiAccordionAttributes as `attr:${K}`]?: KiAccordionAttributes[K] } & { [K in keyof KiAccordion & keyof KiAccordionAttributes as `prop:${K}`]?: KiAccordion[K] };
         "ki-ai-label": Omit<KiAiLabel, keyof KiAiLabelAttributes> & { [K in keyof KiAiLabel & keyof KiAiLabelAttributes]?: KiAiLabel[K] } & { [K in keyof KiAiLabel & keyof KiAiLabelAttributes as `attr:${K}`]?: KiAiLabelAttributes[K] } & { [K in keyof KiAiLabel & keyof KiAiLabelAttributes as `prop:${K}`]?: KiAiLabel[K] };
         "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
         "ki-avatar": Omit<KiAvatar, keyof KiAvatarAttributes> & { [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K] };
@@ -7967,6 +7964,7 @@ declare namespace LocalJSX {
         "ki-conversation": Omit<KiConversation, keyof KiConversationAttributes> & { [K in keyof KiConversation & keyof KiConversationAttributes]?: KiConversation[K] } & { [K in keyof KiConversation & keyof KiConversationAttributes as `attr:${K}`]?: KiConversationAttributes[K] } & { [K in keyof KiConversation & keyof KiConversationAttributes as `prop:${K}`]?: KiConversation[K] };
         "ki-copy-button": Omit<KiCopyButton, keyof KiCopyButtonAttributes> & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes]?: KiCopyButton[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `attr:${K}`]?: KiCopyButtonAttributes[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `prop:${K}`]?: KiCopyButton[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
+        "ki-details": Omit<KiDetails, keyof KiDetailsAttributes> & { [K in keyof KiDetails & keyof KiDetailsAttributes]?: KiDetails[K] } & { [K in keyof KiDetails & keyof KiDetailsAttributes as `attr:${K}`]?: KiDetailsAttributes[K] } & { [K in keyof KiDetails & keyof KiDetailsAttributes as `prop:${K}`]?: KiDetails[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-empty-state": Omit<KiEmptyState, keyof KiEmptyStateAttributes> & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes]?: KiEmptyState[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `attr:${K}`]?: KiEmptyStateAttributes[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `prop:${K}`]?: KiEmptyState[K] } & OneOf<"heading", KiEmptyState["heading"], KiEmptyStateAttributes["heading"]>;
@@ -7988,7 +7986,6 @@ declare namespace LocalJSX {
         "ki-menu-item": Omit<KiMenuItem, keyof KiMenuItemAttributes> & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes]?: KiMenuItem[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `attr:${K}`]?: KiMenuItemAttributes[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `prop:${K}`]?: KiMenuItem[K] };
         "ki-message": Omit<KiMessage, keyof KiMessageAttributes> & { [K in keyof KiMessage & keyof KiMessageAttributes]?: KiMessage[K] } & { [K in keyof KiMessage & keyof KiMessageAttributes as `attr:${K}`]?: KiMessageAttributes[K] } & { [K in keyof KiMessage & keyof KiMessageAttributes as `prop:${K}`]?: KiMessage[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
-        "ki-number-input": Omit<KiNumberInput, keyof KiNumberInputAttributes> & { [K in keyof KiNumberInput & keyof KiNumberInputAttributes]?: KiNumberInput[K] } & { [K in keyof KiNumberInput & keyof KiNumberInputAttributes as `attr:${K}`]?: KiNumberInputAttributes[K] } & { [K in keyof KiNumberInput & keyof KiNumberInputAttributes as `prop:${K}`]?: KiNumberInput[K] } & OneOf<"label", KiNumberInput["label"], KiNumberInputAttributes["label"]>;
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-popover": Omit<KiPopover, keyof KiPopoverAttributes> & { [K in keyof KiPopover & keyof KiPopoverAttributes]?: KiPopover[K] } & { [K in keyof KiPopover & keyof KiPopoverAttributes as `attr:${K}`]?: KiPopoverAttributes[K] } & { [K in keyof KiPopover & keyof KiPopoverAttributes as `prop:${K}`]?: KiPopover[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
@@ -8024,6 +8021,13 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * A set of native disclosure panels with a shared frame.
+             * @whenToUse group related FAQ answers, settings or expandable sections.
+             * Enable exclusive when readers benefit from one open section at a time.
+             * @whenNotToUse switch between views or make the panels advance a workflow.
+             */
+            "ki-accordion": LocalJSX.IntrinsicElements["ki-accordion"] & JSXBase.HTMLAttributes<HTMLKiAccordionElement>;
             /**
              * A compact provenance mark for AI-generated content, with optional details
              * and a user-initiated request to restore their original text.
@@ -8105,10 +8109,11 @@ declare module "@stencil/core" {
             /**
              * A token-styled action button with native button semantics.
              * @whenToUse trigger the single main action of a view, supporting actions
-             * in descending hierarchy, or confirming/destructive actions through tone.
+             * in descending hierarchy, confirming/destructive actions through tone, or
+             * persistent actions such as Bold with `toggle`.
              * While the action a button started is in progress, set `loading` on that
              * button instead of disabling it.
-             * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+             * @whenNotToUse navigation, icon-only actions, form values, or the
              * progress of a page or region (use ki-progress).
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
@@ -8230,6 +8235,14 @@ declare module "@stencil/core" {
              */
             "ki-counter": LocalJSX.IntrinsicElements["ki-counter"] & JSXBase.HTMLAttributes<HTMLKiCounterElement>;
             /**
+             * A native disclosure for supporting information that can stay collapsed.
+             * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
+             * output on demand. Use ki-accordion for related disclosures.
+             * @whenNotToUse hide the primary action or information needed to complete a task.
+             * For script-free HTML, author native details and summary directly.
+             */
+            "ki-details": LocalJSX.IntrinsicElements["ki-details"] & JSXBase.HTMLAttributes<HTMLKiDetailsElement>;
+            /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
@@ -8322,10 +8335,10 @@ declare module "@stencil/core" {
              * @whenToUse a compact, widely understood action where space precludes a
              * visible label: toolbars, card and dialog corners (close), media transport,
              * data-row actions. Always supply `label`; usually pair with ki-tooltip for
-             * sighted discoverability. While the action it started is in progress, set
-             * `loading` instead of disabling it.
-             * @whenNotToUse whenever a visible label fits (use ki-button), toggling
-             * state without supplying `pressed`, navigation (use a link), or form
+             * sighted discoverability. Enable `toggle` for persistent actions such as
+             * Bookmark. While the action it started is in progress, set `loading`.
+             * @whenNotToUse whenever a visible label fits (use ki-button),
+             * navigation (use a link), or form
              * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
              * visible label communicates the consequence).
              */
@@ -8435,16 +8448,6 @@ declare module "@stencil/core" {
              * for transient confirmations and the field's help-text for field guidance.
              */
             "ki-note": LocalJSX.IntrinsicElements["ki-note"] & JSXBase.HTMLAttributes<HTMLKiNoteElement>;
-            /**
-             * A form field for a numeric quantity with optional stepper buttons, bounds,
-             * locale-aware formatting, and a visible unit.
-             * @whenToUse Collect a number like a quantity, amount, or limit. Provide a
-             * visible label and choose bounds and an increment when they have meaning.
-             * @whenNotToUse Use ki-input for identifiers, codes, or other text that only
-             * looks numeric. Use a range control when relative position is the main cue.
-             * @event change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
-             */
-            "ki-number-input": LocalJSX.IntrinsicElements["ki-number-input"] & JSXBase.HTMLAttributes<HTMLKiNumberInputElement>;
             /**
              * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
              * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the

@@ -330,27 +330,31 @@ describe('agent surfaces', () => {
       'loading',
       'loadingLabel',
       'name',
+      'selected',
       'size',
+      'toggle',
       'tone',
       'type',
       'value',
       'variant',
     ]);
-    expect(declaration.attributes).toHaveLength(11);
+    expect(declaration.attributes).toHaveLength(13);
     expect(declaration.slots).toHaveLength(3);
     expect(declaration.cssParts.map((part: { name: string }) => part.name)).toEqual([
       'button',
       'label',
       'spinner',
     ]);
-    expect(declaration.events).toEqual([]);
+    expect(declaration.events).toMatchObject([
+      { name: 'ki-change', type: { text: 'CustomEvent<{ selected: boolean }>' } },
+    ]);
     expect(declaration.cssProperties).toEqual([]);
     expect(declaration.members.map((member: ManifestMember) => member.name)).toContain('variant');
     expect(
       declaration.members.find((member: ManifestMember) => member.name === 'variant'),
     ).toMatchObject({
       kind: 'field',
-      type: { text: '"ghost" | "primary" | "quaternary" | "secondary" | "tertiary"' },
+      type: { text: '"ghost" | "outline" | "primary" | "quaternary" | "secondary" | "tertiary"' },
       default: "'secondary'",
       attribute: 'variant',
       reflects: true,
