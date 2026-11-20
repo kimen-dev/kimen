@@ -31,6 +31,29 @@ it('accepts grouped currency pasted in its configured locale', () => {
   expect(codec.parse(codec.display(-1234.5))).toBe(-1234.5);
 });
 
+it.each([
+  ['en-US', '1,234.', 1234],
+  ['de-DE', '+1.234,5E+2', 123450],
+  ['hi-IN', '12,34,567.89', 1234567.89],
+  ['fr-FR', '1 234,5', 1234.5],
+])('parses valid grouping in %s for %j', (locale, text, value) => {
+  expect(createNumberCodec(locale).parse(text)).toBe(value);
+});
+
+it.each([
+  ['en-US', '12,34'],
+  ['en-US', '1234,567'],
+  ['en-US', ',123'],
+  ['en-US', '123,'],
+  ['en-US', '1,,234'],
+  ['en-US', '1,234.5,67'],
+  ['en-US', '1,234e1,000'],
+  ['hi-IN', '1,234,567'],
+  ['ar-EG', '١٬٢.٣'],
+])('rejects malformed grouping in %s for %j', (locale, text) => {
+  expect(createNumberCodec(locale).parse(text)).toBeUndefined();
+});
+
 it.each(['junk', '0x10', '12 seats', '12.5.4', '2,2', 'Infinity', '1e309', ''])(
   'rejects invalid English numeric input %j',
   (text) => {

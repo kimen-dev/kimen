@@ -6,6 +6,36 @@ interface NumberCodec {
 
 const decimalPattern = /^([+-]?)(\d*)(?:\.(\d*))?(?:e([+-]?\d+))?$/iu;
 const directionMarks = /[\u061c\u200e\u200f\u2066-\u2069]/gu;
+const digitsOnly = /^\d+$/u;
+
+function removeGrouping(
+  value: string,
+  group: string,
+  decimal: string,
+  primary: number,
+  secondary: number,
+): string | undefined {
+  const [mantissa = ''] = value.split(/[eE]/u, 1);
+  const [integer = ''] = mantissa.split(decimal, 1);
+  const suffix = value.slice(integer.length);
+  const [leading = '', ...trailing] = integer.split(group);
+  const firstDigits = leading.replace(/^[+-]/u, '');
+
+  if (
+    trailing.length === 0 ||
+    firstDigits.length > secondary ||
+    !digitsOnly.test(firstDigits) ||
+    suffix.includes(group) ||
+    !trailing.every((digits, index) => {
+      const width = index === trailing.length - 1 ? primary : secondary;
+      return digits.length === width && digitsOnly.test(digits);
+    })
+  ) {
+    return undefined;
+  }
+
+  return `${leading}${trailing.join('')}${suffix}`;
+}
 
 /** Decompose a decimal string without first rounding it to a JS number. */
 function decimalParts(text: string) {
@@ -77,14 +107,6 @@ export function createNumberCodec(
     .map(({ value }) => Array.from(value).length);
   const primary = lengths.at(-1) ?? 3;
   const secondary = lengths.at(-2) ?? primary;
-  const escaped = (symbol: string) => symbol.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
-  const grouped =
-    group === undefined
-      ? undefined
-      : new RegExp(
-          `^[+-]?\\d{1,${String(secondary)}}(?:${escaped(group)}\\d{${String(secondary)}})*${escaped(group)}\\d{${String(primary)}}(?:${escaped(decimal)}\\d*)?(?:e[+-]?\\d+)?$`,
-          'iu',
-        );
   const digits = Array.from({ length: 10 }, (_, digit) => symbols.format(digit));
   const percent = settings.style === 'percent' ? 2 : 0;
   const affixes = [1, -1, 1234.5, -1234.5].flatMap((sample) =>
@@ -126,8 +148,9 @@ export function createNumberCodec(
     }
     if (group?.trim() === '') value = value.replace(/[\u0020\u00a0\u202f]/gu, group);
     if (group !== undefined && value.includes(group)) {
-      if (!grouped?.test(value)) return undefined;
-      value = value.replaceAll(group, '');
+      const ungrouped = removeGrouping(value, group, decimal, primary, secondary);
+      if (ungrouped === undefined) return undefined;
+      value = ungrouped;
     }
     if (decimal !== '.') value = value.replaceAll(decimal, '.');
     const parsed = decimalParts(accounting ? `-${value}` : value);
