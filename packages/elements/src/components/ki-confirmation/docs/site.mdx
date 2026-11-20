@@ -1,0 +1,52 @@
+---
+title: ki-confirmation
+description: Ask someone to approve or refuse a specific assistant action.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Show the request where the person can review it. Use action-specific verbs
+on both buttons and place the details in the default slot. Explain cost or
+irreversibility in `consequence`, which appears as a warning note.
+
+<Demo code={`<ki-confirmation
+  heading="Send this email?"
+  action="send_email"
+  approve-label="Send email"
+  deny-label="Keep draft"
+  consequence="Recipients will get the message immediately."
+  remember
+  remember-label="Allow sending email for the rest of this conversation"
+>
+  <dl>
+    <dt>To</dt><dd>Ana Rivera</dd>
+    <dt>Subject</dt><dd>Weekly report</dd>
+  </dl>
+</ki-confirmation>`} />
+
+## Handle a decision
+
+Listen for `ki-approve` or `ki-deny` on the request. Approval reports a
+boolean `remember` preference. The host can honor that preference for the
+requested action in the current conversation. Route each choice to a declared
+surface action through trusted host code. Use `tone="danger"` for destructive
+approval.
+
+Set `state` to `approved`, `denied` or `expired` after recording the outcome.
+Use `resolved-by` and `resolved-at` for the name and time in the summary.
+
+## Focus and announcements
+
+The group is named by its question and announces new requests politely. Call
+`focusPrompt()` when the person is waiting for the assistant. An active
+editor retains focus. Tab reaches refusal before approval, and Escape leaves
+the decision pending.
+
+## API reference
+
+<CemApi tag="ki-confirmation" />
+
+## Workshop
+
+[Open ki-confirmation in Storybook](/storybook/?path=/docs/docs-components-ki-confirmation--docs)

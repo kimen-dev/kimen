@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 486 semantic
-and 1729 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 494 semantic
+and 1756 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -208,6 +208,14 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-layout-conversation-avatar-radius` | `1000px` | Round corner radius of the fallback assistant avatar. |
+| `--ki-layout-conversation-bubble-end-radius` | `6px` | Smaller radius of the end corner of a user bubble. |
+| `--ki-layout-conversation-bubble-padding` | `0.5rem 0.75rem` | Block and inline insets for a user bubble. |
+| `--ki-layout-conversation-bubble-radius` | `16px` | Standard corner radius of a user bubble. |
+| `--ki-layout-conversation-caret-block-size` | `1em` | Block size of a streaming caret. |
+| `--ki-layout-conversation-caret-inline-size` | `0.5em` | Inline size of a streaming caret. |
+| `--ki-layout-conversation-max-width` | `42rem` | Maximum inline size for a conversation transcript. |
+| `--ki-layout-conversation-user-max-width` | `80%` | Maximum width of a user bubble relative to the transcript. |
 | `--ki-layout-floating-action-lg` | `5rem` | Medium floating action footprint (80px at the default root size). |
 | `--ki-layout-floating-action-lg-icon` | `1.75rem` | Medium floating action glyph (28px at the default root size). |
 | `--ki-layout-floating-action-md` | `3.5rem` | Default floating action footprint (56px at the default root size). |
@@ -1381,6 +1389,41 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-combobox-tag-bg` | `#f3f0eb` | Fill for the selected tag. |
 | `--ki-combobox-tag-fg` | `#181613` | Text on the selected tag. |
 
+### `ki-confirmation`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-confirmation-backdrop-filter` | `none` | Complete backdrop effect behind the confirmation. |
+| `--ki-confirmation-bg` | `#f9f7f4` | Solid raised background of the confirmation prompt and summary. |
+| `--ki-confirmation-bg-image` | `none` | Optional image painted over the solid confirmation background. |
+| `--ki-confirmation-border` | `rgba(24, 22, 19, 0.16)` | Boundary of the confirmation surface. |
+| `--ki-confirmation-border-width` | `1px` | Stroke width of the confirmation boundary. |
+| `--ki-confirmation-fg` | `#181613` | Text on the confirmation surface. |
+| `--ki-confirmation-gap` | `0.75rem` | Block separation between confirmation rows. |
+| `--ki-confirmation-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the pending question. |
+| `--ki-confirmation-inline-gap` | `0.5rem` | Space between text and controls in a row. |
+| `--ki-confirmation-padding` | `1rem` | Space between the prompt's edge and its content. |
+| `--ki-confirmation-radius` | `16px` | Corner radius of the confirmation surface. |
+
+### `ki-conversation`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-conversation-gap` | `1rem` | Space between messages in the transcript. |
+| `--ki-conversation-max-width` | `42rem` | Maximum inline size of the transcript. |
+| `--ki-message-assistant-fg` | `#181613` | Text ink of an assistant reply on the page surface. |
+| `--ki-message-avatar-backdrop-filter` | `none` | Complete filter behind the default assistant avatar. |
+| `--ki-message-avatar-bg` | `#ffebe5` | Solid primary container of the default assistant avatar. |
+| `--ki-message-avatar-bg-image` | `none` | Optional image over the default assistant avatar background. |
+| `--ki-message-avatar-fg` | `#9a3715` | Glyph ink inside the default assistant avatar. |
+| `--ki-message-event-fg` | `#5e5953` | Text and icon ink of a system event on the page surface. |
+| `--ki-message-padding` | `0.5rem 0.75rem` | Block and inline padding inside a user bubble, in that order. |
+| `--ki-message-radius` | `16px` | Radius of the user bubble corners. |
+| `--ki-message-user-backdrop-filter` | `none` | Complete filter behind the user bubble. |
+| `--ki-message-user-bg` | `#f3f0eb` | Solid background of a user bubble. |
+| `--ki-message-user-bg-image` | `none` | Optional image over the user bubble background. |
+| `--ki-message-user-fg` | `#181613` | Text ink in a user bubble. |
+
 ### `ki-copy-button`
 
 | Token | Value (onmars light) | Description |
@@ -1648,6 +1691,8 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-input-action-gap` | `0.25rem` | Gap between the input action and the preceding control or adornment. |
+| `--ki-input-action-padding-end` | `0.25rem` | Inline-end inset between the input action and the inside edge of the field border. |
 | `--ki-input-border-block-end-width` | `1px` | dimension used by the input component for border block end width. |
 | `--ki-input-border-block-start-width` | `1px` | dimension used by the input component for border block start width. |
 | `--ki-input-border-inline-end-width` | `1px` | dimension used by the input component for border inline end width. |

@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Usage/Confirmation" />
+
+# Confirm an assistant action
+
+Name the action in the heading and use verbs that make both choices clear.
+For a destructive request, describe what the person would lose before they
+reach the buttons.
+
+```html
+<ki-confirmation
+  heading="Delete this draft?"
+  action="delete_draft"
+  approve-label="Delete draft"
+  deny-label="Keep draft"
+  tone="danger"
+  consequence="This permanently removes the draft and its attachments."
+></ki-confirmation>
+```
+
+Listen for `ki-approve` or `ki-deny` and update `state` after recording the
+outcome. Provide `resolved-by` and `resolved-at` as display-ready text for
+the conversation history.
+
+[See the Confirmation stories and customization](?path=/docs/docs-components-ki-confirmation--docs).

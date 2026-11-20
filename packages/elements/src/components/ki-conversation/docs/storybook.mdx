@@ -1,0 +1,20 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ConversationStories from '../ki-conversation.stories';
+
+<Meta of={ConversationStories} name="Examples" />
+
+# Conversation examples
+
+## A transcript with a streaming reply
+
+<Canvas of={ConversationStories.Playground} />
+<Controls of={ConversationStories.Playground} />
+
+## Scroll back while replies arrive
+
+Scroll back, then use **Add a reply**. The log holds its reading position.
+Activate **Jump to latest** to return to the end and follow replies again.
+
+<Canvas of={ConversationStories.FollowLatest} />
+
+[Read the Conversation guide](?path=/docs/docs-components-ki-conversation--docs)
