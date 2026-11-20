@@ -377,7 +377,7 @@
       "ki-close": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
+        "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<KiDialogCloseDetail>"
@@ -387,7 +387,7 @@
       "close": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
+        "description": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method or an invoker command.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
         "parameters": [],
         "replacement": null,
         "required": false,
@@ -477,7 +477,7 @@
       "footer": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Dialog actions; applications wire every action to `close()`.",
+        "description": "Dialog actions. Dismiss using an invoker command or `close()`.",
         "replacement": null,
         "required": false,
         "type": null
@@ -509,7 +509,7 @@
         "kinds": [
           "type"
         ],
-        "signature": "export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';"
+        "signature": "export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop' | 'command';"
       },
       "defineCustomElement": {
         "kinds": [
