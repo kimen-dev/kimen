@@ -69,14 +69,17 @@ Rules:
   package-set drift. The builder and verifier also check the packed MCP bin
   in a clean, offline npm install and verify the bundled dependency notices
   (151-release-automation S7 and S8).
-- Each Chromium/Firefox/WebKit job downloads that same artifact ID, verifies
-  the same candidate SHA, installs its elements/tokens tarballs without
-  workspace linking and runs the browser harness against those bytes. Browser
-  evidence records artifact ID and candidate SHA; rebuilding packages from the
-  same source SHA does not qualify.
-- Only after `verify-candidate` succeeds may the publisher receive
-  `id-token: write`. It downloads the same artifact ID and repeats candidate,
-  manifest and tarball verification before invoking npm.
+- Browser validation runs Chromium, Firefox and WebKit, each in four shards
+  that together run that engine's complete browser gate at the candidate's
+  source SHA, each file once. Each shard job downloads that same artifact ID,
+  verifies the same candidate SHA, installs its elements/tokens tarballs
+  without workspace linking and runs the browser harness against those bytes.
+  Browser evidence records artifact ID and candidate SHA; rebuilding packages
+  from the same source SHA does not qualify.
+- Only after `verify-candidate`, every browser shard and the capability-claims
+  binding succeed may the publisher receive `id-token: write`. It downloads
+  the same artifact ID and repeats candidate, manifest and tarball
+  verification before invoking npm.
 - Publisher performs no checkout, install, build or repository script.
 - Publisher requires preinstalled npm >=11.5.1 and exact repository metadata.
   Release-mode `private: true`, missing package/trusted-publisher configuration
