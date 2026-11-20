@@ -2118,9 +2118,19 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-confirmation",
+        "ki-conversation"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-confirmation": [
+          "ki-button"
+        ],
+        "ki-conversation": [
+          "ki-button"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-button-group/ki-button-group.tsx",
@@ -4322,6 +4332,708 @@
         ],
         "ki-copy-button": [
           "ki-icon"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-confirmation/ki-confirmation.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-confirmation",
+      "docs": "An inline prompt for a decision about a proposed assistant action.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Show the exact action and the details a person needs before\ngranting permission. A trusted host maps the two decision events to its\ndeclared actions and records the outcome in state."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Report a completed action without a preceding request, or\nblock the rest of the interface with a modal decision (use ki-dialog).\nThe displayed action identifier is text and carries no execution authority."
+        },
+        {
+          "name": "slot",
+          "text": "- Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
+        },
+        {
+          "name": "part",
+          "text": "group - The painted, labelled prompt or outcome surface."
+        },
+        {
+          "name": "part",
+          "text": "heading - The pending question."
+        },
+        {
+          "name": "part",
+          "text": "remember - The label of the conversation preference checkbox."
+        },
+        {
+          "name": "part",
+          "text": "decisions - The row of decision controls."
+        },
+        {
+          "name": "part",
+          "text": "summary - The resolved row."
+        }
+      ],
+      "usage": {
+        "examples": "# Confirm an assistant action\n\n```html\n<ki-confirmation\n  id=\"send-email-prompt\"\n  heading=\"Send this email?\"\n  action=\"send_email\"\n  approve-label=\"Send email\"\n  deny-label=\"Keep draft\"\n  consequence=\"Recipients will get the message immediately.\"\n  remember\n  remember-label=\"Allow sending email for the rest of this conversation\"\n>\n  <dl>\n    <dt>To</dt><dd>Ana Rivera</dd>\n    <dt>Subject</dt><dd>Weekly report</dd>\n  </dl>\n</ki-confirmation>\n```\n\nMap the two decisions in trusted host code. This MCP Apps example uses a\nready `SurfaceBridge` whose rendered spec declares `approve-send-email` and\n`deny-send-email` in its top-level `actions`. Keep a guarded node's scalar\n`action` binding unset because the component declares two events. Its\n`props.action` carries the visible tool identifier. A trusted host that\napplies an origin allowlist can supply that identifier after rendering, since\nguarded spec data under that prop name passes through the URL policy.\n\n```js\nconst prompt = document.querySelector('#send-email-prompt');\n\nprompt.addEventListener('ki-approve', (event) => {\n  if (event.composedPath()[0] !== prompt) return;\n  bridge.dispatch('approve-send-email', {\n    tool: 'send_email',\n    remember: event.detail?.remember === true,\n  });\n});\n\nprompt.addEventListener('ki-deny', (event) => {\n  if (event.composedPath()[0] !== prompt) return;\n  bridge.dispatch('deny-send-email', { tool: 'send_email' });\n});\n```\n\nThe host owns execution, deadlines and any conversation permission. Supply\noutcome metadata and set the resolved state after recording the decision.\n\n```js\nprompt.resolvedBy = 'You';\nprompt.resolvedAt = '10:32';\nprompt.state = 'approved';\n```\n\nCall `await prompt.focusPrompt()` when the person is waiting for the request.\nKeep the proposed inputs stable while the person is deciding. Mount a new\nelement if another request for the same tool replaces a pending one.\n"
+      },
+      "props": [
+        {
+          "name": "action",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "action",
+          "reflectToAttr": false,
+          "docs": "Tool identifier shown to the person and available for reporting by the host.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "approveLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "approve-label",
+          "reflectToAttr": false,
+          "docs": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "approvedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "approved-label",
+          "reflectToAttr": false,
+          "docs": "Localized outcome text when the host marks the request approved.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Approved'"
+            }
+          ],
+          "default": "'Approved'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "consequence",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "consequence",
+          "reflectToAttr": false,
+          "docs": "Cost or irreversible effect to read before deciding, displayed as a warning note.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "deniedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "denied-label",
+          "reflectToAttr": false,
+          "docs": "Localized outcome text when the host marks the request denied.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Denied'"
+            }
+          ],
+          "default": "'Denied'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "denyLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "deny-label",
+          "reflectToAttr": false,
+          "docs": "Verb or short phrase for refusal, such as \"Keep draft\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "expiredLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "expired-label",
+          "reflectToAttr": false,
+          "docs": "Localized outcome text when the host marks the request expired.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Expired'"
+            }
+          ],
+          "default": "'Expired'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "heading",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading",
+          "reflectToAttr": false,
+          "docs": "Question naming the proposed action. Provide it before asking for a decision.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "remember",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remember",
+          "reflectToAttr": false,
+          "docs": "Offers an unchecked preference limited to this action in the current conversation.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "rememberLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remember-label",
+          "reflectToAttr": false,
+          "docs": "Localized conversation permission label. Name the specific permission when possible.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Allow this action for the rest of this conversation'"
+            }
+          ],
+          "default": "'Allow this action for the rest of this conversation'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "resolvedAt",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "resolved-at",
+          "reflectToAttr": false,
+          "docs": "Display-ready, localized resolution time from the host, if known.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "resolvedBy",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "resolved-by",
+          "reflectToAttr": false,
+          "docs": "Display-ready name of the person or service that resolved the request, if known.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "state",
+          "type": "\"approved\" | \"denied\" | \"expired\" | \"pending\"",
+          "complexType": {
+            "original": "KiConfirmationState",
+            "resolved": "\"approved\" | \"denied\" | \"expired\" | \"pending\"",
+            "references": {
+              "KiConfirmationState": {
+                "location": "local",
+                "path": "src/components/ki-confirmation/ki-confirmation.tsx",
+                "id": "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationState"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "state",
+          "reflectToAttr": false,
+          "docs": "Host-controlled outcome. Resolve after recording a decision or expiring the request.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'pending'"
+            }
+          ],
+          "default": "'pending'",
+          "values": [
+            {
+              "value": "approved",
+              "type": "string"
+            },
+            {
+              "value": "denied",
+              "type": "string"
+            },
+            {
+              "value": "expired",
+              "type": "string"
+            },
+            {
+              "value": "pending",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"neutral\"",
+          "complexType": {
+            "original": "KiConfirmationTone",
+            "resolved": "\"danger\" | \"neutral\"",
+            "references": {
+              "KiConfirmationTone": {
+                "location": "local",
+                "path": "src/components/ki-confirmation/ki-confirmation.tsx",
+                "id": "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": false,
+          "docs": "Use danger when approval is destructive. Unknown values use neutral.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "focusPrompt",
+          "returns": {
+            "type": "Promise<boolean>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<boolean>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<boolean>"
+          },
+          "signature": "focusPrompt() => Promise<boolean>",
+          "parameters": [],
+          "docs": "Moves focus to the pending group and reports success. Call only when the\nhost knows the person was waiting for this request. A focused editor keeps\nits focus, including editors inside open shadow roots.",
+          "docsTags": []
+        }
+      ],
+      "events": [
+        {
+          "event": "ki-approve",
+          "detail": "{ remember: boolean; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ remember: boolean }",
+            "resolved": "{ remember: boolean; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Explicit approval, with the conversation preference at the time of the decision.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-deny",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Explicit refusal of the pending request.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
+        }
+      ],
+      "parts": [
+        {
+          "name": "decisions",
+          "docs": "The row of decision controls."
+        },
+        {
+          "name": "group",
+          "docs": "The painted, labelled prompt or outcome surface."
+        },
+        {
+          "name": "heading",
+          "docs": "The pending question."
+        },
+        {
+          "name": "remember",
+          "docs": "The label of the conversation preference checkbox."
+        },
+        {
+          "name": "summary",
+          "docs": "The resolved row."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-button",
+        "ki-note"
+      ],
+      "dependencyGraph": {
+        "ki-confirmation": [
+          "ki-button",
+          "ki-note"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-conversation/ki-conversation.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-conversation",
+      "docs": "An accessible chat transcript with optional following as messages arrive.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Display chronological user, assistant and event messages. Give\nthe host a block-size constraint to keep scrolling within the transcript."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Collect input, send messages or present a static sequence of\ncards. Place the composer outside the transcript."
+        },
+        {
+          "name": "slot",
+          "text": "- The chronological transcript, normally ki-message elements."
+        },
+        {
+          "name": "part",
+          "text": "log - The named polite live region and keyboard-focusable scrollport."
+        },
+        {
+          "name": "part",
+          "text": "messages - The stack of slotted messages inside the scrollport."
+        },
+        {
+          "name": "part",
+          "text": "jump - The Jump to latest button shown while following is paused."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-conversation examples\n\n## Bounded transcript\n\nSet a block size to make the transcript scroll. Enable `stick-to-bottom` to\nfollow new messages and keep incoming replies in view.\n\n```html\n<ki-conversation id=\"help-chat\" label=\"Component help\" stick-to-bottom style=\"block-size: 20rem\">\n  <ki-message message-role=\"user\">Which inputs handle form errors?</ki-message>\n  <ki-message message-role=\"event\" icon-name=\"search\">Searched the component docs</ki-message>\n  <ki-message message-role=\"assistant\">Input, textarea and select show field errors.</ki-message>\n</ki-conversation>\n<label for=\"prompt\">Message</label>\n<textarea id=\"prompt\"></textarea>\n```\n\n## Pass application chunks to a message\n\nCall this function with the async iterable supplied by your application.\nKeep the composer and any waiting indicator outside the live log.\n\n```js\nasync function appendReply(conversation, chunks) {\n  const reply = document.createElement('ki-message');\n  reply.setAttribute('streaming', '');\n  conversation.append(reply);\n  try {\n    for await (const chunk of chunks) {\n      reply.append(chunk);\n    }\n  } finally {\n    reply.removeAttribute('streaming');\n  }\n}\n```\n\n## Custom-elements entry points\n\n```ts\nimport { defineCustomElement as defineConversation } from '@kimen/elements/ki-conversation';\nimport { defineCustomElement as defineMessage } from '@kimen/elements/ki-message';\n\ndefineConversation();\ndefineMessage();\n```\n"
+      },
+      "props": [
+        {
+          "name": "jumpLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "jump-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible label for the control that resumes following.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Jump to latest'"
+            }
+          ],
+          "default": "'Jump to latest'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Conversation'"
+            }
+          ],
+          "default": "'Conversation'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "stickToBottom",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "stick-to-bottom",
+          "reflectToAttr": true,
+          "docs": "Follow new or growing messages until the reader scrolls away from the end.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The chronological transcript, normally ki-message elements."
+        }
+      ],
+      "parts": [
+        {
+          "name": "jump",
+          "docs": "The Jump to latest button shown while following is paused."
+        },
+        {
+          "name": "log",
+          "docs": "The named polite live region and keyboard-focusable scrollport."
+        },
+        {
+          "name": "messages",
+          "docs": "The stack of slotted messages inside the scrollport."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-button"
+      ],
+      "dependencyGraph": {
+        "ki-conversation": [
+          "ki-button"
         ]
       }
     },
@@ -6945,6 +7657,7 @@
         "ki-copy-button",
         "ki-empty-state",
         "ki-fab",
+        "ki-message",
         "ki-stat",
         "ki-stepper",
         "ki-table"
@@ -6964,6 +7677,9 @@
           "ki-icon"
         ],
         "ki-fab": [
+          "ki-icon"
+        ],
+        "ki-message": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -8102,6 +8818,10 @@
           "text": "end - Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI."
         },
         {
+          "name": "slot",
+          "text": "action - One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls."
+        },
+        {
           "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
@@ -8131,7 +8851,7 @@
         }
       ],
       "usage": {
-        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
+        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nPlace a one-field form's only submit action inside the field.\n\n```html\n<form role=\"search\">\n  <ki-input type=\"search\" name=\"q\" label=\"Search docs\" placeholder=\"Components, tokens…\">\n    <ki-button slot=\"action\" size=\"sm\" variant=\"secondary\" type=\"submit\">Search</ki-button>\n  </ki-input>\n</form>\n```\n\nThe action has a separate tab stop. Enter in the entry also submits the form.\nFor an icon-only action, give `ki-icon-button size=\"sm\"` a `label` and call\n`form.requestSubmit()` from its click handler.\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
       },
       "props": [
         {
@@ -8578,6 +9298,10 @@
       ],
       "styles": [],
       "slots": [
+        {
+          "name": "action",
+          "docs": "One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls."
+        },
         {
           "name": "end",
           "docs": "Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI."
@@ -9740,6 +10464,236 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-message/ki-message.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-message",
+      "docs": "A named chat article styled as a person’s message, assistant reply or event.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Collect a prompt, announce a page alert, or execute a tool."
+        },
+        {
+          "name": "slot",
+          "text": "- Message content, including text or formatted elements."
+        },
+        {
+          "name": "slot",
+          "text": "avatar - Optional avatar replacing the assistant’s decorative default."
+        },
+        {
+          "name": "slot",
+          "text": "actions - Follow-up controls supplied by the consumer after the content."
+        },
+        {
+          "name": "part",
+          "text": "message - The named article and role-specific layout."
+        },
+        {
+          "name": "part",
+          "text": "avatar - The leading assistant avatar container."
+        },
+        {
+          "name": "part",
+          "text": "content - The body of the article, including any event icon."
+        },
+        {
+          "name": "part",
+          "text": "actions - The group containing slotted follow-up controls."
+        },
+        {
+          "name": "part",
+          "text": "caret - The decorative marker displayed while a message is streaming."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-message examples\n\n## User and event messages\n\n```html\n<ki-message message-role=\"user\">Can I export my settings?</ki-message>\n<ki-message message-role=\"event\" icon-name=\"search\">Found the export guide</ki-message>\n```\n\n## Assistant reply with an avatar and action\n\nThe `author` prop names the article. Put formatted content in the default\nslot and application controls in `actions`.\n\n```html\n<ki-message message-role=\"assistant\" author=\"Ava said\">\n  <ki-avatar slot=\"avatar\" size=\"xs\" initials=\"AV\"></ki-avatar>\n  <strong>Yes.</strong> Choose <code>JSON</code> from the export menu.\n  <details slot=\"actions\">\n    <summary>View source</summary>\n    Settings export guide\n  </details>\n</ki-message>\n```\n\n## Streaming reply\n\nAdd `streaming` while the content is arriving, then remove it when the\ncomplete reply is available. Use a registered Markdown component in the\ndefault slot when your application displays formatted Markdown.\n\n```html\n<ki-message message-role=\"assistant\" streaming>Choose the export format</ki-message>\n```\n"
+      },
+      "props": [
+        {
+          "name": "author",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "author",
+          "reflectToAttr": false,
+          "docs": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "messageRole",
+          "type": "\"assistant\" | \"event\" | \"user\" | undefined",
+          "complexType": {
+            "original": "KiMessageRole",
+            "resolved": "\"assistant\" | \"event\" | \"user\" | undefined",
+            "references": {
+              "KiMessageRole": {
+                "location": "local",
+                "path": "src/components/ki-message/ki-message.tsx",
+                "id": "src/components/ki-message/ki-message.tsx::KiMessageRole"
+              }
+            }
+          },
+          "mutable": true,
+          "attr": "message-role",
+          "reflectToAttr": true,
+          "docs": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'assistant'"
+            }
+          ],
+          "values": [
+            {
+              "value": "assistant",
+              "type": "string"
+            },
+            {
+              "value": "event",
+              "type": "string"
+            },
+            {
+              "value": "user",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "streaming",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "streaming",
+          "reflectToAttr": true,
+          "docs": "Show the caret and mark the article busy until this message is complete.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Message content, including text or formatted elements."
+        },
+        {
+          "name": "actions",
+          "docs": "Follow-up controls supplied by the consumer after the content."
+        },
+        {
+          "name": "avatar",
+          "docs": "Optional avatar replacing the assistant’s decorative default."
+        }
+      ],
+      "parts": [
+        {
+          "name": "actions",
+          "docs": "The group containing slotted follow-up controls."
+        },
+        {
+          "name": "avatar",
+          "docs": "The leading assistant avatar container."
+        },
+        {
+          "name": "caret",
+          "docs": "The decorative marker displayed while a message is streaming."
+        },
+        {
+          "name": "content",
+          "docs": "The body of the article, including any event icon."
+        },
+        {
+          "name": "message",
+          "docs": "The named article and role-specific layout."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-message": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-note/ki-note.tsx",
       "encapsulation": "shadow",
       "tag": "ki-note",
@@ -9934,9 +10888,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-confirmation"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-confirmation": [
+          "ki-note"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-option/ki-option.tsx",
@@ -16933,6 +17893,16 @@
       "docstring": "",
       "path": "src/components/ki-chip-group/ki-chip-group.tsx"
     },
+    "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationTone": {
+      "declaration": "export type KiConfirmationTone = 'neutral' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-confirmation/ki-confirmation.tsx"
+    },
+    "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationState": {
+      "declaration": "export type KiConfirmationState = 'pending' | 'approved' | 'denied' | 'expired';",
+      "docstring": "",
+      "path": "src/components/ki-confirmation/ki-confirmation.tsx"
+    },
     "src/components/ki-copy-button/ki-copy-button.tsx::KiCopyButtonVariant": {
       "declaration": "export type KiCopyButtonVariant = Exclude<KiButtonVariant, 'tertiary'>;",
       "docstring": "",
@@ -17067,6 +18037,11 @@
       "declaration": "export interface KiMenuSelectDetail {\n  value: string;\n  checked?: boolean;\n}",
       "docstring": "",
       "path": "src/components/ki-menu/ki-menu.tsx"
+    },
+    "src/components/ki-message/ki-message.tsx::KiMessageRole": {
+      "declaration": "export type KiMessageRole = 'user' | 'assistant' | 'event';",
+      "docstring": "",
+      "path": "src/components/ki-message/ki-message.tsx"
     },
     "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
       "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",

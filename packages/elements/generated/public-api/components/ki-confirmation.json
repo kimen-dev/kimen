@@ -1,0 +1,537 @@
+{
+  "component": {
+    "attributes": {
+      "action": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tool identifier shown to the person and available for reporting by the host.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "approve-label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "approved-label": {
+        "default": "'Approved'",
+        "deprecatedSince": null,
+        "description": "Localized outcome text when the host marks the request approved.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "consequence": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Cost or irreversible effect to read before deciding, displayed as a warning note.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "denied-label": {
+        "default": "'Denied'",
+        "deprecatedSince": null,
+        "description": "Localized outcome text when the host marks the request denied.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "deny-label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "expired-label": {
+        "default": "'Expired'",
+        "deprecatedSince": null,
+        "description": "Localized outcome text when the host marks the request expired.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Question naming the proposed action. Provide it before asking for a decision.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "remember": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Offers an unchecked preference limited to this action in the current conversation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "remember-label": {
+        "default": "'Allow this action for the rest of this conversation'",
+        "deprecatedSince": null,
+        "description": "Localized conversation permission label. Name the specific permission when possible.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "resolved-at": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Display-ready, localized resolution time from the host, if known.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "resolved-by": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Display-ready name of the person or service that resolved the request, if known.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "state": {
+        "default": "'pending'",
+        "deprecatedSince": null,
+        "description": "Host-controlled outcome. Resolve after recording a decision or expiring the request.",
+        "replacement": null,
+        "required": false,
+        "type": "\"approved\" | \"denied\" | \"expired\" | \"pending\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Use danger when approval is destructive. Unknown values use neutral.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\""
+      }
+    },
+    "cssProperties": {
+      "--ki-confirmation-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop effect behind the confirmation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Solid raised background of the confirmation prompt and summary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted over the solid confirmation background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Boundary of the confirmation surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the confirmation boundary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on the confirmation surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block separation between confirmation rows.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-heading-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the pending question.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-inline-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between text and controls in a row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the prompt's edge and its content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-confirmation-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the confirmation surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-primary-med-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for surface primary med em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-mono": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family mono.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-para": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height para.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "An inline prompt for a decision about a proposed assistant action.",
+    "events": {
+      "ki-approve": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Explicit approval, with the conversation preference at the time of the decision.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ remember: boolean }>"
+      },
+      "ki-deny": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Explicit refusal of the pending request.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      }
+    },
+    "methods": {
+      "focusPrompt": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Moves focus to the pending group and reports success. Call only when the\nhost knows the person was waiting for this request. A focused editor keeps\nits focus, including editors inside open shadow roots.",
+        "parameters": [],
+        "replacement": null,
+        "required": false,
+        "signature": "focusPrompt() => Promise<boolean>",
+        "type": "Promise<boolean>"
+      }
+    },
+    "parts": {
+      "decisions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The row of decision controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "group": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The painted, labelled prompt or outcome surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The pending question.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "remember": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The label of the conversation preference checkbox.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "summary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The resolved row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "action": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tool identifier shown to the person and available for reporting by the host.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "approveLabel": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "approvedLabel": {
+        "default": "'Approved'",
+        "deprecatedSince": null,
+        "description": "Localized outcome text when the host marks the request approved.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "consequence": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Cost or irreversible effect to read before deciding, displayed as a warning note.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "deniedLabel": {
+        "default": "'Denied'",
+        "deprecatedSince": null,
+        "description": "Localized outcome text when the host marks the request denied.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "denyLabel": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "expiredLabel": {
+        "default": "'Expired'",
+        "deprecatedSince": null,
+        "description": "Localized outcome text when the host marks the request expired.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Question naming the proposed action. Provide it before asking for a decision.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "remember": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Offers an unchecked preference limited to this action in the current conversation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "rememberLabel": {
+        "default": "'Allow this action for the rest of this conversation'",
+        "deprecatedSince": null,
+        "description": "Localized conversation permission label. Name the specific permission when possible.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "resolvedAt": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Display-ready, localized resolution time from the host, if known.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "resolvedBy": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Display-ready name of the person or service that resolved the request, if known.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "state": {
+        "default": "'pending'",
+        "deprecatedSince": null,
+        "description": "Host-controlled outcome. Resolve after recording a decision or expiring the request.",
+        "replacement": null,
+        "required": false,
+        "type": "\"approved\" | \"denied\" | \"expired\" | \"pending\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Use danger when approval is destructive. Unknown values use neutral.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-confirmation.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-confirmation.d.ts",
+    "symbols": {
+      "KiConfirmation": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiConfirmation extends Components.KiConfirmation, HTMLElement {\n}\nexport const KiConfirmation: {\n    prototype: KiConfirmation;\n    new (): KiConfirmation;\n};"
+      },
+      "KiConfirmationState": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiConfirmationState = 'pending' | 'approved' | 'denied' | 'expired';"
+      },
+      "KiConfirmationTone": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiConfirmationTone = 'neutral' | 'danger';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-confirmation.js"
+  }
+}

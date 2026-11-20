@@ -5,5 +5,18 @@
   "pointer": {
     "hoverWitness": false
   },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpApps": {
+      "brotli": 473
+    },
+    "mcpServer": {
+      "gzip": 1162,
+      "brotli": 964
+    },
+    "tokenStylesheets": {
+      "onmars": 182,
+      "material3": 33
+    }
+  }
 }

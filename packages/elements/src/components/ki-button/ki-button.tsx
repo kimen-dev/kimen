@@ -206,13 +206,8 @@ export class KiButton {
   @State() private formDisabled = false;
   private button: HTMLButtonElement | undefined;
 
-  private get effectiveDisabled(): boolean {
+  get #effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
-  }
-
-  /** Loading is in effect only on a button that is not disabled (046 D8). */
-  private get effectiveLoading(): boolean {
-    return this.loading && !this.effectiveDisabled;
   }
 
   componentWillLoad(): void {
@@ -244,7 +239,7 @@ export class KiButton {
   // cancel both, so no activation reaches the application and the form is
   // never touched (046 D3).
   private readonly handleClick = (event: MouseEvent): void => {
-    if (this.effectiveDisabled || this.loading) {
+    if (this.#effectiveDisabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
       return;
@@ -302,16 +297,10 @@ export class KiButton {
     }
   }
 
-  render() {
-    const loading = this.effectiveLoading;
-    const pressed = this.toggle ? (this.selected ? 'true' : 'false') : undefined;
-    // The status region is rendered always, empty until the button loads: a
-    // polite region created together with its text is not announced (042
-    // D6). It sits outside the native button, so its text never joins the
-    // button's name (046 D7).
-    return [
+  #renderButton(disabled: boolean, loading: boolean) {
+    return (
       <button
-        key="control"
+        key="button"
         ref={(el) => {
           this.button = el;
         }}
@@ -319,10 +308,10 @@ export class KiButton {
         type="button"
         {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
         {...(this.command === undefined ? {} : { command: this.command })}
-        tabIndex={this.effectiveDisabled ? -1 : 0}
-        disabled={this.effectiveDisabled}
+        tabIndex={disabled ? -1 : 0}
+        disabled={disabled}
         aria-disabled={loading ? 'true' : undefined}
-        aria-pressed={pressed}
+        aria-pressed={this.toggle ? (this.selected ? 'true' : 'false') : undefined}
         onClick={this.handleClick}
         onKeyDown={startKeyboardPress}
         onKeyUp={releaseKeyboardPress}
@@ -348,7 +337,20 @@ export class KiButton {
             />
           </svg>
         ) : null}
-      </button>,
+      </button>
+    );
+  }
+
+  render() {
+    const disabled = this.#effectiveDisabled;
+    // Loading is in effect only on a button that is not disabled (046 D8).
+    const loading = this.loading && !disabled;
+    // The status region is rendered always, empty until the button loads: a
+    // polite region created together with its text is not announced (042
+    // D6). It sits outside the native button, so its text never joins the
+    // button's name (046 D7).
+    return [
+      this.#renderButton(disabled, loading),
       <span key="status" class="status" role="status">
         {loading ? this.loadingLabel : null}
       </span>,

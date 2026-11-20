@@ -57,6 +57,8 @@ methods, CSS custom properties and examples.
 - [ki-chip](https://kimen.dev/llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
 - [ki-chip-group](https://kimen.dev/llms/ki-chip-group.md): label related chips or let people change their reading order.
 - [ki-code-block](https://kimen.dev/llms/ki-code-block.md): display a multiline example, generated code or a tool result that readers should be able to inspect and copy.
+- [ki-confirmation](https://kimen.dev/llms/ki-confirmation.md): Show the exact action and the details a person needs before granting permission.
+- [ki-conversation](https://kimen.dev/llms/ki-conversation.md): Display chronological user, assistant and event messages.
 - [ki-copy-button](https://kimen.dev/llms/ki-copy-button.md): let a person copy a link, identifier, token or code sample.
 - [ki-counter](https://kimen.dev/llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](https://kimen.dev/llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
@@ -78,6 +80,7 @@ methods, CSS custom properties and examples.
 - [ki-menu](https://kimen.dev/llms/ki-menu.md): row actions, account commands, split buttons, and overflow actions.
 - [ki-menu-group](https://kimen.dev/llms/ki-menu-group.md): name a set of related actions or scope exclusive radio items in a menu.
 - [ki-menu-item](https://kimen.dev/llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
+- [ki-message](https://kimen.dev/llms/ki-message.md): Display a transcript entry inside ki-conversation.
 - [ki-note](https://kimen.dev/llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
 - [ki-option](https://kimen.dev/llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-popover](https://kimen.dev/llms/ki-popover.md): Show filters, details, a small form, or a text toggletip.
