@@ -1,9 +1,24 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
   "sizeBudget": {
-    "mcpApps": { "raw": 18130, "gzip": 5061, "brotli": 3887 },
-    "mcpServer": { "raw": 26286, "gzip": 6626, "brotli": 4371 }
+    "mcpApps": {
+      "raw": 17955,
+      "gzip": 5212,
+      "brotli": 3787
+    },
+    "mcpServer": {
+      "raw": 26111,
+      "gzip": 6674,
+      "brotli": 4332
+    },
+    "tokenStylesheets": {
+      "onmars": 161
+    }
   }
 }

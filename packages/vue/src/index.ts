@@ -60,6 +60,7 @@ export { KiStatus } from './ki-status.js';
 export { KiSwitch } from './ki-switch.js';
 export { KiTab } from './ki-tab.js';
 export { KiTabPanel } from './ki-tab-panel.js';
+export { KiTable } from './ki-table.js';
 export { KiTabs } from './ki-tabs.js';
 export { KiTextarea } from './ki-textarea.js';
 export { KiToast } from './ki-toast.js';
