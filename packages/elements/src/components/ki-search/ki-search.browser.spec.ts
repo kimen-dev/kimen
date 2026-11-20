@@ -85,8 +85,17 @@ function record(host: HTMLElement, name: string) {
   return listener;
 }
 
-function query(search: SearchElement): HTMLInputElement {
-  const input = part(search, 'bar').querySelector('input');
+function expectShadowFocus(search: SearchElement, control: ReturnType<typeof combobox>) {
+  return expect
+    .poll(() => {
+      const target = control.query();
+      return target !== null && search.shadowRoot?.activeElement === target;
+    })
+    .toBe(true);
+}
+
+function query(search: SearchElement, bar: 'bar' | 'dialog-bar' = 'bar'): HTMLInputElement {
+  const input = part(search, bar).querySelector('input');
   if (!input) throw new Error('Search input is missing');
   return input;
 }
@@ -142,7 +151,7 @@ it.each([599, 600])('S4 honors the auto breakpoint at %dpx', async (width) => {
   await page.viewport(width, 800);
   const search = await mount('mode="auto"');
   await searchbox().click();
-  await expect.element(combobox()).toHaveFocus();
+  await expectShadowFocus(search, combobox());
   if (width < 600) {
     await expect.element(page.getByRole('dialog', { name: 'Search Kimen' })).toBeVisible();
     expect(search.shadowRoot?.querySelector('dialog')?.matches(':modal')).toBe(true);
@@ -176,8 +185,12 @@ it('S6 moves the active descendant with both arrows and retains input focus', as
       return id && search.shadowRoot?.getElementById(id)?.textContent;
     })
     .toContain('Dialog');
-  await userEvent.keyboard('{ArrowDown}{ArrowUp}');
-  await expect.element(combobox()).toHaveFocus();
+  await userEvent.keyboard('{ArrowDown}');
+  await expect
+    .element(page.getByRole('option', { name: /^Drawer/ }))
+    .toHaveAttribute('aria-selected', 'true');
+  await userEvent.keyboard('{ArrowUp}');
+  await expectShadowFocus(search, combobox());
   await expect
     .element(page.getByRole('option', { name: /^Dialog/ }))
     .toHaveAttribute('aria-selected', 'true');
@@ -205,7 +218,7 @@ it('S9 clears before closing on Escape', async () => {
   const search = await mount('mode="fullscreen" value="dialog"');
   const listener = record(search, 'ki-clear');
   await searchbox().click();
-  await expect.element(combobox()).toHaveFocus();
+  await expectShadowFocus(search, combobox());
   await userEvent.keyboard('{Escape}');
   await expect.element(combobox()).toHaveValue('');
   expect(search.open).toBe(true);
@@ -213,29 +226,30 @@ it('S9 clears before closing on Escape', async () => {
 });
 
 it('S10 closes an empty modal and allows a click on the restored input to reopen it', async () => {
-  await mount('mode="fullscreen"');
+  const search = await mount('mode="fullscreen"');
   await searchbox().click();
-  await expect.element(combobox()).toHaveFocus();
+  await expectShadowFocus(search, combobox());
   await userEvent.keyboard('{Escape}');
   await expect.element(page.getByRole('dialog')).not.toBeInTheDocument();
-  await expect.element(searchbox()).toHaveFocus();
+  await expectShadowFocus(search, searchbox());
   await searchbox().click();
   await expect.element(page.getByRole('dialog')).toBeVisible();
 });
 
 it('S11 includes a keyboard-operable removal control in the Recent group', async () => {
-  await mount('mode="docked"');
+  const search = await mount('mode="docked"');
   await searchbox().click();
+  await expectShadowFocus(search, combobox());
   const recent = page.getByRole('group', { name: 'Recent searches' });
   const run = recent.getByRole('button', { name: 'button tokens', exact: true });
   const remove = recent.getByRole('button', { name: 'Remove button tokens' });
   await userEvent.tab();
-  await expect.element(run).toHaveFocus();
+  await expectShadowFocus(search, run);
   await userEvent.tab();
-  await expect.element(remove).toHaveFocus();
+  await expectShadowFocus(search, remove);
   await userEvent.keyboard('{Enter}');
   await expect.element(recent).not.toBeInTheDocument();
-  await expect.element(combobox()).toHaveFocus();
+  await expectShadowFocus(search, combobox());
 });
 
 it('S11 displays a new recent query when the page reuses a removed child', async () => {
@@ -289,12 +303,12 @@ it('S14 makes background controls inert and returns focus from Back', async () =
   outside.textContent = 'Outside';
   fixture.append(outside);
   await searchbox().click();
-  await expect.element(combobox()).toHaveFocus();
+  await expectShadowFocus(search, combobox());
   outside.focus();
   expect(search.shadowRoot?.activeElement).toBe(combobox().element());
   await expectAccessible(fixture);
   await page.getByRole('button', { name: 'Back' }).click();
-  await expect.element(searchbox()).toHaveFocus();
+  await expectShadowFocus(search, searchbox());
 });
 
 it('S15 includes the query in submitted form data and honors disabled fieldsets', async () => {
@@ -315,16 +329,25 @@ it('S15 includes the query in submitted form data and honors disabled fieldsets'
   expect(new FormData(form).has('q')).toBe(false);
 });
 
-it('S16 restores the initial field and form value', async () => {
-  const form = document.createElement('form');
-  fixture.append(form);
-  const search = await mount('mode="docked" name="q" value="tokens"', '', form);
-  edit(query(search), 'dialog');
-  expect(new FormData(form).get('q')).toBe('dialog');
-  form.reset();
-  await expect.element(searchbox()).toHaveValue('tokens');
-  expect(new FormData(form).get('q')).toBe('tokens');
-});
+it.each(['docked', 'fullscreen'])(
+  'S16 restores the %s field and form value before a render',
+  async (mode) => {
+    const form = document.createElement('form');
+    fixture.append(form);
+    const search = await mount(`mode="${mode}" open name="q" value="tokens"`, '', form);
+    const input = query(search, mode === 'fullscreen' ? 'dialog-bar' : 'bar');
+
+    edit(input, 'dialog');
+    expect(new FormData(form).get('q')).toBe('dialog');
+    form.reset();
+
+    // Reset in the same task as the edit so Stencil has yet to render "dialog".
+    expect(input.value).toBe('tokens');
+    expect(new FormData(form).get('q')).toBe('tokens');
+    await expect.element(page.getByRole('dialog')).not.toBeInTheDocument();
+    await expect.element(searchbox()).toHaveValue('tokens');
+  },
+);
 
 it('S17 applies independent background token overrides to the bar and view', async () => {
   const search = await mount('mode="docked" open');
@@ -352,7 +375,7 @@ it('S19 shows a visible keyboard outline in forced colors', async (context) => {
   try {
     const search = await mount();
     await userEvent.tab();
-    await expect.element(combobox()).toHaveFocus();
+    await expectShadowFocus(search, combobox());
     const style = getComputedStyle(part(search, 'bar'));
     expect(style.outlineStyle).toBe('solid');
     expect(parseFloat(style.outlineWidth)).toBeGreaterThan(0);

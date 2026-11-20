@@ -156,7 +156,7 @@ export class KiSearch {
   }
 
   private get activeInput(): HTMLInputElement | undefined {
-    return this.fullscreen && this.open ? this.dialogInput : this.barInput;
+    return this.dialog?.open ? this.dialogInput : this.barInput;
   }
 
   private get suggestions(): SearchRow[] {
@@ -223,6 +223,8 @@ export class KiSearch {
   formResetCallback(): void {
     this.cancelInput();
     this.value = this.defaultValue;
+    // The edit and reset can share a render, leaving the virtual value unchanged.
+    if (this.activeInput) this.activeInput.value = this.value;
     this.open = false;
   }
 
