@@ -1823,7 +1823,7 @@
         },
         "text-ink": {
           "$type": "color",
-          "$description": "Kimen text inks for the Material 3 light scheme where the shared tone ramps read below 4.5:1 on the M3 surfaces (design-system review 2026-11-20). M3 has no info, success or warning roles, so these stay within the Kimen hues, a step darker than onmars to clear the lavender M3 surfaces.",
+          "$description": "Private Kimen text inks for Material 3 where the shared values read below 4.5:1 (design-system review 2026-11-20), inlined where they are read. M3 has no info, success or warning roles, so the light med-em inks stay within the Kimen hues, a step darker than onmars to clear the lavender M3 surfaces; on the light success fill of the dark scheme, secondary text takes the dark on-colour at 80%.",
           "info-med-em-light": {
             "$value": "#0c7292"
           },
@@ -1832,6 +1832,9 @@
           },
           "warning-med-em-light": {
             "$value": "#965d09"
+          },
+          "secondary-on-success-dark": {
+            "$value": "rgba(13, 38, 14, 0.8)"
           }
         },
         "state-layer": {

@@ -206,6 +206,7 @@
   --ki-text-primary-on-tertiary:light-dark(var(--ki-foundation-material3-palette-tertiary-100),var(--ki-foundation-material3-palette-tertiary-20));
   --ki-text-primary-on-tertiary-light:light-dark(var(--ki-foundation-material3-palette-tertiary-30),var(--ki-foundation-material3-palette-tertiary-90));
   --ki-text-primary-on-success:light-dark(var(--ki-color-brand-primary-text-on-success),var(--ki-color-success-950));
+  --ki-text-secondary-on-success:light-dark(var(--ki-color-brand-secondary-text-on-success),rgba(13,38,14,0.8));
   --ki-text-inverse-primary:light-dark(var(--ki-color-brand-200),var(--ki-foundation-migrated-themes-material3-color-brand-500));
   --ki-text-primary-high-em:light-dark(var(--ki-foundation-migrated-themes-material3-color-brand-700),var(--ki-foundation-migrated-themes-material3-color-brand-100));
   --ki-text-primary-med-em:light-dark(var(--ki-foundation-migrated-themes-material3-color-brand-500),var(--ki-foundation-migrated-themes-material3-color-brand-200));

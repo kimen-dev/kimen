@@ -43,6 +43,10 @@ const CONTRAST_PAIRS = [
   { text: '--ki-text-danger', surface: '--ki-surface-s0' },
   { text: '--ki-text-danger', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
+  // Secondary text on the success fill (the success button's own fill) read
+  // 4.27:1 at white 72% and 1.43:1 on the light Material 3 dark fill
+  // (design-system review 2026-11-20).
+  { text: '--ki-text-secondary-on-success', surface: '--ki-surface-success-high-em' },
   // The tonal med-em inks are published text tokens. Straight from the 500
   // ramp steps they read 1.7-3.5:1 on the light pages, with no component
   // painting them to trip a sweep (design-system review 2026-11-20); every

@@ -126,6 +126,9 @@
       "brand": {
         "primary-text-on-primary-light": {
           "$value": "{ki.foundation.onmars-v2.palette.brand-primary-text-on-primary-light}"
+        },
+        "secondary-text-on-success": {
+          "$value": "{ki.color.white.80}"
         }
       }
     },

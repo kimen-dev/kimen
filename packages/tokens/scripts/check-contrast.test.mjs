@@ -58,6 +58,7 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-danger', '--ki-surface-s0'],
       ['--ki-text-danger', '--ki-surface-s1'],
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
+      ['--ki-text-secondary-on-success', '--ki-surface-success-high-em'],
       ...['info', 'success', 'warning', 'danger'].flatMap((tone) =>
         ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].map((surface) => [
           `--ki-text-${tone}-med-em`,

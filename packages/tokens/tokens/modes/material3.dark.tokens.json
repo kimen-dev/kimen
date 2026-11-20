@@ -386,6 +386,9 @@
       "primary-on-success": {
         "$value": "{ki.color.success.950}"
       },
+      "secondary-on-success": {
+        "$value": "{ki.foundation.material3.text-ink.secondary-on-success-dark}"
+      },
       "info-high-em": {
         "$value": "{ki.color.info.300}",
         "$description": "Dark info ink (info step 300), as success-high-em: readable on the dark page and on the dark info container."
