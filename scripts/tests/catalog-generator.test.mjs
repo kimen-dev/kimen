@@ -116,6 +116,35 @@ test('S19 a format the catalog does not know, or one on a non-string attribute, 
   }
 });
 
+test('a string attribute declared with the idref format becomes a reference constraint', () => {
+  // Spec 152 FR-001: a prop naming another element by id resolves only to
+  // a node of the same spec, because the component source says so.
+  const props = propsOf([{ format: 'idref', name: 'for', type: { text: 'string | undefined' } }]);
+  assert.equal(props.for.format, 'idref');
+  assert.throws(
+    () =>
+      buildCatalog(
+        manifestWith([{ format: 'idref', name: 'count', type: { text: 'number' } }]),
+        catalogOptions,
+      ),
+    /ki-probe\.count: .*format/u,
+  );
+});
+
+test('a form-action type offers agents the button value alone', () => {
+  // Spec 152 FR-006: a spec owns no form, so submit and reset could only
+  // act on the host page's form.
+  const props = propsOf([
+    { default: "'submit'", name: 'type', type: { text: '"button" | "reset" | "submit"' } },
+    { name: 'kind', type: { text: '"button" | "submit"' } },
+    { name: 'mode', type: { text: '"reset" | "submit"' } },
+  ]);
+  assert.deepEqual(props.type.values, ['button']);
+  assert.equal(props.type.default, 'button');
+  assert.deepEqual(props.kind.values, ['button', 'submit']);
+  assert.deepEqual(props.mode.values, ['reset', 'submit']);
+});
+
 test('S3 catalog generation only exposes components with an explicit opt-in', () => {
   const manifest = manifestWith([]);
   const published = buildCatalog(manifest, catalogOptions);

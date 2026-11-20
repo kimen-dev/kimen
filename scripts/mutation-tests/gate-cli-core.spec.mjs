@@ -358,6 +358,7 @@ it('runs package lint and every exact ATTW surface from the source inventory', a
     ['pnpm', ['exec', 'publint', 'packages/emitter'], '/workspace'],
     ['pnpm', ['exec', 'publint', 'packages/adapter-a2ui'], '/workspace'],
     ['pnpm', ['exec', 'publint', 'packages/adapter-mcp-apps'], '/workspace'],
+    ['pnpm', ['exec', 'publint', 'packages/mcp-server'], '/workspace'],
     [
       'pnpm',
       [
@@ -649,7 +650,11 @@ it('builds a candidate from exact package directories and sanitizes CLI output',
     {
       mode: 'release',
       outputDirectory: '/output',
-      packageDirectories: ['/repository/packages/elements', '/repository/packages/tokens'],
+      packageDirectories: [
+        '/repository/packages/elements',
+        '/repository/packages/tokens',
+        '/repository/packages/mcp-server',
+      ],
       protectedMainRef: 'refs/heads/main',
       repositoryRoot: '/repository',
       sourceSha: 'b'.repeat(40),

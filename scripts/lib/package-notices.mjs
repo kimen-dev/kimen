@@ -20,7 +20,7 @@ const SECTION_START = new RegExp(`^${RULE}\\nThird-party notices: (.+)\\n${RULE}
 //   and the stock Lucide icon in the packaged MCP Apps document.
 const ELEMENT_BUNDLE_NOTICES = Object.freeze([
   'QR Code generator library (MIT)',
-  'Stencil client runtime (MIT)',
+  '@stencil/core (MIT)',
   'Lucide 1.63.0 and Feather icons (ISC and MIT)',
 ]);
 
@@ -28,8 +28,18 @@ export const PACKAGE_NOTICE_SECTIONS = Object.freeze({
   '@kimen/elements': ELEMENT_BUNDLE_NOTICES,
   '@kimen/tokens': Object.freeze(['onmars theme fonts (SIL OFL 1.1)']),
   '@kimen/adapter-mcp-apps': ELEMENT_BUNDLE_NOTICES,
-  '@kimen/mcp-server': ELEMENT_BUNDLE_NOTICES,
+  '@kimen/mcp-server': Object.freeze([
+    ...ELEMENT_BUNDLE_NOTICES,
+    '@modelcontextprotocol/core (Apache-2.0)',
+    '@modelcontextprotocol/server (Apache-2.0)',
+    'zod (MIT)',
+  ]),
 });
+
+// A notice applies across upgrades that keep the same licence.
+export function bundledPackageNoticeTitle({ name, license }) {
+  return `${name} (${license})`;
+}
 
 const withSingleTrailingNewline = (text) => `${text.trimEnd()}\n`;
 

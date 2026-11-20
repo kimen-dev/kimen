@@ -35,7 +35,19 @@ test('S1: packaging invokes publint once per publishable package and checks ever
     },
   });
 
-  assert.equal(calls.filter(({ args }) => args[1] === 'publint').length, 7);
+  assert.deepEqual(
+    calls.filter(({ args }) => args[1] === 'publint').map(({ args }) => args[2]),
+    [
+      'packages/tokens',
+      'packages/elements',
+      'packages/catalog',
+      'packages/kimen',
+      'packages/emitter',
+      'packages/adapter-a2ui',
+      'packages/adapter-mcp-apps',
+      'packages/mcp-server',
+    ],
+  );
   const componentAttw = calls.filter(
     ({ args }) => args[1] === 'attw' && args.some((arg) => arg.startsWith('./ki-')),
   );
@@ -85,8 +97,8 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 780_859, gzip: 177_000, brotli: 140_000 },
-    mcpServer: { raw: 2_570_879, gzip: 484_000, brotli: 380_000 },
+    mcpApps: { raw: 782_242, gzip: 177_349, brotli: 140_306 },
+    mcpServer: { raw: 2_574_055, gzip: 484_697, brotli: 380_341 },
     tokenStylesheets: { onmars: 12_930, material3: 5_600, base: 250 },
   });
 });
@@ -108,8 +120,8 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 783_059, gzip: 177_180, brotli: 140_165 },
-    mcpServer: { raw: 2_572_179, gzip: 484_190, brotli: 380_175 },
+    mcpApps: { raw: 784_442, gzip: 177_529, brotli: 140_471 },
+    mcpServer: { raw: 2_575_355, gzip: 484_887, brotli: 380_516 },
     tokenStylesheets: { onmars: 13_100, material3: 5_650, base: 250 },
   });
 });

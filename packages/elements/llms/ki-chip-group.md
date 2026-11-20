@@ -28,7 +28,7 @@ announced on each move. Listen for `ki-reorder` to persist the new order.
 
 ## Attributes
 
-- `focus-target` (string | undefined): ID of the entry field in the same document or shadow root for focus after the last chip.
+- `focus-target` (string | undefined, ID of another element of the same spec): ID of the entry field in the same document or shadow root for focus after the last chip.
 - `label` (string, default ''): Accessible name for the group or list.
 - `reorder-announcement` (string, default '{label} moved to position {position} of {total}.'): Localized polite message using {label}, {position} and {total}. Position is one-based.
 - `reorderable` (boolean, default false): Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.

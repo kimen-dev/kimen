@@ -251,7 +251,8 @@ jobs:
             import { readFileSync } from "node:fs";
             const report = JSON.parse(readFileSync(process.argv[1], "utf8"));
             const expectedEngine = process.argv[2];
-            const expectedPackages = ["@kimen/elements", "@kimen/tokens"];
+            const verification = JSON.parse(readFileSync(process.argv[3], "utf8"));
+            const expectedPackages = ["@kimen/elements", "@kimen/tokens", "@kimen/mcp-server"];
             const browser = report.browser;
             const installationEvidence =
               Array.isArray(report.installationExamples) &&
@@ -266,8 +267,8 @@ jobs:
               );
             const packageEvidence =
               Array.isArray(report.packages) &&
-              report.packages.length === expectedPackages.length &&
-              !report.packages.some(
+              report.packages.length === expectedPackages.length - 1 &&
+              ![...report.packages, verification.mcpServer].some(
                 ({ name, source, workspaceLinked }, index) =>
                   name !== expectedPackages[index] ||
                   source !== "tarball" ||
@@ -298,9 +299,9 @@ jobs:
               browser.themeTokenOverrideResolved !== true ||
               browser.webSocketPolicyEnforced !== true
             ) {
-              throw new Error(`consumer evidence incomplete: ${JSON.stringify(report)}`);
+              throw new Error("consumer evidence incomplete: " + JSON.stringify(report));
             }
-          ' "$RUNNER_TEMP/browser-${{ matrix.engine }}.json" "${{ matrix.engine }}"
+          ' "$RUNNER_TEMP/browser-${{ matrix.engine }}.json" "${{ matrix.engine }}" "$verification"
 
   verify-candidate:
     needs: validate-core
@@ -332,6 +333,12 @@ jobs:
         with:
           artifact-ids: ${{ needs.validate-core.outputs.artifact-id }}
           path: ${{ runner.temp }}/downloaded-candidate
+
+      - name: Install Node.js for the packed binary
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          package-manager-cache: false
 
       - name: Independently verify candidate without OIDC
         run: >-
@@ -401,15 +408,15 @@ jobs:
             import { join } from "node:path";
             const root = process.argv[1];
             const manifest = JSON.parse(readFileSync(join(root, "manifest.json"), "utf8"));
-            const expected = ["@kimen/elements", "@kimen/tokens"];
-            if (manifest.mode !== "release" || manifest.sourceSha !== process.env.CANDIDATE_SOURCE_SHA || manifest.tag !== process.env.GITHUB_REF_NAME || manifest.tag !== `v${manifest.version}`) throw new Error("release manifest binding mismatch");
-            if (manifest.packages.length !== 2 || manifest.packages.some((entry, index) => entry.name !== expected[index])) throw new Error("release package set mismatch");
+            const expected = ["@kimen/elements", "@kimen/tokens", "@kimen/mcp-server"];
+            if (manifest.mode !== "release" || manifest.sourceSha !== process.env.CANDIDATE_SOURCE_SHA || manifest.tag !== process.env.GITHUB_REF_NAME || manifest.tag !== "v" + manifest.version) throw new Error("release manifest binding mismatch");
+            if (manifest.packages.length !== expected.length || manifest.packages.some((entry, index) => entry.name !== expected[index])) throw new Error("release package set mismatch");
             for (const entry of manifest.packages) {
               const bytes = readFileSync(join(root, entry.file));
               const sha256 = createHash("sha256").update(bytes).digest("hex");
-              const integrity = `sha512-${createHash("sha512").update(bytes).digest("base64")}`;
-              if (sha256 !== entry.sha256 || integrity !== entry.integrity || bytes.length !== entry.size) throw new Error(`${entry.name} release digest mismatch`);
-              process.stdout.write(`${entry.name}\t${entry.file}\t${entry.integrity}\t${manifest.version}\n`);
+              const integrity = "sha512-" + createHash("sha512").update(bytes).digest("base64");
+              if (sha256 !== entry.sha256 || integrity !== entry.integrity || bytes.length !== entry.size) throw new Error(entry.name + " release digest mismatch");
+              process.stdout.write([entry.name, entry.file, entry.integrity, manifest.version].join("\t") + "\n");
             }
           ' "$content" >"$RUNNER_TEMP/publish-plan.tsv"
 

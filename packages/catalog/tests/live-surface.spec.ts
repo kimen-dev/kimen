@@ -226,7 +226,9 @@ describe('035 — a batch changes only what it names', () => {
       ok: false,
       diagnostics: [{ rule: 'user-state-conflict' }],
     });
-    expect(set({ type: 'submit' }).ok).toBe(true);
+    // Spec 152 S6: a spec never asks for a form-action button.
+    expect(set({ type: 'submit' }).ok).toBe(false);
+    expect(set({ type: 'button' }).ok).toBe(true);
     expect(set({ toggle: false, type: null }).ok).toBe(true);
     expect(button.getAttribute('type')).toBe('button');
     button.click();

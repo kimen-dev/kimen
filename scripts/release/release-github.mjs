@@ -14,6 +14,8 @@ import {
 const releaseBranch = 'release/next';
 const releaseRef = `refs/heads/${releaseBranch}`;
 const mainBranch = 'main';
+// The MCP version is compiled into ignored build outputs. Its tracked
+// package.json is included via releasePackages.
 const generatedFiles = [
   'packages/elements/generated/public-api/index.json',
   'packages/catalog/src/generated/catalog.ts',
