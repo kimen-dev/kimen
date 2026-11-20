@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 461 semantic
-and 1581 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 478 semantic
+and 1588 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -39,6 +39,17 @@ every component at once.
 | `--ki-activity-size-ring-sm` | `1rem` | Small inline activity ring diameter. |
 | `--ki-activity-size-stroke` | `2px` | Stroke of a small or medium activity ring. |
 | `--ki-activity-size-stroke-lg` | `3px` | Stroke of a large activity ring. |
+
+### `ki.anchored-surface`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-anchored-surface-arrow-size` | `0.625rem` | Side length of an anchored surface pointer before rotation. |
+| `--ki-anchored-surface-border-width` | `1px` | Outline thickness for a small anchored surface. |
+| `--ki-anchored-surface-gap` | `0.5rem` | Space between a floating surface and its trigger. |
+| `--ki-anchored-surface-max-width` | `20rem` | Maximum inline size of a small anchored surface. |
+| `--ki-anchored-surface-padding` | `0.75rem` | Interior padding for a small anchored surface. |
+| `--ki-anchored-surface-radius` | `12px` | Corner radius for a small anchored surface. |
 
 ### `ki.control`
 
@@ -73,6 +84,12 @@ every component at once.
 | `--ki-corner-action-seam` | `0px` | Square corner at an edge shared by two actions. |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
+| `--ki-corner-feature-tile-circle` | `1000px` | Fully rounded corners of a circular feature tile. |
+| `--ki-corner-feature-tile-lg` | `12px` | Corner radius of a large square feature tile. |
+| `--ki-corner-feature-tile-md` | `10px` | Corner radius of a medium square feature tile. |
+| `--ki-corner-feature-tile-sm` | `8px` | Corner radius of a small square feature tile. |
+| `--ki-corner-feature-tile-xl` | `16px` | Corner radius of an extra-large square feature tile. |
+| `--ki-corner-feature-tile-xs` | `6px` | Corner radius of an extra-small square feature tile. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
 
 ### `ki.density`
@@ -373,6 +390,16 @@ every component at once.
 | `--ki-scale-control-thumb-border-width` | `0.125rem` | Outline thickness of the visible grip. |
 | `--ki-scale-control-track-height` | `0.25rem` | Thickness of the inactive rail of a value scale. |
 | `--ki-scale-control-vertical-length` | `8rem` | Length of a vertical value scale. |
+
+### `ki.size`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-size-feature-tile-lg` | `3rem` | Large feature tile edge, 48px at the default root size. |
+| `--ki-size-feature-tile-md` | `2.5rem` | Medium feature tile edge, 40px at the default root size. |
+| `--ki-size-feature-tile-sm` | `2rem` | Small feature tile edge, 32px at the default root size. |
+| `--ki-size-feature-tile-xl` | `4rem` | Extra-large feature tile edge, 64px at the default root size. |
+| `--ki-size-feature-tile-xs` | `1.5rem` | Extra-small feature tile edge, 24px at the default root size. |
 
 ### `ki.spacing`
 
@@ -1392,6 +1419,38 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-fab-xl-radius` | `28px` | Corner radius of the large FAB. |
 | `--ki-fab-xl-size` | `6rem` | Minimum footprint of the large FAB. |
 
+### `ki-feature-icon`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-feature-icon-backdrop-filter` | `none` | Complete filter applied behind the feature icon tile. |
+| `--ki-feature-icon-bg` | `#f3f0eb` | Background color of a neutral feature icon tile. |
+| `--ki-feature-icon-bg-image` | `none` | Optional background image painted over the feature icon tile color. |
+| `--ki-feature-icon-circle-radius` | `1000px` | Corner radius of a circular feature icon tile. |
+| `--ki-feature-icon-danger-bg` | `#ffebeb` | Background color of a danger feature icon tile. |
+| `--ki-feature-icon-danger-fg` | `#c21a45` | Glyph color of a danger feature icon tile. |
+| `--ki-feature-icon-fg` | `#181613` | Glyph color of a neutral feature icon tile. |
+| `--ki-feature-icon-info-bg` | `#e6f1fb` | Background color of an info feature icon tile. |
+| `--ki-feature-icon-info-fg` | `#085268` | Glyph color of an info feature icon tile. |
+| `--ki-feature-icon-lg-radius` | `12px` | Corner radius of a large square feature icon tile. |
+| `--ki-feature-icon-lg-size` | `3rem` | Edge length of a large feature icon tile. |
+| `--ki-feature-icon-primary-bg` | `#1d1a16` | Background color of a primary feature icon tile. |
+| `--ki-feature-icon-primary-fg` | `#ffffff` | Glyph color of a primary feature icon tile. |
+| `--ki-feature-icon-primary-light-bg` | `#ffebe5` | Background color of a primary-light feature icon tile. |
+| `--ki-feature-icon-primary-light-fg` | `#9a3715` | Glyph color of a primary-light feature icon tile. |
+| `--ki-feature-icon-radius` | `10px` | Default corner radius of a square feature icon tile. |
+| `--ki-feature-icon-size` | `2.5rem` | Default edge length of a feature icon tile. |
+| `--ki-feature-icon-sm-radius` | `8px` | Corner radius of a small square feature icon tile. |
+| `--ki-feature-icon-sm-size` | `2rem` | Edge length of a small feature icon tile. |
+| `--ki-feature-icon-success-bg` | `#e4f4ea` | Background color of a success feature icon tile. |
+| `--ki-feature-icon-success-fg` | `#2c6a2b` | Glyph color of a success feature icon tile. |
+| `--ki-feature-icon-warning-bg` | `#fcf0dc` | Background color of a warning feature icon tile. |
+| `--ki-feature-icon-warning-fg` | `#945b05` | Glyph color of a warning feature icon tile. |
+| `--ki-feature-icon-xl-radius` | `16px` | Corner radius of an extra-large square feature icon tile. |
+| `--ki-feature-icon-xl-size` | `4rem` | Edge length of an extra-large feature icon tile. |
+| `--ki-feature-icon-xs-radius` | `6px` | Corner radius of an extra-small square feature icon tile. |
+| `--ki-feature-icon-xs-size` | `1.5rem` | Edge length of an extra-small feature icon tile. |
+
 ### `ki-format`
 
 | Token | Value (onmars light) | Description |
@@ -1726,43 +1785,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-note-warning-fg` | `#181613` | Text ink of a warning note. |
 | `--ki-note-warning-icon` | `#945b05` | Decorative icon ink of a warning note. |
 
-### `ki-number-input`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-number-input-border-block-end-width` | `1px` | Field border width at block end. |
-| `--ki-number-input-border-block-start-width` | `1px` | Field border width at block start. |
-| `--ki-number-input-border-inline-width` | `1px` | Field border width at either inline edge. |
-| `--ki-number-input-field-backdrop-filter` | `none` | Complete backdrop filter behind the field. |
-| `--ki-number-input-field-bg` | `#ffffff` | Resting NumberInput field fill. |
-| `--ki-number-input-field-bg-image` | `none` | Optional theme image layered over the field fill. |
-| `--ki-number-input-field-border` | `#86827b` | Resting NumberInput field boundary. |
-| `--ki-number-input-field-disabled-bg` | `#f3f0eb` | Field fill when disabled. |
-| `--ki-number-input-field-disabled-border` | `rgba(24, 22, 19, 0.1)` | Boundary when the entire field is disabled. |
-| `--ki-number-input-field-disabled-fg` | `#cbc7bf` | Numeric entry ink when disabled. |
-| `--ki-number-input-field-fg` | `#181613` | Foreground of the numeric entry. |
-| `--ki-number-input-field-focus-bg` | `#ffffff` | Field fill while focused. |
-| `--ki-number-input-field-focus-fg` | `#181613` | Numeric entry ink while focused. |
-| `--ki-number-input-field-invalid-border` | `#ef4e69` | Field boundary when a validation message is visible. |
-| `--ki-number-input-font-size` | `0.8125rem` | Font size of the numeric entry and its suffix. |
-| `--ki-number-input-font-size-touch` | `1rem` | Minimum input font size under a coarse pointer. |
-| `--ki-number-input-height` | `2.5rem` | Medium field height before applying regional density. |
-| `--ki-number-input-label-font-size` | `0.8125rem` | Field label font size. |
-| `--ki-number-input-label-font-weight` | `600` | Field label font weight. |
-| `--ki-number-input-label-gap` | `0.25rem` | Gap between the label, field and supporting messages. |
-| `--ki-number-input-label-line-height` | `1.25rem` | Line height of the field label. |
-| `--ki-number-input-line-height` | `1.5rem` | Line height of the numeric entry and its suffix. |
-| `--ki-number-input-padding-inline` | `0.625rem` | Inline padding for the plain field and unit suffix. |
-| `--ki-number-input-radius` | `10px` | Field corners. |
-| `--ki-number-input-stepper-bg` | `rgba(0, 0, 0, 0)` | Resting stepper button fill. |
-| `--ki-number-input-stepper-disabled-fg` | `#6b665f` | Stepper icon ink when disabled. |
-| `--ki-number-input-stepper-fg` | `#181613` | Resting stepper icon ink. |
-| `--ki-number-input-stepper-hover-bg` | `#f3f0eb` | Stepper fill when hovered. |
-| `--ki-number-input-stepper-hover-fg` | `#181613` | Stepper icon ink when hovered. |
-| `--ki-number-input-stepper-padding-inline` | `0.125rem` | Editor inline padding between the steppers. |
-| `--ki-number-input-unit-bg` | `rgba(0, 0, 0, 0)` | Backing of the unit suffix within the field. |
-| `--ki-number-input-unit-fg` | `#5e5953` | Unit suffix ink. Medium emphasis in the standard contrast setting. |
-
 ### `ki-option`
 
 | Token | Value (onmars light) | Description |
@@ -1781,6 +1803,23 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-option-rest-fg` | `#181613` | color used by the option component for rest foreground. |
 | `--ki-option-selected-bg` | `#ffebe5` | color used by the option component for selected background. |
 | `--ki-option-selected-fg` | `#181613` | color used by the option component for selected foreground. |
+
+### `ki-popover`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-popover-arrow-size` | `0.625rem` | Side length of an anchored surface pointer before rotation. |
+| `--ki-popover-backdrop-filter` | `none` | Complete backdrop filter behind an anchored surface. |
+| `--ki-popover-bg` | `#f9f7f4` | Raised popover surface colour. |
+| `--ki-popover-bg-image` | `none` | Optional image layer over an anchored surface colour. |
+| `--ki-popover-border` | `rgba(24, 22, 19, 0.1)` | Popover outline colour. |
+| `--ki-popover-border-width` | `1px` | Outline thickness for a small anchored surface. |
+| `--ki-popover-fg` | `#181613` | Popover content ink. |
+| `--ki-popover-gap` | `0.5rem` | Space between a floating surface and its trigger. |
+| `--ki-popover-max-width` | `20rem` | Maximum inline size of a small anchored surface. |
+| `--ki-popover-padding` | `0.75rem` | Interior padding for a small anchored surface. |
+| `--ki-popover-radius` | `12px` | Corner radius for a small anchored surface. |
+| `--ki-popover-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Popover elevation. |
 
 ### `ki-progress`
 

@@ -965,6 +965,53 @@ export const catalogData = {
       "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
       "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
     },
+    "ki-feature-icon": {
+      "description": "A decorative glyph centered on a tinted tile.",
+      "events": {},
+      "props": {
+        "shape": {
+          "type": "enum",
+          "values": [
+            "circle",
+            "square"
+          ],
+          "description": "Rounded square or circle. Unknown values use square.",
+          "default": "square"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.",
+          "default": "md"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "info",
+            "neutral",
+            "primary",
+            "primary-light",
+            "success",
+            "warning"
+          ],
+          "description": "Colour pair for the tile and its glyph. Unknown values use neutral.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "One Lucide glyph. Supply an inline SVG using currentColor or a ki-icon with inherited size. Guarded surfaces use a registered ki-icon."
+      },
+      "tag": "ki-feature-icon",
+      "whenNotToUse": "For an action (use ki-icon-button), a status (use ki-badge),\nor the sole label of a section.",
+      "whenToUse": "Place a decorative icon beside the visible heading of a feature,\nempty state or settings section. The heading carries the meaning."
+    },
     "ki-format-date": {
       "description": "Displays an ISO date or timestamp in the reader's language.",
       "events": {},
@@ -1676,100 +1723,6 @@ export const catalogData = {
       "whenNotToUse": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance.",
       "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
     },
-    "ki-number-input": {
-      "description": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-      "events": {
-        "change": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-      },
-      "props": {
-        "decrease-label": {
-          "type": "string",
-          "description": "Stepper's accessible name. The field label replaces {label}.",
-          "default": "Decrease {label}"
-        },
-        "disabled": {
-          "type": "boolean",
-          "description": "Prevents editing and excludes the control from form submission.",
-          "default": false
-        },
-        "error-text": {
-          "type": "string",
-          "description": "Validation hint to show when the entry fails a constraint."
-        },
-        "format": {
-          "type": "string",
-          "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision."
-        },
-        "help-text": {
-          "type": "string",
-          "description": "Context or instructions displayed beneath the field when it has no visible error."
-        },
-        "increase-label": {
-          "type": "string",
-          "description": "Stepper's accessible name. The field label replaces {label}.",
-          "default": "Increase {label}"
-        },
-        "invalid-number-message": {
-          "type": "string",
-          "description": "Default validation message for text that cannot be read as a number.",
-          "default": "Enter a number."
-        },
-        "label": {
-          "type": "string",
-          "description": "Visible accessible name. Supply a meaningful label in the page language.",
-          "required": true
-        },
-        "max": {
-          "type": "number",
-          "description": "Maximum permitted numeric value. Omit for an unbounded maximum."
-        },
-        "maximum-message": {
-          "type": "string",
-          "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-          "default": "Value adjusted to the maximum of {value}."
-        },
-        "min": {
-          "type": "number",
-          "description": "Minimum permitted numeric value. Omit for an unbounded minimum."
-        },
-        "minimum-message": {
-          "type": "string",
-          "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-          "default": "Value adjusted to the minimum of {value}."
-        },
-        "name": {
-          "type": "string",
-          "description": "Form-data key for the plain numeric value."
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Whether the user must enter a number before submitting the form.",
-          "default": false
-        },
-        "step": {
-          "type": "number",
-          "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-          "default": 1
-        },
-        "steppers": {
-          "type": "boolean",
-          "description": "Shows named decrease and increase buttons inside the field.",
-          "default": false
-        },
-        "unit": {
-          "type": "string",
-          "description": "Visible suffix such as seconds or seats, included in the accessible description."
-        },
-        "value": {
-          "type": "number",
-          "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent."
-        }
-      },
-      "slots": {},
-      "tag": "ki-number-input",
-      "whenNotToUse": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue.",
-      "whenToUse": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning."
-    },
     "ki-option": {
       "description": "A declarative data option rendered by its owning `ki-select`.",
       "events": {},
@@ -1790,6 +1743,68 @@ export const catalogData = {
       "tag": "ki-option",
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
       "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
+    },
+    "ki-popover": {
+      "description": "A non-modal popover anchored to a button.",
+      "events": {
+        "ki-close": "Emitted when the popover closes.",
+        "ki-open": "Emitted when the popover opens."
+      },
+      "props": {
+        "arrow": {
+          "type": "boolean",
+          "description": "Shows the arrow toward the trigger.",
+          "default": true
+        },
+        "for": {
+          "type": "string",
+          "description": "ID of the button in the same document or shadow tree."
+        },
+        "kind": {
+          "type": "enum",
+          "values": [
+            "dialog",
+            "toggletip"
+          ],
+          "description": "Use dialog for controls or toggletip for supplemental text.",
+          "default": "dialog"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of a dialog popover.",
+          "default": "Popover"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Visibility. Reflects activation and native dismissal.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom",
+            "bottom-end",
+            "bottom-start",
+            "end",
+            "end-end",
+            "end-start",
+            "start",
+            "start-end",
+            "start-start",
+            "top",
+            "top-end",
+            "top-start"
+          ],
+          "description": "Preferred side and logical alignment. Flips when room is limited.",
+          "default": "bottom-start"
+        }
+      },
+      "slots": {
+        "": "Dialog content or toggletip text."
+      },
+      "tag": "ki-popover",
+      "whenNotToUse": "Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.",
+      "whenToUse": "Show filters, details, a small form, or a text toggletip."
     },
     "ki-progress": {
       "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",

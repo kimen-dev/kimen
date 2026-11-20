@@ -51,6 +51,7 @@ methods, CSS custom properties and examples.
 - [ki-divider](llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
 - [ki-empty-state](llms/ki-empty-state.md): explain an empty list, table, search result, or first-run view.
 - [ki-fab](llms/ki-fab.md): give a mobile screen one primary action, such as composing a draft or creating a project.
+- [ki-feature-icon](llms/ki-feature-icon.md): Place a decorative icon beside the visible heading of a feature, empty state or settings section.
 - [ki-format-date](llms/ki-format-date.md): For raw date and timestamp values in tables, records and prose.
 - [ki-format-number](llms/ki-format-number.md): For numeric data, currency amounts, ratios and measurements in content.
 - [ki-grid](llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.
@@ -66,8 +67,8 @@ methods, CSS custom properties and examples.
 - [ki-menu-group](llms/ki-menu-group.md): name a set of related actions or scope exclusive radio items in a menu.
 - [ki-menu-item](llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-note](llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
-- [ki-number-input](llms/ki-number-input.md): Collect a number like a quantity, amount, or limit.
 - [ki-option](llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
+- [ki-popover](llms/ki-popover.md): Show filters, details, a small form, or a text toggletip.
 - [ki-progress](llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
 - [ki-qr](llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.
 - [ki-radio](llms/ki-radio.md): place inside `ki-radio-group` when a person must choose exactly one of a small visible set.

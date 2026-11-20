@@ -23,6 +23,7 @@ import { defineCustomElement as defineKiDialog } from '@kimen/elements/component
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
 import { defineCustomElement as defineKiFab } from '@kimen/elements/components/ki-fab.js';
+import { defineCustomElement as defineKiFeatureIcon } from '@kimen/elements/components/ki-feature-icon.js';
 import { defineCustomElement as defineKiFormatDate } from '@kimen/elements/components/ki-format-date.js';
 import { defineCustomElement as defineKiFormatNumber } from '@kimen/elements/components/ki-format-number.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
@@ -38,8 +39,8 @@ import { defineCustomElement as defineKiMenu } from '@kimen/elements/components/
 import { defineCustomElement as defineKiMenuGroup } from '@kimen/elements/components/ki-menu-group.js';
 import { defineCustomElement as defineKiMenuItem } from '@kimen/elements/components/ki-menu-item.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
-import { defineCustomElement as defineKiNumberInput } from '@kimen/elements/components/ki-number-input.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
+import { defineCustomElement as defineKiPopover } from '@kimen/elements/components/ki-popover.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
@@ -513,6 +514,29 @@ export declare interface KiFab extends Components.KiFab {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiFeatureIcon,
+  inputs: ['shape', 'size', 'tone']
+})
+@Component({
+  selector: 'ki-feature-icon',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['shape', 'size', 'tone'],
+})
+export class KiFeatureIcon {
+  protected el: HTMLKiFeatureIconElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiFeatureIcon extends Components.KiFeatureIcon {}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiFormatDate,
   inputs: ['date', 'dateStyle', 'locale', 'timeStyle', 'timeZone']
 })
@@ -868,29 +892,6 @@ export declare interface KiNote extends Components.KiNote {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiNumberInput,
-  inputs: ['decreaseLabel', 'disabled', 'errorText', 'format', 'helpText', 'increaseLabel', 'invalidNumberMessage', 'label', 'max', 'maximumMessage', 'min', 'minimumMessage', 'name', 'required', 'step', 'steppers', 'unit', 'value']
-})
-@Component({
-  selector: 'ki-number-input',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['decreaseLabel', 'disabled', 'errorText', 'format', 'helpText', 'increaseLabel', 'invalidNumberMessage', { name: 'label', required: true }, 'max', 'maximumMessage', 'min', 'minimumMessage', 'name', 'required', 'step', 'steppers', 'unit', 'value'],
-})
-export class KiNumberInput {
-  protected el: HTMLKiNumberInputElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiNumberInput extends Components.KiNumberInput {}
-
-
-@ProxyCmp({
   defineCustomElementFn: defineKiOption,
   inputs: ['disabled', 'value']
 })
@@ -911,6 +912,37 @@ export class KiOption {
 
 
 export declare interface KiOption extends Components.KiOption {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiPopover,
+  inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement']
+})
+@Component({
+  selector: 'ki-popover',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement'],
+})
+export class KiPopover {
+  protected el: HTMLKiPopoverElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiPopover extends Components.KiPopover {
+  /**
+   * Emitted when the popover opens.
+   */
+  /**
+   * Emitted when the popover closes.
+   */
+}
 
 
 @ProxyCmp({

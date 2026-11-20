@@ -6710,6 +6710,233 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-feature-icon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFeatureIcon",
+          "customElement": true,
+          "tagName": "ki-feature-icon",
+          "description": "A decorative glyph centered on a tinted tile.",
+          "whenToUse": "Place a decorative icon beside the visible heading of a feature,\nempty state or settings section. The heading carries the meaning.",
+          "whenNotToUse": "For an action (use ki-icon-button), a status (use ki-badge),\nor the sole label of a section.",
+          "attributes": [
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "\"circle\" | \"square\""
+              },
+              "default": "'square'",
+              "description": "Rounded square or circle. Unknown values use square."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Colour pair for the tile and its glyph. Unknown values use neutral."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "shape",
+              "privacy": "public",
+              "type": {
+                "text": "\"circle\" | \"square\""
+              },
+              "default": "'square'",
+              "description": "Rounded square or circle. Unknown values use square.",
+              "attribute": "shape",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Colour pair for the tile and its glyph. Unknown values use neutral.",
+              "attribute": "tone",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "One Lucide glyph. Supply an inline SVG using currentColor or a ki-icon with inherited size. Guarded surfaces use a registered ki-icon."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "tile",
+              "description": "The painted tile that centers the glyph."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-feature-icon-backdrop-filter",
+              "description": "Complete filter applied behind the feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-bg",
+              "description": "Background color of a neutral feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-bg-image",
+              "description": "Optional background image painted over the feature icon tile color."
+            },
+            {
+              "name": "--ki-feature-icon-circle-radius",
+              "description": "Corner radius of a circular feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-danger-bg",
+              "description": "Background color of a danger feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-danger-fg",
+              "description": "Glyph color of a danger feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-fg",
+              "description": "Glyph color of a neutral feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-info-bg",
+              "description": "Background color of an info feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-info-fg",
+              "description": "Glyph color of an info feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-lg-radius",
+              "description": "Corner radius of a large square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-lg-size",
+              "description": "Edge length of a large feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-primary-bg",
+              "description": "Background color of a primary feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-primary-fg",
+              "description": "Glyph color of a primary feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-primary-light-bg",
+              "description": "Background color of a primary-light feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-primary-light-fg",
+              "description": "Glyph color of a primary-light feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-radius",
+              "description": "Default corner radius of a square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-size",
+              "description": "Default edge length of a feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-sm-radius",
+              "description": "Corner radius of a small square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-sm-size",
+              "description": "Edge length of a small feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-success-bg",
+              "description": "Background color of a success feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-success-fg",
+              "description": "Glyph color of a success feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-warning-bg",
+              "description": "Background color of a warning feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-warning-fg",
+              "description": "Glyph color of a warning feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-xl-radius",
+              "description": "Corner radius of an extra-large square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-xl-size",
+              "description": "Edge length of an extra-large feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-xs-radius",
+              "description": "Corner radius of an extra-small square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-xs-size",
+              "description": "Edge length of an extra-small feature icon tile."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFeatureIcon",
+          "declaration": {
+            "name": "KiFeatureIcon",
+            "module": "dist/components/ki-feature-icon.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-feature-icon",
+          "declaration": {
+            "name": "KiFeatureIcon",
+            "module": "dist/components/ki-feature-icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-format-date.js",
       "declarations": [
         {
@@ -11078,631 +11305,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-number-input.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiNumberInput",
-          "customElement": true,
-          "tagName": "ki-number-input",
-          "description": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-          "whenToUse": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning.",
-          "whenNotToUse": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue.",
-          "attributes": [
-            {
-              "name": "decrease-label",
-              "fieldName": "decreaseLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Decrease {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}."
-            },
-            {
-              "name": "disabled",
-              "fieldName": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Prevents editing and excludes the control from form submission."
-            },
-            {
-              "name": "error-text",
-              "fieldName": "errorText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Validation hint to show when the entry fails a constraint."
-            },
-            {
-              "name": "format",
-              "fieldName": "format",
-              "type": {
-                "text": "string"
-              },
-              "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision."
-            },
-            {
-              "name": "help-text",
-              "fieldName": "helpText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Context or instructions displayed beneath the field when it has no visible error."
-            },
-            {
-              "name": "increase-label",
-              "fieldName": "increaseLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Increase {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}."
-            },
-            {
-              "name": "invalid-number-message",
-              "fieldName": "invalidNumberMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Enter a number.'",
-              "description": "Default validation message for text that cannot be read as a number."
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Visible accessible name. Supply a meaningful label in the page language.",
-              "required": true
-            },
-            {
-              "name": "max",
-              "fieldName": "max",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum permitted numeric value. Omit for an unbounded maximum."
-            },
-            {
-              "name": "maximum-message",
-              "fieldName": "maximumMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the maximum of {value}.'",
-              "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}."
-            },
-            {
-              "name": "min",
-              "fieldName": "min",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Minimum permitted numeric value. Omit for an unbounded minimum."
-            },
-            {
-              "name": "minimum-message",
-              "fieldName": "minimumMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the minimum of {value}.'",
-              "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}."
-            },
-            {
-              "name": "name",
-              "fieldName": "name",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form-data key for the plain numeric value."
-            },
-            {
-              "name": "required",
-              "fieldName": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the user must enter a number before submitting the form."
-            },
-            {
-              "name": "step",
-              "fieldName": "step",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments."
-            },
-            {
-              "name": "steppers",
-              "fieldName": "steppers",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows named decrease and increase buttons inside the field."
-            },
-            {
-              "name": "unit",
-              "fieldName": "unit",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Visible suffix such as seconds or seats, included in the accessible description."
-            },
-            {
-              "name": "value",
-              "fieldName": "value",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "decreaseLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Decrease {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}.",
-              "attribute": "decrease-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Prevents editing and excludes the control from form submission.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "errorText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Validation hint to show when the entry fails a constraint.",
-              "attribute": "error-text",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "format",
-              "privacy": "public",
-              "type": {
-                "text": "NumberFormatOptions | undefined"
-              },
-              "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
-              "attribute": "format",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Context or instructions displayed beneath the field when it has no visible error.",
-              "attribute": "help-text",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "increaseLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Increase {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}.",
-              "attribute": "increase-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "invalidNumberMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Enter a number.'",
-              "description": "Default validation message for text that cannot be read as a number.",
-              "attribute": "invalid-number-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Visible accessible name. Supply a meaningful label in the page language.",
-              "attribute": "label",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum permitted numeric value. Omit for an unbounded maximum.",
-              "attribute": "max",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "maximumMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the maximum of {value}.'",
-              "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-              "attribute": "maximum-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "min",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Minimum permitted numeric value. Omit for an unbounded minimum.",
-              "attribute": "min",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "minimumMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the minimum of {value}.'",
-              "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-              "attribute": "minimum-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form-data key for the plain numeric value.",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the user must enter a number before submitting the form.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "step",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-              "attribute": "step",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "steppers",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows named decrease and increase buttons inside the field.",
-              "attribute": "steppers",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "unit",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Visible suffix such as seconds or seats, included in the accessible description.",
-              "attribute": "unit",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
-              "attribute": "value",
-              "reflects": false
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "type": {
-                "text": "Event"
-              },
-              "description": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-            }
-          ],
-          "slots": [],
-          "cssParts": [
-            {
-              "name": "decrease",
-              "description": "Button that subtracts one step."
-            },
-            {
-              "name": "error",
-              "description": "Polite validation feedback associated with the spinbutton."
-            },
-            {
-              "name": "field",
-              "description": "Enclosure around the editor, unit and stepper buttons."
-            },
-            {
-              "name": "help",
-              "description": "Help message associated with the spinbutton."
-            },
-            {
-              "name": "increase",
-              "description": "Button that adds one step."
-            },
-            {
-              "name": "input",
-              "description": "Native text editor carrying the spinbutton role."
-            },
-            {
-              "name": "label",
-              "description": "Visible name of the spinbutton."
-            },
-            {
-              "name": "status",
-              "description": "Polite feedback explaining a value adjustment."
-            },
-            {
-              "name": "unit",
-              "description": "Visible unit referenced by the spinbutton's description."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-control-offset",
-              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-number-input-border-block-end-width",
-              "description": "Field border width at block end."
-            },
-            {
-              "name": "--ki-number-input-border-block-start-width",
-              "description": "Field border width at block start."
-            },
-            {
-              "name": "--ki-number-input-border-inline-width",
-              "description": "Field border width at either inline edge."
-            },
-            {
-              "name": "--ki-number-input-field-backdrop-filter",
-              "description": "Complete backdrop filter behind the field."
-            },
-            {
-              "name": "--ki-number-input-field-bg",
-              "description": "Resting NumberInput field fill."
-            },
-            {
-              "name": "--ki-number-input-field-bg-image",
-              "description": "Optional theme image layered over the field fill."
-            },
-            {
-              "name": "--ki-number-input-field-border",
-              "description": "Resting NumberInput field boundary."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-bg",
-              "description": "Field fill when disabled."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-border",
-              "description": "Boundary when the entire field is disabled."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-fg",
-              "description": "Numeric entry ink when disabled."
-            },
-            {
-              "name": "--ki-number-input-field-fg",
-              "description": "Foreground of the numeric entry."
-            },
-            {
-              "name": "--ki-number-input-field-focus-bg",
-              "description": "Field fill while focused."
-            },
-            {
-              "name": "--ki-number-input-field-focus-fg",
-              "description": "Numeric entry ink while focused."
-            },
-            {
-              "name": "--ki-number-input-field-invalid-border",
-              "description": "Field boundary when a validation message is visible."
-            },
-            {
-              "name": "--ki-number-input-font-size",
-              "description": "Font size of the numeric entry and its suffix."
-            },
-            {
-              "name": "--ki-number-input-font-size-touch",
-              "description": "Minimum input font size under a coarse pointer."
-            },
-            {
-              "name": "--ki-number-input-height",
-              "description": "Medium field height before applying regional density."
-            },
-            {
-              "name": "--ki-number-input-label-font-size",
-              "description": "Field label font size."
-            },
-            {
-              "name": "--ki-number-input-label-font-weight",
-              "description": "Field label font weight."
-            },
-            {
-              "name": "--ki-number-input-label-gap",
-              "description": "Gap between the label, field and supporting messages."
-            },
-            {
-              "name": "--ki-number-input-label-line-height",
-              "description": "Line height of the field label."
-            },
-            {
-              "name": "--ki-number-input-line-height",
-              "description": "Line height of the numeric entry and its suffix."
-            },
-            {
-              "name": "--ki-number-input-padding-inline",
-              "description": "Inline padding for the plain field and unit suffix."
-            },
-            {
-              "name": "--ki-number-input-radius",
-              "description": "Field corners."
-            },
-            {
-              "name": "--ki-number-input-stepper-bg",
-              "description": "Resting stepper button fill."
-            },
-            {
-              "name": "--ki-number-input-stepper-disabled-fg",
-              "description": "Stepper icon ink when disabled."
-            },
-            {
-              "name": "--ki-number-input-stepper-fg",
-              "description": "Resting stepper icon ink."
-            },
-            {
-              "name": "--ki-number-input-stepper-hover-bg",
-              "description": "Stepper fill when hovered."
-            },
-            {
-              "name": "--ki-number-input-stepper-hover-fg",
-              "description": "Stepper icon ink when hovered."
-            },
-            {
-              "name": "--ki-number-input-stepper-padding-inline",
-              "description": "Editor inline padding between the steppers."
-            },
-            {
-              "name": "--ki-number-input-unit-bg",
-              "description": "Backing of the unit suffix within the field."
-            },
-            {
-              "name": "--ki-number-input-unit-fg",
-              "description": "Unit suffix ink. Medium emphasis in the standard contrast setting."
-            },
-            {
-              "name": "--ki-text-danger-high-em",
-              "description": "semantic color for text danger high em."
-            },
-            {
-              "name": "--ki-text-high-em",
-              "description": "semantic color for text high em."
-            },
-            {
-              "name": "--ki-text-supporting",
-              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-caption-2",
-              "description": "semantic dimension for typography line height caption 2."
-            },
-            {
-              "name": "--ki-typography-size-caption-2",
-              "description": "semantic dimension for typography size caption 2."
-            },
-            {
-              "name": "--ki-typography-weight-body-normal",
-              "description": "semantic font weight for typography weight body normal."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiNumberInput",
-          "declaration": {
-            "name": "KiNumberInput",
-            "module": "dist/components/ki-number-input.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-number-input",
-          "declaration": {
-            "name": "KiNumberInput",
-            "module": "dist/components/ki-number-input.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-option.js",
       "declarations": [
         {
@@ -11783,6 +11385,265 @@
           "declaration": {
             "name": "KiOption",
             "module": "dist/components/ki-option.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-popover.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiPopover",
+          "customElement": true,
+          "tagName": "ki-popover",
+          "description": "A non-modal popover anchored to a button.",
+          "whenToUse": "Show filters, details, a small form, or a text toggletip.",
+          "whenNotToUse": "Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.",
+          "attributes": [
+            {
+              "name": "arrow",
+              "fieldName": "arrow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the arrow toward the trigger."
+            },
+            {
+              "name": "for",
+              "fieldName": "for",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of the button in the same document or shadow tree."
+            },
+            {
+              "name": "kind",
+              "fieldName": "kind",
+              "type": {
+                "text": "\"dialog\" | \"toggletip\""
+              },
+              "default": "'dialog'",
+              "description": "Use dialog for controls or toggletip for supplemental text."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Popover'",
+              "description": "Accessible name of a dialog popover."
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Visibility. Reflects activation and native dismissal."
+            },
+            {
+              "name": "placement",
+              "fieldName": "placement",
+              "type": {
+                "text": "\"bottom\" | \"bottom-end\" | \"bottom-start\" | \"end\" | \"end-end\" | \"end-start\" | \"start\" | \"start-end\" | \"start-start\" | \"top\" | \"top-end\" | \"top-start\""
+              },
+              "default": "'bottom-start'",
+              "description": "Preferred side and logical alignment. Flips when room is limited."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "arrow",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the arrow toward the trigger.",
+              "attribute": "arrow",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "for",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of the button in the same document or shadow tree.",
+              "attribute": "for",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "kind",
+              "privacy": "public",
+              "type": {
+                "text": "\"dialog\" | \"toggletip\""
+              },
+              "default": "'dialog'",
+              "description": "Use dialog for controls or toggletip for supplemental text.",
+              "attribute": "kind",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Popover'",
+              "description": "Accessible name of a dialog popover.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Visibility. Reflects activation and native dismissal.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "privacy": "public",
+              "type": {
+                "text": "\"bottom\" | \"bottom-end\" | \"bottom-start\" | \"end\" | \"end-end\" | \"end-start\" | \"start\" | \"start-end\" | \"start-start\" | \"top\" | \"top-end\" | \"top-start\""
+              },
+              "default": "'bottom-start'",
+              "description": "Preferred side and logical alignment. Flips when room is limited.",
+              "attribute": "placement",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-close",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Emitted when the popover closes."
+            },
+            {
+              "name": "ki-open",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Emitted when the popover opens."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Dialog content or toggletip text."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "arrow",
+              "description": "The decorative arrow."
+            },
+            {
+              "name": "surface",
+              "description": "The popover panel."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-popover-arrow-size",
+              "description": "Side length of an anchored surface pointer before rotation."
+            },
+            {
+              "name": "--ki-popover-backdrop-filter",
+              "description": "Complete backdrop filter behind an anchored surface."
+            },
+            {
+              "name": "--ki-popover-bg",
+              "description": "Raised popover surface colour."
+            },
+            {
+              "name": "--ki-popover-bg-image",
+              "description": "Optional image layer over an anchored surface colour."
+            },
+            {
+              "name": "--ki-popover-border",
+              "description": "Popover outline colour."
+            },
+            {
+              "name": "--ki-popover-border-width",
+              "description": "Outline thickness for a small anchored surface."
+            },
+            {
+              "name": "--ki-popover-fg",
+              "description": "Popover content ink."
+            },
+            {
+              "name": "--ki-popover-gap",
+              "description": "Space between a floating surface and its trigger."
+            },
+            {
+              "name": "--ki-popover-max-width",
+              "description": "Maximum inline size of a small anchored surface."
+            },
+            {
+              "name": "--ki-popover-padding",
+              "description": "Interior padding for a small anchored surface."
+            },
+            {
+              "name": "--ki-popover-radius",
+              "description": "Corner radius for a small anchored surface."
+            },
+            {
+              "name": "--ki-popover-shadow",
+              "description": "Popover elevation."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-para",
+              "description": "semantic dimension for typography line height para."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiPopover",
+          "declaration": {
+            "name": "KiPopover",
+            "module": "dist/components/ki-popover.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-popover",
+          "declaration": {
+            "name": "KiPopover",
+            "module": "dist/components/ki-popover.js"
           }
         }
       ]
