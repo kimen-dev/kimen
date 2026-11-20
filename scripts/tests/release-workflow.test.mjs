@@ -1,4 +1,5 @@
 // @spec:018-project-integrity-hardening
+// @spec:151-release-automation
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
@@ -324,4 +325,19 @@ test('@spec:018-project-integrity-hardening S8 exact candidate consumer receives
     /NPM_CONFIG_OFFLINE=true npm_config_offline=true\s+node scripts\/consumer-contract\.mjs/u,
   );
   assert.match(browserJob, /--cache-dir "\$consumer_cache"/u);
+});
+
+test('S7 each release fence expects the three canonical packages and checks the installed MCP server', () => {
+  const scope = '["@kimen/elements", "@kimen/tokens", "@kimen/mcp-server"]';
+  const browser = readJob(releaseWorkflow, 'browser');
+  const independent = readJob(releaseWorkflow, 'verify-candidate');
+  const publish = readJob(releaseWorkflow, 'publish');
+
+  assert.ok(browser.includes(`const expectedPackages = ${scope};`));
+  assert.ok(browser.includes('[...report.packages, verification.mcpServer]'));
+  assert.ok(publish.includes(`const expected = ${scope};`));
+  assert.match(publish, /manifest\.packages\.length !== expected\.length/u);
+  assert.match(independent, /node-version: 26/u);
+  assert.match(independent, /node scripts\/release\/candidate-cli\.mjs verify/u);
+  assert.doesNotMatch(independent, /registry\.npmjs\.org|id-token: write/u);
 });

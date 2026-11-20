@@ -7,7 +7,8 @@ candidate.tar
 ├── manifest.json
 ├── SHA256SUMS
 ├── kimen-elements-X.Y.Z.tgz
-└── kimen-tokens-X.Y.Z.tgz
+├── kimen-tokens-X.Y.Z.tgz
+└── kimen-mcp-server-X.Y.Z.tgz
 ```
 
 `manifest.json`:
@@ -26,6 +27,20 @@ candidate.tar
       "sha256": "<64-hex>",
       "integrity": "sha512-<base64>",
       "size": 12345
+    },
+    {
+      "name": "@kimen/tokens",
+      "file": "kimen-tokens-1.2.3.tgz",
+      "sha256": "<64-hex>",
+      "integrity": "sha512-<base64>",
+      "size": 12345
+    },
+    {
+      "name": "@kimen/mcp-server",
+      "file": "kimen-mcp-server-1.2.3.tgz",
+      "sha256": "<64-hex>",
+      "integrity": "sha512-<base64>",
+      "size": 12345
     }
   ]
 }
@@ -33,7 +48,8 @@ candidate.tar
 
 Rules:
 
-- The 018 package set is exactly `@kimen/elements` and `@kimen/tokens`.
+- The package set is exactly `@kimen/elements`, `@kimen/tokens` and
+  `@kimen/mcp-server`, in that order (151-release-automation S6).
   `@kimen/catalog`, the unscoped placeholder and any extra tarball fail closed;
   catalog can enter only through its later approved capability/release change.
 - In `release` mode source SHA is reachable from protected main and tag/version/
@@ -50,7 +66,9 @@ Rules:
   the out-of-band `candidate.tar` SHA-256; no warning text is treated as a gate.
   A separate `verify-candidate` job, with no OIDC, downloads by artifact ID and
   fails on candidate SHA, internal manifest/checksum, unexpected file or
-  package-set drift.
+  package-set drift. The builder and verifier also check the packed MCP bin
+  in a clean, offline npm install and verify the bundled dependency notices
+  (151-release-automation S7 and S8).
 - Each Chromium/Firefox/WebKit job downloads that same artifact ID, verifies
   the same candidate SHA, installs its elements/tokens tarballs without
   workspace linking and runs the browser harness against those bytes. Browser
@@ -70,4 +88,4 @@ Rules:
 - Publication is idempotent per package: registry version absent publishes;
   existing `dist.integrity` equal to the manifest SHA-512 is already complete;
   existing version with any other integrity is a security failure. A retry after
-  one package succeeded therefore publishes only the missing identical package.
+  a partial publication therefore publishes only the missing tarballs.
