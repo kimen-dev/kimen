@@ -137,8 +137,10 @@ Feature: Rating displays a score or collects a choice on a small scale
 
 ## Decisions
 
-- **Agent's choice, pending founder confirmation.** The scale accepts up to 10 glyphs to keep declarative surfaces and their radio groups bounded. Fractional maxima round down, nonfinite maxima fall back to 5 and the minimum is 1. Scores clamp to scale and editable values round to the nearest allowed step. The numeric precision prop accepts 0.5 and uses whole steps for other inputs.
+- **Agent's choice, pending founder confirmation.** The scale accepts up to 10 glyphs to keep declarative surfaces and their radio groups bounded. Fractional maxima round down, nonfinite maxima fall back to 5 and the minimum is 1. Scores clamp to scale and editable values round to the nearest allowed step. The catalog supports numeric props. Expose precision as a number and use half steps only for 0.5.
 - **Agent's choice, pending founder confirmation.** Zero means unselected. An optional unrated or read-only score contributes no field data. A required editable score needs a positive selection. Re-selecting the current option keeps it and emits no event.
 - **Agent's choice, pending founder confirmation.** Horizontal arrows follow reading direction, vertical arrows follow score order, and arrows wrap. Tab enters on the selected or first choice. Half steps use two targets per glyph in reading order.
 - **Agent's choice, pending founder confirmation.** Read-only uses the supplied context label as the image description. Overridable text patterns name the image, singular and plural choices, input score and required error. An unavailable custom icon falls back to the star.
 - **Agent's choice, pending founder confirmation.** Changes are instantaneous. Whole-star targets start at 32 CSS pixels, half-star targets start at 24 CSS pixels wide, and the Kimen touch density minimum applies to every choice. Glyph groups can wrap as space narrows.
+
+- **Agent's choice, pending founder confirmation.** Declare the API change as major because the protected API comparator classifies additions to the generated loader namespaces that way.

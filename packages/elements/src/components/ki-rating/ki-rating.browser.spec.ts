@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
+import { paintContrast } from '../../../browser-tests/contracts';
 import { defineAllComponents } from '../../../browser-tests/all-components';
 
 const styles = document.createElement('style');
@@ -73,6 +74,18 @@ function filledCounts(shadow: ShadowRoot) {
   );
 }
 
+function expectHalfFill(shadow: ShadowRoot, index: number) {
+  const glyph = glyphs(shadow)[index];
+  if (!glyph) throw new Error('Expected a rendered glyph');
+  const clip = glyphSvgs(glyph).at(-1)?.getRootNode();
+  if (!(clip instanceof ShadowRoot) || !clip.host.parentElement) {
+    throw new Error('Expected the clipping element for the filled glyph');
+  }
+  expect(clip.host.parentElement.getBoundingClientRect().width).toBeCloseTo(
+    glyph.getBoundingClientRect().width / 2,
+  );
+}
+
 function formFixture() {
   const form = fixture.querySelector('form');
   if (!form) throw new Error('Expected a rating form');
@@ -88,15 +101,7 @@ it('S1 shows an unrounded score with a half-filled glyph', async () => {
 
   await expect.element(page.getByText('4.3', { exact: true })).toBeVisible();
   await expect.poll(() => filledCounts(shadow)).toEqual([1, 1, 1, 1, 1]);
-  const last = glyphs(shadow).at(-1);
-  if (!last) throw new Error('Expected the last glyph');
-  const clip = glyphSvgs(last).at(-1)?.getRootNode();
-  if (!(clip instanceof ShadowRoot) || !clip.host.parentElement) {
-    throw new Error('Expected the clipping element for the filled glyph');
-  }
-  expect(clip.host.parentElement.getBoundingClientRect().width).toBeCloseTo(
-    last.getBoundingClientRect().width / 2,
-  );
+  expectHalfFill(shadow, 4);
 });
 
 it('S2 updates fill and visible score and emits only for changed choices', async () => {
@@ -127,6 +132,7 @@ it('S3 exposes and selects the half step of a star by pointer', async () => {
   await expect.element(radio('2.5 stars')).toBeChecked();
   await expect.element(page.getByText('2.5 of 5', { exact: true })).toBeVisible();
   await expect.poll(() => filledCounts(shadow)).toEqual([1, 1, 1, 0, 0]);
+  expectHalfFill(shadow, 2);
   expect(events).toEqual([{ value: 2.5 }]);
 });
 
@@ -245,7 +251,9 @@ it('S11 blocks required submission until the rating has a selection', async () =
   );
   const form = formFixture();
   const invalid = vi.fn();
-  const submitted = vi.fn((event: Event) => { event.preventDefault(); });
+  const submitted = vi.fn((event: Event) => {
+    event.preventDefault();
+  });
   rating.addEventListener('invalid', invalid);
   form.addEventListener('submit', submitted);
 
@@ -325,7 +333,16 @@ it('S15 keeps filled and outlined glyphs distinct in forced colours', async (tes
       return;
     }
     await expect.poll(() => getComputedStyle(witness).backgroundColor).not.toBe('rgb(1, 2, 3)');
+    expect(matchMedia('(forced-colors: active)').matches).toBe(true);
     await expect.poll(() => filledCounts(shadow)).toEqual([1, 1, 1, 0, 0]);
+    const [filled, , , empty] = glyphs(shadow);
+    if (!filled || !empty) throw new Error('Expected a filled and empty glyph');
+    const fill = glyphPaint(filled).at(-1)?.fill ?? 'transparent';
+    const outline = glyphPaint(empty)[0]?.stroke ?? 'transparent';
+    witness.style.backgroundColor = 'Canvas';
+    const canvas = getComputedStyle(witness).backgroundColor;
+    expect(paintContrast(fill, canvas)).toBeGreaterThanOrEqual(3);
+    expect(paintContrast(outline, canvas)).toBeGreaterThanOrEqual(3);
     await expect.element(page.getByText('3 of 5', { exact: true })).toBeVisible();
   } finally {
     await browserCommands.emulateForcedColors(null);

@@ -29,7 +29,10 @@ describe('rating scale', () => {
     [Number.NaN, 5, 0.5, 0],
     [-2, 5, 1, 0],
     [6, 5, 0, 5],
-  ])('resolves value %s on a %s-point scale with step %s to %s', (value, max, step, expected) => {
-    expect(ratingValue(value, max, step)).toBe(expected);
-  });
+  ] as const)(
+    'resolves value %s on a %s-point scale with step %s to %s',
+    (value, max, step, expected) => {
+      expect(ratingValue(value, max, step)).toBe(expected);
+    },
+  );
 });
