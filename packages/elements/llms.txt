@@ -48,7 +48,6 @@ methods, CSS custom properties and examples.
 - [ki-counter](llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
-- [ki-empty-state](llms/ki-empty-state.md): explain an empty list, table, search result, or first-run view.
 - [ki-grid](llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.
 - [ki-icon](llms/ki-icon.md): show a named glyph next to text, or give a standalone meaningful glyph an accessible label.
 - [ki-icon-button](llms/ki-icon-button.md): a compact, widely understood action where space precludes a visible label: toolbars, card and dialog corners (close), media transport, data-row actions.
@@ -74,6 +73,7 @@ methods, CSS custom properties and examples.
 - [ki-skeleton](llms/ki-skeleton.md): Reserve the expected layout of a card, list, or assistant reply while it loads.
 - [ki-spinner](llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
+- [ki-stat](llms/ki-stat.md): Summarize one numeric metric in a dashboard or report.
 - [ki-status](llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.
 - [ki-switch](llms/ki-switch.md): binary settings whose change takes effect immediately, always with a slotted label.
 - [ki-tab](llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional `start` and `end` slot media.

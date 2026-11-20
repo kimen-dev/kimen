@@ -858,9 +858,87 @@
         }
       ],
       "usage": {
-        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
       },
       "props": [
+        {
+          "name": "command",
+          "type": "\"close\" | \"request-close\" | \"show-modal\" | undefined",
+          "complexType": {
+            "original": "KiDialogCommand",
+            "resolved": "\"close\" | \"request-close\" | \"show-modal\" | undefined",
+            "references": {
+              "KiDialogCommand": {
+                "location": "import",
+                "path": "../../utils/dialog-invoker",
+                "id": "src/utils/dialog-invoker.ts::KiDialogCommand",
+                "referenceLocation": "KiDialogCommand"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "command",
+          "reflectToAttr": true,
+          "docs": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "value": "close",
+              "type": "string"
+            },
+            {
+              "value": "request-close",
+              "type": "string"
+            },
+            {
+              "value": "show-modal",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "commandfor",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "commandfor",
+          "reflectToAttr": true,
+          "docs": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "disabled",
           "type": "boolean",
@@ -1087,7 +1165,7 @@
           "mutable": false,
           "attr": "type",
           "reflectToAttr": true,
-          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "docsTags": [
             {
               "name": "default",
@@ -3229,7 +3307,7 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
         },
         {
           "name": "whenNotToUse",
@@ -3241,7 +3319,7 @@
         },
         {
           "name": "slot",
-          "text": "footer - Dialog actions; applications wire every action to `close()`."
+          "text": "footer - Dialog actions. Dismiss using an invoker command or `close()`."
         },
         {
           "name": "part",
@@ -3261,7 +3339,7 @@
         }
       ],
       "usage": {
-        "examples": "A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:\n\n```html\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" type=\"button\">Cancel</ki-button>\n  <ki-button slot=\"footer\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\nOpen it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):\n\n```html\n<ki-button type=\"button\" onclick=\"document.getElementById('confirm-dialog').show()\">\n  Delete draft\n</ki-button>\n```\n"
+        "examples": "A modal confirmation. `heading` names the dialog and actions go in the `footer`\nslot. Each invoker uses the dialog's ID within the same document or shadow root.\n\n```html\n<ki-button commandfor=\"confirm-dialog\" command=\"show-modal\" tone=\"danger\">Delete draft</ki-button>\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"request-close\" autofocus>Cancel</ki-button>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"close\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\n`close` dismisses the dialog. `request-close` first gives the dialog a chance\nto cancel the request. After an accepted close command, the opening button\nregains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and\n`close()` remain available for programmatic control.\n"
       },
       "props": [
         {
@@ -3366,7 +3444,7 @@
           },
           "signature": "close() => Promise<void>",
           "parameters": [],
-          "docs": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
+          "docs": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method or an invoker command.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
           "docsTags": []
         },
         {
@@ -3410,11 +3488,17 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
+          "docs": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
           "docsTags": []
         }
       ],
-      "listeners": [],
+      "listeners": [
+        {
+          "event": "command",
+          "capture": false,
+          "passive": false
+        }
+      ],
       "styles": [],
       "slots": [
         {
@@ -3423,7 +3507,7 @@
         },
         {
           "name": "footer",
-          "docs": "Dialog actions; applications wire every action to `close()`."
+          "docs": "Dialog actions. Dismiss using an invoker command or `close()`."
         }
       ],
       "parts": [
@@ -3528,312 +3612,6 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-empty-state/ki-empty-state.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-empty-state",
-      "docs": "A short explanation and next step for an empty view.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states."
-        },
-        {
-          "name": "slot",
-          "text": "- Localized supporting text with a reason or recovery advice."
-        },
-        {
-          "name": "slot",
-          "text": "media - Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
-        },
-        {
-          "name": "slot",
-          "text": "actions - Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls."
-        },
-        {
-          "name": "part",
-          "text": "container - Centered layout for the illustration, message and actions."
-        },
-        {
-          "name": "part",
-          "text": "media - Decorative illustration or FeatureIcon tile."
-        },
-        {
-          "name": "part",
-          "text": "heading - Native heading at the selected document level."
-        },
-        {
-          "name": "part",
-          "text": "description - Wrapper for the default slot."
-        },
-        {
-          "name": "part",
-          "text": "actions - Wrapping row of consumer-supplied controls."
-        }
-      ],
-      "usage": {
-        "examples": "Use EmptyState when a list, table or first-run screen is empty. Name what is\nempty, explain why or what to do next, and offer at most one primary action.\n\n```ts\nimport '@kimen/elements/icons/folder-plus';\n```\n\n```html\n<ki-empty-state heading=\"No projects yet\" icon-name=\"folder-plus\" tone=\"primary-light\">\n  Projects hold your surfaces, catalogs and themes.\n  <ki-button slot=\"actions\" variant=\"primary\">New project</ki-button>\n</ki-empty-state>\n```\n\nUse `announce` for search or filter results. Insert the message when results\nbecome empty. If it remains visible for a subsequent search, update its heading\nand description.\n\n```html\n<ki-empty-state heading=\"No results for webhok\" heading-level=\"2\" size=\"sm\" announce>\n  Check the spelling or remove a filter.\n  <ki-button slot=\"actions\" variant=\"secondary\">Clear filters</ki-button>\n</ki-empty-state>\n```\n\nPut a decorative illustration in `media` to replace the icon.\n\n```html\n<ki-empty-state heading=\"Your inbox is clear\">\n  <img slot=\"media\" src=\"/images/empty-inbox.svg\" alt=\"\" width=\"120\" height=\"80\">\n  New messages will appear here.\n</ki-empty-state>\n```\n"
-      },
-      "props": [
-        {
-          "name": "announce",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "announce",
-          "reflectToAttr": false,
-          "docs": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "heading",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "heading",
-          "reflectToAttr": false,
-          "docs": "Localized heading that identifies the empty view. Blank text omits the heading.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "headingLevel",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "heading-level",
-          "reflectToAttr": false,
-          "docs": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "2"
-            },
-            {
-              "name": "maximum",
-              "text": "6"
-            },
-            {
-              "name": "default",
-              "text": "3"
-            }
-          ],
-          "default": "3",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "size",
-          "type": "\"md\" | \"sm\"",
-          "complexType": {
-            "original": "'sm' | 'md'",
-            "resolved": "\"md\" | \"sm\"",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "size",
-          "reflectToAttr": true,
-          "docs": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'md'"
-            }
-          ],
-          "default": "'md'",
-          "values": [
-            {
-              "value": "md",
-              "type": "string"
-            },
-            {
-              "value": "sm",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "tone",
-          "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\"",
-          "complexType": {
-            "original": "| 'neutral'\n    | 'primary'\n    | 'primary-light'\n    | 'info'\n    | 'success'\n    | 'warning'\n    | 'danger'",
-            "resolved": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\"",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "tone",
-          "reflectToAttr": false,
-          "docs": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'neutral'"
-            }
-          ],
-          "default": "'neutral'",
-          "values": [
-            {
-              "value": "danger",
-              "type": "string"
-            },
-            {
-              "value": "info",
-              "type": "string"
-            },
-            {
-              "value": "neutral",
-              "type": "string"
-            },
-            {
-              "value": "primary",
-              "type": "string"
-            },
-            {
-              "value": "primary-light",
-              "type": "string"
-            },
-            {
-              "value": "success",
-              "type": "string"
-            },
-            {
-              "value": "warning",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Localized supporting text with a reason or recovery advice."
-        },
-        {
-          "name": "actions",
-          "docs": "Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls."
-        },
-        {
-          "name": "media",
-          "docs": "Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
-        }
-      ],
-      "parts": [
-        {
-          "name": "actions",
-          "docs": "Wrapping row of consumer-supplied controls."
-        },
-        {
-          "name": "container",
-          "docs": "Centered layout for the illustration, message and actions."
-        },
-        {
-          "name": "description",
-          "docs": "Wrapper for the default slot."
-        },
-        {
-          "name": "heading",
-          "docs": "Native heading at the selected document level."
-        },
-        {
-          "name": "media",
-          "docs": "Decorative illustration or FeatureIcon tile."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-empty-state": [
-          "ki-icon"
-        ]
-      }
     },
     {
       "filePath": "src/components/ki-grid/ki-grid.tsx",
@@ -4238,11 +4016,11 @@
       "parts": [],
       "states": [],
       "dependents": [
-        "ki-empty-state"
+        "ki-stat"
       ],
       "dependencies": [],
       "dependencyGraph": {
-        "ki-empty-state": [
+        "ki-stat": [
           "ki-icon"
         ]
       }
@@ -4283,9 +4061,87 @@
         }
       ],
       "usage": {
-        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
+        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
       },
       "props": [
+        {
+          "name": "command",
+          "type": "\"close\" | \"request-close\" | \"show-modal\" | undefined",
+          "complexType": {
+            "original": "KiDialogCommand",
+            "resolved": "\"close\" | \"request-close\" | \"show-modal\" | undefined",
+            "references": {
+              "KiDialogCommand": {
+                "location": "import",
+                "path": "../../utils/dialog-invoker",
+                "id": "src/utils/dialog-invoker.ts::KiDialogCommand",
+                "referenceLocation": "KiDialogCommand"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "command",
+          "reflectToAttr": true,
+          "docs": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "value": "close",
+              "type": "string"
+            },
+            {
+              "value": "request-close",
+              "type": "string"
+            },
+            {
+              "value": "show-modal",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "commandfor",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "commandfor",
+          "reflectToAttr": true,
+          "docs": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "disabled",
           "type": "boolean",
@@ -9497,6 +9353,389 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-stat/ki-stat.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-stat",
+      "docs": "A key metric with an optional comparison against a reference period.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Summarize one numeric metric in a dashboard or report. Set\ndirection to lower-is-better for metrics such as latency and neutral for\nchanges that carry no favorable or unfavorable meaning."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Present a sequence of readings or inspect multiple data\npoints. Use a chart or table with a text equivalent for that data."
+        },
+        {
+          "name": "slot",
+          "text": "chart - An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+        },
+        {
+          "name": "part",
+          "text": "card - The surface containing the metric and chart."
+        },
+        {
+          "name": "part",
+          "text": "label - The visible metric label."
+        },
+        {
+          "name": "part",
+          "text": "value - The formatted current reading and its unit."
+        },
+        {
+          "name": "part",
+          "text": "comparison - The optional row with delta and reference period."
+        },
+        {
+          "name": "part",
+          "text": "delta - The trend glyph and formatted comparison magnitude."
+        },
+        {
+          "name": "part",
+          "text": "trend - The decorative rising or falling trend glyph."
+        },
+        {
+          "name": "part",
+          "text": "reference - The visible comparison period."
+        }
+      ],
+      "usage": {
+        "examples": "# Stat\n\nUse one stat for one key number. Choose the preference for the metric. Here,\nthe render time went down and the change is favorable.\n\n```html\n<ki-stat\n  label=\"Median render time\"\n  value=\"84\"\n  unit=\"ms\"\n  delta=\"-9\"\n  delta-label=\"vs last week\"\n  direction=\"lower-is-better\"\n></ki-stat>\n```\n\nFor a percentage comparison beside a count, set `deltaFormat` as a property.\nPercent formatting takes a fraction, so 0.12 reads as 12%.\n\n```html\n<ki-stat id=\"active-surfaces\" label=\"Active surfaces\" value=\"1284\" delta=\"0.12\" delta-label=\"vs last week\"></ki-stat>\n```\n\n```js\ndocument.querySelector('#active-surfaces').deltaFormat = { style: 'percent' };\n```\n\nWith no `delta`, the card shows the current value alone. For a trend that carries\nno judgment, use `direction=\"neutral\"`. For an informative sparkline, give the\nchart a text equivalent through its own HTML semantics.\n\n```html\n<ki-stat label=\"Sales\" value=\"750\">\n  <svg slot=\"chart\" role=\"img\" aria-label=\"Sales rose from 680 to 750 this week\" viewBox=\"0 0 80 20\" width=\"80\" height=\"20\">\n    <path d=\"M1 17 L13 11 L27 14 L39 4 L52 8 L67 5 L79 1\" fill=\"none\" stroke=\"currentColor\"></path>\n  </svg>\n</ki-stat>\n```\n"
+      },
+      "props": [
+        {
+          "name": "delta",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "delta",
+          "reflectToAttr": false,
+          "docs": "Optional finite change. Its sign determines the trend and its magnitude is displayed.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "deltaFormat",
+          "type": "NumberFormatOptions | undefined",
+          "complexType": {
+            "original": "Intl.NumberFormatOptions",
+            "resolved": "NumberFormatOptions | undefined",
+            "references": {
+              "Intl": {
+                "location": "global",
+                "id": "global::Intl"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Number-format options for the change. Defaults to format. Set this property to an Intl options object.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "NumberFormatOptions"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "deltaLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "delta-label",
+          "reflectToAttr": false,
+          "docs": "Localized comparison period, such as \"vs last week\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "direction",
+          "type": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\"",
+          "complexType": {
+            "original": "'higher-is-better' | 'lower-is-better' | 'neutral'",
+            "resolved": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "direction",
+          "reflectToAttr": false,
+          "docs": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'higher-is-better'"
+            }
+          ],
+          "default": "'higher-is-better'",
+          "values": [
+            {
+              "value": "higher-is-better",
+              "type": "string"
+            },
+            {
+              "value": "lower-is-better",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "downLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "down-label",
+          "reflectToAttr": false,
+          "docs": "Localized spoken direction for a negative delta.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'down'"
+            }
+          ],
+          "default": "'down'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "format",
+          "type": "NumberFormatOptions | undefined",
+          "complexType": {
+            "original": "Intl.NumberFormatOptions",
+            "resolved": "NumberFormatOptions | undefined",
+            "references": {
+              "Intl": {
+                "location": "global",
+                "id": "global::Intl"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Number-format options for the reading. Set this JavaScript property to an Intl options object.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "NumberFormatOptions"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the metric, such as \"Median render time\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "unit",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "unit",
+          "reflectToAttr": false,
+          "docs": "Literal suffix for decimal readings, such as \"ms\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "upLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "up-label",
+          "reflectToAttr": false,
+          "docs": "Localized spoken direction for a positive delta.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'up'"
+            }
+          ],
+          "default": "'up'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current finite reading.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "chart",
+          "docs": "An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+        }
+      ],
+      "parts": [
+        {
+          "name": "card",
+          "docs": "The surface containing the metric and chart."
+        },
+        {
+          "name": "comparison",
+          "docs": "The optional row with delta and reference period."
+        },
+        {
+          "name": "delta",
+          "docs": "The trend glyph and formatted comparison magnitude."
+        },
+        {
+          "name": "label",
+          "docs": "The visible metric label."
+        },
+        {
+          "name": "reference",
+          "docs": "The visible comparison period."
+        },
+        {
+          "name": "trend",
+          "docs": "The decorative rising or falling trend glyph."
+        },
+        {
+          "name": "value",
+          "docs": "The formatted current reading and its unit."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-stat": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-status/ki-status.tsx",
       "encapsulation": "shadow",
       "tag": "ki-status",
@@ -11623,6 +11862,11 @@
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
     },
+    "src/utils/dialog-invoker.ts::KiDialogCommand": {
+      "declaration": "export type KiDialogCommand = 'show-modal' | 'close' | 'request-close';",
+      "docstring": "",
+      "path": "src/utils/dialog-invoker.ts"
+    },
     "src/components/ki-checkbox/ki-checkbox.tsx::KiCheckboxSize": {
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
       "docstring": "",
@@ -11659,7 +11903,7 @@
       "path": "src/components/ki-counter/ki-counter.tsx"
     },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
-      "declaration": "export interface KiDialogCloseDetail {\n  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */\n  reason: KiDialogCloseReason;\n}",
+      "declaration": "export interface KiDialogCloseDetail {\n  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. */\n  reason: KiDialogCloseReason;\n}",
       "docstring": "Event payload for the post-close `ki-close` notification.",
       "path": "src/components/ki-dialog/ki-dialog.tsx"
     },

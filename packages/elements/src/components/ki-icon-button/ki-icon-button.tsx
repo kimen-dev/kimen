@@ -1,5 +1,6 @@
 import { Component, Element, h, Prop, Watch } from '@stencil/core';
 import { forwardedButtonAria, syncButtonAria } from '../../utils/button-aria';
+import type { KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -83,6 +84,23 @@ export class KiIconButton {
    * visible label means ki-button).
    */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * ID of a ki-dialog in the same document or shadow tree as this button.
+   * Set it together with `command` to connect a dialog declaratively.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) commandfor?: string;
+
+  /**
+   * Dialog action to run for `commandfor`. Use `show-modal` to open,
+   * `close` for direct dismissal, or `request-close` for guarded dismissal.
+   * Choose a command for local dialog control and omit it for other actions.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) command?: KiDialogCommand;
 
   /**
    * Prevents activation, removes the icon button from keyboard reach, and
@@ -181,11 +199,6 @@ export class KiIconButton {
     this.ariaObserver?.disconnect();
   }
 
-  /** Loading is in effect only on an icon button that is not disabled (046 D8). */
-  private get effectiveLoading(): boolean {
-    return this.loading && !this.disabled;
-  }
-
   // A real browser never dispatches click on a disabled native button, but
   // synthetic activation (element.click(), dispatched events) still would:
   // cancel both phases so the disabled contract (S2) holds for every caller
@@ -193,7 +206,7 @@ export class KiIconButton {
   // clicks, for the pointer and for Enter/Space: cancelled the same way (046
   // D3).
   private readonly handleClick = (event: MouseEvent): void => {
-    if (this.disabled || this.effectiveLoading) {
+    if (this.disabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
@@ -203,20 +216,25 @@ export class KiIconButton {
     // Not form-associated (FR-008): no ElementInternals, and the internal
     // native button is type="button" inside the shadow root, so activation
     // can never submit or reset an enclosing form.
-    const loading = this.effectiveLoading;
+    // Disabled wins over loading for the rendered state (046 D8).
+    const loading = this.loading && !this.disabled;
     // The status region is rendered always, empty until the button loads: a
     // polite region created together with its text is not announced (042
     // D6). It sits outside the native button, next to it (046 D7).
     // Keep visible capped counts beside the button too, so they stay separate
     // from the control's own label.
+    // Stable keys for this fixed tree avoid shipping Stencil's generated hashes.
     return [
-      <span class="control">
+      <span key="control" class="control">
         <button
+          key="button"
           ref={(el) => {
             this.button = el;
           }}
           part="button"
           type="button"
+          {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
+          {...(this.command === undefined ? {} : { command: this.command })}
           tabIndex={this.disabled ? -1 : 0}
           disabled={this.disabled}
           aria-disabled={loading ? 'true' : undefined}
@@ -228,8 +246,8 @@ export class KiIconButton {
           onKeyUp={releaseKeyboardPress}
           onBlur={endKeyboardPress}
         >
-          <span part="icon" aria-hidden="true">
-            <slot />
+          <span key="icon" part="icon" aria-hidden="true">
+            <slot key="glyph" />
           </span>
           {loading ? (
             // The circular ki-progress geometry (015), as in ki-button.
@@ -246,9 +264,9 @@ export class KiIconButton {
             </svg>
           ) : null}
         </button>
-        <slot name="counter" />
+        <slot key="counter" name="counter" />
       </span>,
-      <span class="status" role="status">
+      <span key="status" class="status" role="status">
         {loading ? this.loadingLabel : null}
       </span>,
     ];

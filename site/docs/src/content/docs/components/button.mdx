@@ -85,6 +85,20 @@ submits the owning form, runs constraint validation and contributes
 </form>`}
 />
 
+### Open a dialog
+
+Set `commandfor` to the ID of a [ki-dialog](/docs/components/dialog/) in the
+same document or shadow root. `command="show-modal"` opens it. A configured
+dialog command takes precedence over form submission or reset.
+
+<Demo
+  code={`<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
+<ki-dialog id="draft-preview" heading="Draft preview">
+  <p>This draft is visible only to you.</p>
+  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
+</ki-dialog>`}
+/>
+
 ## API reference
 
 <CemApi tag="ki-button" />

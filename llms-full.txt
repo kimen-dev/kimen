@@ -540,6 +540,18 @@ A standalone primary action:
 </form>
 ```
 
+Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
+dialog and invoker share a document or shadow root. The command takes
+precedence over form submission or reset.
+
+```html
+<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
+<ki-dialog id="draft-preview" heading="Draft preview">
+  This draft is visible only to you.
+  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
+</ki-dialog>
+```
+
 Programmatic creation after registration; string attributes and properties are interchangeable:
 
 ```ts
@@ -575,13 +587,15 @@ While the action a button started is in progress, set `loading` on it instead of
 ```
 
 Attributes:
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
 - `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
-- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
 - `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
@@ -1547,8 +1561,8 @@ A modal dialog for one interrupting decision or short focused task.
 
 When to use: destructive confirmations, blocking choices, and brief
 critical input that must be resolved before returning to the page. Always
-provide a `heading`, place actions in the `footer` slot, wire each footer
-action to `close()`, and in destructive confirmations put `autofocus` on
+provide a `heading`, place actions in the `footer` slot, wire each
+dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
 the least destructive action.
 When NOT to use: non-blocking feedback (`ki-alert`, `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -1556,23 +1570,22 @@ supplementary hints (`ki-tooltip`), long forms or multi-step flows
 
 Examples:
 
-A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:
+A modal confirmation. `heading` names the dialog and actions go in the `footer`
+slot. Each invoker uses the dialog's ID within the same document or shadow root.
 
 ```html
+<ki-button commandfor="confirm-dialog" command="show-modal" tone="danger">Delete draft</ki-button>
 <ki-dialog heading="Delete draft?" id="confirm-dialog">
   <p>This permanently removes the draft.</p>
-  <ki-button slot="footer" type="button">Cancel</ki-button>
-  <ki-button slot="footer" tone="danger" variant="primary">Delete</ki-button>
+  <ki-button slot="footer" commandfor="confirm-dialog" command="request-close" autofocus>Cancel</ki-button>
+  <ki-button slot="footer" commandfor="confirm-dialog" command="close" tone="danger" variant="primary">Delete</ki-button>
 </ki-dialog>
 ```
 
-Open it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):
-
-```html
-<ki-button type="button" onclick="document.getElementById('confirm-dialog').show()">
-  Delete draft
-</ki-button>
-```
+`close` dismisses the dialog. `request-close` first gives the dialog a chance
+to cancel the request. After an accepted close command, the opening button
+regains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and
+`close()` remain available for programmatic control.
 
 Attributes:
 - `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
@@ -1581,7 +1594,7 @@ Attributes:
 
 Slots:
 - (default): Dialog body content.
-- `footer`: Dialog actions; applications wire every action to `close()`.
+- `footer`: Dialog actions. Dismiss using an invoker command or `close()`.
 
 Parts:
 - `body`: Scrollable body region.
@@ -1590,10 +1603,10 @@ Parts:
 - `heading`: Visible h2 title, rendered only when `heading` is non-empty.
 
 Events:
-- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
 
 Methods:
-- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
+- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method or an invoker command. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
 - `show()` (Promise<void>): Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
 
 CSS custom properties:
@@ -1701,114 +1714,6 @@ CSS custom properties:
 - `--ki-divider-thickness`: dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-
-### ki-empty-state
-
-A short explanation and next step for an empty view.
-
-When to use: explain an empty list, table, search result, or first-run view.
-Supply a localized heading that names what is empty and a short next step.
-Use announce for results that change after an interaction.
-When NOT to use: signal that results are loading or draw attention to an error
-that needs acknowledgement. Use ki-spinner or ki-alert for those states.
-
-Examples:
-
-Use EmptyState when a list, table or first-run screen is empty. Name what is
-empty, explain why or what to do next, and offer at most one primary action.
-
-```ts
-import '@kimen/elements/icons/folder-plus';
-```
-
-```html
-<ki-empty-state heading="No projects yet" icon-name="folder-plus" tone="primary-light">
-  Projects hold your surfaces, catalogs and themes.
-  <ki-button slot="actions" variant="primary">New project</ki-button>
-</ki-empty-state>
-```
-
-Use `announce` for search or filter results. Insert the message when results
-become empty. If it remains visible for a subsequent search, update its heading
-and description.
-
-```html
-<ki-empty-state heading="No results for webhok" heading-level="2" size="sm" announce>
-  Check the spelling or remove a filter.
-  <ki-button slot="actions" variant="secondary">Clear filters</ki-button>
-</ki-empty-state>
-```
-
-Put a decorative illustration in `media` to replace the icon.
-
-```html
-<ki-empty-state heading="Your inbox is clear">
-  <img slot="media" src="/images/empty-inbox.svg" alt="" width="120" height="80">
-  New messages will appear here.
-</ki-empty-state>
-```
-
-Attributes:
-- `announce` (boolean, default false): Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.
-- `heading` (string, required): Localized heading that identifies the empty view. Blank text omits the heading.
-- `heading-level` (number, default 3, minimum 2, maximum 6): Native heading level for the surrounding document outline. Only integers from 2 through 6 are valid; unsupported values use level 3.
-- `icon-name` (string | undefined): Optional decorative Lucide glyph. Register it with a per-icon import before mounting. A supplied illustration takes precedence.
-- `size` ("md" | "sm", default 'md'): Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.
-- `tone` ("danger" | "info" | "neutral" | "primary" | "primary-light" | "success" | "warning", default 'neutral'): FeatureIcon tone. Unrecognized tones use the neutral tile.
-
-Slots:
-- (default): Localized supporting text with a reason or recovery advice.
-- `actions`: Optional controls for the next step, with at most one primary action. In a guarded surface, bind actions to these controls.
-- `media`: Optional decorative illustration in place of the icon. Use an image with empty alt text or a decorative SVG. Keep this slot free of controls.
-
-Parts:
-- `actions`: Wrapping row of consumer-supplied controls.
-- `container`: Centered layout for the illustration, message and actions.
-- `description`: Wrapper for the default slot.
-- `heading`: Native heading at the selected document level.
-- `media`: Decorative illustration or FeatureIcon tile.
-
-Events: none
-
-Methods: none
-
-CSS custom properties:
-- `--ki-empty-state-backdrop-filter`: Complete filter applied behind the empty view.
-- `--ki-empty-state-bg`: Background behind the empty view.
-- `--ki-empty-state-bg-image`: Optional image above the background color.
-- `--ki-empty-state-description-bg`: Background layer behind the supporting copy.
-- `--ki-empty-state-description-fg`: Supporting text ink, strengthened in contrast-more mode.
-- `--ki-empty-state-description-line-height`: Line height of the supporting copy.
-- `--ki-empty-state-description-size`: Font size of the supporting copy.
-- `--ki-empty-state-fg`: Foreground ink for the heading.
-- `--ki-empty-state-gap`: Gap between the decorative media, message and action row.
-- `--ki-empty-state-gap-sm`: Gap between regions in a compact empty view.
-- `--ki-empty-state-heading-font-family`: Typeface for the native heading.
-- `--ki-empty-state-heading-line-height`: Heading line height in a regular empty view.
-- `--ki-empty-state-heading-line-height-sm`: Heading line height in a compact empty view.
-- `--ki-empty-state-heading-size`: Heading font size in a regular empty view.
-- `--ki-empty-state-heading-size-sm`: Heading font size in a compact empty view.
-- `--ki-empty-state-heading-weight`: Weight of the heading.
-- `--ki-empty-state-max-width`: Maximum inline size of the centered content.
-- `--ki-empty-state-tile-danger-bg`: Background of the danger decorative tile.
-- `--ki-empty-state-tile-danger-fg`: Glyph ink on the danger decorative tile.
-- `--ki-empty-state-tile-info-bg`: Background of the info decorative tile.
-- `--ki-empty-state-tile-info-fg`: Glyph ink on the info decorative tile.
-- `--ki-empty-state-tile-neutral-bg`: Background of the neutral decorative tile.
-- `--ki-empty-state-tile-neutral-fg`: Glyph ink on the neutral decorative tile.
-- `--ki-empty-state-tile-primary-bg`: Background of the primary decorative tile.
-- `--ki-empty-state-tile-primary-fg`: Glyph ink on the primary decorative tile.
-- `--ki-empty-state-tile-primary-light-bg`: Background of the primary-light decorative tile.
-- `--ki-empty-state-tile-primary-light-fg`: Glyph ink on the primary-light decorative tile.
-- `--ki-empty-state-tile-radius`: Corner radius of the regular fallback tile.
-- `--ki-empty-state-tile-radius-sm`: Corner radius of the compact fallback tile.
-- `--ki-empty-state-tile-size`: Regular FeatureIcon fallback tile size.
-- `--ki-empty-state-tile-size-sm`: Compact FeatureIcon fallback tile size.
-- `--ki-empty-state-tile-success-bg`: Background of the success decorative tile.
-- `--ki-empty-state-tile-success-fg`: Glyph ink on the success decorative tile.
-- `--ki-empty-state-tile-warning-bg`: Background of the warning decorative tile.
-- `--ki-empty-state-tile-warning-fg`: Glyph ink on the warning decorative tile.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-grid
@@ -1993,6 +1898,15 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 </ki-tooltip>
 ```
 
+An icon button in the dialog footer can dismiss it by ID. The dialog must be
+in the same document or shadow root as the icon button.
+
+```html
+<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+</ki-icon-button>
+```
+
 While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
 
 ```html
@@ -2002,6 +1916,8 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 ```
 
 Attributes:
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
@@ -4176,6 +4092,111 @@ Methods: none
 CSS custom properties:
 - `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
 - `--ki-stack-gap`: Default gap of a stack.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-stat
+
+A key metric with an optional comparison against a reference period.
+
+When to use: Summarize one numeric metric in a dashboard or report. Set
+direction to lower-is-better for metrics such as latency and neutral for
+changes that carry no favorable or unfavorable meaning.
+When NOT to use: Present a sequence of readings or inspect multiple data
+points. Use a chart or table with a text equivalent for that data.
+
+Examples:
+
+# Stat
+
+Use one stat for one key number. Choose the preference for the metric. Here,
+the render time went down and the change is favorable.
+
+```html
+<ki-stat
+  label="Median render time"
+  value="84"
+  unit="ms"
+  delta="-9"
+  delta-label="vs last week"
+  direction="lower-is-better"
+></ki-stat>
+```
+
+For a percentage comparison beside a count, set `deltaFormat` as a property.
+Percent formatting takes a fraction, so 0.12 reads as 12%.
+
+```html
+<ki-stat id="active-surfaces" label="Active surfaces" value="1284" delta="0.12" delta-label="vs last week"></ki-stat>
+```
+
+```js
+document.querySelector('#active-surfaces').deltaFormat = { style: 'percent' };
+```
+
+With no `delta`, the card shows the current value alone. For a trend that carries
+no judgment, use `direction="neutral"`. For an informative sparkline, give the
+chart a text equivalent through its own HTML semantics.
+
+```html
+<ki-stat label="Sales" value="750">
+  <svg slot="chart" role="img" aria-label="Sales rose from 680 to 750 this week" viewBox="0 0 80 20" width="80" height="20">
+    <path d="M1 17 L13 11 L27 14 L39 4 L52 8 L67 5 L79 1" fill="none" stroke="currentColor"></path>
+  </svg>
+</ki-stat>
+```
+
+Attributes:
+- `delta` (number | undefined): Optional finite change. Its sign determines the trend and its magnitude is displayed.
+- `delta-label` (string | undefined): Localized comparison period, such as "vs last week".
+- `direction` ("higher-is-better" | "lower-is-better" | "neutral", default 'higher-is-better'): Which direction is favorable for this metric. Use neutral to avoid a judgment.
+- `down-label` (string, default 'down'): Localized spoken direction for a negative delta.
+- `label` (string, required): Localized name of the metric, such as "Median render time".
+- `unit` (string | undefined): Literal suffix for decimal readings, such as "ms".
+- `up-label` (string, default 'up'): Localized spoken direction for a positive delta.
+- `value` (number, required): Current finite reading.
+
+Slots:
+- `chart`: An optional sparkline after the summary. Give informative charts a textual equivalent, and hide charts that repeat the summary.
+
+Parts:
+- `card`: The surface containing the metric and chart.
+- `comparison`: The optional row with delta and reference period.
+- `delta`: The trend glyph and formatted comparison magnitude.
+- `label`: The visible metric label.
+- `reference`: The visible comparison period.
+- `trend`: The decorative rising or falling trend glyph.
+- `value`: The formatted current reading and its unit.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-stat-backdrop-filter`: Complete optional filter behind the metric surface.
+- `--ki-stat-bg`: Raised surface of the metric card.
+- `--ki-stat-bg-image`: Optional image layered over the metric surface.
+- `--ki-stat-border`: Subtle metric card outline.
+- `--ki-stat-border-width`: Width of the metric card outline.
+- `--ki-stat-delta-danger-fg`: Ink of an unfavorable comparison.
+- `--ki-stat-delta-line-height`: Line height of the comparison.
+- `--ki-stat-delta-neutral-fg`: Ink of an unchanged or ungraded comparison.
+- `--ki-stat-delta-size`: Text size of the comparison.
+- `--ki-stat-delta-success-fg`: Ink of a favorable comparison.
+- `--ki-stat-emphasis-weight`: Weight of the main reading and comparison magnitude.
+- `--ki-stat-gap`: Space between the reading and comparison or chart.
+- `--ki-stat-label-fg`: Ink of the metric label and comparison period.
+- `--ki-stat-label-line-height`: Line height of the metric label.
+- `--ki-stat-label-size`: Text size of the metric label.
+- `--ki-stat-padding`: Insets around the metric and chart.
+- `--ki-stat-radius`: Corner radius of the metric card.
+- `--ki-stat-trend-gap`: Space between the trend glyph and comparison magnitude.
+- `--ki-stat-trend-size`: Size of the rising or falling trend glyph.
+- `--ki-stat-value-fg`: Ink of the main reading.
+- `--ki-stat-value-font-family`: Typeface of the main reading.
+- `--ki-stat-value-letter-spacing`: Spacing between digits in the main reading.
+- `--ki-stat-value-line-height`: Line height of the main reading.
+- `--ki-stat-value-size`: Size of the main reading.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-status

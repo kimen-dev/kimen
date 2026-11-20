@@ -8,9 +8,8 @@ A modal dialog for one interrupting decision or short focused task.
 
 **When to use** — destructive confirmations, blocking choices, and brief
 critical input that must be resolved before returning to the page. Always
-provide a `heading`, place actions in the `footer` slot, wire each footer
-action to `close()`, and in destructive confirmations put `autofocus` on
-the least destructive action.
+provide a `heading` and place actions in the `footer` slot. In destructive
+confirmations put `autofocus` on the least destructive action.
 
 **When NOT to use** — non-blocking feedback (`ki-alert`, `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows (navigate
@@ -18,14 +17,14 @@ or use a future full-screen variant), menus, or pickers.
 
 ## Examples
 
-The reflected `open` attribute is the only public source of truth — add it
-or call `show()` to open, remove it or call `close()` to close. When open,
-the native dialog enters the top layer and the page behind is inert:
+The `open` attribute reflects the dialog's state. To manage it programmatically,
+add `open` or call `show()` to open and remove `open` or call `close()` to dismiss.
+When open, the native dialog enters the top layer and the page behind is inert.
 
 ```html
-<ki-dialog heading="Session expired">
+<ki-dialog id="session-expired" heading="Session expired">
   Sign in again to continue where you left off.
-  <ki-button slot="footer" variant="primary">Sign in</ki-button>
+  <ki-button slot="footer" commandfor="session-expired" command="close" variant="primary">Sign in</ki-button>
 </ki-dialog>
 ```
 
@@ -34,49 +33,46 @@ semantics apply: `close-on-backdrop="false"` still enables it — omit the
 attribute entirely for critical confirmations:
 
 ```html
-<ki-dialog heading="Keyboard shortcuts" close-on-backdrop>
+<ki-dialog id="shortcuts" heading="Keyboard shortcuts" close-on-backdrop>
   Press ? anywhere to reopen this reference.
-  <ki-button slot="footer">Got it</ki-button>
+  <ki-button slot="footer" commandfor="shortcuts" command="close">Got it</ki-button>
 </ki-dialog>
 ```
 
 ## Recipe: destructive confirmation with `ki-close` reason
 
-Footer actions never close the dialog automatically — wire each one to
-`close()`. After every close path the dialog fires `ki-close` (not
-cancelable — it is a post-close notification, never a veto point) whose
-`detail.reason` reports how it closed: `method` for `close()`/`open`
-removal, `escape` for the Escape key, `backdrop` for opt-in backdrop
-dismissal:
+Connect a button to a dialog with `commandfor` and the dialog's ID in the
+same document or shadow root. `show-modal` opens it, `close` dismisses it,
+and `request-close` first gives the dialog a chance to cancel the request.
+Opening and closing work through markup once the elements are registered.
 
 ```html
-<ki-button id="open-delete" tone="danger">Delete account…</ki-button>
+<ki-button commandfor="confirm" command="show-modal" tone="danger">Delete account…</ki-button>
 
 <ki-dialog id="confirm" heading="Delete account?">
   This permanently removes your account and all project data.
-  <ki-button slot="footer" autofocus data-action="cancel">Cancel</ki-button>
-  <ki-button slot="footer" tone="danger" data-action="confirm">Delete</ki-button>
+  <ki-button slot="footer" commandfor="confirm" command="request-close" autofocus>Cancel</ki-button>
+  <ki-button slot="footer" commandfor="confirm" command="close" tone="danger" id="confirm-delete">Delete</ki-button>
 </ki-dialog>
+```
 
+Use `ki-close` to observe the dismissal after focus returns. Its `detail.reason`
+is `command` for a close command, `method` for `close()` or `open` removal,
+`escape` for the Escape key, or `backdrop` for opt-in backdrop dismissal.
+The example adds application logic to remember which footer action was used.
+
+```html
 <script type="module">
   const dialog = document.getElementById('confirm');
   let confirmed = false;
 
-  document.getElementById('open-delete').addEventListener('click', () => {
-    confirmed = false;
-    dialog.show();
+  document.getElementById('confirm-delete').addEventListener('click', () => {
+    confirmed = true;
   });
 
-  for (const action of dialog.querySelectorAll('[data-action]')) {
-    action.addEventListener('click', () => {
-      confirmed = action.dataset.action === 'confirm';
-      dialog.close();
-    });
-  }
-
   dialog.addEventListener('ki-close', (event) => {
-    // reason: 'method' | 'escape' | 'backdrop'
     console.log('closed via', event.detail.reason, '— confirmed:', confirmed);
+    confirmed = false;
   });
 </script>
 ```
@@ -110,8 +106,9 @@ collapsed when empty).
 
 - Always provide a `heading` — it is the visible title and the accessible
   name; APG modal dialogs require an accessible name.
-- Focus returns to the invoker through the native mechanism after close;
-  call `show()` from the control that should regain focus.
+- The opener exposes the dialog popup and its expanded state, and focus returns
+  to it after close. When using `show()`, call it from the control that should
+  regain focus.
 - In destructive confirmations, put `autofocus` on the least destructive
   footer action.
 - Do not set the internal native `dialog`'s `open` attribute; the host

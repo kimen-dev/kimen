@@ -70,6 +70,17 @@ Inside a native form, activating an icon button never submits or resets the
 form: the component is not form-associated. An icon-only submit control is a
 when-NOT-to-use — reach for `ki-button`.
 
+## Recipe: close a dialog with an icon button
+
+Give the dialog an ID in the same document or shadow root as the icon button.
+`command="close"` dismisses it and focus returns to the opener.
+
+```html
+<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
+  <span aria-hidden="true">✕</span>
+</ki-icon-button>
+```
+
 ## Customization
 
 | Token                                 | Controls                            |
