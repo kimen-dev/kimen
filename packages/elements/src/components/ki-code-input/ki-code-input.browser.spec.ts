@@ -28,6 +28,7 @@ afterEach(async () => {
   fixture.replaceChildren();
   fixture.removeAttribute('style');
   fixture.removeAttribute('dir');
+  document.documentElement.style.removeProperty('--ki-surface-s0');
   await parkPointer();
 });
 
@@ -86,7 +87,7 @@ function formFixture() {
 }
 
 async function replaceThirdDigit() {
-  await userEvent.keyboard('{Home}{ArrowRight}{ArrowRight}{Shift>}{ArrowRight}{/Shift}8');
+  await userEvent.keyboard('{ArrowLeft>6/}{ArrowRight}{ArrowRight}{Shift>}{ArrowRight}{/Shift}8');
 }
 
 it('S1: filters a formatted paste and publishes the complete code once', async () => {
@@ -178,7 +179,7 @@ it('S5: exposes one required textbox with a name and delivery help', async () =>
 
   await userEvent.keyboard('{Tab}');
 
-  await expect.element(textbox()).toHaveFocus();
+  await expect.poll(() => element.shadowRoot?.activeElement).toBe(inputOf(element));
   await expect.element(textbox()).toBeRequired();
   await expect.element(textbox()).toHaveAccessibleDescription(help);
   expect(inputOf(element).inputMode).toBe('numeric');
@@ -268,7 +269,7 @@ it('S9: disables the native field and excludes its code through a disabled field
 });
 
 it('S10: paints every box with the inherited custom semantic surface', async () => {
-  fixture.style.setProperty('--ki-surface-s0', 'rgb(210, 233, 245)');
+  document.documentElement.style.setProperty('--ki-surface-s0', 'rgb(210, 233, 245)');
   const element = await mount('length="4"');
   await expect
     .poll(() => cellsOf(element).map((cell) => getComputedStyle(cell).backgroundColor))

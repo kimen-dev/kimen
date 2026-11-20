@@ -42,15 +42,16 @@ it('S14: applies touch density and preserves the coarse-pointer text floor', asy
   fixture.innerHTML = `<ki-code-input label="Verification code" size="sm"
     style="--ki-code-input-font-size: var(--ki-typography-size-caption-2)"></ki-code-input>`;
   const textbox = page.getByRole('textbox', { name: 'Verification code' });
-  await expect.element(textbox).toBeVisible();
-  const input = fixture.querySelector('ki-code-input')?.shadowRoot?.querySelector('input');
+  await expect.element(textbox).toBeInTheDocument();
+  const shadow = fixture.querySelector('ki-code-input')?.shadowRoot;
+  const input = shadow?.querySelector('input');
   if (!input) throw new Error('Missing native code input');
   const standardHeight = input.getBoundingClientRect().height;
 
   fixture.setAttribute('data-ki-density', 'touch');
   await textbox.click();
 
-  await expect.element(textbox).toHaveFocus();
+  await expect.poll(() => shadow?.activeElement === input).toBe(true);
   expect(input.getBoundingClientRect().height).toBeGreaterThan(standardHeight);
   expect(input.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
   expect(Number.parseFloat(getComputedStyle(input).fontSize)).toBeGreaterThanOrEqual(16);
