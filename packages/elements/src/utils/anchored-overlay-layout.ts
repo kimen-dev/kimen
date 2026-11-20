@@ -5,10 +5,14 @@ type AnchorName = `--${string}`;
 
 interface OverlayPositionOptions {
   placement: OverlayPlacement;
-  /** Resolved gap in CSS pixels. */
-  offset?: number;
+  /** Gap in CSS pixels, optionally resolved once the popup is visible. */
+  offset?: number | ((popup: HTMLElement) => number);
   /** Optional CSS anchor-name supplied by the component. */
   anchorName?: AnchorName;
+  /** The native popover invoker when CSS uses the implicit anchor. */
+  source?: HTMLElement;
+  /** The resolved side and trigger centre relative to the popup's edges. */
+  onPosition?: (placement: OverlayPlacement, inlineCenter: number, blockCenter: number) => void;
 }
 
 /**
@@ -65,22 +69,40 @@ function movePopup(
   viewport: Window,
   options: OverlayPositionOptions,
 ): void {
-  const { x, y } = resolveOverlayPosition({
+  const dir = viewport.getComputedStyle(anchor).direction === 'rtl' ? 'rtl' : 'ltr';
+  const triggerRect = anchor.getBoundingClientRect();
+  const popupRect = popup.getBoundingClientRect();
+  const { x, y, effectivePlacement } = resolveOverlayPosition({
     placement: options.placement,
-    offset: options.offset ?? 0,
-    dir: viewport.getComputedStyle(anchor).direction === 'rtl' ? 'rtl' : 'ltr',
-    triggerRect: anchor.getBoundingClientRect(),
-    popupRect: popup.getBoundingClientRect(),
+    offset: typeof options.offset === 'function' ? options.offset(popup) : (options.offset ?? 0),
+    dir,
+    triggerRect,
+    popupRect,
     viewport: { width: viewport.innerWidth, height: viewport.innerHeight },
   });
   const name = options.anchorName;
-  const cssAnchor = name ? measureCssAnchor(popup, name) : null;
-  if (name && cssAnchor) {
-    popup.style.left = `calc(anchor(${name} left) + ${String(x - cssAnchor.left)}px)`;
-    popup.style.top = `calc(anchor(${name} top) + ${String(y - cssAnchor.top)}px)`;
-  } else {
+  const source = options.source;
+  const cssAnchor = name ? measureCssAnchor(popup, name) : source?.getBoundingClientRect();
+  if (cssAnchor) {
+    const prefix = name ? `${name} ` : '';
+    popup.style.left = `calc(anchor(${prefix}left) + ${String(x - cssAnchor.left)}px)`;
+    popup.style.top = `calc(anchor(${prefix}top) + ${String(y - cssAnchor.top)}px)`;
+  }
+  // An invoker can be outside the popup's CSS anchor scope. Test the actual
+  // positioned box so an unresolved implicit anchor cannot leave auto insets.
+  const rect = source ? popup.getBoundingClientRect() : undefined;
+  if (!cssAnchor || (rect && (Math.abs(rect.left - x) > 0.5 || Math.abs(rect.top - y) > 0.5))) {
     popup.style.left = `${String(x)}px`;
     popup.style.top = `${String(y)}px`;
+  }
+  const center = triggerRect.left + triggerRect.width / 2 - x;
+  if (options.onPosition) {
+    const popupDirection = viewport.getComputedStyle(popup).direction;
+    options.onPosition(
+      effectivePlacement,
+      popupDirection === 'rtl' ? popupRect.width - center : center,
+      triggerRect.top + triggerRect.height / 2 - y,
+    );
   }
 }
 

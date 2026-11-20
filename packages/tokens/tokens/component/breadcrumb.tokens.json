@@ -1,0 +1,97 @@
+{
+  "ki": {
+    "breadcrumb": {
+      "item": {
+        "$description": "Breadcrumb items are rendered by the owning trail and share its tokens."
+      },
+      "bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Transparent backing for ancestor text and the overflow trigger."
+      },
+      "fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Medium-emphasis ink for ancestors and the overflow trigger, strengthened in more-contrast mode."
+      },
+      "current-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Transparent backing for the current level."
+      },
+      "current-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Emphasized foreground of the current level."
+      },
+      "separator": {
+        "$value": "{ki.text.low-em}",
+        "$description": "Foreground of the decorative breadcrumb chevron."
+      },
+      "gap": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Gap between breadcrumb rows, levels and their chevrons."
+      },
+      "padding-inline": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Inline inset of a level label."
+      },
+      "padding-block": {
+        "$value": "{ki.layout.spacing.xxs}",
+        "$description": "Block inset of a level label."
+      },
+      "radius": {
+        "$value": "{ki.corner.inline}",
+        "$description": "Radius of the overflow trigger and level focus outlines."
+      },
+      "separator-size": {
+        "$value": "{ki.layout.spacing.sm}",
+        "$description": "Edge length of the decorative chevron before rotation."
+      },
+      "separator-stroke": {
+        "$value": "{ki.typography.underline.thickness-hover}",
+        "$description": "Stroke width of the decorative chevron."
+      },
+      "glyph-size": {
+        "$value": "{ki.glyph.size.sm}",
+        "$description": "Size of the ellipsis glyph."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Backing for the active overflow trigger and highlighted overflow links."
+      },
+      "hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Foreground for the active overflow trigger and highlighted overflow links."
+      },
+      "menu-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Surface behind the overflow menu entries."
+      },
+      "menu-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text of overflow menu entries."
+      },
+      "menu-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the overflow menu surface."
+      },
+      "menu-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter of the overflow menu, none by default."
+      },
+      "menu-padding": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Inset around the overflow menu entries."
+      },
+      "menu-radius": {
+        "$value": "{ki.corner.inline}",
+        "$description": "Outer radius of the overflow menu."
+      },
+      "menu-shadow": {
+        "$value": "{ki.elevation.e2}",
+        "$description": "Elevation of the overflow menu above the page."
+      },
+      "menu-max-block-size": {
+        "$value": "{ki.layout.spacing.25xl}",
+        "$description": "Maximum block size of the scrollable overflow menu."
+      }
+    }
+  }
+}

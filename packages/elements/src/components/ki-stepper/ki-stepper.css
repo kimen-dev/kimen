@@ -1,0 +1,224 @@
+:host {
+  display: block;
+  container: ki-stepper / inline-size;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="list"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ki-layout-spacing-xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-body-1);
+}
+
+[part="step"] {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ki-layout-spacing-xl);
+  min-inline-size: 0;
+}
+
+[part="marker"] {
+  box-sizing: border-box;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--ki-stepper-dot-size);
+  block-size: var(--ki-stepper-dot-size);
+  border: var(--ki-stepper-stroke) solid var(--ki-stepper-upcoming-border);
+  border-radius: var(--ki-corner-activity-mark);
+  color: var(--ki-stepper-upcoming-fg);
+  background-color: var(--ki-stepper-upcoming-bg);
+  font-size: var(--ki-typography-size-caption-2);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+[part="marker"] ki-icon,
+[part="summary"] ki-icon {
+  flex: none;
+  font-size: var(--ki-stepper-glyph-size);
+}
+
+[data-state="done"] [part="marker"] {
+  color: var(--ki-stepper-done-fg);
+  background-color: var(--ki-stepper-done-bg);
+  border-color: var(--ki-stepper-done-bg);
+}
+
+[data-state="current"] [part="marker"] {
+  color: var(--ki-stepper-current-fg);
+  background-color: var(--ki-stepper-current-bg);
+  border-color: var(--ki-stepper-current-border);
+}
+
+[data-state="error"] [part="marker"] {
+  color: var(--ki-stepper-error-fg);
+  background-color: var(--ki-stepper-error-bg);
+  border-color: var(--ki-stepper-error-border);
+}
+
+.content {
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  min-inline-size: 0;
+  gap: var(--ki-layout-spacing-xxs);
+}
+
+[part="title"] {
+  color: var(--ki-stepper-label-fg);
+  background-color: var(--ki-stepper-label-bg);
+  inline-size: max-content;
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-state="current"] [part="title"] {
+  font-weight: var(--ki-typography-weight-body-semibold);
+}
+
+[data-state="upcoming"] [part="title"] {
+  color: var(--ki-stepper-upcoming-fg);
+}
+
+a[part="title"],
+[part="summary"] {
+  box-sizing: border-box;
+  min-inline-size: var(--ki-density-target-min);
+  min-block-size: var(--ki-density-target-min);
+}
+
+a[part="title"] {
+  align-content: center;
+}
+
+[part="description"] {
+  color: var(--ki-step-description-fg);
+  background-color: var(--ki-step-description-bg);
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+  overflow-wrap: anywhere;
+}
+
+[part="connector"] {
+  position: absolute;
+  inset-inline-start: calc((var(--ki-stepper-dot-size) - var(--ki-stepper-stroke)) / 2);
+  inset-block: calc(var(--ki-stepper-dot-size) + var(--ki-layout-spacing-xs))
+    calc(var(--ki-layout-spacing-xs) - var(--ki-layout-spacing-xl));
+  inline-size: var(--ki-stepper-stroke);
+  border-radius: var(--ki-corner-activity-mark);
+  background-color: var(--ki-stepper-connector);
+}
+
+:where([data-state="done"]) [part="connector"] {
+  background-color: var(--ki-stepper-connector-done);
+}
+
+[part="summary"] {
+  display: none;
+  align-items: center;
+  max-inline-size: 100%;
+  gap: var(--ki-layout-spacing-sm);
+  padding: 0;
+  border: 0;
+  color: var(--ki-stepper-summary-fg);
+  background-color: var(--ki-stepper-summary-bg);
+  font: inherit;
+  font-weight: var(--ki-typography-weight-body-semibold);
+  text-align: start;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+a[part="title"]:focus-visible,
+[part="summary"]:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+[part="summary"][aria-expanded="true"] {
+  margin-block-end: var(--ki-layout-spacing-md);
+}
+
+[part="summary"][aria-expanded="true"] ki-icon {
+  rotate: 180deg;
+}
+
+.visually-hidden {
+  position: absolute;
+  inline-size: var(--ki-layout-spacing-xxs);
+  block-size: var(--ki-layout-spacing-xxs);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@container ki-stepper (inline-size < 22rem) {
+  [part="summary"] {
+    display: inline-flex;
+  }
+
+  /* Keep the focused link visible even before Stencil renders the new state. */
+  [part="summary"][aria-expanded="false"] + [part="list"]:not(:focus-within) {
+    display: none;
+  }
+}
+
+@container ki-stepper (inline-size >= 22rem) {
+  .horizontal {
+    flex-flow: row wrap;
+    gap: var(--ki-layout-spacing-md);
+  }
+
+  .horizontal [part="step"] {
+    flex: 1 0 max-content;
+    gap: var(--ki-layout-spacing-sm);
+    min-inline-size: calc(var(--ki-stepper-dot-size) + var(--ki-layout-spacing-7xl));
+    max-inline-size: 100%;
+  }
+
+  .horizontal .content {
+    flex-basis: max-content;
+  }
+
+  .horizontal [part="connector"] {
+    position: static;
+    flex: 1;
+    margin-block-start: calc((var(--ki-stepper-dot-size) - var(--ki-stepper-stroke)) / 2);
+    min-inline-size: var(--ki-layout-spacing-xs);
+    block-size: var(--ki-stepper-stroke);
+  }
+}
+
+@media (forced-colors: active) {
+  [data-state="upcoming"] [part="marker"] {
+    border-style: dashed;
+  }
+
+  [data-state="current"] [part="marker"] {
+    forced-color-adjust: none;
+    color: HighlightText;
+    background-color: Highlight;
+    border-color: Highlight;
+  }
+
+  [part="connector"] {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
+}

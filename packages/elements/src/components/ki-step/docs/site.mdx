@@ -1,0 +1,17 @@
+---
+title: ki-step
+description: Declare a named step in a Stepper.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+
+Place `ki-step` directly inside [ki-stepper](../stepper/) and put its label in
+the default slot. The state defaults to `upcoming`. Use `done` for completed
+work, `current` for the active step and `error` for a step that needs attention.
+
+An `href` on a completed step turns its label into a link. Use
+`description` for supporting text that appears below the label.
+
+## API reference
+
+<CemApi tag="ki-step" />
