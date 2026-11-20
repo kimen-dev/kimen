@@ -242,8 +242,10 @@ it('S8 uses a bounded shimmer by default and keeps the same fill and size under 
     expect(dimensions(part)).toEqual(before);
     expect(getComputedStyle(part).backgroundColor).toBe(fill);
 
-    host.setAttribute('animated', 'true');
+    host.removeAttribute('animated');
     await expect.poll(() => shimmer(part)).not.toBe('none');
+    expect(host.animated).toBe(true);
+    expect(host.hasAttribute('animated')).toBe(false);
     await browserCommands.emulateReducedMotion('reduce');
     await expect.poll(() => shimmer(part)).toBe('none');
     expect(dimensions(part)).toEqual(before);

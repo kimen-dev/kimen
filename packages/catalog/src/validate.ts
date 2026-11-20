@@ -644,6 +644,18 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   }
   if (entry !== undefined) {
     checkRequiredProps(node, entry, path, issues);
+    // The image contract requires a description only for informative media.
+    if (node.component === 'ki-image' && ownEntry(node.props, 'decorative') !== true) {
+      const alt = ownEntry(node.props, 'alt');
+      if (alt === undefined || (typeof alt === 'string' && alt.trim() === '')) {
+        issues.push({
+          code: 'missing-required-prop',
+          message: 'ki-image requires non-blank alt text unless decorative is true',
+          path: `${path}.props.alt`,
+          value: 'alt',
+        });
+      }
+    }
   }
   if (node.action !== undefined) {
     const native = isNativePrimitive(node.component);

@@ -184,6 +184,9 @@ test('S6 browser setups isolate shared input and page-level capability emulation
     'src/components/ki-skeleton/ki-skeleton.pointer.browser.spec.ts',
     'browser-tests/touch-field-text.browser.spec.ts',
     'browser-tests/touch-size-field-text.browser.spec.ts',
+    // A component's own `<tag>.pointer.browser.spec.ts` joins by name.
+    'browser-tests/**/*.pointer.browser.spec.{ts,tsx}',
+    'src/components/ki-*/**/*.pointer.browser.spec.{ts,tsx}',
   ];
   for (const spec of inputDeviceSpecs) {
     assert.ok(

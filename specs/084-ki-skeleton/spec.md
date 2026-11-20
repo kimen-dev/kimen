@@ -97,7 +97,7 @@ Feature: ki-skeleton reserves space for loading content
 - Draw text, circle and rectangle placeholders. Text is the default shape and starts with one line. Multiple lines shorten the final line.
 - Accept CSS lengths through `size`, `inline-size` and `block-size`. Keep an unchanged footprint when animation, colour preferences or the primary pointer change.
 - Hide the skeleton from assistive technology and keep it out of sequential focus. Document a labelled region with `aria-busy` and a cancellable 300 ms reveal that preserves layout before and after the reveal.
-- Enable shimmer by default. Render statically under reduced motion, forced colours or `animated="false"`. Provide a system-colour outline in forced colours.
+- Enable shimmer by default. Render statically under reduced motion, forced colours or `animated="false"`. Restore the default when the `animated` attribute is removed, including when a live surface unsets the prop. Provide a system-colour outline in forced colours.
 - Derive normal paint from semantic tokens. Support an optional background image and backdrop filter, both defaulting to `none`. Capture all shapes in onmars and Material 3, light and dark.
 - Discover the component in the catalog and all three framework wrappers. The catalog exposes its six props with empty slots and actions.
 
@@ -107,5 +107,5 @@ Feature: ki-skeleton reserves space for loading content
 - **Agent's choice, pending founder confirmation.** A single line fills the available inline size and uses a 0.75rem block size with a 0.5rem gap between lines. The final line of a multiline skeleton is 70% of the requested inline size. Circle defaults to 2.5rem and rectangle to full inline width by 6rem. A lone circle axis sets its diameter when `size` is absent. A single diameter scales down on both axes in a narrower container.
 - **Agent's choice, pending founder confirmation.** Explicit dimensions override the corresponding `size` axes. Text uses the block dimension for each line. Unknown shapes fall back to text. Direct-element line counts are truncated and limited to 1–20, with non-finite inputs falling back to one. The catalog accepts numeric counts within that range and the element discards fractions.
 - **Agent's choice, pending founder confirmation.** Shimmer sweeps in reading order up to three times at 1.4 seconds per sweep by default, then settles to the base fill. This bounds automatic motion alongside other content without adding a pause control to a decorative element.
-- **Agent's choice, pending founder confirmation.** Expose a `shape` part for each painted surface. Preserve a default-on boolean's explicit false and reset values in the catalog's one-shot and live renderers.
+- **Agent's choice, pending founder confirmation.** Expose a `shape` part for each painted surface.
 - **Agent's choice, pending founder confirmation.** Declare the additive surface as major because the protected API comparator classifies the generated loader Components and JSX namespace updates as major.

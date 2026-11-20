@@ -1,0 +1,98 @@
+{
+  "ki": {
+    "spinner": {
+      "size": {
+        "$value": "{ki.activity-size.ring-md}",
+        "$description": "Default ring diameter."
+      },
+      "size-sm": {
+        "$value": "{ki.activity-size.ring-sm}",
+        "$description": "Small ring diameter."
+      },
+      "size-lg": {
+        "$value": "{ki.activity-size.ring-lg}",
+        "$description": "Large ring diameter."
+      },
+      "stroke": {
+        "$value": "{ki.activity-size.stroke}",
+        "$description": "Stroke width of the small and medium rings."
+      },
+      "stroke-lg": {
+        "$value": "{ki.activity-size.stroke-lg}",
+        "$description": "Stroke width of the large ring."
+      },
+      "radius": {
+        "$value": "{ki.corner.activity-mark}",
+        "$description": "Round corners of the ring and dots."
+      },
+      "track": {
+        "$value": "{ki.outline.strong}",
+        "$description": "Ink of the ring track."
+      },
+      "indicator": {
+        "$value": "{ki.surface.primary-high-em}",
+        "$description": "Ink of the revolving ring segment."
+      },
+      "ring-duration": {
+        "$value": "{ki.motion.duration.activity-rotation}",
+        "$description": "Standard ring rotation period."
+      },
+      "ring-duration-reduced": {
+        "$value": "{ki.motion.duration.activity-rotation-reduced}",
+        "$description": "Ring rotation period when reduced motion is requested."
+      },
+      "ring-easing": {
+        "$value": "{ki.motion.easing.activity-rotation}",
+        "$description": "Easing for ring rotation."
+      },
+      "dot-size": {
+        "$value": "{ki.activity-size.dot}",
+        "$description": "Diameter of each dot at full size."
+      },
+      "dot-gap": {
+        "$value": "{ki.spacing.activity-dot-gap}",
+        "$description": "Gap between dots."
+      },
+      "dot-duration": {
+        "$value": "{ki.motion.duration.activity-pulse}",
+        "$description": "Typing pulse period."
+      },
+      "dot-delay": {
+        "$value": "{ki.motion.duration.activity-stagger}",
+        "$description": "Delay between consecutive typing dots."
+      },
+      "dot-easing": {
+        "$value": "{ki.motion.easing.activity-pulse}",
+        "$description": "Easing of the typing pulse."
+      },
+      "dot-scale-min": {
+        "$value": "{ki.motion.scale.activity-pulse-min}",
+        "$description": "Smallest scale of a dot during the pulse."
+      },
+      "label-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Background of the inline activity label."
+      },
+      "label-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink of the visible label and the typing dots."
+      },
+      "label-gap": {
+        "$value": "{ki.spacing.activity-label-gap}",
+        "$description": "Gap between the graphic and the visible label."
+      },
+      "label-font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Font family of the visible label."
+      },
+      "label-font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Font size of the visible label."
+      },
+      "label-line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Line height of the visible label."
+      }
+    }
+  }
+}

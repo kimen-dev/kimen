@@ -9,36 +9,22 @@ import {
   validateUiSpec,
 } from '../src/index.js';
 
-// Exercise the writers against a declared default independently of generation.
-const animationCatalog: Catalog = {
-  catalogSchemaVersion: catalogData.catalogSchemaVersion,
-  components: {
-    'ki-skeleton': {
-      tag: 'ki-skeleton',
-      description: 'A loading placeholder',
-      whenToUse: 'Reserve space while content loads',
-      whenNotToUse: 'For content that is already available',
-      props: { animated: { type: 'boolean', default: true, description: 'Enable shimmer' } },
-      slots: {},
-      events: {},
-    },
-  },
-};
+const catalog: Catalog = catalogData;
 
 it('S8 preserves explicit false for a default-on boolean in a catalog render', () => {
   const surface = document.createElement('div');
   const result = renderUiSpec(
     { version: 1, root: { component: 'ki-skeleton', props: { animated: false } } },
-    { catalog: animationCatalog, surface },
+    { surface },
   );
 
   expect(result.ok).toBe(true);
   expect(surface.querySelector('ki-skeleton')?.getAttribute('animated')).toBe('false');
 });
 
-it('S8 restores the default-on value when a live surface resets the animation prop', () => {
+it('S8 removes the animation attribute when a live surface unsets the prop', () => {
   const surface = document.createElement('div');
-  const live = createLiveSurface({ surface, catalog: animationCatalog });
+  const live = createLiveSurface({ surface });
   const id = 'skeleton';
   const node = { component: 'ki-skeleton', id, props: { animated: false } };
   expect(live.apply({ ops: [{ op: 'insert', node }] }).ok).toBe(true);
@@ -50,7 +36,7 @@ it('S8 restores the default-on value when a live surface resets the animation pr
     expect(surface.querySelector('ki-skeleton')).toBe(placeholder);
   };
   setAnimation(null);
-  expect(placeholder?.getAttribute('animated')).toBe('');
+  expect(placeholder?.getAttribute('animated')).toBeNull();
   setAnimation(false);
   expect(placeholder?.getAttribute('animated')).toBe('false');
   setAnimation(true);
@@ -58,7 +44,7 @@ it('S8 restores the default-on value when a live surface resets the animation pr
 });
 
 it('generates a passive catalog entry with all six props and bounded lines', () => {
-  const entry = (catalogData as Catalog).components['ki-skeleton'];
+  const entry = catalog.components['ki-skeleton'];
   expect(entry?.props).toMatchObject({
     animated: { type: 'boolean', default: true },
     'block-size': { type: 'string' },

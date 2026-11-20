@@ -34,6 +34,7 @@ export function fixtureFor(component: VisualComponent): ComponentFixture {
 
 export interface ComponentFixture {
   gallery: VisualGallery;
+  material3Dark: boolean;
   barePage: { keyboardPressed: boolean };
   pointer: { hoverWitness: boolean };
 }

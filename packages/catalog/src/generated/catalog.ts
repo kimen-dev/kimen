@@ -164,7 +164,7 @@ export const catalogData = {
         },
         "dismissible": {
           "type": "boolean",
-          "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+          "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`.",
           "default": false
         },
         "heading": {
@@ -190,7 +190,7 @@ export const catalogData = {
         "icon": "Optional decorative glyph shown in a round frame at the top of\nthe card, in the tone's colors. Hidden from assistive technology: it never\ncarries meaning the heading and message lack. When to use: give every\nnon-neutral alert an icon. When NOT to use: never as the only cue for the\nmessage."
       },
       "tag": "ki-alert",
-      "whenNotToUse": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
+      "whenNotToUse": "transient confirmations that expire on their own belong to\n`ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to\nanother element belong to `ki-badge`; blocking decisions belong to\n`ki-dialog`; inline field-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
       "whenToUse": "show a persistent inline message about the state of a page or\nsection, such as a failed save, completed operation, or service notice, that\nremains until the condition is resolved or the person dismisses it. Express\nseverity with `tone`, never custom styling."
     },
     "ki-avatar": {
@@ -224,9 +224,11 @@ export const catalogData = {
           "format": "url"
         }
       },
-      "slots": {},
+      "slots": {
+        "counter": "Decorative ki-counter. Counts sit at block-start inline-end\nand dots at block-end inline-end. Include its meaning in the avatar label."
+      },
       "tag": "ki-avatar",
-      "whenNotToUse": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), for presence/verification adornments overlaid on the corner\n(a future overlay concern shared with the nav badge), or unlabeled when no\nadjacent text names the identity.",
+      "whenNotToUse": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), or unlabeled when no adjacent text names the identity.\nUse the counter slot for a decorative count or presence dot.",
       "whenToUse": "a compact identity visual for a person or entity — a comment\nauthor, a contact list item, a project member. Set `label` whenever the\navatar is the only carrier of the identity (no adjacent visible name);\ncompose several into `ki-avatar-group` for a compact \"who is involved\"\nstack with overflow."
     },
     "ki-avatar-group": {
@@ -289,7 +291,7 @@ export const catalogData = {
         "": "The label: short status text, the sole carrier of meaning."
       },
       "tag": "ki-badge",
-      "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (a future, separate concern).",
+      "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (use ki-counter).",
       "whenToUse": "annotate an entity with short status text (a state, a\ncategory) whose meaning is carried by the label itself; the tone color\nonly reinforces the text, it never replaces it."
     },
     "ki-button": {
@@ -376,18 +378,42 @@ export const catalogData = {
       "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
     "ki-card": {
-      "description": "A non-interactive card surface for grouping related content.",
-      "events": {},
-      "props": {},
+      "description": "A card surface for grouping related content, with an optional primary link or action.",
+      "events": {
+        "ki-activate": "Fires once when the user activates an action card by pointer or keyboard."
+      },
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "Destination for the card's title link. Supply a text heading in the\nheader slot. A nonblank href takes precedence over interactive.",
+          "format": "url"
+        },
+        "interactive": {
+          "type": "boolean",
+          "description": "Gives a titled card a primary button that emits ki-activate. Use href\nfor navigation. Keep other actions in separate controls in the card.",
+          "default": false
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "default",
+            "elevated",
+            "filled",
+            "outlined"
+          ],
+          "description": "Surface treatment. Choose elevated for a raised panel, filled for a\ntinted group or outlined for a bordered surface. Use default to follow\nthe theme's existing card treatment.",
+          "default": "default"
+        }
+      },
       "slots": {
         "": "Body region for supporting text or arbitrary composed content.",
         "footer": "Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1.",
-        "header": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics.",
+        "header": "Title region. Supply one nonempty text heading at the surrounding document level for a clickable card.",
         "media": "Leading visual region for an image, video or illustration."
       },
       "tag": "ki-card",
-      "whenNotToUse": "as a button or link target, form control, fieldset, page\nlandmark, section replacement or nested card. For an interactive card, slot\nthe button or link INSIDE a region (whole-card interactivity is a future\nfeature, not this component).",
-      "whenToUse": "group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology."
+      "whenNotToUse": "as a form field, fieldset, page landmark, section replacement\nor nested card. Use a standalone button or link for a control without\nsupporting content.",
+      "whenToUse": "group related media, a title, supporting text and actions into\none scannable surface. Set `href` for navigation or `interactive` for a\ndeclared action. Give a clickable card one text heading in the header\nslot and place secondary controls in the body or footer."
     },
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
@@ -453,6 +479,98 @@ export const catalogData = {
       "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked.",
       "whenToUse": "selecting one or more independent options that a form submits\nlater, including a \"select all\" parent that presents partial selection with\n`indeterminate`. Always provide a visible label in the default slot."
     },
+    "ki-checkbox-group": {
+      "description": "A form-associated group of independently selectable checkboxes.",
+      "events": {
+        "ki-change": "Fires once for a committed user toggle with a copy of the current selection."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Makes the group unavailable and excludes it from form submission.",
+          "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Localized message displayed for a failing selection limit."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of guidance displayed under the choices."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible legend and accessible name for these choices.",
+          "required": true
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum number of checked options, as a nonnegative integer."
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum number of checked options, as a nonnegative integer."
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key repeated for each selected option."
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Lays choices out vertically or in a wrapping horizontal row.",
+          "default": "vertical"
+        }
+      },
+      "slots": {
+        "": "Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group."
+      },
+      "tag": "ki-checkbox-group",
+      "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
+      "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits."
+    },
+    "ki-counter": {
+      "description": "A decorative count or dot over a trigger or avatar.",
+      "events": {},
+      "props": {
+        "dot": {
+          "type": "boolean",
+          "description": "Show a dot independently of the count, including when the value is zero.",
+          "default": false
+        },
+        "for": {
+          "type": "string",
+          "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property."
+        },
+        "max": {
+          "type": "number",
+          "description": "Largest count displayed in full. Higher values display the cap with a\nplus sign. Fractional caps round down; invalid caps use 99.",
+          "default": 99
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral",
+            "primary",
+            "success"
+          ],
+          "description": "Semantic palette of the pill or dot. An unknown tone uses danger.",
+          "default": "danger"
+        },
+        "value": {
+          "type": "number",
+          "description": "Count of unread or pending items. Finite values are rounded down.\nValues below one and non-finite values hide the count."
+        }
+      },
+      "slots": {},
+      "tag": "ki-counter",
+      "whenNotToUse": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics.",
+      "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
+    },
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
       "events": {
@@ -480,7 +598,7 @@ export const catalogData = {
         "footer": "Dialog actions; applications wire every action to `close()`."
       },
       "tag": "ki-dialog",
-      "whenNotToUse": "non-blocking feedback (`ki-alert`, future `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
+      "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
       "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action."
     },
     "ki-divider": {
@@ -501,6 +619,67 @@ export const catalogData = {
       "tag": "ki-divider",
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
+    },
+    "ki-grid": {
+      "description": "A passive responsive grid for content items.",
+      "events": {},
+      "props": {
+        "columns": {
+          "type": "number",
+          "description": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+          "minimum": 1
+        },
+        "gap": {
+          "type": "enum",
+          "values": [
+            "10xl",
+            "11xl",
+            "12xl",
+            "13xl",
+            "14xl",
+            "15xl",
+            "16xl",
+            "17xl",
+            "18xl",
+            "19xl",
+            "20xl",
+            "21xl",
+            "22xl",
+            "23xl",
+            "24xl",
+            "25xl",
+            "26xl",
+            "2xl",
+            "3xl",
+            "4xl",
+            "5xl",
+            "6xl",
+            "7xl",
+            "8xl",
+            "9xl",
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs",
+            "xxs",
+            "zero"
+          ],
+          "description": "Kimen spacing step, xl by default. Unsupported values keep the default gap.",
+          "default": "xl"
+        },
+        "min-column": {
+          "type": "string",
+          "description": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.",
+          "default": "15rem"
+        }
+      },
+      "slots": {
+        "": "The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit."
+      },
+      "tag": "ki-grid",
+      "whenNotToUse": "for page shells, painted grouping (use ki-card), or a data grid.",
+      "whenToUse": "lay out items on responsive tracks with consistent token spacing."
     },
     "ki-icon": {
       "description": "A static Lucide glyph selected by name from the application's per-icon imports.",
@@ -594,11 +773,86 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+        "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
       },
       "tag": "ki-icon-button",
       "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
       "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
+    },
+    "ki-image": {
+      "description": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",
+      "events": {
+        "ki-error": "Reports a load failure or rejected URL once per source attempt. Bubbles\nand crosses shadow boundaries so consumers can observe it on a surface."
+      },
+      "props": {
+        "alt": {
+          "type": "string",
+          "description": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image."
+        },
+        "decorative": {
+          "type": "boolean",
+          "description": "Hide the media from assistive technology when it conveys no information.",
+          "default": false
+        },
+        "fallback-label": {
+          "type": "string",
+          "description": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label.",
+          "default": "Image unavailable"
+        },
+        "fit": {
+          "type": "enum",
+          "values": [
+            "contain",
+            "cover"
+          ],
+          "description": "Cover fills the frame. Contain preserves the whole image in it.",
+          "default": "cover"
+        },
+        "loading": {
+          "type": "enum",
+          "values": [
+            "eager",
+            "lazy"
+          ],
+          "description": "Native loading hint. Use eager for a critical image above the fold.",
+          "default": "lazy"
+        },
+        "radius": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "none"
+          ],
+          "description": "Corner radius of the media frame.",
+          "default": "lg"
+        },
+        "ratio": {
+          "type": "enum",
+          "values": [
+            "16:9",
+            "1:1",
+            "3:2",
+            "4:3",
+            "auto"
+          ],
+          "description": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load.",
+          "default": "auto"
+        },
+        "src": {
+          "type": "string",
+          "description": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+          "required": true,
+          "format": "url"
+        }
+      },
+      "slots": {
+        "caption": "Optional visible context displayed below the media in a figcaption."
+      },
+      "tag": "ki-image",
+      "whenNotToUse": "for a background decoration, a video, or an interactive\ncontrol. Use a separate control to open or otherwise act on an image.",
+      "whenToUse": "to show a photo, illustration, or diagram with a predictable\nlayout. Supply task-relevant alt text, or mark purely decorative media as\ndecorative. Set an explicit ratio when the layout must stay fixed."
     },
     "ki-indicator": {
       "description": "A non-interactive page-position indicator: one dot per position of a\nbounded sequence, exactly one highlighted as current.",
@@ -716,6 +970,64 @@ export const catalogData = {
       "whenNotToUse": "multiline text, predefined choices, boolean state, numeric\nstepper entry, or placeholder-only labeling.",
       "whenToUse": "collect one line of free text from a person, always with a\nvisible `label`; choose the `type` and `autocomplete` that match the entry\npurpose."
     },
+    "ki-link": {
+      "description": "A native navigation link with Kimen ink, underline, and focus styles.",
+      "events": {},
+      "props": {
+        "download": {
+          "type": "string",
+          "description": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name."
+        },
+        "external": {
+          "type": "boolean",
+          "description": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules.",
+          "default": false
+        },
+        "external-label": {
+          "type": "string",
+          "description": "Localizable text appended to the accessible name in external mode.",
+          "default": "(opens in a new tab)"
+        },
+        "href": {
+          "type": "string",
+          "description": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+          "required": true,
+          "format": "url"
+        },
+        "rel": {
+          "type": "string",
+          "description": "Space-separated native link relationships. External links always include noopener."
+        },
+        "target": {
+          "type": "string",
+          "description": "Native browsing-context name. External links use _blank."
+        },
+        "underline": {
+          "type": "enum",
+          "values": [
+            "always",
+            "hover"
+          ],
+          "description": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it.",
+          "default": "always"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "neutral",
+            "primary"
+          ],
+          "description": "Ink role. Primary uses accent ink and neutral uses body ink.",
+          "default": "primary"
+        }
+      },
+      "slots": {
+        "": "Descriptive link text. Use phrasing content without nested interactive controls."
+      },
+      "tag": "ki-link",
+      "whenNotToUse": "perform an action on the current page. Use ki-button variant=\"ghost\" for that.",
+      "whenToUse": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation."
+    },
     "ki-list": {
       "description": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
       "events": {},
@@ -752,6 +1064,46 @@ export const catalogData = {
       "tag": "ki-list-item",
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+    },
+    "ki-note": {
+      "description": "A compact, static explanation beside a control or inside a card.",
+      "events": {},
+      "props": {
+        "icon": {
+          "type": "boolean",
+          "description": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",
+          "default": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Uses caption text at sm and body text at md. Unknown values use md.",
+          "default": "md"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "info",
+            "neutral",
+            "primary",
+            "success",
+            "warning"
+          ],
+          "description": "Selects the background tint and decorative icon. Unknown values use neutral.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Short explanatory text that carries the full meaning.",
+        "icon": "A decorative glyph that replaces the tone's built-in icon."
+      },
+      "tag": "ki-note",
+      "whenNotToUse": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance.",
+      "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
     },
     "ki-option": {
       "description": "A declarative data option rendered by its owning `ki-select`.",
@@ -1049,6 +1401,133 @@ export const catalogData = {
       "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
       "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
     },
+    "ki-spinner": {
+      "description": "A compact status for an indeterminate wait.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+          "required": true
+        },
+        "show-label": {
+          "type": "boolean",
+          "description": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case.",
+          "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm"
+          ],
+          "description": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring.",
+          "default": "md"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "dots",
+            "ring"
+          ],
+          "description": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring.",
+          "default": "ring"
+        }
+      },
+      "slots": {},
+      "tag": "ki-spinner",
+      "whenNotToUse": "use ki-progress for page-level work or a known fraction of\na task. Use ki-alert for persistent notices.",
+      "whenToUse": "show brief inline activity such as saving a change or running a\ntool. Choose typing dots for an assistant that is thinking. Set a localized\nlabel that names the activity and mount the spinner when the wait starts."
+    },
+    "ki-stack": {
+      "description": "A passive flex layout for content on one axis.",
+      "events": {},
+      "props": {
+        "align": {
+          "type": "enum",
+          "values": [
+            "baseline",
+            "center",
+            "end",
+            "start",
+            "stretch"
+          ],
+          "description": "Cross-axis alignment, stretch by default.",
+          "default": "stretch"
+        },
+        "direction": {
+          "type": "enum",
+          "values": [
+            "column",
+            "row"
+          ],
+          "description": "Main axis, column by default.",
+          "default": "column"
+        },
+        "gap": {
+          "type": "enum",
+          "values": [
+            "10xl",
+            "11xl",
+            "12xl",
+            "13xl",
+            "14xl",
+            "15xl",
+            "16xl",
+            "17xl",
+            "18xl",
+            "19xl",
+            "20xl",
+            "21xl",
+            "22xl",
+            "23xl",
+            "24xl",
+            "25xl",
+            "26xl",
+            "2xl",
+            "3xl",
+            "4xl",
+            "5xl",
+            "6xl",
+            "7xl",
+            "8xl",
+            "9xl",
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs",
+            "xxs",
+            "zero"
+          ],
+          "description": "Kimen spacing step, md by default. Unsupported values keep the default gap.",
+          "default": "md"
+        },
+        "justify": {
+          "type": "enum",
+          "values": [
+            "between",
+            "center",
+            "end",
+            "start"
+          ],
+          "description": "Main-axis distribution, start by default. Use between to distribute spare space.",
+          "default": "start"
+        },
+        "wrap": {
+          "type": "boolean",
+          "description": "Allow items to continue on a new line. Defaults to false.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "The content in reading order. A direct child with data-grow takes a share of free space."
+      },
+      "tag": "ki-stack",
+      "whenNotToUse": "for page shells, painted grouping (use ki-card), or tabular data.",
+      "whenToUse": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing."
+    },
     "ki-status": {
       "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",
       "events": {},
@@ -1285,6 +1764,96 @@ export const catalogData = {
       "tag": "ki-textarea",
       "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
       "whenToUse": "free-form text longer than one line, such as comments,\ndescriptions, messages, delivery notes, or addresses when paired with a\nmatching `autocomplete` purpose."
+    },
+    "ki-toast": {
+      "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
+      "events": {
+        "ki-dismiss": "Fired once when the toast leaves because its time ran out\n(`reason: \"timeout\"`), the person used the dismiss button (`\"button\"`),\npressed Escape inside it (`\"escape\"`) or activated its action\n(`\"action\"`), after it is hidden and focus has been handed on. Not\ncancelable. When to use: remove the element, or record that the message\nwas seen. When NOT to use: do not expect it for programmatic `dismissed`\nchanges."
+      },
+      "props": {
+        "dismiss-label": {
+          "type": "string",
+          "description": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot.",
+          "default": "Dismiss"
+        },
+        "dismissed": {
+          "type": "boolean",
+          "description": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person.",
+          "default": false
+        },
+        "dismissible": {
+          "type": "boolean",
+          "description": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person.",
+          "default": true
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+          "minimum": 0
+        },
+        "heading": {
+          "type": "string",
+          "description": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure."
+        },
+        "queued": {
+          "type": "boolean",
+          "description": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it.",
+          "default": false
+        },
+        "tone": {
+          "type": "string",
+          "documentedValues": [
+            "danger",
+            "info",
+            "neutral",
+            "success",
+            "warning"
+          ],
+          "description": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Message text. It lives inside the live-region boundary.",
+        "action": "At most one action, as a `ki-button size=\"sm\" variant=\"ghost\"`.\nIts own click handler runs, then the toast leaves (`reason: \"action\"`). A\ntoast holding an action never leaves on its own. When NOT to use: a response\nthe person cannot skip belongs in `ki-dialog`."
+      },
+      "tag": "ki-toast",
+      "whenNotToUse": "anything the person must read or act on to continue belongs\nto `ki-dialog`; form validation belongs to the field's error text; a lasting\ncondition of the page belongs to `ki-alert`, which stays inline.\n\nAssistive technology note: a toast announces as it appears, so append it\nwhen the event happens; a toast present at initial page load is exposed with\nits role but its announcement is not guaranteed. The heading and the message\nare the whole announcement: the icon, the action and the dismiss button\nstay outside the live region.",
+      "whenToUse": "confirm an action that happened elsewhere on screen (\"Changes\nsaved\", \"Link copied\"), report a background result (\"Export ready\"), or\noffer a quick undo. Raise it into a `ki-toaster`, in markup or with its\n`show()` method; express urgency with `tone`."
+    },
+    "ki-toaster": {
+      "description": "The one place toasts appear: it paints its `ki-toast` children in the top\nlayer at a corner of the viewport, stacks them in arrival order, shows the\nnewest few and queues the older ones, without covering the page beside\nthem.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+          "default": "Notifications"
+        },
+        "max": {
+          "type": "number",
+          "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A toast holding focus keeps\nits place until focus leaves the toaster; the oldest other one waits\ninstead. A value below 1 or not a whole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+          "default": 3,
+          "minimum": 1
+        },
+        "placement": {
+          "type": "string",
+          "documentedValues": [
+            "bottom-center",
+            "bottom-end",
+            "top-center",
+            "top-end"
+          ],
+          "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+          "default": "bottom-end"
+        }
+      },
+      "slots": {
+        "": "The `ki-toast` elements, in arrival order. Other children are not\ncounted, queued or placed."
+      },
+      "tag": "ki-toaster",
+      "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
+      "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
     },
     "ki-tooltip": {
       "description": "A transient, text-only description bubble for one slotted trigger.",
