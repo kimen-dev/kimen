@@ -1259,14 +1259,15 @@ describe('Kimen public site experience in a real browser', () => {
       const menu = requireElement<HTMLDetailsElement>('[data-topnav-menu]', HTMLDetailsElement);
       const summary = requireElement<HTMLElement>('[data-topnav-menu] > summary', HTMLElement);
 
-      const row = [brand, scheme, summary].map((element) => element.getBoundingClientRect());
-      for (const box of row) {
-        expect(Math.abs(box.top + box.height / 2 - (row[1].top + row[1].height / 2))).toBeLessThan(
-          2,
-        );
+      const [brandBox, schemeBox, menuBox] = [brand, scheme, summary].map((element) =>
+        element.getBoundingClientRect(),
+      ) as [DOMRect, DOMRect, DOMRect];
+      const middle = (box: DOMRect) => box.top + box.height / 2;
+      for (const box of [brandBox, menuBox]) {
+        expect(Math.abs(middle(box) - middle(schemeBox))).toBeLessThan(2);
       }
-      expect(row[0].right).toBeLessThanOrEqual(row[1].left);
-      expect(row[1].right).toBeLessThanOrEqual(row[2].left);
+      expect(brandBox.right).toBeLessThanOrEqual(schemeBox.left);
+      expect(schemeBox.right).toBeLessThanOrEqual(menuBox.left);
       expect([...document.querySelectorAll<HTMLElement>('.topnav > a')].filter(isRendered)).toEqual(
         [],
       );
