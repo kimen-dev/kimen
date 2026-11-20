@@ -1772,6 +1772,7 @@ export const catalogData = {
         }
       },
       "slots": {
+        "action": "One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls.",
         "end": "Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI.",
         "start": "Leading icon or text affix inside the field. Follows writing direction."
       },

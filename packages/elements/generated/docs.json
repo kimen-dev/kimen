@@ -8652,6 +8652,10 @@
           "text": "end - Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI."
         },
         {
+          "name": "slot",
+          "text": "action - One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls."
+        },
+        {
           "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
@@ -8681,7 +8685,7 @@
         }
       ],
       "usage": {
-        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
+        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nPlace a one-field form's only submit action inside the field.\n\n```html\n<form role=\"search\">\n  <ki-input type=\"search\" name=\"q\" label=\"Search docs\" placeholder=\"Components, tokens…\">\n    <ki-button slot=\"action\" size=\"sm\" variant=\"secondary\" type=\"submit\">Search</ki-button>\n  </ki-input>\n</form>\n```\n\nThe action has a separate tab stop. Enter in the entry also submits the form.\nFor an icon-only action, give `ki-icon-button size=\"sm\"` a `label` and call\n`form.requestSubmit()` from its click handler.\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
       },
       "props": [
         {
@@ -9128,6 +9132,10 @@
       ],
       "styles": [],
       "slots": [
+        {
+          "name": "action",
+          "docs": "One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls."
+        },
         {
           "name": "end",
           "docs": "Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI."
