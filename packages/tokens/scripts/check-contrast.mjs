@@ -17,6 +17,8 @@ const NON_TEXT_MIN_RATIO = 3;
 // because the fill happened to be dark enough, and that accident is what hid
 // the checked fill sitting at 2.35:1 against a dark page.
 const NON_TEXT_COMPONENTS = new Set(['checkbox', 'radio']);
+// Rating has both graphic and text pairs. Only the glyphs use WCAG 1.4.11.
+const NON_TEXT_RATING_INKS = new Set(['--ki-rating-on-fg', '--ki-rating-off-fg']);
 // A theme is the default stylesheet plus, for an opt-in theme, the stylesheet of
 // its overrides loaded after it — exactly what a consumer page loads.
 const DEFAULT_STYLESHEET = new URL('../dist/css/tokens.css', import.meta.url);
@@ -347,7 +349,10 @@ export function componentPairs(declarations) {
           component: match[1],
           text,
           surface: name,
-          minRatio: NON_TEXT_COMPONENTS.has(match[1]) ? NON_TEXT_MIN_RATIO : MIN_RATIO,
+          minRatio:
+            NON_TEXT_COMPONENTS.has(match[1]) || NON_TEXT_RATING_INKS.has(text)
+              ? NON_TEXT_MIN_RATIO
+              : MIN_RATIO,
         });
       }
     }
@@ -1230,7 +1235,7 @@ function evaluateContext(theme, scheme, declarations) {
   }
 
   // A translucent component cell composites over the page. Inline links
-  // can also sit directly on higher surface levels, including inside cards.
+  // and rating glyphs can also sit directly on higher surface levels, including inside cards.
   // A component's -icon ink sits on its -bg at the non-text minimum.
   const icons = swept.flatMap(({ surface }) => {
     const ink = surface.replace(/-bg$/u, '-icon');
@@ -1246,7 +1251,9 @@ function evaluateContext(theme, scheme, declarations) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
     const backdrops =
-      pair.component === 'link' && rawSurface.a < 1 ? CONTROL_PAGE_SURFACES : ['--ki-surface-s0'];
+      (pair.component === 'link' || pair.component === 'rating') && rawSurface.a < 1
+        ? CONTROL_PAGE_SURFACES
+        : ['--ki-surface-s0'];
     const min = pair.minRatio ?? MIN_RATIO;
 
     for (const backdrop of backdrops) {

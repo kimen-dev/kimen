@@ -1,0 +1,25 @@
+---
+title: ki-rating
+description: Show an average score or ask for a rating on a small scale.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `readonly` to show an average. The visible number keeps its precision and the artwork rounds to the nearest half star.
+
+<Demo code={`<ki-rating readonly label="Average review score" value="4.3"></ki-rating>`} />
+
+Give an editable rating a question in `label`. Tab enters the group, arrows move and select, and Space selects the focused option. Choose `precision="0.5"` to make both halves of each star selectable.
+
+<Demo code={`<ki-rating label="How useful was this answer?" precision="0.5" value="2.5"></ki-rating>`} />
+
+Use `name` to include a selected score in form data and `required` to require an answer. Listen for `ki-change` and read the numeric score from `event.detail.value`.
+
+## API reference
+
+<CemApi tag="ki-rating" />
+
+## Workshop
+
+[Open ki-rating in Storybook](/storybook/?path=/docs/docs-components-ki-rating--docs)
