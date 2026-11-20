@@ -116,7 +116,7 @@ type rejects the message (`unknown-property`, scenario S9).
 | Image         | mapped    | ki-image                      |
 | Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
-| AudioPlayer   | unmapped  | —                             |
+| AudioPlayer   | mapped    | ki-audio                      |
 | Modal         | mapped    | ki-button, ki-dialog          |
 | Slider        | mapped    | ki-slider                     |
 | DateTimeInput | mapped    | ki-time-input                 |
@@ -186,6 +186,12 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
   image with a missing or blank label uses the per-node fallback and reports
   `missing-image-alt`. `cover` and `contain` pass through to `fit`. Other fit
   values and the `variant` size hint use the `ki-image` defaults.
+- `AudioPlayer.url` becomes `ki-audio` `src` and passes through Kimen's
+  guarded URL policy, which accepts HTTP(S) and relative URLs. An unresolved
+  URL binding defers the player until the data arrives. The optional
+  `description` supplies the title and group name. Playback controls stay
+  local, and the basic catalog leaves transcript links and speed presets to
+  direct `ki-audio` consumers. This mapping applies to both version families.
 - `Button.variant`: `primary` becomes `variant="primary"`, `borderless`
   becomes `variant="ghost"`, `default` keeps the catalog default.
 - `Modal`: a `Button` or `Text` trigger opens a `ki-dialog` using
@@ -254,7 +260,7 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | Image         | mapped    | ki-image                      |
 | Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
-| AudioPlayer   | unmapped  | —                             |
+| AudioPlayer   | mapped    | ki-audio                      |
 | Modal         | mapped    | ki-button, ki-dialog          |
 | Slider        | mapped    | ki-slider                     |
 | DateTimeInput | mapped    | ki-time-input                 |
@@ -342,7 +348,7 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
   input channel.
 - **Full re-render per update.** Every accepted `updateComponents` or
   `updateDataModel` re-renders the whole surface through `renderUiSpec`, so
-  scroll, focus and in-progress input are lost, and degradations are
+  scroll, focus, in-progress input and playback state reset, and degradations are
   reported on each render. The call lives in one module
   (`src/render-point.ts`) so an incremental renderer can replace it there.
 - **Declared action set.** Pass `actions` to declare it up front. Otherwise

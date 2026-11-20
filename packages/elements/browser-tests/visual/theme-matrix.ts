@@ -2,6 +2,7 @@
 const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-accordion',
   'ki-ai-label',
+  'ki-audio',
   'ki-breadcrumb',
   'ki-button',
   'ki-card',

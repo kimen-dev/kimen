@@ -486,6 +486,18 @@ function isSvgPathIcon(value: unknown): boolean {
 
 /** Per-type builders for every `mapped`, `inline` and `layout` basic-catalog type. */
 export const BUILDERS: Readonly<Record<string, Builder>> = {
+  AudioPlayer: (it) => {
+    const src = it.value('url');
+    const title = it.text('description');
+    if (src === undefined && it.body['url'] !== undefined) {
+      // A missing binding can resolve when the data model arrives.
+      return [];
+    }
+    if (typeof src !== 'string') {
+      throw it.malformed('url', 'AudioPlayer url must resolve to a string');
+    }
+    return [node('ki-audio', { src, ...(title.trim() === '' ? {} : { title }) }, [])];
+  },
   Button: (it) => {
     const variant = it.literal('variant');
     const mapped = variant === undefined ? undefined : BUTTON_VARIANTS[variant];

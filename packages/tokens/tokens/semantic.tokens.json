@@ -1852,6 +1852,10 @@
       "navigation-row": {
         "$value": "{ki.radius.component.sm}",
         "$description": "Corner of a side navigation row."
+      },
+      "media-panel": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Corner shape of a self-contained media control panel."
       }
     },
     "motion": {
@@ -2605,6 +2609,13 @@
       "row-radius": {
         "$value": "{ki.radius.component.sm}",
         "$description": "Default rounding of a highlighted tree row."
+      }
+    },
+    "media-layout": {
+      "$type": "dimension",
+      "inline-max": {
+        "$value": "{ki.size.surface.md}",
+        "$description": "Maximum inline size of a self-contained media control panel."
       }
     }
   }

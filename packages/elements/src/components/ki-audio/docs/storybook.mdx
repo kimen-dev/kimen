@@ -1,0 +1,16 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AudioStories from '../ki-audio.stories';
+
+<Meta title="Docs/Components/ki-audio" />
+
+# ki-audio
+
+Play the sample, seek through it, and change the playback speed. The link
+leads to the text alternative beneath the player.
+
+<Canvas of={AudioStories.Playground} />
+
+A compact right-to-left container wraps the speed and mute controls when
+the timeline needs more room. The start of the timeline is on the right.
+
+<Canvas of={AudioStories.NarrowRtl} />

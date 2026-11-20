@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Recipes/Audio recordings" />
+
+# Audio recordings
+
+Pair a recording with a referenceable transcript. Describe speech and
+meaningful sounds in the transcript so a reader can follow the same content.
+Give each recording a unique title when several players share a page.
+
+```html
+<ki-audio
+  src="/ep4.mp3"
+  title="Interview, episode 4"
+  transcript-href="/ep4/transcript"
+></ki-audio>
+```
+
+`title` is the HTML attribute. Set `audioTitle` when assigning the Stencil
+property in JavaScript. Localize control labels through the label attributes,
+including `transcript-label` and `time-label`.
+
+## Observe playback
+
+Listen to events on the player itself. For example, reveal a follow-up link
+when the recording finishes.
+
+```js
+const player = document.querySelector('ki-audio');
+player?.addEventListener('ended', () => {
+  document.querySelector('#episode-notes')?.removeAttribute('hidden');
+});
+```
+
+Use `--ki-audio-bg` and `--ki-audio-fg` together when replacing the panel
+colours. The seek rail reads `--ki-audio-track-bg` and its progress and thumb
+read `--ki-audio-progress-bg`. Preserve their visibility against the panel
+in light and dark schemes.

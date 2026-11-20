@@ -345,6 +345,7 @@
   --ki-alert-shell-radius:var(--ki-radius-component-lg);
   --ki-alert-shell-bg:var(--ki-color-transparent-black);
   --ki-alert-card-shadow:0 0 0 0 var(--ki-color-transparent-black);
+  --ki-audio-speed-radius:var(--ki-control-compact-pill-radius);
   --ki-avatar-group-counter-border-color:var(--ki-outline-none);
   --ki-avatar-group-counter-shadow:0 0 0 0 var(--ki-color-transparent-black);
   --ki-avatar-bg:var(--ki-surface-primary-med-em);
@@ -483,6 +484,7 @@
   --ki-divider-color:var(--ki-outline-med-em);
   --ki-divider-radius:var(--ki-radius-0);
   --ki-divider-spacing:var(--ki-space-zero);
+  --ki-empty-state-heading-weight:var(--ki-typography-weight-body-medium);
   --ki-indicator-gap:var(--ki-space-md);
   --ki-indicator-dot-color:var(--ki-outline-control);
   --ki-indicator-dot-current-inline-size:var(--ki-space-md);
@@ -713,7 +715,6 @@
   --ki-tooltip-font-size:var(--ki-font-size-caption-2);
   --ki-tooltip-line-height:var(--ki-font-line-height-caption-2);
   --ki-tooltip-shadow:0 0 0 0 var(--ki-color-transparent-black);
-  --ki-tree-radius:var(--ki-corner-action-frame);
   --ki-video-frame-radius:var(--ki-radius-component-lg);
   --ki-video-scrim-color:var(--ki-transparent-inverse);
   --ki-video-scrim-padding:var(--ki-space-zero);

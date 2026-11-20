@@ -214,6 +214,155 @@ CSS custom properties:
 - `--ki-surface-special-light-s0-dark-s2`: semantic color for surface special light s0 dark s2.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
+### ki-audio
+
+A recording player with play, pause, a seek timeline, elapsed and total time, playback speed, mute, and an optional transcript link.
+
+When to use: play a voice note, interview, or other prerecorded audio that a person deliberately starts. Provide a title and the equivalent text transcript URL when available.
+When NOT to use: show video (use ki-video), play an ambient loop or start playback automatically, or record audio.
+
+Examples:
+
+# Using ki-audio
+
+Offer a voice note or recording with a clear title and an adjacent transcript.
+
+```html
+<ki-audio
+  src="/ep4.mp3"
+  title="Interview, episode 4"
+  transcript-href="/ep4/transcript"
+></ki-audio>
+```
+
+Set the speeds and translate the control labels in the language of the page.
+The seek announcement substitutes the formatted elapsed and total times into
+the `time-label` template.
+
+```html
+<ki-audio
+  lang="es"
+  src="/notas/7.mp3"
+  title="Nota de voz"
+  rates="0.75,1,1.5"
+  play-label="Reproducir"
+  pause-label="Pausar"
+  seek-label="Posición"
+  time-label="{elapsed} de {duration}"
+  speed-label="Velocidad"
+  mute-label="Silenciar"
+  unmute-label="Activar sonido"
+  transcript-href="/notas/7/transcripcion"
+  transcript-label="Leer la transcripción"
+  error-label="No se pudo reproducir el audio"
+></ki-audio>
+```
+
+Listen on the player for `play`, `pause`, `timeupdate` and `ended`. For
+example, an experiment can observe completion after the listener reaches the
+end of a recording.
+
+```js
+const player = document.querySelector('ki-audio');
+player?.addEventListener('ended', () => {
+  document.querySelector('#next-recording')?.removeAttribute('hidden');
+});
+```
+
+Attributes:
+- `title` (string | undefined, default 'Audio player'): Visible title and accessible name of the player.
+- `error-label` (string, default 'Audio could not be played'): Message shown if playback cannot start or the recording fails to load.
+- `mute-label` (string, default 'Mute'): Accessible name of the mute button.
+- `pause-label` (string, default 'Pause'): Accessible name of the pause button.
+- `play-label` (string, default 'Play'): Accessible name of the play button.
+- `rates` (string, default '0.75,1,1.25,1.5,2'): Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available.
+- `seek-label` (string, default 'Seek'): Accessible name of the timeline slider.
+- `speed-label` (string, default 'Playback speed'): Accessible label for the playback-rate picker.
+- `src` (string, required, URL): Source URL for the recording. Use an HTTP(S) URL or a relative URL.
+- `time-label` (string | undefined, default '{elapsed} of {duration}'): Accessible time template. Keep the {elapsed} and {duration} placeholders.
+- `transcript-href` (string | undefined, URL): URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.
+- `transcript-label` (string, default 'Read the transcript'): Text of the transcript link.
+- `unmute-label` (string, default 'Unmute'): Accessible name of the unmute button.
+
+Slots: none
+
+Parts:
+- `mute`: Mute and unmute control.
+- `play`: Play and pause control.
+- `player`: The named group and themed surface.
+- `progress`: Played portion of the timeline rail.
+- `seek`: Native seek slider.
+- `speed`: Native playback-rate picker.
+- `status`: Playback failure message.
+- `time`: Elapsed and total time readouts.
+- `title`: Visible recording title.
+- `track`: Timeline rail.
+- `transcript`: Transcript link.
+
+Events:
+- `ended` (CustomEvent<void>): Forwarded when the recording ends. The catalog can bind a declared action here.
+- `pause` (CustomEvent<void>): Forwarded when native playback pauses.
+- `play` (CustomEvent<void>): Forwarded when the native playback state switches to playing.
+- `timeupdate` (CustomEvent<void>): Forwarded when the native playback position is updated.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-audio-backdrop-filter`: Complete backdrop filter applied to the player, off by default.
+- `--ki-audio-bg`: Background behind the player and transcript link.
+- `--ki-audio-bg-image`: Optional image painted over the player background.
+- `--ki-audio-border`: Boundary of the player panel.
+- `--ki-audio-fg`: Text on the player background.
+- `--ki-audio-progress-bg`: Colour of the elapsed timeline and seek thumb.
+- `--ki-audio-radius`: Corner radius of the player panel.
+- `--ki-audio-speed-radius`: Corner radius of the playback speed button.
+- `--ki-audio-title-family`: Font family of the recording title.
+- `--ki-audio-track-bg`: Colour of the inactive timeline.
+- `--ki-button-ghost-neutral-disabled-bg`: color used by the button component for ghost neutral disabled background.
+- `--ki-button-ghost-neutral-disabled-border`: color used by the button component for ghost neutral disabled border.
+- `--ki-button-ghost-neutral-disabled-fg`: color used by the button component for ghost neutral disabled foreground.
+- `--ki-button-ghost-neutral-hover-bg`: color used by the button component for ghost neutral hover background.
+- `--ki-button-ghost-neutral-hover-border`: color used by the button component for ghost neutral hover border.
+- `--ki-button-ghost-neutral-hover-fg`: color used by the button component for ghost neutral hover foreground.
+- `--ki-button-ghost-neutral-rest-bg`: color used by the button component for ghost neutral rest background.
+- `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border.
+- `--ki-button-ghost-neutral-rest-fg`: color used by the button component for ghost neutral rest foreground.
+- `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-neutral-disabled-border`: color used by the button component for primary neutral disabled border.
+- `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-neutral-hover-bg`: color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
+- `--ki-button-primary-neutral-hover-border`: color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge).
+- `--ki-button-primary-neutral-hover-fg`: color used by the button component for primary neutral hover foreground.
+- `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).
+- `--ki-button-primary-neutral-rest-border`: color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).
+- `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
+- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
+- `--ki-control-radius-track`: Corner radius of a track containing adjacent controls.
+- `--ki-control-size-md`: Medium control track height, 40 CSS px at the default root size.
+- `--ki-control-size-sm`: Small control track height, 32 CSS px at the default root size.
+- `--ki-corner-activity-mark`: Round corners for rings and typing dots.
+- `--ki-corner-inline`: Small radius for an outline around inline content.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-glyph-size-md`: Medium glyph for body content (20px at the default root size).
+- `--ki-glyph-size-sm`: Small glyph for dense layouts (16px at the default root size).
+- `--ki-media-layout-inline-max`: Maximum inline size of a self-contained media control panel.
+- `--ki-scale-control-coarse-target`: Minimum grip target when a value scale has a coarse primary pointer.
+- `--ki-scale-control-track-height`: Thickness of the inactive rail of a value scale.
+- `--ki-spacing-action-inset`: Interior space at the edge of an action surface or divider.
+- `--ki-spacing-block`: Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl.
+- `--ki-spacing-media-caption`: Block spacing between a media frame and its caption.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-underline-offset`: Gap between text and its underline.
+- `--ki-typography-underline-thickness`: Stroke width of a resting text underline.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+
 ### ki-avatar
 
 A static identity visual that shows a person or entity at a glance through a fallback chain: portrait, then initials, then a built-in generic figure.
@@ -540,6 +689,18 @@ A standalone primary action:
 </form>
 ```
 
+Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
+dialog and invoker share a document or shadow root. The command takes
+precedence over form submission or reset.
+
+```html
+<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
+<ki-dialog id="draft-preview" heading="Draft preview">
+  This draft is visible only to you.
+  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
+</ki-dialog>
+```
+
 Programmatic creation after registration; string attributes and properties are interchangeable:
 
 ```ts
@@ -575,13 +736,15 @@ While the action a button started is in progress, set `loading` on it instead of
 ```
 
 Attributes:
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
 - `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
-- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
 - `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
@@ -1461,6 +1624,263 @@ CSS custom properties:
 - `--ki-chip-height-sm`: Small height of a compact pill.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 
+### ki-copy-button
+
+Copies text to the clipboard and confirms the result in the same button.
+
+When to use: let a person copy a link, identifier, token or code sample. Supply
+a direct value or point to a source in the same document or shadow root.
+When NOT to use: submit a form, navigate, or trigger an action with no clipboard
+write. Use a button or link for those actions.
+
+Examples:
+
+# ki-copy-button examples
+
+## Copy an invite link
+
+```html
+<ki-copy-button value="https://kimen.dev/i/4f9a" label="Copy invite link"></ki-copy-button>
+```
+
+## Copy what a field currently contains
+
+```html
+<ki-input id="token-field" label="Token" value="token-4f9a"></ki-input>
+<ki-copy-button from="token-field" variant="secondary">Copy token</ki-copy-button>
+```
+
+## Copy a code sample with localized feedback
+
+```html
+<pre id="install-command"><code>pnpm add @kimen/elements</code></pre>
+<ki-copy-button
+  from="install-command"
+  copied-label="Copiado"
+  copy-error-label="No se pudo copiar"
+>Copiar comando</ki-copy-button>
+```
+
+Attributes:
+- `copied-label` (string, default 'Copied'): Polite announcement after a successful write. Override for localized interfaces.
+- `copy-error-label` (string, default "Couldn't copy"): Polite announcement after a failed write or missing source. Override for localized interfaces.
+- `feedback-duration` (number, default 1500, minimum 0): Milliseconds to show feedback after a write settles. Zero keeps the outcome visible until the next result. Invalid values use 1500 ms.
+- `from` (string | undefined): ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+- `label` (string, default 'Copy'): Accessible name for the icon-only control. Visible slot text supplies the name when present.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Match the size of adjacent controls.
+- `value` (string | undefined): Exact clipboard text, including whitespace. Supply it when the text is known directly.
+- `variant` ("ghost" | "primary" | "quaternary" | "secondary", default 'ghost'): Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.
+
+Slots:
+- (default): Optional visible text, which supplies the accessible name and places the icon at the inline start. Use plain text or non-interactive markup.
+
+Parts:
+- `button`: Native copy control with keyboard and pointer activation.
+- `icon`: Fixed-size decorative feedback glyph box inside the button.
+- `label`: Wrapper around the visible slotted label.
+
+Events:
+- `ki-copy` (CustomEvent<{ value: string }>): Fired after a successful clipboard write. The detail carries the exact text copied.
+- `ki-copy-error` (CustomEvent<void>): Fired when the source cannot be read or clipboard writing is unavailable or fails.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-button-backdrop-filter`: Complete backdrop filter for glass button and icon-button variants.
+- `--ki-button-border-width`: dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px).
+- `--ki-button-focus-ring-color`: color used by the button component for focus ring color.
+- `--ki-button-focus-ring-offset`: dimension used by the button component for focus ring offset.
+- `--ki-button-focus-ring-shadow`: shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring).
+- `--ki-button-focus-ring-width`: dimension used by the button component for focus ring width.
+- `--ki-button-font-family`: font family used by the button component for font family.
+- `--ki-button-font-weight`: font weight used by the button component for font weight.
+- `--ki-button-ghost-danger-hover-bg`: color used by the button component for ghost danger hover background.
+- `--ki-button-ghost-danger-hover-border`: color used by the button component for ghost danger hover border.
+- `--ki-button-ghost-danger-hover-fg`: color used by the button component for ghost danger hover foreground.
+- `--ki-button-ghost-danger-rest-bg`: color used by the button component for ghost danger rest background.
+- `--ki-button-ghost-danger-rest-border`: color used by the button component for ghost danger rest border.
+- `--ki-button-ghost-danger-rest-fg`: color used by the button component for ghost danger rest foreground.
+- `--ki-button-ghost-disabled-shadow`: value used by the button component for ghost disabled shadow.
+- `--ki-button-ghost-hover-shadow`: value used by the button component for ghost hover shadow.
+- `--ki-button-ghost-neutral-disabled-bg`: color used by the button component for ghost neutral disabled background.
+- `--ki-button-ghost-neutral-disabled-border`: color used by the button component for ghost neutral disabled border.
+- `--ki-button-ghost-neutral-disabled-fg`: color used by the button component for ghost neutral disabled foreground.
+- `--ki-button-ghost-neutral-hover-bg`: color used by the button component for ghost neutral hover background.
+- `--ki-button-ghost-neutral-hover-border`: color used by the button component for ghost neutral hover border.
+- `--ki-button-ghost-neutral-hover-fg`: color used by the button component for ghost neutral hover foreground.
+- `--ki-button-ghost-neutral-rest-bg`: color used by the button component for ghost neutral rest background.
+- `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border.
+- `--ki-button-ghost-neutral-rest-fg`: color used by the button component for ghost neutral rest foreground.
+- `--ki-button-ghost-rest-shadow`: value used by the button component for ghost rest shadow.
+- `--ki-button-ghost-success-hover-bg`: color used by the button component for ghost success hover background.
+- `--ki-button-ghost-success-hover-border`: color used by the button component for ghost success hover border.
+- `--ki-button-ghost-success-hover-fg`: color used by the button component for ghost success hover foreground.
+- `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
+- `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
+- `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
+- `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
+- `--ki-button-lg-gap`: dimension used by the button component for lg gap.
+- `--ki-button-lg-height`: dimension used by the button component for lg height.
+- `--ki-button-lg-icon-size`: dimension used by the button component for lg icon size.
+- `--ki-button-lg-line-height`: dimension used by the button component for lg line height.
+- `--ki-button-lg-min-target`: dimension used by the button component for lg min target.
+- `--ki-button-lg-padding-inline`: dimension used by the button component for lg padding inline.
+- `--ki-button-lg-radius`: dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns).
+- `--ki-button-lg-spinner-size`: dimension used by the button component for the lg loading spinner box (20px, the lg icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-button-md-font-size`: dimension used by the button component for md font size.
+- `--ki-button-md-gap`: dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px).
+- `--ki-button-md-height`: dimension used by the button component for md height.
+- `--ki-button-md-icon-size`: dimension used by the button component for md icon size.
+- `--ki-button-md-line-height`: dimension used by the button component for md line height.
+- `--ki-button-md-min-target`: dimension used by the button component for md min target.
+- `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
+- `--ki-button-md-radius`: dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).
+- `--ki-button-md-spinner-size`: dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-button-padding-block`: dimension used by the button component for padding block (MarsUI: 4px in every size).
+- `--ki-button-primary-active-overlay`: Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
+- `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
+- `--ki-button-primary-danger-hover-border`: color used by the button component for primary danger hover border (MarsUI bevel top/inline edge).
+- `--ki-button-primary-danger-hover-fg`: color used by the button component for primary danger hover foreground.
+- `--ki-button-primary-danger-rest-bg`: color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-danger-rest-border`: color used by the button component for primary danger rest border (MarsUI bevel top/inline edge).
+- `--ki-button-primary-danger-rest-fg`: color used by the button component for primary danger rest foreground.
+- `--ki-button-primary-disabled-shadow`: value used by the button component for primary disabled shadow.
+- `--ki-button-primary-hover-overlay`: color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5).
+- `--ki-button-primary-hover-shadow`: shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).
+- `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-neutral-disabled-border`: color used by the button component for primary neutral disabled border.
+- `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-neutral-hover-bg`: color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
+- `--ki-button-primary-neutral-hover-border`: color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge).
+- `--ki-button-primary-neutral-hover-fg`: color used by the button component for primary neutral hover foreground.
+- `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).
+- `--ki-button-primary-neutral-rest-border`: color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).
+- `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
+- `--ki-button-primary-rest-border-bottom`: color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom).
+- `--ki-button-primary-rest-shadow`: shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default).
+- `--ki-button-primary-success-hover-bg`: color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
+- `--ki-button-primary-success-hover-border`: color used by the button component for primary success hover border (MarsUI bevel top/inline edge).
+- `--ki-button-primary-success-hover-fg`: color used by the button component for primary success hover foreground.
+- `--ki-button-primary-success-rest-bg`: color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-success-rest-border`: color used by the button component for primary success rest border (MarsUI bevel top/inline edge).
+- `--ki-button-primary-success-rest-fg`: color used by the button component for primary success rest foreground.
+- `--ki-button-quaternary-danger-hover-bg`: color used by the button component for quaternary danger hover background.
+- `--ki-button-quaternary-danger-hover-border`: color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-danger-hover-fg`: color used by the button component for quaternary danger hover foreground.
+- `--ki-button-quaternary-danger-rest-bg`: color used by the button component for quaternary danger rest background.
+- `--ki-button-quaternary-danger-rest-border`: color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-danger-rest-fg`: color used by the button component for quaternary danger rest foreground.
+- `--ki-button-quaternary-disabled-shadow`: value used by the button component for quaternary disabled shadow.
+- `--ki-button-quaternary-hover-shadow`: value used by the button component for quaternary hover shadow.
+- `--ki-button-quaternary-neutral-disabled-bg`: color used by the button component for quaternary neutral disabled background.
+- `--ki-button-quaternary-neutral-disabled-border`: color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-neutral-disabled-fg`: color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars.
+- `--ki-button-quaternary-neutral-hover-bg`: color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill).
+- `--ki-button-quaternary-neutral-hover-border`: color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-neutral-hover-fg`: color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
+- `--ki-button-quaternary-neutral-rest-bg`: color used by the button component for quaternary neutral rest background.
+- `--ki-button-quaternary-neutral-rest-border`: color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
+- `--ki-button-quaternary-rest-shadow`: value used by the button component for quaternary rest shadow.
+- `--ki-button-quaternary-success-hover-bg`: color used by the button component for quaternary success hover background.
+- `--ki-button-quaternary-success-hover-border`: color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-success-hover-fg`: color used by the button component for quaternary success hover foreground.
+- `--ki-button-quaternary-success-rest-bg`: color used by the button component for quaternary success rest background.
+- `--ki-button-quaternary-success-rest-border`: color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-success-rest-fg`: color used by the button component for quaternary success rest foreground.
+- `--ki-button-secondary-active-overlay`: Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
+- `--ki-button-secondary-danger-hover-bg`: color used by the button component for secondary danger hover background.
+- `--ki-button-secondary-danger-hover-border`: color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait).
+- `--ki-button-secondary-danger-hover-fg`: color used by the button component for secondary danger hover foreground.
+- `--ki-button-secondary-danger-rest-bg`: color used by the button component for secondary danger rest background.
+- `--ki-button-secondary-danger-rest-border`: color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait).
+- `--ki-button-secondary-danger-rest-fg`: color used by the button component for secondary danger rest foreground.
+- `--ki-button-secondary-disabled-shadow`: value used by the button component for secondary disabled shadow.
+- `--ki-button-secondary-hover-overlay`: color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3).
+- `--ki-button-secondary-hover-shadow`: shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).
+- `--ki-button-secondary-neutral-disabled-bg`: color used by the button component for secondary neutral disabled background.
+- `--ki-button-secondary-neutral-disabled-border`: color used by the button component for secondary neutral disabled border.
+- `--ki-button-secondary-neutral-disabled-fg`: color used by the button component for secondary neutral disabled foreground.
+- `--ki-button-secondary-neutral-hover-bg`: color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay).
+- `--ki-button-secondary-neutral-hover-border`: color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge).
+- `--ki-button-secondary-neutral-hover-fg`: color used by the button component for secondary neutral hover foreground (MarsUI text/high_em).
+- `--ki-button-secondary-neutral-rest-bg`: color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint).
+- `--ki-button-secondary-neutral-rest-border`: color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge).
+- `--ki-button-secondary-neutral-rest-fg`: color used by the button component for secondary neutral rest foreground (MarsUI text/high_em).
+- `--ki-button-secondary-rest-border-bottom`: color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom).
+- `--ki-button-secondary-rest-shadow`: shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default).
+- `--ki-button-secondary-success-hover-bg`: color used by the button component for secondary success hover background.
+- `--ki-button-secondary-success-hover-border`: color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait).
+- `--ki-button-secondary-success-hover-fg`: color used by the button component for secondary success hover foreground.
+- `--ki-button-secondary-success-rest-bg`: color used by the button component for secondary success rest background.
+- `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).
+- `--ki-button-secondary-success-rest-fg`: color used by the button component for secondary success rest foreground.
+- `--ki-button-sm-font-size`: dimension used by the button component for sm font size.
+- `--ki-button-sm-gap`: dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text).
+- `--ki-button-sm-height`: dimension used by the button component for sm height.
+- `--ki-button-sm-icon-size`: dimension used by the button component for sm icon size.
+- `--ki-button-sm-line-height`: dimension used by the button component for sm line height.
+- `--ki-button-sm-min-target`: dimension used by the button component for sm min target.
+- `--ki-button-sm-padding-inline`: dimension used by the button component for sm padding inline.
+- `--ki-button-sm-radius`: dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns).
+- `--ki-button-sm-spinner-size`: dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-button-spinner-duration`: duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference.
+- `--ki-button-spinner-stroke-width`: dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width).
+- `--ki-button-tertiary-danger-hover-bg`: Tertiary alias of the secondary danger hover background.
+- `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground.
+- `--ki-button-tertiary-danger-rest-bg`: Tertiary alias of the secondary danger rest background.
+- `--ki-button-tertiary-danger-rest-border`: color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-button-tertiary-danger-rest-fg`: color used by the button component for tertiary danger rest foreground.
+- `--ki-button-tertiary-disabled-shadow`: value used by the button component for tertiary disabled shadow.
+- `--ki-button-tertiary-hover-overlay`: Hover overlay for neutral tertiary buttons, shared with secondary by default.
+- `--ki-button-tertiary-hover-shadow`: shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).
+- `--ki-button-tertiary-neutral-disabled-bg`: color used by the button component for tertiary neutral disabled background.
+- `--ki-button-tertiary-neutral-disabled-border`: color used by the button component for tertiary neutral disabled border.
+- `--ki-button-tertiary-neutral-disabled-fg`: color used by the button component for tertiary neutral disabled foreground.
+- `--ki-button-tertiary-neutral-hover-bg`: Tertiary alias of the secondary neutral hover background.
+- `--ki-button-tertiary-neutral-hover-border`: color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-button-tertiary-neutral-hover-fg`: Tertiary alias of the secondary neutral hover foreground.
+- `--ki-button-tertiary-neutral-rest-bg`: Tertiary alias of the secondary neutral rest background.
+- `--ki-button-tertiary-neutral-rest-border`: color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-button-tertiary-neutral-rest-fg`: Tertiary alias of the secondary neutral rest foreground.
+- `--ki-button-tertiary-rest-border-bottom`: color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary).
+- `--ki-button-tertiary-rest-shadow`: shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override).
+- `--ki-button-tertiary-success-hover-bg`: Tertiary alias of the secondary success hover background.
+- `--ki-button-tertiary-success-hover-border`: color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-button-tertiary-success-hover-fg`: color used by the button component for tertiary success hover foreground.
+- `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
+- `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
+- `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).
+- `--ki-button-xl-height`: dimension used by the button component for xl height.
+- `--ki-button-xl-icon-size`: dimension used by the button component for xl icon size.
+- `--ki-button-xl-line-height`: dimension used by the button component for xl line height.
+- `--ki-button-xl-min-target`: dimension used by the button component for xl min target.
+- `--ki-button-xl-padding-inline`: dimension used by the button component for xl padding inline (MarsUI 14px).
+- `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
+- `--ki-button-xl-spinner-size`: dimension used by the button component for the xl loading spinner box (24px, the xl icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-button-xs-font-size`: dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px.
+- `--ki-button-xs-gap`: dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px).
+- `--ki-button-xs-height`: dimension used by the button component for xs height.
+- `--ki-button-xs-icon-size`: dimension used by the button component for xs icon size (MarsUI 14px).
+- `--ki-button-xs-line-height`: dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1).
+- `--ki-button-xs-min-target`: dimension used by the button component for xs min target.
+- `--ki-button-xs-padding-inline`: dimension used by the button component for xs padding inline.
+- `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
+- `--ki-button-xs-spinner-size`: dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-copy-button-error-bg`: Contrast ground for the error glyph on filled primary copy buttons.
+- `--ki-copy-button-error-fg`: Copy failure glyph ink.
+- `--ki-copy-button-success-bg`: Contrast ground for the success glyph on filled primary copy buttons.
+- `--ki-copy-button-success-fg`: Confirmation check ink.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-counter
 
 A decorative count or dot over a trigger or avatar.
@@ -1547,8 +1967,8 @@ A modal dialog for one interrupting decision or short focused task.
 
 When to use: destructive confirmations, blocking choices, and brief
 critical input that must be resolved before returning to the page. Always
-provide a `heading`, place actions in the `footer` slot, wire each footer
-action to `close()`, and in destructive confirmations put `autofocus` on
+provide a `heading`, place actions in the `footer` slot, wire each
+dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
 the least destructive action.
 When NOT to use: non-blocking feedback (`ki-alert`, `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -1556,23 +1976,22 @@ supplementary hints (`ki-tooltip`), long forms or multi-step flows
 
 Examples:
 
-A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:
+A modal confirmation. `heading` names the dialog and actions go in the `footer`
+slot. Each invoker uses the dialog's ID within the same document or shadow root.
 
 ```html
+<ki-button commandfor="confirm-dialog" command="show-modal" tone="danger">Delete draft</ki-button>
 <ki-dialog heading="Delete draft?" id="confirm-dialog">
   <p>This permanently removes the draft.</p>
-  <ki-button slot="footer" type="button">Cancel</ki-button>
-  <ki-button slot="footer" tone="danger" variant="primary">Delete</ki-button>
+  <ki-button slot="footer" commandfor="confirm-dialog" command="request-close" autofocus>Cancel</ki-button>
+  <ki-button slot="footer" commandfor="confirm-dialog" command="close" tone="danger" variant="primary">Delete</ki-button>
 </ki-dialog>
 ```
 
-Open it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):
-
-```html
-<ki-button type="button" onclick="document.getElementById('confirm-dialog').show()">
-  Delete draft
-</ki-button>
-```
+`close` dismisses the dialog. `request-close` first gives the dialog a chance
+to cancel the request. After an accepted close command, the opening button
+regains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and
+`close()` remain available for programmatic control.
 
 Attributes:
 - `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
@@ -1581,7 +2000,7 @@ Attributes:
 
 Slots:
 - (default): Dialog body content.
-- `footer`: Dialog actions; applications wire every action to `close()`.
+- `footer`: Dialog actions. Dismiss using an invoker command or `close()`.
 
 Parts:
 - `body`: Scrollable body region.
@@ -1590,10 +2009,10 @@ Parts:
 - `heading`: Visible h2 title, rendered only when `heading` is non-empty.
 
 Events:
-- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
 
 Methods:
-- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
+- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method or an invoker command. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
 - `show()` (Promise<void>): Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
 
 CSS custom properties:
@@ -1702,6 +2121,333 @@ CSS custom properties:
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-empty-state
+
+A short explanation and next step for an empty view.
+
+When to use: explain an empty list, table, search result, or first-run view.
+Supply a localized heading that names what is empty and a short next step.
+Use announce for results that change after an interaction.
+When NOT to use: signal that results are loading or draw attention to an error
+that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+
+Examples:
+
+Use EmptyState when a list, table or first-run screen is empty. Name what is
+empty, explain why or what to do next, and offer at most one primary action.
+
+```ts
+import '@kimen/elements/icons/folder-plus';
+```
+
+```html
+<ki-empty-state heading="No projects yet" icon-name="folder-plus" tone="primary-light">
+  Projects hold your surfaces, catalogs and themes.
+  <ki-button slot="actions" variant="primary">New project</ki-button>
+</ki-empty-state>
+```
+
+Use `announce` for search or filter results. Insert the message when results
+become empty. If it remains visible for a subsequent search, update its heading
+and description.
+
+```html
+<ki-empty-state heading="No results for webhok" heading-level="2" size="sm" announce>
+  Check the spelling or remove a filter.
+  <ki-button slot="actions" variant="secondary">Clear filters</ki-button>
+</ki-empty-state>
+```
+
+Put a decorative illustration in `media` to replace the icon.
+
+```html
+<ki-empty-state heading="Your inbox is clear">
+  <img slot="media" src="/images/empty-inbox.svg" alt="" width="120" height="80">
+  New messages will appear here.
+</ki-empty-state>
+```
+
+Attributes:
+- `announce` (boolean, default false): Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.
+- `heading` (string, required): Localized heading that identifies the empty view. Blank text omits the heading.
+- `heading-level` (number, default 3, minimum 2, maximum 6): Native heading level for the surrounding document outline. Only integers from 2 through 6 are valid; unsupported values use level 3.
+- `icon-name` (string | undefined): Optional decorative Lucide glyph. Register it with a per-icon import before mounting. A supplied illustration takes precedence.
+- `size` ("md" | "sm", default 'md'): Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.
+- `tone` ("danger" | "info" | "neutral" | "primary" | "primary-light" | "success" | "warning", default 'neutral'): FeatureIcon tone. Unrecognized tones use the neutral tile.
+
+Slots:
+- (default): Localized supporting text with a reason or recovery advice.
+- `actions`: Optional controls for the next step, with at most one primary action. In a guarded surface, bind actions to these controls.
+- `media`: Optional decorative illustration in place of the icon. Use an image with empty alt text or a decorative SVG. Keep this slot free of controls.
+
+Parts:
+- `actions`: Wrapping row of consumer-supplied controls.
+- `container`: Centered layout for the illustration, message and actions.
+- `description`: Wrapper for the default slot.
+- `heading`: Native heading at the selected document level.
+- `media`: Decorative illustration or FeatureIcon tile.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-empty-state-backdrop-filter`: Complete filter applied behind the empty view.
+- `--ki-empty-state-bg`: Background behind the empty view.
+- `--ki-empty-state-bg-image`: Optional image above the background color.
+- `--ki-empty-state-description-bg`: Background layer behind the supporting copy.
+- `--ki-empty-state-description-fg`: Supporting text ink, strengthened in contrast-more mode.
+- `--ki-empty-state-description-line-height`: Line height of the supporting copy.
+- `--ki-empty-state-description-size`: Font size of the supporting copy.
+- `--ki-empty-state-fg`: Foreground ink for the heading.
+- `--ki-empty-state-gap`: Gap between the decorative media, message and action row.
+- `--ki-empty-state-gap-sm`: Gap between regions in a compact empty view.
+- `--ki-empty-state-heading-font-family`: Typeface for the native heading.
+- `--ki-empty-state-heading-line-height`: Heading line height in a regular empty view.
+- `--ki-empty-state-heading-line-height-sm`: Heading line height in a compact empty view.
+- `--ki-empty-state-heading-size`: Heading font size in a regular empty view.
+- `--ki-empty-state-heading-size-sm`: Heading font size in a compact empty view.
+- `--ki-empty-state-heading-weight`: Weight of the heading.
+- `--ki-empty-state-max-width`: Maximum inline size of the centered content.
+- `--ki-empty-state-tile-danger-bg`: Background of the danger decorative tile.
+- `--ki-empty-state-tile-danger-fg`: Glyph ink on the danger decorative tile.
+- `--ki-empty-state-tile-info-bg`: Background of the info decorative tile.
+- `--ki-empty-state-tile-info-fg`: Glyph ink on the info decorative tile.
+- `--ki-empty-state-tile-neutral-bg`: Background of the neutral decorative tile.
+- `--ki-empty-state-tile-neutral-fg`: Glyph ink on the neutral decorative tile.
+- `--ki-empty-state-tile-primary-bg`: Background of the primary decorative tile.
+- `--ki-empty-state-tile-primary-fg`: Glyph ink on the primary decorative tile.
+- `--ki-empty-state-tile-primary-light-bg`: Background of the primary-light decorative tile.
+- `--ki-empty-state-tile-primary-light-fg`: Glyph ink on the primary-light decorative tile.
+- `--ki-empty-state-tile-radius`: Corner radius of the regular fallback tile.
+- `--ki-empty-state-tile-radius-sm`: Corner radius of the compact fallback tile.
+- `--ki-empty-state-tile-size`: Regular FeatureIcon fallback tile size.
+- `--ki-empty-state-tile-size-sm`: Compact FeatureIcon fallback tile size.
+- `--ki-empty-state-tile-success-bg`: Background of the success decorative tile.
+- `--ki-empty-state-tile-success-fg`: Glyph ink on the success decorative tile.
+- `--ki-empty-state-tile-warning-bg`: Background of the warning decorative tile.
+- `--ki-empty-state-tile-warning-fg`: Glyph ink on the warning decorative tile.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-fab
+
+The primary action of a screen, as an icon or an extended control with a visible label.
+
+When to use: give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation.
+When NOT to use: for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.
+
+Examples:
+
+# Using ki-fab
+
+Use one FAB for the primary action of a screen. Give it a localized `label`
+in every layout. Import each Lucide glyph before mounting a FAB that names it.
+Use the native `click` event to call your application's action handler.
+
+```js
+import '@kimen/elements/icons/pencil';
+import { defineCustomElement } from '@kimen/elements/ki-fab';
+
+defineCustomElement();
+
+document.querySelector('#compose')?.addEventListener('click', openComposer);
+```
+
+```html
+<ki-fab id="compose" label="Compose" icon-name="pencil"></ki-fab>
+```
+
+Use `href` when activation takes the user to a destination. To supply a custom
+glyph, use the `icon` slot with decorative, noninteractive content.
+
+```html
+<ki-fab label="New project" href="/projects/new" variant="primary" extended>
+  <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+    <path d="M5 12h14M12 5v14"></path>
+  </svg>
+</ki-fab>
+```
+
+Place a fixed FAB after the main content so its tab stop follows the page's
+controls. Reserve bottom space so the last item can scroll above it. Set
+`--ki-fab-mobile-nav-block-size` to the height of the fixed navigation when
+present, excluding the safe area.
+
+```html
+<main class="compose-page">
+  <!-- Page content -->
+</main>
+<ki-fab label="Compose" icon-name="pencil" position="fixed" extended collapse-on-scroll></ki-fab>
+```
+
+```css
+:root {
+  --ki-fab-mobile-nav-block-size: var(--app-mobile-nav-height, 0px);
+  --compose-clearance: calc(
+    var(--ki-fab-size) + 2 * var(--ki-fab-offset) +
+      var(--ki-fab-mobile-nav-block-size) + env(safe-area-inset-bottom, 0px)
+  );
+  scroll-padding-block-end: var(--compose-clearance);
+}
+
+.compose-page {
+  padding-block-end: var(--compose-clearance);
+}
+```
+
+The clearance above uses the default `md` size. Adjust it for a larger FAB
+and use the actual expanded height if the label wraps. The label hides as the
+user scrolls down the document and reappears on upward scroll. The native
+control retains its accessible name and focus.
+
+Attributes:
+- `collapse-on-scroll` (boolean, default false): Compact an extended FAB on viewport scroll down and restore on scroll up.
+- `extended` (boolean, default false): Show the action label next to its icon.
+- `href` (string | undefined, URL): A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.
+- `icon-name` (string | undefined): Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.
+- `label` (string, required): Accessible name of the action. Also the visible text in the extended state.
+- `position` ("fixed" | "static", default 'static'): Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.
+- `size` ("lg" | "md" | "xl", default 'md'): Square footprint when icon-only, and minimum size when extended.
+- `variant` ("primary" | "secondary" | "surface", default 'secondary'): Surface and ink: strong primary, tinted secondary or raised surface.
+
+Slots:
+- `icon`: Decorative, noninteractive icon replacing the named glyph.
+
+Parts:
+- `control`: The native button or link, including its surface and focus ring.
+- `icon`: Wrapper for the decorative named or slotted glyph.
+- `label`: Visible label of an extended FAB.
+
+Events:
+- `click` (Event): Native activation click. The page or guarded renderer handles the declared action.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-fab-backdrop-filter`: Complete optional filter behind the FAB.
+- `--ki-fab-bg`: Tinted secondary FAB fill.
+- `--ki-fab-bg-image`: Optional layer painted over the FAB fill.
+- `--ki-fab-collapse-duration`: Duration of the extended FAB footprint change.
+- `--ki-fab-collapse-easing`: Easing of the extended FAB footprint change.
+- `--ki-fab-fg`: Ink on the tinted secondary FAB.
+- `--ki-fab-font-family`: Typeface for FAB labels.
+- `--ki-fab-font-size`: Text size for extended FAB labels.
+- `--ki-fab-font-weight`: Text weight for extended FAB labels.
+- `--ki-fab-forced-colors-border-width`: Boundary width for the FAB in forced colors.
+- `--ki-fab-gap`: Space between icon and label in an extended FAB.
+- `--ki-fab-hover-shadow`: FAB elevation for a pointer that can hover.
+- `--ki-fab-icon-size`: Glyph size of the default FAB.
+- `--ki-fab-lg-icon-size`: Glyph size of the medium FAB.
+- `--ki-fab-lg-radius`: Corner radius of the medium FAB.
+- `--ki-fab-lg-size`: Minimum footprint of the medium FAB.
+- `--ki-fab-line-height`: Line height for extended FAB labels.
+- `--ki-fab-mobile-nav-block-size`: Height to reserve for mobile navigation, excluding the safe-area inset.
+- `--ki-fab-offset`: Fixed FAB gap to the viewport edge or mobile navigation.
+- `--ki-fab-padding-inline-end`: Inline end padding of an extended FAB.
+- `--ki-fab-padding-inline-start`: Inline start padding of an extended FAB.
+- `--ki-fab-primary-bg`: Strong primary FAB fill.
+- `--ki-fab-primary-fg`: Ink on the strong primary FAB.
+- `--ki-fab-radius`: Corner radius of the default FAB size.
+- `--ki-fab-shadow`: Resting FAB elevation.
+- `--ki-fab-size`: Minimum FAB footprint in the default size.
+- `--ki-fab-surface-bg`: Raised surface FAB fill.
+- `--ki-fab-surface-fg`: Ink on the raised surface FAB.
+- `--ki-fab-xl-icon-size`: Glyph size of the large FAB.
+- `--ki-fab-xl-radius`: Corner radius of the large FAB.
+- `--ki-fab-xl-size`: Minimum footprint of the large FAB.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+
+### ki-format-date
+
+Displays an ISO date or timestamp in the reader's language.
+
+When to use: For raw date and timestamp values in tables, records and prose.
+When NOT to use: For an editable date or an elapsed time that should change as the clock advances.
+
+Examples:
+
+# Format a date
+
+Use a calendar date when the day is the value, and send an offset or `Z` when
+the value is a timestamp. Set `lang` on the surrounding document or section.
+
+```html
+<section lang="es-ES">
+  <ki-format-date date="2026-11-19" date-style="long"></ki-format-date>
+  <ki-format-date
+    date="2026-11-19T23:41:00Z"
+    date-style="long"
+    time-style="short"
+    time-zone="Europe/Madrid"
+  ></ki-format-date>
+</section>
+```
+
+Attributes:
+- `date` (string | undefined): ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.
+- `date-style` ("full" | "long" | "medium" | "short" | undefined): Date detail. Defaults to medium when neither date style nor time style is supplied.
+- `lang` (string | undefined): Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.
+- `time-style` ("full" | "long" | "medium" | "short" | undefined): Time detail. Omit to show the date alone.
+- `time-zone` (string | undefined): IANA time zone for a timestamp. A calendar date keeps its day in every zone.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-format-date-font-family`: Default body font family for ki-format-date on a bare page.
+
+### ki-format-number
+
+Displays a raw number using local number conventions and tabular figures.
+
+When to use: For numeric data, currency amounts, ratios and measurements in content.
+When NOT to use: For numeric input or values that already include localized formatting.
+
+Examples:
+
+# Format a number
+
+Pass raw numbers and let the nearest `lang` declaration select the separators,
+spacing and symbols. A percent takes a ratio.
+
+```html
+<section lang="es-ES">
+  <ki-format-number value="1284.5"></ki-format-number>
+  <ki-format-number value="49" currency="EUR"></ki-format-number>
+  <ki-format-number value="0.496" format-style="percent" maximum-fraction-digits="1"></ki-format-number>
+  <ki-format-number value="23" format-style="unit" unit="celsius"></ki-format-number>
+  <ki-format-number value="59320" notation="compact"></ki-format-number>
+</section>
+```
+
+Attributes:
+- `currency` (string | undefined): ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.
+- `format-style` ("decimal" | "percent" | "unit" | undefined): Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.
+- `maximum-fraction-digits` (number | undefined, minimum 0): Maximum number of fraction digits.
+- `minimum-fraction-digits` (number | undefined, minimum 0): Minimum number of fraction digits.
+- `notation` ("compact" | undefined): Use compact notation for abbreviated large numbers. Omit for standard notation.
+- `unit` (string | undefined): Intl unit identifier, such as celsius or kilometer. Use with format-style="unit".
+- `value` (number | undefined): Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-format-number-font-family`: Default body font family for ki-format-number on a bare page.
 
 ### ki-grid
 
@@ -1885,6 +2631,15 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 </ki-tooltip>
 ```
 
+An icon button in the dialog footer can dismiss it by ID. The dialog must be
+in the same document or shadow root as the icon button.
+
+```html
+<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+</ki-icon-button>
+```
+
 While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
 
 ```html
@@ -1894,6 +2649,8 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 ```
 
 Attributes:
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
@@ -3396,6 +4153,42 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-relative-time
+
+Displays the elapsed or remaining time for a timestamp in the reader's language.
+
+When to use: For timestamps whose distance from the present matters, such as timeline entries or recent changes.
+When NOT to use: For an interactive countdown or a date that should always show an absolute value.
+
+Examples:
+
+# Format a relative timestamp
+
+Use `sync` to update the visible wording as time passes. A threshold of
+86,400 seconds switches to the formatted timestamp at one day's distance.
+Assistive technology and the tooltip expose the absolute timestamp throughout.
+
+```html
+<ki-relative-time date="2026-11-19T08:41:00Z" sync threshold="86400"></ki-relative-time>
+```
+
+Attributes:
+- `date` (string | undefined): ISO calendar date or date-time. A timestamp without an offset uses local time.
+- `numeric` ("always" | "auto", default 'auto'): Auto can show words such as yesterday. Always uses a number.
+- `sync` (boolean, default false): Refresh the visible wording as the clock crosses a formatting boundary.
+- `threshold` (number | undefined, minimum 0): Display an absolute timestamp when the distance reaches this many seconds. Omit to keep relative wording at any distance.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-relative-time-font-family`: Default body font family for ki-relative-time on a bare page.
+
 ### ki-scroller
 
 A bounded scroll container that clips its content along one declared axis and replaces platform scrollbar chrome with a token-resolved indicator.
@@ -3931,6 +4724,126 @@ CSS custom properties:
 - `--ki-skeleton-shimmer-easing`: Easing of the shimmer sweep.
 - `--ki-skeleton-shimmer-image`: Image of the moving highlight. Use currentColor to inherit the highlight colour.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-slider
+
+Adjusts a value or an interval on a bounded scale.
+
+When to use: coarse adjustments such as volume, balance or a price filter,
+with a descriptive label.
+When NOT to use: when people need to enter exact numbers or choose among a
+few named options. Use a number input or radio group for those tasks.
+
+Examples:
+
+# Slider examples
+
+Import the element and one theme stylesheet before mounting the examples.
+
+```js
+import '@kimen/tokens/css';
+import { defineCustomElement } from '@kimen/elements/ki-slider';
+
+defineCustomElement();
+```
+
+```html
+<form>
+  <ki-slider label="Volume" name="volume" help-text="Playback level"
+    min="0" max="100" step="1" value="60" marks="5" format="percent"></ki-slider>
+  <ki-slider label="Price per night" name="price" range
+    value="20,80" format="currency" currency="EUR"></ki-slider>
+  <button type="reset">Reset</button>
+</form>
+
+<ki-slider label="Exposure" centered min="-50" max="50" value="-20"></ki-slider>
+<ki-slider label="Bass" orientation="vertical" max="10" value="4"></ki-slider>
+```
+
+A named slider contributes one form entry. The form above starts with
+`volume=60` and `price=20,80`. Range values always run from lower to upper.
+The closest `lang` controls the display format. Localize the thumb suffixes
+through `minimum-label` and `maximum-label`.
+
+```js
+const volume = document.querySelector('ki-slider[name="volume"]');
+volume.addEventListener('input', () => previewVolume(volume.value));
+volume.addEventListener('change', () => saveVolume(volume.value));
+```
+
+The neutral catalog exposes the `change` action event. Bind it to a declared
+action to receive the current value on commit.
+
+Attributes:
+- `centered` (boolean, default false): Shows a midpoint tick and fills from that point to a single thumb.
+- `currency` (string, default 'EUR'): ISO 4217 code used with currency format.
+- `disabled` (boolean, default false): Makes the slider unavailable for pointer, keyboard and form submission.
+- `format` ("currency" | "number" | "percent", default 'number'): Display format for the readout and accessible values.
+- `help-text` (string | undefined): Optional supporting text, read as the description of each thumb.
+- `label` (string | undefined, default 'Slider'): Visible base name. Use a task-specific, localized label.
+- `marks` (number, default 0, minimum 0, maximum 100): Number of evenly spaced tick intervals, up to 100. Zero hides ticks.
+- `max` (number, default 100): Inclusive upper bound. A maximum below min collapses the scale.
+- `maximum-label` (string | undefined, default 'maximum'): Localized suffix for the upper thumb's accessible name.
+- `min` (number, default 0): Inclusive lower bound and step origin.
+- `minimum-label` (string | undefined, default 'minimum'): Localized suffix for the lower thumb's accessible name.
+- `name` (string | undefined): Native form key. Omit when the value should remain local to the control.
+- `orientation` ("horizontal" | "vertical", default 'horizontal'): Axis of the scale. A vertical scale increases towards the top.
+- `range` (boolean, default false): Enables two non-crossing thumbs in minimum then maximum tab order.
+- `step` (number, default 1): Positive increment. Values snap from min and max is always reachable.
+- `value` (number | string | undefined): Current selection as a number or, in range mode, a comma-separated pair. HTML attributes also accept the scalar as numeric text. Defaults to min for one thumb and to both bounds for a range. User updates are normalized.
+
+Slots: none
+
+Parts:
+- `center-tick`: Midpoint mark on a centered scale.
+- `field`: Layout containing the visible label, value, controls and help.
+- `fill`: Active portion of the rail.
+- `help`: Supporting text associated with each thumb.
+- `label`: Visible text used to name the control.
+- `mark`: Decorative scale mark at an interval boundary.
+- `thumb`: Focusable pointer target for one end of the selection.
+- `track`: Inactive rail between the two ends of the scale.
+- `value`: Formatted value or interval shown beside the label.
+
+Events:
+- `change` (Event): Bubbles once when a pointer operation commits a different selection or a keyboard action changes it. Read the current host value. For updates during a drag, listen for the standard bubbling `input` event. Programmatic updates and form resets are silent.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-slider-coarse-target`: Minimum target size on a coarse pointer.
+- `--ki-slider-fill-backdrop-filter`: Optional effect behind the active rail.
+- `--ki-slider-fill-bg`: Colour of the active section of the rail.
+- `--ki-slider-fill-bg-image`: Optional image painted on the active rail.
+- `--ki-slider-gap`: Gap between the slider control and its labels.
+- `--ki-slider-label-bg`: Background beneath the field label.
+- `--ki-slider-label-fg`: Ink of the field label.
+- `--ki-slider-mark-width`: Thickness of each interval tick.
+- `--ki-slider-radius`: Round rail, grip and midpoint tick corners.
+- `--ki-slider-text-bg`: Background beneath the value readout and help.
+- `--ki-slider-text-fg`: Ink of the value readout and help.
+- `--ki-slider-thumb-backdrop-filter`: Optional effect behind the grip.
+- `--ki-slider-thumb-bg`: Grip surface behind the outline.
+- `--ki-slider-thumb-bg-image`: Optional image painted on the grip.
+- `--ki-slider-thumb-border`: Outline colour of the visible grip.
+- `--ki-slider-thumb-border-width`: Outline thickness of the visible grip.
+- `--ki-slider-thumb-shadow`: Optional grip elevation.
+- `--ki-slider-thumb-size`: Diameter of the visible grip within the pointer target.
+- `--ki-slider-track-backdrop-filter`: Optional effect behind the inactive rail.
+- `--ki-slider-track-bg`: Inactive rail colour against the surrounding surface.
+- `--ki-slider-track-bg-image`: Optional image painted on the inactive rail.
+- `--ki-slider-track-height`: Inactive rail thickness.
+- `--ki-slider-vertical-length`: Length of the vertical rail.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 
 ### ki-spinner
 
@@ -5097,199 +6010,6 @@ CSS custom properties:
 - `--ki-tooltip-shadow`: shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
-### ki-tree
-
-A named hierarchy with collapsible branches and independent keyboard focus.
-
-When to use: browse nested files, categories or an outline, select items in
-a hierarchy, or navigate through linked destinations.
-When NOT to use: flat lists of peers, menus of commands, or submitted form values.
-
-Examples:
-
-# Tree examples
-
-Give the tree a label and put the item text before any nested items. Set
-`expanded` to show a branch's children and `selected` to mark the initial
-selection. The tree defaults to single selection.
-
-```html
-<ki-tree label="Project files">
-  <ki-tree-item expanded>
-    src
-    <ki-tree-item selected>ki-dialog.ts</ki-tree-item>
-    <ki-tree-item>ki-menu.ts</ki-tree-item>
-  </ki-tree-item>
-  <ki-tree-item>README.md</ki-tree-item>
-</ki-tree>
-```
-
-Set `selection="multiple"` to show checkboxes. The Reports branch starts
-mixed because Summary is the only checked child. Toggling Reports also
-updates its enabled descendants. The `ki-selection-change` event reports
-the committed selection in `detail.selectedItems`, including fully checked
-branches.
-
-```html
-<ki-tree label="Export files" selection="multiple">
-  <ki-tree-item expanded>
-    Reports
-    <ki-tree-item selected>Summary</ki-tree-item>
-    <ki-tree-item>Appendix</ki-tree-item>
-    <ki-tree-item disabled>Draft</ki-tree-item>
-  </ki-tree-item>
-</ki-tree>
-```
-
-Use `selection="none"` with `href` to build a navigation tree.
-
-```html
-<ki-tree label="Documentation" selection="none">
-  <ki-tree-item expanded>
-    Guides
-    <ki-tree-item href="./quick-start/">Quick start</ki-tree-item>
-    <ki-tree-item href="./theming/">Theming</ki-tree-item>
-  </ki-tree-item>
-</ki-tree>
-```
-
-A lazy branch emits `ki-load` the first time it opens. Append its child
-items to `event.detail.item` to replace the spinner. Set `item.lazy = false`
-to finish the wait if there are no children.
-
-```html
-<ki-tree label="Project files">
-  <ki-tree-item lazy loading-label="Loading tokens">tokens</ki-tree-item>
-</ki-tree>
-```
-
-```js
-document.querySelector('ki-tree')?.addEventListener('ki-load', ({ detail: { item } }) => {
-  const child = document.createElement('ki-tree-item');
-  child.textContent = 'palette.tokens.json';
-  item.append(child);
-});
-```
-
-Attributes:
-- `label` (string, default 'Tree'): Accessible name of the hierarchy. Localize it and make it distinct among nearby trees.
-- `selection` ("multiple" | "none" | "single", default 'single'): Use none for navigation, single for one selected item, or multiple for checkable branches.
-
-Slots:
-- (default): Direct ki-tree-item children in reading order.
-
-Parts:
-- `base`: The surface around the hierarchy.
-
-Events:
-- `ki-selection-change` (CustomEvent<{ selectedItems: HTMLKiTreeItemElement[] }>): Emitted after a user selection changes. Selected items are in tree order.
-
-Methods: none
-
-CSS custom properties:
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-tree-backdrop-filter`: Complete backdrop filter behind the surface.
-- `--ki-tree-bg`: Base surface of the hierarchy.
-- `--ki-tree-bg-image`: Optional image layered over the tree surface.
-- `--ki-tree-edge`: Perimeter color of the hierarchy surface.
-- `--ki-tree-edge-width`: Width of the surface and checkbox outlines.
-- `--ki-tree-fg`: Text on the base surface.
-- `--ki-tree-padding`: Interior padding of the hierarchy surface.
-- `--ki-tree-radius`: Rounding of the hierarchy surface.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-
-### ki-tree-item
-
-An item or expandable branch inside a ki-tree.
-
-When to use: label a file, category or destination in a hierarchy. Nest more
-ki-tree-item children for a branch.
-When NOT to use: standalone controls, form checkboxes, or a row with other
-interactive descendants.
-
-Examples:
-
-# Tree item examples
-
-Place each item directly in a `ki-tree` or another `ki-tree-item`. Put the
-label text before the child items. A disabled item stays in the tree's
-arrow-key sequence and cannot be activated.
-
-```html
-<ki-tree label="Project files">
-  <ki-tree-item expanded>
-    src
-    <ki-tree-item selected>ki-dialog.ts</ki-tree-item>
-    <ki-tree-item disabled>Archived code</ki-tree-item>
-  </ki-tree-item>
-</ki-tree>
-```
-
-Import the decorative glyph before the tree mounts if you set `icon-name`.
-
-```js
-import '@kimen/elements/icons/file-code';
-```
-
-```html
-<ki-tree label="Project files">
-  <ki-tree-item icon-name="file-code">ki-dialog.ts</ki-tree-item>
-</ki-tree>
-```
-
-Attributes:
-- `disabled` (boolean, default false): Keep the row discoverable by keyboard while preventing user activation.
-- `expanded` (boolean, default false): Whether a branch reveals its children. Has no visible effect on a leaf.
-- `href` (string | undefined, URL): Native destination of the row. Prefer selection="none" for navigation trees.
-- `icon-name` (string | undefined): Optional decorative icon. Import the named Kimen glyph before mounting the tree.
-- `lazy` (boolean, default false): Request children on the first empty expansion. Clear it to finish an empty load.
-- `loading-label` (string, default 'Loading'): Localized text for the spinner status during an outstanding lazy request.
-- `selected` (boolean, default false): Selected state. The tree keeps it in sync with single selection or fully checked branches.
-
-Slots:
-- (default): The row label and directly nested ki-tree-item children.
-
-Parts:
-- `checkbox`: Check-state indicator and hit area in multiple selection.
-- `disclosure`: Leading hit area and direction indicator of a branch.
-- `group`: The region containing the expanded child items.
-- `label`: Visible row text or native destination link.
-- `row`: The painted and focus-highlighted item row.
-
-Events:
-- `ki-collapse` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch collapses.
-- `ki-expand` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch expands.
-- `ki-load` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted once when an empty lazy branch first opens. The listener supplies the children.
-
-Methods: none
-
-CSS custom properties:
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-tree-disclosure-duration`: Disclosure turn duration.
-- `--ki-tree-disclosure-easing`: Disclosure turn easing.
-- `--ki-tree-edge-width`: Width of the surface and checkbox outlines.
-- `--ki-tree-focus-ring-color`: Ink of the focused row outline.
-- `--ki-tree-focus-ring-width`: Width of the focused row outline.
-- `--ki-tree-hover-bg`: Fill of an unselected row hovered by a fine pointer.
-- `--ki-tree-hover-fg`: Text of an unselected row hovered by a fine pointer.
-- `--ki-tree-icon-fg`: Default ink of the decorative row icons.
-- `--ki-tree-indent`: Inline indentation per hierarchy level.
-- `--ki-tree-item-box-radius`: Rounding of the visual checkbox indicator.
-- `--ki-tree-item-box-size`: Size of the visual checkbox indicator.
-- `--ki-tree-item-gap`: Space between an optional item icon and its label.
-- `--ki-tree-item-padding`: Inline-end inset of an item row.
-- `--ki-tree-item-radius`: Rounding of a highlighted item row.
-- `--ki-tree-item-target`: Minimum inline target of a disclosure or checkbox.
-- `--ki-tree-row-height`: Minimum block size before density adjustment.
-- `--ki-tree-selected-bg`: Fill of a selected or checked row.
-- `--ki-tree-selected-fg`: Text and glyph ink on a selected row.
-- `--ki-tree-touch-row-min`: Minimum row block size on a coarse pointer.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-
 ### ki-video
 
 A themed video surface: a calm poster facade with exactly one accessible play control over a slotted native `<video>` element. From the first activation on, playback, scrubbing, volume, captions and fullscreen belong to the native player — Kimen ships no custom chrome.
@@ -5301,7 +6021,7 @@ with one play control. Slot exactly one native `<video>` carrying its own
 enables the native chrome the moment the facade yields, FR-002), and give
 the control a `label` (required: the accessible name of the play button).
 When NOT to use: decorative background or ambient loops (plain CSS and
-`<video>` are the tool), audio-only content (a future audio component),
+`<video>` are the tool), audio-only recordings (use ki-audio),
 embeds from streaming platforms that ship their own player chrome (use
 their embed), or static imagery (use an image, not a video). `autoplay`
 on the slotted media is unsupported: the facade's contract is that
