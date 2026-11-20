@@ -34,7 +34,7 @@ package still carries a `workspace:` runtime range.
 
 | Mode | Entry point | Package state | Authority | Result |
 |---|---|---|---|---|
-| Dry run | Manual `release` workflow dispatch at the revision to validate | Current exact versions; `private: true` is accepted | Read-only repository token; no OIDC publisher runs | Core, candidate, independent verification and Chromium/Firefox/WebKit all execute; nothing is published |
+| Dry run | Manual `release` workflow dispatch at the revision to validate | Current exact versions; `private: true` is accepted | Read-only repository token; no OIDC publisher runs | Core, candidate, independent verification, Chromium/Firefox/WebKit (four shards each) and the capability binding all execute; nothing is published |
 | Release | The release App pushes an annotated `vX.Y.Z` tag after the release PR is merged | All three packages are version `X.Y.Z`, `private: false`, and carry exact repository metadata | Only `publish`, after every validation job, receives `id-token: write` in the protected `npm` environment | Missing versions publish; byte-identical existing versions are skipped |
 
 Dry run never creates tags, changes versions or carries dormant publication
@@ -67,7 +67,8 @@ authority. A non-tag dispatch always emits a manifest whose `mode` is
    metadata for a matching tag. A conflicting tag fails the run and keeps
    its original target.
 4. The tag push starts `release.yml`, the sole npm publisher. It validates
-   the immutable candidate across all three browser engines, then publishes
+   the immutable candidate across all three browser engines, each in four
+   parallel shards, then publishes
    through npm trusted publishing under the `npm` environment policy.
 
 Both automation workflows require `RELEASE_APP_ID` and
@@ -122,15 +123,29 @@ of Actions. For the external steps, see the
 
 ## Immutable handoff and authority boundaries
 
-`validate-core` has `contents: read`, runs frozen deterministic gates, packs
-the exact three packages and uploads one non-overwriting artifact. It exports
-the GitHub artifact ID/digest plus an independently computed SHA-256 of
-`candidate.tar`.
+`validate-core` has `contents: read`, runs the frozen deterministic core gates
+(`scripts/gates/gates-core.sh`) and the packaging contract, packs the exact
+three packages and uploads one non-overwriting artifact. It exports the GitHub
+artifact ID/digest plus an independently computed SHA-256 of `candidate.tar`,
+and keeps its current-run gate evidence as a separate artifact.
 
-Each browser matrix job downloads by that artifact ID, recomputes the candidate
+The browser matrix is engine × shard: Chromium, Firefox and WebKit, each in
+four shards. A shard checks out the validation harness at the candidate SHA
+and runs `scripts/gates/gates-browser.sh <engine>` with
+`KIMEN_BROWSER_SHARD=<index>/4`: a quarter of the elements files and, in the
+last Chromium shard, the Chromium-only suites. The four shards of an engine
+together run its complete browser gate, each file once. Each shard keeps its
+gate evidence, then downloads by that artifact ID, recomputes the candidate
 SHA, verifies its manifest and checksums, installs the elements and tokens
-tarballs in a clean browser consumer and runs exactly one of Chromium,
-Firefox or WebKit. The matrix records an outcome for every engine.
+tarballs in a clean browser consumer and checks them in its engine. With
+fail-fast off, the matrix records an outcome for every engine and shard.
+
+`capability-claims` runs after `validate-core` and every browser shard, at the
+candidate SHA. `scripts/release/compose-gate-evidence.mjs` joins their
+current-run evidence into one record, in which the browser gate
+(`test-browser`) is green only when every engine reported every shard green.
+`scripts/gates/check-capabilities.mjs` then binds each available capability
+claim to that record (018-project-integrity-hardening S13).
 
 `verify-candidate` independently downloads and verifies the same artifact with
 no OIDC authority. The candidate builder and verifiers install the packed MCP
@@ -141,8 +156,8 @@ the npm code recorded in both the server bundle and its embedded browser
 surface. The release builder omits the MCP package's development dependencies
 from the packed manifest.
 
-`publish` needs `validate-core`, all browser jobs and
-`verify-candidate`; it runs only for release manifests. The publisher has no
+`publish` needs `validate-core`, every browser shard, `verify-candidate` and
+`capability-claims`; it runs only for release manifests. The publisher has no
 checkout and performs no dependency install, build, versioning or repository
 script execution. Its only elevated permission is short-lived OIDC
 (`id-token: write`) in the protected `npm` environment.
@@ -156,6 +171,7 @@ global policy gate before changing workflow structure:
 ```sh
 pnpm run check:workflows
 node --test scripts/tests/release-workflow.test.mjs
+node --test scripts/tests/release-gate-evidence.test.mjs
 node --test scripts/tests/release-candidate.test.mjs
 ```
 

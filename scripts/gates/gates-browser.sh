@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # One deterministic real-browser invocation. The caller must select exactly
-# one supported engine; prerelease supplies this script from a three-job matrix.
+# one supported engine; prerelease supplies this script from an engine × shard
+# matrix (.github/workflows/release.yml).
 set -uo pipefail
 
 fail() {
@@ -17,10 +18,11 @@ case "$ENGINE" in
   *) fail 'engine must be exactly one of chromium, firefox, webkit' ;;
 esac
 
-# CI splits the elements suite across parallel jobs (.github/workflows/ci.yml):
-# KIMEN_BROWSER_SHARD=<index>/<count> runs that share of its files, and the
-# smaller Chromium-only suites run once, in the last shard. Unset, the gate is
-# the whole suite in one invocation (local readiness, release).
+# CI and the release split the elements suite across parallel jobs
+# (.github/workflows/ci.yml, release.yml): KIMEN_BROWSER_SHARD=<index>/<count>
+# runs that share of its files, and the smaller Chromium-only suites run once,
+# in the last shard. Unset, the gate is the whole suite in one invocation
+# (local readiness).
 SHARD="${KIMEN_BROWSER_SHARD:-}"
 SHARD_INDEX=1
 SHARD_COUNT=1
