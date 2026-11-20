@@ -1720,6 +1720,99 @@ export namespace Components {
         "tone": KiNoteTone;
     }
     /**
+     * A form field for a numeric quantity with optional stepper buttons, bounds,
+     * locale-aware formatting, and a visible unit.
+     * @whenToUse Collect a number like a quantity, amount, or limit. Provide a
+     * visible label and choose bounds and an increment when they have meaning.
+     * @whenNotToUse Use ki-input for identifiers, codes, or other text that only
+     * looks numeric. Use a range control when relative position is the main cue.
+     * @event change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
+     */
+    interface KiNumberInput {
+        /**
+          * Stepper's accessible name. The field label replaces {label}.
+          * @default 'Decrease {label}'
+         */
+        "decreaseLabel": string;
+        /**
+          * Prevents editing and excludes the control from form submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Validation hint to show when the entry fails a constraint.
+         */
+        "errorText"?: string;
+        /**
+          * Intl.NumberFormat options for display. In HTML or a catalog spec, supply these options as JSON text. The form value retains its original precision.
+          * @attributeType string
+         */
+        "format": Intl.NumberFormatOptions | undefined;
+        /**
+          * Context or instructions displayed beneath the field when it has no visible error.
+         */
+        "helpText"?: string;
+        /**
+          * Stepper's accessible name. The field label replaces {label}.
+          * @default 'Increase {label}'
+         */
+        "increaseLabel": string;
+        /**
+          * Default validation message for text that cannot be read as a number.
+          * @default 'Enter a number.'
+         */
+        "invalidNumberMessage": string;
+        /**
+          * Visible accessible name. Supply a meaningful label in the page language.
+         */
+        "label": string;
+        /**
+          * Maximum permitted numeric value. Omit for an unbounded maximum.
+         */
+        "max"?: number;
+        /**
+          * Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.
+          * @default 'Value adjusted to the maximum of {value}.'
+         */
+        "maximumMessage": string;
+        /**
+          * Minimum permitted numeric value. Omit for an unbounded minimum.
+         */
+        "min"?: number;
+        /**
+          * Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.
+          * @default 'Value adjusted to the minimum of {value}.'
+         */
+        "minimumMessage": string;
+        /**
+          * Form-data key for the plain numeric value.
+         */
+        "name"?: string;
+        /**
+          * Whether the user must enter a number before submitting the form.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.
+          * @default 1
+         */
+        "step": number;
+        /**
+          * Shows named decrease and increase buttons inside the field.
+          * @default false
+         */
+        "steppers": boolean;
+        /**
+          * Visible suffix such as seconds or seats, included in the accessible description.
+         */
+        "unit"?: string;
+        /**
+          * Current numeric value, or undefined when empty or unparseable. Use the attribute for the form reset value. Property assignments are silent.
+         */
+        "value": number | undefined;
+    }
+    /**
      * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
      * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
@@ -3680,6 +3773,21 @@ declare global {
         new (): HTMLKiNoteElement;
     };
     /**
+     * A form field for a numeric quantity with optional stepper buttons, bounds,
+     * locale-aware formatting, and a visible unit.
+     * @whenToUse Collect a number like a quantity, amount, or limit. Provide a
+     * visible label and choose bounds and an increment when they have meaning.
+     * @whenNotToUse Use ki-input for identifiers, codes, or other text that only
+     * looks numeric. Use a range control when relative position is the main cue.
+     * @event change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
+     */
+    interface HTMLKiNumberInputElement extends Components.KiNumberInput, HTMLStencilElement {
+    }
+    var HTMLKiNumberInputElement: {
+        prototype: HTMLKiNumberInputElement;
+        new (): HTMLKiNumberInputElement;
+    };
+    /**
      * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
      * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
@@ -4298,6 +4406,7 @@ declare global {
         "ki-menu-item": HTMLKiMenuItemElement;
         "ki-message": HTMLKiMessageElement;
         "ki-note": HTMLKiNoteElement;
+        "ki-number-input": HTMLKiNumberInputElement;
         "ki-option": HTMLKiOptionElement;
         "ki-popover": HTMLKiPopoverElement;
         "ki-progress": HTMLKiProgressElement;
@@ -6026,6 +6135,103 @@ declare namespace LocalJSX {
         "tone"?: KiNoteTone;
     }
     /**
+     * A form field for a numeric quantity with optional stepper buttons, bounds,
+     * locale-aware formatting, and a visible unit.
+     * @whenToUse Collect a number like a quantity, amount, or limit. Provide a
+     * visible label and choose bounds and an increment when they have meaning.
+     * @whenNotToUse Use ki-input for identifiers, codes, or other text that only
+     * looks numeric. Use a range control when relative position is the main cue.
+     * @event change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
+     */
+    interface KiNumberInput {
+        /**
+          * Stepper's accessible name. The field label replaces {label}.
+          * @default 'Decrease {label}'
+         */
+        "decreaseLabel"?: string;
+        /**
+          * Prevents editing and excludes the control from form submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Validation hint to show when the entry fails a constraint.
+         */
+        "errorText"?: string;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Intl.NumberFormat options for display. In HTML or a catalog spec, supply these options as JSON text. The form value retains its original precision.
+          * @attributeType string
+         */
+        "format"?: Intl.NumberFormatOptions | undefined;
+        /**
+          * Context or instructions displayed beneath the field when it has no visible error.
+         */
+        "helpText"?: string;
+        /**
+          * Stepper's accessible name. The field label replaces {label}.
+          * @default 'Increase {label}'
+         */
+        "increaseLabel"?: string;
+        /**
+          * Default validation message for text that cannot be read as a number.
+          * @default 'Enter a number.'
+         */
+        "invalidNumberMessage"?: string;
+        /**
+          * Visible accessible name. Supply a meaningful label in the page language.
+         */
+        "label": string;
+        /**
+          * Maximum permitted numeric value. Omit for an unbounded maximum.
+         */
+        "max"?: number;
+        /**
+          * Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.
+          * @default 'Value adjusted to the maximum of {value}.'
+         */
+        "maximumMessage"?: string;
+        /**
+          * Minimum permitted numeric value. Omit for an unbounded minimum.
+         */
+        "min"?: number;
+        /**
+          * Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.
+          * @default 'Value adjusted to the minimum of {value}.'
+         */
+        "minimumMessage"?: string;
+        /**
+          * Form-data key for the plain numeric value.
+         */
+        "name"?: string;
+        /**
+          * Whether the user must enter a number before submitting the form.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.
+          * @default 1
+         */
+        "step"?: number;
+        /**
+          * Shows named decrease and increase buttons inside the field.
+          * @default false
+         */
+        "steppers"?: boolean;
+        /**
+          * Visible suffix such as seconds or seats, included in the accessible description.
+         */
+        "unit"?: string;
+        /**
+          * Current numeric value, or undefined when empty or unparseable. Use the attribute for the form reset value. Property assignments are silent.
+         */
+        "value"?: number | undefined;
+    }
+    /**
      * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
      * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
      * human-facing label and its `value` is the submitted value.
@@ -7513,6 +7719,26 @@ declare namespace LocalJSX {
         "size": KiNoteSize;
         "icon": boolean;
     }
+    interface KiNumberInputAttributes {
+        "label": string;
+        "helpText": string;
+        "errorText": string;
+        "required": boolean;
+        "disabled": boolean;
+        "name": string;
+        "value": number | undefined;
+        "min": number;
+        "max": number;
+        "step": number;
+        "steppers": boolean;
+        "unit": string;
+        "format": string;
+        "decreaseLabel": string;
+        "increaseLabel": string;
+        "minimumMessage": string;
+        "maximumMessage": string;
+        "invalidNumberMessage": string;
+    }
     interface KiOptionAttributes {
         "value": string;
         "disabled": boolean;
@@ -7762,6 +7988,7 @@ declare namespace LocalJSX {
         "ki-menu-item": Omit<KiMenuItem, keyof KiMenuItemAttributes> & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes]?: KiMenuItem[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `attr:${K}`]?: KiMenuItemAttributes[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `prop:${K}`]?: KiMenuItem[K] };
         "ki-message": Omit<KiMessage, keyof KiMessageAttributes> & { [K in keyof KiMessage & keyof KiMessageAttributes]?: KiMessage[K] } & { [K in keyof KiMessage & keyof KiMessageAttributes as `attr:${K}`]?: KiMessageAttributes[K] } & { [K in keyof KiMessage & keyof KiMessageAttributes as `prop:${K}`]?: KiMessage[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
+        "ki-number-input": Omit<KiNumberInput, keyof KiNumberInputAttributes> & { [K in keyof KiNumberInput & keyof KiNumberInputAttributes]?: KiNumberInput[K] } & { [K in keyof KiNumberInput & keyof KiNumberInputAttributes as `attr:${K}`]?: KiNumberInputAttributes[K] } & { [K in keyof KiNumberInput & keyof KiNumberInputAttributes as `prop:${K}`]?: KiNumberInput[K] } & OneOf<"label", KiNumberInput["label"], KiNumberInputAttributes["label"]>;
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-popover": Omit<KiPopover, keyof KiPopoverAttributes> & { [K in keyof KiPopover & keyof KiPopoverAttributes]?: KiPopover[K] } & { [K in keyof KiPopover & keyof KiPopoverAttributes as `attr:${K}`]?: KiPopoverAttributes[K] } & { [K in keyof KiPopover & keyof KiPopoverAttributes as `prop:${K}`]?: KiPopover[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
@@ -8208,6 +8435,16 @@ declare module "@stencil/core" {
              * for transient confirmations and the field's help-text for field guidance.
              */
             "ki-note": LocalJSX.IntrinsicElements["ki-note"] & JSXBase.HTMLAttributes<HTMLKiNoteElement>;
+            /**
+             * A form field for a numeric quantity with optional stepper buttons, bounds,
+             * locale-aware formatting, and a visible unit.
+             * @whenToUse Collect a number like a quantity, amount, or limit. Provide a
+             * visible label and choose bounds and an increment when they have meaning.
+             * @whenNotToUse Use ki-input for identifiers, codes, or other text that only
+             * looks numeric. Use a range control when relative position is the main cue.
+             * @event change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
+             */
+            "ki-number-input": LocalJSX.IntrinsicElements["ki-number-input"] & JSXBase.HTMLAttributes<HTMLKiNumberInputElement>;
             /**
              * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
              * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the

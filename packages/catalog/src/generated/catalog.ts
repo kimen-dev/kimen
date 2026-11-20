@@ -2174,6 +2174,100 @@ export const catalogData = {
       "whenNotToUse": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance.",
       "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
     },
+    "ki-number-input": {
+      "description": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
+      "events": {
+        "change": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
+      },
+      "props": {
+        "decrease-label": {
+          "type": "string",
+          "description": "Stepper's accessible name. The field label replaces {label}.",
+          "default": "Decrease {label}"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Prevents editing and excludes the control from form submission.",
+          "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Validation hint to show when the entry fails a constraint."
+        },
+        "format": {
+          "type": "string",
+          "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Context or instructions displayed beneath the field when it has no visible error."
+        },
+        "increase-label": {
+          "type": "string",
+          "description": "Stepper's accessible name. The field label replaces {label}.",
+          "default": "Increase {label}"
+        },
+        "invalid-number-message": {
+          "type": "string",
+          "description": "Default validation message for text that cannot be read as a number.",
+          "default": "Enter a number."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible accessible name. Supply a meaningful label in the page language.",
+          "required": true
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum permitted numeric value. Omit for an unbounded maximum."
+        },
+        "maximum-message": {
+          "type": "string",
+          "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
+          "default": "Value adjusted to the maximum of {value}."
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum permitted numeric value. Omit for an unbounded minimum."
+        },
+        "minimum-message": {
+          "type": "string",
+          "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
+          "default": "Value adjusted to the minimum of {value}."
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key for the plain numeric value."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether the user must enter a number before submitting the form.",
+          "default": false
+        },
+        "step": {
+          "type": "number",
+          "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
+          "default": 1
+        },
+        "steppers": {
+          "type": "boolean",
+          "description": "Shows named decrease and increase buttons inside the field.",
+          "default": false
+        },
+        "unit": {
+          "type": "string",
+          "description": "Visible suffix such as seconds or seats, included in the accessible description."
+        },
+        "value": {
+          "type": "number",
+          "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent."
+        }
+      },
+      "slots": {},
+      "tag": "ki-number-input",
+      "whenNotToUse": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue.",
+      "whenToUse": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning."
+    },
     "ki-option": {
       "description": "A declarative data option rendered by its owning `ki-select` or `ki-combobox`.",
       "events": {},

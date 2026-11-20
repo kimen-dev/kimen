@@ -75,6 +75,7 @@ methods, CSS custom properties and examples.
 - [ki-menu-item](llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-message](llms/ki-message.md): Display a transcript entry inside ki-conversation.
 - [ki-note](llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
+- [ki-number-input](llms/ki-number-input.md): Collect a number like a quantity, amount, or limit.
 - [ki-option](llms/ki-option.md): declare one choice inside a `ki-select` or `ki-combobox`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-popover](llms/ki-popover.md): Show filters, details, a small form, or a text toggletip.
 - [ki-progress](llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
