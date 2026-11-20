@@ -38,8 +38,6 @@ methods, CSS custom properties and examples.
 - [ki-avatar](llms/ki-avatar.md): a compact identity visual for a person or entity — a comment author, a contact list item, a project member.
 - [ki-avatar-group](llms/ki-avatar-group.md): a compact "who is involved" stack — the members of a shared document, project card or event row — where space deserves only the first few identities and an exact "+N" counter accounts for the rest.
 - [ki-badge](llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.
-- [ki-breadcrumb](llms/ki-breadcrumb.md): show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
-- [ki-breadcrumb-item](llms/ki-breadcrumb-item.md): declare a direct child of ki-breadcrumb in hierarchy order.
 - [ki-button](llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.
 - [ki-button-group](llms/ki-button-group.md): place two to five related actions together, present a primary action with a menu of alternatives, or give formatting tools one Tab stop.
 - [ki-card](llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
@@ -47,10 +45,13 @@ methods, CSS custom properties and examples.
 - [ki-checkbox-group](llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
 - [ki-chip](llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
 - [ki-chip-group](llms/ki-chip-group.md): label related chips or let people change their reading order.
+- [ki-copy-button](llms/ki-copy-button.md): let a person copy a link, identifier, token or code sample.
 - [ki-counter](llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
 - [ki-empty-state](llms/ki-empty-state.md): explain an empty list, table, search result, or first-run view.
+- [ki-fab](llms/ki-fab.md): give a mobile screen one primary action, such as composing a draft or creating a project.
+- [ki-feature-icon](llms/ki-feature-icon.md): Place a decorative icon beside the visible heading of a feature, empty state or settings section.
 - [ki-format-date](llms/ki-format-date.md): For raw date and timestamp values in tables, records and prose.
 - [ki-format-number](llms/ki-format-number.md): For numeric data, currency amounts, ratios and measurements in content.
 - [ki-grid](llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.
@@ -67,6 +68,7 @@ methods, CSS custom properties and examples.
 - [ki-menu-item](llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-note](llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
 - [ki-option](llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
+- [ki-popover](llms/ki-popover.md): Show filters, details, a small form, or a text toggletip.
 - [ki-progress](llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
 - [ki-qr](llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.
 - [ki-radio](llms/ki-radio.md): place inside `ki-radio-group` when a person must choose exactly one of a small visible set.
@@ -77,6 +79,7 @@ methods, CSS custom properties and examples.
 - [ki-segmented-control](llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
 - [ki-select](llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
 - [ki-skeleton](llms/ki-skeleton.md): Reserve the expected layout of a card, list, or assistant reply while it loads.
+- [ki-slider](llms/ki-slider.md): coarse adjustments such as volume, balance or a price filter, with a descriptive label.
 - [ki-spinner](llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-stat](llms/ki-stat.md): Summarize one numeric metric in a dashboard or report.

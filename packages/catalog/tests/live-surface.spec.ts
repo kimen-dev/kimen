@@ -203,6 +203,37 @@ describe('035 — a batch changes only what it names', () => {
     expect(canonical(surface)).toBe(freshHtml(live));
   });
 
+  it('updates and unsets a Kimen boolean that defaults to true', () => {
+    const { live } = mount();
+    const inserted = live.apply({
+      ops: [
+        {
+          node: { component: 'ki-popover', id: 'filters', props: { arrow: false } },
+          op: 'insert',
+          parent: 'board',
+        },
+      ],
+    });
+    expect(inserted.ok).toBe(true);
+    const popover = one('ki-popover');
+    expect(popover.outerHTML).toBe('<ki-popover arrow="false"></ki-popover>');
+
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: true } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover arrow=""></ki-popover>');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: false } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover arrow="false"></ki-popover>');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: null } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover></ki-popover>');
+    expect(one('ki-popover')).toBe(popover);
+    expect(canonical(surface)).toBe(freshHtml(live));
+  });
+
   it('S5 inserting a sibling before a focused node adds one node and moves nothing', () => {
     const { live } = mount();
     const [first, second] = items();

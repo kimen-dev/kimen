@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-slider" />
+
+# ki-slider
+
+Use a slider for approximate values such as volume and for intervals such
+as price filters. Tab to a thumb and use the arrows to adjust it. Page Up
+and Page Down move ten steps. Home and End reach the thumb's current limits.
+
+```html
+<ki-slider label="Volume" value="60" marks="5" format="percent"></ki-slider>
+<ki-slider label="Price" range value="20,80" format="currency" currency="EUR"></ki-slider>
+<ki-slider label="Exposure" centered min="-50" max="50" value="-20"></ki-slider>
+<ki-slider label="Bass" orientation="vertical" max="10" value="4"></ki-slider>
+```
+
+Read the current `value` from the host in `input` and `change` listeners.
+Give the slider a `name` to include it in a form. An interval submits a single
+comma-separated value.
+
+Set `--ki-slider-track-bg`, `--ki-slider-fill-bg` and the thumb tokens to
+adjust the rail and thumb for a theme. Keep the controls distinguishable
+from their surrounding surface and let the system palette apply in forced
+colors.

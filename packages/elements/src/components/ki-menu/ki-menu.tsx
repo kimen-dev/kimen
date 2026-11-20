@@ -491,18 +491,20 @@ export class KiMenu {
   render() {
     return (
       <div
+        key="popup"
         part="popup"
         popover="manual"
         ref={(panel) => {
           this.panel = panel;
         }}
       >
-        <div part="header">
-          <slot name="header" />
+        <div key="header" part="header">
+          <slot key="header-slot" name="header" />
         </div>
         {this.filterLabel && (
           <div key="filter" class="filter-row">
             <svg
+              key="icon"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -510,10 +512,11 @@ export class KiMenu {
               stroke-linecap="round"
               aria-hidden="true"
             >
-              <path d="m21 21-4.34-4.34" />
-              <circle cx="11" cy="11" r="8" />
+              <path key="handle" d="m21 21-4.34-4.34" />
+              <circle key="lens" cx="11" cy="11" r="8" />
             </svg>
             <input
+              key="search"
               part="filter"
               type="search"
               aria-label={this.filterLabel}
@@ -524,7 +527,7 @@ export class KiMenu {
               }}
               onInput={this.onFilterInput}
             />
-            <span class="status" role="status" aria-live="polite" aria-atomic="true">
+            <span key="status" class="status" role="status" aria-live="polite" aria-atomic="true">
               {this.filterResultsLabel.replace('{count}', String(this.matchCount))}
             </span>
           </div>
@@ -539,7 +542,7 @@ export class KiMenu {
             this.list = list;
           }}
         >
-          <slot />
+          <slot key="items" />
         </div>
       </div>
     );
