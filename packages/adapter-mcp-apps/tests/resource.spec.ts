@@ -27,6 +27,11 @@ import {
 
 const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
 
+// Brotli at its default quality over the whole surface document, and the
+// in-memory regeneration check, are CPU-bound: the document grows with every
+// component, and a shared CI runner took 5.1 s against Vitest's 5 s default.
+const CPU_BOUND_TIMEOUT_MS = 30_000;
+
 // Art. IV: budget the complete document, including the default token CSS.
 const budgetScript = join(process.cwd(), '../../scripts/lib/bundle-size-budget.mjs');
 const { mcpApps: SIZE_BUDGET } = JSON.parse(
@@ -94,13 +99,17 @@ describe('surfaces are predeclared, self-contained and auditable', () => {
     expect(resource.text.length).toBeGreaterThan(10_000);
   });
 
-  it('S1 keeps the self-contained document inside its declared size budget', () => {
-    const bytes = Buffer.from(createKimenSurfaceResource().text, 'utf8');
+  it(
+    'S1 keeps the self-contained document inside its declared size budget',
+    () => {
+      const bytes = Buffer.from(createKimenSurfaceResource().text, 'utf8');
 
-    expect(bytes.length).toBeLessThanOrEqual(SIZE_BUDGET.raw);
-    expect(gzipSync(bytes, { level: 9 }).length).toBeLessThanOrEqual(SIZE_BUDGET.gzip);
-    expect(brotliCompressSync(bytes).length).toBeLessThanOrEqual(SIZE_BUDGET.brotli);
-  });
+      expect(bytes.length).toBeLessThanOrEqual(SIZE_BUDGET.raw);
+      expect(gzipSync(bytes, { level: 9 }).length).toBeLessThanOrEqual(SIZE_BUDGET.gzip);
+      expect(brotliCompressSync(bytes).length).toBeLessThanOrEqual(SIZE_BUDGET.brotli);
+    },
+    CPU_BOUND_TIMEOUT_MS,
+  );
 
   it('S2 references no external origin in the document or its content policy', () => {
     // Every script and style is inline — nothing is fetched.
@@ -123,17 +132,21 @@ describe('surfaces are predeclared, self-contained and auditable', () => {
     expect(resource._meta.ui.csp.resourceDomains).toHaveLength(0);
   });
 
-  it('S2 regenerates the packaged document byte for byte', () => {
-    // `--check` rebuilds the document in memory and exits non-zero unless it
-    // equals the packaged one: no date, no randomness, no machine path may
-    // reach it, or a host's cached audit would stop matching.
-    const check = spawnSync(process.execPath, ['scripts/generate-surface.mjs', '--check'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
+  it(
+    'S2 regenerates the packaged document byte for byte',
+    () => {
+      // `--check` rebuilds the document in memory and exits non-zero unless it
+      // equals the packaged one: no date, no randomness, no machine path may
+      // reach it, or a host's cached audit would stop matching.
+      const check = spawnSync(process.execPath, ['scripts/generate-surface.mjs', '--check'], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+      });
 
-    expect(check.status, `${check.stdout}${check.stderr}`).toBe(0);
-  });
+      expect(check.status, `${check.stdout}${check.stderr}`).toBe(0);
+    },
+    CPU_BOUND_TIMEOUT_MS,
+  );
 
   it('S21 names the inline script and the inline stylesheet by digest in the content policy', () => {
     const policy = contentPolicy();
