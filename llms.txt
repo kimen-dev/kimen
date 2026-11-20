@@ -47,7 +47,6 @@ methods, CSS custom properties and examples.
 - [ki-avatar-group](https://kimen.dev/llms/ki-avatar-group.md): a compact "who is involved" stack — the members of a shared document, project card or event row — where space deserves only the first few identities and an exact "+N" counter accounts for the rest.
 - [ki-badge](https://kimen.dev/llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.
 - [ki-button](https://kimen.dev/llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.
-- [ki-button-group](https://kimen.dev/llms/ki-button-group.md): place two to five related actions together, present a primary action with a menu of alternatives, or give formatting tools one Tab stop.
 - [ki-card](https://kimen.dev/llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
 - [ki-checkbox](https://kimen.dev/llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
 - [ki-checkbox-group](https://kimen.dev/llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
@@ -75,6 +74,7 @@ methods, CSS custom properties and examples.
 - [ki-segment](https://kimen.dev/llms/ki-segment.md): offer one mutually exclusive choice with text or a named icon.
 - [ki-segmented-control](https://kimen.dev/llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
 - [ki-select](https://kimen.dev/llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
+- [ki-skeleton](https://kimen.dev/llms/ki-skeleton.md): Reserve the expected layout of a card, list, or assistant reply while it loads.
 - [ki-spinner](https://kimen.dev/llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](https://kimen.dev/llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-status](https://kimen.dev/llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.

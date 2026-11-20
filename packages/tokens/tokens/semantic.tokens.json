@@ -2129,6 +2129,40 @@
           "$description": "Default compact pill surface leaves the backdrop unfiltered."
         }
       }
+    },
+    "placeholder": {
+      "radius": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Corner radius shared by loading text lines and rectangular placeholders."
+      },
+      "line-size": {
+        "$value": "{ki.foundation.placeholder.line-size}",
+        "$description": "Block size reserved by one loading text line."
+      },
+      "circle-size": {
+        "$value": "{ki.foundation.placeholder.circle-size}",
+        "$description": "Default diameter of a loading avatar placeholder."
+      },
+      "rect-size": {
+        "$value": "{ki.foundation.placeholder.rect-size}",
+        "$description": "Default block size of a loading media placeholder."
+      },
+      "circle-radius": {
+        "$value": "{ki.foundation.placeholder.circle-radius}",
+        "$description": "Proportional radius that preserves round loading shapes across sizes."
+      },
+      "last-line-scale": {
+        "$value": "{ki.foundation.placeholder.last-line-scale}",
+        "$description": "Fraction of available inline space reserved by the final loading text line."
+      },
+      "shimmer-image": {
+        "$value": "{ki.foundation.placeholder.shimmer-image}",
+        "$description": "A soft currentColor highlight that can sweep across a loading placeholder."
+      },
+      "shimmer-duration": {
+        "$value": "{ki.foundation.placeholder.shimmer-duration}",
+        "$description": "Duration of one loading highlight sweep."
+      }
     }
   }
 }
