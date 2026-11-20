@@ -1,5 +1,5 @@
-import { Component, Element, h, Prop, Watch } from '@stencil/core';
-import { forwardedButtonAria, syncButtonAria } from '../../utils/button-aria';
+import { Component, Element, Event, type EventEmitter, h, Prop, Watch } from '@stencil/core';
+import { syncButtonAria } from '../../utils/button-aria';
 import type { KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
@@ -7,7 +7,13 @@ import {
   startKeyboardPress,
 } from '../../utils/keyboard-press';
 
-export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';
+export type KiIconButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'quaternary'
+  | 'ghost'
+  | 'outline';
 export type KiIconButtonTone = 'neutral' | 'success' | 'danger';
 export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -18,16 +24,18 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * @whenToUse a compact, widely understood action where space precludes a
  * visible label: toolbars, card and dialog corners (close), media transport,
  * data-row actions. Always supply `label`; usually pair with ki-tooltip for
- * sighted discoverability. While the action it started is in progress, set
- * `loading` instead of disabling it.
- * @whenNotToUse whenever a visible label fits (use ki-button), toggling
- * state without supplying `pressed`, navigation (use a link), or form
+ * sighted discoverability. Enable `toggle` for persistent actions such as
+ * Bookmark. While the action it started is in progress, set `loading`.
+ * @whenNotToUse whenever a visible label fits (use ki-button),
+ * navigation (use a link), or form
  * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
  * visible label communicates the consequence).
  *
  * @slot - Exactly one decorative icon. The slot is presentational: its
  * content is hidden from assistive technology and never contributes to the
  * accessible name — that comes from `label` alone.
+ * @slot selected - Optional decorative icon shown when the toggle is selected.
+ * If omitted, the default icon stays visible and an inline SVG takes a current-colour fill.
  * @slot counter - Decorative ki-counter in the block-start inline-end corner.
  * Include its meaning in the button label.
  * @part button - Internal native button.
@@ -37,7 +45,12 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  */
 @Component({
   tag: 'ki-icon-button',
-  styleUrls: ['../ki-button/ki-button.surface.css', 'ki-icon-button.css'],
+  styleUrls: [
+    '../ki-button/ki-button.surface.css',
+    '../ki-button/ki-button.surface.legacy.css',
+    '../ki-button/ki-button.toggle.css',
+    'ki-icon-button.css',
+  ],
   shadow: { delegatesFocus: true },
 })
 export class KiIconButton {
@@ -46,7 +59,8 @@ export class KiIconButton {
   /**
    * Visual hierarchy for the action. Use filled `primary` for the single main
    * action, outlined `secondary` for supporting actions, `quaternary` for
-   * neutral icon actions, and `ghost` for accent icon actions.
+   * neutral icon actions, `ghost` for accent icon actions and `outline` for
+   * an unfilled action with a visible boundary.
    * When NOT to use: do not use variant to signal success or danger; use
    * `tone` for intent.
    *
@@ -57,7 +71,8 @@ export class KiIconButton {
 
   /**
    * Semantic intent for the action, independent of hierarchy. Use `success`
-   * for confirming actions and `danger` for destructive actions.
+   * for confirming actions and `danger` for destructive actions. Toggle
+   * palettes are specific to the variant.
    * When NOT to use: do not use tone for visual hierarchy; use `variant`.
    *
    * @default 'neutral'
@@ -84,6 +99,27 @@ export class KiIconButton {
    * visible label means ki-button).
    */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * Enables persistent press state for an action such as Bookmark. The
+   * native button exposes `aria-pressed` and each activation switches
+   * `selected`. Keep the same accessible label in both states.
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) toggle = false;
+
+  /**
+   * Current press state in toggle mode. Set this to initialize or synchronize
+   * the state programmatically without emitting a change.
+   *
+   * @default false
+   */
+  @Prop({ mutable: true, reflect: true }) selected = false;
+
+  /** Emitted after toggle activation with the new selected state. */
+  @Event({ eventName: 'ki-change', bubbles: true, composed: true, cancelable: false })
+  change!: EventEmitter<{ selected: boolean }>;
 
   /**
    * ID of a ki-dialog in the same document or shadow tree as this button.
@@ -146,7 +182,7 @@ export class KiIconButton {
 
   /**
    * Application-owned toggle state. The native icon button exposes this as
-   * `aria-pressed`. Omit for a momentary action.
+   * `aria-pressed` when `toggle` is off. Omit for a momentary action.
    */
   @Prop() pressed?: boolean;
 
@@ -157,28 +193,10 @@ export class KiIconButton {
    */
   @Prop() expanded?: boolean;
 
-  private button: HTMLButtonElement | undefined;
-  private ariaObserver?: MutationObserver;
-
-  connectedCallback(): void {
-    // Armed on every connection, not once on load: disconnectedCallback
-    // releases the observer, and a button that is moved in the document (a
-    // keyed reorder, a drag between lists) connects again without loading
-    // again.
-    this.ariaObserver?.disconnect();
-    this.ariaObserver = new MutationObserver(() => {
-      syncButtonAria(this.host, this.button);
-    });
-    this.ariaObserver.observe(this.host, {
-      attributeFilter: forwardedButtonAria,
-    });
-    // ARIA changed while the button was out of the document. On the
-    // first connection there is no inner button yet: componentDidLoad syncs.
-    syncButtonAria(this.host, this.button);
-  }
-
   componentWillLoad(): void {
-    this.warnDeprecatedVariant(this.variant);
+    if (process.env.NODE_ENV === 'development') {
+      this.warnDeprecatedVariant(this.variant);
+    }
   }
 
   @Watch('variant')
@@ -192,11 +210,13 @@ export class KiIconButton {
   }
 
   componentDidLoad(): void {
-    syncButtonAria(this.host, this.button);
+    this.forwardButtonAria();
   }
 
-  disconnectedCallback(): void {
-    this.ariaObserver?.disconnect();
+  @Watch('aria-description')
+  @Watch('aria-haspopup')
+  protected forwardButtonAria(): void {
+    syncButtonAria(this.host, this.host.shadowRoot?.querySelector('button'));
   }
 
   // A real browser never dispatches click on a disabled native button, but
@@ -205,10 +225,14 @@ export class KiIconButton {
   // (002 precedent). An aria-disabled (loading) button does dispatch real
   // clicks, for the pointer and for Enter/Space: cancelled the same way (046
   // D3).
-  private readonly handleClick = (event: MouseEvent): void => {
+  readonly #handleClick = (event: MouseEvent): void => {
     if (this.disabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
+    } else if (this.toggle) {
+      const selected = !this.selected;
+      this.selected = selected;
+      this.change.emit({ selected });
     }
   };
 
@@ -216,8 +240,12 @@ export class KiIconButton {
     // Not form-associated (FR-008): no ElementInternals, and the internal
     // native button is type="button" inside the shadow root, so activation
     // can never submit or reset an enclosing form.
-    // Disabled wins over loading for the rendered state (046 D8).
     const loading = this.loading && !this.disabled;
+    const pressed = this.toggle ? this.selected : this.pressed;
+    const expanded = this.expanded;
+    const defaultIcon = <slot key="glyph" />;
+    const { command, commandfor } = this;
+    const onClick = this.#handleClick;
     // The status region is rendered always, empty until the button loads: a
     // polite region created together with its text is not announced (042
     // D6). It sits outside the native button, next to it (046 D7).
@@ -228,26 +256,23 @@ export class KiIconButton {
       <span key="control" class="control">
         <button
           key="button"
-          ref={(el) => {
-            this.button = el;
-          }}
           part="button"
           type="button"
-          {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
-          {...(this.command === undefined ? {} : { command: this.command })}
+          {...(commandfor === undefined ? {} : { commandfor })}
+          {...(command === undefined ? {} : { command })}
           tabIndex={this.disabled ? -1 : 0}
           disabled={this.disabled}
           aria-disabled={loading ? 'true' : undefined}
           aria-label={this.label}
-          aria-pressed={this.pressed == null ? undefined : this.pressed ? 'true' : 'false'}
-          aria-expanded={this.expanded == null ? undefined : this.expanded ? 'true' : 'false'}
-          onClick={this.handleClick}
+          aria-pressed={pressed == null ? undefined : pressed ? 'true' : 'false'}
+          aria-expanded={expanded == null ? undefined : expanded ? 'true' : 'false'}
+          onClick={onClick}
           onKeyDown={startKeyboardPress}
           onKeyUp={releaseKeyboardPress}
           onBlur={endKeyboardPress}
         >
           <span key="icon" part="icon" aria-hidden="true">
-            <slot key="glyph" />
+            {this.toggle && pressed ? <slot name="selected">{defaultIcon}</slot> : defaultIcon}
           </span>
           {loading ? (
             // The circular ki-progress geometry (015), as in ki-button.

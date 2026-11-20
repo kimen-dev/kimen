@@ -16,7 +16,7 @@
           "$description": "Optional image over the fullscreen fill."
         },
         "backdrop-filter": {
-          "$value": "{ki.effect.no-backdrop-filter}",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
           "$type": "other",
           "$description": "Complete backdrop filter for the fullscreen surface."
         },

@@ -14,7 +14,7 @@ the control a `label` (required: the accessible name of the play button).
 ## When not to use
 
 decorative background or ambient loops (plain CSS and
-`<video>` are the tool), audio-only content (a future audio component),
+`<video>` are the tool), audio-only recordings (use ki-audio),
 embeds from streaming platforms that ship their own player chrome (use
 their embed), or static imagery (use an image, not a video). `autoplay`
 on the slotted media is unsupported: the facade's contract is that

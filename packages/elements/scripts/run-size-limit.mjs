@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { readComponentMetadataByTag } from './component-metadata.mjs';
+
 const compareText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 const toDistPath = (tag, projectRoot) =>
   projectRoot ? resolve(projectRoot, 'dist/components', `${tag}.js`) : `dist/components/${tag}.js`;
@@ -38,12 +40,24 @@ export function renderCompositeEntry(group, projectRoot) {
   );
 }
 
+/**
+ * The uniform worst-case ceiling, unless a member declares a reviewed exception in its
+ * component.json (`sizeBudget.worstCase.brotli`, in bytes). A composite takes its largest.
+ */
+function worstCaseLimit(members, metadataByTag) {
+  const exceptions = members
+    .map((tag) => metadataByTag.get(tag)?.sizeBudget?.worstCase?.brotli)
+    .filter((bytes) => Number.isSafeInteger(bytes) && bytes > 25_000);
+  return exceptions.length === 0 ? '25 KB' : `${String(Math.max(...exceptions))} B`;
+}
+
 export function createSizeLimitConfig({
   components,
   groups,
   onlyTag,
   projectRoot = '',
   compositeEntries = {},
+  metadataByTag = new Map(),
 }) {
   if (!Array.isArray(components) || components.length === 0 || !Array.isArray(groups)) {
     throw new TypeError('Size budget derivation requires component inventory and groups');
@@ -123,7 +137,7 @@ export function createSizeLimitConfig({
       {
         name: `${subject.id} worst case (full Stencil runtime)`,
         path,
-        limit: '25 KB',
+        limit: worstCaseLimit(subject.members, metadataByTag),
       },
     ];
   });
@@ -148,6 +162,7 @@ export async function runSizeLimit({ workspaceRoot, onlyTag }) {
       onlyTag,
       projectRoot,
       compositeEntries,
+      metadataByTag: readComponentMetadataByTag(join(projectRoot, 'src/components')),
     });
     await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, 'utf8');
     const result = spawnSync('pnpm', ['exec', 'size-limit', '--config', configPath], {

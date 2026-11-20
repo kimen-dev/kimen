@@ -38,7 +38,7 @@ import { catalogData, validateUiSpec } from '@kimen/catalog';
 
 // What may an agent emit? One entry per published element:
 catalogData.components['ki-button'].props.variant;
-// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary'], ... }
+// { type: 'enum', values: ['ghost', 'outline', 'primary', 'quaternary', 'secondary'], ... }
 
 // Validate an agent-emitted UI spec before anything renders:
 const report = validateUiSpec({
@@ -191,6 +191,10 @@ carries the user's credentials; values with inner white space are rejected
 written exactly as `URL.origin` prints an origin (`https://cdn.example.com`,
 `https://localhost:8443`) — a host name alone, a trailing slash or a path
 matches nothing, so a typo can only narrow what is accepted.
+
+The renderers pass the same scope to `ki-markdown`. Its links and opt-in
+images use the URL policy when rendering. A blocked destination leaves the
+link label or image alternative text visible and inert.
 
 A prop is URL-typed because its constraint says `format: 'url'`. As a
 backstop, a string prop named like a fetchable native attribute (`src`,

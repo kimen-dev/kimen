@@ -11,15 +11,20 @@ import React from 'react';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import type { Components } from '@kimen/elements/components';
 import { KiButton as KiButtonElement, defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { KiButtonCustomEvent } from '@kimen/elements/components';
+import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
-export type KiButtonEvents = NonNullable<unknown>;
+export type KiButtonEvents = {
+  onKiChange: EventName<KiButtonCustomEvent<{ selected: boolean }>>
+};
 
 export const KiButton: StencilReactComponent<KiButtonElement, KiButtonEvents, Components.KiButton> = /*@__PURE__*/ createComponent<KiButtonElement, KiButtonEvents, Components.KiButton>({
     tagName: 'ki-button',
     elementClass: KiButtonElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: {} as KiButtonEvents,
+    events: {
+      onKiChange: 'ki-change'
+    } as KiButtonEvents,
     defineCustomElement: defineKiButton,
 });

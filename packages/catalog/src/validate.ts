@@ -30,7 +30,7 @@ import { isUrlProp, urlViolation } from './url-policy.js';
 
 /** One prop constraint, exactly as narrow as the manifest documents. */
 export interface CatalogPropConstraint {
-  readonly type: 'boolean' | 'enum' | 'number' | 'string';
+  readonly type: 'boolean' | 'enum' | 'number' | 'number-or-string' | 'string';
   /** Closed value set offered to authors (present exactly when `type` is `enum`). */
   readonly values?: readonly string[];
   /** Deprecated enum values accepted when validating existing specs. */
@@ -80,6 +80,8 @@ export interface CatalogEntry {
   readonly props: Readonly<Record<string, CatalogPropConstraint>>;
   readonly slots: Readonly<Record<string, string>>;
   readonly events: Readonly<Record<string, string>>;
+  /** Which declared event dispatches an action when the component has several events. */
+  readonly activationEvent?: string;
 }
 
 /**
@@ -477,6 +479,10 @@ function checkUrl(
   }
 }
 
+export function acceptsNumberOrString(value: unknown): value is number | string {
+  return typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value));
+}
+
 export function acceptsEnumValue(value: unknown, constraint: CatalogPropConstraint): boolean {
   return (
     typeof value === 'string' &&
@@ -511,6 +517,17 @@ function checkProp(
         issues.push({
           code: 'prop-out-of-range',
           message: `${component} prop "${name}" must be ${range}`,
+          path,
+          value: String(value),
+        });
+      }
+      return;
+    }
+    case 'number-or-string': {
+      if (!acceptsNumberOrString(value)) {
+        issues.push({
+          code: 'invalid-prop-type',
+          message: `${component} prop "${name}" expects a number or string value`,
           path,
           value: String(value),
         });
@@ -712,9 +729,14 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   }
   if (node.action !== undefined) {
     const native = isNativePrimitive(node.component);
-    if (native || node.component === 'ki-icon') {
-      // A primitive (037 D7) or icon (069 S11) composes inside an activator
-      // when it accompanies an action.
+    if (
+      native ||
+      node.component === 'ki-icon' ||
+      node.component === 'ki-feature-icon' ||
+      node.component === 'ki-markdown'
+    ) {
+      // Primitives and decorative glyphs never bind their own actions.
+      // Markdown delegates native interaction to its links and copy buttons.
       issues.push({
         code: 'action-not-allowed',
         message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,

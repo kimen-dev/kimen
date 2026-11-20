@@ -37,8 +37,7 @@ import '@kimen/tokens/css/base'; /* optional page contract: page background, tex
 The theme stylesheet declares every `--ki-*` token and the `color-scheme`
 they resolve from, so the browser paints its canvas, scrollbars and native
 controls in the same scheme as the components: a page that loads nothing
-else stays legible for a visitor who prefers dark — measured over all 29
-components. That declaration is a default with zero specificity, so a
+else stays legible for a visitor who prefers dark — measured across the component suite. That declaration is a default with zero specificity, so a
 `color-scheme` your own CSS sets on the page wins and the tokens follow it.
 
 The page contract paints the page itself from the tokens — background from
@@ -110,7 +109,7 @@ stays on the default theme.
   model and the page contract in depth.
 - [Design tokens](/docs/guides/tokens/) — the token layers and how to
   customize without forking.
-- [Components](/docs/components/alert/) — all 29 elements with live
+- [Components](/docs/components/alert/) — the element library with live
   examples and generated API tables.
 - [Storybook workshop](/storybook/) — every component, every state,
   with theme and scheme toolbars.

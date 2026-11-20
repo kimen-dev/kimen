@@ -6,7 +6,7 @@ The default slot holds exactly one decorative icon; the mandatory `label` is the
 </ki-icon-button>
 ```
 
-Visual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:
+Visual hierarchy comes from `variant` (default `secondary`). In the original momentary variants, `tone` (default `neutral`) carries semantic intent such as success or danger.
 
 ```html
 <ki-icon-button variant="primary" label="Play">
@@ -16,6 +16,21 @@ Visual hierarchy comes from `variant` (default `secondary`) and semantic intent 
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12" stroke="currentColor" stroke-width="2" fill="none" /></svg>
 </ki-icon-button>
 ```
+
+Add `toggle` for an action such as Bookmark that stays pressed until the next activation. `variant="outline"` uses an outline at rest and a fill when selected. Give the pressed version a decorative icon in the `selected` slot.
+
+```html
+<ki-icon-button toggle variant="outline" label="Bookmark">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M6 3h12v18l-6-4-6 4z" stroke="currentColor" stroke-width="2" />
+  </svg>
+  <svg slot="selected" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M6 3h12v18l-6-4-6 4z" />
+  </svg>
+</ki-icon-button>
+```
+
+With an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.
 
 Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:
 

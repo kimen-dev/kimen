@@ -1,0 +1,21 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Forms/Number input" />
+
+# Number input
+
+Use `<ki-number-input>` to collect a number such as a seat count, a timeout,
+or a price. Optional steppers adjust the value within `min` and `max`. A
+suffix supplied through `unit` is visible and accessible to screen readers.
+
+```html
+<ki-number-input label="Seats" name="seats" value="3" min="1" max="50" steppers></ki-number-input>
+<ki-number-input label="Timeout" name="timeout" value="30" unit="seconds"></ki-number-input>
+```
+
+Supply `format` to show a localized decimal, percentage, currency, or unit.
+For example, a discount with `value="0.125"` and
+`format='{"style":"percent","maximumFractionDigits":1}'` displays as 12.5%
+in English and submits `0.125` to the form.
+
+[Component workshop and customization](?path=/docs/docs-components-ki-number-input--docs)

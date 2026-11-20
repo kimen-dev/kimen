@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/Stepper" />
+
+# Stepper
+
+Use `ki-stepper` to show progress through a task with named stages. Place
+`ki-step` children in task order. Give the list a task-specific `label` and
+update the states as people progress.
+
+```html
+<ki-stepper label="Setup progress">
+  <ki-step state="done" href="/setup/account">Account</ki-step>
+  <ki-step state="done">Workspace</ki-step>
+  <ki-step state="current">Invite team</ki-step>
+  <ki-step description="Check the details before you finish.">Review</ki-step>
+</ki-stepper>
+```
+
+Use `orientation="vertical"` for a stacked list at every width. Horizontal
+lists become a position disclosure below 22rem of available inline size.
+People can open it to see each step and use any completed step's link.
+
+The default state is `upcoming`. `aria-current="step"` identifies the current
+item, and each state has localized assistive text. See the
+[Stepper workshop](?path=/story/elements-ki-stepper--horizontal) for both
+orientations and compact mode.

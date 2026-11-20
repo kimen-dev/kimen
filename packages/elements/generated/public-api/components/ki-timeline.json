@@ -1,0 +1,161 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the ordered list.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "order": {
+        "default": "'newest-first'",
+        "deprecatedSince": null,
+        "description": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
+        "replacement": null,
+        "required": false,
+        "type": "\"newest-first\" | \"oldest-first\""
+      }
+    },
+    "cssProperties": {
+      "--ki-timeline-dot-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Diameter of the timeline marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between marker and text and between timeline entries.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text color of the event summary and details.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-line": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of the decorative line connecting timeline markers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-timeline-line-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hairline width of the timeline connector.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A chronological list of activity, audit records, or steps from a run.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "announcements": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Polite region for batches of new event summaries.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "item": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native list entry including the connector to the next event.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "list": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Named native ordered list.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the ordered list.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "order": {
+        "default": "'newest-first'",
+        "deprecatedSince": null,
+        "description": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
+        "replacement": null,
+        "required": false,
+        "type": "\"newest-first\" | \"oldest-first\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct ki-timeline-item children.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-timeline.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-timeline.d.ts",
+    "symbols": {
+      "KiTimeline": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiTimeline extends Components.KiTimeline, HTMLElement {\n}\nexport const KiTimeline: {\n    prototype: KiTimeline;\n    new (): KiTimeline;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-timeline.js"
+  }
+}

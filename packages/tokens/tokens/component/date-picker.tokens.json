@@ -1,0 +1,98 @@
+{
+  "ki": {
+    "date-picker": {
+      "bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Fill of the calendar dialog."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Default calendar text."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the calendar fill."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Complete filter behind the calendar."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Calendar surface edge."
+      },
+      "shadow": {
+        "$value": "{ki.elevation.e3}",
+        "$description": "Calendar popup elevation."
+      },
+      "radius": {
+        "$value": "{ki.corner.calendar-surface}",
+        "$description": "Calendar popup corner radius."
+      },
+      "day-size": {
+        "$value": "{ki.control.size.md}",
+        "$description": "Default size of a day target."
+      },
+      "day-radius": {
+        "$value": "{ki.control.radius.item}",
+        "$description": "Radius of a day and the ends of a range."
+      },
+      "selected-bg": {
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Fill of a chosen day or range endpoint."
+      },
+      "selected-fg": {
+        "$value": "{ki.text.primary-on-primary}",
+        "$description": "Text of a chosen day or range endpoint."
+      },
+      "range-bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Fill of the span between selected endpoints."
+      },
+      "range-fg": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Text of dates within the span."
+      },
+      "today-border": {
+        "$value": "{ki.outline.primary-high-em}",
+        "$description": "Outline of the current date."
+      },
+      "weekday-bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Fill behind weekday names."
+      },
+      "weekday-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink of weekday names."
+      },
+      "outside-bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Fill behind dates in neighboring months."
+      },
+      "outside-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink of dates in neighboring months."
+      },
+      "day-hover-bg": {
+        "$value": "{ki.surface.s3}",
+        "$description": "Hover fill of an available unselected day."
+      },
+      "day-hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink on the hover fill."
+      },
+      "heading-family": {
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Family of the calendar month heading."
+      },
+      "field-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Fill of the text field."
+      },
+      "field-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text, icon and caret of the field."
+      }
+    }
+  }
+}

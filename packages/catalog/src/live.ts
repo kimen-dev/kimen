@@ -30,14 +30,16 @@ import {
   ABSOLUTE_MAX_BYTES,
   type ActionEvent,
   attachText,
+  authoredLiveScalar,
   createNodeElement,
   DEFAULT_RENDER_BUDGETS,
   declaredEvents,
   type GuardState,
   guardNode,
-  matchesConstraint,
+  hasToggleActivation,
   payloadBytes,
   pinButtonType,
+  readLiveScalar,
   type RenderBudgets,
   type RenderDiagnostic,
   type RenderResult,
@@ -94,9 +96,9 @@ export interface LiveSurfaceOptions {
   /** The catalog in use, fixed for the surface's life (032 S16); default built-in. */
   readonly catalog?: Catalog;
   /**
-   * The allowed origins of URL props, fixed for the surface's life: absent,
-   * the scheme allowlist alone; present, every URL prop value in the
-   * resulting state must be an absolute http(s) URL of a listed origin
+   * The allowed origins of URL props and Markdown destinations, fixed for
+   * the surface's life. Absent, the scheme allowlist applies. Present, a URL
+   * must be absolute HTTP(S) and belong to a listed origin
    * (see `RenderOptions.allowedUrlOrigins`).
    */
   readonly allowedUrlOrigins?: readonly string[];
@@ -452,12 +454,13 @@ function heldUserState(
       if (constraint === undefined) {
         continue;
       }
-      // Reads the rendered component's own property (its code, never spec data).
-      const live: unknown = Reflect.get(origin.dom, name);
-      if (
-        !matchesConstraint(live, constraint) ||
-        live === (ownEntry(origin.props, name) ?? constraint.default)
-      ) {
+      const live = readLiveScalar(origin.dom, name, constraint);
+      const written = authoredLiveScalar(
+        origin.dom,
+        name,
+        ownEntry(origin.props, name) ?? constraint.default,
+      );
+      if (live === undefined || live === written) {
         continue;
       }
       if (!force) {
@@ -603,13 +606,16 @@ function userStateConflict(
   ) {
     return null;
   }
-  // Reads the rendered component's own property (its code, never spec data).
-  const live: unknown = Reflect.get(origin.dom, name);
-  if (!matchesConstraint(live, constraint)) {
+  const live = readLiveScalar(origin.dom, name, constraint);
+  if (live === undefined) {
     return null;
   }
-  const written = ownEntry(origin.props, name) ?? constraint.default;
-  const wanted = next ?? constraint.default;
+  const written = authoredLiveScalar(
+    origin.dom,
+    name,
+    ownEntry(origin.props, name) ?? constraint.default,
+  );
+  const wanted = authoredLiveScalar(origin.dom, name, next ?? constraint.default);
   if (live === written || live === wanted) {
     return null;
   }
@@ -696,7 +702,7 @@ function applySet(
     node.dom !== undefined &&
     node.action !== undefined &&
     Object.hasOwn(op.props, 'type') &&
-    declaredEvents(entry).length === 0
+    (declaredEvents(entry).length === 0 || hasToggleActivation(entry))
   ) {
     pinButtonType(node.dom, entry, node.props);
   }
@@ -919,7 +925,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     slot: string,
     dialogIdFor: DialogIdFor,
   ): MNode => {
-    const element = createNodeElement(doc, node.component);
+    const element = createNodeElement(doc, node.component, context.allowedUrlOrigins);
     const model: MNode = {
       action: node.action,
       component: node.component,

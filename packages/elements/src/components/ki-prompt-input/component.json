@@ -1,0 +1,22 @@
+{
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
+  "catalog": true,
+  "formBinding": "text",
+  "visual": {
+    "material3Dark": true
+  },
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 30320,
+      "gzip": 6272
+    },
+    "tokenStylesheets": {
+      "onmars": 80
+    }
+  }
+}

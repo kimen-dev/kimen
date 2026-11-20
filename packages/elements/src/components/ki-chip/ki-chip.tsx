@@ -121,32 +121,32 @@ export class KiChip {
       return;
     }
     this.host.remove();
+    const focused = root.activeElement;
     if (
-      group?.isConnected &&
-      (root.activeElement === active ||
-        root.activeElement === null ||
-        root.activeElement === this.host.ownerDocument.body)
+      !group?.isConnected ||
+      (focused && focused !== active && focused !== this.host.ownerDocument.body)
     ) {
-      const focusChip = (chip: HTMLElement): boolean => {
-        if (chip.parentElement !== group) {
-          return false;
-        }
-        chipControl(chip)?.focus();
-        return root.activeElement === chip;
-      };
-      if (siblings.slice(index + 1).some(focusChip)) {
+      return;
+    }
+    const focusChip = (chip: HTMLElement): boolean => {
+      if (chip.parentElement !== group) {
+        return false;
+      }
+      chipControl(chip)?.focus();
+      return root.activeElement === chip;
+    };
+    if (siblings.slice(index + 1).some(focusChip)) {
+      return;
+    }
+    const field = root.getElementById(group.getAttribute('focus-target') ?? '');
+    if (field) {
+      focusThroughShadow(field);
+      if (root.activeElement === field) {
         return;
       }
-      const field = root.getElementById(group.getAttribute('focus-target') ?? '');
-      if (field) {
-        focusThroughShadow(field);
-        if (root.activeElement === field) {
-          return;
-        }
-      }
-      if (!siblings.slice(0, index).reverse().some(focusChip)) {
-        group.shadowRoot?.querySelector<HTMLElement>('[part="group"]')?.focus();
-      }
+    }
+    if (!siblings.slice(0, index).reverse().some(focusChip)) {
+      group.shadowRoot?.querySelector<HTMLElement>('[part="group"]')?.focus();
     }
   };
 
@@ -199,7 +199,7 @@ export class KiChip {
     const shortcuts =
       this.reorderable && !this.disabled ? 'Alt+ArrowLeft Alt+ArrowRight' : undefined;
     const lead = checked ? (
-      <span part="selection-icon" data-testid="selection-icon" aria-hidden="true">
+      <span part="selection-icon" aria-hidden="true">
         {this.glyph('check')}
       </span>
     ) : (
@@ -208,15 +208,15 @@ export class KiChip {
       </span>
     );
     const label = (
-      <span id="label" part="label">
-        <slot />
+      <span key="label" id="label" part="label">
+        <slot key="text" />
       </span>
     );
 
     return (
-      <Host role={this.groupType === 'input' ? 'listitem' : undefined}>
+      <Host key="host" role={this.groupType === 'input' ? 'listitem' : undefined}>
         {this.reorderable && !this.disabled && (
-          <span part="drag-handle" data-testid="drag-handle" draggable={true} aria-hidden="true">
+          <span key="drag-handle" part="drag-handle" draggable={true} aria-hidden="true">
             {this.glyph('grip')}
           </span>
         )}

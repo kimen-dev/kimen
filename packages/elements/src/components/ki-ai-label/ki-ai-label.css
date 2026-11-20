@@ -1,0 +1,136 @@
+:host {
+  --_ki-ai-label-height: var(--ki-ai-label-sm-height);
+  --_ki-ai-label-inset: var(--ki-ai-label-sm-padding-inline);
+  --_ki-ai-label-icon: var(--ki-ai-label-sm-icon-size);
+
+  display: inline-flex;
+  vertical-align: middle;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([size="md"]) {
+  --_ki-ai-label-height: var(--ki-ai-label-md-height);
+  --_ki-ai-label-inset: var(--ki-ai-label-md-padding-inline);
+  --_ki-ai-label-icon: var(--ki-ai-label-md-icon-size);
+}
+
+[part="label"] {
+  display: inline-flex;
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--ki-ai-label-gap);
+  min-block-size: var(--_ki-ai-label-height);
+  padding-inline: var(--_ki-ai-label-inset);
+  border-radius: var(--ki-ai-label-radius);
+  background-color: var(--ki-ai-label-bg);
+  background-image: var(--ki-ai-label-bg-image);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: var(--ki-ai-label-backdrop-filter);
+  backdrop-filter: var(--ki-ai-label-backdrop-filter);
+  color: var(--ki-ai-label-fg);
+  font-size: var(--ki-typography-size-caption-2);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  line-height: var(--ki-typography-line-height-caption-2);
+  white-space: nowrap;
+}
+
+[part="icon"] {
+  flex: none;
+  font-size: var(--_ki-ai-label-icon);
+}
+
+/* The hit area follows density while the tinted mark keeps its metric scale. */
+[part="trigger"],
+[part="revert"] {
+  min-inline-size: var(--ki-density-target-min);
+  min-block-size: var(--ki-density-target-min);
+  border: 0;
+  border-radius: var(--ki-ai-label-radius);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+[part="trigger"] {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+}
+
+[part="revert"] {
+  justify-self: start;
+  padding-block: var(--ki-ai-label-gap);
+  padding-inline: var(--ki-ai-label-popover-gap);
+  font-size: var(--ki-typography-size-body-2);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  text-align: start;
+  text-decoration: underline;
+}
+
+[part="popover"] {
+  display: none;
+  position: fixed;
+  box-sizing: border-box;
+  inset: auto;
+  inline-size: var(--ki-ai-label-popover-width);
+  max-inline-size: calc(100dvi - 2 * var(--ki-ai-label-popover-padding));
+  max-block-size: calc(100dvb - 2 * var(--ki-ai-label-popover-padding));
+  margin: 0;
+  padding: var(--ki-ai-label-popover-padding);
+  overflow: auto;
+  overflow-wrap: anywhere;
+  row-gap: var(--ki-ai-label-popover-gap);
+  border: var(--ki-ai-label-border-width) solid var(--ki-ai-label-popover-border);
+  border-radius: var(--ki-ai-label-popover-radius);
+  background-color: var(--ki-ai-label-popover-bg);
+  background-image: var(--ki-ai-label-popover-bg-image);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: var(--ki-ai-label-popover-backdrop-filter);
+  backdrop-filter: var(--ki-ai-label-popover-backdrop-filter);
+  box-shadow: var(--ki-ai-label-popover-shadow);
+  color: var(--ki-ai-label-popover-fg);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-para);
+}
+
+[part="popover"]:popover-open {
+  display: grid;
+}
+
+[part="trigger"]:focus-visible,
+[part="revert"]:focus-visible,
+[part="popover"]:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+[part="explanation"],
+[part="metadata"] {
+  margin: 0;
+}
+
+[part="metadata"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ki-ai-label-gap);
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+}
+
+@media (forced-colors: active) {
+  [part="label"],
+  [part="popover"] {
+    border: var(--ki-ai-label-border-width) solid CanvasText;
+  }
+
+  [part="trigger"]:focus-visible,
+  [part="revert"]:focus-visible,
+  [part="popover"]:focus-visible {
+    outline-color: Highlight;
+  }
+}

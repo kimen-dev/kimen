@@ -1,4 +1,5 @@
 // @spec:035-live-surface
+// @spec:094-toggle-icon-button
 // The live surface as a security boundary and as a minimal-change renderer:
 // batches addressed by stable ids are validated against the resulting state
 // before any DOM write, change only what they name, never overwrite the
@@ -200,6 +201,66 @@ describe('035 — a batch changes only what it names', () => {
     expect(live.snapshot().nodes[0]?.slots?.['footer']?.[0]).toMatchObject({
       props: { disabled: false },
     });
+    expect(canonical(surface)).toBe(freshHtml(live));
+  });
+
+  it('S1 switches a bound button to toggle activation and preserves the user selection', () => {
+    const { live, events } = mount();
+    const button = one('ki-button');
+    button.click();
+    expect(events.map(({ data }) => data)).toEqual([{ variant: 'primary' }]);
+
+    const set = (props: { toggle?: boolean; selected?: boolean; type?: string | null }) =>
+      live.apply({ ops: [{ id: 'pay', op: 'set', props }] });
+    expect(set({ toggle: true }).ok).toBe(true);
+    button.click();
+    expect(events).toHaveLength(1);
+    Reflect.set(button, 'selected', true);
+    button.dispatchEvent(new CustomEvent('ki-change', { bubbles: true }));
+    expect(events.map(({ data }) => data)).toEqual([
+      { variant: 'primary' },
+      { variant: 'primary', toggle: true, selected: true },
+    ]);
+
+    expect(set({ selected: false })).toMatchObject({
+      ok: false,
+      diagnostics: [{ rule: 'user-state-conflict' }],
+    });
+    expect(set({ type: 'submit' }).ok).toBe(true);
+    expect(set({ toggle: false, type: null }).ok).toBe(true);
+    expect(button.getAttribute('type')).toBe('button');
+    button.click();
+    expect(events.at(-1)?.data).toEqual({ variant: 'primary', toggle: false });
+  });
+
+  it('updates and unsets a Kimen boolean that defaults to true', () => {
+    const { live } = mount();
+    const inserted = live.apply({
+      ops: [
+        {
+          node: { component: 'ki-popover', id: 'filters', props: { arrow: false } },
+          op: 'insert',
+          parent: 'board',
+        },
+      ],
+    });
+    expect(inserted.ok).toBe(true);
+    const popover = one('ki-popover');
+    expect(popover.outerHTML).toBe('<ki-popover arrow="false"></ki-popover>');
+
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: true } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover arrow=""></ki-popover>');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: false } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover arrow="false"></ki-popover>');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: null } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover></ki-popover>');
+    expect(one('ki-popover')).toBe(popover);
     expect(canonical(surface)).toBe(freshHtml(live));
   });
 

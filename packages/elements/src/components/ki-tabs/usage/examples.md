@@ -19,3 +19,21 @@ A disabled tab stays visible but cannot be selected by any modality; user select
   <ki-tab-panel value="invoices">Invoice history</ki-tab-panel>
 </ki-tabs>
 ```
+
+Use a primary group for tabs at screen level. In content, use
+`variant="secondary"` for a full-width selection indicator. A decorative
+SVG in a tab's `icon` slot stacks above the label in primary tabs and
+appears before the label in secondary tabs. Set `icon-layout="inline"` or
+`icon-layout="stacked"` to override the layout for the group.
+
+```html
+<ki-tabs label="Mail sections" variant="secondary">
+  <ki-tab value="inbox">
+    <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M3 5h18v14H3zM3 5l9 7 9-7" />
+    </svg>
+    Inbox
+  </ki-tab>
+  <ki-tab-panel value="inbox">Incoming messages</ki-tab-panel>
+</ki-tabs>
+```

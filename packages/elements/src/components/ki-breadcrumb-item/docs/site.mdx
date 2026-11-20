@@ -1,0 +1,25 @@
+---
+title: Breadcrumb item
+description: Declare one level of a breadcrumb with a plain-text label and an optional destination.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Place `ki-breadcrumb-item` directly inside [Breadcrumb](../breadcrumb/).
+Give each level a plain-text label. An ancestor with an `href` becomes a
+link, and an ancestor without one provides context as text. In the
+overflow menu, a level without a destination is announced as unavailable.
+
+<Demo code={`<ki-breadcrumb label="Settings path">
+  <ki-breadcrumb-item href="#workspace">Workspace</ki-breadcrumb-item>
+  <ki-breadcrumb-item>Administration</ki-breadcrumb-item>
+  <ki-breadcrumb-item current>Settings</ki-breadcrumb-item>
+</ki-breadcrumb>`} />
+
+The order supplies the hierarchy. Place the current page last. You can
+mark it with `current` to make the authored trail easier to read.
+
+## API reference
+
+<CemApi tag="ki-breadcrumb-item" />

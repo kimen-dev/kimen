@@ -1,0 +1,855 @@
+{
+  "component": {
+    "attributes": {
+      "apply-label": {
+        "default": "'Apply'",
+        "deprecatedSince": null,
+        "description": "Localized label of the confirmation button that saves a complete draft.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "cancel-label": {
+        "default": "'Cancel'",
+        "deprecatedSince": null,
+        "description": "Localized label of the confirmation button that discards a draft.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "change-label": {
+        "default": "'Change date, {date}'",
+        "deprecatedSince": null,
+        "description": "Localized name of the trigger when a date is saved. Use {date} for the current selection.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "choose-label": {
+        "default": "'Choose date'",
+        "deprecatedSince": null,
+        "description": "Localized name of the calendar dialog and of the trigger when no date is saved.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "confirm": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Require Apply before saving picks made in the calendar.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Disables the text entry and calendar button and excludes the field from form data.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "error-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Overrides the message shown when a date is missing, invalid or outside the bounds.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "first-day-of-week": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A format hint or explanation read with the field. It is replaced by a visible error.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "invalid-date-label": {
+        "default": "'Enter a valid date within the allowed range.'",
+        "deprecatedSince": null,
+        "description": "Localized fallback message for an impossible, incomplete or out-of-bounds date.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible text and accessible name of the date field. Provide a label for every field.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "locale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "max": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Latest selectable date, inclusive. Use YYYY-MM-DD.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Earliest selectable date, inclusive. Use YYYY-MM-DD.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "mode": {
+        "default": "'single'",
+        "deprecatedSince": null,
+        "description": "Select one date or a range with a start and an end date.",
+        "replacement": null,
+        "required": false,
+        "type": "\"range\" | \"single\""
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key. A range is submitted as a single value.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "next-month-label": {
+        "default": "'Next month'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the next-month button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "previous-month-label": {
+        "default": "'Previous month'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the previous-month button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires a complete date or pair of dates for native form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-control-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the boundary of a compact control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-radius-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a track containing adjacent controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small control track height, 32 CSS px at the default root size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-size-touch": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Touch target size for controls on a coarse pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter behind the calendar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the calendar dialog.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over the calendar fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Calendar surface edge.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-day-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hover fill of an available unselected day.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-day-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink on the hover fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-day-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Radius of a day and the ends of a range.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-day-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default size of a day target.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default calendar text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-field-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the text field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-field-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text, icon and caret of the field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-heading-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Family of the calendar month heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-outside-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill behind dates in neighboring months.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-outside-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of dates in neighboring months.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Calendar popup corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-range-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the span between selected endpoints.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-range-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text of dates within the span.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a chosen day or range endpoint.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text of a chosen day or range endpoint.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Calendar popup elevation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-today-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline of the current date.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-weekday-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill behind weekday names.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-date-picker-weekday-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of weekday names.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-glyph-size-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium glyph for body content (20px at the default root size).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-3xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 3xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-lg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The lg spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The md spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-outline-control": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-outline-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for outline danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-transparent": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Transparent surface backing for a background image that carries its own opacity.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A locale-aware date field with an anchored keyboard-operable calendar.",
+    "events": {
+      "ki-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<DatePickerChangeDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "day": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Date button in the calendar grid.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Live constraint message replacing help when the field is invalid.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "field": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Enclosure of the text field and calendar button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "grid": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Calendar grid with localized weekdays and date buttons.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Help text associated with the input.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native text entry for a localized date or range.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label and accessible name of the text field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "month": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Live month and year heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "popup": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Anchored non-modal calendar dialog.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "trigger": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Button that opens and closes the calendar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "applyLabel": {
+        "default": "'Apply'",
+        "deprecatedSince": null,
+        "description": "Localized label of the confirmation button that saves a complete draft.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "cancelLabel": {
+        "default": "'Cancel'",
+        "deprecatedSince": null,
+        "description": "Localized label of the confirmation button that discards a draft.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "changeLabel": {
+        "default": "'Change date, {date}'",
+        "deprecatedSince": null,
+        "description": "Localized name of the trigger when a date is saved. Use {date} for the current selection.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "chooseLabel": {
+        "default": "'Choose date'",
+        "deprecatedSince": null,
+        "description": "Localized name of the calendar dialog and of the trigger when no date is saved.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "confirm": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Require Apply before saving picks made in the calendar.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Disables the text entry and calendar button and excludes the field from form data.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "errorText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Overrides the message shown when a date is missing, invalid or outside the bounds.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "firstDayOfWeek": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A format hint or explanation read with the field. It is replaced by a visible error.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "invalidDateLabel": {
+        "default": "'Enter a valid date within the allowed range.'",
+        "deprecatedSince": null,
+        "description": "Localized fallback message for an impossible, incomplete or out-of-bounds date.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible text and accessible name of the date field. Provide a label for every field.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "locale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "max": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Latest selectable date, inclusive. Use YYYY-MM-DD.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Earliest selectable date, inclusive. Use YYYY-MM-DD.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "mode": {
+        "default": "'single'",
+        "deprecatedSince": null,
+        "description": "Select one date or a range with a start and an end date.",
+        "replacement": null,
+        "required": false,
+        "type": "\"range\" | \"single\""
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key. A range is submitted as a single value.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "nextMonthLabel": {
+        "default": "'Next month'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the next-month button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "previousMonthLabel": {
+        "default": "'Previous month'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the previous-month button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires a complete date or pair of dates for native form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-date-picker.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-date-picker.d.ts",
+    "symbols": {
+      "DatePickerChangeDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface DatePickerChangeDetail {\n    value: string;\n}"
+      },
+      "KiDatePicker": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiDatePicker extends Components.KiDatePicker, HTMLElement {\n}\nexport const KiDatePicker: {\n    prototype: KiDatePicker;\n    new (): KiDatePicker;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-date-picker.js"
+  }
+}

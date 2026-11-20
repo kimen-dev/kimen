@@ -1,0 +1,13 @@
+{
+  "ki": {
+    "combobox": {
+      "listbox": {
+        "shadow": {
+          "$value": "{ki.elevation.e2}",
+          "$type": "shadow",
+          "$description": "Material 3 menu elevation."
+        }
+      }
+    }
+  }
+}

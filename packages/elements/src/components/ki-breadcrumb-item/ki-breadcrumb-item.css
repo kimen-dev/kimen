@@ -1,0 +1,5 @@
+/* The owning breadcrumb renders the level in its ordered list or menu. */
+:host {
+  display: none;
+  font-family: var(--ki-typography-family-body);
+}

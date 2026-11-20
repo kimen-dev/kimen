@@ -1,0 +1,56 @@
+---
+title: Breadcrumb
+description: Show the page's position in a hierarchy and make its ancestor pages reachable.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-breadcrumb` to show how the current page fits into a workspace, app,
+or documentation hierarchy. Add one direct `ki-breadcrumb-item` for each
+level, from the root to the page the reader is on.
+
+<Demo code={`<ki-breadcrumb label="Project path">
+  <ki-breadcrumb-item href="#workspace">Workspace</ki-breadcrumb-item>
+  <ki-breadcrumb-item href="#projects">Projects</ki-breadcrumb-item>
+  <ki-breadcrumb-item current>Settings</ki-breadcrumb-item>
+</ki-breadcrumb>`} />
+
+Each item's text supplies its label. Ancestors with an `href` are links. The
+last item appears as text and is announced as the current page, with or
+without the explicit `current` marker.
+
+## Long paths
+
+Set `max-items="4"` to collapse a long path. When the path exceeds the
+threshold, the first and last two levels stay visible and the middle
+levels appear in the ellipsis menu. A positive limit below four uses four.
+
+<Demo code={`<ki-breadcrumb label="Release path" max-items="4">
+  <ki-breadcrumb-item href="#workspace">Workspace</ki-breadcrumb-item>
+  <ki-breadcrumb-item href="#projects">Projects</ki-breadcrumb-item>
+  <ki-breadcrumb-item href="#kimen">Kimen</ki-breadcrumb-item>
+  <ki-breadcrumb-item href="#packages">Packages</ki-breadcrumb-item>
+  <ki-breadcrumb-item href="#releases">Releases</ki-breadcrumb-item>
+  <ki-breadcrumb-item current>v2.4.0</ki-breadcrumb-item>
+</ki-breadcrumb>`} />
+
+Tab reaches the visible links and the ellipsis button. Enter, Space and
+Down open the menu at its first level. Up opens it at its last level.
+Move through the menu with the arrow keys, Home and End, or a level's
+first character. Escape closes the menu and returns focus to the button.
+
+## Localization and density
+
+Set `label` to name the navigation landmark. Use `more-label` to localize
+the overflow button and put `{n}` where the hidden level count belongs.
+Right-to-left reading order follows the nearest `dir` setting. Use
+`data-ki-density="touch"` on the breadcrumb or its region for larger targets.
+
+## API reference
+
+<CemApi tag="ki-breadcrumb" />
+
+## Workshop
+
+[Open ki-breadcrumb in Storybook](/storybook/?path=/docs/docs-components-ki-breadcrumb--docs)

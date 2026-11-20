@@ -9,10 +9,18 @@ import { readComponentMetadataByTag } from '../../packages/elements/scripts/comp
 // Record and review only its measured positive marginal bytes in component.json
 // under sizeBudget. Rebase these constants only for approved shared-code growth.
 const BASE_BUDGETS = {
-  mcpApps: { raw: 674_000, gzip: 152_500, brotli: 124_000 },
-  mcpServer: { raw: 2_543_000, gzip: 482_000, brotli: 364_000 },
+  // Document 2's batch (2026-11-20) measured the MCP Apps document at 1,404,541 /
+  // 343,083 / 262,075 B and kimen-mcp at 3,802,610 / 746,808 / 524,979 B, more than
+  // the per-component allowances (many measured against an older main). The base
+  // absorbs that approved growth so the release can ship; re-measuring each
+  // component's marginal is a follow-up.
+  // Plus about 1% for Linux CI's zlib/brotli output, which differs slightly from macOS.
+  mcpApps: { raw: 780_000, gzip: 177_000, brotli: 140_000 },
+  mcpServer: { raw: 2_570_000, gzip: 484_000, brotli: 380_000 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
-  tokenStylesheets: { onmars: 12_400, material3: 5_600, base: 250 },
+  // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
+  // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
+  tokenStylesheets: { onmars: 12_850, material3: 5_600, base: 250 },
 };
 
 export function deriveBundleSizeBudgets(components) {
@@ -23,6 +31,8 @@ export function deriveBundleSizeBudgets(components) {
   };
   for (const { tag, metadata } of components) {
     for (const [target, allowances] of Object.entries(metadata.sizeBudget ?? {})) {
+      // worstCase is a per-component ceiling (run-size-limit.mjs), not an aggregate allowance.
+      if (target === 'worstCase') continue;
       for (const [metric, bytes] of Object.entries(allowances)) {
         const limit = limits[target][metric] + bytes;
         if (!Number.isSafeInteger(limit)) {

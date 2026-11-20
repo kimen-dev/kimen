@@ -1,0 +1,653 @@
+{
+  "component": {
+    "attributes": {
+      "centered": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Shows a midpoint tick and fills from that point to a single thumb.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "currency": {
+        "default": "'EUR'",
+        "deprecatedSince": null,
+        "description": "ISO 4217 code used with currency format.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the slider unavailable for pointer, keyboard and form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "format": {
+        "default": "'number'",
+        "deprecatedSince": null,
+        "description": "Display format for the readout and accessible values.",
+        "replacement": null,
+        "required": false,
+        "type": "\"currency\" | \"number\" | \"percent\""
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional supporting text, read as the description of each thumb.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": "'Slider'",
+        "deprecatedSince": null,
+        "description": "Visible base name. Use a task-specific, localized label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "marks": {
+        "default": "0",
+        "deprecatedSince": null,
+        "description": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "max": {
+        "default": "100",
+        "deprecatedSince": null,
+        "description": "Inclusive upper bound. A maximum below min collapses the scale.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "maximum-label": {
+        "default": "'maximum'",
+        "deprecatedSince": null,
+        "description": "Localized suffix for the upper thumb's accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "min": {
+        "default": "0",
+        "deprecatedSince": null,
+        "description": "Inclusive lower bound and step origin.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "minimum-label": {
+        "default": "'minimum'",
+        "deprecatedSince": null,
+        "description": "Localized suffix for the lower thumb's accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native form key. Omit when the value should remain local to the control.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "orientation": {
+        "default": "'horizontal'",
+        "deprecatedSince": null,
+        "description": "Axis of the scale. A vertical scale increases towards the top.",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      "range": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Enables two non-crossing thumbs in minimum then maximum tab order.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "step": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Positive increment. Values snap from min and max is always reachable.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized.",
+        "replacement": null,
+        "required": false,
+        "type": "number | string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-coarse-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum target size on a coarse pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-fill-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional effect behind the active rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-fill-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the active section of the rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-fill-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted on the active rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the slider control and its labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-label-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background beneath the field label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the field label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-mark-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of each interval tick.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Round rail, grip and midpoint tick corners.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-text-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background beneath the value readout and help.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-text-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the value readout and help.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-thumb-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional effect behind the grip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-thumb-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Grip surface behind the outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-thumb-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted on the grip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-thumb-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline colour of the visible grip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-thumb-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline thickness of the visible grip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-thumb-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional grip elevation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-thumb-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Diameter of the visible grip within the pointer target.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-track-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional effect behind the inactive rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-track-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inactive rail colour against the surrounding surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-track-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted on the inactive rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-track-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inactive rail thickness.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-slider-vertical-length": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Length of the vertical rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Adjusts a value or an interval on a bounded scale.",
+    "events": {
+      "change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Bubbles once when a pointer operation commits a different\nselection or a keyboard action changes it. Read the current host value.\nFor updates during a drag, listen for the standard bubbling `input` event.\nProgrammatic updates and form resets are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "Event"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "center-tick": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Midpoint mark on a centered scale.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "field": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Layout containing the visible label, value, controls and help.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "fill": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Active portion of the rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text associated with each thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible text used to name the control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "mark": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative scale mark at an interval boundary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "thumb": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Focusable pointer target for one end of the selection.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inactive rail between the two ends of the scale.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Formatted value or interval shown beside the label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "centered": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Shows a midpoint tick and fills from that point to a single thumb.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "currency": {
+        "default": "'EUR'",
+        "deprecatedSince": null,
+        "description": "ISO 4217 code used with currency format.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the slider unavailable for pointer, keyboard and form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "format": {
+        "default": "'number'",
+        "deprecatedSince": null,
+        "description": "Display format for the readout and accessible values.",
+        "replacement": null,
+        "required": false,
+        "type": "\"currency\" | \"number\" | \"percent\""
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional supporting text, read as the description of each thumb.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": "'Slider'",
+        "deprecatedSince": null,
+        "description": "Visible base name. Use a task-specific, localized label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "marks": {
+        "default": "0",
+        "deprecatedSince": null,
+        "description": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "max": {
+        "default": "100",
+        "deprecatedSince": null,
+        "description": "Inclusive upper bound. A maximum below min collapses the scale.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "maximumLabel": {
+        "default": "'maximum'",
+        "deprecatedSince": null,
+        "description": "Localized suffix for the upper thumb's accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "min": {
+        "default": "0",
+        "deprecatedSince": null,
+        "description": "Inclusive lower bound and step origin.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "minimumLabel": {
+        "default": "'minimum'",
+        "deprecatedSince": null,
+        "description": "Localized suffix for the lower thumb's accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native form key. Omit when the value should remain local to the control.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "orientation": {
+        "default": "'horizontal'",
+        "deprecatedSince": null,
+        "description": "Axis of the scale. A vertical scale increases towards the top.",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      "range": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Enables two non-crossing thumbs in minimum then maximum tab order.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "step": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Positive increment. Values snap from min and max is always reachable.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized.",
+        "replacement": null,
+        "required": false,
+        "type": "number | string | undefined"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-slider.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-slider.d.ts",
+    "symbols": {
+      "KiSlider": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSlider extends Components.KiSlider, HTMLElement {\n}\nexport const KiSlider: {\n    prototype: KiSlider;\n    new (): KiSlider;\n};"
+      },
+      "KiSliderFormat": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiSliderFormat = 'number' | 'percent' | 'currency';"
+      },
+      "KiSliderOrientation": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiSliderOrientation = 'horizontal' | 'vertical';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-slider.js"
+  }
+}

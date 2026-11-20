@@ -1,0 +1,11 @@
+{
+  "ki": {
+    "toolbar": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.round}",
+        "$description": "Radius of the floating pill on the Material 3 shape scale."
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as PaginationStories from '../ki-pagination.stories';
+
+<Meta of={PaginationStories} />
+
+# Pagination playground
+
+Resize the canvas to see numbered pagination switch to the compact stepper
+below 480 CSS pixels.
+
+<Canvas of={PaginationStories.Playground} />
+<Controls of={PaginationStories.Playground} />
+
+<Canvas of={PaginationStories.Compact} />
+<Canvas of={PaginationStories.ServerLinks} />
+<Canvas of={PaginationStories.LoadMore} />

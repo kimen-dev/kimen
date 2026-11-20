@@ -1,0 +1,60 @@
+{
+  "ki": {
+    "drawer": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s1}",
+        "$description": "Raised surface color of the drawer."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the drawer surface."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Complete backdrop filter applied behind the drawer surface."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Foreground color on the drawer surface."
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{ki.elevation.e4}",
+        "$description": "Resting elevation of the drawer."
+      },
+      "size": {
+        "$value": "{ki.layout.sheet-size}",
+        "$description": "Default inline size of a side sheet and block-size cap of a bottom sheet."
+      },
+      "radius": {
+        "$value": "{ki.corner.sheet}",
+        "$description": "Radius of the corners on the inner edge of the drawer."
+      },
+      "heading": {
+        "font-family": {
+          "$value": "{ki.typography.family.heading}",
+          "$description": "Typeface of the drawer title."
+        }
+      },
+      "close-size": {
+        "$value": "{ki.layout.spacing.10xl}",
+        "$description": "Preferred size of the Close button before the density minimum."
+      },
+      "handle-size": {
+        "$value": "{ki.layout.spacing.10xl}",
+        "$description": "Inline extent of the bottom-sheet handle."
+      },
+      "handle-thickness": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Thickness of the bottom-sheet handle."
+      },
+      "handle-color": {
+        "$type": "color",
+        "$value": "{ki.outline.control}",
+        "$description": "Color of the bottom-sheet handle."
+      }
+    }
+  }
+}

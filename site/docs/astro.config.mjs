@@ -82,16 +82,11 @@ export default defineConfig({
         },
         {
           label: 'Guides',
-          items: [
-            'guides/theming',
-            'guides/tokens',
-            'guides/accessibility',
-            'guides/frameworks',
-            {
-              label: 'Generative UI',
-              items: ['guides/ui-spec', 'guides/emitting-specs', 'guides/a2ui', 'guides/mcp-apps'],
-            },
-          ],
+          items: ['guides/theming', 'guides/tokens', 'guides/accessibility', 'guides/frameworks'],
+        },
+        {
+          label: 'Generative UI',
+          items: ['guides/ui-spec', 'guides/emitting-specs', 'guides/a2ui', 'guides/mcp-apps'],
         },
         {
           label: 'Components',
@@ -115,17 +110,27 @@ export default defineConfig({
         // the analytics tag above does.
         Footer: './src/components/Footer.astro',
         Sidebar: './src/components/Sidebar.astro',
+        MobileMenuFooter: './src/components/MobileMenuFooter.astro',
         PageTitle: './src/components/PageTitle.astro',
-        // Mirrors Starlight's resolved theme into Kimen's scheme attribute so
-        // every live ki-* demo follows the docs theme toggle.
+        // Resolve the shared scheme and theme before Starlight and the demos paint.
         ThemeProvider: './src/components/ThemeProvider.astro',
       },
       customCss: [
         // Kimen token layer: live demos resolve every visual value from it.
         '@kimen/tokens/css',
+        '@kimen/tokens/css/material3',
         './src/styles/fonts.css',
         './src/styles/site.css',
+        './src/styles/home.css',
       ],
+      expressiveCode: {
+        useDarkModeMediaQuery: false,
+        styleOverrides: {
+          codeFontFamily: 'var(--ki-typography-family-mono)',
+          codeFontSize: 'var(--ki-site-docs-code-size)',
+          codeLineHeight: 'var(--ki-site-docs-code-line)',
+        },
+      },
       head: analyticsHead,
     }),
   ],

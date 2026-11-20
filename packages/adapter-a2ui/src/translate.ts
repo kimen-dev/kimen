@@ -99,6 +99,7 @@ const MAX_TRANSLATION_DEPTH = 256;
 const MAX_TRANSLATED_NODES = 4096;
 
 type Piece = UiSpecNode | string;
+type TextPresentation = 'markdown' | 'literal';
 
 interface WalkContext {
   readonly surfaceId: string;
@@ -164,6 +165,7 @@ class Instance {
     readonly scope: readonly string[],
     readonly depth: number,
     readonly context: WalkContext,
+    readonly textPresentation: TextPresentation = 'markdown',
   ) {}
 
   private get values(): ValueContext {
@@ -250,7 +252,7 @@ class Instance {
   }
 
   /** Resolves a single child reference (`ComponentId`). */
-  child(property: string): Piece[] {
+  child(property: string, textPresentation = this.textPresentation): Piece[] {
     const raw = this.body[property];
     if (raw === undefined) {
       return [];
@@ -258,7 +260,7 @@ class Instance {
     if (typeof raw !== 'string') {
       throw this.malformed(property, `${this.type} property "${property}" must be a component id`);
     }
-    return this.resolve(raw, this.scope);
+    return this.resolve(raw, this.scope, textPresentation);
   }
 
   /** Resolves a `ChildList` into the pieces it contributes, flattened. */
@@ -310,8 +312,12 @@ class Instance {
     throw this.malformed(property, `${this.type} children must be a list of ids or a template`);
   }
 
-  private resolve(childId: string, scope: readonly string[]): Piece[] {
-    const pieces = resolveComponent(childId, scope, this.depth + 1, this.context);
+  private resolve(
+    childId: string,
+    scope: readonly string[],
+    textPresentation = this.textPresentation,
+  ): Piece[] {
+    const pieces = resolveComponent(childId, scope, this.depth + 1, this.context, textPresentation);
     if (pieces === null) {
       throw new Abort(
         this.context.abort ?? {
@@ -406,6 +412,9 @@ const LAYOUT_JUSTIFY: ReadonlyMap<string, string> = new Map([
   ['spaceBetween', 'between'],
 ]);
 
+/** A local clock time, capturing the minute precision of ki-time-input. */
+const LOCAL_TIME = /^((?:[01]\d|2[0-3]):[0-5]\d)(?::[0-5]\d)?$/u;
+
 function layout(it: Instance, direction?: 'row'): UiSpecNode {
   const align = it.literal('align');
   const justify = LAYOUT_JUSTIFY.get(it.literal('justify') ?? '');
@@ -483,12 +492,28 @@ function isSvgPathIcon(value: unknown): boolean {
 
 /** Per-type builders for every `mapped`, `inline` and `layout` basic-catalog type. */
 export const BUILDERS: Readonly<Record<string, Builder>> = {
+  AudioPlayer: (it) => {
+    const src = it.value('url');
+    const title = it.text('description');
+    if (src === undefined && it.body['url'] !== undefined) {
+      // A missing binding can resolve when the data model arrives.
+      return [];
+    }
+    if (typeof src !== 'string') {
+      throw it.malformed('url', 'AudioPlayer url must resolve to a string');
+    }
+    return [node('ki-audio', { src, ...(title.trim() === '' ? {} : { title }) }, [])];
+  },
   Button: (it) => {
     const variant = it.literal('variant');
     const mapped = variant === undefined ? undefined : BUTTON_VARIANTS[variant];
     return [
       it.action(
-        node('ki-button', mapped === undefined ? {} : { variant: mapped }, it.child('child')),
+        node(
+          'ki-button',
+          mapped === undefined ? {} : { variant: mapped },
+          it.child('child', 'literal'),
+        ),
       ),
     ];
   },
@@ -513,10 +538,11 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     if (!Array.isArray(options)) {
       throw it.malformed('options', 'ChoicePicker options must be a list');
     }
+    const searchable = options.length > 15;
     const selected = it.value('value');
     const first = Array.isArray(selected) ? toText(selected[0]) : toText(selected);
     const selectedValues = new Set(
-      multiple && Array.isArray(selected)
+      multiple && !searchable && Array.isArray(selected)
         ? selected.filter((value): value is string => typeof value === 'string')
         : [],
     );
@@ -531,7 +557,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         option['label'] === undefined ? '' : toText(resolveOption(it, option['label'], index));
       const value = option['value'];
       return node(
-        multiple ? 'ki-checkbox' : 'ki-radio',
+        searchable ? 'ki-option' : multiple ? 'ki-checkbox' : 'ki-radio',
         { value, ...(selectedValues.has(value) ? { checked: true } : {}) },
         label === '' ? [] : [label],
       );
@@ -540,18 +566,50 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     if (multiple && label.trim() === '') {
       throw new Degrade('unsupported-variant', 'multipleSelection requires a group label');
     }
+    const value =
+      searchable && multiple
+        ? JSON.stringify(
+            Array.isArray(selected) ? selected.map(toText) : first === '' ? [] : [first],
+          )
+        : first;
     return [
       node(
-        multiple ? 'ki-checkbox-group' : 'ki-radio-group',
+        searchable ? 'ki-combobox' : multiple ? 'ki-checkbox-group' : 'ki-radio-group',
         {
           ...(label === '' ? {} : { label }),
-          ...(!multiple && first !== '' ? { value: first } : {}),
+          ...(searchable && multiple ? { multiple: true } : {}),
+          ...((searchable || !multiple) && value !== '' ? { value } : {}),
         },
         choices,
       ),
     ];
   },
   Column: (it) => [layout(it)],
+  DateTimeInput: (it) => {
+    for (const property of ['enableDate', 'enableTime']) {
+      const flag = it.body[property];
+      if (flag !== undefined && typeof flag !== 'boolean') {
+        throw it.malformed(property, `DateTimeInput ${property} must be a boolean`);
+      }
+    }
+    if (it.body['enableDate'] === true) {
+      throw new Degrade('unsupported-variant', 'DatePicker is unavailable');
+    }
+    if (it.body['enableTime'] !== true) {
+      throw new Degrade('unsupported-variant', 'enableTime must be true');
+    }
+
+    const label = it.text('label');
+    const rawValue = it.value('value');
+    if (label.trim() === '') {
+      throw new Degrade('unsupported-variant', 'time-only input requires a label');
+    }
+    const time = typeof rawValue === 'string' ? LOCAL_TIME.exec(rawValue)?.[1] : undefined;
+    if (rawValue !== undefined && rawValue !== '' && time === undefined) {
+      throw it.malformed('value', 'DateTimeInput time must be HH:mm or HH:mm:ss');
+    }
+    return [node('ki-time-input', { label, ...(time === undefined ? {} : { value: time }) }, [])];
+  },
   Divider: (it) => {
     const axis = it.literal('axis');
     return [
@@ -639,7 +697,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       throw new Degrade('unsupported-variant', `Modal trigger: ${triggerType}`);
     }
 
-    const [trigger] = it.child('trigger');
+    const [trigger] = it.child('trigger', 'literal');
     if (typeof trigger === 'object' && trigger.component !== 'ki-button') {
       return [trigger];
     }
@@ -687,6 +745,47 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     ];
   },
   Row: (it) => [layout(it, 'row')],
+  Slider: (it) => {
+    const label = it.text('label');
+    const min = it.body['min'] === undefined ? 0 : it.body['min'];
+    const max = it.body['max'];
+    const steps = it.body['steps'];
+    if (it.body['value'] === undefined) {
+      throw it.malformed('value', 'Slider needs a value or a numeric data binding');
+    }
+    const value = it.value('value');
+    if (typeof min !== 'number' || !Number.isFinite(min)) {
+      throw it.malformed('min', 'Slider min must be a finite number');
+    }
+    if (typeof max !== 'number' || !Number.isFinite(max)) {
+      throw it.malformed('max', 'Slider max must be a finite number');
+    }
+    if (value !== undefined && (typeof value !== 'number' || !Number.isFinite(value))) {
+      throw it.malformed('value', 'Slider value must resolve to a finite number');
+    }
+    let step: number | undefined;
+    if (steps !== undefined) {
+      if (typeof steps !== 'number' || !Number.isInteger(steps) || steps < 1) {
+        throw it.malformed('steps', 'Slider steps must be a positive integer');
+      }
+      const span = max - min;
+      const increment = Number.isFinite(span) ? span / steps : max / steps - min / steps;
+      if (Number.isFinite(increment) && increment > 0) step = increment;
+    }
+    return [
+      node(
+        'ki-slider',
+        {
+          ...(label === '' ? {} : { label }),
+          min,
+          max,
+          ...(step === undefined ? {} : { step }),
+          ...(value === undefined ? {} : { value }),
+        },
+        [],
+      ),
+    ];
+  },
   Tabs: (it) => {
     const tabs = it.body['tabs'];
     if (!Array.isArray(tabs) || tabs.length === 0) {
@@ -710,6 +809,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         it.scope,
         it.depth,
         it.context,
+        it.textPresentation,
       );
       pieces.push(node('ki-tab', { value }, title === '' ? [] : [title]));
       pieces.push(node('ki-tab-panel', { value }, scoped.child('child')));
@@ -718,7 +818,10 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
   },
   Text: (it) => {
     const text = it.text('text');
-    return text === '' ? [] : [text];
+    if (text === '') {
+      return [];
+    }
+    return [it.textPresentation === 'literal' ? text : node('ki-markdown', {}, [text])];
   },
   TextField: (it) => {
     const label = it.text('label');
@@ -807,6 +910,7 @@ function resolveComponent(
   scope: readonly string[],
   depth: number,
   context: WalkContext,
+  textPresentation: TextPresentation = 'markdown',
 ): Piece[] | null {
   if (context.abort !== null) {
     return null;
@@ -886,7 +990,7 @@ function resolveComponent(
   }
   context.ancestors.add(id);
   try {
-    return builder(new Instance(id, type, body, scope, depth, context));
+    return builder(new Instance(id, type, body, scope, depth, context, textPresentation));
   } catch (error) {
     if (error instanceof Degrade) {
       return degrade(error.reason, error.detail);
