@@ -128,3 +128,5 @@ Feature: ki-code-input collects a fixed-length verification code
 - **Agent's choice, pending founder confirmation.** Expose the label, field, native input, cells, help and error as parts. Keep app-level content such as resend controls outside the component.
 - **Agent's choice, pending founder confirmation.** Use native paste for plain codes and insert cleaned text into the current selection for formatted codes. The browser owns the undo history of native edits. A cleaned paste uses a programmatic replacement.
 - **Agent's choice, pending founder confirmation.** Use Kimen's 1.2-second activity pulse for up to four caret blinks. Then keep the caret visible.
+- **Agent's choice, pending founder confirmation.** Keep both events in the catalog metadata and use the renderer's existing ambiguity rule for generic action binding. The host can listen to the completion event directly.
+- **Agent's choice, pending founder confirmation.** Declare the new surface as major because the protected API comparator classifies generated Components and JSX namespace changes as major.

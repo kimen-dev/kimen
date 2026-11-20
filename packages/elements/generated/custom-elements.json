@@ -4276,6 +4276,432 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-code-input.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCodeInput",
+          "customElement": true,
+          "tagName": "ki-code-input",
+          "description": "A form-associated verification field with one native text input and a visual box per character.",
+          "whenToUse": "Collect a one-time code of four to eight characters for sign-in or verification.",
+          "whenNotToUse": "Use ki-input for passwords, long codes or free text.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disable editing, sequential focus and form participation."
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Message for a failing code constraint. Omit to use the browser's message."
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Instructions saying where the code was sent and how long it is valid."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible accessible name. Supply a label in the language of the form.",
+              "required": true
+            },
+            {
+              "name": "length",
+              "fieldName": "length",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "description": "Number of cells and maximum code length. Unsupported lengths fall back to six.",
+              "minimum": 4,
+              "maximum": 8
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Key for the single value submitted to the enclosing form."
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Require a complete code before submitting. An optional field may be empty."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Medium or small cells. The form region's density adjusts both sizes."
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "\"alphanumeric\" | \"numeric\""
+              },
+              "default": "'numeric'",
+              "description": "Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current code, including leading zeros. Use the attribute to declare\nthe reset value. Programmatic assignments are normalized and silent."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disable editing, sequential focus and form participation.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Message for a failing code constraint. Omit to use the browser's message.",
+              "attribute": "error-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Instructions saying where the code was sent and how long it is valid.",
+              "attribute": "help-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible accessible name. Supply a label in the language of the form.",
+              "attribute": "label",
+              "reflects": true,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "length",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "description": "Number of cells and maximum code length. Unsupported lengths fall back to six.",
+              "attribute": "length",
+              "reflects": true,
+              "minimum": 4,
+              "maximum": 8
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Key for the single value submitted to the enclosing form.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Require a complete code before submitting. An optional field may be empty.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Medium or small cells. The form region's density adjusts both sizes.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "type": {
+                "text": "\"alphanumeric\" | \"numeric\""
+              },
+              "default": "'numeric'",
+              "description": "Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current code, including leading zeros. Use the attribute to declare\nthe reset value. Programmatic assignments are normalized and silent.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-complete",
+              "type": {
+                "text": "CustomEvent<KiCodeInputDetail>"
+              },
+              "description": "Emitted after the input event when the edited code fills all the cells."
+            },
+            {
+              "name": "ki-input",
+              "type": {
+                "text": "CustomEvent<KiCodeInputDetail>"
+              },
+              "description": "Emitted when a user edit changes the code."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "cell",
+              "description": "Decorative box for one code character."
+            },
+            {
+              "name": "error",
+              "description": "Polite validation message that replaces the instructions."
+            },
+            {
+              "name": "field",
+              "description": "Enclosure of the native input and its visual boxes."
+            },
+            {
+              "name": "help",
+              "description": "Delivery and validity instructions read with the field."
+            },
+            {
+              "name": "input",
+              "description": "Single native text input, responsible for editing and autofill."
+            },
+            {
+              "name": "label",
+              "description": "Visible label supplying the native input's accessible name."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-code-input-active-border",
+              "description": "Focus outline around the active or selected cells."
+            },
+            {
+              "name": "--ki-code-input-backdrop-filter",
+              "description": "Optional compositing filter behind a code cell."
+            },
+            {
+              "name": "--ki-code-input-bg",
+              "description": "Resting code cell fill."
+            },
+            {
+              "name": "--ki-code-input-bg-image",
+              "description": "Optional image painted over the code cell fill."
+            },
+            {
+              "name": "--ki-code-input-blink-duration",
+              "description": "Duration of one code caret blink."
+            },
+            {
+              "name": "--ki-code-input-border",
+              "description": "Resting code cell boundary."
+            },
+            {
+              "name": "--ki-code-input-cell-size",
+              "description": "Default code cell edge before applying control density."
+            },
+            {
+              "name": "--ki-code-input-cell-size-sm",
+              "description": "Small code cell edge before applying control density."
+            },
+            {
+              "name": "--ki-code-input-disabled-fg",
+              "description": "Code character ink while the field is disabled."
+            },
+            {
+              "name": "--ki-code-input-error-border",
+              "description": "Code cell boundary after failed validation."
+            },
+            {
+              "name": "--ki-code-input-fg",
+              "description": "Resting code character ink."
+            },
+            {
+              "name": "--ki-code-input-font-size",
+              "description": "Code character size."
+            },
+            {
+              "name": "--ki-code-input-gap",
+              "description": "Inline space between code cells."
+            },
+            {
+              "name": "--ki-code-input-radius",
+              "description": "Code cell corner radius."
+            },
+            {
+              "name": "--ki-code-input-selection-bg",
+              "description": "Background of a selected code character."
+            },
+            {
+              "name": "--ki-code-input-selection-fg",
+              "description": "Ink of a selected code character."
+            },
+            {
+              "name": "--ki-code-input-touch-font-size",
+              "description": "Minimum native input text size on a coarse pointer."
+            },
+            {
+              "name": "--ki-control-border-width",
+              "description": "Stroke width of the boundary of a compact control."
+            },
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-text-danger-high-em",
+              "description": "semantic color for text danger high em."
+            },
+            {
+              "name": "--ki-text-high-em",
+              "description": "semantic color for text high em."
+            },
+            {
+              "name": "--ki-text-supporting",
+              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-family-mono",
+              "description": "semantic font family for typography family mono."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            },
+            {
+              "name": "--ki-typography-weight-body-normal",
+              "description": "semantic font weight for typography weight body normal."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCodeInput",
+          "declaration": {
+            "name": "KiCodeInput",
+            "module": "dist/components/ki-code-input.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-code-input",
+          "declaration": {
+            "name": "KiCodeInput",
+            "module": "dist/components/ki-code-input.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-counter.js",
       "declarations": [
         {

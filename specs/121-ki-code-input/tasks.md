@@ -4,6 +4,6 @@
 - [x] Scaffold the component and write traceable browser and normalization unit tests.
 - [x] Implement native editing, form participation, tokens and accessibility states.
 - [x] Add usage examples, stories, docs and theme galleries.
-- [ ] Generate and verify the catalog, wrappers and public API.
+- [x] Generate and verify the catalog, wrappers and public API.
 - [ ] Verify in Chromium, Firefox and WebKit and generate Linux baselines in CI.
 - [ ] Re-sync the design-system card from the reviewed commit.

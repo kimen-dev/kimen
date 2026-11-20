@@ -3014,6 +3014,437 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-code-input/ki-code-input.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-code-input",
+      "docs": "A form-associated verification field with one native text input and a visual box per character.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Collect a one-time code of four to eight characters for sign-in or verification."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Use ki-input for passwords, long codes or free text."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible label supplying the native input's accessible name."
+        },
+        {
+          "name": "part",
+          "text": "field - Enclosure of the native input and its visual boxes."
+        },
+        {
+          "name": "part",
+          "text": "input - Single native text input, responsible for editing and autofill."
+        },
+        {
+          "name": "part",
+          "text": "cell - Decorative box for one code character."
+        },
+        {
+          "name": "part",
+          "text": "help - Delivery and validity instructions read with the field."
+        },
+        {
+          "name": "part",
+          "text": "error - Polite validation message that replaces the instructions."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-code-input examples\n\nUse `ki-code-input` for fixed one-time codes of four to eight characters. Use\n`ki-input` for passwords, longer codes and free text.\n\n## Numeric verification with a resend action\n\n```html\n<form id=\"verification\">\n  <ki-code-input\n    label=\"Verification code\"\n    name=\"otp\"\n    required\n    help-text=\"We sent a code to ana@example.com. It is valid for ten minutes.\"\n    error-text=\"Enter all six digits.\"\n  ></ki-code-input>\n  <ki-button type=\"submit\">Verify</ki-button>\n  <ki-button id=\"resend-code\" type=\"button\" variant=\"ghost\">Resend code</ki-button>\n</form>\n```\n\nRead `new FormData(form).get('otp')` in the submit handler and send the string\nto the verification service. The application knows the expiration time and\nowns the resend request. On successful resend, clear the old value and any\ncustom validity error, update the help text, and focus the field. Offer a\nvisible and announced status if a request is still pending or fails.\n\nOn the custom-elements build, use `field.setCustomValidity(message)` and\n`field.reportValidity()` to display a server rejection. Clear the message\nwith `field.setCustomValidity('')` once the person edits or resends the code.\n\n## Four-character recovery code\n\n```html\n<ki-code-input\n  label=\"Recovery code\"\n  name=\"recovery\"\n  type=\"alphanumeric\"\n  length=\"4\"\n  size=\"sm\"\n  help-text=\"Use the four characters from your verification email.\"\n></ki-code-input>\n```\n\nBoth `ki-input` and `ki-complete` carry `{ value }`. Listen for\n`ki-complete` if filling the last box enables the next step. Leave submission\nto the form unless completing the code can safely advance the flow.\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disable editing, sequential focus and form participation.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Message for a failing code constraint. Omit to use the browser's message.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "Instructions saying where the code was sent and how long it is valid.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Visible accessible name. Supply a label in the language of the form.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "length",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "length",
+          "reflectToAttr": true,
+          "docs": "Number of cells and maximum code length. Unsupported lengths fall back to six.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "4"
+            },
+            {
+              "name": "maximum",
+              "text": "8"
+            },
+            {
+              "name": "default",
+              "text": "6"
+            }
+          ],
+          "default": "6",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Key for the single value submitted to the enclosing form.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Require a complete code before submitting. An optional field may be empty.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"md\" | \"sm\"",
+          "complexType": {
+            "original": "'sm' | 'md'",
+            "resolved": "\"md\" | \"sm\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Medium or small cells. The form region's density adjusts both sizes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "type",
+          "type": "\"alphanumeric\" | \"numeric\"",
+          "complexType": {
+            "original": "KiCodeInputType",
+            "resolved": "\"alphanumeric\" | \"numeric\"",
+            "references": {
+              "KiCodeInputType": {
+                "location": "local",
+                "path": "src/components/ki-code-input/ki-code-input.tsx",
+                "id": "src/components/ki-code-input/ki-code-input.tsx::KiCodeInputType"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "type",
+          "reflectToAttr": true,
+          "docs": "Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'numeric'"
+            }
+          ],
+          "default": "'numeric'",
+          "values": [
+            {
+              "value": "alphanumeric",
+              "type": "string"
+            },
+            {
+              "value": "numeric",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "The current code, including leading zeros. Use the attribute to declare\nthe reset value. Programmatic assignments are normalized and silent.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-complete",
+          "detail": "KiCodeInputDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiCodeInputDetail",
+            "resolved": "KiCodeInputDetail",
+            "references": {
+              "KiCodeInputDetail": {
+                "location": "local",
+                "path": "src/components/ki-code-input/ki-code-input.tsx",
+                "id": "src/components/ki-code-input/ki-code-input.tsx::KiCodeInputDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted after the input event when the edited code fills all the cells.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-input",
+          "detail": "KiCodeInputDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiCodeInputDetail",
+            "resolved": "KiCodeInputDetail",
+            "references": {
+              "KiCodeInputDetail": {
+                "location": "local",
+                "path": "src/components/ki-code-input/ki-code-input.tsx",
+                "id": "src/components/ki-code-input/ki-code-input.tsx::KiCodeInputDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted when a user edit changes the code.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "beforeinput",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "cell",
+          "docs": "Decorative box for one code character."
+        },
+        {
+          "name": "error",
+          "docs": "Polite validation message that replaces the instructions."
+        },
+        {
+          "name": "field",
+          "docs": "Enclosure of the native input and its visual boxes."
+        },
+        {
+          "name": "help",
+          "docs": "Delivery and validity instructions read with the field."
+        },
+        {
+          "name": "input",
+          "docs": "Single native text input, responsible for editing and autofill."
+        },
+        {
+          "name": "label",
+          "docs": "Visible label supplying the native input's accessible name."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-counter/ki-counter.tsx",
       "encapsulation": "shadow",
       "tag": "ki-counter",
@@ -11340,6 +11771,16 @@
       "declaration": "export interface KiChipReorderDetail {\n  value: string;\n  fromIndex: number;\n  toIndex: number;\n}",
       "docstring": "",
       "path": "src/components/ki-chip-group/ki-chip-group.tsx"
+    },
+    "src/components/ki-code-input/ki-code-input.tsx::KiCodeInputType": {
+      "declaration": "export type KiCodeInputType = 'numeric' | 'alphanumeric';",
+      "docstring": "",
+      "path": "src/components/ki-code-input/ki-code-input.tsx"
+    },
+    "src/components/ki-code-input/ki-code-input.tsx::KiCodeInputDetail": {
+      "declaration": "export interface KiCodeInputDetail {\n  value: string;\n}",
+      "docstring": "",
+      "path": "src/components/ki-code-input/ki-code-input.tsx"
     },
     "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",

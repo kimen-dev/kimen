@@ -16,6 +16,7 @@ import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 import { KiChipSize } from "./components/ki-chip/ki-chip";
 import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+import { KiCodeInputDetail, KiCodeInputType } from "./components/ki-code-input/ki-code-input";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -55,6 +56,7 @@ export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 export { KiChipSize } from "./components/ki-chip/ki-chip";
 export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+export { KiCodeInputDetail, KiCodeInputType } from "./components/ki-code-input/ki-code-input";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -505,6 +507,61 @@ export namespace Components {
           * @default 'filter'
          */
         "type": KiChipType;
+    }
+    /**
+     * A form-associated verification field with one native text input and a visual box per character.
+     * @whenToUse Collect a one-time code of four to eight characters for sign-in or verification.
+     * @whenNotToUse Use ki-input for passwords, long codes or free text.
+     */
+    interface KiCodeInput {
+        /**
+          * Disable editing, sequential focus and form participation.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Message for a failing code constraint. Omit to use the browser's message.
+         */
+        "errorText"?: string;
+        /**
+          * Instructions saying where the code was sent and how long it is valid.
+         */
+        "helpText"?: string;
+        /**
+          * Visible accessible name. Supply a label in the language of the form.
+         */
+        "label": string;
+        /**
+          * Number of cells and maximum code length. Unsupported lengths fall back to six.
+          * @minimum 4
+          * @maximum 8
+          * @default 6
+         */
+        "length": number;
+        /**
+          * Key for the single value submitted to the enclosing form.
+         */
+        "name"?: string;
+        /**
+          * Require a complete code before submitting. An optional field may be empty.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Medium or small cells. The form region's density adjusts both sizes.
+          * @default 'md'
+         */
+        "size": 'sm' | 'md';
+        /**
+          * Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.
+          * @default 'numeric'
+         */
+        "type": KiCodeInputType;
+        /**
+          * The current code, including leading zeros. Use the attribute to declare the reset value. Programmatic assignments are normalized and silent.
+          * @default ''
+         */
+        "value": string;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -1835,6 +1892,10 @@ export interface KiChipGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiChipGroupElement;
 }
+export interface KiCodeInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCodeInputElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -2102,6 +2163,29 @@ declare global {
     var HTMLKiChipGroupElement: {
         prototype: HTMLKiChipGroupElement;
         new (): HTMLKiChipGroupElement;
+    };
+    interface HTMLKiCodeInputElementEventMap {
+        "ki-input": KiCodeInputDetail;
+        "ki-complete": KiCodeInputDetail;
+    }
+    /**
+     * A form-associated verification field with one native text input and a visual box per character.
+     * @whenToUse Collect a one-time code of four to eight characters for sign-in or verification.
+     * @whenNotToUse Use ki-input for passwords, long codes or free text.
+     */
+    interface HTMLKiCodeInputElement extends Components.KiCodeInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCodeInputElementEventMap>(type: K, listener: (this: HTMLKiCodeInputElement, ev: KiCodeInputCustomEvent<HTMLKiCodeInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCodeInputElementEventMap>(type: K, listener: (this: HTMLKiCodeInputElement, ev: KiCodeInputCustomEvent<HTMLKiCodeInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCodeInputElement: {
+        prototype: HTMLKiCodeInputElement;
+        new (): HTMLKiCodeInputElement;
     };
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -2828,6 +2912,7 @@ declare global {
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-code-input": HTMLKiCodeInputElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
@@ -3336,6 +3421,73 @@ declare namespace LocalJSX {
           * @default 'filter'
          */
         "type"?: KiChipType;
+    }
+    /**
+     * A form-associated verification field with one native text input and a visual box per character.
+     * @whenToUse Collect a one-time code of four to eight characters for sign-in or verification.
+     * @whenNotToUse Use ki-input for passwords, long codes or free text.
+     */
+    interface KiCodeInput {
+        /**
+          * Disable editing, sequential focus and form participation.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Message for a failing code constraint. Omit to use the browser's message.
+         */
+        "errorText"?: string;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Instructions saying where the code was sent and how long it is valid.
+         */
+        "helpText"?: string;
+        /**
+          * Visible accessible name. Supply a label in the language of the form.
+         */
+        "label": string;
+        /**
+          * Number of cells and maximum code length. Unsupported lengths fall back to six.
+          * @minimum 4
+          * @maximum 8
+          * @default 6
+         */
+        "length"?: number;
+        /**
+          * Key for the single value submitted to the enclosing form.
+         */
+        "name"?: string;
+        /**
+          * Emitted after the input event when the edited code fills all the cells.
+         */
+        "onKi-complete"?: (event: KiCodeInputCustomEvent<KiCodeInputDetail>) => void;
+        /**
+          * Emitted when a user edit changes the code.
+         */
+        "onKi-input"?: (event: KiCodeInputCustomEvent<KiCodeInputDetail>) => void;
+        /**
+          * Require a complete code before submitting. An optional field may be empty.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Medium or small cells. The form region's density adjusts both sizes.
+          * @default 'md'
+         */
+        "size"?: 'sm' | 'md';
+        /**
+          * Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.
+          * @default 'numeric'
+         */
+        "type"?: KiCodeInputType;
+        /**
+          * The current code, including leading zeros. Use the attribute to declare the reset value. Programmatic assignments are normalized and silent.
+          * @default ''
+         */
+        "value"?: string;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -4759,6 +4911,18 @@ declare namespace LocalJSX {
         "focusTarget": string;
         "reorderAnnouncement": string;
     }
+    interface KiCodeInputAttributes {
+        "label": string;
+        "helpText": string;
+        "errorText": string;
+        "name": string;
+        "required": boolean;
+        "disabled": boolean;
+        "length": number;
+        "type": KiCodeInputType;
+        "size": 'sm' | 'md';
+        "value": string;
+    }
     interface KiCounterAttributes {
         "value": number;
         "max": number;
@@ -5014,6 +5178,7 @@ declare namespace LocalJSX {
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-code-input": Omit<KiCodeInput, keyof KiCodeInputAttributes> & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes]?: KiCodeInput[K] } & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes as `attr:${K}`]?: KiCodeInputAttributes[K] } & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes as `prop:${K}`]?: KiCodeInput[K] } & OneOf<"label", KiCodeInput["label"], KiCodeInputAttributes["label"]>;
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
@@ -5185,6 +5350,12 @@ declare module "@stencil/core" {
              * @whenNotToUse choose exactly one option or submit a form value.
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
+            /**
+             * A form-associated verification field with one native text input and a visual box per character.
+             * @whenToUse Collect a one-time code of four to eight characters for sign-in or verification.
+             * @whenNotToUse Use ki-input for passwords, long codes or free text.
+             */
+            "ki-code-input": LocalJSX.IntrinsicElements["ki-code-input"] & JSXBase.HTMLAttributes<HTMLKiCodeInputElement>;
             /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an

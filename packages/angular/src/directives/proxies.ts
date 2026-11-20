@@ -17,6 +17,7 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
+import { defineCustomElement as defineKiCodeInput } from '@kimen/elements/components/ki-code-input.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
@@ -341,6 +342,37 @@ export class KiChipGroup {
 export declare interface KiChipGroup extends Components.KiChipGroup {
   /**
    * Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiCodeInput,
+  inputs: ['disabled', 'errorText', 'helpText', 'label', 'length', 'name', 'required', 'size', 'type', 'value']
+})
+@Component({
+  selector: 'ki-code-input',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'length', 'name', 'required', 'size', 'type', 'value'],
+})
+export class KiCodeInput {
+  protected el: HTMLKiCodeInputElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCodeInput extends Components.KiCodeInput {
+  /**
+   * Emitted when a user edit changes the code.
+   */
+  /**
+   * Emitted after the input event when the edited code fills all the cells.
    */
 }
 

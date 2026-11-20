@@ -673,6 +673,76 @@ export const catalogData = {
       "whenNotToUse": "choose exactly one option or submit a form value.",
       "whenToUse": "label related chips or let people change their reading order."
     },
+    "ki-code-input": {
+      "description": "A form-associated verification field with one native text input and a visual box per character.",
+      "events": {
+        "ki-complete": "Emitted after the input event when the edited code fills all the cells.",
+        "ki-input": "Emitted when a user edit changes the code."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Disable editing, sequential focus and form participation.",
+          "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Message for a failing code constraint. Omit to use the browser's message."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Instructions saying where the code was sent and how long it is valid."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible accessible name. Supply a label in the language of the form.",
+          "required": true
+        },
+        "length": {
+          "type": "number",
+          "description": "Number of cells and maximum code length. Unsupported lengths fall back to six.",
+          "default": 6,
+          "minimum": 4,
+          "maximum": 8
+        },
+        "name": {
+          "type": "string",
+          "description": "Key for the single value submitted to the enclosing form."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Require a complete code before submitting. An optional field may be empty.",
+          "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Medium or small cells. The form region's density adjusts both sizes.",
+          "default": "md"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "alphanumeric",
+            "numeric"
+          ],
+          "description": "Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.",
+          "default": "numeric"
+        },
+        "value": {
+          "type": "string",
+          "description": "The current code, including leading zeros. Use the attribute to declare\nthe reset value. Programmatic assignments are normalized and silent.",
+          "default": ""
+        }
+      },
+      "slots": {},
+      "tag": "ki-code-input",
+      "whenNotToUse": "Use ki-input for passwords, long codes or free text.",
+      "whenToUse": "Collect a one-time code of four to eight characters for sign-in or verification."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},

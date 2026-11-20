@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 448 semantic
-and 1429 component tokens. Values are the resolved **onmars light**
+and 1446 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1209,6 +1209,28 @@ theme-wide change or on any subtree for a scoped one.
 | --- | --- | --- |
 | `--ki-chip-group-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family inherited by chip group content. |
 | `--ki-chip-group-gap` | `0.5rem` | Gap between adjacent chips and rows. |
+
+### `ki-code-input`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-code-input-active-border` | `#bb4e2a` | Focus outline around the active or selected cells. |
+| `--ki-code-input-backdrop-filter` | `none` | Optional compositing filter behind a code cell. |
+| `--ki-code-input-bg` | `#ffffff` | Resting code cell fill. |
+| `--ki-code-input-bg-image` | `none` | Optional image painted over the code cell fill. |
+| `--ki-code-input-blink-duration` | `1200ms` | Duration of one code caret blink. |
+| `--ki-code-input-border` | `#86827b` | Resting code cell boundary. |
+| `--ki-code-input-cell-size` | `3rem` | Default code cell edge before applying control density. |
+| `--ki-code-input-cell-size-sm` | `2.5rem` | Small code cell edge before applying control density. |
+| `--ki-code-input-disabled-fg` | `#5e5953` | Code character ink while the field is disabled. |
+| `--ki-code-input-error-border` | `#ef4e69` | Code cell boundary after failed validation. |
+| `--ki-code-input-fg` | `#181613` | Resting code character ink. |
+| `--ki-code-input-font-size` | `1.125rem` | Code character size. |
+| `--ki-code-input-gap` | `0.5rem` | Inline space between code cells. |
+| `--ki-code-input-radius` | `10px` | Code cell corner radius. |
+| `--ki-code-input-selection-bg` | `#f3f0eb` | Background of a selected code character. |
+| `--ki-code-input-selection-fg` | `#181613` | Ink of a selected code character. |
+| `--ki-code-input-touch-font-size` | `1rem` | Minimum native input text size on a coarse pointer. |
 
 ### `ki-counter`
 
