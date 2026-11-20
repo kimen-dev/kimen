@@ -66,6 +66,18 @@ const summary = () => part(tool(), 'summary');
 const badge = () => part(tool(), 'status');
 const disclosure = () => part(tool(), 'disclosure') as HTMLDetailsElement;
 
+// Vitest's WebKit matcher exempts summary itself from the closed-details
+// check. Its visible descendants still need a native visibility witness.
+function hasVisibleBox(element: Element | null | undefined): boolean {
+  if (!element?.checkVisibility({ opacityProperty: true, visibilityProperty: true })) return false;
+  const { width, height } = element.getBoundingClientRect();
+  return width > 0 && height > 0;
+}
+
+function statusHasVisibleBox(): boolean {
+  return hasVisibleBox(badge().shadowRoot?.querySelector('[part~="badge"]'));
+}
+
 it('S1 opens a completed call and reveals labeled CodeBlock payloads', async () => {
   await mount(
     'name="search_docs" title="Search docs" status="done" duration="1200"',
@@ -74,8 +86,9 @@ it('S1 opens a completed call and reveals labeled CodeBlock payloads', async () 
   );
 
   const summaryName = 'Search docs search_docs Done · 1.2 sec';
-  await expect.element(page.getByText('Search docs', { exact: true })).toBeVisible();
   await expect.element(summary()).toHaveTextContent(summaryName);
+  const title = page.getByText('Search docs', { exact: true }).element();
+  await expect.poll(() => hasVisibleBox(title)).toBe(true);
   await expect.element(part(tool(), 'name')).toHaveTextContent('search_docs');
   await expect.element(badge()).toHaveTextContent('Done · 1.2 sec');
   const tree = await browser.accessibilityTree();
@@ -179,7 +192,7 @@ it('S6 publishes one transition to a conversation-owned log', async () => {
     await expect
       .poll(() => host.shadowRoot?.querySelector('[part="status"]')?.textContent)
       .toBe('Running');
-    await expect.element(badge()).toBeVisible();
+    await expect.poll(statusHasVisibleBox).toBe(true);
     expect(log.children).toHaveLength(0);
 
     host.status = 'done';
@@ -188,6 +201,9 @@ it('S6 publishes one transition to a conversation-owned log', async () => {
     await settleFrames(2);
 
     expect(log.children).toHaveLength(1);
+    await expect.element(badge()).toHaveTextContent('Done');
+    expect(disclosure().open).toBe(false);
+    expect(await browser.ariaSnapshot(disclosureSelector)).toContain('Done');
     expect(host.shadowRoot?.querySelector('[role="log"], [aria-live]')).toBeNull();
   } finally {
     fixture.removeEventListener('ki-tool-status-change', record);
@@ -251,7 +267,7 @@ it('S9 keeps the status and keyboard focus visible in forced colors', async (con
   expect(focus.outlineStyle).toBe('solid');
   expect(Number.parseFloat(focus.outlineWidth)).toBeGreaterThan(0);
   expect(focus.outlineColor).not.toBe(getComputedStyle(canvas).backgroundColor);
-  await expect.element(badge()).toBeVisible();
+  await expect.poll(statusHasVisibleBox).toBe(true);
   await expect.element(badge()).toHaveTextContent('Running');
 });
 
@@ -268,7 +284,7 @@ it('S10 stops the decorative activity indicator under reduced motion', async () 
 
   await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
   await expect.poll(animation).toBe(0);
-  await expect.element(badge()).toBeVisible();
+  await expect.poll(statusHasVisibleBox).toBe(true);
   await expect.element(badge()).toHaveTextContent('Running');
 });
 
