@@ -860,6 +860,10 @@
         "$value": "24px",
         "$description": "The smallest pointer target any density may produce: WCAG 2.5.8 (AA) asks for 24 x 24 CSS px. In px on purpose: WCAG measures CSS px, and a page that shrinks its root font size must not shrink the floor."
       },
+      "target-mobile-nav": {
+        "$value": "48px",
+        "$description": "Minimum destination target size in a mobile bottom navigation bar, measured in CSS pixels."
+      },
       "target-touch": {
         "$value": "44px",
         "$description": "The pointer target of the touch density (spec 045 Amendment A1): WCAG 2.5.5 Target Size (Enhanced, AAA) and Apple's Human Interface Guidelines ask for 44 x 44 CSS px. In px for the same reason as target-min."

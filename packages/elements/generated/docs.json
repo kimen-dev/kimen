@@ -1235,6 +1235,186 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-button-group/ki-button-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-button-group",
+      "docs": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation."
+        },
+        {
+          "name": "slot",
+          "text": "- Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+        },
+        {
+          "name": "part",
+          "text": "group - The named group or toolbar surface."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-button-group\n\n## Spaced and attached groups\n\nUse a label that describes what the actions do together. In attached mode the\nfirst button provides the common variant and size. An explicit group size\napplies in both modes.\n\n```html\n<ki-button-group label=\"History\">\n  <ki-button type=\"button\">Undo</ki-button>\n  <ki-button type=\"button\">Redo</ki-button>\n</ki-button-group>\n\n<ki-button-group label=\"Clipboard\" attached size=\"sm\">\n  <ki-button type=\"button\">Copy</ki-button>\n  <ki-button type=\"button\">Paste</ki-button>\n</ki-button-group>\n```\n\n## Formatting toolbar\n\nImport the glyphs used by your page. Give each icon button a tooltip using the\nsame label. The application sets `pressed` as the formatting state changes. The native button exposes it as `aria-pressed`.\n\n```js\nimport '@kimen/elements/icons/bold';\nimport '@kimen/elements/icons/list';\n```\n\n```html\n<ki-button-group label=\"Formatting\" toolbar size=\"sm\">\n  <ki-tooltip label=\"Bold\">\n    <ki-icon-button label=\"Bold\" variant=\"ghost\" pressed=\"true\">\n      <ki-icon name=\"bold\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n  <span role=\"separator\" aria-orientation=\"vertical\"></span>\n  <ki-tooltip label=\"Bulleted list\">\n    <ki-icon-button label=\"Bulleted list\" variant=\"ghost\">\n      <ki-icon name=\"list\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n</ki-button-group>\n```\n\n## Split button\n\nWith a build that includes `ki-menu`, anchor the menu to the chevron action.\nImport `@kimen/elements/icons/chevron-down` before mounting the group. Handle the\nmain button's click and menu selection as separate actions.\n\n```html\n<ki-button-group label=\"Save actions\" attached>\n  <ki-button type=\"button\" variant=\"primary\">Save</ki-button>\n  <ki-tooltip label=\"More save options\">\n    <ki-icon-button id=\"save-options\" label=\"More save options\" aria-haspopup=\"menu\" expanded=\"false\">\n      <ki-icon name=\"chevron-down\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n</ki-button-group>\n\n<ki-menu anchor=\"save-options\">\n  <ki-menu-item value=\"draft\">Save as draft</ki-menu-item>\n  <ki-menu-item value=\"copy\">Save a copy</ki-menu-item>\n</ki-menu>\n```\n\nKeep the icon button's `expanded` property in sync with the menu's `open`\nstate. Its native button exposes that state as `aria-expanded`.\n"
+      },
+      "props": [
+        {
+          "name": "attached",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "attached",
+          "reflectToAttr": true,
+          "docs": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined",
+          "complexType": {
+            "original": "KiButtonSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined",
+            "references": {
+              "KiButtonSize": {
+                "location": "import",
+                "path": "../ki-button/ki-button",
+                "id": "src/components/ki-button/ki-button.tsx::KiButtonSize",
+                "referenceLocation": "KiButtonSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "toolbar",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "toolbar",
+          "reflectToAttr": true,
+          "docs": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The named group or toolbar surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-card/ki-card.tsx",
       "encapsulation": "shadow",
       "tag": "ki-card",
@@ -3037,9 +3217,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-mobile-nav-item"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-mobile-nav-item": [
+          "ki-counter"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
@@ -3751,9 +3937,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-mobile-nav-item"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-mobile-nav-item": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -3767,7 +3959,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
+          "text": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
         },
         {
           "name": "slot",
@@ -3819,6 +4011,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "expanded",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "expanded",
+          "reflectToAttr": false,
+          "docs": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -3900,6 +4118,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pressed",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pressed",
+          "reflectToAttr": false,
+          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -5637,6 +5881,337 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-mobile-nav/ki-mobile-nav.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-mobile-nav",
+      "docs": "A fixed or floating navigation bar for the main destinations of a phone layout.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations."
+        },
+        {
+          "name": "slot",
+          "text": "- Three to five direct ki-mobile-nav-item destinations."
+        },
+        {
+          "name": "part",
+          "text": "bar - The native navigation landmark and painted bar."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-mobile-nav\n\nUse one bottom navigation bar for the three to five top-level destinations in\nthe phone layout. Place it after the content. The host reserves space in the\napp shell so the last content can scroll above the links.\n\n```js\nimport '@kimen/elements/icons/house';\nimport '@kimen/elements/icons/search';\nimport '@kimen/elements/icons/inbox';\n```\n\n```html\n<main>\n  <!-- App content -->\n</main>\n<ki-mobile-nav label=\"Main\" variant=\"floating\">\n  <ki-mobile-nav-item href=\"/\" icon-name=\"house\" current>Home</ki-mobile-nav-item>\n  <ki-mobile-nav-item href=\"/search\" icon-name=\"search\">Search</ki-mobile-nav-item>\n  <ki-mobile-nav-item href=\"/inbox\" icon-name=\"inbox\" count=\"3\">Inbox</ki-mobile-nav-item>\n</ki-mobile-nav>\n```\n\nOmit `variant` for an edge-to-edge bar. When switching to TopNav or Sidebar,\nuse one app breakpoint to hide this bar and show the wider navigation.\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Main'"
+            }
+          ],
+          "default": "'Main'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"fixed\" | \"floating\"",
+          "complexType": {
+            "original": "KiMobileNavVariant",
+            "resolved": "\"fixed\" | \"floating\"",
+            "references": {
+              "KiMobileNavVariant": {
+                "location": "local",
+                "path": "src/components/ki-mobile-nav/ki-mobile-nav.tsx",
+                "id": "src/components/ki-mobile-nav/ki-mobile-nav.tsx::KiMobileNavVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Place the bar edge to edge or inset it as a raised pill.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'fixed'"
+            }
+          ],
+          "default": "'fixed'",
+          "values": [
+            {
+              "value": "fixed",
+              "type": "string"
+            },
+            {
+              "value": "floating",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Three to five direct ki-mobile-nav-item destinations."
+        }
+      ],
+      "parts": [
+        {
+          "name": "bar",
+          "docs": "The native navigation landmark and painted bar."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-mobile-nav-item/ki-mobile-nav-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-mobile-nav-item",
+      "docs": "An icon and visible label for one mobile navigation destination.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link."
+        },
+        {
+          "name": "slot",
+          "text": "- Visible destination text. Use plain text or noninteractive phrasing content."
+        },
+        {
+          "name": "part",
+          "text": "link - The native anchor and focus target."
+        },
+        {
+          "name": "part",
+          "text": "indicator - The icon well painted on the current destination."
+        },
+        {
+          "name": "part",
+          "text": "label - The always-visible destination label."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-mobile-nav-item\n\nUse a short label, a registered icon and a destination URL for each native\nlink inside `ki-mobile-nav`.\n\n```html\n<ki-mobile-nav-item href=\"/\" icon-name=\"house\" current>Home</ki-mobile-nav-item>\n<ki-mobile-nav-item href=\"/inbox\" icon-name=\"inbox\" count=\"125\" count-label=\"{count} unread\">\n  Inbox\n</ki-mobile-nav-item>\n```\n\nMark the active destination with `current`. The second link shows `99+` in the\nbadge and is announced as “Inbox, 125 unread”. A zero count hides the badge.\n"
+      },
+      "props": [
+        {
+          "name": "count",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count",
+          "reflectToAttr": false,
+          "docs": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "countLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count-label",
+          "reflectToAttr": false,
+          "docs": "Localized suffix for the link name. Use {count} for the full rounded count.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} new'"
+            }
+          ],
+          "default": "'{count} new'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "current",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "current",
+          "reflectToAttr": true,
+          "docs": "Marks this link as the current page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "Destination URL. Relative paths and fragments use native anchor resolution.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Registered icon name. The visible destination text supplies the link name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Visible destination text. Use plain text or noninteractive phrasing content."
+        }
+      ],
+      "parts": [
+        {
+          "name": "indicator",
+          "docs": "The icon well painted on the current destination."
+        },
+        {
+          "name": "label",
+          "docs": "The always-visible destination label."
+        },
+        {
+          "name": "link",
+          "docs": "The native anchor and focus target."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-counter"
+      ],
+      "dependencyGraph": {
+        "ki-mobile-nav-item": [
+          "ki-icon",
+          "ki-counter"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-note/ki-note.tsx",
@@ -7533,6 +8108,228 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-skeleton/ki-skeleton.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-skeleton",
+      "docs": "Decorative placeholder shapes that reserve space for loading content.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region."
+        },
+        {
+          "name": "part",
+          "text": "shape - Each painted text line, circle or rectangle."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-skeleton\n\nDefine the component when using direct imports.\n\n```js\nimport { defineCustomElement } from '@kimen/elements/ki-skeleton';\ndefineCustomElement();\n```\n\n## Match the expected layout\n\n```html\n<section aria-label=\"Assistant is writing\" aria-busy=\"true\">\n  <ki-skeleton lines=\"3\"></ki-skeleton>\n</section>\n\n<section aria-label=\"Loading project\" aria-busy=\"true\">\n  <ki-skeleton shape=\"circle\" size=\"2.5rem\"></ki-skeleton>\n  <ki-skeleton shape=\"rect\" block-size=\"6rem\"></ki-skeleton>\n</section>\n```\n\nThe last of multiple text lines is shorter. Use `inline-size` and `block-size` to match the dimensions of the incoming content. Set `animated=\"false\"` to use a static fill.\n\n## Skip the flash on fast loads\n\nReserve the expected block size immediately. Use `hidden` until the request has been pending for about 300 ms.\n\n```html\n<section id=\"project\" aria-label=\"Loading project\" aria-busy=\"true\" style=\"min-block-size:6rem\">\n  <ki-skeleton hidden shape=\"rect\" block-size=\"6rem\"></ki-skeleton>\n</section>\n```\n\n```js\nconst region = document.querySelector('#project');\nconst placeholder = region.querySelector('ki-skeleton');\nconst reveal = setTimeout(() => {\n  placeholder.hidden = false;\n}, 300);\n\ntry {\n  const project = await new Promise((resolve) => {\n    setTimeout(() => resolve({ name: 'Roadmap' }), 900);\n  });\n  region.textContent = project.name;\n} finally {\n  clearTimeout(reveal);\n  placeholder.remove();\n  region.setAttribute('aria-busy', 'false');\n  region.setAttribute('aria-label', 'Project');\n}\n```\n\nUse this script in a module after the section is mounted. Change the simulated request to 150 ms to see the fast path. In an application, use the real request and show its error state in the same region.\n"
+      },
+      "props": [
+        {
+          "name": "animated",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "animated",
+          "reflectToAttr": false,
+          "docs": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "blockSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "block-size",
+          "reflectToAttr": false,
+          "docs": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "inlineSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "inline-size",
+          "reflectToAttr": false,
+          "docs": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "lines",
+          "reflectToAttr": false,
+          "docs": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            },
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "maximum",
+              "text": "20"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "shape",
+          "type": "\"circle\" | \"rect\" | \"text\"",
+          "complexType": {
+            "original": "'text' | 'circle' | 'rect'",
+            "resolved": "\"circle\" | \"rect\" | \"text\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "shape",
+          "reflectToAttr": false,
+          "docs": "Match the placeholder to the expected text, avatar, or rectangular content.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'text'"
+            }
+          ],
+          "default": "'text'",
+          "values": [
+            {
+              "value": "circle",
+              "type": "string"
+            },
+            {
+              "value": "rect",
+              "type": "string"
+            },
+            {
+              "value": "text",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": false,
+          "docs": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "shape",
+          "docs": "Each painted text line, circle or rectangle."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",
       "encapsulation": "shadow",
       "tag": "ki-spinner",
@@ -8240,293 +9037,6 @@
         {
           "name": "dot",
           "docs": "The dot itself: size, tone fill, radius, ring and effects."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-suggestion/ki-suggestion.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-suggestion",
-      "docs": "A native prompt button displayed by a ki-suggestions group.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "offer one short, actionable prompt in a suggestion group."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "navigation, static content, or a submitted form value."
-        },
-        {
-          "name": "slot",
-          "text": "- Plain text forming the visible and accessible prompt title."
-        },
-        {
-          "name": "part",
-          "text": "button - The native suggestion button."
-        },
-        {
-          "name": "part",
-          "text": "description - Optional supporting text shown in cards."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-suggestion examples\n\n## Add context to a prompt\n\n```html\n<ki-suggestions label=\"Start a conversation\" variant=\"cards\">\n  <ki-suggestion description=\"For the merged pull requests\">Draft release notes</ki-suggestion>\n  <ki-suggestion>Plan the next release</ki-suggestion>\n</ki-suggestions>\n```\n\nPut the prompt in the default slot as plain text. The title supplies the\nbutton's accessible name. Use `description` for separate context.\n\nRegister both tags for direct imports. Listen to `ki-select` on the group\nfor the chosen title.\n"
-      },
-      "props": [
-        {
-          "name": "description",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "description",
-          "reflectToAttr": false,
-          "docs": "Optional accessible description, visible below the title in cards.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Plain text forming the visible and accessible prompt title."
-        }
-      ],
-      "parts": [
-        {
-          "name": "button",
-          "docs": "The native suggestion button."
-        },
-        {
-          "name": "description",
-          "docs": "Optional supporting text shown in cards."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-suggestions/ki-suggestions.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-suggestions",
-      "docs": "A labelled group of prompt starters or follow-up suggestions.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "offer suggested prompts to start or continue an assistant conversation."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "choose a form value, switch views, or display static example text."
-        },
-        {
-          "name": "slot",
-          "text": "- Direct ki-suggestion children in reading order."
-        },
-        {
-          "name": "part",
-          "text": "group - The container that lays out the suggested prompts."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-suggestions examples\n\n## Fill a draft for editing\n\n```html\n<ki-suggestions id=\"starters\" label=\"Start a conversation\" variant=\"cards\" mode=\"fill\">\n  <ki-suggestion description=\"For the merged pull requests\">Draft release notes</ki-suggestion>\n  <ki-suggestion description=\"From the on-call reports\">Summarise the incidents</ki-suggestion>\n</ki-suggestions>\n<label for=\"draft\">Message</label>\n<textarea id=\"draft\"></textarea>\n```\n\n```js\nimport { defineCustomElement as defineSuggestions } from '@kimen/elements/ki-suggestions';\nimport { defineCustomElement as defineSuggestion } from '@kimen/elements/ki-suggestion';\n\ndefineSuggestions();\ndefineSuggestion();\n\ndocument.querySelector('#starters').composer = document.querySelector('#draft');\n```\n\nThe group replaces the draft and focuses the textarea. A custom composer can\nexpose the same writable string `value` and `focus()` interface.\n\n## Send a follow-up\n\n```html\n<ki-suggestions id=\"follow-ups\" label=\"Follow-up suggestions\">\n  <ki-suggestion>Which ones recur?</ki-suggestion>\n  <ki-suggestion>Group them by service</ki-suggestion>\n</ki-suggestions>\n```\n\n```js\nconst followUps = document.querySelector('#follow-ups');\nfollowUps.composer = document.querySelector('#draft');\nfollowUps.addEventListener('ki-select', ({ detail }) => {\n  sendPrompt(detail.text);\n});\n```\n\nHere `sendPrompt` is the application's conversation handler. After dispatch,\nthe group focuses the composer and preserves its draft. Cancel the event to\nmanage value and focus in the application handler.\n"
-      },
-      "props": [
-        {
-          "name": "composer",
-          "type": "KiSuggestionsComposer | undefined",
-          "complexType": {
-            "original": "KiSuggestionsComposer",
-            "resolved": "KiSuggestionsComposer | undefined",
-            "references": {
-              "KiSuggestionsComposer": {
-                "location": "local",
-                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
-                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsComposer"
-              }
-            }
-          },
-          "mutable": false,
-          "reflectToAttr": false,
-          "docs": "Optional composer supplied by application code. Fill mode sets its value.\nBoth modes focus it after an uncancelled selection.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "KiSuggestionsComposer"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Required accessible name for the group.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "mode",
-          "type": "\"fill\" | \"send\"",
-          "complexType": {
-            "original": "KiSuggestionsMode",
-            "resolved": "\"fill\" | \"send\"",
-            "references": {
-              "KiSuggestionsMode": {
-                "location": "local",
-                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
-                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsMode"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "mode",
-          "reflectToAttr": false,
-          "docs": "Send through the application or fill its attached editor for revision.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'send'"
-            }
-          ],
-          "default": "'send'",
-          "values": [
-            {
-              "value": "fill",
-              "type": "string"
-            },
-            {
-              "value": "send",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "variant",
-          "type": "\"cards\" | \"chips\"",
-          "complexType": {
-            "original": "KiSuggestionsVariant",
-            "resolved": "\"cards\" | \"chips\"",
-            "references": {
-              "KiSuggestionsVariant": {
-                "location": "local",
-                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
-                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsVariant"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "variant",
-          "reflectToAttr": true,
-          "docs": "Wrapping chips for follow-ups or cards with room for a description.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'chips'"
-            }
-          ],
-          "default": "'chips'",
-          "values": [
-            {
-              "value": "cards",
-              "type": "string"
-            },
-            {
-              "value": "chips",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-select",
-          "detail": "{ text: string; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ text: string }",
-            "resolved": "{ text: string; }",
-            "references": {}
-          },
-          "cancelable": true,
-          "composed": true,
-          "docs": "Reports the chosen prompt title. Use this event to send the prompt in\nsend mode. Cancel it to take over the default composer write and focus.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [
-        {
-          "event": "click",
-          "capture": false,
-          "passive": false
-        }
-      ],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Direct ki-suggestion children in reading order."
-        }
-      ],
-      "parts": [
-        {
-          "name": "group",
-          "docs": "The container that lays out the suggested prompts."
         }
       ],
       "states": [],
@@ -10619,6 +11129,11 @@
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
     },
+    "src/components/ki-mobile-nav/ki-mobile-nav.tsx::KiMobileNavVariant": {
+      "declaration": "export type KiMobileNavVariant = 'fixed' | 'floating';",
+      "docstring": "",
+      "path": "src/components/ki-mobile-nav/ki-mobile-nav.tsx"
+    },
     "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
       "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",
       "docstring": "",
@@ -10678,21 +11193,6 @@
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
       "path": "src/components/ki-status/ki-status.tsx"
-    },
-    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsVariant": {
-      "declaration": "export type KiSuggestionsVariant = 'chips' | 'cards';",
-      "docstring": "",
-      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
-    },
-    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsMode": {
-      "declaration": "export type KiSuggestionsMode = 'send' | 'fill';",
-      "docstring": "",
-      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
-    },
-    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsComposer": {
-      "declaration": "export interface KiSuggestionsComposer {\n  value: string;\n  focus(): void;\n}",
-      "docstring": "Application-owned editor used by a suggestions group.",
-      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
     },
     "src/components/ki-switch/ki-switch.tsx::KiSwitchSize": {
       "declaration": "export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';",

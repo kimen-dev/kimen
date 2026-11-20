@@ -34,6 +34,8 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-menu-group',
   'ki-menu-item',
   'ki-message',
+  'ki-mobile-nav',
+  'ki-mobile-nav-item',
   'ki-note',
   'ki-popover',
   'ki-reasoning',

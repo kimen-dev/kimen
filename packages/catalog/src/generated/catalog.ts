@@ -377,6 +377,44 @@ export const catalogData = {
       "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
       "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
+    "ki-button-group": {
+      "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+      "events": {},
+      "props": {
+        "attached": {
+          "type": "boolean",
+          "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+          "required": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode."
+        },
+        "toolbar": {
+          "type": "boolean",
+          "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+      },
+      "tag": "ki-button-group",
+      "whenNotToUse": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation.",
+      "whenToUse": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop."
+    },
     "ki-card": {
       "description": "A card surface for grouping related content, with an optional primary link or action.",
       "events": {
@@ -823,6 +861,10 @@ export const catalogData = {
           "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
           "default": false
         },
+        "expanded": {
+          "type": "boolean",
+          "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions."
+        },
         "label": {
           "type": "string",
           "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
@@ -837,6 +879,10 @@ export const catalogData = {
           "type": "string",
           "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
           "default": "Loading"
+        },
+        "pressed": {
+          "type": "boolean",
+          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
         },
         "size": {
           "type": "enum",
@@ -880,7 +926,7 @@ export const catalogData = {
         "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
       },
       "tag": "ki-icon-button",
-      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
       "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
     },
     "ki-image": {
@@ -1167,6 +1213,69 @@ export const catalogData = {
       "tag": "ki-list-item",
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+    },
+    "ki-mobile-nav": {
+      "description": "A fixed or floating navigation bar for the main destinations of a phone layout.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
+          "default": "Main"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "floating"
+          ],
+          "description": "Place the bar edge to edge or inset it as a raised pill.",
+          "default": "fixed"
+        }
+      },
+      "slots": {
+        "": "Three to five direct ki-mobile-nav-item destinations."
+      },
+      "tag": "ki-mobile-nav",
+      "whenNotToUse": "Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.",
+      "whenToUse": "Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow."
+    },
+    "ki-mobile-nav-item": {
+      "description": "An icon and visible label for one mobile navigation destination.",
+      "events": {},
+      "props": {
+        "count": {
+          "type": "number",
+          "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99."
+        },
+        "count-label": {
+          "type": "string",
+          "description": "Localized suffix for the link name. Use {count} for the full rounded count.",
+          "default": "{count} new"
+        },
+        "current": {
+          "type": "boolean",
+          "description": "Marks this link as the current page.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
+          "required": true,
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered icon name. The visible destination text supplies the link name.",
+          "required": true
+        }
+      },
+      "slots": {
+        "": "Visible destination text. Use plain text or noninteractive phrasing content."
+      },
+      "tag": "ki-mobile-nav-item",
+      "whenNotToUse": "For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.",
+      "whenToUse": "Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation."
     },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",
@@ -1526,6 +1635,50 @@ export const catalogData = {
       "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
       "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited."
     },
+    "ki-skeleton": {
+      "description": "Decorative placeholder shapes that reserve space for loading content.",
+      "events": {},
+      "props": {
+        "animated": {
+          "type": "boolean",
+          "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+          "default": true
+        },
+        "block-size": {
+          "type": "string",
+          "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape."
+        },
+        "inline-size": {
+          "type": "string",
+          "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space."
+        },
+        "lines": {
+          "type": "number",
+          "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 20
+        },
+        "shape": {
+          "type": "enum",
+          "values": [
+            "circle",
+            "rect",
+            "text"
+          ],
+          "description": "Match the placeholder to the expected text, avatar, or rectangular content.",
+          "default": "text"
+        },
+        "size": {
+          "type": "string",
+          "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence."
+        }
+      },
+      "slots": {},
+      "tag": "ki-skeleton",
+      "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
+      "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
+    },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",
       "events": {},
@@ -1683,59 +1836,6 @@ export const catalogData = {
       "tag": "ki-status",
       "whenNotToUse": "short labeled status text (that pill is ki-badge — this dot\nnever renders text), notification counters or the overlay attachment\nmechanism (a future, separate nav-badge concern), messages that need\nattention or announcement (ki-alert — the dot has no live region),\nprogress or loading (ki-progress). An unlabeled dot without adjacent\nvisible text is an authoring mistake (WCAG 1.4.1).",
       "whenToUse": "mark a state with minimal footprint adjacent to (or overlaid\non) the item it describes: presence on an avatar, health of a service\nlist entry, connection state in a toolbar. Label it (`label`) or pair it\nwith adjacent visible text — color is never the only carrier of the\nmeaning (WCAG 1.4.1)."
-    },
-    "ki-suggestion": {
-      "description": "A native prompt button displayed by a ki-suggestions group.",
-      "events": {},
-      "props": {
-        "description": {
-          "type": "string",
-          "description": "Optional accessible description, visible below the title in cards."
-        }
-      },
-      "slots": {
-        "": "Plain text forming the visible and accessible prompt title."
-      },
-      "tag": "ki-suggestion",
-      "whenNotToUse": "navigation, static content, or a submitted form value.",
-      "whenToUse": "offer one short, actionable prompt in a suggestion group."
-    },
-    "ki-suggestions": {
-      "description": "A labelled group of prompt starters or follow-up suggestions.",
-      "events": {
-        "ki-select": "Reports the chosen prompt title. Use this event to send the prompt in\nsend mode. Cancel it to take over the default composer write and focus."
-      },
-      "props": {
-        "label": {
-          "type": "string",
-          "description": "Required accessible name for the group.",
-          "required": true
-        },
-        "mode": {
-          "type": "enum",
-          "values": [
-            "fill",
-            "send"
-          ],
-          "description": "Send through the application or fill its attached editor for revision.",
-          "default": "send"
-        },
-        "variant": {
-          "type": "enum",
-          "values": [
-            "cards",
-            "chips"
-          ],
-          "description": "Wrapping chips for follow-ups or cards with room for a description.",
-          "default": "chips"
-        }
-      },
-      "slots": {
-        "": "Direct ki-suggestion children in reading order."
-      },
-      "tag": "ki-suggestions",
-      "whenNotToUse": "choose a form value, switch views, or display static example text.",
-      "whenToUse": "offer suggested prompts to start or continue an assistant conversation."
     },
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",

@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiAvatar } from '@kimen/elements/component
 import { defineCustomElement as defineKiAvatarGroup } from '@kimen/elements/components/ki-avatar-group.js';
 import { defineCustomElement as defineKiBadge } from '@kimen/elements/components/ki-badge.js';
 import { defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
+import { defineCustomElement as defineKiButtonGroup } from '@kimen/elements/components/ki-button-group.js';
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
@@ -28,6 +29,8 @@ import { defineCustomElement as defineKiInput } from '@kimen/elements/components
 import { defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
+import { defineCustomElement as defineKiMobileNav } from '@kimen/elements/components/ki-mobile-nav.js';
+import { defineCustomElement as defineKiMobileNavItem } from '@kimen/elements/components/ki-mobile-nav-item.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
@@ -38,11 +41,10 @@ import { defineCustomElement as defineKiScroller } from '@kimen/elements/compone
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
+import { defineCustomElement as defineKiSkeleton } from '@kimen/elements/components/ki-skeleton.js';
 import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
-import { defineCustomElement as defineKiSuggestion } from '@kimen/elements/components/ki-suggestion.js';
-import { defineCustomElement as defineKiSuggestions } from '@kimen/elements/components/ki-suggestions.js';
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
 import { defineCustomElement as defineKiTab } from '@kimen/elements/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
@@ -176,6 +178,29 @@ export class KiButton {
 
 
 export declare interface KiButton extends Components.KiButton {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiButtonGroup,
+  inputs: ['attached', 'label', 'size', 'toolbar']
+})
+@Component({
+  selector: 'ki-button-group',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['attached', { name: 'label', required: true }, 'size', 'toolbar'],
+})
+export class KiButtonGroup {
+  protected el: HTMLKiButtonGroupElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiButtonGroup extends Components.KiButtonGroup {}
 
 
 @ProxyCmp({
@@ -448,14 +473,14 @@ export declare interface KiIcon extends Components.KiIcon {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiIconButton,
-  inputs: ['disabled', 'label', 'loading', 'loadingLabel', 'size', 'tone', 'variant']
+  inputs: ['disabled', 'expanded', 'label', 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant']
 })
 @Component({
   selector: 'ki-icon-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', { name: 'label', required: true }, 'loading', 'loadingLabel', 'size', 'tone', 'variant'],
+  inputs: ['disabled', 'expanded', { name: 'label', required: true }, 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant'],
 })
 export class KiIconButton {
   protected el: HTMLKiIconButtonElement;
@@ -610,6 +635,52 @@ export class KiListItem {
 
 
 export declare interface KiListItem extends Components.KiListItem {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMobileNav,
+  inputs: ['label', 'variant']
+})
+@Component({
+  selector: 'ki-mobile-nav',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label', 'variant'],
+})
+export class KiMobileNav {
+  protected el: HTMLKiMobileNavElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMobileNav extends Components.KiMobileNav {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMobileNavItem,
+  inputs: ['count', 'countLabel', 'current', 'href', 'iconName']
+})
+@Component({
+  selector: 'ki-mobile-nav-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['count', 'countLabel', 'current', { name: 'href', required: true }, { name: 'iconName', required: true }],
+})
+export class KiMobileNavItem {
+  protected el: HTMLKiMobileNavItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMobileNavItem extends Components.KiMobileNavItem {}
 
 
 @ProxyCmp({
@@ -848,6 +919,29 @@ export declare interface KiSelect extends Components.KiSelect {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiSkeleton,
+  inputs: ['animated', 'blockSize', 'inlineSize', 'lines', 'shape', 'size']
+})
+@Component({
+  selector: 'ki-skeleton',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['animated', 'blockSize', 'inlineSize', 'lines', 'shape', 'size'],
+})
+export class KiSkeleton {
+  protected el: HTMLKiSkeletonElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSkeleton extends Components.KiSkeleton {}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiSpinner,
   inputs: ['label', 'showLabel', 'size', 'variant']
 })
@@ -914,58 +1008,6 @@ export class KiStatus {
 
 
 export declare interface KiStatus extends Components.KiStatus {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiSuggestion,
-  inputs: ['description']
-})
-@Component({
-  selector: 'ki-suggestion',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['description'],
-})
-export class KiSuggestion {
-  protected el: HTMLKiSuggestionElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiSuggestion extends Components.KiSuggestion {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiSuggestions,
-  inputs: ['composer', 'label', 'mode', 'variant']
-})
-@Component({
-  selector: 'ki-suggestions',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['composer', { name: 'label', required: true }, 'mode', 'variant'],
-})
-export class KiSuggestions {
-  protected el: HTMLKiSuggestionsElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-
-export declare interface KiSuggestions extends Components.KiSuggestions {
-  /**
-   * Reports the chosen prompt title. Use this event to send the prompt in
-send mode. Cancel it to take over the default composer write and focus.
-   */
-}
 
 
 @ProxyCmp({

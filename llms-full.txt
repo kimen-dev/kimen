@@ -790,6 +790,122 @@ CSS custom properties:
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
+### ki-button-group
+
+Arranges related actions as a spaced group, attached group, or keyboard toolbar.
+
+When to use: place two to five related actions together, present a primary
+action with a menu of alternatives, or give formatting tools one Tab stop.
+When NOT to use: for a single-choice setting, unrelated actions, or navigation.
+Use a segmented control for a single-choice setting and links for navigation.
+
+Examples:
+
+# Using ki-button-group
+
+## Spaced and attached groups
+
+Use a label that describes what the actions do together. In attached mode the
+first button provides the common variant and size. An explicit group size
+applies in both modes.
+
+```html
+<ki-button-group label="History">
+  <ki-button type="button">Undo</ki-button>
+  <ki-button type="button">Redo</ki-button>
+</ki-button-group>
+
+<ki-button-group label="Clipboard" attached size="sm">
+  <ki-button type="button">Copy</ki-button>
+  <ki-button type="button">Paste</ki-button>
+</ki-button-group>
+```
+
+## Formatting toolbar
+
+Import the glyphs used by your page. Give each icon button a tooltip using the
+same label. The application sets `pressed` as the formatting state changes. The native button exposes it as `aria-pressed`.
+
+```js
+import '@kimen/elements/icons/bold';
+import '@kimen/elements/icons/list';
+```
+
+```html
+<ki-button-group label="Formatting" toolbar size="sm">
+  <ki-tooltip label="Bold">
+    <ki-icon-button label="Bold" variant="ghost" pressed="true">
+      <ki-icon name="bold"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+  <span role="separator" aria-orientation="vertical"></span>
+  <ki-tooltip label="Bulleted list">
+    <ki-icon-button label="Bulleted list" variant="ghost">
+      <ki-icon name="list"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+</ki-button-group>
+```
+
+## Split button
+
+With a build that includes `ki-menu`, anchor the menu to the chevron action.
+Import `@kimen/elements/icons/chevron-down` before mounting the group. Handle the
+main button's click and menu selection as separate actions.
+
+```html
+<ki-button-group label="Save actions" attached>
+  <ki-button type="button" variant="primary">Save</ki-button>
+  <ki-tooltip label="More save options">
+    <ki-icon-button id="save-options" label="More save options" aria-haspopup="menu" expanded="false">
+      <ki-icon name="chevron-down"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+</ki-button-group>
+
+<ki-menu anchor="save-options">
+  <ki-menu-item value="draft">Save as draft</ki-menu-item>
+  <ki-menu-item value="copy">Save a copy</ki-menu-item>
+</ki-menu>
+```
+
+Keep the icon button's `expanded` property in sync with the menu's `open`
+state. Its native button exposes that state as `aria-expanded`.
+
+Attributes:
+- `attached` (boolean, default false): Joins neighboring actions at their inner edges. Buttons share the first button's variant and use its size when the group has no explicit size. Use for a closely related set of actions or for a split button.
+- `label` (string, required): Required accessible name for the group or toolbar (for example, "Text formatting"). Provide a localized name that describes the actions' shared purpose.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs" | undefined): Applies one token-backed size to each button while it belongs to the group. Omit it to keep individual sizes in spaced mode.
+- `toolbar` (boolean, default false): Gives the group toolbar semantics, a framed surface and one Tab stop. Horizontal arrows, Home and End move between the toolbar's actions.
+
+Slots:
+- (default): Related ki-button and ki-icon-button controls, in reading order. Wrap labeled icon actions in ki-tooltip with the same label to show the label on focus and hover. A toolbar can also include vertical separators.
+
+Parts:
+- `group`: The named group or toolbar surface.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-button-group-attached-gap`: Gap between joined actions.
+- `--ki-button-group-attached-radius`: Radius of the logical corners along a shared button edge.
+- `--ki-button-group-backdrop-filter`: Complete optional backdrop filter for the toolbar surface.
+- `--ki-button-group-bg`: Toolbar surface colour.
+- `--ki-button-group-bg-image`: Optional decorative image over the toolbar surface.
+- `--ki-button-group-border-color`: Thin toolbar frame colour.
+- `--ki-button-group-border-width`: Thickness of the toolbar frame and divider.
+- `--ki-button-group-divider`: Decorative toolbar separator ink.
+- `--ki-button-group-divider-size`: Block size of a vertical toolbar separator.
+- `--ki-button-group-fg`: Default toolbar foreground on its raised surface.
+- `--ki-button-group-gap`: Gap between actions in a spaced group.
+- `--ki-button-group-padding`: Toolbar frame inset and divider margin.
+- `--ki-button-group-radius`: Logical outside radius of the toolbar frame.
+- `--ki-button-group-seam-overlap`: Shared-edge overlap between adjacent attached actions.
+- `--ki-button-group-toolbar-gap`: Gap between toolbar actions.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-card
 
 A card surface for grouping related content, with an optional primary link or action.
@@ -1723,7 +1839,7 @@ data-row actions. Always supply `label`; usually pair with ki-tooltip for
 sighted discoverability. While the action it started is in progress, set
 `loading` instead of disabling it.
 When NOT to use: whenever a visible label fits (use ki-button), toggling
-state (a future toggle icon button), navigation (use a link), or form
+state without supplying `pressed`, navigation (use a link), or form
 submit/reset (ki-icon-button is not form-associated; use ki-button, whose
 visible label communicates the consequence).
 
@@ -1779,9 +1895,11 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 
 Attributes:
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
+- `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
 - `loading` (boolean, default false): Pending state of the action this icon button started (refreshing, sending). While set, every activation is blocked (pointer, Enter and Space), but the icon button stays focusable, in the Tab order and at its size: the icon stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its `label`, and `loadingLabel` is announced as a polite status message. `disabled` wins over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this icon button started is running, so a second activation cannot repeat it. When NOT to use: for an icon button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the icon button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Refreshing"). When NOT to use: do not repeat `label` here; the person already hears it on focus.
+- `pressed` (boolean | undefined): Application-owned toggle state. The native icon button exposes this as `aria-pressed`. Omit for a momentary action.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, and `ghost` for accent icon actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
@@ -2562,6 +2680,134 @@ CSS custom properties:
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-mobile-nav
+
+A fixed or floating navigation bar for the main destinations of a phone layout.
+
+When to use: Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
+When NOT to use: Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+
+Examples:
+
+# Using ki-mobile-nav
+
+Use one bottom navigation bar for the three to five top-level destinations in
+the phone layout. Place it after the content. The host reserves space in the
+app shell so the last content can scroll above the links.
+
+```js
+import '@kimen/elements/icons/house';
+import '@kimen/elements/icons/search';
+import '@kimen/elements/icons/inbox';
+```
+
+```html
+<main>
+  <!-- App content -->
+</main>
+<ki-mobile-nav label="Main" variant="floating">
+  <ki-mobile-nav-item href="/" icon-name="house" current>Home</ki-mobile-nav-item>
+  <ki-mobile-nav-item href="/search" icon-name="search">Search</ki-mobile-nav-item>
+  <ki-mobile-nav-item href="/inbox" icon-name="inbox" count="3">Inbox</ki-mobile-nav-item>
+</ki-mobile-nav>
+```
+
+Omit `variant` for an edge-to-edge bar. When switching to TopNav or Sidebar,
+use one app breakpoint to hide this bar and show the wider navigation.
+
+Attributes:
+- `label` (string, default 'Main'): Accessible name of the landmark. Supply a distinct name when the page has more than one navigation landmark.
+- `variant` ("fixed" | "floating", default 'fixed'): Place the bar edge to edge or inset it as a raised pill.
+
+Slots:
+- (default): Three to five direct ki-mobile-nav-item destinations.
+
+Parts:
+- `bar`: The native navigation landmark and painted bar.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-mobile-nav-backdrop-filter`: Complete optional backdrop filter for either bar variant.
+- `--ki-mobile-nav-bg`: Fixed bar surface.
+- `--ki-mobile-nav-bg-image`: Optional decorative image for either bar variant.
+- `--ki-mobile-nav-border`: Stroke along the fixed bar or around the floating bar.
+- `--ki-mobile-nav-border-width`: Bar border width.
+- `--ki-mobile-nav-floating-bg`: Floating bar surface.
+- `--ki-mobile-nav-floating-inset`: Space beside and below the floating bar.
+- `--ki-mobile-nav-floating-padding`: Inline padding inside the floating bar.
+- `--ki-mobile-nav-floating-radius`: Floating bar pill shape.
+- `--ki-mobile-nav-floating-shadow`: Elevation of the floating bar.
+- `--ki-mobile-nav-font-family`: Typeface for the bar and its destination labels.
+- `--ki-mobile-nav-height`: Minimum height before the safe area and border are added.
+- `--ki-mobile-nav-item-target-min`: Minimum block and inline link target size.
+
+### ki-mobile-nav-item
+
+An icon and visible label for one mobile navigation destination.
+
+When to use: Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
+When NOT to use: For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
+
+Examples:
+
+# Using ki-mobile-nav-item
+
+Use a short label, a registered icon and a destination URL for each native
+link inside `ki-mobile-nav`.
+
+```html
+<ki-mobile-nav-item href="/" icon-name="house" current>Home</ki-mobile-nav-item>
+<ki-mobile-nav-item href="/inbox" icon-name="inbox" count="125" count-label="{count} unread">
+  Inbox
+</ki-mobile-nav-item>
+```
+
+Mark the active destination with `current`. The second link shows `99+` in the
+badge and is announced as “Inbox, 125 unread”. A zero count hides the badge.
+
+Attributes:
+- `count` (number | undefined): Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.
+- `count-label` (string, default '{count} new'): Localized suffix for the link name. Use {count} for the full rounded count.
+- `current` (boolean, default false): Marks this link as the current page.
+- `href` (string, required, URL): Destination URL. Relative paths and fragments use native anchor resolution.
+- `icon-name` (string, required): Registered icon name. The visible destination text supplies the link name.
+
+Slots:
+- (default): Visible destination text. Use plain text or noninteractive phrasing content.
+
+Parts:
+- `indicator`: The icon well painted on the current destination.
+- `label`: The always-visible destination label.
+- `link`: The native anchor and focus target.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-mobile-nav-border-width`: Bar border width.
+- `--ki-mobile-nav-font-family`: Typeface for the bar and its destination labels.
+- `--ki-mobile-nav-indicator-bg`: Fill behind the current destination icon.
+- `--ki-mobile-nav-indicator-block-size`: Current icon pill height.
+- `--ki-mobile-nav-indicator-fg`: Icon ink on the current destination fill.
+- `--ki-mobile-nav-indicator-inline-size`: Current icon pill width.
+- `--ki-mobile-nav-indicator-radius`: Current icon pill corner radius.
+- `--ki-mobile-nav-item-current-fg`: Label ink of the current destination on the fixed or floating bar.
+- `--ki-mobile-nav-item-fg`: Foreground ink of an inactive destination on the fixed or floating bar.
+- `--ki-mobile-nav-item-focus-radius`: Corner radius of the keyboard focus indication.
+- `--ki-mobile-nav-item-font-size`: Destination label font size.
+- `--ki-mobile-nav-item-font-weight`: Destination label font weight.
+- `--ki-mobile-nav-item-gap`: Gap between the glyph and its label.
+- `--ki-mobile-nav-item-icon-size`: Destination glyph size.
+- `--ki-mobile-nav-item-line-height`: Destination label line height.
+- `--ki-mobile-nav-item-target-min`: Minimum block and inline link target size.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
 
 ### ki-note
 
@@ -3485,6 +3731,108 @@ CSS custom properties:
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-skeleton
+
+Decorative placeholder shapes that reserve space for loading content.
+
+When to use: Reserve the expected layout of a card, list, or assistant reply
+while it loads. Give the surrounding region an accessible name and set
+its aria-busy state. Show the skeleton after about 300 ms of waiting.
+When NOT to use: For a standalone loading announcement, progress measurement,
+or interactive control. Put content and loading feedback in the caller's region.
+
+Examples:
+
+# Using ki-skeleton
+
+Define the component when using direct imports.
+
+```js
+import { defineCustomElement } from '@kimen/elements/ki-skeleton';
+defineCustomElement();
+```
+
+## Match the expected layout
+
+```html
+<section aria-label="Assistant is writing" aria-busy="true">
+  <ki-skeleton lines="3"></ki-skeleton>
+</section>
+
+<section aria-label="Loading project" aria-busy="true">
+  <ki-skeleton shape="circle" size="2.5rem"></ki-skeleton>
+  <ki-skeleton shape="rect" block-size="6rem"></ki-skeleton>
+</section>
+```
+
+The last of multiple text lines is shorter. Use `inline-size` and `block-size` to match the dimensions of the incoming content. Set `animated="false"` to use a static fill.
+
+## Skip the flash on fast loads
+
+Reserve the expected block size immediately. Use `hidden` until the request has been pending for about 300 ms.
+
+```html
+<section id="project" aria-label="Loading project" aria-busy="true" style="min-block-size:6rem">
+  <ki-skeleton hidden shape="rect" block-size="6rem"></ki-skeleton>
+</section>
+```
+
+```js
+const region = document.querySelector('#project');
+const placeholder = region.querySelector('ki-skeleton');
+const reveal = setTimeout(() => {
+  placeholder.hidden = false;
+}, 300);
+
+try {
+  const project = await new Promise((resolve) => {
+    setTimeout(() => resolve({ name: 'Roadmap' }), 900);
+  });
+  region.textContent = project.name;
+} finally {
+  clearTimeout(reveal);
+  placeholder.remove();
+  region.setAttribute('aria-busy', 'false');
+  region.setAttribute('aria-label', 'Project');
+}
+```
+
+Use this script in a module after the section is mounted. Change the simulated request to 150 ms to see the fast path. In an application, use the real request and show its error state in the same region.
+
+Attributes:
+- `animated` (boolean, default true): Sweep a highlight while the user permits motion. Set false to use a static placeholder. Shimmer also stops under reduced motion and forced colours.
+- `block-size` (string | undefined): CSS length for the block axis. For text, this is the height of each line. Use it to reserve the height of the content that will replace the shape.
+- `inline-size` (string | undefined): CSS length for the inline axis. Use it to match a fixed content width. Text and rectangles otherwise fill available inline space.
+- `lines` (number, default 1, minimum 1, maximum 20): Number of text lines. Use a whole number from 1 to 20 for the expected paragraph length. Extra lines are ignored for circles and rectangles.
+- `shape` ("circle" | "rect" | "text", default 'text'): Match the placeholder to the expected text, avatar, or rectangular content.
+- `size` (string | undefined): CSS length shared by both axes. Use it for circles or square blocks. An axis-specific override takes precedence.
+
+Slots: none
+
+Parts:
+- `shape`: Each painted text line, circle or rectangle.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-skeleton-backdrop-filter`: Complete backdrop filter behind a loading shape. Defaults to none.
+- `--ki-skeleton-bg`: Base fill of the decorative loading shapes.
+- `--ki-skeleton-bg-image`: Optional image layered over the static fill. Defaults to none.
+- `--ki-skeleton-circle-radius`: Proportional corner radius of the circular shape.
+- `--ki-skeleton-circle-size`: Default diameter of the circle.
+- `--ki-skeleton-highlight`: Peak colour of the animated loading highlight.
+- `--ki-skeleton-last-line-scale`: Fraction of the usual line width occupied by the final line in multiline text.
+- `--ki-skeleton-line-gap`: Block-axis space between text lines.
+- `--ki-skeleton-line-size`: Default height of each text line.
+- `--ki-skeleton-radius`: Corner radius of text lines and rectangles.
+- `--ki-skeleton-rect-size`: Default block size of the rectangle.
+- `--ki-skeleton-shimmer-duration`: Duration of a shimmer sweep.
+- `--ki-skeleton-shimmer-easing`: Easing of the shimmer sweep.
+- `--ki-skeleton-shimmer-image`: Image of the moving highlight. Use currentColor to inherit the highlight colour.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-spinner
 
 A compact status for an indeterminate wait.
@@ -3697,165 +4045,6 @@ CSS custom properties:
 - `--ki-status-success-color`: color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500).
 - `--ki-status-warning-color`: color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008).
 - `--ki-typography-family-body`: semantic font family for typography family body.
-
-### ki-suggestion
-
-A native prompt button displayed by a ki-suggestions group.
-
-When to use: offer one short, actionable prompt in a suggestion group.
-When NOT to use: navigation, static content, or a submitted form value.
-
-Examples:
-
-# ki-suggestion examples
-
-## Add context to a prompt
-
-```html
-<ki-suggestions label="Start a conversation" variant="cards">
-  <ki-suggestion description="For the merged pull requests">Draft release notes</ki-suggestion>
-  <ki-suggestion>Plan the next release</ki-suggestion>
-</ki-suggestions>
-```
-
-Put the prompt in the default slot as plain text. The title supplies the
-button's accessible name. Use `description` for separate context.
-
-Register both tags for direct imports. Listen to `ki-select` on the group
-for the chosen title.
-
-Attributes:
-- `description` (string | undefined): Optional accessible description, visible below the title in cards.
-
-Slots:
-- (default): Plain text forming the visible and accessible prompt title.
-
-Parts:
-- `button`: The native suggestion button.
-- `description`: Optional supporting text shown in cards.
-
-Events: none
-
-Methods: none
-
-CSS custom properties:
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-suggestion-backdrop-filter`: Filter behind the chip surface.
-- `--ki-suggestion-bg`: Resting chip surface.
-- `--ki-suggestion-bg-image`: Image layered over the chip surface.
-- `--ki-suggestion-border`: Resting chip boundary.
-- `--ki-suggestion-border-width`: Boundary width for either suggestion variant.
-- `--ki-suggestion-card-description-fg`: Resting card description.
-- `--ki-suggestion-card-gap`: Space between the card title and description.
-- `--ki-suggestion-card-hover-description-fg`: Description over the card hover surface.
-- `--ki-suggestion-card-pressed-description-fg`: Description over the pressed card surface.
-- `--ki-suggestion-description-line-height`: Line height of the card description.
-- `--ki-suggestion-description-size`: Type size of the card description.
-- `--ki-suggestion-fg`: Resting chip title.
-- `--ki-suggestion-font-family`: Typeface of the suggestion text.
-- `--ki-suggestion-font-size`: Type size of the prompt title.
-- `--ki-suggestion-height`: Minimum painted height of a chip.
-- `--ki-suggestion-hover-bg`: Chip surface on a hovering device.
-- `--ki-suggestion-hover-fg`: Title over the chip hover surface.
-- `--ki-suggestion-inset`: Inline padding for either variant.
-- `--ki-suggestion-line-height`: Line height of the prompt title.
-- `--ki-suggestion-pressed-bg`: Chip surface while a pointer or key holds activation.
-- `--ki-suggestion-pressed-fg`: Title over the pressed chip surface.
-- `--ki-suggestion-radius`: Rounded outline of a chip.
-- `--ki-suggestion-weight`: Weight of chip titles and card descriptions.
-
-### ki-suggestions
-
-A labelled group of prompt starters or follow-up suggestions.
-
-When to use: offer suggested prompts to start or continue an assistant conversation.
-When NOT to use: choose a form value, switch views, or display static example text.
-
-Examples:
-
-# ki-suggestions examples
-
-## Fill a draft for editing
-
-```html
-<ki-suggestions id="starters" label="Start a conversation" variant="cards" mode="fill">
-  <ki-suggestion description="For the merged pull requests">Draft release notes</ki-suggestion>
-  <ki-suggestion description="From the on-call reports">Summarise the incidents</ki-suggestion>
-</ki-suggestions>
-<label for="draft">Message</label>
-<textarea id="draft"></textarea>
-```
-
-```js
-import { defineCustomElement as defineSuggestions } from '@kimen/elements/ki-suggestions';
-import { defineCustomElement as defineSuggestion } from '@kimen/elements/ki-suggestion';
-
-defineSuggestions();
-defineSuggestion();
-
-document.querySelector('#starters').composer = document.querySelector('#draft');
-```
-
-The group replaces the draft and focuses the textarea. A custom composer can
-expose the same writable string `value` and `focus()` interface.
-
-## Send a follow-up
-
-```html
-<ki-suggestions id="follow-ups" label="Follow-up suggestions">
-  <ki-suggestion>Which ones recur?</ki-suggestion>
-  <ki-suggestion>Group them by service</ki-suggestion>
-</ki-suggestions>
-```
-
-```js
-const followUps = document.querySelector('#follow-ups');
-followUps.composer = document.querySelector('#draft');
-followUps.addEventListener('ki-select', ({ detail }) => {
-  sendPrompt(detail.text);
-});
-```
-
-Here `sendPrompt` is the application's conversation handler. After dispatch,
-the group focuses the composer and preserves its draft. Cancel the event to
-manage value and focus in the application handler.
-
-Attributes:
-- `label` (string, required): Required accessible name for the group.
-- `mode` ("fill" | "send", default 'send'): Send through the application or fill its attached editor for revision.
-- `variant` ("cards" | "chips", default 'chips'): Wrapping chips for follow-ups or cards with room for a description.
-
-Slots:
-- (default): Direct ki-suggestion children in reading order.
-
-Parts:
-- `group`: The container that lays out the suggested prompts.
-
-Events:
-- `ki-select` (CustomEvent<{ text: string }>): Reports the chosen prompt title. Use this event to send the prompt in send mode. Cancel it to take over the default composer write and focus.
-
-Methods: none
-
-CSS custom properties:
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-suggestion-card-backdrop-filter`: Filter behind the card surface.
-- `--ki-suggestion-card-bg`: Resting card surface.
-- `--ki-suggestion-card-bg-image`: Image layered over the card surface.
-- `--ki-suggestion-card-border`: Resting card boundary.
-- `--ki-suggestion-card-fg`: Resting card title.
-- `--ki-suggestion-card-hover-bg`: Card surface on a hovering device.
-- `--ki-suggestion-card-hover-fg`: Title over the card hover surface.
-- `--ki-suggestion-card-inset`: Block padding of each starter card.
-- `--ki-suggestion-card-pressed-bg`: Card surface while a pointer or key holds activation.
-- `--ki-suggestion-card-pressed-fg`: Title over the pressed card surface.
-- `--ki-suggestion-card-radius`: Corners of a starter card.
-- `--ki-suggestion-card-weight`: Weight of the card title.
-- `--ki-suggestions-card-width`: Maximum inline size of each starter card.
-- `--ki-suggestions-font-family`: Typeface inherited by the suggestion group.
-- `--ki-suggestions-gap`: Spacing between suggestions.
 
 ### ki-switch
 

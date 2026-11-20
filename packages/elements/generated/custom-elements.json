@@ -2304,6 +2304,204 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-button-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiButtonGroup",
+          "customElement": true,
+          "tagName": "ki-button-group",
+          "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+          "whenToUse": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop.",
+          "whenNotToUse": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation.",
+          "attributes": [
+            {
+              "name": "attached",
+              "fieldName": "attached",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+              "required": true
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined"
+              },
+              "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode."
+            },
+            {
+              "name": "toolbar",
+              "fieldName": "toolbar",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "attached",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+              "attribute": "attached",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+              "attribute": "label",
+              "reflects": true,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined"
+              },
+              "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "toolbar",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+              "attribute": "toolbar",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "group",
+              "description": "The named group or toolbar surface."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-button-group-attached-gap",
+              "description": "Gap between joined actions."
+            },
+            {
+              "name": "--ki-button-group-attached-radius",
+              "description": "Radius of the logical corners along a shared button edge."
+            },
+            {
+              "name": "--ki-button-group-backdrop-filter",
+              "description": "Complete optional backdrop filter for the toolbar surface."
+            },
+            {
+              "name": "--ki-button-group-bg",
+              "description": "Toolbar surface colour."
+            },
+            {
+              "name": "--ki-button-group-bg-image",
+              "description": "Optional decorative image over the toolbar surface."
+            },
+            {
+              "name": "--ki-button-group-border-color",
+              "description": "Thin toolbar frame colour."
+            },
+            {
+              "name": "--ki-button-group-border-width",
+              "description": "Thickness of the toolbar frame and divider."
+            },
+            {
+              "name": "--ki-button-group-divider",
+              "description": "Decorative toolbar separator ink."
+            },
+            {
+              "name": "--ki-button-group-divider-size",
+              "description": "Block size of a vertical toolbar separator."
+            },
+            {
+              "name": "--ki-button-group-fg",
+              "description": "Default toolbar foreground on its raised surface."
+            },
+            {
+              "name": "--ki-button-group-gap",
+              "description": "Gap between actions in a spaced group."
+            },
+            {
+              "name": "--ki-button-group-padding",
+              "description": "Toolbar frame inset and divider margin."
+            },
+            {
+              "name": "--ki-button-group-radius",
+              "description": "Logical outside radius of the toolbar frame."
+            },
+            {
+              "name": "--ki-button-group-seam-overlap",
+              "description": "Shared-edge overlap between adjacent attached actions."
+            },
+            {
+              "name": "--ki-button-group-toolbar-gap",
+              "description": "Gap between toolbar actions."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiButtonGroup",
+          "declaration": {
+            "name": "KiButtonGroup",
+            "module": "dist/components/ki-button-group.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-button-group",
+          "declaration": {
+            "name": "KiButtonGroup",
+            "module": "dist/components/ki-button-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-card.js",
       "declarations": [
         {
@@ -5006,7 +5204,7 @@
           "tagName": "ki-icon-button",
           "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
           "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it.",
-          "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+          "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
           "attributes": [
             {
               "name": "disabled",
@@ -5016,6 +5214,14 @@
               },
               "default": "false",
               "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`."
+            },
+            {
+              "name": "expanded",
+              "fieldName": "expanded",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions."
             },
             {
               "name": "label",
@@ -5043,6 +5249,14 @@
               },
               "default": "'Loading'",
               "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus."
+            },
+            {
+              "name": "pressed",
+              "fieldName": "pressed",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
             },
             {
               "name": "size",
@@ -5090,6 +5304,17 @@
             },
             {
               "kind": "field",
+              "name": "expanded",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions.",
+              "attribute": "expanded",
+              "reflects": false
+            },
+            {
+              "kind": "field",
               "name": "label",
               "privacy": "public",
               "type": {
@@ -5123,6 +5348,17 @@
               "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
               "attribute": "loading-label",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "pressed",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
+              "attribute": "pressed",
+              "reflects": false
             },
             {
               "kind": "field",
@@ -7766,6 +8002,393 @@
           "declaration": {
             "name": "KiListItem",
             "module": "dist/components/ki-list-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-mobile-nav.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMobileNav",
+          "customElement": true,
+          "tagName": "ki-mobile-nav",
+          "description": "A fixed or floating navigation bar for the main destinations of a phone layout.",
+          "whenToUse": "Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.",
+          "whenNotToUse": "Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main'",
+              "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"fixed\" | \"floating\""
+              },
+              "default": "'fixed'",
+              "description": "Place the bar edge to edge or inset it as a raised pill."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main'",
+              "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"fixed\" | \"floating\""
+              },
+              "default": "'fixed'",
+              "description": "Place the bar edge to edge or inset it as a raised pill.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Three to five direct ki-mobile-nav-item destinations."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "bar",
+              "description": "The native navigation landmark and painted bar."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-mobile-nav-backdrop-filter",
+              "description": "Complete optional backdrop filter for either bar variant."
+            },
+            {
+              "name": "--ki-mobile-nav-bg",
+              "description": "Fixed bar surface."
+            },
+            {
+              "name": "--ki-mobile-nav-bg-image",
+              "description": "Optional decorative image for either bar variant."
+            },
+            {
+              "name": "--ki-mobile-nav-border",
+              "description": "Stroke along the fixed bar or around the floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-border-width",
+              "description": "Bar border width."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-bg",
+              "description": "Floating bar surface."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-inset",
+              "description": "Space beside and below the floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-padding",
+              "description": "Inline padding inside the floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-radius",
+              "description": "Floating bar pill shape."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-shadow",
+              "description": "Elevation of the floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-font-family",
+              "description": "Typeface for the bar and its destination labels."
+            },
+            {
+              "name": "--ki-mobile-nav-height",
+              "description": "Minimum height before the safe area and border are added."
+            },
+            {
+              "name": "--ki-mobile-nav-item-target-min",
+              "description": "Minimum block and inline link target size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMobileNav",
+          "declaration": {
+            "name": "KiMobileNav",
+            "module": "dist/components/ki-mobile-nav.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-mobile-nav",
+          "declaration": {
+            "name": "KiMobileNav",
+            "module": "dist/components/ki-mobile-nav.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-mobile-nav-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMobileNavItem",
+          "customElement": true,
+          "tagName": "ki-mobile-nav-item",
+          "description": "An icon and visible label for one mobile navigation destination.",
+          "whenToUse": "Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.",
+          "whenNotToUse": "For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.",
+          "attributes": [
+            {
+              "name": "count",
+              "fieldName": "count",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99."
+            },
+            {
+              "name": "count-label",
+              "fieldName": "countLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{count} new'",
+              "description": "Localized suffix for the link name. Use {count} for the full rounded count."
+            },
+            {
+              "name": "current",
+              "fieldName": "current",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks this link as the current page."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
+              "required": true,
+              "format": "url"
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string"
+              },
+              "description": "Registered icon name. The visible destination text supplies the link name.",
+              "required": true
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "count",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99.",
+              "attribute": "count",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "countLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{count} new'",
+              "description": "Localized suffix for the link name. Use {count} for the full rounded count.",
+              "attribute": "count-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "current",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks this link as the current page.",
+              "attribute": "current",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
+              "attribute": "href",
+              "reflects": false,
+              "required": true,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Registered icon name. The visible destination text supplies the link name.",
+              "attribute": "icon-name",
+              "reflects": false,
+              "required": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Visible destination text. Use plain text or noninteractive phrasing content."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "indicator",
+              "description": "The icon well painted on the current destination."
+            },
+            {
+              "name": "label",
+              "description": "The always-visible destination label."
+            },
+            {
+              "name": "link",
+              "description": "The native anchor and focus target."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-mobile-nav-border-width",
+              "description": "Bar border width."
+            },
+            {
+              "name": "--ki-mobile-nav-font-family",
+              "description": "Typeface for the bar and its destination labels."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-bg",
+              "description": "Fill behind the current destination icon."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-block-size",
+              "description": "Current icon pill height."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-fg",
+              "description": "Icon ink on the current destination fill."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-inline-size",
+              "description": "Current icon pill width."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-radius",
+              "description": "Current icon pill corner radius."
+            },
+            {
+              "name": "--ki-mobile-nav-item-current-fg",
+              "description": "Label ink of the current destination on the fixed or floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-item-fg",
+              "description": "Foreground ink of an inactive destination on the fixed or floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-item-focus-radius",
+              "description": "Corner radius of the keyboard focus indication."
+            },
+            {
+              "name": "--ki-mobile-nav-item-font-size",
+              "description": "Destination label font size."
+            },
+            {
+              "name": "--ki-mobile-nav-item-font-weight",
+              "description": "Destination label font weight."
+            },
+            {
+              "name": "--ki-mobile-nav-item-gap",
+              "description": "Gap between the glyph and its label."
+            },
+            {
+              "name": "--ki-mobile-nav-item-icon-size",
+              "description": "Destination glyph size."
+            },
+            {
+              "name": "--ki-mobile-nav-item-line-height",
+              "description": "Destination label line height."
+            },
+            {
+              "name": "--ki-mobile-nav-item-target-min",
+              "description": "Minimum block and inline link target size."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMobileNavItem",
+          "declaration": {
+            "name": "KiMobileNavItem",
+            "module": "dist/components/ki-mobile-nav-item.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-mobile-nav-item",
+          "declaration": {
+            "name": "KiMobileNavItem",
+            "module": "dist/components/ki-mobile-nav-item.js"
           }
         }
       ]
@@ -10438,6 +11061,237 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-skeleton.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSkeleton",
+          "customElement": true,
+          "tagName": "ki-skeleton",
+          "description": "Decorative placeholder shapes that reserve space for loading content.",
+          "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting.",
+          "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
+          "attributes": [
+            {
+              "name": "animated",
+              "fieldName": "animated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours."
+            },
+            {
+              "name": "block-size",
+              "fieldName": "blockSize",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape."
+            },
+            {
+              "name": "inline-size",
+              "fieldName": "inlineSize",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space."
+            },
+            {
+              "name": "lines",
+              "fieldName": "lines",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+              "minimum": 1,
+              "maximum": 20
+            },
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "\"circle\" | \"rect\" | \"text\""
+              },
+              "default": "'text'",
+              "description": "Match the placeholder to the expected text, avatar, or rectangular content."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "animated",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+              "attribute": "animated",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "blockSize",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape.",
+              "attribute": "block-size",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "inlineSize",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space.",
+              "attribute": "inline-size",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "lines",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+              "attribute": "lines",
+              "reflects": false,
+              "minimum": 1,
+              "maximum": 20
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "privacy": "public",
+              "type": {
+                "text": "\"circle\" | \"rect\" | \"text\""
+              },
+              "default": "'text'",
+              "description": "Match the placeholder to the expected text, avatar, or rectangular content.",
+              "attribute": "shape",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence.",
+              "attribute": "size",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "shape",
+              "description": "Each painted text line, circle or rectangle."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-skeleton-backdrop-filter",
+              "description": "Complete backdrop filter behind a loading shape. Defaults to none."
+            },
+            {
+              "name": "--ki-skeleton-bg",
+              "description": "Base fill of the decorative loading shapes."
+            },
+            {
+              "name": "--ki-skeleton-bg-image",
+              "description": "Optional image layered over the static fill. Defaults to none."
+            },
+            {
+              "name": "--ki-skeleton-circle-radius",
+              "description": "Proportional corner radius of the circular shape."
+            },
+            {
+              "name": "--ki-skeleton-circle-size",
+              "description": "Default diameter of the circle."
+            },
+            {
+              "name": "--ki-skeleton-highlight",
+              "description": "Peak colour of the animated loading highlight."
+            },
+            {
+              "name": "--ki-skeleton-last-line-scale",
+              "description": "Fraction of the usual line width occupied by the final line in multiline text."
+            },
+            {
+              "name": "--ki-skeleton-line-gap",
+              "description": "Block-axis space between text lines."
+            },
+            {
+              "name": "--ki-skeleton-line-size",
+              "description": "Default height of each text line."
+            },
+            {
+              "name": "--ki-skeleton-radius",
+              "description": "Corner radius of text lines and rectangles."
+            },
+            {
+              "name": "--ki-skeleton-rect-size",
+              "description": "Default block size of the rectangle."
+            },
+            {
+              "name": "--ki-skeleton-shimmer-duration",
+              "description": "Duration of a shimmer sweep."
+            },
+            {
+              "name": "--ki-skeleton-shimmer-easing",
+              "description": "Easing of the shimmer sweep."
+            },
+            {
+              "name": "--ki-skeleton-shimmer-image",
+              "description": "Image of the moving highlight. Use currentColor to inherit the highlight colour."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSkeleton",
+          "declaration": {
+            "name": "KiSkeleton",
+            "module": "dist/components/ki-skeleton.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-skeleton",
+          "declaration": {
+            "name": "KiSkeleton",
+            "module": "dist/components/ki-skeleton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-spinner.js",
       "declarations": [
         {
@@ -11000,386 +11854,6 @@
           "declaration": {
             "name": "KiStatus",
             "module": "dist/components/ki-status.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-suggestion.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiSuggestion",
-          "customElement": true,
-          "tagName": "ki-suggestion",
-          "description": "A native prompt button displayed by a ki-suggestions group.",
-          "whenToUse": "offer one short, actionable prompt in a suggestion group.",
-          "whenNotToUse": "navigation, static content, or a submitted form value.",
-          "attributes": [
-            {
-              "name": "description",
-              "fieldName": "description",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional accessible description, visible below the title in cards."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "description",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional accessible description, visible below the title in cards.",
-              "attribute": "description",
-              "reflects": false
-            }
-          ],
-          "events": [],
-          "slots": [
-            {
-              "name": "",
-              "description": "Plain text forming the visible and accessible prompt title."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "button",
-              "description": "The native suggestion button."
-            },
-            {
-              "name": "description",
-              "description": "Optional supporting text shown in cards."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-suggestion-backdrop-filter",
-              "description": "Filter behind the chip surface."
-            },
-            {
-              "name": "--ki-suggestion-bg",
-              "description": "Resting chip surface."
-            },
-            {
-              "name": "--ki-suggestion-bg-image",
-              "description": "Image layered over the chip surface."
-            },
-            {
-              "name": "--ki-suggestion-border",
-              "description": "Resting chip boundary."
-            },
-            {
-              "name": "--ki-suggestion-border-width",
-              "description": "Boundary width for either suggestion variant."
-            },
-            {
-              "name": "--ki-suggestion-card-description-fg",
-              "description": "Resting card description."
-            },
-            {
-              "name": "--ki-suggestion-card-gap",
-              "description": "Space between the card title and description."
-            },
-            {
-              "name": "--ki-suggestion-card-hover-description-fg",
-              "description": "Description over the card hover surface."
-            },
-            {
-              "name": "--ki-suggestion-card-pressed-description-fg",
-              "description": "Description over the pressed card surface."
-            },
-            {
-              "name": "--ki-suggestion-description-line-height",
-              "description": "Line height of the card description."
-            },
-            {
-              "name": "--ki-suggestion-description-size",
-              "description": "Type size of the card description."
-            },
-            {
-              "name": "--ki-suggestion-fg",
-              "description": "Resting chip title."
-            },
-            {
-              "name": "--ki-suggestion-font-family",
-              "description": "Typeface of the suggestion text."
-            },
-            {
-              "name": "--ki-suggestion-font-size",
-              "description": "Type size of the prompt title."
-            },
-            {
-              "name": "--ki-suggestion-height",
-              "description": "Minimum painted height of a chip."
-            },
-            {
-              "name": "--ki-suggestion-hover-bg",
-              "description": "Chip surface on a hovering device."
-            },
-            {
-              "name": "--ki-suggestion-hover-fg",
-              "description": "Title over the chip hover surface."
-            },
-            {
-              "name": "--ki-suggestion-inset",
-              "description": "Inline padding for either variant."
-            },
-            {
-              "name": "--ki-suggestion-line-height",
-              "description": "Line height of the prompt title."
-            },
-            {
-              "name": "--ki-suggestion-pressed-bg",
-              "description": "Chip surface while a pointer or key holds activation."
-            },
-            {
-              "name": "--ki-suggestion-pressed-fg",
-              "description": "Title over the pressed chip surface."
-            },
-            {
-              "name": "--ki-suggestion-radius",
-              "description": "Rounded outline of a chip."
-            },
-            {
-              "name": "--ki-suggestion-weight",
-              "description": "Weight of chip titles and card descriptions."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiSuggestion",
-          "declaration": {
-            "name": "KiSuggestion",
-            "module": "dist/components/ki-suggestion.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-suggestion",
-          "declaration": {
-            "name": "KiSuggestion",
-            "module": "dist/components/ki-suggestion.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-suggestions.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiSuggestions",
-          "customElement": true,
-          "tagName": "ki-suggestions",
-          "description": "A labelled group of prompt starters or follow-up suggestions.",
-          "whenToUse": "offer suggested prompts to start or continue an assistant conversation.",
-          "whenNotToUse": "choose a form value, switch views, or display static example text.",
-          "attributes": [
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Required accessible name for the group.",
-              "required": true
-            },
-            {
-              "name": "mode",
-              "fieldName": "mode",
-              "type": {
-                "text": "\"fill\" | \"send\""
-              },
-              "default": "'send'",
-              "description": "Send through the application or fill its attached editor for revision."
-            },
-            {
-              "name": "variant",
-              "fieldName": "variant",
-              "type": {
-                "text": "\"cards\" | \"chips\""
-              },
-              "default": "'chips'",
-              "description": "Wrapping chips for follow-ups or cards with room for a description."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "composer",
-              "privacy": "public",
-              "type": {
-                "text": "KiSuggestionsComposer | undefined"
-              },
-              "description": "Optional composer supplied by application code. Fill mode sets its value.\nBoth modes focus it after an uncancelled selection.",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Required accessible name for the group.",
-              "attribute": "label",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "mode",
-              "privacy": "public",
-              "type": {
-                "text": "\"fill\" | \"send\""
-              },
-              "default": "'send'",
-              "description": "Send through the application or fill its attached editor for revision.",
-              "attribute": "mode",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "privacy": "public",
-              "type": {
-                "text": "\"cards\" | \"chips\""
-              },
-              "default": "'chips'",
-              "description": "Wrapping chips for follow-ups or cards with room for a description.",
-              "attribute": "variant",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-select",
-              "type": {
-                "text": "CustomEvent<{ text: string }>"
-              },
-              "description": "Reports the chosen prompt title. Use this event to send the prompt in\nsend mode. Cancel it to take over the default composer write and focus."
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Direct ki-suggestion children in reading order."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "group",
-              "description": "The container that lays out the suggested prompts."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-space-scale",
-              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
-            },
-            {
-              "name": "--ki-suggestion-card-backdrop-filter",
-              "description": "Filter behind the card surface."
-            },
-            {
-              "name": "--ki-suggestion-card-bg",
-              "description": "Resting card surface."
-            },
-            {
-              "name": "--ki-suggestion-card-bg-image",
-              "description": "Image layered over the card surface."
-            },
-            {
-              "name": "--ki-suggestion-card-border",
-              "description": "Resting card boundary."
-            },
-            {
-              "name": "--ki-suggestion-card-fg",
-              "description": "Resting card title."
-            },
-            {
-              "name": "--ki-suggestion-card-hover-bg",
-              "description": "Card surface on a hovering device."
-            },
-            {
-              "name": "--ki-suggestion-card-hover-fg",
-              "description": "Title over the card hover surface."
-            },
-            {
-              "name": "--ki-suggestion-card-inset",
-              "description": "Block padding of each starter card."
-            },
-            {
-              "name": "--ki-suggestion-card-pressed-bg",
-              "description": "Card surface while a pointer or key holds activation."
-            },
-            {
-              "name": "--ki-suggestion-card-pressed-fg",
-              "description": "Title over the pressed card surface."
-            },
-            {
-              "name": "--ki-suggestion-card-radius",
-              "description": "Corners of a starter card."
-            },
-            {
-              "name": "--ki-suggestion-card-weight",
-              "description": "Weight of the card title."
-            },
-            {
-              "name": "--ki-suggestions-card-width",
-              "description": "Maximum inline size of each starter card."
-            },
-            {
-              "name": "--ki-suggestions-font-family",
-              "description": "Typeface inherited by the suggestion group."
-            },
-            {
-              "name": "--ki-suggestions-gap",
-              "description": "Spacing between suggestions."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiSuggestions",
-          "declaration": {
-            "name": "KiSuggestions",
-            "module": "dist/components/ki-suggestions.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-suggestions",
-          "declaration": {
-            "name": "KiSuggestions",
-            "module": "dist/components/ki-suggestions.js"
           }
         }
       ]

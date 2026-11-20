@@ -1,0 +1,199 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": "'Main'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "variant": {
+        "default": "'fixed'",
+        "deprecatedSince": null,
+        "description": "Place the bar edge to edge or inset it as a raised pill.",
+        "replacement": null,
+        "required": false,
+        "type": "\"fixed\" | \"floating\""
+      }
+    },
+    "cssProperties": {
+      "--ki-mobile-nav-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete optional backdrop filter for either bar variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fixed bar surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative image for either bar variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke along the fixed bar or around the floating bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Bar border width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-floating-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Floating bar surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-floating-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space beside and below the floating bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-floating-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline padding inside the floating bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-floating-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Floating bar pill shape.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-floating-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Elevation of the floating bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface for the bar and its destination labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum height before the safe area and border are added.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum block and inline link target size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A fixed or floating navigation bar for the main destinations of a phone layout.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "bar": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native navigation landmark and painted bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": "'Main'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "variant": {
+        "default": "'fixed'",
+        "deprecatedSince": null,
+        "description": "Place the bar edge to edge or inset it as a raised pill.",
+        "replacement": null,
+        "required": false,
+        "type": "\"fixed\" | \"floating\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Three to five direct ki-mobile-nav-item destinations.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-mobile-nav.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-mobile-nav.d.ts",
+    "symbols": {
+      "KiMobileNav": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiMobileNav extends Components.KiMobileNav, HTMLElement {\n}\nexport const KiMobileNav: {\n    prototype: KiMobileNav;\n    new (): KiMobileNav;\n};"
+      },
+      "KiMobileNavVariant": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiMobileNavVariant = 'fixed' | 'floating';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-mobile-nav.js"
+  }
+}

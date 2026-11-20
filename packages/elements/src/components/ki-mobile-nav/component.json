@@ -1,0 +1,22 @@
+{
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
+  "catalog": true,
+  "visual": {
+    "material3Dark": true
+  },
+  "budgetGroup": {
+    "members": ["ki-mobile-nav", "ki-mobile-nav-item"]
+  },
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 19627,
+      "gzip": 4252,
+      "brotli": 2885
+    }
+  }
+}
