@@ -146,6 +146,23 @@ export const catalogData = {
       "whenNotToUse": "Do not use it for avatars (ki-avatar), for icons inside controls, for text set as an image, or as a button. Never bind an action.",
       "whenToUse": "Show a chart, a photo or an illustration that carries content (describe it in alt) or decoration (alt \"\")."
     },
+    "ki-accordion": {
+      "description": "A set of native disclosure panels with a shared frame.",
+      "events": {},
+      "props": {
+        "exclusive": {
+          "type": "boolean",
+          "description": "Whether the accordion allows at most one direct member to be open.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Direct ki-details members in reading order."
+      },
+      "tag": "ki-accordion",
+      "whenNotToUse": "switch between views or make the panels advance a workflow.",
+      "whenToUse": "group related FAQ answers, settings or expandable sections.\nEnable exclusive when readers benefit from one open section at a time."
+    },
     "ki-alert": {
       "description": "A persistent inline status message with token-backed tone semantics.",
       "events": {
@@ -724,6 +741,35 @@ export const catalogData = {
       "tag": "ki-counter",
       "whenNotToUse": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics.",
       "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
+    },
+    "ki-details": {
+      "description": "A native disclosure for supporting information that can stay collapsed.",
+      "events": {
+        "ki-toggle": "Emitted for a native state change, including an exclusive peer closing."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Disables summary activation. The page can still set open.",
+          "default": false
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the panel is open. Native changes reflect back to this property.",
+          "default": false
+        },
+        "summary": {
+          "type": "string",
+          "description": "Plain label for the control. Supply the summary slot for a rich label."
+        }
+      },
+      "slots": {
+        "": "Content shown when the disclosure is open.",
+        "summary": "Rich summary text or an authored heading, replacing the summary prop."
+      },
+      "tag": "ki-details",
+      "whenNotToUse": "hide the primary action or information needed to complete a task.\nFor script-free HTML, author native details and summary directly.",
+      "whenToUse": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
     },
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",

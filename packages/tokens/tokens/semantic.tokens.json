@@ -557,11 +557,6 @@
     },
     "outline": {
       "$type": "color",
-      "hairline-width": {
-        "$type": "dimension",
-        "$value": "{ki.size.border.hairline}",
-        "$description": "Width of a thin boundary or separator."
-      },
       "high-em": {
         "$value": "{ki.color.black.12}",
         "$description": "semantic color for outline high em."
@@ -745,6 +740,11 @@
       "secondary-button-bottom": {
         "$value": "{ki.color.black.12}",
         "$description": "semantic color for outline secondary button bottom."
+      },
+      "hairline-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of a thin boundary or separator."
       }
     },
     "inverse-white": {
@@ -1608,14 +1608,6 @@
     },
     "spacing": {
       "$type": "dimension",
-      "standard-inset": {
-        "$value": "{ki.space.xl}",
-        "$description": "Standard content inset."
-      },
-      "compact-inset": {
-        "$value": "{ki.space.lg}",
-        "$description": "Compact content inset."
-      },
       "media-caption": {
         "$value": "{ki.space.xs}",
         "$description": "Block spacing between a media frame and its caption."
@@ -1656,6 +1648,14 @@
         "$value": "{ki.size.border.hairline}",
         "$description": "Width of the frame and divider in an action surface.",
         "$type": "dimension"
+      },
+      "standard-inset": {
+        "$value": "{ki.space.xl}",
+        "$description": "Standard content inset."
+      },
+      "compact-inset": {
+        "$value": "{ki.space.lg}",
+        "$description": "Compact content inset."
       }
     },
     "notification-marker": {
@@ -1716,10 +1716,6 @@
     },
     "corner": {
       "$type": "dimension",
-      "panel": {
-        "$value": "{ki.radius.component.lg}",
-        "$description": "Corner radius for an outlined content panel."
-      },
       "inline": {
         "$value": "{ki.radius.xxs}",
         "$description": "Small radius for an outline around inline content."
@@ -1739,6 +1735,10 @@
       "action-seam": {
         "$value": "{ki.radius.0}",
         "$description": "Square corner at an edge shared by two actions."
+      },
+      "panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius for an outlined content panel."
       }
     },
     "motion": {

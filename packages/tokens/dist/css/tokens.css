@@ -806,6 +806,7 @@
   --ki-outline-primary-button-bottom:var(--ki-color-transparent-black);
   --ki-outline-secondary-button-top:light-dark(rgba(24,22,19,0.14),rgba(255,250,240,0.14));
   --ki-outline-secondary-button-bottom:light-dark(rgba(24,22,19,0.14),rgba(255,250,240,0.14));
+  --ki-outline-hairline-width:var(--ki-size-border-hairline);
   --ki-inverse-white-alpha-3:light-dark(var(--ki-color-black-3),var(--ki-color-white-3));
   --ki-inverse-white-alpha-6:light-dark(var(--ki-color-black-5),var(--ki-color-white-5));
   --ki-inverse-white-alpha-9:light-dark(var(--ki-color-black-8),var(--ki-color-white-8));
@@ -947,6 +948,8 @@
   --ki-spacing-action-inset:var(--ki-space-xs);
   --ki-spacing-action-joined-gap:var(--ki-space-zero);
   --ki-spacing-action-hairline:var(--ki-size-border-hairline);
+  --ki-spacing-standard-inset:var(--ki-space-xl);
+  --ki-spacing-compact-inset:var(--ki-space-lg);
   --ki-notification-marker-count-size:var(--ki-space-4xl);
   --ki-notification-marker-dot-size:var(--ki-space-lg);
   --ki-notification-marker-ring-width:var(--ki-space-xxs);
@@ -957,6 +960,7 @@
   --ki-corner-activity-mark:var(--ki-radius-round);
   --ki-corner-action-frame:var(--ki-radius-component-md);
   --ki-corner-action-seam:var(--ki-radius-0);
+  --ki-corner-panel:var(--ki-radius-component-lg);
   --ki-motion-duration-fast:var(--ki-duration-fast);
   --ki-motion-duration-short-1:var(--ki-duration-fast);
   --ki-motion-duration-short-2:var(--ki-duration-fast);
@@ -1072,6 +1076,7 @@
   --ki-empty-layout-max-width:var(--ki-size-surface-sm);
   --ki-empty-layout-tile-regular:var(--ki-space-14xl);
   --ki-empty-layout-tile-compact:var(--ki-space-12xl);
+  --ki-accordion-divider-width:var(--ki-outline-hairline-width);
   --ki-alert-padding-inline:var(--ki-space-xl);
   --ki-alert-padding-block:var(--ki-space-xl);
   --ki-alert-gap:var(--ki-space-xl);
@@ -1644,6 +1649,22 @@
   --ki-counter-success-fg:var(--ki-surface-s0);
   --ki-counter-neutral-bg:var(--ki-surface-inverse-white);
   --ki-counter-neutral-fg:var(--ki-text-inverse-black);
+  --ki-details-bg:var(--ki-surface-s0);
+  --ki-details-fg:var(--ki-text-high-em);
+  --ki-details-bg-image:var(--ki-surface-image-none);
+  --ki-details-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-details-border:var(--ki-outline-low-em);
+  --ki-details-border-width:var(--ki-outline-hairline-width);
+  --ki-details-radius:var(--ki-corner-panel);
+  --ki-details-padding:var(--ki-spacing-standard-inset);
+  --ki-details-summary-padding-block:var(--ki-spacing-compact-inset);
+  --ki-details-summary-hover-bg:var(--ki-surface-s1);
+  --ki-details-summary-hover-fg:var(--ki-text-high-em);
+  --ki-details-body-bg:var(--ki-surface-s0);
+  --ki-details-body-fg:var(--ki-text-supporting);
+  --ki-details-disabled-fg:var(--ki-text-med-em);
+  --ki-details-motion-duration:var(--ki-motion-duration-fast);
+  --ki-details-motion-easing:var(--ki-motion-easing-standard);
   --ki-dialog-radius:var(--ki-radius-component-3xl);
   --ki-dialog-padding:var(--ki-space-7xl);
   --ki-dialog-gap:var(--ki-space-xl);
@@ -2638,6 +2659,7 @@
     --ki-alert-info-border:var(--ki-outline-strong);
     --ki-alert-warning-border:var(--ki-outline-strong);
     --ki-card-border-color:var(--ki-outline-strong);
+    --ki-details-border:var(--ki-outline-strong);
     --ki-dialog-border:var(--ki-size-border-hairline) solid var(--ki-outline-strong);
     --ki-dialog-divider-color:var(--ki-outline-strong);
     --ki-divider-color:var(--ki-outline-strong);
@@ -2664,6 +2686,7 @@
   --ki-alert-info-border:var(--ki-outline-strong);
   --ki-alert-warning-border:var(--ki-outline-strong);
   --ki-card-border-color:var(--ki-outline-strong);
+  --ki-details-border:var(--ki-outline-strong);
   --ki-dialog-border:var(--ki-size-border-hairline) solid var(--ki-outline-strong);
   --ki-dialog-divider-color:var(--ki-outline-strong);
   --ki-divider-color:var(--ki-outline-strong);
