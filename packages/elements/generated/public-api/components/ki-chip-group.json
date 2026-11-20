@@ -1,0 +1,184 @@
+{
+  "component": {
+    "attributes": {
+      "focus-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID of the entry field in the same document or shadow root for focus after the last chip.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Accessible name for the group or list.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "reorder-announcement": {
+        "default": "'{label} moved to position {position} of {total}.'",
+        "deprecatedSince": null,
+        "description": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "reorderable": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "type": {
+        "default": "'filter'",
+        "deprecatedSince": null,
+        "description": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+        "replacement": null,
+        "required": false,
+        "type": "\"assist\" | \"filter\" | \"input\""
+      }
+    },
+    "cssProperties": {
+      "--ki-chip-group-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font family inherited by chip group content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-group-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between adjacent chips and rows.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-height-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small height of a compact pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A named collection of filter, input or assist chips, with optional ordering.",
+    "events": {
+      "ki-reorder": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiChipReorderDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "group": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The wrapping chip layout.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "focusTarget": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID of the entry field in the same document or shadow root for focus after the last chip.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Accessible name for the group or list.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "reorderAnnouncement": {
+        "default": "'{label} moved to position {position} of {total}.'",
+        "deprecatedSince": null,
+        "description": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "reorderable": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "type": {
+        "default": "'filter'",
+        "deprecatedSince": null,
+        "description": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+        "replacement": null,
+        "required": false,
+        "type": "\"assist\" | \"filter\" | \"input\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct ki-chip children in reading order.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-chip-group.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-chip-group.d.ts",
+    "symbols": {
+      "KiChipGroup": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiChipGroup extends Components.KiChipGroup, HTMLElement {\n}\nexport const KiChipGroup: {\n    prototype: KiChipGroup;\n    new (): KiChipGroup;\n};"
+      },
+      "KiChipReorderDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiChipReorderDetail {\n    value: string;\n    fromIndex: number;\n    toIndex: number;\n}"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-chip-group.js"
+  }
+}

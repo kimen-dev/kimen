@@ -1,0 +1,27 @@
+---
+title: ki-skeleton
+description: Reserve space for a loading card, list, or assistant reply.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Match the placeholder to the space the content will use. Text draws one full line by default. Use `lines` for a paragraph, `shape="circle"` for an avatar, and `shape="rect"` for a cover or other block.
+
+<Demo code={`<section aria-busy="true" aria-label="Loading project" style="display:grid;gap:var(--ki-space-md);max-inline-size:18rem">
+  <ki-skeleton shape="circle" size="2.5rem"></ki-skeleton>
+  <ki-skeleton shape="text" lines="3"></ki-skeleton>
+  <ki-skeleton shape="rect" block-size="6rem"></ki-skeleton>
+</section>`} />
+
+Reserve the region's block size at the start of the request. Set `aria-busy="true"` on the named region and reveal the shapes after about 300 ms. If the request settles earlier, cancel the reveal. Replace the shapes with the result and clear the busy state. The shapes are hidden from assistive technology.
+
+Use `animated="false"` for static shapes. Reduced motion and forced colours also use static shapes.
+
+## API reference
+
+<CemApi tag="ki-skeleton" />
+
+## Workshop
+
+[Open ki-skeleton in Storybook](/storybook/?path=/docs/docs-components-ki-skeleton--docs)
