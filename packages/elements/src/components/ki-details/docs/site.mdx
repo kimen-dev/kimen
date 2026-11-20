@@ -4,17 +4,19 @@ description: Reveal supporting content with a native disclosure.
 ---
 
 import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
 
 Use a disclosure for a short explanation, an FAQ answer, a settings section
 or tool output. Supply a plain `summary` or slot a heading into the summary
 when the disclosure titles a section.
 
-```html
-<ki-details open>
+<Demo
+  layout="block"
+  code={`<ki-details open>
   <h2 slot="summary">Workspace settings</h2>
   <p>Choose who can invite members to the workspace.</p>
-</ki-details>
-```
+</ki-details>`}
+/>
 
 The browser manages expansion and can reveal a match in a closed panel.
 Press Enter or Space on the focused summary to toggle it. When `disabled`
