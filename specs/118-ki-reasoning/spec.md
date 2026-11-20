@@ -36,6 +36,9 @@ Readers can open the disclosure to follow the supplied steps as they arrive.
 - **Agent's choice, pending founder confirmation.** The guarded catalog
   exposes the default slot and the optional `ki-toggle` action. Applications
   may put a semantic list of steps in the slot in authored HTML.
+- **Agent's choice, pending founder confirmation.** The API declaration uses
+  the comparator's major classification for the expanded Stencil loader
+  `Components` and `JSX` namespaces.
 
 ## Behavior contract
 
