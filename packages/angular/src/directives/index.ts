@@ -34,6 +34,7 @@ export const DIRECTIVES = [
   d.KiSegment,
   d.KiSegmentedControl,
   d.KiSelect,
+  d.KiSkeleton,
   d.KiSpinner,
   d.KiStack,
   d.KiStatus,

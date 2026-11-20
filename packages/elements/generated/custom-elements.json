@@ -10438,6 +10438,237 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-skeleton.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSkeleton",
+          "customElement": true,
+          "tagName": "ki-skeleton",
+          "description": "Decorative placeholder shapes that reserve space for loading content.",
+          "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting.",
+          "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
+          "attributes": [
+            {
+              "name": "animated",
+              "fieldName": "animated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours."
+            },
+            {
+              "name": "block-size",
+              "fieldName": "blockSize",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape."
+            },
+            {
+              "name": "inline-size",
+              "fieldName": "inlineSize",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space."
+            },
+            {
+              "name": "lines",
+              "fieldName": "lines",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+              "minimum": 1,
+              "maximum": 20
+            },
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "\"circle\" | \"rect\" | \"text\""
+              },
+              "default": "'text'",
+              "description": "Match the placeholder to the expected text, avatar, or rectangular content."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "animated",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+              "attribute": "animated",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "blockSize",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape.",
+              "attribute": "block-size",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "inlineSize",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space.",
+              "attribute": "inline-size",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "lines",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+              "attribute": "lines",
+              "reflects": false,
+              "minimum": 1,
+              "maximum": 20
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "privacy": "public",
+              "type": {
+                "text": "\"circle\" | \"rect\" | \"text\""
+              },
+              "default": "'text'",
+              "description": "Match the placeholder to the expected text, avatar, or rectangular content.",
+              "attribute": "shape",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence.",
+              "attribute": "size",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "shape",
+              "description": "Each painted text line, circle or rectangle."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-skeleton-backdrop-filter",
+              "description": "Complete backdrop filter behind a loading shape. Defaults to none."
+            },
+            {
+              "name": "--ki-skeleton-bg",
+              "description": "Base fill of the decorative loading shapes."
+            },
+            {
+              "name": "--ki-skeleton-bg-image",
+              "description": "Optional image layered over the static fill. Defaults to none."
+            },
+            {
+              "name": "--ki-skeleton-circle-radius",
+              "description": "Proportional corner radius of the circular shape."
+            },
+            {
+              "name": "--ki-skeleton-circle-size",
+              "description": "Default diameter of the circle."
+            },
+            {
+              "name": "--ki-skeleton-highlight",
+              "description": "Peak colour of the animated loading highlight."
+            },
+            {
+              "name": "--ki-skeleton-last-line-scale",
+              "description": "Fraction of the usual line width occupied by the final line in multiline text."
+            },
+            {
+              "name": "--ki-skeleton-line-gap",
+              "description": "Block-axis space between text lines."
+            },
+            {
+              "name": "--ki-skeleton-line-size",
+              "description": "Default height of each text line."
+            },
+            {
+              "name": "--ki-skeleton-radius",
+              "description": "Corner radius of text lines and rectangles."
+            },
+            {
+              "name": "--ki-skeleton-rect-size",
+              "description": "Default block size of the rectangle."
+            },
+            {
+              "name": "--ki-skeleton-shimmer-duration",
+              "description": "Duration of a shimmer sweep."
+            },
+            {
+              "name": "--ki-skeleton-shimmer-easing",
+              "description": "Easing of the shimmer sweep."
+            },
+            {
+              "name": "--ki-skeleton-shimmer-image",
+              "description": "Image of the moving highlight. Use currentColor to inherit the highlight colour."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSkeleton",
+          "declaration": {
+            "name": "KiSkeleton",
+            "module": "dist/components/ki-skeleton.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-skeleton",
+          "declaration": {
+            "name": "KiSkeleton",
+            "module": "dist/components/ki-skeleton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-spinner.js",
       "declarations": [
         {

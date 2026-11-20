@@ -1227,6 +1227,45 @@ export namespace Components {
         "value": string;
     }
     /**
+     * Decorative placeholder shapes that reserve space for loading content.
+     * @whenToUse Reserve the expected layout of a card, list, or assistant reply
+     * while it loads. Give the surrounding region an accessible name and set
+     * its aria-busy state. Show the skeleton after about 300 ms of waiting.
+     * @whenNotToUse For a standalone loading announcement, progress measurement,
+     * or interactive control. Put content and loading feedback in the caller's region.
+     */
+    interface KiSkeleton {
+        /**
+          * Sweep a highlight while the user permits motion. Set false to use a static placeholder. Shimmer also stops under reduced motion and forced colours.
+          * @default true
+         */
+        "animated": boolean;
+        /**
+          * CSS length for the block axis. For text, this is the height of each line. Use it to reserve the height of the content that will replace the shape.
+         */
+        "blockSize"?: string;
+        /**
+          * CSS length for the inline axis. Use it to match a fixed content width. Text and rectangles otherwise fill available inline space.
+         */
+        "inlineSize"?: string;
+        /**
+          * Number of text lines. Use a whole number from 1 to 20 for the expected paragraph length. Extra lines are ignored for circles and rectangles.
+          * @default 1
+          * @minimum 1
+          * @maximum 20
+         */
+        "lines": number;
+        /**
+          * Match the placeholder to the expected text, avatar, or rectangular content.
+          * @default 'text'
+         */
+        "shape": 'text' | 'circle' | 'rect';
+        /**
+          * CSS length shared by both axes. Use it for circles or square blocks. An axis-specific override takes precedence.
+         */
+        "size"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -2333,6 +2372,20 @@ declare global {
         new (): HTMLKiSelectElement;
     };
     /**
+     * Decorative placeholder shapes that reserve space for loading content.
+     * @whenToUse Reserve the expected layout of a card, list, or assistant reply
+     * while it loads. Give the surrounding region an accessible name and set
+     * its aria-busy state. Show the skeleton after about 300 ms of waiting.
+     * @whenNotToUse For a standalone loading announcement, progress measurement,
+     * or interactive control. Put content and loading feedback in the caller's region.
+     */
+    interface HTMLKiSkeletonElement extends Components.KiSkeleton, HTMLStencilElement {
+    }
+    var HTMLKiSkeletonElement: {
+        prototype: HTMLKiSkeletonElement;
+        new (): HTMLKiSkeletonElement;
+    };
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -2613,6 +2666,7 @@ declare global {
         "ki-segment": HTMLKiSegmentElement;
         "ki-segmented-control": HTMLKiSegmentedControlElement;
         "ki-select": HTMLKiSelectElement;
+        "ki-skeleton": HTMLKiSkeletonElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
@@ -3839,6 +3893,45 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * Decorative placeholder shapes that reserve space for loading content.
+     * @whenToUse Reserve the expected layout of a card, list, or assistant reply
+     * while it loads. Give the surrounding region an accessible name and set
+     * its aria-busy state. Show the skeleton after about 300 ms of waiting.
+     * @whenNotToUse For a standalone loading announcement, progress measurement,
+     * or interactive control. Put content and loading feedback in the caller's region.
+     */
+    interface KiSkeleton {
+        /**
+          * Sweep a highlight while the user permits motion. Set false to use a static placeholder. Shimmer also stops under reduced motion and forced colours.
+          * @default true
+         */
+        "animated"?: boolean;
+        /**
+          * CSS length for the block axis. For text, this is the height of each line. Use it to reserve the height of the content that will replace the shape.
+         */
+        "blockSize"?: string;
+        /**
+          * CSS length for the inline axis. Use it to match a fixed content width. Text and rectangles otherwise fill available inline space.
+         */
+        "inlineSize"?: string;
+        /**
+          * Number of text lines. Use a whole number from 1 to 20 for the expected paragraph length. Extra lines are ignored for circles and rectangles.
+          * @default 1
+          * @minimum 1
+          * @maximum 20
+         */
+        "lines"?: number;
+        /**
+          * Match the placeholder to the expected text, avatar, or rectangular content.
+          * @default 'text'
+         */
+        "shape"?: 'text' | 'circle' | 'rect';
+        /**
+          * CSS length shared by both axes. Use it for circles or square blocks. An axis-specific override takes precedence.
+         */
+        "size"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -4492,6 +4585,14 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiSkeletonAttributes {
+        "shape": 'text' | 'circle' | 'rect';
+        "lines": number;
+        "size": string;
+        "inlineSize": string;
+        "blockSize": string;
+        "animated": boolean;
+    }
     interface KiSpinnerAttributes {
         "label": string;
         "variant": 'ring' | 'dots';
@@ -4601,6 +4702,7 @@ declare namespace LocalJSX {
         "ki-segment": Omit<KiSegment, keyof KiSegmentAttributes> & { [K in keyof KiSegment & keyof KiSegmentAttributes]?: KiSegment[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `attr:${K}`]?: KiSegmentAttributes[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `prop:${K}`]?: KiSegment[K] } & OneOf<"value", KiSegment["value"], KiSegmentAttributes["value"]>;
         "ki-segmented-control": Omit<KiSegmentedControl, keyof KiSegmentedControlAttributes> & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes]?: KiSegmentedControl[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `attr:${K}`]?: KiSegmentedControlAttributes[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `prop:${K}`]?: KiSegmentedControl[K] } & OneOf<"label", KiSegmentedControl["label"], KiSegmentedControlAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
+        "ki-skeleton": Omit<KiSkeleton, keyof KiSkeletonAttributes> & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes]?: KiSkeleton[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `attr:${K}`]?: KiSkeletonAttributes[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `prop:${K}`]?: KiSkeleton[K] };
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
@@ -5002,6 +5104,15 @@ declare module "@stencil/core" {
              * are silent.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
+            /**
+             * Decorative placeholder shapes that reserve space for loading content.
+             * @whenToUse Reserve the expected layout of a card, list, or assistant reply
+             * while it loads. Give the surrounding region an accessible name and set
+             * its aria-busy state. Show the skeleton after about 300 ms of waiting.
+             * @whenNotToUse For a standalone loading announcement, progress measurement,
+             * or interactive control. Put content and loading feedback in the caller's region.
+             */
+            "ki-skeleton": LocalJSX.IntrinsicElements["ki-skeleton"] & JSXBase.HTMLAttributes<HTMLKiSkeletonElement>;
             /**
              * A compact status for an indeterminate wait.
              * @whenToUse show brief inline activity such as saving a change or running a

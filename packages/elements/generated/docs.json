@@ -7533,6 +7533,228 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-skeleton/ki-skeleton.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-skeleton",
+      "docs": "Decorative placeholder shapes that reserve space for loading content.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region."
+        },
+        {
+          "name": "part",
+          "text": "shape - Each painted text line, circle or rectangle."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-skeleton\n\nDefine the component when using direct imports.\n\n```js\nimport { defineCustomElement } from '@kimen/elements/ki-skeleton';\ndefineCustomElement();\n```\n\n## Match the expected layout\n\n```html\n<section aria-label=\"Assistant is writing\" aria-busy=\"true\">\n  <ki-skeleton lines=\"3\"></ki-skeleton>\n</section>\n\n<section aria-label=\"Loading project\" aria-busy=\"true\">\n  <ki-skeleton shape=\"circle\" size=\"2.5rem\"></ki-skeleton>\n  <ki-skeleton shape=\"rect\" block-size=\"6rem\"></ki-skeleton>\n</section>\n```\n\nThe last of multiple text lines is shorter. Use `inline-size` and `block-size` to match the dimensions of the incoming content. Set `animated=\"false\"` to use a static fill.\n\n## Skip the flash on fast loads\n\nReserve the expected block size immediately. Use `hidden` until the request has been pending for about 300 ms.\n\n```html\n<section id=\"project\" aria-label=\"Loading project\" aria-busy=\"true\" style=\"min-block-size:6rem\">\n  <ki-skeleton hidden shape=\"rect\" block-size=\"6rem\"></ki-skeleton>\n</section>\n```\n\n```js\nconst region = document.querySelector('#project');\nconst placeholder = region.querySelector('ki-skeleton');\nconst reveal = setTimeout(() => {\n  placeholder.hidden = false;\n}, 300);\n\ntry {\n  const project = await new Promise((resolve) => {\n    setTimeout(() => resolve({ name: 'Roadmap' }), 900);\n  });\n  region.textContent = project.name;\n} finally {\n  clearTimeout(reveal);\n  placeholder.remove();\n  region.setAttribute('aria-busy', 'false');\n  region.setAttribute('aria-label', 'Project');\n}\n```\n\nUse this script in a module after the section is mounted. Change the simulated request to 150 ms to see the fast path. In an application, use the real request and show its error state in the same region.\n"
+      },
+      "props": [
+        {
+          "name": "animated",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "animated",
+          "reflectToAttr": false,
+          "docs": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "blockSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "block-size",
+          "reflectToAttr": false,
+          "docs": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "inlineSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "inline-size",
+          "reflectToAttr": false,
+          "docs": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "lines",
+          "reflectToAttr": false,
+          "docs": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            },
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "maximum",
+              "text": "20"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "shape",
+          "type": "\"circle\" | \"rect\" | \"text\"",
+          "complexType": {
+            "original": "'text' | 'circle' | 'rect'",
+            "resolved": "\"circle\" | \"rect\" | \"text\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "shape",
+          "reflectToAttr": false,
+          "docs": "Match the placeholder to the expected text, avatar, or rectangular content.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'text'"
+            }
+          ],
+          "default": "'text'",
+          "values": [
+            {
+              "value": "circle",
+              "type": "string"
+            },
+            {
+              "value": "rect",
+              "type": "string"
+            },
+            {
+              "value": "text",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": false,
+          "docs": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "shape",
+          "docs": "Each painted text line, circle or rectangle."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",
       "encapsulation": "shadow",
       "tag": "ki-spinner",

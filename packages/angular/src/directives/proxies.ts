@@ -38,6 +38,7 @@ import { defineCustomElement as defineKiScroller } from '@kimen/elements/compone
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
+import { defineCustomElement as defineKiSkeleton } from '@kimen/elements/components/ki-skeleton.js';
 import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
@@ -843,6 +844,29 @@ export class KiSelect {
 
 
 export declare interface KiSelect extends Components.KiSelect {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSkeleton,
+  inputs: ['animated', 'blockSize', 'inlineSize', 'lines', 'shape', 'size']
+})
+@Component({
+  selector: 'ki-skeleton',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['animated', 'blockSize', 'inlineSize', 'lines', 'shape', 'size'],
+})
+export class KiSkeleton {
+  protected el: HTMLKiSkeletonElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSkeleton extends Components.KiSkeleton {}
 
 
 @ProxyCmp({
