@@ -1,0 +1,144 @@
+{
+  "ki": {
+    "fab": {
+      "size": {
+        "$value": "{ki.layout.floating-action.md}",
+        "$description": "Minimum FAB footprint in the default size."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.2xl}",
+        "$description": "Corner radius of the default FAB size."
+      },
+      "icon-size": {
+        "$value": "{ki.glyph.size.lg}",
+        "$description": "Glyph size of the default FAB."
+      },
+      "lg": {
+        "size": {
+          "$value": "{ki.layout.floating-action.lg}",
+          "$description": "Minimum footprint of the medium FAB."
+        },
+        "radius": {
+          "$value": "{ki.radius.component.4xl}",
+          "$description": "Corner radius of the medium FAB."
+        },
+        "icon-size": {
+          "$value": "{ki.layout.floating-action.lg-icon}",
+          "$description": "Glyph size of the medium FAB."
+        }
+      },
+      "xl": {
+        "size": {
+          "$value": "{ki.layout.floating-action.xl}",
+          "$description": "Minimum footprint of the large FAB."
+        },
+        "radius": {
+          "$value": "{ki.radius.component.6xl}",
+          "$description": "Corner radius of the large FAB."
+        },
+        "icon-size": {
+          "$value": "{ki.layout.floating-action.xl-icon}",
+          "$description": "Glyph size of the large FAB."
+        }
+      },
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Tinted secondary FAB fill."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Ink on the tinted secondary FAB."
+      },
+      "primary": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "Strong primary FAB fill."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.primary-on-primary}",
+          "$description": "Ink on the strong primary FAB."
+        }
+      },
+      "surface": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s1}",
+          "$description": "Raised surface FAB fill."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.primary-high-em}",
+          "$description": "Ink on the raised surface FAB."
+        }
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional layer painted over the FAB fill."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete optional filter behind the FAB."
+      },
+      "shadow": {
+        "$value": "{ki.elevation.e3}",
+        "$description": "Resting FAB elevation."
+      },
+      "hover-shadow": {
+        "$value": "{ki.elevation.e4}",
+        "$description": "FAB elevation for a pointer that can hover."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Typeface for FAB labels."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-2}",
+        "$description": "Text size for extended FAB labels."
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.semibold}",
+        "$description": "Text weight for extended FAB labels."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-2}",
+        "$description": "Line height for extended FAB labels."
+      },
+      "gap": {
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Space between icon and label in an extended FAB."
+      },
+      "padding-inline-start": {
+        "$value": "{ki.layout.spacing.3xl}",
+        "$description": "Inline start padding of an extended FAB."
+      },
+      "padding-inline-end": {
+        "$value": "{ki.layout.spacing.4xl}",
+        "$description": "Inline end padding of an extended FAB."
+      },
+      "offset": {
+        "$value": "{ki.layout.spacing.3xl}",
+        "$description": "Fixed FAB gap to the viewport edge or mobile navigation."
+      },
+      "mobile-nav-block-size": {
+        "$value": "{ki.layout.spacing.zero}",
+        "$description": "Height to reserve for mobile navigation, excluding the safe-area inset."
+      },
+      "collapse-duration": {
+        "$value": "{ki.motion.duration.short-4}",
+        "$description": "Duration of the extended FAB footprint change."
+      },
+      "collapse-easing": {
+        "$value": "{ki.motion.easing.standard}",
+        "$description": "Easing of the extended FAB footprint change."
+      },
+      "forced-colors-border-width": {
+        "$value": "{ki.typography.visually-hidden-size}",
+        "$description": "Boundary width for the FAB in forced colors."
+      }
+    }
+  }
+}

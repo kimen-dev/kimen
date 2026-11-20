@@ -32,7 +32,13 @@ import type {
   UiSpecNode,
   ValidationContext,
 } from './validate.js';
-import { acceptsEnumValue, ownEntry, toPlainData, validatePlainData } from './validate.js';
+import {
+  acceptsEnumValue,
+  acceptsNumberOrString,
+  ownEntry,
+  toPlainData,
+  validatePlainData,
+} from './validate.js';
 
 const builtInCatalog: Catalog = catalogData;
 
@@ -147,24 +153,15 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
 
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
- * bound node activates on the only one (FR-003, S17) or, when there is none,
- * on the platform click. Multiple events require a source-owned discriminator
- * on a validated prop. Otherwise the guard rejects the binding (S19).
+ * bound node activates through a declared event or falls back to a platform
+ * click. Multiple events need an explicit activation or a source-owned mode
+ * discriminator on a validated prop (S19).
  */
 export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
 }
 
 const CHIP_ACTIVATIONS = ['ki-change', 'ki-remove', 'ki-activate'] as const;
-const PAGINATION_ACTIVATIONS = ['ki-page-change', 'ki-load-more'] as const;
-
-function paginationActivations(tag: string, events: readonly string[]): boolean {
-  return (
-    tag === 'ki-pagination' &&
-    events.length === PAGINATION_ACTIVATIONS.length &&
-    PAGINATION_ACTIVATIONS.every((event) => events.includes(event))
-  );
-}
 
 function chipActivations(tag: string, events: readonly string[]): boolean {
   return (
@@ -253,13 +250,28 @@ export function guardNode(
     }
   }
   // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
-  // activation event. Chip type and pagination variant supply explicit
-  // discriminators. An action-bound pager must stay in button mode.
+  // activation event. Chips select it by type. Other multi-event entries
+  // must declare which of their events activates the action.
   if (node.action !== undefined) {
-    const events = declaredEvents(ownEntry(state.components, node.component));
-    const pagination = paginationActivations(node.component, events);
-    const urlMode = pagination && ownEntry(node.props, 'href-template') !== undefined;
-    if (chipActivations(node.component, events)) {
+    const entry = ownEntry(state.components, node.component);
+    const events = declaredEvents(entry);
+    const activation = entry?.activationEvent;
+    if (node.component === 'ki-pagination' && ownEntry(node.props, 'href-template') !== undefined) {
+      state.diagnostics.push({
+        message:
+          'ki-pagination uses native navigation when href-template is supplied; omit the URL template to bind an action',
+        path: `${path}.action`,
+        rule: 'ambiguous-activation-event',
+        value: node.action,
+      });
+    } else if (activation !== undefined && !events.includes(activation)) {
+      state.diagnostics.push({
+        message: `${node.component} activationEvent must name a declared event`,
+        path: `${path}.action`,
+        rule: 'invalid-activation-event',
+        value: node.action,
+      });
+    } else if (chipActivations(node.component, events)) {
       const kind =
         node.props?.['type'] ??
         (parent?.component === 'ki-chip-group' ? parent.props?.['type'] : undefined);
@@ -271,11 +283,9 @@ export function guardNode(
           value: node.action,
         });
       }
-    } else if (events.length > 1 && (!pagination || urlMode)) {
+    } else if (activation === undefined && events.length > 1) {
       state.diagnostics.push({
-        message: urlMode
-          ? 'ki-pagination uses native navigation when href-template is supplied; omit the URL template to bind an action'
-          : `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
+        message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
         rule: 'ambiguous-activation-event',
         value: node.action,
@@ -327,7 +337,7 @@ export function payloadBytes(data: unknown): number {
  */
 const LIVE_STATE_PROPS = ['checked', 'selected', 'value'] as const;
 
-export function matchesConstraint(
+function matchesConstraint(
   value: unknown,
   constraint: CatalogPropConstraint,
 ): value is boolean | number | string {
@@ -336,6 +346,8 @@ export function matchesConstraint(
       return typeof value === 'boolean';
     case 'number':
       return typeof value === 'number' && Number.isFinite(value);
+    case 'number-or-string':
+      return acceptsNumberOrString(value);
     case 'enum':
       return acceptsEnumValue(value, constraint);
     default:
@@ -343,20 +355,85 @@ export function matchesConstraint(
   }
 }
 
+function isMultipleChoiceValue(element: Element, name: string): boolean {
+  return (
+    name === 'value' && element.localName === 'ki-combobox' && element.hasAttribute('multiple')
+  );
+}
+
+/** Reads a catalog-declared value without letting non-scalar objects cross the guard. */
+export function readLiveScalar(
+  element: Element,
+  name: string,
+  constraint: CatalogPropConstraint,
+): Scalar | undefined {
+  const value: unknown = Reflect.get(element, name);
+  if (matchesConstraint(value, constraint)) return value;
+  if (
+    constraint.type === 'string' &&
+    isMultipleChoiceValue(element, name) &&
+    Array.isArray(value)
+  ) {
+    const choices: unknown[] = Array.from(value);
+    if (choices.every((choice) => typeof choice === 'string')) return JSON.stringify(choices);
+  }
+  return undefined;
+}
+
+/** Match the combobox's multiple-value attribute semantics in live conflict checks. */
+export function authoredLiveScalar(
+  element: Element,
+  name: string,
+  value: Scalar | undefined,
+): Scalar | undefined {
+  if (typeof value !== 'string' || !isMultipleChoiceValue(element, name)) return value;
+  if (value === '') return '[]';
+  if (value.trimStart().startsWith('[')) {
+    try {
+      const choices: unknown = JSON.parse(value);
+      if (Array.isArray(choices) && choices.every((choice) => typeof choice === 'string')) {
+        return JSON.stringify([...new Set(choices)]);
+      }
+    } catch {
+      // A bracket can also be part of a literal option value.
+    }
+  }
+  return JSON.stringify([value]);
+}
+
 function liveData(
   element: Element,
   props: Readonly<Record<string, Scalar>>,
   entry: CatalogEntry | undefined,
+  event: Event,
 ): Record<string, boolean | number | string> {
   const data: Record<string, boolean | number | string> = { ...props };
+  // An explicit activation can carry a requested number before the host
+  // commits it. Read only own data fields for declared numeric props.
+  if (entry?.activationEvent === event.type && 'detail' in event) {
+    const detail = event.detail;
+    if (typeof detail === 'object' && detail !== null) {
+      for (const [name, constraint] of Object.entries(entry.props)) {
+        if (constraint.type !== 'number') continue;
+        const value: unknown = Object.getOwnPropertyDescriptor(detail, name)?.value;
+        if (
+          typeof value === 'number' &&
+          Number.isSafeInteger(value) &&
+          value >= (constraint.minimum ?? -Infinity) &&
+          value <= (constraint.maximum ?? Infinity)
+        ) {
+          data[name] = value;
+        }
+      }
+    }
+  }
   for (const name of LIVE_STATE_PROPS) {
     const constraint = ownEntry(entry?.props, name);
     if (constraint === undefined) {
       continue;
     }
-    // Reads the rendered component's own property (its code, never spec data).
-    const live: unknown = Reflect.get(element, name);
-    if (matchesConstraint(live, constraint)) {
+    const live = readLiveScalar(element, name, constraint);
+    if (live !== undefined) {
       data[name] = live;
     }
   }
@@ -510,10 +587,9 @@ export function wireActivation(
     return;
   }
   const events = declaredEvents(entry);
-  const chip = chipActivations(element.localName, events);
-  const pagination = paginationActivations(element.localName, events);
-  const activation = events[0] ?? DEFAULT_ACTIVATION_EVENT;
-  const clickActivated = !chip && !pagination && activation === DEFAULT_ACTIVATION_EVENT;
+  const variantActivation = chipActivations(element.localName, events);
+  const activation = entry?.activationEvent ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
+  const clickActivated = !variantActivation && activation === DEFAULT_ACTIVATION_EVENT;
   const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
   const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
     const href = props['href'];
@@ -543,29 +619,13 @@ export function wireActivation(
 
   // Accept only the component's own event for its current mode (S17–S19).
   // The control's default behavior remains intact, and actions carry its live state.
-  const activations = pagination ? PAGINATION_ACTIVATIONS : chip ? CHIP_ACTIVATIONS : [activation];
-  for (const name of activations) {
+  for (const name of variantActivation ? CHIP_ACTIVATIONS : [activation]) {
     element.addEventListener(name, (event: Event) => {
       if (event.target !== element || !claim(event)) return;
       const props = currentProps();
       if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
-      if (chip && chipActivation(element, props) !== name) return;
-      if (pagination) {
-        const active = props['variant'] === 'load-more' ? 'ki-load-more' : 'ki-page-change';
-        if (name !== active) return;
-        if (active === 'ki-page-change') {
-          const detail = 'detail' in event ? event.detail : undefined;
-          const page =
-            typeof detail === 'object' && detail !== null && 'page' in detail
-              ? detail.page
-              : undefined;
-          if (typeof page === 'number' && Number.isSafeInteger(page) && page >= 1) {
-            dispatch({ ...props, page });
-          }
-          return;
-        }
-      }
-      dispatch(liveData(element, props, entry));
+      if (variantActivation && chipActivation(element, props) !== name) return;
+      dispatch(liveData(element, props, entry, event));
     });
   }
 }

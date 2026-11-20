@@ -84,11 +84,12 @@ const propConstraintSchema = z.strictObject({
   maximum: z.number().optional(),
   minimum: z.number().optional(),
   required: z.boolean().optional(),
-  type: z.enum(['boolean', 'enum', 'number', 'string']),
+  type: z.enum(['boolean', 'enum', 'number', 'number-or-string', 'string']),
   values: z.array(z.string()).optional(),
 });
 
 const entrySchema = z.strictObject({
+  activationEvent: z.string().optional(),
   description: z.string(),
   events: z.record(z.string(), z.string()),
   props: z.record(z.string(), propConstraintSchema),
@@ -254,7 +255,9 @@ function checkConstraint(
       constraint.type === 'enum'
         ? typeof constraint.default === 'string' &&
           (constraint.values ?? []).includes(constraint.default)
-        : typeof constraint.default === constraint.type && inBounds;
+        : constraint.type === 'number-or-string'
+          ? typeof constraint.default === 'number' || typeof constraint.default === 'string'
+          : typeof constraint.default === constraint.type && inBounds;
     if (!satisfies) {
       issues.push({
         code: 'malformed-constraint',
@@ -340,6 +343,15 @@ function checkEntry(
       value: entry.tag,
     });
   }
+  const action = entry.activationEvent;
+  if (action !== undefined && !Object.hasOwn(entry.events, action)) {
+    issues.push({
+      code: 'malformed-definition',
+      message: `"${entry.tag}" activationEvent must name a declared event`,
+      path: `${path}.activationEvent`,
+      value: action,
+    });
+  }
   for (const field of GUIDANCE_FIELDS) {
     if (entry[field].trim() === '') {
       issues.push({
@@ -413,6 +425,7 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
 
 function normalizeEntry(input: ParsedEntry): CatalogEntry {
   return {
+    ...(input.activationEvent === undefined ? {} : { activationEvent: input.activationEvent }),
     description: input.description,
     events: sortedRecord(Object.entries(input.events)),
     props: sortedRecord(

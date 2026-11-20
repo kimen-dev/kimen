@@ -195,7 +195,14 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     properties: ['label', 'value', CHECKS],
   },
   ChoicePicker: {
-    catalog: ['ki-radio-group', 'ki-radio', 'ki-checkbox-group', 'ki-checkbox'],
+    catalog: [
+      'ki-radio-group',
+      'ki-radio',
+      'ki-checkbox-group',
+      'ki-checkbox',
+      'ki-combobox',
+      'ki-option',
+    ],
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', CHECKS],
   },
@@ -214,7 +221,11 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     kind: 'mapped',
     properties: ['trigger', 'content'],
   },
-  Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
+  Slider: {
+    catalog: ['ki-slider'],
+    kind: 'mapped',
+    properties: ['label', 'min', 'max', 'value', CHECKS],
+  },
   DateTimeInput: {
     kind: 'unmapped',
     reason: 'no date or time input in the catalog',
@@ -351,7 +362,14 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     properties: ['label', 'value', V1_CHECKS],
   },
   ChoicePicker: {
-    catalog: ['ki-radio-group', 'ki-radio', 'ki-checkbox-group', 'ki-checkbox'],
+    catalog: [
+      'ki-radio-group',
+      'ki-radio',
+      'ki-checkbox-group',
+      'ki-checkbox',
+      'ki-combobox',
+      'ki-option',
+    ],
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', V1_CHECKS],
   },
@@ -370,7 +388,11 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     kind: 'mapped',
     properties: ['trigger', 'content'],
   },
-  Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
+  Slider: {
+    catalog: ['ki-slider'],
+    kind: 'mapped',
+    properties: ['label', 'min', 'max', 'steps', 'value', V1_CHECKS],
+  },
   DateTimeInput: {
     kind: 'unmapped',
     reason: 'no date or time input in the catalog',

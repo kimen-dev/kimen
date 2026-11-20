@@ -1,0 +1,44 @@
+---
+title: ki-popover
+description: Open non-modal content beside a button.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a popover for filters, details or a small form that belongs beside a trigger. Use `ki-dialog` when the user must make a decision, and `ki-tooltip` for a short hover or focus hint.
+
+<Demo code={`<ki-button id="incident-filters" type="button" variant="secondary">Filters</ki-button>
+<ki-popover for="incident-filters" label="Incident filters">
+  <ki-checkbox checked>Open incidents</ki-checkbox>
+  <ki-checkbox>Assigned to me</ki-checkbox>
+</ki-popover>`} />
+
+## Trigger and keyboard behavior
+
+Give the trigger a unique `id` and pass it to `for`. Put both elements in the same document or shadow tree. If the trigger is inside a form, use `type="button"` so activation leaves the form untouched.
+
+Opening a dialog popover focuses an available control inside it. Tab can reach the rest of the page. Escape closes the popover and returns focus to the trigger. A click outside also closes it.
+
+## Toggletip
+
+Use `kind="toggletip"` for supplemental text. Screen readers receive the text as a polite status update and the trigger keeps focus.
+
+<Demo code={`<ki-button id="retention-info" type="button" variant="ghost">About retention</ki-button>
+<ki-popover for="retention-info" kind="toggletip" placement="bottom" arrow="false">
+  Logs are kept for 30 days.
+</ki-popover>`} />
+
+## Placement and styling
+
+The default placement is `bottom-start`. Use `top`, `bottom`, `start` or `end`, with optional `-start` or `-end` alignment. The popover flips when the opposite side has more room. Use `arrow="false"` to hide the arrow.
+
+Restyle the panel with the `--ki-popover-*` tokens or the `surface` and `arrow` parts. The surface has no animation.
+
+## API reference
+
+<CemApi tag="ki-popover" />
+
+## Workshop
+
+[Open ki-popover in Storybook](/storybook/?path=/docs/docs-components-ki-popover--docs)

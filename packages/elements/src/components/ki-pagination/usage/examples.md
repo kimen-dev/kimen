@@ -42,7 +42,8 @@ requested results render. Keep the heading programmatically focusable.
 
 Place `{page}` in the path, query, or fragment of a relative or HTTP(S) URL.
 The generated anchors support browser link actions. The catalog applies
-its URL policy. Use button mode when a guarded surface binds a host action.
+its URL policy. For a guarded page action, use numbered or compact pagination
+in button mode.
 
 ## Append results and announce the count
 

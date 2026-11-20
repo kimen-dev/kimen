@@ -48,8 +48,9 @@ export function pageHref(
   page: number,
   base: string,
 ): string | undefined {
-  if (!template?.includes('{page}')) return undefined;
+  if (!template) return undefined;
   const href = template.replaceAll('{page}', String(page));
+  if (href === template) return undefined;
   const destination = URL.parse(href, base);
   return destination &&
     /^https?:$/u.test(destination.protocol) &&

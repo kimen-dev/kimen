@@ -12,7 +12,7 @@
   display: none;
 }
 
-:where(nav > div),
+div,
 ol {
   display: flex;
   flex-wrap: wrap;

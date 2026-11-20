@@ -73,15 +73,15 @@ Feature: ki-pagination navigates paged results
     Then each page button is at least 44 by 44 pixels
 
   # S11
-  Scenario Outline: The guarded surface dispatches the active pagination action
-    Given a guarded surface with <variant> pagination and a declared action
-    When the person activates <control>
-    Then the host receives its declared action with <payload>
+  Scenario Outline: The guarded surface dispatches the requested page
+    Given <variant> pagination for page 5 of 12 with a guarded action
+    When the person requests page 6
+    Then the host receives the declared action with the requested page 6
 
     Examples:
-      | variant   | control   | payload          |
-      | pages     | Page 6    | requested page 6 |
-      | load-more | Load more | no page request  |
+      | variant |
+      | pages   |
+      | compact |
 
   # S12
   Scenario: The guarded surface rejects page links with a disallowed origin

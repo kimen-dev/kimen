@@ -9,6 +9,7 @@ import { nonnegativeInteger, pageHref, pageItems, paginationState } from './ki-p
  * @whenToUse paged tables, search results or long lists. Use compact for
  * a previous/next stepper and load-more to append results in place.
  * @whenNotToUse short lists that fit in one view or the steps of a task.
+ * @catalogAction ki-page-change
  *
  * @part navigation - Named navigation landmark.
  * @part list - Ordered list of pages in the numbered variant.
@@ -131,7 +132,6 @@ export class KiPagination {
     return (
       <Control
         {...(href === undefined ? { type: 'button' } : { href })}
-        key={part}
         aria-current={current ? 'page' : undefined}
         aria-label={label}
         class="item"
@@ -158,7 +158,6 @@ export class KiPagination {
     }
     return (
       <ki-icon-button
-        key={direction}
         part={direction}
         variant={compact ? 'secondary' : 'ghost'}
         label={label}
@@ -188,7 +187,6 @@ export class KiPagination {
           part="load-more"
           role="group"
           type="button"
-          variant="secondary"
           aria-disabled={complete ? 'true' : undefined}
           onClick={() => {
             if (!complete) this.loadMore.emit();

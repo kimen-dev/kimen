@@ -86,15 +86,15 @@ Feature: ki-pagination navigates paged results
     Then each page button is at least 44 by 44 pixels
 
   # S11
-  Scenario Outline: The guarded surface dispatches the active pagination action
-    Given a guarded surface with <variant> pagination and a declared action
-    When the person activates <control>
-    Then the host receives its declared action with <payload>
+  Scenario Outline: The guarded surface dispatches the requested page
+    Given <variant> pagination for page 5 of 12 with a guarded action
+    When the person requests page 6
+    Then the host receives the declared action with the requested page 6
 
     Examples:
-      | variant   | control   | payload          |
-      | pages     | Page 6    | requested page 6 |
-      | load-more | Load more | no page request  |
+      | variant |
+      | pages   |
+      | compact |
 
   # S12
   Scenario: The guarded surface rejects page links with a disallowed origin
@@ -134,4 +134,4 @@ Feature: ki-pagination navigates paged results
 - **Agent's choice, pending founder confirmation.** The host owns `page` and `shown`. The current numbered button remains focusable and activation is silent. A completed Load more remains focusable and becomes unavailable. Localizable labels and templates are props.
 - **Agent's choice, pending founder confirmation.** Missing or nonpositive page totals give no paged navigation. Other finite page values are truncated and bounded. A one-page gap shows its number. Siblings and boundaries are capped at ten each to bound the rendered window. Missing count values leave the polite status empty.
 - **Agent's choice, pending founder confirmation.** Enabled navigation controls use native links in URL mode, including previous and next. Invalid templates fall back to buttons. A plain activation of a different link emits a page request that the host can cancel to handle navigation itself.
-- **Agent's choice, pending founder confirmation.** The guarded renderer accepts a bound action for the active pagination variant in button mode, including the requested page for numbered and compact variants. URL mode uses the existing guarded URL policy. Slots are empty.
+- **Agent's choice, pending founder confirmation.** The catalog selects `ki-page-change` for guarded actions. Numbered and compact pagination report the requested page in button mode. Applications can listen directly for the Load more event. URL mode uses the existing guarded URL policy. Slots are empty.

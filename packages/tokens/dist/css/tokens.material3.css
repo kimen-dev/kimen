@@ -363,6 +363,8 @@
   --ki-badge-info-bg:var(--ki-surface-info-base-em);
   --ki-badge-warning-bg:var(--ki-surface-warning-base-em);
   --ki-badge-xs-radius:var(--ki-radius-round);
+  --ki-breadcrumb-hover-bg:var(--ki-surface-s3);
+  --ki-breadcrumb-menu-bg:var(--ki-surface-s2);
   --ki-button-xs-radius:var(--ki-radius-round);
   --ki-button-sm-radius:var(--ki-radius-round);
   --ki-button-md-radius:var(--ki-radius-round);
@@ -461,6 +463,7 @@
   --ki-checkbox-indeterminate-active-border:var(--ki-outline-none);
   --ki-checkbox-indeterminate-disabled-bg:var(--ki-surface-disabled-low-em);
   --ki-checkbox-indeterminate-disabled-fg:var(--ki-text-muted);
+  --ki-combobox-listbox-shadow:var(--ki-elevation-e2);
   --ki-dialog-radius:var(--ki-radius-big-component-lg);
   --ki-dialog-gap:var(--ki-space-5xl);
   --ki-dialog-bg:var(--ki-surface-s3);

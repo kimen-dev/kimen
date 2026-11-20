@@ -12,4 +12,4 @@ technology.
 | Public source and stability (I, IX) | Document Stencil props, events, parts and semantic token aliases. Regenerate discovery surfaces and declare the API addition. The gate classifies generated loader namespace changes as major. |
 | Contract and verification (II, III, X) | Write the unit and S-ID browser specs before implementation. Exercise page ranges, keyboard, status updates, guarded actions, responsive layout and tokens. |
 | Accessibility and tokens (IV–VI) | Use native keyboard behavior, a named landmark, an overridable page name, polite status, logical styles, and contrast-checked color pairs. Run the shared accessibility and visual suites in CI. |
-| Catalog (VIII) | Declare both events and the URL format. Keep guarded action selection limited to the active pagination variant and preserve other renderer guards. |
+| Catalog (VIII) | Declare both events and the URL format. Select `ki-page-change` for guarded actions and preserve the URL-mode guard. |

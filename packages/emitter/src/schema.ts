@@ -93,7 +93,16 @@ function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<
   const base: Record<string, unknown> =
     constraint.type === 'enum'
       ? { enum: [...(constraint.values ?? [])], type: 'string' }
-      : { type: constraint.type };
+      : constraint.type === 'number-or-string'
+        ? {
+            anyOf: [
+              { type: 'number' },
+              constraint.required === true
+                ? { type: 'string', pattern: NON_BLANK }
+                : { type: 'string' },
+            ],
+          }
+        : { type: constraint.type };
   if (constraint.description !== '') {
     base['description'] = constraint.description;
   }

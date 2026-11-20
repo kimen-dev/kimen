@@ -1,7 +1,7 @@
 // @spec:100-ki-pagination
 import { beforeEach, expect, it, vi } from 'vitest';
 
-import { type ActionEvent, createLiveSurface, renderUiSpec } from '../src/index.js';
+import { type ActionEvent, catalogData, createLiveSurface, renderUiSpec } from '../src/index.js';
 
 let surface: HTMLElement;
 
@@ -19,25 +19,22 @@ function spec(props: Record<string, string | number>, action?: string) {
   };
 }
 
-it.each([
-  ['pages', 'ki-page-change', { page: 6 }],
-  ['compact', 'ki-page-change', { page: 6 }],
-  ['load-more', 'ki-load-more', undefined],
-] as const)('S11 dispatches only the declared %s pagination action', (variant, type, detail) => {
+it.each(['pages', 'compact'])('S11 dispatches the declared page request in %s mode', (variant) => {
+  expect(catalogData.components['ki-pagination'].activationEvent).toBe('ki-page-change');
   const onAction = vi.fn<(event: ActionEvent) => void>();
   const props = { page: 5, pages: 12, variant };
   expect(renderUiSpec(spec(props, 'paginate'), { onAction, surface }).ok).toBe(true);
   const element = surface.querySelector('ki-pagination');
   if (!element) throw new Error('Pagination did not render');
 
-  const inactive = type === 'ki-page-change' ? 'ki-load-more' : 'ki-page-change';
-  element.dispatchEvent(new CustomEvent(inactive, { detail: { page: 7 } }));
+  element.dispatchEvent(new CustomEvent('ki-load-more'));
   expect(onAction).not.toHaveBeenCalled();
 
-  element.dispatchEvent(new CustomEvent(type, { detail }));
+  const detail = { page: 6, pages: -1, variant: 'load-more', undescribed: 8 };
+  element.dispatchEvent(new CustomEvent('ki-page-change', { detail }));
   expect(onAction).toHaveBeenCalledExactlyOnceWith({
     action: 'paginate',
-    data: { ...props, ...(detail ?? {}) },
+    data: { ...props, page: 6 },
     path: 'root',
   });
 });
@@ -54,36 +51,39 @@ it('S12 rejects an origin outside the guarded URL allowlist', () => {
   ).toBe(true);
 });
 
-it('S11 routes the new variant after a live patch and keeps the same pager', () => {
+it('S11 keeps the selected page event and URL guard after a live patch', () => {
   const onAction = vi.fn();
   const live = createLiveSurface({ actions: ['paginate'], onAction, surface });
   const node = { ...spec({ page: 5, pages: 12 }, 'paginate').root, id: 'pager' };
   expect(live.apply({ ops: [{ node, op: 'insert' }] }).ok).toBe(true);
   const pager = surface.querySelector('ki-pagination');
   if (!pager) throw new Error('Pagination did not render');
-  const requestPage = () =>
-    pager.dispatchEvent(new CustomEvent('ki-page-change', { detail: { page: 6 } }));
+  const requestPage = (page: number) =>
+    pager.dispatchEvent(new CustomEvent('ki-page-change', { detail: { page } }));
 
-  requestPage();
+  requestPage(6);
   expect(onAction).toHaveBeenNthCalledWith(
     1,
     expect.objectContaining({ action: 'paginate', data: { page: 6, pages: 12 } }),
   );
 
-  expect(
-    live.apply({ ops: [{ id: 'pager', op: 'set', props: { variant: 'load-more' } }] }).ok,
-  ).toBe(true);
+  expect(live.apply({ ops: [{ id: 'pager', op: 'set', props: { variant: 'compact' } }] }).ok).toBe(
+    true,
+  );
   expect(surface.querySelector('ki-pagination')).toBe(pager);
-  requestPage();
-  expect(onAction).toHaveBeenCalledTimes(1);
-  pager.dispatchEvent(new CustomEvent('ki-load-more'));
+  requestPage(7);
   expect(onAction).toHaveBeenNthCalledWith(
     2,
     expect.objectContaining({
       action: 'paginate',
-      data: { page: 5, pages: 12, variant: 'load-more' },
+      data: { page: 7, pages: 12, variant: 'compact' },
     }),
   );
+  expect(
+    live.apply({ ops: [{ id: 'pager', op: 'set', props: { variant: 'load-more' } }] }).ok,
+  ).toBe(true);
+  pager.dispatchEvent(new CustomEvent('ki-load-more'));
+  expect(onAction).toHaveBeenCalledTimes(2);
 
   const linkPatch = live.apply({
     ops: [{ id: 'pager', op: 'set', props: { 'href-template': '?page={page}' } }],
@@ -93,11 +93,15 @@ it('S11 routes the new variant after a live patch and keeps the same pager', () 
   expect(pager.hasAttribute('href-template')).toBe(false);
 });
 
-it('keeps native URL navigation and guarded actions separate', () => {
+it('rejects an action binding on native URL pagination', () => {
   const result = renderUiSpec(spec({ 'href-template': '?page={page}', pages: 12 }, 'paginate'), {
     surface,
   });
   expect(result.ok).toBe(false);
-  expect(result.diagnostics[0]?.rule).toBe('ambiguous-activation-event');
+  expect(result.diagnostics[0]).toMatchObject({
+    message:
+      'ki-pagination uses native navigation when href-template is supplied; omit the URL template to bind an action',
+    rule: 'ambiguous-activation-event',
+  });
   expect(surface.children).toHaveLength(0);
 });
