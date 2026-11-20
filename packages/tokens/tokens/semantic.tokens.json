@@ -2095,6 +2095,28 @@
       "grid-fixed-breakpoint": {
         "$value": "{ki.size.layout.grid-fixed-breakpoint}",
         "$description": "Minimum available inline size for a fixed grid to use multiple tracks."
+      },
+      "floating-action": {
+        "md": {
+          "$value": "{ki.space.16xl}",
+          "$description": "Default floating action footprint (56px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.20xl}",
+          "$description": "Medium floating action footprint (80px at the default root size)."
+        },
+        "xl": {
+          "$value": "{ki.space.22xl}",
+          "$description": "Large floating action footprint (96px at the default root size)."
+        },
+        "lg-icon": {
+          "$value": "{ki.space.9xl}",
+          "$description": "Medium floating action glyph (28px at the default root size)."
+        },
+        "xl-icon": {
+          "$value": "{ki.space.11xl}",
+          "$description": "Large floating action glyph (36px at the default root size)."
+        }
       }
     },
     "control": {
@@ -2283,6 +2305,29 @@
       "tile-compact": {
         "$value": "{ki.space.12xl}",
         "$description": "Size of the decorative tile in a compact empty view."
+      }
+    },
+    "scale-control": {
+      "$type": "dimension",
+      "track-height": {
+        "$value": "{ki.space.xs}",
+        "$description": "Thickness of the inactive rail of a value scale."
+      },
+      "thumb-border-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Outline thickness of the visible grip."
+      },
+      "mark-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Thickness of a tick marking an interval."
+      },
+      "vertical-length": {
+        "$value": "{ki.size.slider-vertical}",
+        "$description": "Length of a vertical value scale."
+      },
+      "coarse-target": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum grip target when a value scale has a coarse primary pointer."
       }
     }
   }
