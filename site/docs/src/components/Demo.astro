@@ -1,61 +1,56 @@
 ---
-// Live example: renders the snippet through Expressive Code AND injects the
-// same markup live, so the demo can never drift from the code shown. The
-// shared client script registers every discovered ki-* element from its
-// built module; Astro deduplicates it across Demo instances.
+// The source snippet remains the single source for both the live example
+// and its Expressive Code panel.
 import { Code } from '@astrojs/starlight/components';
 
 interface Props {
-  /** The exact HTML rendered live and shown as the code block. */
   code: string;
   lang?: string;
-  /** Row (default) lays out inline demos; block for full-width surfaces. */
   layout?: 'row' | 'block';
-  /** Set false for snippets that should not render live (code only). */
   live?: boolean;
 }
 
 const { code, lang = 'html', layout = 'row', live = true } = Astro.props;
 ---
 
-<figure class="ki-demo">
-  {live && <div class:list={['ki-demo-surface', `ki-demo-${layout}`]} set:html={code} />}
-  <Code code={code} lang={lang} />
+<figure class="ki-demo not-content">
+  {
+    live && (
+      <form class="ki-demo-bar">
+        <fieldset class="ki-demo-segment">
+          <legend class="visually-hidden">Theme for this example</legend>
+          <label><input type="radio" name="demo-theme" value="" data-demo-theme checked /><span>Page theme</span></label>
+          <label><input type="radio" name="demo-theme" value="onmars" data-demo-theme /><span>Onmars</span></label>
+          <label><input type="radio" name="demo-theme" value="material3" data-demo-theme /><span>Material 3</span></label>
+        </fieldset>
+        <fieldset class="ki-demo-segment">
+          <legend class="visually-hidden">Color scheme for this example</legend>
+          <label><input type="radio" name="demo-scheme" value="" data-demo-scheme checked /><span>Page scheme</span></label>
+          <label><input type="radio" name="demo-scheme" value="light" data-demo-scheme /><span>Light</span></label>
+          <label><input type="radio" name="demo-scheme" value="dark" data-demo-scheme /><span>Dark</span></label>
+        </fieldset>
+      </form>
+      <div class:list={['ki-demo-surface', `ki-demo-${layout}`]} set:html={code} />
+    )
+  }
+  <div class="ki-demo-code"><Code code={code} lang={lang} /></div>
 </figure>
 
 <script>
   import { defineAllComponents } from 'virtual:kimen-component-registrations';
 
   defineAllComponents();
+
+  for (const demo of document.querySelectorAll<HTMLElement>('.ki-demo')) {
+    const surface = demo.querySelector('.ki-demo-surface');
+    demo.addEventListener('change', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement) || !target.checked || !surface) return;
+      const attribute = target.hasAttribute('data-demo-theme') ? 'data-ki-theme'
+        : target.hasAttribute('data-demo-scheme') ? 'data-ki-color-scheme' : null;
+      if (!attribute) return;
+      if (target.value) surface.setAttribute(attribute, target.value);
+      else surface.removeAttribute(attribute);
+    });
+  }
 </script>
-
-<style>
-  .ki-demo {
-    margin: 1rem 0;
-    border: 1px solid var(--sl-color-hairline);
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }
-
-  .ki-demo-surface {
-    padding: 1.5rem;
-    background: var(--ki-surface-s0);
-    color: var(--ki-text-high-em);
-    font-family: var(--ki-typography-family-body, inherit);
-  }
-
-  .ki-demo-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .ki-demo :global(.expressive-code) {
-    margin: 0;
-  }
-
-  .ki-demo :global(.expressive-code .frame) {
-    border-radius: 0;
-  }
-</style>

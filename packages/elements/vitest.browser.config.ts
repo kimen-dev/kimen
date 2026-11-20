@@ -7,6 +7,7 @@ import { defineConfig } from 'vitest/config';
 
 import { componentRegistrationPlugin } from './scripts/component-registration-plugin.mjs';
 import { measureThemeFonts } from './scripts/measure-theme-fonts.ts';
+import { siteAssetsPlugin } from './scripts/site-assets-plugin.mjs';
 
 // The explicit .ts extension keeps this config importable by plain Node type
 // stripping (scripts/tests/browser-gates.test.mjs loads it without a bundler).
@@ -88,7 +89,7 @@ const visualBaselinePath = (spec: string, name: string, engine: string, platform
 
 export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
-  plugins: [distSourceCoveragePlugin, componentRegistrationPlugin()],
+  plugins: [distSourceCoveragePlugin, componentRegistrationPlugin(), siteAssetsPlugin()],
   optimizeDeps: {
     // dist/components imports @stencil/core/internal/client at runtime.
     // Pre-bundling it up front prevents the mid-run dependency discovery

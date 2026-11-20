@@ -19,106 +19,109 @@
       content="Kimen's public site is measured with cookieless, self-hosted analytics. No accounts, no advertising, no cross-site profile."
     />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f9f9fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1b1916" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f9f7f4" media="(prefers-color-scheme: light)" />
     <link rel="stylesheet" href="../assets/tokens/tokens.css" />
     <link rel="stylesheet" href="../fonts.css" />
     <link rel="stylesheet" href="../landing.css" />
+    <link rel="stylesheet" href="../pages.css" />
+    <link rel="stylesheet" href="./privacy.css" />
     <script>
-      // Apply the persisted token theme before first paint. This tiny bootstrap
-      // stays inline so a returning visitor never sees the default theme flash.
+      // Keep the initial paint in the saved palette when storage is available.
       (() => {
         try {
-          const theme = localStorage.getItem('kimen-theme');
-          const scheme = localStorage.getItem('kimen-scheme') ?? 'dark';
           const root = document.documentElement;
-          if (theme === 'material3') {
-            root.setAttribute('data-ki-theme', 'material3');
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = '../assets/tokens/tokens.material3.css';
-            link.id = 'material3-css';
-            document.head.appendChild(link);
+          const scheme = localStorage.getItem("kimen-scheme");
+          if (scheme === "auto") {
+            root.dataset.kiColorScheme = matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
+          } else if (scheme === "light" || scheme === "dark") {
+            root.dataset.kiColorScheme = scheme;
           }
-          if (scheme === 'light' || scheme === 'dark') {
-            root.setAttribute('data-ki-color-scheme', scheme);
+          if (localStorage.getItem("kimen-theme") === "material3") {
+            root.dataset.kiTheme = "material3";
+            const link = document.createElement("link");
+            link.id = "material3-css";
+            link.rel = "stylesheet";
+            link.href = "../assets/tokens/tokens.material3.css";
+            link.addEventListener("error", () => link.remove(), { once: true });
+            document.head.append(link);
           }
         } catch {
-          // Storage may be unavailable in a hardened/private browsing context.
+          // The default palette also works when storage is unavailable.
         }
       })();
     </script>
+    <script type="module" src="../pages.js"></script>
     <!-- kimen:analytics -->
   </head>
   <body data-kimen-page="privacy">
     <a class="skip-link" href="#main">Skip to content</a>
-    <div class="aurora" aria-hidden="true"></div>
 
     <header class="site-header">
       <a class="brand" href="../">
-        <svg class="brand-mark" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-          <path
-            d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9" />
         </svg>
         <span class="brand-name">Kimen</span>
         <span class="brand-stage">pre-v1</span>
         <span class="visually-hidden">home</span>
       </a>
-
-      <div class="header-desktop">
-        <nav class="site-nav" aria-label="Primary">
-          <a href="../docs/components/alert/">Components</a>
-          <a href="../playground/">Playground</a>
-          <a href="https://github.com/kimen-dev/kimen">GitHub</a>
-        </nav>
-      </div>
-
-      <details class="mobile-menu">
-        <summary>Menu</summary>
-        <div class="mobile-menu-panel">
-          <nav aria-label="Primary mobile">
-            <a href="../docs/components/alert/">Components</a>
-            <a href="../playground/">Playground</a>
-            <a href="https://github.com/kimen-dev/kimen">GitHub</a>
-          </nav>
-        </div>
-      </details>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="../docs/">Docs</a>
+        <a href="../docs/components/alert/">Components</a>
+        <a href="../playground/">Playground</a>
+        <a class="github" href="https://github.com/kimen-dev/kimen">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+            />
+          </svg>
+          <span class="visually-hidden">GitHub</span>
+        </a>
+      </nav>
+      <label class="header-scheme scheme-picker" data-privacy-scheme hidden>
+        <span class="visually-hidden">Color scheme</span>
+        <select data-scheme-control>
+          <option value="auto">Auto</option>
+          <option value="light">Light</option>
+          <option value="dark" selected>Dark</option>
+        </select>
+      </label>
     </header>
 
-    <main id="main" class="privacy-main">
+    <main id="main" tabindex="-1" class="privacy">
       <h1>Privacy</h1>
-      <p>
-        This site is documentation for an open-source project. It has no
-        accounts, no login and no advertising, and it never asks for personal
-        data.
+      <p class="privacy-lede">
+        This site is documentation for an open-source project. It has no accounts, no login and no
+        advertising, and it never asks for personal data.
       </p>
+      <ul class="privacy-glance" aria-label="At a glance">
+        <li>No accounts or login</li>
+        <li>Cookieless analytics</li>
+        <li>No advertising or third-party trackers</li>
+        <li>Self-hosted page counts</li>
+      </ul>
       <h2>What is measured</h2>
       <p>
         Page views are counted with
-        <a href="https://umami.is/">Umami</a>, self-hosted by the maintainers
-        at <code>umami.onmars.tech</code>. Umami sets no cookies and builds no
-        cross-site profile; it records the page visited, the referrer, and
-        technical details derived from the request — browser, operating
-        system, device type, screen size, language, and location down to
-        country, region and city — without storing the IP address. Because
-        nothing is stored on your device and no profile is built, no consent
-        banner is required.
+        <a href="https://umami.is/">Umami</a>, self-hosted by the maintainers at
+        <code>umami.onmars.tech</code>. Umami sets no cookies and builds no cross-site profile; it
+        records the page visited, the referrer, and technical details derived from the request —
+        browser, operating system, device type, screen size, language, and location down to country,
+        region and city — without storing the IP address. Because nothing is stored on your device
+        and no profile is built, no consent banner is required.
       </p>
       <h2>What is not done</h2>
       <p>
-        No advertising networks, no third-party trackers, no session
-        recording, no fingerprinting, and no data sold or shared.
+        No advertising networks, no third-party trackers, no session recording, no fingerprinting,
+        and no data sold or shared.
       </p>
       <h2>Hosting</h2>
       <p>
-        The site is served by Cloudflare Pages. Cloudflare processes requests
-        to deliver and protect the site, as any content delivery network does.
+        The site is served by Cloudflare Pages. Cloudflare processes requests to deliver and protect
+        the site, as any content delivery network does.
       </p>
       <h2>Contact</h2>
       <p>
@@ -135,6 +138,14 @@
         <a href="../storybook/">Storybook</a>
         <a href="https://github.com/kimen-dev/kimen">GitHub</a>
       </nav>
+      <label class="footer-scheme scheme-picker" data-privacy-scheme hidden>
+        <span class="visually-hidden">Color scheme</span>
+        <select data-scheme-control>
+          <option value="auto">Auto</option>
+          <option value="light">Light</option>
+          <option value="dark" selected>Dark</option>
+        </select>
+      </label>
     </footer>
   </body>
 </html>

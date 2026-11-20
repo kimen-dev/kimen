@@ -1,0 +1,97 @@
+---
+import manifest from '../../../../packages/elements/generated/custom-elements.json';
+import { getCollection } from 'astro:content';
+
+const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
+const descriptions = new Map(
+  manifest.modules.flatMap(({ declarations }) =>
+    declarations.map(({ tagName, description }) => [tagName, description]),
+  ),
+);
+
+// Short standalone specimens supplement the generated directory. The
+// documentation page remains the source for multi-state and composed demos.
+const previews = new Map([
+  ['ki-button', '<ki-button variant="primary">Save</ki-button>'],
+  ['ki-input', '<ki-input label="Workspace" value="Atlas research"></ki-input>'],
+  ['ki-textarea', '<ki-textarea label="Notes" rows="2" value="Review the outline"></ki-textarea>'],
+  [
+    'ki-select',
+    '<ki-select label="Region" value="eu-west"><ki-option value="eu-west">eu-west</ki-option><ki-option value="us-east">us-east</ki-option></ki-select>',
+  ],
+  ['ki-checkbox', '<ki-checkbox checked>Weekly digest</ki-checkbox>'],
+  [
+    'ki-radio-group',
+    '<ki-radio-group label="Plan" value="team"><ki-radio value="solo">Solo</ki-radio><ki-radio value="team">Team</ki-radio></ki-radio-group>',
+  ],
+  ['ki-switch', '<ki-switch checked>Invite via link</ki-switch>'],
+  ['ki-alert', '<ki-alert tone="success" heading="Saved">Draft stored.</ki-alert>'],
+  ['ki-progress', '<ki-progress label="Storage" value="64"></ki-progress>'],
+  [
+    'ki-status',
+    '<span class="kimen-index-row"><ki-status tone="success" label="Online"></ki-status> API gateway</span>',
+  ],
+  ['ki-indicator', '<ki-indicator count="5" current="2" label="Gallery page"></ki-indicator>'],
+  ['ki-card', '<ki-card><span slot="header">Workspace</span>3 members · eu-west</ki-card>'],
+  [
+    'ki-list',
+    '<ki-list aria-label="Members"><ki-list-item>Ana García</ki-list-item><ki-list-item>Mina Kato</ki-list-item></ki-list>',
+  ],
+  ['ki-avatar', '<ki-avatar initials="AG" label="Ana García"></ki-avatar>'],
+  [
+    'ki-avatar-group',
+    '<ki-avatar-group><ki-avatar initials="AG" label="Ana García"></ki-avatar><ki-avatar initials="MK" label="Mina Kato"></ki-avatar><ki-avatar initials="LB" label="Leo Brandt"></ki-avatar></ki-avatar-group>',
+  ],
+  [
+    'ki-badge',
+    '<span class="kimen-index-row"><ki-badge tone="success">Synced</ki-badge><ki-badge>eu-west</ki-badge></span>',
+  ],
+  ['ki-divider', '<span class="kimen-index-stack">Above<ki-divider></ki-divider>Below</span>'],
+  ['ki-qr', '<ki-qr value="https://kimen.dev/" label="Open kimen.dev"></ki-qr>'],
+  [
+    'ki-tabs',
+    '<ki-tabs label="Settings" value="email"><ki-tab value="email">Email</ki-tab><ki-tab value="security">Security</ki-tab><ki-tab-panel value="email">Email preferences</ki-tab-panel><ki-tab-panel value="security">Sign-in preferences</ki-tab-panel></ki-tabs>',
+  ],
+]);
+const docs = await getCollection(
+  'docs',
+  ({ id, data }) => id.startsWith('components/') && !data.draft,
+);
+const entries = docs
+  .map(({ id, data }) => {
+    const tag = `ki-${id.slice('components/'.length)}`;
+    return {
+      path: id,
+      tag,
+      description: descriptions.get(tag) ?? data.description,
+      preview: previews.get(tag),
+    };
+  })
+  .sort((a, b) => a.tag.localeCompare(b.tag, 'en'));
+const previewsInOrder = [...previews.keys()].flatMap((tag) =>
+  entries.filter((entry) => entry.tag === tag),
+);
+const otherEntries = entries.filter(({ preview }) => !preview);
+---
+
+<section aria-labelledby="docs-components-title">
+  <h2 id="docs-components-title">Components</h2>
+  <p class="kimen-home-index-lede">Try a component or open its documentation for examples and the API.</p>
+  <ul class="kimen-index">
+    {
+      [...previewsInOrder, ...otherEntries].map(({ path, tag, description, preview }) => (
+        <li class="kimen-index-cell">
+          {preview && <div class="kimen-index-sample" data-pagefind-ignore set:html={preview} />}
+          <a class="kimen-index-name" href={`${docsBase}${path}/`}>{tag}</a>
+          <p class="kimen-index-desc">{description}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  import { defineAllComponents } from 'virtual:kimen-component-registrations';
+
+  defineAllComponents();
+</script>
