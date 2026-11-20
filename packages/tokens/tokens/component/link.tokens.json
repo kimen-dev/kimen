@@ -1,0 +1,54 @@
+{
+  "ki": {
+    "link": {
+      "bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Transparent backing for primary link text."
+      },
+      "fg": {
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Accent ink for primary links."
+      },
+      "neutral-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Transparent backing for neutral link text."
+      },
+      "neutral-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Body ink for neutral links."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image overlay for link backing."
+      },
+      "underline-thickness": {
+        "$value": "{ki.typography.underline.thickness}",
+        "$description": "Resting underline thickness."
+      },
+      "underline-thickness-hover": {
+        "$value": "{ki.typography.underline.thickness-hover}",
+        "$description": "Underline thickness under a hover-capable pointer."
+      },
+      "underline-offset": {
+        "$value": "{ki.typography.underline.offset}",
+        "$description": "Space between link text and its underline."
+      },
+      "radius": {
+        "$value": "{ki.corner.inline}",
+        "$description": "Corner radius used by the link focus outline."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Body typeface used by link text."
+      },
+      "icon-size": {
+        "$value": "{ki.typography.inline-icon.size}",
+        "$description": "External link icon edge relative to the inherited text size."
+      },
+      "icon-gap": {
+        "$value": "{ki.typography.inline-icon.gap}",
+        "$description": "Space between the label and the external link icon."
+      }
+    }
+  }
+}

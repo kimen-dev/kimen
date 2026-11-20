@@ -1,4 +1,6 @@
 import { Component, Element, h, Prop, Watch } from '@stencil/core';
+import { forwardedButtonAria, syncButtonAria } from '../../utils/button-aria';
+import type { KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -19,13 +21,15 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * sighted discoverability. While the action it started is in progress, set
  * `loading` instead of disabling it.
  * @whenNotToUse whenever a visible label fits (use ki-button), toggling
- * state (a future toggle icon button), navigation (use a link), or form
+ * state without supplying `pressed`, navigation (use a link), or form
  * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
  * visible label communicates the consequence).
  *
  * @slot - Exactly one decorative icon. The slot is presentational: its
  * content is hidden from assistive technology and never contributes to the
  * accessible name — that comes from `label` alone.
+ * @slot counter - Decorative ki-counter in the block-start inline-end corner.
+ * Include its meaning in the button label.
  * @part button - Internal native button.
  * @part icon - Icon wrapper around the default slot.
  * @part spinner - Loading spinner drawn in place of the icon, in the button's
@@ -86,6 +90,23 @@ export class KiIconButton {
   @Prop({ reflect: true }) label!: string;
 
   /**
+   * ID of a ki-dialog in the same document or shadow tree as this button.
+   * Set it together with `command` to connect a dialog declaratively.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) commandfor?: string;
+
+  /**
+   * Dialog action to run for `commandfor`. Use `show-modal` to open,
+   * `close` for direct dismissal, or `request-close` for guarded dismissal.
+   * Choose a command for local dialog control and omit it for other actions.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) command?: KiDialogCommand;
+
+  /**
    * Prevents activation, removes the icon button from keyboard reach, and
    * exposes the unavailable state through the internal native button. Wins
    * over `loading` when both are set.
@@ -127,24 +148,37 @@ export class KiIconButton {
    */
   @Prop({ attribute: 'loading-label', reflect: true }) loadingLabel = 'Loading';
 
+  /**
+   * Application-owned toggle state. The native icon button exposes this as
+   * `aria-pressed`. Omit for a momentary action.
+   */
+  @Prop() pressed?: boolean;
+
+  /**
+   * Application-owned disclosure state for a trigger that opens a popup.
+   * The native icon button exposes this as `aria-expanded`. Use with
+   * `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
+   */
+  @Prop() expanded?: boolean;
+
   private button: HTMLButtonElement | undefined;
-  private descriptionObserver?: MutationObserver;
+  private ariaObserver?: MutationObserver;
 
   connectedCallback(): void {
     // Armed on every connection, not once on load: disconnectedCallback
     // releases the observer, and a button that is moved in the document (a
     // keyed reorder, a drag between lists) connects again without loading
     // again.
-    this.descriptionObserver?.disconnect();
-    this.descriptionObserver = new MutationObserver(() => {
-      this.syncForwardedDescription();
+    this.ariaObserver?.disconnect();
+    this.ariaObserver = new MutationObserver(() => {
+      syncButtonAria(this.host, this.button);
     });
-    this.descriptionObserver.observe(this.host, {
-      attributeFilter: ['aria-description'],
+    this.ariaObserver.observe(this.host, {
+      attributeFilter: forwardedButtonAria,
     });
-    // A description written while the button was out of the document. On the
+    // ARIA changed while the button was out of the document. On the
     // first connection there is no inner button yet: componentDidLoad syncs.
-    this.syncForwardedDescription();
+    syncButtonAria(this.host, this.button);
   }
 
   componentWillLoad(): void {
@@ -162,32 +196,11 @@ export class KiIconButton {
   }
 
   componentDidLoad(): void {
-    this.syncForwardedDescription();
+    syncButtonAria(this.host, this.button);
   }
 
   disconnectedCallback(): void {
-    this.descriptionObserver?.disconnect();
-  }
-
-  // Assistive tech announces the DELEGATED inner button, not this focus-
-  // delegating host, so an `aria-description` set on the host (e.g. by a
-  // wrapping ki-tooltip) is never announced. Mirror it onto the inner button.
-  // Done imperatively, not in JSX: aria-description is a valid ARIA 1.3 global
-  // (jsx-a11y's allow-list is stale and flags it), and Stencil's vdom never
-  // renders this attribute, so an imperative write survives re-renders intact
-  // (002 FR-015 pattern, here FR-014).
-  private syncForwardedDescription(): void {
-    const description = this.host.getAttribute('aria-description');
-    if (description === null) {
-      this.button?.removeAttribute('aria-description');
-    } else {
-      this.button?.setAttribute('aria-description', description);
-    }
-  }
-
-  /** Loading is in effect only on an icon button that is not disabled (046 D8). */
-  private get effectiveLoading(): boolean {
-    return this.loading && !this.disabled;
+    this.ariaObserver?.disconnect();
   }
 
   // A real browser never dispatches click on a disabled native button, but
@@ -197,7 +210,7 @@ export class KiIconButton {
   // clicks, for the pointer and for Enter/Space: cancelled the same way (046
   // D3).
   private readonly handleClick = (event: MouseEvent): void => {
-    if (this.disabled || this.effectiveLoading) {
+    if (this.disabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
@@ -207,45 +220,57 @@ export class KiIconButton {
     // Not form-associated (FR-008): no ElementInternals, and the internal
     // native button is type="button" inside the shadow root, so activation
     // can never submit or reset an enclosing form.
-    const loading = this.effectiveLoading;
+    // Disabled wins over loading for the rendered state (046 D8).
+    const loading = this.loading && !this.disabled;
     // The status region is rendered always, empty until the button loads: a
     // polite region created together with its text is not announced (042
     // D6). It sits outside the native button, next to it (046 D7).
+    // Keep visible capped counts beside the button too, so they stay separate
+    // from the control's own label.
+    // Stable keys for this fixed tree avoid shipping Stencil's generated hashes.
     return [
-      <button
-        ref={(el) => {
-          this.button = el;
-        }}
-        part="button"
-        type="button"
-        tabIndex={this.disabled ? -1 : 0}
-        disabled={this.disabled}
-        aria-disabled={loading ? 'true' : undefined}
-        aria-label={this.label}
-        onClick={this.handleClick}
-        onKeyDown={startKeyboardPress}
-        onKeyUp={releaseKeyboardPress}
-        onBlur={endKeyboardPress}
-      >
-        <span part="icon" aria-hidden="true">
-          <slot />
-        </span>
-        {loading ? (
-          // The circular ki-progress geometry (015), as in ki-button.
-          <svg part="spinner" viewBox="0 0 40 40" aria-hidden="true">
-            <circle
-              cx="20"
-              cy="20"
-              r="18"
-              pathLength="100"
-              fill="none"
-              stroke="currentColor"
-              vector-effect="non-scaling-stroke"
-            />
-          </svg>
-        ) : null}
-      </button>,
-      <span class="status" role="status">
+      <span key="control" class="control">
+        <button
+          key="button"
+          ref={(el) => {
+            this.button = el;
+          }}
+          part="button"
+          type="button"
+          {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
+          {...(this.command === undefined ? {} : { command: this.command })}
+          tabIndex={this.disabled ? -1 : 0}
+          disabled={this.disabled}
+          aria-disabled={loading ? 'true' : undefined}
+          aria-label={this.label}
+          aria-pressed={this.pressed == null ? undefined : this.pressed ? 'true' : 'false'}
+          aria-expanded={this.expanded == null ? undefined : this.expanded ? 'true' : 'false'}
+          onClick={this.handleClick}
+          onKeyDown={startKeyboardPress}
+          onKeyUp={releaseKeyboardPress}
+          onBlur={endKeyboardPress}
+        >
+          <span key="icon" part="icon" aria-hidden="true">
+            <slot key="glyph" />
+          </span>
+          {loading ? (
+            // The circular ki-progress geometry (015), as in ki-button.
+            <svg part="spinner" viewBox="0 0 40 40" aria-hidden="true">
+              <circle
+                cx="20"
+                cy="20"
+                r="18"
+                pathLength="100"
+                fill="none"
+                stroke="currentColor"
+                vector-effect="non-scaling-stroke"
+              />
+            </svg>
+          ) : null}
+        </button>
+        <slot key="counter" name="counter" />
+      </span>,
+      <span key="status" class="status" role="status">
         {loading ? this.loadingLabel : null}
       </span>,
     ];

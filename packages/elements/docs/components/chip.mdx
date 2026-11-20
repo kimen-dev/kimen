@@ -1,0 +1,59 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-chip" />
+
+# Chip
+
+Use `ki-chip` for independent filters, picked values such as tags or
+recipients, and contextual actions alongside content. Use `ki-badge` for
+status, `ki-button` for a primary action, and `ki-radio-group` for an
+exclusive choice.
+
+## Filter
+
+The default filter is a toggle button. Its check and fill show selection.
+Listen for `ki-change` to read `detail.selected`.
+
+```html
+<ki-chip-group label="Team" type="filter">
+  <ki-chip value="design" selected>Design</ki-chip>
+  <ki-chip value="eng">Engineering</ki-chip>
+</ki-chip-group>
+```
+
+## Input
+
+An input chip has one interactive control when `removable` is set. The
+remove button supports Backspace and Delete as well as Enter and Space.
+With a labelled input group, focus moves to the next enabled chip or the
+field linked by `focus-target`.
+
+```html
+<ki-chip-group type="input" label="Recipients" focus-target="recipient">
+  <ki-chip value="ana" removable>
+    <ki-avatar slot="start" size="xxs" initials="AG" label="Ana García"></ki-avatar>
+    Ana García
+  </ki-chip>
+</ki-chip-group>
+<input id="recipient" aria-label="Add recipient">
+```
+
+Listen for the cancelable `ki-remove` and read `detail.value`. Cancel the
+event when the framework owns the chip list and handle removal and focus in
+application code. Use `remove-label` to localize the remove action.
+
+## Assist
+
+An assist chip is an ordinary button. Listen for `ki-activate` and handle
+the action in application code. The optional `start` glyph is decorative.
+
+```html
+<ki-chip type="assist" value="calendar">Add to calendar</ki-chip>
+```
+
+## Catalog actions
+
+Bind an action to the chip using the catalog's `action` field. The chip
+kind selects its declared event. Set `removable: true` for an input action.
+On a live surface, handle a removal request with the host's remove patch so
+the DOM and live model stay aligned.

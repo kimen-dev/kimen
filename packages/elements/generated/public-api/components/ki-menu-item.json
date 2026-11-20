@@ -1,0 +1,357 @@
+{
+  "component": {
+    "attributes": {
+      "checked": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Checked state for checkbox and radio actions.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Disabled actions remain discoverable via menu navigation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "shortcut": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Display-only keyboard shortcut. Applications own shortcut registration.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Apply the danger tone to a destructive action.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\""
+      },
+      "type": {
+        "default": "'item'",
+        "deprecatedSince": null,
+        "description": "Action role. A checkbox stays open. A radio selects one action within its group.",
+        "replacement": null,
+        "required": false,
+        "type": "\"checkbox\" | \"item\" | \"radio\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Action identifier reported by the parent menu.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-focus-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of a visible keyboard focus outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-focus-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of a visible keyboard focus outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Family for action labels and the filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline space between the parts of a row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-inline-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Start and end inset of an action, group label, or filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-danger-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for destructive actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-danger-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for hovered or keyboard-focused destructive actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Muted ink of disabled actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for resting actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default action row minimum height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind hovered or keyboard-focused actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for hovered or keyboard-focused actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of an action glyph and the check indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Vertical inset used when an action wraps.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Action row corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-meta-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for shortcut hints and the filter placeholder.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-meta-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of metadata and group labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-meta-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for shortcut hints on a hovered or focused action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-touch-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum action and filter height for coarse pointers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A pointer and keyboard action within a ki-menu.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "check": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The indicator of a checked action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "item": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The focusable action row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "shortcut": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The display-only shortcut hint.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "checked": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Checked state for checkbox and radio actions.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Disabled actions remain discoverable via menu navigation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "shortcut": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Display-only keyboard shortcut. Applications own shortcut registration.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Apply the danger tone to a destructive action.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"neutral\""
+      },
+      "type": {
+        "default": "'item'",
+        "deprecatedSince": null,
+        "description": "Action role. A checkbox stays open. A radio selects one action within its group.",
+        "replacement": null,
+        "required": false,
+        "type": "\"checkbox\" | \"item\" | \"radio\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Action identifier reported by the parent menu.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The action's visible label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One decorative icon or avatar before the label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-menu-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-menu-item.d.ts",
+    "symbols": {
+      "KiMenuItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiMenuItem extends Components.KiMenuItem, HTMLElement {\n}\nexport const KiMenuItem: {\n    prototype: KiMenuItem;\n    new (): KiMenuItem;\n};"
+      },
+      "KiMenuItemTone": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiMenuItemTone = 'neutral' | 'danger';"
+      },
+      "KiMenuItemType": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiMenuItemType = 'item' | 'checkbox' | 'radio';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-menu-item.js"
+  }
+}

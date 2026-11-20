@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+fieldset {
+  position: relative;
+  min-inline-size: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+fieldset:disabled {
+  color: var(--ki-text-med-em);
+}
+
+[part="label"] {
+  padding: 0;
+  margin-block-end: var(--ki-checkbox-group-gap);
+  font-size: var(--ki-radio-group-label-font-size);
+  font-weight: var(--ki-radio-group-label-font-weight);
+  line-height: var(--ki-radio-group-label-line-height);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ki-checkbox-group-gap);
+}
+
+:host([orientation="horizontal"]) .options {
+  flex-flow: row wrap;
+}
+
+[part="help"],
+[part="error"]:not(:empty) {
+  margin-block-start: var(--ki-checkbox-group-gap);
+}

@@ -1,0 +1,66 @@
+{
+  "ki": {
+    "button-group": {
+      "gap": {
+        "$value": "{ki.spacing.action-gap}",
+        "$description": "Gap between actions in a spaced group."
+      },
+      "attached-gap": {
+        "$value": "{ki.spacing.action-joined-gap}",
+        "$description": "Gap between joined actions."
+      },
+      "seam-overlap": {
+        "$value": "{ki.spacing.action-hairline}",
+        "$description": "Shared-edge overlap between adjacent attached actions."
+      },
+      "attached-radius": {
+        "$value": "{ki.corner.action-seam}",
+        "$description": "Radius of the logical corners along a shared button edge."
+      },
+      "toolbar-gap": {
+        "$value": "{ki.spacing.action-compact-gap}",
+        "$description": "Gap between toolbar actions."
+      },
+      "padding": {
+        "$value": "{ki.spacing.action-inset}",
+        "$description": "Toolbar frame inset and divider margin."
+      },
+      "divider": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Decorative toolbar separator ink."
+      },
+      "divider-size": {
+        "$value": "{ki.glyph.size.md}",
+        "$description": "Block size of a vertical toolbar separator."
+      },
+      "bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Toolbar surface colour."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional decorative image over the toolbar surface."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Default toolbar foreground on its raised surface."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete optional backdrop filter for the toolbar surface."
+      },
+      "border-color": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Thin toolbar frame colour."
+      },
+      "border-width": {
+        "$value": "{ki.spacing.action-hairline}",
+        "$description": "Thickness of the toolbar frame and divider."
+      },
+      "radius": {
+        "$value": "{ki.corner.action-frame}",
+        "$description": "Logical outside radius of the toolbar frame."
+      }
+    }
+  }
+}

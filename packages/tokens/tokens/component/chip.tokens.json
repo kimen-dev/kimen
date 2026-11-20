@@ -1,0 +1,150 @@
+{
+  "ki": {
+    "chip": {
+      "height": {
+        "$value": "{ki.control.compact-pill.height}",
+        "$description": "Default height of a compact pill."
+      },
+      "height-sm": {
+        "$value": "{ki.control.compact-pill.height-sm}",
+        "$description": "Small height of a compact pill."
+      },
+      "icon-size": {
+        "$value": "{ki.control.compact-pill.icon-size}",
+        "$description": "Icon size inside a compact pill."
+      },
+      "inset": {
+        "$value": "{ki.control.compact-pill.inset}",
+        "$description": "Default inline padding of a compact pill."
+      },
+      "inset-sm": {
+        "$value": "{ki.control.compact-pill.inset-sm}",
+        "$description": "Small inline padding of a compact pill."
+      },
+      "inset-action": {
+        "$value": "{ki.control.compact-pill.inset-action}",
+        "$description": "Trailing inset beside a pill action."
+      },
+      "gap": {
+        "$value": "{ki.control.compact-pill.gap}",
+        "$description": "Gap between content in a compact pill."
+      },
+      "radius": {
+        "$value": "{ki.control.compact-pill.radius}",
+        "$description": "Fully rounded compact pill shape."
+      },
+      "border-width": {
+        "$value": "{ki.control.compact-pill.border-width}",
+        "$description": "Default thickness of a compact pill border."
+      },
+      "bg-image": {
+        "$value": "{ki.control.compact-pill.bg-image}",
+        "$description": "Default compact pill surface uses a solid color."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.control.compact-pill.backdrop-filter}",
+        "$description": "Default compact pill surface leaves the backdrop unfiltered."
+      },
+      "bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Resting filter and assist surface."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Resting filter and assist label."
+      },
+      "border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Outline of an unselected filter or assist chip."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Surface under the hovering pointer."
+      },
+      "hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Label over the hover surface."
+      },
+      "pressed-bg": {
+        "$value": "{ki.surface.s3}",
+        "$description": "Surface while the activation is held."
+      },
+      "pressed-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Label while the activation is held."
+      },
+      "selected-bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Selected filter surface."
+      },
+      "selected-fg": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Selected filter label and check."
+      },
+      "selected-border": {
+        "$value": "{ki.outline.primary-high-em}",
+        "$description": "Accessible boundary of a selected filter."
+      },
+      "input-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Surface of a picked value."
+      },
+      "input-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Label of a picked value."
+      },
+      "assist-icon-fg": {
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Decorative glyph in an assist chip."
+      },
+      "disabled-ink": {
+        "$value": "{ki.text.base-em}",
+        "$description": "Label on a disabled chip."
+      },
+      "disabled-border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Outline of a disabled chip."
+      },
+      "remove-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Remove button surface inside an input chip."
+      },
+      "remove-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Resting remove glyph."
+      },
+      "remove-hover-bg": {
+        "$value": "{ki.surface.s4}",
+        "$description": "Remove button hover surface."
+      },
+      "remove-hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Remove glyph over the hover surface."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Font family for the visible chip label."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Default chip label size."
+      },
+      "font-size-sm": {
+        "$value": "{ki.typography.size.caption-2}",
+        "$description": "Small chip label size."
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "Weight for a chip label."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Default line height of the chip label."
+      },
+      "line-height-sm": {
+        "$value": "{ki.typography.line-height.caption-2}",
+        "$description": "Small line height of the chip label."
+      }
+    }
+  }
+}
