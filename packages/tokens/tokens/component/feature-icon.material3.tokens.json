@@ -1,0 +1,33 @@
+{
+  "ki": {
+    "feature-icon": {
+      "$description": "Material 3 feature icon corners follow the theme's shape scale through the shared semantic aliases.",
+      "radius": {
+        "$value": "{ki.corner.feature-tile.md}"
+      },
+      "circle-radius": {
+        "$value": "{ki.corner.feature-tile.circle}"
+      },
+      "xs": {
+        "radius": {
+          "$value": "{ki.corner.feature-tile.xs}"
+        }
+      },
+      "sm": {
+        "radius": {
+          "$value": "{ki.corner.feature-tile.sm}"
+        }
+      },
+      "lg": {
+        "radius": {
+          "$value": "{ki.corner.feature-tile.lg}"
+        }
+      },
+      "xl": {
+        "radius": {
+          "$value": "{ki.corner.feature-tile.xl}"
+        }
+      }
+    }
+  }
+}
