@@ -881,12 +881,15 @@ describe('ki-tabs narrow viewport behavior in a real browser', () => {
   });
 
   it.each([
-    ['first', 'a', '{Home}'],
-    ['last', 'f', '{End}'],
+    ['first', 'a', '{Home}', 'ltr'],
+    ['last', 'f', '{End}', 'ltr'],
+    ['first', 'a', '{Home}', 'rtl'],
+    ['last', 'f', '{End}', 'rtl'],
   ])(
-    'S4 the focus ring of the %s tab is not clipped by the strip',
-    async (_position, value, key) => {
+    'S4 the focus ring of the %s tab (%s, %s) fits inside the strip under %s',
+    async (_position, value, key, dir) => {
       await narrow(async () => {
+        document.documentElement.dir = dir;
         const tabs = await mount(sixTabs());
         tab(tabs, 'c').focus();
 
@@ -903,6 +906,7 @@ describe('ki-tabs narrow viewport behavior in a real browser', () => {
         expect(box.right + ring).toBeLessThanOrEqual(clip.right + 0.5);
         expect(box.top - ring).toBeGreaterThanOrEqual(clip.top - 0.5);
         expect(box.bottom + ring).toBeLessThanOrEqual(clip.bottom + 0.5);
+        expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
       });
     },
   );
@@ -1155,6 +1159,27 @@ describe('tabs variants and decorative icons', () => {
     await expect.element(page.getByRole('tabpanel', { name: 'Inbox', exact: true })).toBeVisible();
     expect(page.getByRole('img', { name: 'Envelope' }).query()).toBeNull();
     await expectAccessible(main());
+  });
+
+  it('S3 keeps a slotted icon decorative and restores its authored accessibility when moved out', async () => {
+    const group = await mount(iconTabFixture());
+    const otherGroup = await mount(fixture());
+    const icon = tab(group, 'inbox').querySelector('svg');
+    if (!icon) throw new Error('Missing inbox icon');
+
+    await expect.poll(() => icon.getAttribute('aria-hidden')).toBe('true');
+    icon.setAttribute('aria-hidden', 'false');
+    await expect.poll(() => icon.getAttribute('aria-hidden')).toBe('true');
+    expect(page.getByRole('img', { name: 'Envelope' }).query()).toBeNull();
+
+    tab(otherGroup, 'email').append(icon);
+    await expect.poll(() => icon.assignedSlot?.name).toBe('icon');
+    expect(page.getByRole('img', { name: 'Envelope' }).query()).toBeNull();
+
+    main().append(icon);
+
+    await expect.element(page.getByRole('img', { name: 'Envelope' })).toBeVisible();
+    expect(icon.getAttribute('aria-hidden')).toBe('false');
   });
 
   it('S4 omits an icon-only tab and restores it when a visible label arrives', async () => {

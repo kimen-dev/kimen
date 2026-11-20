@@ -88,7 +88,8 @@
  * draws its ring there. While a tab shows that ring the component sets
  * --_ki-tabs-focus-room to how far it reaches: the strip grows by that much
  * and gives it back with negative margins, so no tab moves. The inline-end
- * side takes no negative margin (a wider box would overflow the page again).
+ * side takes no negative margin. Its padding includes a scroll pixel of
+ * slack for fractional tab widths without widening the scrollport.
  * At rest the strip is exactly the row and lies over nothing around it. */
 .strip {
   display: flex;
@@ -97,6 +98,7 @@
   align-items: inherit;
   justify-content: inherit;
   padding: var(--_ki-tabs-focus-room, 0);
+  padding-inline-end: var(--_ki-tabs-focus-end-room, 0);
   margin-block: calc(-1 * var(--_ki-tabs-focus-room, 0px));
   margin-inline-start: calc(-1 * var(--_ki-tabs-focus-room, 0px));
   overflow-inline: auto;

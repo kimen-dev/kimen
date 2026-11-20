@@ -33,6 +33,11 @@ interface EventEmitter<T> {
 const TAB_TAG = 'ki-tab';
 const PANEL_TAG = 'ki-tab-panel';
 
+const decorativeIconOwners = new WeakMap<
+  Element,
+  { owner: KiTabs; authoredHidden: string | null }
+>();
+
 // Inspect label nodes only for the new icon slot. Legacy start/end slots
 // keep their existing composition and selection semantics.
 function hasTabLabel(node: Node): boolean {
@@ -78,6 +83,7 @@ export class KiTabs {
   private readonly issuedIds = new Map<string, number>();
   private tabRoster: HTMLElement[] = [];
   private panelRoster: HTMLElement[] = [];
+  private decorativeIcons = new Set<Element>();
   private pairings: PairingRecord[] = [];
   private tabStrip: HTMLElement | undefined;
   // The tab the last reconciliation left selected.
@@ -185,6 +191,8 @@ export class KiTabs {
 
   disconnectedCallback(): void {
     this.childObserver?.disconnect();
+    this.handleFocusOut();
+    this.syncDecorativeIcons(new Set());
   }
 
   private readonly setTabStripRef = (strip?: HTMLElement): void => {
@@ -237,7 +245,7 @@ export class KiTabs {
 
     event.preventDefault();
     this.selectTab(nextTab, true);
-    nextTab.focus();
+    nextTab.focus({ preventScroll: true });
   };
 
   /**
@@ -257,16 +265,20 @@ export class KiTabs {
       ring.outlineStyle === 'none'
         ? 0
         : Number.parseFloat(ring.outlineWidth) + Number.parseFloat(ring.outlineOffset);
-    strip.style.setProperty('--_ki-tabs-focus-room', `${String(Math.max(reach, 0) || 0)}px`);
     // Keyboard focus brings the tab in together with its ring. Pointer focus
     // does not scroll: the strip must not move under a press still going on.
     if (reach > 0) {
+      strip.style.setProperty('--_ki-tabs-focus-room', `${String(reach)}px`);
+      // A whole scroll pixel of trailing space keeps a rounded scroll offset
+      // from clamping before the entire outline has entered the scrollport.
+      strip.style.setProperty('--_ki-tabs-focus-end-room', `${String(reach + 1)}px`);
       this.revealTab(tab);
     }
   };
 
   private readonly handleFocusOut = (): void => {
     this.tabStrip?.style.removeProperty('--_ki-tabs-focus-room');
+    this.tabStrip?.style.removeProperty('--_ki-tabs-focus-end-room');
   };
 
   private tabFromEvent(event: Event): HTMLElement | null {
@@ -293,9 +305,9 @@ export class KiTabs {
     this.reconciling = true;
     this.stampTabSlots();
     this.readRosters();
+    const tabRecords = this.tabRecords();
     this.observeChildren();
 
-    const tabRecords = this.tabRecords();
     this.pairings = buildPairing(
       tabRecords,
       this.panelRoster.map((panel) => ({ value: this.elementValue(panel) })),
@@ -370,9 +382,9 @@ export class KiTabs {
     const pastLeft = stripBox.left + room - tabBox.left;
     const pastRight = tabBox.right - (stripBox.right - room);
     if (pastLeft > 0) {
-      strip.scrollLeft -= pastLeft;
+      strip.scrollLeft -= Math.ceil(pastLeft);
     } else if (pastRight > 0) {
-      strip.scrollLeft += pastRight;
+      strip.scrollLeft += Math.ceil(pastRight);
     }
   }
 
@@ -419,10 +431,15 @@ export class KiTabs {
 
   private tabRecords(): TabRecord[] {
     const seen = new Set<string>();
+    const decorativeIcons = new Set<Element>();
 
-    return this.tabRoster.map((tab) => {
+    const records = this.tabRoster.map((tab) => {
       const value = this.elementValue(tab);
-      const hasIcon = [...tab.children].some((child) => child.getAttribute('slot') === 'icon');
+      const icons = [...tab.children].filter((child) => child.getAttribute('slot') === 'icon');
+      for (const icon of icons) {
+        decorativeIcons.add(icon);
+      }
+      const hasIcon = icons.length > 0;
       const missingLabel =
         hasIcon &&
         ![...tab.childNodes].some(
@@ -442,6 +459,40 @@ export class KiTabs {
         duplicate,
       };
     });
+    this.syncDecorativeIcons(decorativeIcons);
+    return records;
+  }
+
+  private syncDecorativeIcons(assigned: Set<Element>): void {
+    for (const icon of this.decorativeIcons) {
+      const state = decorativeIconOwners.get(icon);
+      if (assigned.has(icon) || state?.owner !== this) {
+        continue;
+      }
+      decorativeIconOwners.delete(icon);
+      if (icon.getAttribute('aria-hidden') === 'true') {
+        if (state.authoredHidden === null) {
+          icon.removeAttribute('aria-hidden');
+        } else {
+          icon.setAttribute('aria-hidden', state.authoredHidden);
+        }
+      }
+    }
+
+    for (const icon of assigned) {
+      const hidden = icon.getAttribute('aria-hidden');
+      const state = decorativeIconOwners.get(icon);
+      if (hidden !== 'true' || state?.owner !== this) {
+        // Hide the light-DOM node as well as the composed slot wrapper.
+        // Transfer the authored value if another group owned this icon first.
+        const authoredHidden = hidden === 'true' && state ? state.authoredHidden : hidden;
+        decorativeIconOwners.set(icon, { owner: this, authoredHidden });
+      }
+      if (hidden !== 'true') {
+        icon.setAttribute('aria-hidden', 'true');
+      }
+    }
+    this.decorativeIcons = assigned;
   }
 
   private elementValue(element: HTMLElement): string {
