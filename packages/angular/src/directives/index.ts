@@ -41,6 +41,7 @@ export const DIRECTIVES = [
   d.KiSkeleton,
   d.KiSpinner,
   d.KiStack,
+  d.KiStat,
   d.KiStatus,
   d.KiSwitch,
   d.KiTab,

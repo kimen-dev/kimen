@@ -298,19 +298,6 @@ export const catalogData = {
       "description": "A token-styled action button with native button semantics.",
       "events": {},
       "props": {
-        "command": {
-          "type": "enum",
-          "values": [
-            "close",
-            "request-close",
-            "show-modal"
-          ],
-          "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
-        },
-        "commandfor": {
-          "type": "string",
-          "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
-        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button. Wins over\n`loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
@@ -359,7 +346,7 @@ export const catalogData = {
             "reset",
             "submit"
           ],
-          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "default": "submit"
         },
         "value": {
@@ -728,7 +715,7 @@ export const catalogData = {
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
       "events": {
-        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
       },
       "props": {
         "close-on-backdrop": {
@@ -749,11 +736,11 @@ export const catalogData = {
       },
       "slots": {
         "": "Dialog body content.",
-        "footer": "Dialog actions. Dismiss using an invoker command or `close()`."
+        "footer": "Dialog actions; applications wire every action to `close()`."
       },
       "tag": "ki-dialog",
       "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
-      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action."
     },
     "ki-divider": {
       "description": "A static, decorative rule that visually separates adjacent content.",
@@ -869,19 +856,6 @@ export const catalogData = {
       "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
       "events": {},
       "props": {
-        "command": {
-          "type": "enum",
-          "values": [
-            "close",
-            "request-close",
-            "show-modal"
-          ],
-          "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
-        },
-        "commandfor": {
-          "type": "string",
-          "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
-        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
@@ -1883,6 +1857,60 @@ export const catalogData = {
       "tag": "ki-stack",
       "whenNotToUse": "for page shells, painted grouping (use ki-card), or tabular data.",
       "whenToUse": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing."
+    },
+    "ki-stat": {
+      "description": "A key metric with an optional comparison against a reference period.",
+      "events": {},
+      "props": {
+        "delta": {
+          "type": "number",
+          "description": "Optional finite change. Its sign determines the trend and its magnitude is displayed."
+        },
+        "delta-label": {
+          "type": "string",
+          "description": "Localized comparison period, such as \"vs last week\"."
+        },
+        "direction": {
+          "type": "enum",
+          "values": [
+            "higher-is-better",
+            "lower-is-better",
+            "neutral"
+          ],
+          "description": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+          "default": "higher-is-better"
+        },
+        "down-label": {
+          "type": "string",
+          "description": "Localized spoken direction for a negative delta.",
+          "default": "down"
+        },
+        "label": {
+          "type": "string",
+          "description": "Localized name of the metric, such as \"Median render time\".",
+          "required": true
+        },
+        "unit": {
+          "type": "string",
+          "description": "Literal suffix for decimal readings, such as \"ms\"."
+        },
+        "up-label": {
+          "type": "string",
+          "description": "Localized spoken direction for a positive delta.",
+          "default": "up"
+        },
+        "value": {
+          "type": "number",
+          "description": "Current finite reading.",
+          "required": true
+        }
+      },
+      "slots": {
+        "chart": "An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+      },
+      "tag": "ki-stat",
+      "whenNotToUse": "Present a sequence of readings or inspect multiple data\npoints. Use a chart or table with a text equivalent for that data.",
+      "whenToUse": "Summarize one numeric metric in a dashboard or report. Set\ndirection to lower-is-better for metrics such as latency and neutral for\nchanges that carry no favorable or unfavorable meaning."
     },
     "ki-status": {
       "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",

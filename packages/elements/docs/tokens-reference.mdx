@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 448 semantic
-and 1429 component tokens. Values are the resolved **onmars light**
+and 1453 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1903,6 +1903,35 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-spinner-stroke` | `2px` | Stroke width of the small and medium rings. |
 | `--ki-spinner-stroke-lg` | `3px` | Stroke width of the large ring. |
 | `--ki-spinner-track` | `rgba(0, 0, 0, 0.48)` | Ink of the ring track. |
+
+### `ki-stat`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-stat-backdrop-filter` | `none` | Complete optional filter behind the metric surface. |
+| `--ki-stat-bg` | `#f9f7f4` | Raised surface of the metric card. |
+| `--ki-stat-bg-image` | `none` | Optional image layered over the metric surface. |
+| `--ki-stat-border` | `rgba(24, 22, 19, 0.1)` | Subtle metric card outline. |
+| `--ki-stat-border-width` | `1px` | Width of the metric card outline. |
+| `--ki-stat-delta-danger-fg` | `#c21a45` | Ink of an unfavorable comparison. |
+| `--ki-stat-delta-line-height` | `1rem` | Line height of the comparison. |
+| `--ki-stat-delta-neutral-fg` | `#5e5953` | Ink of an unchanged or ungraded comparison. |
+| `--ki-stat-delta-size` | `0.75rem` | Text size of the comparison. |
+| `--ki-stat-delta-success-fg` | `#2c6a2b` | Ink of a favorable comparison. |
+| `--ki-stat-emphasis-weight` | `700` | Weight of the main reading and comparison magnitude. |
+| `--ki-stat-gap` | `0.25rem` | Space between the reading and comparison or chart. |
+| `--ki-stat-label-fg` | `#5e5953` | Ink of the metric label and comparison period. |
+| `--ki-stat-label-line-height` | `1.5rem` | Line height of the metric label. |
+| `--ki-stat-label-size` | `0.8125rem` | Text size of the metric label. |
+| `--ki-stat-padding` | `0.75rem` | Insets around the metric and chart. |
+| `--ki-stat-radius` | `12px` | Corner radius of the metric card. |
+| `--ki-stat-trend-gap` | `0.125rem` | Space between the trend glyph and comparison magnitude. |
+| `--ki-stat-trend-size` | `1rem` | Size of the rising or falling trend glyph. |
+| `--ki-stat-value-fg` | `#181613` | Ink of the main reading. |
+| `--ki-stat-value-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the main reading. |
+| `--ki-stat-value-letter-spacing` | `-0.015em` | Spacing between digits in the main reading. |
+| `--ki-stat-value-line-height` | `1.75rem` | Line height of the main reading. |
+| `--ki-stat-value-size` | `1.375rem` | Size of the main reading. |
 
 ### `ki-status`
 
