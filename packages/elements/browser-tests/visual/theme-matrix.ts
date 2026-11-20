@@ -25,6 +25,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-spinner',
   'ki-stack',
   'ki-stat',
+  'ki-tool-call',
 ]);
 
 /** Both schemes are alternately themed when the component contract requires it. */

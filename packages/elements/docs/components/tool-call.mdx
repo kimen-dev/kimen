@@ -1,0 +1,17 @@
+# ki-tool-call
+
+Inspect an assistant tool call's status, duration and payloads. The
+summary opens with a click, Enter or Space. Failed calls start expanded.
+
+```html
+<ki-tool-call name="search_docs" status="done" duration="1200">
+  <ki-code-block slot="input" language="json">{"query": "Forms"}</ki-code-block>
+  <ki-code-block slot="output" language="json">["Field help"]</ki-code-block>
+</ki-tool-call>
+```
+
+Use the `error` slot for a failure message. With `retryable`, handle
+`ki-tool-retry` in your application. Append each `ki-tool-status-change`
+once to your conversation log.
+
+[Component guide and API](../../src/components/ki-tool-call/docs/site.mdx)

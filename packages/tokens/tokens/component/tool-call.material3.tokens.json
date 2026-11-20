@@ -1,0 +1,111 @@
+{
+  "ki": {
+    "tool-call": {
+      "bg": {
+        "$value": "{ki.surface.raised}",
+        "$type": "color",
+        "$description": "Solid background of the call disclosure."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$type": "color",
+        "$description": "Text ink on the call surface."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$type": "gradient",
+        "$description": "Optional image over the solid background."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$type": "other",
+        "$description": "Whole filter behind the call."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$type": "color",
+        "$description": "Border ink around the call."
+      },
+      "border-width": {
+        "$value": "{ki.spacing.action-hairline}",
+        "$type": "dimension",
+        "$description": "Width of the disclosure frame."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$type": "dimension",
+        "$description": "Corners of the disclosure surface."
+      },
+      "code-bg": {
+        "$value": "{ki.surface.s2}",
+        "$type": "color",
+        "$description": "Background for input and output payloads."
+      },
+      "code-fg": {
+        "$value": "{ki.text.high-em}",
+        "$type": "color",
+        "$description": "Plain text ink on the payload surface."
+      },
+      "code-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$type": "dimension",
+        "$description": "Corners of the plain payload surface."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$type": "dimension",
+        "$description": "Body text size."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$type": "dimension",
+        "$description": "Body text line height."
+      },
+      "caption-size": {
+        "$value": "{ki.typography.size.caption-2}",
+        "$type": "dimension",
+        "$description": "Size of captions and the tool identifier."
+      },
+      "mono-family": {
+        "$value": "{ki.typography.family.mono}",
+        "$type": "fontFamily",
+        "$description": "Typeface of the tool identifier."
+      },
+      "gap": {
+        "$value": "{ki.layout.spacing.md}",
+        "$type": "dimension",
+        "$description": "Gap between summary items and body sections."
+      },
+      "inline-gap": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$type": "dimension",
+        "$description": "Gap between status items and after each caption."
+      },
+      "padding": {
+        "$value": "{ki.layout.spacing.xl}",
+        "$type": "dimension",
+        "$description": "Horizontal inset and space after the body."
+      },
+      "icon": {
+        "$value": "{ki.text.med-em}",
+        "$type": "color",
+        "$description": "Ink of the decorative icons."
+      },
+      "icon-size": {
+        "$value": "{ki.layout.spacing.lg}",
+        "$type": "dimension",
+        "$description": "Size of the wrench and chevron."
+      },
+      "transition-duration": {
+        "$value": "{ki.motion.duration.fast}",
+        "$type": "duration",
+        "$description": "Duration of the disclosure chevron rotation."
+      },
+      "transition-easing": {
+        "$value": "{ki.motion.easing.standard}",
+        "$type": "cubicBezier",
+        "$description": "Easing of the disclosure chevron rotation."
+      }
+    }
+  }
+}
