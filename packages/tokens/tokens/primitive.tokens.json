@@ -863,6 +863,10 @@
         "$description": "Width of a toast (issue #353, spec 049): one size of its own, between the surface steps xs (20rem) and sm (24rem)."
       },
       "surface": {
+        "compact-list": {
+          "$value": "12rem",
+          "$description": "Maximum block size of a compact scrolling list."
+        },
         "xxs": {
           "$value": "18rem",
           "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Floating hint surfaces such as tooltips."

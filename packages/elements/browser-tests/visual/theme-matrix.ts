@@ -9,6 +9,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-note',
   'ki-spinner',
   'ki-stack',
+  'ki-time-input',
 ]);
 
 /** Both schemes are alternately themed when the component contract requires it. */

@@ -1,28 +1,29 @@
 # TimeInput
 
-Issue #388. `<ki-time-input>` collects a wall-clock time, supports locale-aware typing, and offers suggested slots. The dial supplements typing on touch layouts.
+Issue #388. `<ki-time-input>` collects a wall-clock time, supports locale-aware typing, and offers suggested slots. The issue allows this field and list to ship before the clock dial.
 
 | Family | Scenarios | N/A justification |
 | --- | --- | --- |
-| Core behavior | S1, S2, S11, S12 | |
-| Keyboard path | S3, S4, S9 | |
-| Assistive-tech outcome | S5, S10 | |
+| Core behavior | S1, S2, S12, S13 | |
+| Keyboard path | S3, S4 | |
+| Assistive-tech outcome | S5 | |
 | Form participation | S6, S7 | |
 | Theming | S8 | |
 
 ## Interpretations
 
-- Agent's choice, pending founder confirmation. Honor the issue's explicit dial acceptance criteria in this branch. The clock trigger opens a dialog on primary coarse-pointer layouts when `picker="dial"`. Fine-pointer layouts use the list. Arrow Down on the editable field opens the list in both layouts.
+- Agent's choice, pending founder confirmation. Ship the editable field and suggestions in this PR. The dial prototype measured 14.41 kB marginal and 33.23 kB worst case against limits of 9 kB and 25 kB. The dial, including the `picker` prop, can follow once it fits both limits. S9–S11 are retired from this delivery.
 - Agent's choice, pending founder confirmation. Use the nearest declared `lang`, falling back to the browser locale. Accept localized digits, separators and day periods, plus canonical `HH:mm` as a fallback. `time-zone` appends text to the help line and leaves wall-clock values in place.
-- Agent's choice, pending founder confirmation. Slots start at `min` (or midnight), advance by integer `step`, and stop at inclusive `max` (or `23:59`). Invalid step falls back to 30. Bounds constrain typed and dial values. The default range is a single calendar day.
-- Agent's choice, pending founder confirmation. Blur commits valid typed text, Enter commits a selected slot, and Apply commits the dialog draft. Cancel and Escape dismiss the dialog without a commit. The clock presents hour and minute faces, with five-minute pointers on the minute face and full precision in its spinbutton. `ki-change` reports a committed value that changed.
-- Agent's choice, pending founder confirmation. A2UI 0.9.1 and 1.0 map time-only inputs. Date-enabled inputs retain the adapter's unsupported-variant fallback until DatePicker is available on the integration branch. Time values with seconds are reduced to minute precision.
+- Agent's choice, pending founder confirmation. Slots start at `min` (or midnight), advance by integer `step`, and stop at inclusive `max` (or `23:59`). Invalid step falls back to 30. An invalid bound falls back to its day endpoint. Bounds constrain typed values. The default range is a single calendar day.
+- Agent's choice, pending founder confirmation. Blur commits valid typed text, and Enter or a click commits a selected slot. `ki-change` and native `change` report a changed user commit.
+- Agent's choice, pending founder confirmation. A2UI 0.9.1 and 1.0 map time-only inputs with a visible label. Date-enabled inputs retain the adapter's unsupported-variant fallback until DatePicker is available on the integration branch. Time values with seconds are reduced to minute precision.
+- Agent's choice, pending founder confirmation. The suggestion popup uses the shared top-layer utilities and the CSS anchoring pattern from `ki-select`. Its theme tokens use the semantic palette from the Menu reference. Menu and Popover are absent from this checkout.
 
 ## Behavior contract
 
 ```gherkin
 Feature: ki-time-input collects a local time of day
-  People can type an exact time, choose a suggested slot, or use a clock on touch layouts.
+  People can type an exact time or choose a suggested slot.
 
   # S1
   Scenario: Typing preserves precise minutes
@@ -74,32 +75,15 @@ Feature: ki-time-input collects a local time of day
     When the person opens the suggestions
     Then the selected slot is visibly painted with the assigned colour pair
 
-  # S9
-  Scenario: The clock dial can be used entirely by keyboard
-    Given a touch layout clock dialog has hour and minute spinbuttons adjusted by keyboard to "09:31"
-    When the person activates Apply with the keyboard
-    Then the dialog closes and the field commits "09:31"
-
-  # S10
-  Scenario Outline: The clock announces its localized draft time
-    Given the clock dialog is open with time "09:30" in <locale>
-    When the person increments the minute spinbutton
-    Then a polite status announces <announcement> and the clock reflects the new minute
-
-    Examples:
-      | locale | announcement |
-      | en-US  | 9:31 AM      |
-      | en-GB  | 09:31        |
-
-  # S11
-  Scenario: Desktop layouts use the list even when the dial is requested
-    Given a fine-pointer time field is configured with the dial picker
-    When the person activates Choose time
-    Then the suggested times list opens
-
   # S12
   Scenario: A2UI time-only fields render as TimeInput
     Given A2UI describes a time-only input with value "09:30"
     When the surface is mapped
     Then it contains a labeled time field with canonical value "09:30"
+
+  # S13
+  Scenario: The picker button offers suggested slots
+    Given a time field suggests "09:30" between "09:00" and "10:00"
+    When the person uses Choose time to pick "09:30"
+    Then the field commits "09:30" and closes the list
 ```

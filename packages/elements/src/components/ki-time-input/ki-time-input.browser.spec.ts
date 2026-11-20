@@ -230,16 +230,17 @@ it('S8 repaints the selected slot with the theme’s selected foreground and bac
   expect(getComputedStyle(unselected).backgroundColor).not.toBe('rgb(12, 35, 60)');
 });
 
-it('S11 opens the list from Choose time on desktop even with the dial requested', async () => {
-  expect(matchMedia('(pointer: coarse)').matches).toBe(false);
-  await mount('picker="dial" lang="en-GB" min="09:00" max="10:00"');
+it('S13 opens suggestions from Choose time and commits the option clicked with a pointer', async () => {
+  const host = await mount('lang="en-GB" min="09:00" max="10:00"');
 
   await trigger().click();
-
   await expect.element(suggestions()).toBeVisible();
-  await expect.element(page.getByRole('dialog')).not.toBeInTheDocument();
   await option(/^0?9:30$/u).click();
+
+  await expect.element(suggestions()).not.toBeInTheDocument();
+  expect(host.value).toBe('09:30');
   await expect.poll(displayedTime).toBe('9:30');
+  expect(host.shadowRoot?.activeElement).toBe(input());
 });
 
 it('passes axe with the suggestion list closed and open', async () => {
@@ -307,11 +308,16 @@ it('opens the material3 suggestions without running motion when reduced motion i
   await browserCommands.emulateReducedMotion('reduce');
   try {
     fixture.dataset.kiTheme = 'material3';
-    await mount('lang="en-GB" min="09:00" max="10:00"');
+    const host = await mount('lang="en-GB" min="09:00" max="10:00"');
+    const enclosure = host.shadowRoot?.querySelector('[part~="field"]');
+    if (!enclosure) {
+      throw new Error('missing field enclosure');
+    }
     expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
 
     await openWithArrow();
 
+    expect(getComputedStyle(enclosure).transitionDuration).toBe('0s');
     expect(suggestions().element().getAnimations({ subtree: true })).toHaveLength(0);
   } finally {
     await browserCommands.emulateReducedMotion(null);

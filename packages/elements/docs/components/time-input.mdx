@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-time-input" />
+
+# ki-time-input
+
+Use TimeInput for a wall-clock time, such as a reservation time or opening
+hour. Pair it with a date field when the form also asks for a day.
+
+## Collect a required time in a form
+
+Provide a visible label, a field name and an error message suited to the
+allowed hours. Suggestions follow the step interval. Typed minutes can
+fall between suggested slots.
+
+```html
+<form id="booking">
+  <ki-time-input
+    lang="en-GB"
+    label="Arrival time"
+    name="arrival"
+    required
+    value="09:30"
+    min="08:00"
+    max="18:00"
+    step="30"
+    help-text="Venue time"
+    time-zone="Europe/Madrid"
+    error-text="Choose a time between 08:00 and 18:00."
+  ></ki-time-input>
+  <ki-button type="submit" variant="primary">Save booking</ki-button>
+</form>
+
+<script type="module">
+  const form = document.getElementById('booking');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const arrival = new FormData(form).get('arrival');
+    console.log(arrival); // "09:30" in 24-hour format
+  });
+</script>
+```
+
+Use Down Arrow to open suggestions, Enter to choose the active slot and
+Escape to return to the draft. The form serializes the accepted `HH:mm`
+value and reset restores the value declared in the attribute.
+
+Open the TimeInput playground to inspect the field's controls, the suggestion
+list and the 12-hour and 24-hour examples.

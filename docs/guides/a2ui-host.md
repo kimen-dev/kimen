@@ -284,8 +284,13 @@ fixed label `Unsupported component`), so a hostile payload under an unmapped
 type never rides it. Each degradation reaches `onDegradation` as data:
 
 ```ts
-{ surfaceId: 'checkout', componentId: 'when', componentType: 'DateTimeInput', reason: 'unmapped-type' }
+{ surfaceId: 'checkout', componentId: 'range', componentType: 'Slider', reason: 'unmapped-type' }
 ```
+
+`DateTimeInput` maps to `ki-time-input` when `enableTime` is true and
+`enableDate` is false or omitted. Supply a visible `label` and use `HH:mm`
+for the value. Date-enabled variants report `unsupported-variant` while
+DatePicker is pending.
 
 A value that needs a client function the adapter does not evaluate (for
 example `formatDate`) degrades its component the same way, with

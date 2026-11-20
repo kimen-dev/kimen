@@ -19,7 +19,9 @@ describe('canonical time', () => {
 
   it.each(['', '9:00', '24:00', '12:60', '09:00:00', ' 09:00', '09:00Z'])(
     'rejects a noncanonical value %j',
-    (value) => { expect(parseCanonicalTime(value)).toBeUndefined(); },
+    (value) => {
+      expect(parseCanonicalTime(value)).toBeUndefined();
+    },
   );
 });
 
@@ -39,7 +41,9 @@ describe('localized time', () => {
 
   it.each(['13:00 PM', '9:3 AM', '9:30 AM tomorrow', '12:60 PM', '09:30:00'])(
     'rejects invalid text %j',
-    (text) => { expect(createTimeLocale('en-US').parse(text)).toBeUndefined(); },
+    (text) => {
+      expect(createTimeLocale('en-US').parse(text)).toBeUndefined();
+    },
   );
 
   it.each(['en-US', 'en-GB', 'ar-EG', 'fi-FI', 'en-US-u-hc-h24'])(
@@ -53,7 +57,12 @@ describe('localized time', () => {
   );
 
   it('uses a supported fallback on a malformed language tag', () => {
-    expect(createTimeLocale('not_a_language', 'en-GB').format(557)).toBe('09:17');
+    const expected = new Intl.DateTimeFormat('en-GB', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone: 'UTC',
+    }).format(557 * 60_000);
+    expect(createTimeLocale('not_a_language', 'en-GB').format(557)).toBe(expected);
   });
 });
 

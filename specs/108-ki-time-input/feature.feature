@@ -1,5 +1,5 @@
 Feature: ki-time-input collects a local time of day
-  People can type an exact time, choose a suggested slot, or use a clock on touch layouts.
+  People can type an exact time or choose a suggested slot.
 
   # S1
   Scenario: Typing preserves precise minutes
@@ -51,31 +51,14 @@ Feature: ki-time-input collects a local time of day
     When the person opens the suggestions
     Then the selected slot is visibly painted with the assigned colour pair
 
-  # S9
-  Scenario: The clock dial can be used entirely by keyboard
-    Given a touch layout clock dialog has hour and minute spinbuttons adjusted by keyboard to "09:31"
-    When the person activates Apply with the keyboard
-    Then the dialog closes and the field commits "09:31"
-
-  # S10
-  Scenario Outline: The clock announces its localized draft time
-    Given the clock dialog is open with time "09:30" in <locale>
-    When the person increments the minute spinbutton
-    Then a polite status announces <announcement> and the clock reflects the new minute
-
-    Examples:
-      | locale | announcement |
-      | en-US  | 9:31 AM      |
-      | en-GB  | 09:31        |
-
-  # S11
-  Scenario: Desktop layouts use the list even when the dial is requested
-    Given a fine-pointer time field is configured with the dial picker
-    When the person activates Choose time
-    Then the suggested times list opens
-
   # S12
   Scenario: A2UI time-only fields render as TimeInput
     Given A2UI describes a time-only input with value "09:30"
     When the surface is mapped
     Then it contains a labeled time field with canonical value "09:30"
+
+  # S13
+  Scenario: The picker button offers suggested slots
+    Given a time field suggests "09:30" between "09:00" and "10:00"
+    When the person uses Choose time to pick "09:30"
+    Then the field commits "09:30" and closes the list

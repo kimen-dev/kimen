@@ -119,7 +119,7 @@ type rejects the message (`unknown-property`, scenario S9).
 | AudioPlayer   | unmapped  | —                             |
 | Modal         | unmapped  | —                             |
 | Slider        | unmapped  | —                             |
-| DateTimeInput | unmapped  | —                             |
+| DateTimeInput | mapped    | ki-time-input                 |
 | html          | forbidden | —                             |
 | RawHtml       | forbidden | —                             |
 | script        | forbidden | —                             |
@@ -191,6 +191,13 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
 - `TextField.variant`: `longText` becomes `ki-textarea`, `obscured` becomes
   `ki-input type="password"`, `number` and `shortText` become `ki-input`;
   `validationRegexp` is not evaluated.
+- `DateTimeInput` renders `ki-time-input` when `enableTime` is `true` and
+  `enableDate` is `false` or omitted. Its `label` and `value` can come from
+  bindings. The field keeps the hour and minute from `HH:mm` or `HH:mm:ss`.
+  An absent or empty value leaves the field empty. An invalid time
+  rejects the update. Date-enabled inputs, inputs with neither flag enabled,
+  and time-only inputs without a label use the `unsupported-variant` fallback.
+  Date and date-time support depends on DatePicker entering the catalog.
 - `ChoicePicker`: `mutuallyExclusive` becomes `ki-radio-group` with the first
   selected value. `multipleSelection` becomes a `ki-checkbox-group` with
   a checkbox per option and checked states from the selected value list.
@@ -240,7 +247,7 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | AudioPlayer   | unmapped  | —                             |
 | Modal         | unmapped  | —                             |
 | Slider        | unmapped  | —                             |
-| DateTimeInput | unmapped  | —                             |
+| DateTimeInput | mapped    | ki-time-input                 |
 | html          | forbidden | —                             |
 | RawHtml       | forbidden | —                             |
 | script        | forbidden | —                             |
