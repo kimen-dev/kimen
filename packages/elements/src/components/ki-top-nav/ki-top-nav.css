@@ -2,6 +2,7 @@
   position: relative;
   display: block;
   min-inline-size: 0;
+  min-block-size: var(--_ki-top-nav-expanded-height, 0);
   font-family: var(--ki-typography-family-body);
 }
 
@@ -15,6 +16,15 @@
   z-index: 1;
 }
 
+/* Reserve the expanded height so a collapse cannot remove its own scroll range. */
+:host(.collapse-lg) {
+  --_ki-top-nav-expanded-height: var(--ki-app-bar-lg-height);
+}
+
+:host(.collapse-xl) {
+  --_ki-top-nav-expanded-height: var(--ki-app-bar-xl-height);
+}
+
 /* Contain the length probe so a wide breakpoint never widens the page. */
 .measure {
   position: absolute;
@@ -26,7 +36,10 @@
 
 .probe {
   display: block;
-  block-size: 0;
+  block-size: max(
+    0px,
+    calc(var(--_ki-top-nav-expanded-height, var(--ki-app-bar-height)) - var(--ki-app-bar-height))
+  );
 }
 
 .bar {
@@ -240,6 +253,7 @@ nav {
 
 .search ::slotted(*) {
   min-inline-size: 0;
+  min-block-size: var(--ki-density-target-min);
 }
 
 .expanded .search {

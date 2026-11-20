@@ -12,7 +12,8 @@ Link and action destinations belong to the consuming app.
   Header sizes `lg` and `xl` fall back to `md`.
 - Agent's choice, pending founder confirmation. Use the nearest vertical
   scrolling ancestor or the document for scroll behavior. Both scrolling
-  modes tint the surface and collapse applies only to the tall sizes.
+  modes tint the surface. Tall bars collapse after scrolling past the extra
+  title-row height. Their reserved layout space keeps the scroll range stable.
 - Agent's choice, pending founder confirmation. Expose localized menu labels
   as props. Use TopNav-owned anchored menus with Menu keyboard behavior
   because the shared Menu element is absent from the assigned branch.

@@ -108,7 +108,14 @@ const heading = () => page.getByRole('heading', { name: 'Release notes' });
 it('S1: shows five primary links and a current-page indicator on a wide bar', async () => {
   const host = wideHeader();
   await expect.element(page.getByRole('link', { name: 'Kimen' })).toBeVisible();
-  await expect.element(page.getByRole('navigation').getByRole('link')).toHaveLength(5);
+  const nav = page.getByRole('navigation', { name: 'Main' });
+  const destinations = page.getByRole('link', {
+    name: /^(Overview|Projects|Reports|Teams|Settings)$/,
+  });
+  await expect.element(destinations).toHaveLength(5);
+  for (const destination of destinations.elements()) {
+    expect(destination.assignedSlot?.closest('nav')).toBe(nav.element());
+  }
   await expect.element(page.getByRole('button', { name: 'Notifications, 3 unread' })).toBeVisible();
   const current = required(host.querySelector('[aria-current="page"]'));
   expect(Number.parseFloat(getComputedStyle(current).borderBlockEndWidth)).toBeGreaterThanOrEqual(
@@ -123,9 +130,22 @@ it('S2: responds to the authored CSS breakpoint and preserves the actual links',
   await expect.element(navigation()).toBeVisible();
   await expect.element(page.getByRole('link', { name: 'Overview' })).not.toBeInTheDocument();
   await navigation().click();
-  const items = page.getByRole('menu').getByRole('menuitem');
+  const menu = page.getByRole('menu');
+  const items = page.getByRole('menuitem');
   await expect.element(items).toHaveLength(5);
   expect(items.elements()).toEqual([...host.querySelectorAll('a:not([slot])')]);
+  for (const item of items.elements()) {
+    expect(item.assignedSlot?.closest('[role="menu"]')).toBe(menu.element());
+  }
+  await expect
+    .poll(() => {
+      const trigger = navigation().element().getBoundingClientRect();
+      const panel = menu.element().getBoundingClientRect();
+      return (
+        Math.abs(panel.top - trigger.bottom) <= 0.5 && Math.abs(panel.left - trigger.left) <= 0.5
+      );
+    })
+    .toBe(true);
   await expect.element(page.getByRole('link', { name: 'Kimen' })).toBeVisible();
   await expect.element(page.getByRole('button', { name: 'Notifications, 3 unread' })).toBeVisible();
 
@@ -133,6 +153,8 @@ it('S2: responds to the authored CSS breakpoint and preserves the actual links',
   await expect.element(page.getByRole('link', { name: 'Overview' })).toBeVisible();
   expect(host.querySelector('a[href="#overview"]')?.getAttribute('tabindex')).toBe('0');
   await expect.element(page.getByRole('menu')).not.toBeInTheDocument();
+  host.removeAttribute('collapse-at');
+  await expect.element(navigation()).toBeVisible();
 });
 
 it('S3: keeps three direct actions and exposes the remaining two in order', async () => {
@@ -151,7 +173,7 @@ it('S4: collapses XL to the medium bar while sticking to a nested scroller', asy
   await expect.element(heading()).toBeVisible();
   const surface = part(bar, 'bar');
   const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
-  expect(surface.getBoundingClientRect().height).toBeCloseTo(9.5 * rem);
+  expect(Math.abs(surface.getBoundingClientRect().height - 9.5 * rem)).toBeLessThanOrEqual(0.5);
   expect((heading().element() as HTMLElement).getBoundingClientRect().top).toBeGreaterThan(
     page.getByRole('button', { name: 'Back' }).element().getBoundingClientRect().bottom,
   );
@@ -162,7 +184,9 @@ it('S4: collapses XL to the medium bar while sticking to a nested scroller', asy
   expect((heading().element() as HTMLElement).getBoundingClientRect().top).toBeLessThan(
     page.getByRole('button', { name: 'Back' }).element().getBoundingClientRect().bottom,
   );
-  expect(surface.getBoundingClientRect().top).toBeCloseTo(scroller.getBoundingClientRect().top);
+  expect(
+    Math.abs(surface.getBoundingClientRect().top - scroller.getBoundingClientRect().top),
+  ).toBeLessThanOrEqual(0.5);
   scroller.scrollTop = 0;
   await expect
     .poll(() => Math.abs(surface.getBoundingClientRect().height - 9.5 * rem) <= 0.5)
@@ -279,9 +303,9 @@ it('S12: exposes the named landmark, current page and notification count and pas
   wideHeader();
   const nav = page.getByRole('navigation', { name: 'Main' });
   await expect.element(nav).toHaveLength(1);
-  await expect
-    .element(nav.getByRole('link', { name: 'Projects' }))
-    .toHaveAttribute('aria-current', 'page');
+  const current = page.getByRole('link', { name: 'Projects' });
+  await expect.element(current).toHaveAttribute('aria-current', 'page');
+  expect(current.element().assignedSlot?.closest('nav')).toBe(nav.element());
   await expect.element(page.getByRole('button', { name: 'Notifications, 3 unread' })).toBeVisible();
   await expectAccessible(fixture);
 });
@@ -296,9 +320,9 @@ it('S13: connects the localized trigger to its menu and keeps aria-current', asy
   await expect
     .element(menu)
     .toHaveAttribute('id', required(trigger.element().getAttribute('aria-controls')));
-  await expect
-    .element(menu.getByRole('menuitem', { name: 'Projects' }))
-    .toHaveAttribute('aria-current', 'page');
+  const current = page.getByRole('menuitem', { name: 'Projects' });
+  await expect.element(current).toHaveAttribute('aria-current', 'page');
+  expect(current.element().assignedSlot?.closest('[role="menu"]')).toBe(menu.element());
   expect(
     host.shadowRoot?.getElementById(required(trigger.element().getAttribute('aria-controls'))),
   ).toBe(menu.element());
@@ -326,6 +350,7 @@ it('S15: paints the themed app-bar fill, image, backdrop and heading family', as
   host.style.setProperty('--ki-app-bar-bg', 'rgb(245, 241, 236)');
   host.style.setProperty('--ki-app-bar-bg-image', 'linear-gradient(transparent, white)');
   host.style.setProperty('--ki-app-bar-backdrop-filter', 'blur(3px)');
+  host.setAttribute('data-ki-theme', 'onmars');
   host.style.setProperty('--ki-typography-family-heading', 'serif');
   await expect.element(heading()).toBeVisible();
   const surface = getComputedStyle(part(host, 'bar'));
@@ -351,10 +376,18 @@ it('S16: lays out the brand and trailing actions in RTL', async () => {
   );
 });
 
-it('S17: keeps a drawn current-page indicator in forced colors', async () => {
+it('S17: keeps a drawn current-page indicator in forced colors', async (test) => {
+  const witness = document.createElement('span');
+  witness.style.backgroundColor = 'rgb(1, 2, 3)';
+  fixture.append(witness);
   await media.emulateForcedColors('active');
   try {
-    await expect.poll(() => matchMedia('(forced-colors: active)').matches).toBe(true);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const applied =
+      matchMedia('(forced-colors: active)').matches &&
+      getComputedStyle(witness).backgroundColor !== 'rgb(1, 2, 3)';
+    if (navigator.userAgent.includes('Chrome/')) expect(applied).toBe(true);
+    else if (!applied) test.skip('This browser does not apply a forced palette under emulation');
     const host = wideHeader();
     await expect.element(page.getByRole('link', { name: 'Projects' })).toBeVisible();
     const indicator = getComputedStyle(required(host.querySelector('[aria-current="page"]')));

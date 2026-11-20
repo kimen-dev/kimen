@@ -5,10 +5,13 @@ import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
 
 import { AnchoredOverlay } from '../../utils/anchored-overlay';
 import { shadowFocusTarget } from '../../utils/shadow-focus';
-import { extendTypeahead, typeaheadIndex } from '../../utils/typeahead';
+import { typeaheadIndex } from '../../utils/typeahead';
 import { type TopNavSize, appBarSize, hasCenteredTitle, headingTag } from './ki-top-nav.layout';
 
 const DEFAULT_COLLAPSE_AT = '48rem';
+const DEFAULT_LABEL = 'Main';
+const DEFAULT_NAVIGATION_LABEL = 'Open navigation';
+const DEFAULT_OVERFLOW_LABEL = 'More actions';
 const INLINE_ACTIONS = 3;
 const MENU_ID = 'top-nav-menu';
 const TRIGGER_ID = 'top-nav-trigger';
@@ -62,7 +65,7 @@ export class KiTopNav {
   @Prop() variant: TopNavVariant = 'header';
 
   /** Accessible name of the header's primary navigation landmark. Override for localization. */
-  @Prop() label = 'Main';
+  @Prop() label = DEFAULT_LABEL;
 
   /** Bar size. Only app-bar mode has large and extra-large two-row sizes. */
   @Prop() size: TopNavSize = 'md';
@@ -74,10 +77,10 @@ export class KiTopNav {
   @Prop({ reflect: true }) sticky = false;
 
   /** Accessible name for the compact navigation button and menu. Override for localization. */
-  @Prop() navigationLabel = 'Open navigation';
+  @Prop() navigationLabel = DEFAULT_NAVIGATION_LABEL;
 
   /** Accessible name for the app-bar overflow button and menu. Override for localization. */
-  @Prop() overflowLabel = 'More actions';
+  @Prop() overflowLabel = DEFAULT_OVERFLOW_LABEL;
 
   /** Screen heading, set with the HTML title attribute or the screenTitle property. */
   @Prop({ attribute: 'title' }) screenTitle = '';
@@ -96,6 +99,7 @@ export class KiTopNav {
 
   @State() private compact = false;
   @State() private scrolled = false;
+  @State() private collapsed = false;
   @State() private open = false;
   @State() private linkCount = 0;
   @State() private actionCount = 0;
@@ -115,8 +119,6 @@ export class KiTopNav {
   private contentObserver?: MutationObserver;
   private scrollRoot: Element | Document | undefined;
   private focusAfterLayout: HTMLAnchorElement | 'trigger' | undefined;
-  private typed = '';
-  private lastTyped = 0;
 
   private get appBar(): boolean {
     return this.variant === 'app-bar';
@@ -131,6 +133,7 @@ export class KiTopNav {
   }
 
   componentDidRender(): void {
+    if (this.appBar) this.syncScroll();
     const focus = this.focusAfterLayout;
     this.focusAfterLayout = undefined;
     if (focus === 'trigger') this.trigger?.focus();
@@ -229,8 +232,10 @@ export class KiTopNav {
 
   private readonly syncScroll = (): void => {
     const root = this.scrollRoot;
-    const offset = root instanceof Document ? root.scrollingElement?.scrollTop : root?.scrollTop;
-    this.scrolled = (offset ?? 0) > 0;
+    const offset =
+      (root instanceof Document ? root.scrollingElement?.scrollTop : root?.scrollTop) ?? 0;
+    this.scrolled = offset > 0;
+    this.collapsed = this.scrolled && offset >= (this.probe?.offsetHeight ?? 0);
   };
 
   private readonly syncContent = (): void => {
@@ -342,8 +347,6 @@ export class KiTopNav {
 
   private closeMenu(restoreFocus = false): void {
     this.open = false;
-    this.typed = '';
-    this.lastTyped = 0;
     this.overlay.hide(restoreFocus || undefined);
   }
 
@@ -391,12 +394,9 @@ export class KiTopNav {
         return;
       default: {
         if (event.key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey) return;
-        const now = performance.now();
-        this.typed = extendTypeahead(this.typed, event.key, now - this.lastTyped);
-        this.lastTyped = now;
         target = typeaheadIndex(
           items.map((item) => ({ label: this.actionLabel(item) })),
-          this.typed,
+          event.key,
           current,
         );
       }
@@ -441,7 +441,7 @@ export class KiTopNav {
         aria-controls={MENU_ID}
         aria-expanded={this.open ? 'true' : 'false'}
         ref={(element) => {
-          this.trigger = element;
+          if (element) this.trigger = element;
         }}
         onClick={this.toggleMenu}
         onKeyDown={this.onTriggerKey}
@@ -475,8 +475,8 @@ export class KiTopNav {
         <div class="brand" part="brand">
           <slot name="brand" />
         </div>
-        <nav part="navigation" aria-label={this.label}>
-          {menu && this.renderMenuTrigger(this.navigationLabel, 'menu')}
+        <nav part="navigation" aria-label={this.label || DEFAULT_LABEL}>
+          {menu && this.renderMenuTrigger(this.navigationLabel || DEFAULT_NAVIGATION_LABEL, 'menu')}
           {/* Keyboard handlers apply only while this surface has the menu role. */}
           {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div
@@ -484,7 +484,7 @@ export class KiTopNav {
             class={{ links: true, 'nav-menu': this.compact, popup: menu }}
             {...popup}
             ref={(element) => {
-              this.menu = element;
+              if (element) this.menu = element;
             }}
             onClick={this.onLinkClick}
             onKeyDown={this.onMenuKey}
@@ -507,7 +507,7 @@ export class KiTopNav {
 
   private renderOverflow() {
     return [
-      this.renderMenuTrigger(this.overflowLabel, 'ellipsis'),
+      this.renderMenuTrigger(this.overflowLabel || DEFAULT_OVERFLOW_LABEL, 'ellipsis'),
       <div
         id={MENU_ID}
         part="menu"
@@ -517,7 +517,7 @@ export class KiTopNav {
         tabindex="-1"
         aria-labelledby={TRIGGER_ID}
         ref={(element) => {
-          this.menu = element;
+          if (element) this.menu = element;
         }}
         onKeyDown={this.onMenuKey}
         onFocusout={this.onMenuFocusOut}
@@ -542,7 +542,7 @@ export class KiTopNav {
   }
 
   private renderAppBar() {
-    const size = appBarSize(this.size, this.scrollBehavior, this.scrolled);
+    const size = appBarSize(this.size, this.scrollBehavior, this.collapsed);
     const expanded = size === 'lg' || size === 'xl';
     const centered =
       hasCenteredTitle(size, this.titleAlign, this.compact, this.actionCount) && !this.hasSearch;
@@ -559,9 +559,7 @@ export class KiTopNav {
           'extra-large': size === 'xl',
           'has-search': this.hasSearch,
           centered,
-          scrolled:
-            this.scrolled &&
-            (this.scrollBehavior === 'elevate' || this.scrollBehavior === 'collapse'),
+          scrolled: this.scrolled && this.scrollBehavior !== 'none',
         }}
       >
         <div class="leading" part="leading">
@@ -595,12 +593,18 @@ export class KiTopNav {
   }
 
   render() {
-    const length = this.collapseAt.trim();
+    const length = (this.collapseAt || DEFAULT_COLLAPSE_AT).trim();
     const breakpoint = CSS.supports('inline-size', `max(0px, ${length})`)
       ? length
       : DEFAULT_COLLAPSE_AT;
+    const collapsible = this.appBar && this.scrollBehavior === 'collapse';
     return (
-      <Host>
+      <Host
+        class={{
+          'collapse-lg': collapsible && this.size === 'lg',
+          'collapse-xl': collapsible && this.size === 'xl',
+        }}
+      >
         <span class="measure" aria-hidden="true">
           <span
             class="probe"
