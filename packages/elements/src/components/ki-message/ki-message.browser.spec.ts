@@ -158,13 +158,15 @@ describe('system preferences', () => {
   });
 
   it('S13 leaves the streaming caret visible and static under reduced motion', async () => {
-    await browserCommands.emulateReducedMotion('reduce');
-    expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
     fixture.innerHTML = '<ki-message id="reply" streaming>Here</ki-message>';
     await expect.element(page.getByRole('article', { name: 'Assistant said' })).toBeVisible();
 
     const caret = part('#reply', 'caret');
-    expect(getComputedStyle(caret).animationName).toBe('none');
+    // Apply the preference to the mounted shadow sheet, including in WebKit.
+    await browserCommands.emulateReducedMotion('reduce');
+    await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+    await expect.poll(() => getComputedStyle(caret).animationName).toBe('none');
+    expect(getComputedStyle(caret).opacity).toBe('1');
     expect(caret.getBoundingClientRect().width).toBeGreaterThan(0);
   });
 

@@ -120,6 +120,12 @@ slot[name="avatar"]::slotted(*) {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  [part="caret"] {
+    animation: none;
+  }
+}
+
 @keyframes blink {
   50% {
     opacity: 0;
