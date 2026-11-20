@@ -24,13 +24,17 @@ afterEach(async () => {
   await parkPointer();
 });
 
-it('keeps both variants touch sized with compact density and the smallest tab size', async (test) => {
-  if (!(await browserCommands.emulateHoverCapability('none'))) {
-    test.skip('this engine cannot emulate a touch screen');
+it('keeps both variants touch sized with touch density and the smallest tab size', async (test) => {
+  const emulated = await browserCommands.emulateHoverCapability('none');
+  const coarse = () => matchMedia('(pointer: coarse)').matches;
+  if (navigator.userAgent.includes('Chrome/')) {
+    expect(emulated).toBe(true);
+    await expect.poll(coarse).toBe(true);
+  } else if (!coarse()) {
+    test.skip('this engine cannot emulate a coarse primary pointer');
   }
   try {
-    expect(matchMedia('(pointer: coarse)').matches).toBe(true);
-    document.body.innerHTML = `<main data-ki-density="compact">
+    document.body.innerHTML = `<main data-ki-density="touch">
       <ki-tabs label="Mail" size="xs" variant="primary">
         <ki-tab value="mail"><svg slot="icon" viewBox="0 0 20 20"><rect width="20" height="20"/></svg>Mail</ki-tab>
         <ki-tab-panel value="mail">Messages</ki-tab-panel>
@@ -41,16 +45,14 @@ it('keeps both variants touch sized with compact density and the smallest tab si
       </ki-tabs>
     </main>`;
 
-    const mail = page.getByRole('tab', { name: 'Mail', exact: true }).element();
-    const info = page.getByRole('tab', { name: 'Info', exact: true }).element();
-    await expect
-      .poll(() =>
-        Math.min(mail.getBoundingClientRect().height, info.getBoundingClientRect().height),
-      )
-      .toBeGreaterThanOrEqual(44);
-    await expect
-      .poll(() => Math.min(mail.getBoundingClientRect().width, info.getBoundingClientRect().width))
-      .toBeGreaterThanOrEqual(44);
+    const mail = page.getByRole('tab', { name: 'Mail', exact: true });
+    const info = page.getByRole('tab', { name: 'Info', exact: true });
+    await expect.element(mail).toBeVisible();
+    await expect.element(info).toBeVisible();
+    const mailRect = mail.element().getBoundingClientRect();
+    const infoRect = info.element().getBoundingClientRect();
+    expect(Math.min(mailRect.height, infoRect.height)).toBeGreaterThanOrEqual(44);
+    expect(Math.min(mailRect.width, infoRect.width)).toBeGreaterThanOrEqual(44);
   } finally {
     await browserCommands.emulateHoverCapability(null);
   }

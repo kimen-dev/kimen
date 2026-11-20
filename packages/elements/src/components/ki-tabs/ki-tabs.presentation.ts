@@ -5,5 +5,8 @@ export function resolveIconLayout(
   variant: KiTabsVariant,
   layout: string | undefined,
 ): KiTabsIconLayout {
-  throw new Error(`Tab icon layout is not implemented: ${variant} ${layout ?? 'default'}`);
+  if (layout === 'stacked' || layout === 'inline') {
+    return layout;
+  }
+  return variant === 'secondary' ? 'inline' : 'stacked';
 }

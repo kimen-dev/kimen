@@ -1121,7 +1121,9 @@ describe('tabs variants and decorative icons', () => {
     await expect
       .poll(() => {
         const { icon, label } = inboxGeometry(group);
-        return layout === 'stacked' ? icon.bottom <= label.top : icon.right <= label.left;
+        const iconLeads =
+          layout === 'stacked' ? icon.bottom <= label.top : icon.right <= label.left;
+        return icon.width > 0 && icon.height > 0 && iconLeads;
       })
       .toBe(true);
   });
@@ -1228,8 +1230,8 @@ describe('tabs variants and decorative icons', () => {
     try {
       await browserCommands.emulateReducedMotion('reduce');
       await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
-      expect(getComputedStyle(indicatorOf(group)).transitionDuration).toBe('0s');
-      expect(getComputedStyle(indicatorOf(group)).transform).toBe('none');
+      await expect.poll(() => getComputedStyle(indicatorOf(group)).transitionDuration).toBe('0s');
+      await expect.poll(() => getComputedStyle(indicatorOf(group)).transform).toBe('none');
       await page.getByRole('tab', { name: 'Sent', exact: true }).click();
       await expect.element(page.getByRole('tabpanel', { name: 'Sent', exact: true })).toBeVisible();
     } finally {

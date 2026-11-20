@@ -1,4 +1,4 @@
-import { Component, Element, Host, h, Prop } from '@stencil/core';
+import { Component, Element, forceUpdate, Host, h, Prop, Watch } from '@stencil/core';
 import {
   booleanFromAttributePresence,
   observeAttributePresence,
@@ -8,12 +8,13 @@ import {
  * One selectable tab inside a `ki-tabs` view switcher.
  *
  * @whenToUse label one peer content view inside `ki-tabs`, with optional
- * `start` and `end` slot media.
+ * decorative `icon` and `start` or `end` slot media.
  * @whenNotToUse standalone, for form value
  * selection, or for page navigation; use the parent group's `value` instead
  * of authoring `selected`.
  *
- * @slot - Tab label; this is the accessible name source.
+ * @slot - Required visible text label and accessible name source.
+ * @slot icon - Decorative SVG. Supply visible text in the default slot.
  * @slot start - Leading icon or media. Follows writing direction.
  * @slot end - Trailing icon or media. Follows writing direction.
  * @part tab - Tab surface.
@@ -73,7 +74,14 @@ export class KiTab {
     this.presenceObserver = undefined;
   }
 
+  @Watch('data-ki-tab-with-icon')
+  protected updateIcon(): void {
+    forceUpdate(this.host);
+  }
+
   render() {
+    const hasIcon = this.host.hasAttribute('data-ki-tab-with-icon');
+    const indicator = <span part="indicator" aria-hidden="true" />;
     return (
       <Host
         role="tab"
@@ -82,10 +90,20 @@ export class KiTab {
       >
         <span part="tab">
           <slot name="start" />
-          <slot />
+          {hasIcon ? (
+            <span class="content">
+              <span class="icon" aria-hidden="true" inert>
+                <slot name="icon" />
+              </span>
+              <slot />
+              {indicator}
+            </span>
+          ) : (
+            <slot />
+          )}
           <slot name="end" />
         </span>
-        <span part="indicator" aria-hidden="true" />
+        {!hasIcon && indicator}
       </Host>
     );
   }

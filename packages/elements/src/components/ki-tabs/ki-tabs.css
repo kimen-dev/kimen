@@ -53,6 +53,30 @@
   --_ki-tab-line-height: var(--ki-tab-xl-line-height);
 }
 
+.strip[data-icon-layout="stacked"] ::slotted(ki-tab) {
+  --_ki-tab-icon-direction: column;
+  --_ki-tab-icon-gap: var(--ki-tab-icon-stacked-gap);
+  --_ki-tab-icon-height: var(--ki-tab-icon-stacked-min-block-size);
+}
+
+.strip[data-variant="secondary"] ::slotted(ki-tab) {
+  --_ki-tab-indicator-height: var(--ki-tab-secondary-indicator-height);
+  --_ki-tab-indicator-inset: 0;
+  --_ki-tab-indicator-radius: 0;
+  --_ki-tab-icon-content-position: static;
+  --_ki-tab-unselected-fg: var(--ki-tabs-secondary-unselected-rest-fg);
+  --_ki-tab-unselected-bg: var(--ki-tabs-secondary-unselected-rest-bg);
+  --_ki-tab-selected-fg: var(--ki-tabs-secondary-selected-rest-fg);
+  --_ki-tab-selected-bg: var(--ki-tabs-secondary-selected-rest-bg);
+}
+
+.strip[data-variant="primary"] ::slotted(ki-tab[data-ki-tab-with-icon]) {
+  --_ki-tab-indicator-height: var(--ki-tab-primary-indicator-height);
+  --_ki-tab-indicator-inset: 0;
+  --_ki-tab-indicator-block-end: calc(-1 * var(--ki-tab-padding-block-end));
+  --_ki-tab-indicator-radius: var(--ki-tab-primary-indicator-height) var(--ki-tab-primary-indicator-height) 0 0;
+}
+
 /* More tabs than fit scroll inside the strip instead of widening the page
  * (WCAG 1.4.10). The strip around the tab slot is the scroll container, not
  * the tablist, so the tablist box and its divider stay exactly where they

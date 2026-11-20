@@ -2049,6 +2049,17 @@
         "$type": "dimension",
         "$value": "{ki.size.border.hairline}",
         "$description": "Stroke width of the boundary of a compact control."
+      },
+      "indicator-width": {
+        "$type": "dimension",
+        "thin": {
+          "$value": "{ki.size.border.thin}",
+          "$description": "Thin selection marker for navigation within content."
+        },
+        "medium": {
+          "$value": "{ki.size.border.medium}",
+          "$description": "Medium selection marker for primary navigation."
+        }
       }
     }
   }

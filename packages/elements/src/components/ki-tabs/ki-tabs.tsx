@@ -8,6 +8,11 @@ import {
   nextSelectableIndex,
 } from './ki-tabs.keyboard';
 import {
+  resolveIconLayout,
+  type KiTabsIconLayout,
+  type KiTabsVariant,
+} from './ki-tabs.presentation';
+import {
   buildPairing,
   resolveSelection,
   type PairingRecord,
@@ -28,13 +33,29 @@ interface EventEmitter<T> {
 const TAB_TAG = 'ki-tab';
 const PANEL_TAG = 'ki-tab-panel';
 
+// Inspect label nodes only for the new icon slot. Legacy start/end slots
+// keep their existing composition and selection semantics.
+function hasTabLabel(node: Node): boolean {
+  if (node.nodeType === Node.TEXT_NODE) {
+    return Boolean(node.textContent?.trim());
+  }
+  return (
+    node instanceof HTMLElement &&
+    !node.hidden &&
+    !node.inert &&
+    node.getAttribute('aria-hidden') !== 'true' &&
+    [...node.childNodes].some(hasTabLabel)
+  );
+}
+
 let nextId = 0;
 
 /**
  * A tab group for switching between peer content views.
  *
  * @whenToUse switch between small sets of peer views inside the same page,
- * with one visible panel at a time.
+ * with one visible panel at a time. Use primary for the screen-level group
+ * and secondary inside content.
  * @whenNotToUse selecting form values
  * (use `ki-radio-group`), page navigation (use links), step flows, or
  * standalone `ki-tab` / `ki-tab-panel` children outside this group.
@@ -104,6 +125,20 @@ export class KiTabs {
    * @default 'md'
    */
   @Prop({ reflect: true }) size: KiTabsSize = 'md';
+
+  /**
+   * Visual treatment for the group. Use one primary group per screen and
+   * secondary groups within content.
+   *
+   * @default 'primary'
+   */
+  @Prop({ reflect: true }) variant: KiTabsVariant = 'primary';
+
+  /**
+   * Positions the decorative icon relative to its tab label. When omitted,
+   * primary stacks the icon above the label and secondary puts it inline.
+   */
+  @Prop({ reflect: true }) iconLayout?: KiTabsIconLayout;
 
   /**
    * Fired once after a user-driven selection change from pointer or keyboard
@@ -282,7 +317,8 @@ export class KiTabs {
   }
 
   private resolveSelectedTab(tabRecords: TabRecord[], requestedValue?: string): HTMLElement | null {
-    const owned = (value: string): boolean => tabRecords.some((tab) => tab.value === value);
+    const owned = (value: string): boolean =>
+      tabRecords.some((tab) => tab.value === value && !tab.duplicate);
 
     if (requestedValue !== undefined) {
       // A new request replaces the one that was waiting.
@@ -369,7 +405,12 @@ export class KiTabs {
     this.childObserver?.disconnect();
 
     for (const tab of this.tabRoster) {
-      this.childObserver?.observe(tab, { attributeFilter: ['disabled', 'value'] });
+      this.childObserver?.observe(tab, {
+        attributeFilter: ['disabled', 'value', 'slot', 'hidden', 'inert', 'aria-hidden'],
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
     }
     for (const panel of this.panelRoster) {
       this.childObserver?.observe(panel, { attributeFilter: ['value'] });
@@ -381,8 +422,20 @@ export class KiTabs {
 
     return this.tabRoster.map((tab) => {
       const value = this.elementValue(tab);
-      const duplicate = seen.has(value);
-      seen.add(value);
+      const hasIcon = [...tab.children].some((child) => child.getAttribute('slot') === 'icon');
+      const missingLabel =
+        hasIcon &&
+        ![...tab.childNodes].some(
+          (node) => (!(node instanceof HTMLElement) || node.slot === '') && hasTabLabel(node),
+        );
+      this.setBooleanAttribute(tab, 'data-ki-tab-with-icon', hasIcon);
+      this.setBooleanAttribute(tab, 'data-ki-tab-unlabelled', missingLabel);
+      // An icon-only tab has no place in selection or pairing, like an
+      // absent tab. A valid tab with its value can still own the panel.
+      const duplicate = missingLabel || seen.has(value);
+      if (!missingLabel) {
+        seen.add(value);
+      }
       return {
         value,
         disabled: childDisabled(tab),
@@ -464,10 +517,8 @@ export class KiTabs {
   }
 
   private setBooleanAttribute(element: HTMLElement, name: string, enabled: boolean): void {
-    if (enabled) {
-      element.setAttribute(name, '');
-    } else {
-      element.removeAttribute(name);
+    if (element.hasAttribute(name) !== enabled) {
+      element.toggleAttribute(name, enabled);
     }
   }
 
@@ -495,6 +546,7 @@ export class KiTabs {
   }
 
   render() {
+    const variant = this.variant === 'secondary' ? 'secondary' : 'primary';
     return (
       <Host
         onClick={this.handleClick}
@@ -515,6 +567,8 @@ export class KiTabs {
               tablist. */}
           <div
             class="strip"
+            data-variant={variant}
+            data-icon-layout={resolveIconLayout(variant, this.iconLayout)}
             role="tablist"
             aria-label={this.label}
             tabIndex={-1}

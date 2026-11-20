@@ -22,6 +22,10 @@ decorative icons while keeping each tab visibly labeled.
   the tablist and selection until it receives a label. Existing tabs using the
   legacy `start` or `end` slots keep their behavior. (agent's choice, pending
   founder confirmation)
+- The repository assigns one token-source namespace to each tag. The
+  `tabs` token sources carry the secondary group colours. The `tab` source
+  carries the singular `--ki-tab-*` indicator and icon tokens. (agent's
+  choice, pending founder confirmation)
 - Use the forced-colour palette's `LinkText` for the selected label and
   `Highlight` for the marker. (agent's choice, pending founder confirmation)
 
