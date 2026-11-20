@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+figure {
+  margin: 0;
+  background-color: var(--ki-code-bg);
+  background-image: var(--ki-code-bg-image);
+  backdrop-filter: var(--ki-code-backdrop-filter);
+  border: var(--ki-code-border-width) solid var(--ki-code-border);
+  border-radius: var(--ki-code-radius);
+  color: var(--ki-code-fg);
+  font-size: var(--ki-code-font-size);
+  line-height: var(--ki-code-line-height);
+}
+
+figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ki-code-header-padding);
+  padding-block: var(--ki-code-header-padding);
+  padding-inline: var(--ki-code-padding);
+  min-block-size: var(--ki-density-target-min);
+  border-block-end: var(--ki-code-border-width) solid var(--ki-code-border);
+  color: var(--ki-code-header-fg);
+  overflow-wrap: anywhere;
+}
+
+ki-copy-button {
+  flex: none;
+}
+
+pre {
+  margin: 0;
+  padding-block: var(--ki-code-padding);
+  overflow: auto;
+  font: inherit;
+  font-family: var(--ki-code-font-family);
+}
+
+pre:focus-visible {
+  outline: var(--ki-code-focus-width) solid var(--ki-code-focus-color);
+  outline-offset: calc(-1 * var(--ki-code-focus-width));
+}
+
+code {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-inline-size: 100%;
+  inline-size: max-content;
+  font-family: inherit;
+  white-space: normal;
+}
+
+code[data-numbered] {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+code[data-wrap] {
+  inline-size: auto;
+}
+
+.line {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  min-block-size: var(--ki-code-line-height);
+  padding-inline: var(--ki-code-padding);
+}
+
+.line-text {
+  min-inline-size: 0;
+  white-space: pre;
+}
+
+code[data-wrap] .line-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.line-number {
+  padding-inline-end: var(--ki-code-padding);
+  color: var(--ki-code-line-number);
+  text-align: end;
+  user-select: none;
+}
+
+.line[data-highlighted] {
+  padding-inline-start: calc(var(--ki-code-padding) - var(--ki-code-highlight-marker-width));
+  border-inline-start: var(--ki-code-highlight-marker-width) solid var(--ki-code-highlight-marker);
+  background-color: var(--ki-code-highlight-bg);
+}
+
+.syntax-keyword {
+  color: var(--ki-code-keyword);
+}
+
+.syntax-string {
+  color: var(--ki-code-string);
+}
+
+.syntax-number {
+  color: var(--ki-code-number);
+}
+
+.syntax-function {
+  color: var(--ki-code-function);
+}
+
+.syntax-comment {
+  color: var(--ki-code-comment);
+  font-style: italic;
+}
+
+@media (forced-colors: active) {
+  .line[data-highlighted] {
+    border-inline-start-color: CanvasText;
+  }
+}

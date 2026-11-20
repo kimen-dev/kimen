@@ -1,0 +1,7 @@
+{
+  "barePage": { "keyboardPressed": false },
+  "pointer": { "hoverWitness": false },
+  "tokenNamespace": "code",
+  "catalog": true,
+  "catalogAction": "ki-copy"
+}

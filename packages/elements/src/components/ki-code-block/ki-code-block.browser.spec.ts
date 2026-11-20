@@ -104,7 +104,7 @@ it('S1 displays language, filename, syntax colors, one-based numbers and line ra
 });
 
 it('S2 renders unsupported languages and HTML-like input as literal text', async () => {
-  const literal = '  <b data-test>literal</b>';
+  const literal = '  <b data-test>literal</b>\n  text';
   const host = await mount('language="txt"', literal);
   const code = part(host, 'code');
   expect(code.textContent).toBe(literal);
@@ -115,7 +115,9 @@ it('S2 renders unsupported languages and HTML-like input as literal text', async
 it('S3 copies updated source with original whitespace and emits success once', async () => {
   const host = await mount('language="ts" line-numbers highlight="1" copied-label="Code copied"');
   const copied = vi.fn();
+  const captured = vi.fn();
   host.addEventListener('ki-copy', copied);
+  host.addEventListener('ki-copy', captured, { capture: true });
   const updated = "\tconst content = '<tag>';  \r\n\r\n";
   const text = host.firstChild;
   if (!(text instanceof Text)) throw new Error('Missing original text node');
@@ -137,6 +139,7 @@ it('S3 copies updated source with original whitespace and emits success once', a
         }),
       ],
     ]);
+  expect(captured).toHaveBeenCalledTimes(1);
   await expect.element(page.getByRole('status')).toHaveTextContent('Code copied');
 });
 
@@ -189,7 +192,7 @@ it('S6 activates Copy code once with Enter and keeps native focus', async () => 
   await expect.element(locator).toBeVisible();
   const copy = host.shadowRoot?.querySelector('ki-copy-button');
   const button = copy?.shadowRoot?.querySelector('button');
-  if (!button) throw new Error('Missing native copy button');
+  if (!copy || !button) throw new Error('Missing native copy button');
 
   button.focus();
   await userEvent.keyboard('{Enter}');
@@ -232,6 +235,9 @@ it('S8 consumes overridden syntax ink and highlight fill tokens', async () => {
 });
 
 it('S9 preserves a highlight marker and focus in forced colors and reduced motion', async () => {
+  const before = fixture.appendChild(document.createElement('button'));
+  before.textContent = 'Before code';
+  before.tabIndex = 0;
   const host = await mount('highlight="2" line-numbers copyable="false"');
   try {
     await browser.emulateForcedColors('active');
@@ -242,8 +248,9 @@ it('S9 preserves a highlight marker and focus in forced colors and reduced motio
     const scroll = part(host, 'scroll');
     const [line] = highlighted(host);
     if (!line) throw new Error('Missing selected line');
-    scroll.focus();
-    const marker = getComputedStyle(line, '::before');
+    before.focus();
+    await userEvent.tab();
+    const marker = getComputedStyle(line);
     expect(marker.borderInlineStartStyle).toBe('solid');
     expect(Number.parseFloat(marker.borderInlineStartWidth)).toBeGreaterThan(0);
     expect(getComputedStyle(scroll).outlineStyle).toBe('solid');
@@ -266,5 +273,7 @@ it('S10 keeps the RTL header and left-to-right code with a left-side gutter', as
   if (!number || !line) throw new Error('Missing numbered line');
   expect(getComputedStyle(header).direction).toBe('rtl');
   expect(getComputedStyle(code).direction).toBe('ltr');
-  expect(number.getBoundingClientRect().right).toBeLessThan(line.getBoundingClientRect().left);
+  const numberText = document.createRange();
+  numberText.selectNodeContents(number);
+  expect(numberText.getBoundingClientRect().right).toBeLessThan(line.getBoundingClientRect().left);
 });

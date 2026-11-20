@@ -19,7 +19,7 @@
 - **Grammar and source** (agent's choice, pending founder confirmation). The default slot supplies literal text and updates when that text changes. JavaScript, TypeScript and JSON have lightweight syntax coloring, including common JavaScript and TypeScript aliases. Other languages display plain text. The language label uses the supplied text. The clipboard receives the original whitespace.
 - **Line highlighting** (agent's choice, pending founder confirmation). Lines are one-based. Omit malformed and reversed ranges, intersect valid ranges with the displayed lines, and combine overlaps. A visible rule and a localized accessible description identify selected lines. The code and its gutter read left to right inside either interface direction.
 - **Labels and clipboard** (agent's choice, pending founder confirmation). Use a localized fallback figure name when metadata is missing and forward localizable button labels to CopyButton. Publish successful and failed copy events on the code block. Guarded surfaces can bind a declared action to successful copies.
-- **Contrast** (agent's choice, pending founder confirmation). Use supporting text for comments and line numbers so the same inks remain legible in both themes, including on highlighted lines.
+- **Contrast** (agent's choice, pending founder confirmation). Use supporting text for comments and line numbers so the same inks remain legible in both themes, including on highlighted lines. Declare the `code` token namespace in the component inventory to keep the proposed `--ki-code-*` names.
 
 ## Gherkin
 

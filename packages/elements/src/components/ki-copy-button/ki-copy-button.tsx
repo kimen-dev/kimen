@@ -169,9 +169,11 @@ export class KiCopyButton {
   render() {
     const feedback = this.feedback;
     const iconLabel = (this.label || '').trim() || DEFAULT_LABEL;
+    // Keep the fixed control and status region identities stable as feedback changes.
     return (
-      <Host tone="neutral">
+      <Host key="copy-button" tone="neutral">
         <button
+          key="button"
           aria-label={this.hasLabel ? undefined : iconLabel}
           data-icon-only={this.hasLabel ? undefined : ''}
           onBlur={endKeyboardPress}
@@ -184,14 +186,14 @@ export class KiCopyButton {
           tabIndex={0}
           type="button"
         >
-          <span aria-hidden="true" data-feedback={feedback?.result} part="icon">
-            <ki-icon name={glyphs[feedback?.result ?? 'idle']} />
+          <span key="glyph" aria-hidden="true" data-feedback={feedback?.result} part="icon">
+            <ki-icon key="icon" name={glyphs[feedback?.result ?? 'idle']} />
           </span>
-          <span hidden={!this.hasLabel} part="label">
-            <slot />
+          <span key="label" hidden={!this.hasLabel} part="label">
+            <slot key="label-text" />
           </span>
         </button>
-        <span aria-atomic="true" aria-live="polite" class="status" role="status">
+        <span key="status" aria-atomic="true" aria-live="polite" class="status" role="status">
           {feedback && (
             <span key={feedback.attempt}>
               {feedback.result === 'success' ? this.copiedLabel : this.copyErrorLabel}
