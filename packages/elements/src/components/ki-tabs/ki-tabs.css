@@ -74,7 +74,8 @@
   --_ki-tab-indicator-height: var(--ki-tab-primary-indicator-height);
   --_ki-tab-indicator-inset: 0;
   --_ki-tab-indicator-block-end: calc(-1 * var(--ki-tab-padding-block-end));
-  --_ki-tab-indicator-radius: var(--ki-tab-primary-indicator-height) var(--ki-tab-primary-indicator-height) 0 0;
+  --_ki-tab-indicator-radius: var(--ki-tab-primary-indicator-height)
+    var(--ki-tab-primary-indicator-height) 0 0;
 }
 
 /* More tabs than fit scroll inside the strip instead of widening the page

@@ -108,7 +108,10 @@
 :host([data-ki-tab-with-icon]) [part="tab"] {
   min-block-size: max(
     var(--ki-density-target-min),
-    calc(max(var(--_ki-tab-min-block-size), var(--_ki-tab-icon-height, 0px)) + var(--ki-density-control-offset))
+    calc(
+      max(var(--_ki-tab-min-block-size), var(--_ki-tab-icon-height, 0px)) +
+      var(--ki-density-control-offset)
+    )
   );
 }
 
