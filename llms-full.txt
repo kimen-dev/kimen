@@ -1171,6 +1171,180 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-chip
+
+A compact filter toggle, removable picked value, or contextual action.
+
+When to use: apply independent filters, represent values selected in an entry
+field, or offer a small contextual action alongside content.
+When NOT to use: static status (ki-badge), primary actions (ki-button), suggested
+prompts, or mutually exclusive choices (ki-radio-group).
+
+Examples:
+
+# Chip examples
+
+Use a filter group for independent toggles. Read `ki-change.detail.selected` to
+update the results. The chip's `value` identifies the filter.
+
+```html
+<ki-chip-group label="Team" type="filter">
+  <ki-chip value="design" selected>Design</ki-chip>
+  <ki-chip value="eng">Engineering</ki-chip>
+</ki-chip-group>
+```
+
+Use an input group for picked values. Link the entry field by ID so focus
+returns to it after the last chip. Listen to `ki-remove` to update your
+collection. If a framework owns these nodes, cancel the event and let it
+apply the DOM change, then focus the next chip or the linked field.
+
+```html
+<ki-chip-group label="Recipients" type="input" focus-target="recipient">
+  <ki-chip value="ana" removable>
+    <ki-avatar slot="start" size="xxs" initials="AG" label="Ana García"></ki-avatar>
+    Ana García
+  </ki-chip>
+  <ki-chip value="luis" removable>Luis</ki-chip>
+</ki-chip-group>
+<input id="recipient" aria-label="Add recipient">
+```
+
+Use assist for a contextual action. Handle `ki-activate` in application code.
+
+```html
+<ki-chip type="assist" value="calendar">
+  <svg slot="start" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <rect x="3" y="5" width="18" height="16" rx="2"/>
+    <path d="M3 10h18M8 2v6m8-6v6"/>
+  </svg>
+  Add to calendar
+</ki-chip>
+```
+
+Attributes:
+- `disabled` (boolean, default false): Prevents activation, removal and moving the chip.
+- `removable` (boolean, default false): Gives an input chip a trailing remove button and keyboard deletion.
+- `remove-label` (string, default 'Remove'): Localized action prefix in the remove button's accessible name, followed by the chip label.
+- `selected` (boolean, default false): The pressed state of a filter chip. The user can toggle it in place.
+- `size` ("md" | "sm", default 'md'): Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.
+- `type` ("assist" | "filter" | "input" | undefined): Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.
+- `value` (string, default ''): Value sent with removal, contextual activation and reorder events.
+
+Slots:
+- (default): The visible text label. Use text or non-interactive markup.
+- `start`: One decorative glyph or extra-extra-small avatar. A filter check replaces it when selected. Do not slot controls.
+
+Parts:
+- `chip`: The painted pill.
+- `drag-handle`: The grip enabled by a reorderable parent group.
+- `label`: The text wrapper around the default slot.
+- `remove`: The native remove button on a removable input chip.
+- `selection-icon`: The selected filter check.
+- `start`: The decorative leading content.
+
+Events:
+- `ki-activate` (CustomEvent<{
+    value: string;
+  }>): Emitted by an assist chip when its native button is activated.
+- `ki-change` (CustomEvent<{
+    selected: boolean;
+  }>): Emitted after a filter chip changes its pressed state.
+- `ki-remove` (CustomEvent<{ value: string }>): Remove request for an input chip. Cancel it to keep application ownership of the chip.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-chip-assist-icon-fg`: Decorative glyph in an assist chip.
+- `--ki-chip-backdrop-filter`: Default compact pill surface leaves the backdrop unfiltered.
+- `--ki-chip-bg`: Resting filter and assist surface.
+- `--ki-chip-bg-image`: Default compact pill surface uses a solid color.
+- `--ki-chip-border`: Outline of an unselected filter or assist chip.
+- `--ki-chip-border-width`: Default thickness of a compact pill border.
+- `--ki-chip-disabled-border`: Outline of a disabled chip.
+- `--ki-chip-disabled-ink`: Label on a disabled chip.
+- `--ki-chip-fg`: Resting filter and assist label.
+- `--ki-chip-font-family`: Font family for the visible chip label.
+- `--ki-chip-font-size`: Default chip label size.
+- `--ki-chip-font-size-sm`: Small chip label size.
+- `--ki-chip-font-weight`: Weight for a chip label.
+- `--ki-chip-gap`: Gap between content in a compact pill.
+- `--ki-chip-height`: Default height of a compact pill.
+- `--ki-chip-height-sm`: Small height of a compact pill.
+- `--ki-chip-hover-bg`: Surface under the hovering pointer.
+- `--ki-chip-hover-fg`: Label over the hover surface.
+- `--ki-chip-icon-size`: Icon size inside a compact pill.
+- `--ki-chip-input-bg`: Surface of a picked value.
+- `--ki-chip-input-fg`: Label of a picked value.
+- `--ki-chip-inset`: Default inline padding of a compact pill.
+- `--ki-chip-inset-action`: Trailing inset beside a pill action.
+- `--ki-chip-inset-sm`: Small inline padding of a compact pill.
+- `--ki-chip-line-height`: Default line height of the chip label.
+- `--ki-chip-line-height-sm`: Small line height of the chip label.
+- `--ki-chip-pressed-bg`: Surface while the activation is held.
+- `--ki-chip-pressed-fg`: Label while the activation is held.
+- `--ki-chip-radius`: Fully rounded compact pill shape.
+- `--ki-chip-remove-bg`: Remove button surface inside an input chip.
+- `--ki-chip-remove-fg`: Resting remove glyph.
+- `--ki-chip-remove-hover-bg`: Remove button hover surface.
+- `--ki-chip-remove-hover-fg`: Remove glyph over the hover surface.
+- `--ki-chip-selected-bg`: Selected filter surface.
+- `--ki-chip-selected-border`: Accessible boundary of a selected filter.
+- `--ki-chip-selected-fg`: Selected filter label and check.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+
+### ki-chip-group
+
+A named collection of filter, input or assist chips, with optional ordering.
+
+When to use: label related chips or let people change their reading order.
+When NOT to use: choose exactly one option or submit a form value.
+
+Examples:
+
+# Chip group examples
+
+A labelled group lets the user reorder direct chips with a drag handle,
+two pointer activations on the handles, or Alt+Left/Right. The order is
+announced on each move. Listen for `ki-reorder` to persist the new order.
+
+```html
+<ki-chip-group label="Recipients" type="input" reorderable focus-target="recipient">
+  <ki-chip value="ana" removable>Ana García</ki-chip>
+  <ki-chip value="luis" removable>Luis</ki-chip>
+</ki-chip-group>
+<input id="recipient" aria-label="Add recipient">
+```
+
+Attributes:
+- `focus-target` (string | undefined): ID of the entry field in the same document or shadow root for focus after the last chip.
+- `label` (string, default ''): Accessible name for the group or list.
+- `reorder-announcement` (string, default '{label} moved to position {position} of {total}.'): Localized polite message using {label}, {position} and {total}. Position is one-based.
+- `reorderable` (boolean, default false): Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.
+- `type` ("assist" | "filter" | "input", default 'filter'): Shared chip kind and collection semantics. Input chips are presented as a list.
+
+Slots:
+- (default): Direct ki-chip children in reading order.
+
+Parts:
+- `group`: The wrapping chip layout.
+
+Events:
+- `ki-reorder` (CustomEvent<KiChipReorderDetail>): Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-chip-group-font-family`: Font family inherited by chip group content.
+- `--ki-chip-group-gap`: Gap between adjacent chips and rows.
+- `--ki-chip-height-sm`: Small height of a compact pill.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+
 ### ki-citation
 
 A numbered inline link from an answer to a source card.
@@ -3028,6 +3202,171 @@ CSS custom properties:
 - `--ki-scroller-thumb-thickness`: dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17).
 - `--ki-scroller-track-color`: color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute.
 - `--ki-scroller-track-inset`: dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-segment
+
+A single choice in a ki-segmented-control.
+
+When to use: offer one mutually exclusive choice with text or a named icon.
+When NOT to use: standalone, for navigation, or for form submission.
+
+Examples:
+
+# ki-segment examples
+
+Place each choice directly in a `ki-segmented-control`. Give every choice a
+distinct value, and set the selected value on the group.
+
+```html
+<ki-segmented-control label="Date range" value="week">
+  <ki-segment value="day">Day</ki-segment>
+  <ki-segment value="week">Week</ki-segment>
+  <ki-segment value="year" disabled>Year</ki-segment>
+</ki-segmented-control>
+```
+
+Use the `start` slot for a decorative icon. An icon-only option needs
+`aria-label`, which also supplies its hover and focus tooltip when enabled.
+
+The all-elements loader registers `ki-tooltip`. When using direct imports or
+framework wrappers, register it separately for icon-only options.
+
+Attributes:
+- `aria-label` (string | undefined): Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.
+- `disabled` (boolean, default false): Excludes the option from selection and keyboard navigation.
+- `value` (string, required): Required nonempty option identifier. Each value must be unique in its group.
+
+Slots:
+- (default): Noninteractive visible option label.
+- `start`: Decorative leading icon. Supply aria-label for an icon-only option.
+
+Parts:
+- `button`: The native option surface with radio semantics.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-segment-font-size`: Text size of medium and small segments.
+- `--ki-segment-font-weight`: Font weight of segment labels.
+- `--ki-segment-gap`: Gap between the leading icon and label.
+- `--ki-segment-icon-size`: Size of leading artwork.
+- `--ki-segment-line-height`: Line height of medium and small segments.
+- `--ki-segment-padding-inline`: Inline padding of a medium or small segment.
+- `--ki-segmented-control-track-size-md`: Medium track height before density adjustment.
+- `--ki-segmented-item-backdrop-filter`: Complete CSS backdrop filter behind an unselected segment.
+- `--ki-segmented-item-bg`: Resting surface of an unselected segment, matching the track by default.
+- `--ki-segmented-item-bg-image`: Optional image layered over an unselected segment surface.
+- `--ki-segmented-item-disabled-fg`: Ink of an unavailable segment.
+- `--ki-segmented-item-fg`: Resting ink of an unselected segment, strengthened in contrast-more.
+- `--ki-segmented-item-radius`: Corner radius of each segment.
+- `--ki-segmented-selected-backdrop-filter`: Complete CSS backdrop filter behind the selected segment.
+- `--ki-segmented-selected-bg`: Raised selected surface, lighter than the track in both schemes.
+- `--ki-segmented-selected-bg-image`: Optional image layered over the selected segment.
+- `--ki-segmented-selected-border-color`: High-contrast selection boundary when elevation or surface differences are subtle.
+- `--ki-segmented-selected-border-width`: Width of the selection boundary.
+- `--ki-segmented-selected-fg`: Ink of the selected segment.
+- `--ki-segmented-selected-shadow`: Elevation of the selected segment.
+- `--ki-segmented-track-padding`: Inset between the track and its segments.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-segmented-control
+
+A compact control for one in-place choice among two to five options.
+
+When to use: apply a chart range, view mode, or another immediate setting.
+When NOT to use: switching between panels (ki-tabs), submitted form choices
+(ki-radio-group), or more than five options (ki-select).
+
+Examples:
+
+# ki-segmented-control examples
+
+## Change a chart range
+
+```html
+<ki-segmented-control id="range" label="Chart range" value="week">
+  <ki-segment value="day">Day</ki-segment>
+  <ki-segment value="week">Week</ki-segment>
+  <ki-segment value="month">Month</ki-segment>
+</ki-segmented-control>
+```
+
+```js
+import { defineCustomElement as defineControl } from '@kimen/elements/ki-segmented-control';
+import { defineCustomElement as defineSegment } from '@kimen/elements/ki-segment';
+
+defineControl();
+defineSegment();
+
+document.querySelector('#range').addEventListener('ki-change', ({ detail }) => {
+  updateChartRange(detail.value);
+});
+```
+
+## Give an icon-only option a name
+
+```html
+<ki-segmented-control label="View" size="sm" full-width>
+  <ki-segment value="list">List</ki-segment>
+  <ki-segment value="board" aria-label="Board">
+    <svg slot="start" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 2h4v12H2zm6 0h6v7H8z" fill="currentColor"></path>
+    </svg>
+  </ki-segment>
+</ki-segmented-control>
+```
+
+The all-elements loader already registers the tooltip. With direct imports
+or framework wrappers, register it before mounting an icon-only option.
+
+```js
+import { defineCustomElement as defineTooltip } from '@kimen/elements/ki-tooltip';
+
+defineTooltip();
+```
+
+Supply a visible label when space permits. The icon-only option takes its
+accessible name and hover or focus tooltip from `aria-label`. Keep slotted
+content noninteractive.
+
+Attributes:
+- `full-width` (boolean, default false): Distribute the available inline space evenly among all segments.
+- `label` (string, required): Required accessible name of the group. Use a short name for the setting.
+- `size` ("md" | "sm" | "xs", default 'md'): Track size. The default heights are 28, 32 and 40 CSS px respectively; surrounding density settings can increase or decrease targets.
+- `value` (string, default ''): Resolved selected value. Set it to choose an option programmatically. Omit it to select the first available option. The value is empty when there are no available options. Programmatic changes are silent.
+
+Slots:
+- (default): Two to five direct ki-segment children with distinct nonempty values.
+
+Parts:
+- `track`: Surface containing the radiogroup and its options.
+
+Events:
+- `ki-change` (CustomEvent<{ value: string }>): Emitted once per changed user choice with the new resolved value.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-segment-font-size-xs`: Text size of extra-small segments.
+- `--ki-segment-line-height-xs`: Line height of extra-small segments.
+- `--ki-segment-padding-inline-xs`: Inline padding of an extra-small segment.
+- `--ki-segmented-control-track-size-md`: Medium track height before density adjustment.
+- `--ki-segmented-control-track-size-sm`: Small track height before density adjustment.
+- `--ki-segmented-control-track-size-xs`: Extra-small track height before density adjustment.
+- `--ki-segmented-radius`: Corner radius of the control track.
+- `--ki-segmented-track-backdrop-filter`: Complete CSS backdrop filter behind the track.
+- `--ki-segmented-track-bg`: Solid surface for the segment track.
+- `--ki-segmented-track-bg-image`: Optional image layered over the track surface.
+- `--ki-segmented-track-gap`: Gap between adjacent segments.
+- `--ki-segmented-track-padding`: Inset between the track and its segments.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-select

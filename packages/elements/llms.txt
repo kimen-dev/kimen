@@ -42,6 +42,8 @@ methods, CSS custom properties and examples.
 - [ki-card](llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
 - [ki-checkbox](llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
 - [ki-checkbox-group](llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
+- [ki-chip](llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
+- [ki-chip-group](llms/ki-chip-group.md): label related chips or let people change their reading order.
 - [ki-citation](llms/ki-citation.md): Next to a claim supported by a `ki-source` in the same document or shadow root.
 - [ki-counter](llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
@@ -62,6 +64,8 @@ methods, CSS custom properties and examples.
 - [ki-radio](llms/ki-radio.md): place inside `ki-radio-group` when a person must choose exactly one of a small visible set.
 - [ki-radio-group](llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
 - [ki-scroller](llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
+- [ki-segment](llms/ki-segment.md): offer one mutually exclusive choice with text or a named icon.
+- [ki-segmented-control](llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
 - [ki-select](llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
 - [ki-source](llms/ki-source.md): As a direct child of `ki-sources`.
 - [ki-sources](llms/ki-sources.md): To show the evidence behind an answer.

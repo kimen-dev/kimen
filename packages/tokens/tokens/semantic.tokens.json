@@ -1571,14 +1571,25 @@
       }
     },
     "glyph": {
-      "$type": "dimension",
-      "media-size": {
-        "$value": "{ki.space.5xl}",
-        "$description": "Standard dimension of an inline media placeholder symbol."
+      "size": {
+        "$type": "dimension",
+        "sm": {
+          "$value": "{ki.space.3xl}",
+          "$description": "Small glyph for dense layouts (16px at the default root size)."
+        },
+        "md": {
+          "$value": "{ki.space.5xl}",
+          "$description": "Medium glyph for body content (20px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Large standalone glyph (24px at the default root size)."
+        }
       },
       "stroke-width": {
-        "$value": "{ki.size.border.hairline}",
-        "$description": "Base stroke width for simple outlined symbols."
+        "$type": "number",
+        "$value": "{ki.scale.icon-stroke}",
+        "$description": "Weight of a line icon's outline in viewBox units."
       }
     },
     "spacing": {
@@ -1602,28 +1613,6 @@
       "activity-dot-gap": {
         "$value": "{ki.space.xs}",
         "$description": "Gap between typing dots."
-      }
-    },
-    "glyph": {
-      "size": {
-        "$type": "dimension",
-        "sm": {
-          "$value": "{ki.space.3xl}",
-          "$description": "Small glyph for dense layouts (16px at the default root size)."
-        },
-        "md": {
-          "$value": "{ki.space.5xl}",
-          "$description": "Medium glyph for body content (20px at the default root size)."
-        },
-        "lg": {
-          "$value": "{ki.space.7xl}",
-          "$description": "Large standalone glyph (24px at the default root size)."
-        }
-      },
-      "stroke-width": {
-        "$type": "number",
-        "$value": "{ki.scale.icon-stroke}",
-        "$description": "Weight of a line icon's outline in viewBox units."
       }
     },
     "source-reference": {
@@ -2056,6 +2045,99 @@
       "grid-fixed-breakpoint": {
         "$value": "{ki.size.layout.grid-fixed-breakpoint}",
         "$description": "Minimum available inline size for a fixed grid to use multiple tracks."
+      }
+    },
+    "control": {
+      "size": {
+        "$type": "dimension",
+        "xs": {
+          "$value": "{ki.space.9xl}",
+          "$description": "Extra-small control track height, 28 CSS px at the default root size."
+        },
+        "sm": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Small control track height, 32 CSS px at the default root size."
+        },
+        "md": {
+          "$value": "{ki.space.12xl}",
+          "$description": "Medium control track height, 40 CSS px at the default root size."
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "track": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "Corner radius of a track containing adjacent controls."
+        },
+        "item": {
+          "$value": "{ki.radius.component.sm}",
+          "$description": "Corner radius of an individual control inside a track."
+        }
+      },
+      "track-inset": {
+        "$type": "dimension",
+        "$value": "{ki.space.xxs}",
+        "$description": "Inset and spacing between adjacent controls inside a track."
+      },
+      "icon-gap": {
+        "$type": "dimension",
+        "$value": "{ki.space.sm}",
+        "$description": "Separation between a control label and its leading icon."
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Stroke width of the boundary of a compact control."
+      },
+      "compact-pill": {
+        "height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Default height of a compact pill."
+        },
+        "height-sm": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Small height of a compact pill."
+        },
+        "icon-size": {
+          "$value": "{ki.space.3xl}",
+          "$description": "Icon size inside a compact pill."
+        },
+        "inset": {
+          "$value": "{ki.space.xl}",
+          "$description": "Default inline padding of a compact pill."
+        },
+        "inset-sm": {
+          "$value": "{ki.space.md}",
+          "$description": "Small inline padding of a compact pill."
+        },
+        "inset-action": {
+          "$value": "{ki.space.xs}",
+          "$description": "Trailing inset beside a pill action."
+        },
+        "gap": {
+          "$value": "{ki.space.sm}",
+          "$description": "Gap between content in a compact pill."
+        },
+        "collection-gap": {
+          "$value": "{ki.space.md}",
+          "$description": "Gap between adjacent compact pills."
+        },
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Fully rounded compact pill shape."
+        },
+        "border-width": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "Default thickness of a compact pill border."
+        },
+        "bg-image": {
+          "$value": "none",
+          "$description": "Default compact pill surface uses a solid color."
+        },
+        "backdrop-filter": {
+          "$value": "none",
+          "$description": "Default compact pill surface leaves the backdrop unfiltered."
+        }
       }
     }
   }

@@ -14,6 +14,8 @@ import { defineCustomElement as defineKiButton } from '@kimen/elements/component
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
+import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
+import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
 import { defineCustomElement as defineKiCitation } from '@kimen/elements/components/ki-citation.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
@@ -34,6 +36,8 @@ import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
+import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
+import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
 import { defineCustomElement as defineKiSource } from '@kimen/elements/components/ki-source.js';
 import { defineCustomElement as defineKiSources } from '@kimen/elements/components/ki-sources.js';
@@ -250,6 +254,68 @@ export class KiCheckboxGroup {
 export declare interface KiCheckboxGroup extends Components.KiCheckboxGroup {
   /**
    * Fires once for a committed user toggle with a copy of the current selection.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiChip,
+  inputs: ['disabled', 'removable', 'removeLabel', 'selected', 'size', 'type', 'value']
+})
+@Component({
+  selector: 'ki-chip',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'removable', 'removeLabel', 'selected', 'size', 'type', 'value'],
+})
+export class KiChip {
+  protected el: HTMLKiChipElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiChip extends Components.KiChip {
+  /**
+   * Emitted after a filter chip changes its pressed state.
+   */
+  /**
+   * Remove request for an input chip. Cancel it to keep application ownership of the chip.
+   */
+  /**
+   * Emitted by an assist chip when its native button is activated.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiChipGroup,
+  inputs: ['focusTarget', 'label', 'reorderAnnouncement', 'reorderable', 'type']
+})
+@Component({
+  selector: 'ki-chip-group',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['focusTarget', 'label', 'reorderAnnouncement', 'reorderable', 'type'],
+})
+export class KiChipGroup {
+  protected el: HTMLKiChipGroupElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiChipGroup extends Components.KiChipGroup {
+  /**
+   * Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
    */
 }
 
@@ -729,6 +795,57 @@ export class KiScroller {
 
 
 export declare interface KiScroller extends Components.KiScroller {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSegment,
+  inputs: ['accessibleLabel', 'disabled', 'value']
+})
+@Component({
+  selector: 'ki-segment',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['accessibleLabel', 'disabled', { name: 'value', required: true }],
+})
+export class KiSegment {
+  protected el: HTMLKiSegmentElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSegment extends Components.KiSegment {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSegmentedControl,
+  inputs: ['fullWidth', 'label', 'size', 'value']
+})
+@Component({
+  selector: 'ki-segmented-control',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['fullWidth', { name: 'label', required: true }, 'size', 'value'],
+})
+export class KiSegmentedControl {
+  protected el: HTMLKiSegmentedControlElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiSegmentedControl extends Components.KiSegmentedControl {
+  /**
+   * Emitted once per changed user choice with the new resolved value.
+   */
+}
 
 
 @ProxyCmp({
