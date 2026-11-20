@@ -34,8 +34,9 @@ it('S3 shows the referenced title and hostname on hover and remains open over th
   await link().hover();
   await expect.element(preview()).toBeVisible();
   expect(preview().element().matches(':popover-open')).toBe(true);
-  await expect.element(preview()).toHaveTextContent('Methods');
-  await expect.element(preview()).toHaveTextContent('example.org');
+  await expect.element(preview().getByText('Methods', { exact: true })).toBeVisible();
+  await expect.element(preview().getByText('example.org', { exact: true })).toBeVisible();
+  await expect.element(preview()).toHaveAccessibleName('example.org');
   await preview().hover();
   await expect.element(preview()).toBeVisible();
   await page.getByRole('button', { name: 'First control' }).hover();
@@ -134,5 +135,6 @@ it('resolves and mirrors the citation property before and after mount', async ()
   expect(citation.getAttribute('ref')).toBe('findings');
 
   await updated.hover();
-  await expect.element(preview()).toHaveTextContent('Findings');
+  await expect.element(preview().getByText('Findings', { exact: true })).toBeVisible();
+  await expect.element(preview().getByText('example.net', { exact: true })).toBeVisible();
 });
