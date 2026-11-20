@@ -65,6 +65,6 @@ export class KiOption {
   // The owning ki-select derives the effective value when it reads the option.
 
   render() {
-    return <slot />;
+    return <slot key="label" />;
   }
 }

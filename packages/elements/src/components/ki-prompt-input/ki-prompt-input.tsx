@@ -151,7 +151,8 @@ export class KiPromptInput {
   @Watch('value')
   protected syncValue(): void {
     const text = this.value ?? '';
-    if (this.textarea && this.textarea.value !== text) this.textarea.value = text;
+    const textarea = this.textarea;
+    if (textarea && textarea.value !== text) textarea.value = text;
     this.internals.setFormValue(text);
   }
 
@@ -174,8 +175,8 @@ export class KiPromptInput {
     this.feedback = '';
   }
 
-  private readonly onInput = (): void => {
-    if (this.textarea) this.value = this.textarea.value;
+  private readonly onInput = (event: globalThis.Event): void => {
+    this.value = (event.currentTarget as HTMLTextAreaElement).value;
   };
 
   private readonly send = (): void => {

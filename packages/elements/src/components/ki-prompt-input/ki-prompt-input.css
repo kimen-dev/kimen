@@ -147,7 +147,7 @@ button:disabled {
 }
 
 [part="tools"] {
-  flex: 1 1 auto;
+  flex: auto;
 }
 
 [part="status"],

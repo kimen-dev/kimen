@@ -23,8 +23,8 @@ export function acceptsFile(file: File, accept: string): boolean {
   return accept
     .toLowerCase()
     .split(',')
-    .some((specifier) => {
-      const rule = specifier.trim();
+    .map((specifier) => specifier.trim())
+    .some((rule) => {
       if (rule.startsWith('.')) return name.endsWith(rule);
       if (rule.endsWith('/*')) return type.startsWith(rule.slice(0, -1));
       return rule !== '' && type === rule;
@@ -32,15 +32,13 @@ export function acceptsFile(file: File, accept: string): boolean {
 }
 
 export function transferFiles({ files, items }: FileTransferData): FileBatch {
-  return files.length
-    ? files
-    : Array.from(items, (item) => item.getAsFile()).filter((file) => !!file);
+  if (files.length) return files;
+  return Array.from(items, (item) => item.getAsFile()).filter((file) => file !== null);
 }
 
 function limit(value: number | undefined): number {
-  return value !== undefined && Number.isFinite(value) && value >= 0
-    ? Math.floor(value)
-    : Number.POSITIVE_INFINITY;
+  const maximum = Math.floor(value ?? -1);
+  return maximum >= 0 ? maximum : Infinity;
 }
 
 export function selectAttachments(
@@ -50,7 +48,7 @@ export function selectAttachments(
   maxFiles?: number,
   maxSize?: number,
 ): AttachmentSelection {
-  const countLimit = limit(maxFiles);
+  const remaining = limit(maxFiles) - existingCount;
   const sizeLimit = limit(maxSize);
   const accepted: File[] = [];
   const rejected: AttachmentSelection['rejected'] = [];
@@ -59,7 +57,7 @@ export function selectAttachments(
     let reason: RejectionReason | undefined;
     if (!acceptsFile(file, accept)) reason = 'type';
     else if (file.size > sizeLimit) reason = 'size';
-    else if (existingCount + accepted.length >= countLimit) reason = 'count';
+    else if (accepted.length >= remaining) reason = 'count';
     if (reason) rejected.push({ file, reason });
     else accepted.push(file);
   }
