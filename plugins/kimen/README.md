@@ -38,6 +38,33 @@ Full setup, including the `kimen-mcp` server for each client:
 - `.claude-plugin/plugin.json`: the manifest Claude Code and Codex read; the
   marketplace is `.claude-plugin/marketplace.json` at the repository root.
 - `.antigravity-plugin/plugin.json`: the Antigravity manifest.
+- `evals/`: behaviour tests for the skills, run with `claude plugin eval`
+  (see [Evals](#evals)).
 
 The plugin bundles no MCP server yet: `kimen-mcp` is not on npm, so each
 client starts the locally built binary (see the guide).
+
+## Evals
+
+`evals/` holds four cases for
+[`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals):
+
+| Case | Skill | What it checks |
+| --- | --- | --- |
+| `signup-form-page` | `kimen-components` | a form page that reads the contracts at kimen.dev, uses only real `ki-*` tags and attributes, loads the tokens and registers the components |
+| `dark-mode-toggle` | `kimen-components` | a theme switch through `data-ki-color-scheme`, with the page painted by tokens: no hard-coded colours, no `!important` |
+| `address-confirmation-spec` | `kimen-genui` | a UI spec with catalog components only, attribute-name props, declared and bound actions, no markup or styling |
+| `unrelated-request` | neither | a Python task loads no Kimen skill |
+
+Every grader is deterministic (file, regex and tool-call checks), so the
+only model calls are the runs themselves. The allow-lists of tags,
+attributes and catalog components are copied from the generated contracts;
+refresh them when a component changes. From the repository root:
+
+```sh
+claude plugin eval plugins/kimen --allow-tools Write "WebFetch(domain:kimen.dev)"
+```
+
+Each case runs three times with the plugin and three times without it. For a
+quick check, add `--runs 1 --ablation none`; in CI, add `--trust-plugin`,
+`--json results.json`, a pinned `--model` and `--max-cost-usd`.
