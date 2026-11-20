@@ -1,5 +1,6 @@
 import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
+import { forwardedButtonAria, syncButtonAria } from '../../utils/button-aria';
 import type { KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
@@ -159,7 +160,7 @@ export class KiButton {
 
   @State() private formDisabled = false;
   private button: HTMLButtonElement | undefined;
-  private descriptionObserver?: MutationObserver;
+  private ariaObserver?: MutationObserver;
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -175,16 +176,16 @@ export class KiButton {
     // releases the observer, and a button that is moved in the document (a
     // keyed reorder, a drag between lists) connects again without loading
     // again.
-    this.descriptionObserver?.disconnect();
-    this.descriptionObserver = new MutationObserver(() => {
-      this.syncForwardedDescription();
+    this.ariaObserver?.disconnect();
+    this.ariaObserver = new MutationObserver(() => {
+      syncButtonAria(this.host, this.button);
     });
-    this.descriptionObserver.observe(this.host, {
-      attributeFilter: ['aria-description'],
+    this.ariaObserver.observe(this.host, {
+      attributeFilter: forwardedButtonAria,
     });
-    // A description written while the button was out of the document. On the
+    // ARIA changed while the button was out of the document. On the
     // first connection there is no inner button yet: componentDidLoad syncs.
-    this.syncForwardedDescription();
+    syncButtonAria(this.host, this.button);
   }
 
   componentWillLoad(): void {
@@ -202,26 +203,11 @@ export class KiButton {
   }
 
   componentDidLoad(): void {
-    this.syncForwardedDescription();
+    syncButtonAria(this.host, this.button);
   }
 
   disconnectedCallback(): void {
-    this.descriptionObserver?.disconnect();
-  }
-
-  // Assistive tech announces the DELEGATED inner button, not this focus-
-  // delegating host, so an `aria-description` set on the host (e.g. by a
-  // wrapping ki-tooltip) is never announced. Mirror it onto the inner button.
-  // Done imperatively, not in JSX: aria-description is a valid ARIA 1.3 global
-  // (jsx-a11y's allow-list is stale and flags it), and Stencil's vdom never
-  // renders this attribute, so an imperative write survives re-renders intact.
-  private syncForwardedDescription(): void {
-    const description = this.host.getAttribute('aria-description');
-    if (description === null) {
-      this.button?.removeAttribute('aria-description');
-    } else {
-      this.button?.setAttribute('aria-description', description);
-    }
+    this.ariaObserver?.disconnect();
   }
 
   // A disabled native button never dispatches a real click, but an

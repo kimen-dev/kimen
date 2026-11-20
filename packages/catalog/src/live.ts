@@ -143,7 +143,7 @@ export interface LiveSurface {
  * The props that are a control's own value channel: once the user changed
  * one (D5), an agent `set` may not overwrite it implicitly.
  */
-const USER_STATE_PROPS: ReadonlySet<string> = new Set(['checked', 'open', 'value']);
+const USER_STATE_PROPS: ReadonlySet<string> = new Set(['checked', 'open', 'selected', 'value']);
 
 // The interaction events that mark an element's user state as changed, on
 // top of the events its catalog entry declares.
@@ -935,6 +935,33 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     writeProps(element, node.component, model.props, dialogIdFor);
     writeDialogId(element, node.id, dialogIdFor);
     const entry = ownEntry(components, node.component);
+    if (node.component === 'ki-chip') {
+      // Live membership belongs to the patch model. The host can answer the
+      // removal request with a remove operation, with or without a binding.
+      element.addEventListener('ki-remove', (event) => {
+        if (event.target === element) {
+          event.preventDefault();
+        }
+      });
+    } else if (node.component === 'ki-chip-group') {
+      // A chip group moves the actual node. Keep the live default slot in the
+      // same reading order so later placements and action paths use it.
+      element.addEventListener('ki-reorder', (event) => {
+        if (event.target !== element || applying) {
+          return;
+        }
+        const entries = model.slots.get('');
+        if (entries) {
+          const order = new Map<Node, number>(
+            Array.from(element.childNodes, (node, index) => [node, index]),
+          );
+          const indexOf = (entry: MEntry): number =>
+            entry.dom ? (order.get(entry.dom) ?? -1) : -1;
+          entries.sort((left, right) => indexOf(left) - indexOf(right));
+          cached = null;
+        }
+      });
+    }
     const action = node.action;
     wireActivation(
       element,

@@ -18,6 +18,8 @@ export const KiIconButton: StencilVueComponent<JSX.KiIconButton> = /*@__PURE__*/
   'command',
   'disabled',
   'loading',
-  'loadingLabel'
+  'loadingLabel',
+  'pressed',
+  'expanded'
 ]);
 

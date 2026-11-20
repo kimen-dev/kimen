@@ -390,6 +390,44 @@ export const catalogData = {
       "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
       "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
+    "ki-button-group": {
+      "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+      "events": {},
+      "props": {
+        "attached": {
+          "type": "boolean",
+          "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+          "required": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode."
+        },
+        "toolbar": {
+          "type": "boolean",
+          "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+      },
+      "tag": "ki-button-group",
+      "whenNotToUse": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation.",
+      "whenToUse": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop."
+    },
     "ki-card": {
       "description": "A card surface for grouping related content, with an optional primary link or action.",
       "events": {
@@ -544,6 +582,109 @@ export const catalogData = {
       "tag": "ki-checkbox-group",
       "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
       "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits."
+    },
+    "ki-chip": {
+      "description": "A compact filter toggle, removable picked value, or contextual action.",
+      "events": {
+        "ki-activate": "Emitted by an assist chip when its native button is activated.",
+        "ki-change": "Emitted after a filter chip changes its pressed state.",
+        "ki-remove": "Remove request for an input chip. Cancel it to keep application ownership of the chip."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Prevents activation, removal and moving the chip.",
+          "default": false
+        },
+        "removable": {
+          "type": "boolean",
+          "description": "Gives an input chip a trailing remove button and keyboard deletion.",
+          "default": false
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+          "default": "Remove"
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "The pressed state of a filter chip. The user can toggle it in place.",
+          "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+          "default": "md"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "assist",
+            "filter",
+            "input"
+          ],
+          "description": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter."
+        },
+        "value": {
+          "type": "string",
+          "description": "Value sent with removal, contextual activation and reorder events.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The visible text label. Use text or non-interactive markup.",
+        "start": "One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+      },
+      "tag": "ki-chip",
+      "whenNotToUse": "static status (ki-badge), primary actions (ki-button), suggested\nprompts, or mutually exclusive choices (ki-radio-group).",
+      "whenToUse": "apply independent filters, represent values selected in an entry\nfield, or offer a small contextual action alongside content."
+    },
+    "ki-chip-group": {
+      "description": "A named collection of filter, input or assist chips, with optional ordering.",
+      "events": {
+        "ki-reorder": "Emitted after moving a chip. Indices are zero-based positions in the visible chip collection."
+      },
+      "props": {
+        "focus-target": {
+          "type": "string",
+          "description": "ID of the entry field in the same document or shadow root for focus after the last chip."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the group or list.",
+          "default": ""
+        },
+        "reorder-announcement": {
+          "type": "string",
+          "description": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+          "default": "{label} moved to position {position} of {total}."
+        },
+        "reorderable": {
+          "type": "boolean",
+          "description": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+          "default": false
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "assist",
+            "filter",
+            "input"
+          ],
+          "description": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+          "default": "filter"
+        }
+      },
+      "slots": {
+        "": "Direct ki-chip children in reading order."
+      },
+      "tag": "ki-chip-group",
+      "whenNotToUse": "choose exactly one option or submit a form value.",
+      "whenToUse": "label related chips or let people change their reading order."
     },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
@@ -746,6 +887,10 @@ export const catalogData = {
           "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
           "default": false
         },
+        "expanded": {
+          "type": "boolean",
+          "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions."
+        },
         "label": {
           "type": "string",
           "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
@@ -760,6 +905,10 @@ export const catalogData = {
           "type": "string",
           "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
           "default": "Loading"
+        },
+        "pressed": {
+          "type": "boolean",
+          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
         },
         "size": {
           "type": "enum",
@@ -803,7 +952,7 @@ export const catalogData = {
         "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
       },
       "tag": "ki-icon-button",
-      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
       "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
     },
     "ki-image": {
@@ -1448,6 +1597,50 @@ export const catalogData = {
       "tag": "ki-select",
       "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
       "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited."
+    },
+    "ki-skeleton": {
+      "description": "Decorative placeholder shapes that reserve space for loading content.",
+      "events": {},
+      "props": {
+        "animated": {
+          "type": "boolean",
+          "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+          "default": true
+        },
+        "block-size": {
+          "type": "string",
+          "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape."
+        },
+        "inline-size": {
+          "type": "string",
+          "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space."
+        },
+        "lines": {
+          "type": "number",
+          "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 20
+        },
+        "shape": {
+          "type": "enum",
+          "values": [
+            "circle",
+            "rect",
+            "text"
+          ],
+          "description": "Match the placeholder to the expected text, avatar, or rectangular content.",
+          "default": "text"
+        },
+        "size": {
+          "type": "string",
+          "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence."
+        }
+      },
+      "slots": {},
+      "tag": "ki-skeleton",
+      "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
+      "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
     },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",

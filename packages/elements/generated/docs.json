@@ -1313,6 +1313,186 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-button-group/ki-button-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-button-group",
+      "docs": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation."
+        },
+        {
+          "name": "slot",
+          "text": "- Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+        },
+        {
+          "name": "part",
+          "text": "group - The named group or toolbar surface."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-button-group\n\n## Spaced and attached groups\n\nUse a label that describes what the actions do together. In attached mode the\nfirst button provides the common variant and size. An explicit group size\napplies in both modes.\n\n```html\n<ki-button-group label=\"History\">\n  <ki-button type=\"button\">Undo</ki-button>\n  <ki-button type=\"button\">Redo</ki-button>\n</ki-button-group>\n\n<ki-button-group label=\"Clipboard\" attached size=\"sm\">\n  <ki-button type=\"button\">Copy</ki-button>\n  <ki-button type=\"button\">Paste</ki-button>\n</ki-button-group>\n```\n\n## Formatting toolbar\n\nImport the glyphs used by your page. Give each icon button a tooltip using the\nsame label. The application sets `pressed` as the formatting state changes. The native button exposes it as `aria-pressed`.\n\n```js\nimport '@kimen/elements/icons/bold';\nimport '@kimen/elements/icons/list';\n```\n\n```html\n<ki-button-group label=\"Formatting\" toolbar size=\"sm\">\n  <ki-tooltip label=\"Bold\">\n    <ki-icon-button label=\"Bold\" variant=\"ghost\" pressed=\"true\">\n      <ki-icon name=\"bold\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n  <span role=\"separator\" aria-orientation=\"vertical\"></span>\n  <ki-tooltip label=\"Bulleted list\">\n    <ki-icon-button label=\"Bulleted list\" variant=\"ghost\">\n      <ki-icon name=\"list\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n</ki-button-group>\n```\n\n## Split button\n\nWith a build that includes `ki-menu`, anchor the menu to the chevron action.\nImport `@kimen/elements/icons/chevron-down` before mounting the group. Handle the\nmain button's click and menu selection as separate actions.\n\n```html\n<ki-button-group label=\"Save actions\" attached>\n  <ki-button type=\"button\" variant=\"primary\">Save</ki-button>\n  <ki-tooltip label=\"More save options\">\n    <ki-icon-button id=\"save-options\" label=\"More save options\" aria-haspopup=\"menu\" expanded=\"false\">\n      <ki-icon name=\"chevron-down\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n</ki-button-group>\n\n<ki-menu anchor=\"save-options\">\n  <ki-menu-item value=\"draft\">Save as draft</ki-menu-item>\n  <ki-menu-item value=\"copy\">Save a copy</ki-menu-item>\n</ki-menu>\n```\n\nKeep the icon button's `expanded` property in sync with the menu's `open`\nstate. Its native button exposes that state as `aria-expanded`.\n"
+      },
+      "props": [
+        {
+          "name": "attached",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "attached",
+          "reflectToAttr": true,
+          "docs": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined",
+          "complexType": {
+            "original": "KiButtonSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined",
+            "references": {
+              "KiButtonSize": {
+                "location": "import",
+                "path": "../ki-button/ki-button",
+                "id": "src/components/ki-button/ki-button.tsx::KiButtonSize",
+                "referenceLocation": "KiButtonSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "toolbar",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "toolbar",
+          "reflectToAttr": true,
+          "docs": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The named group or toolbar surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-card/ki-card.tsx",
       "encapsulation": "shadow",
       "tag": "ki-card",
@@ -2286,6 +2466,632 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-chip/ki-chip.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-chip",
+      "docs": "A compact filter toggle, removable picked value, or contextual action.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "apply independent filters, represent values selected in an entry\nfield, or offer a small contextual action alongside content."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "static status (ki-badge), primary actions (ki-button), suggested\nprompts, or mutually exclusive choices (ki-radio-group)."
+        },
+        {
+          "name": "slot",
+          "text": "- The visible text label. Use text or non-interactive markup."
+        },
+        {
+          "name": "slot",
+          "text": "start - One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+        },
+        {
+          "name": "part",
+          "text": "chip - The painted pill."
+        },
+        {
+          "name": "part",
+          "text": "label - The text wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "start - The decorative leading content."
+        },
+        {
+          "name": "part",
+          "text": "selection-icon - The selected filter check."
+        },
+        {
+          "name": "part",
+          "text": "remove - The native remove button on a removable input chip."
+        },
+        {
+          "name": "part",
+          "text": "drag-handle - The grip enabled by a reorderable parent group."
+        }
+      ],
+      "usage": {
+        "examples": "# Chip examples\n\nUse a filter group for independent toggles. Read `ki-change.detail.selected` to\nupdate the results. The chip's `value` identifies the filter.\n\n```html\n<ki-chip-group label=\"Team\" type=\"filter\">\n  <ki-chip value=\"design\" selected>Design</ki-chip>\n  <ki-chip value=\"eng\">Engineering</ki-chip>\n</ki-chip-group>\n```\n\nUse an input group for picked values. Link the entry field by ID so focus\nreturns to it after the last chip. Listen to `ki-remove` to update your\ncollection. If a framework owns these nodes, cancel the event and let it\napply the DOM change, then focus the next chip or the linked field.\n\n```html\n<ki-chip-group label=\"Recipients\" type=\"input\" focus-target=\"recipient\">\n  <ki-chip value=\"ana\" removable>\n    <ki-avatar slot=\"start\" size=\"xxs\" initials=\"AG\" label=\"Ana García\"></ki-avatar>\n    Ana García\n  </ki-chip>\n  <ki-chip value=\"luis\" removable>Luis</ki-chip>\n</ki-chip-group>\n<input id=\"recipient\" aria-label=\"Add recipient\">\n```\n\nUse assist for a contextual action. Handle `ki-activate` in application code.\n\n```html\n<ki-chip type=\"assist\" value=\"calendar\">\n  <svg slot=\"start\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\">\n    <rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/>\n    <path d=\"M3 10h18M8 2v6m8-6v6\"/>\n  </svg>\n  Add to calendar\n</ki-chip>\n```\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Prevents activation, removal and moving the chip.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removable",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "removable",
+          "reflectToAttr": true,
+          "docs": "Gives an input chip a trailing remove button and keyboard deletion.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remove-label",
+          "reflectToAttr": true,
+          "docs": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Remove'"
+            }
+          ],
+          "default": "'Remove'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "selected",
+          "reflectToAttr": true,
+          "docs": "The pressed state of a filter chip. The user can toggle it in place.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiChipSize",
+            "resolved": "\"md\" | \"sm\"",
+            "references": {
+              "KiChipSize": {
+                "location": "local",
+                "path": "src/components/ki-chip/ki-chip.tsx",
+                "id": "src/components/ki-chip/ki-chip.tsx::KiChipSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "type",
+          "type": "\"assist\" | \"filter\" | \"input\" | undefined",
+          "complexType": {
+            "original": "KiChipType",
+            "resolved": "\"assist\" | \"filter\" | \"input\" | undefined",
+            "references": {
+              "KiChipType": {
+                "location": "import",
+                "path": "./ki-chip.dom.js",
+                "id": "src/components/ki-chip/ki-chip.dom.ts::KiChipType",
+                "referenceLocation": "KiChipType"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "type",
+          "reflectToAttr": true,
+          "docs": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "assist",
+              "type": "string"
+            },
+            {
+              "value": "filter",
+              "type": "string"
+            },
+            {
+              "value": "input",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Value sent with removal, contextual activation and reorder events.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-activate",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{\n    value: string;\n  }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted by an assist chip when its native button is activated.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-change",
+          "detail": "{ selected: boolean; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{\n    selected: boolean;\n  }",
+            "resolved": "{ selected: boolean; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted after a filter chip changes its pressed state.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-remove",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: string }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Remove request for an input chip. Cancel it to keep application ownership of the chip.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The visible text label. Use text or non-interactive markup."
+        },
+        {
+          "name": "start",
+          "docs": "One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+        }
+      ],
+      "parts": [
+        {
+          "name": "chip",
+          "docs": "The painted pill."
+        },
+        {
+          "name": "drag-handle",
+          "docs": "The grip enabled by a reorderable parent group."
+        },
+        {
+          "name": "label",
+          "docs": "The text wrapper around the default slot."
+        },
+        {
+          "name": "remove",
+          "docs": "The native remove button on a removable input chip."
+        },
+        {
+          "name": "selection-icon",
+          "docs": "The selected filter check."
+        },
+        {
+          "name": "start",
+          "docs": "The decorative leading content."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-chip-group/ki-chip-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-chip-group",
+      "docs": "A named collection of filter, input or assist chips, with optional ordering.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "label related chips or let people change their reading order."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "choose exactly one option or submit a form value."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-chip children in reading order."
+        },
+        {
+          "name": "part",
+          "text": "group - The wrapping chip layout."
+        }
+      ],
+      "usage": {
+        "examples": "# Chip group examples\n\nA labelled group lets the user reorder direct chips with a drag handle,\ntwo pointer activations on the handles, or Alt+Left/Right. The order is\nannounced on each move. Listen for `ki-reorder` to persist the new order.\n\n```html\n<ki-chip-group label=\"Recipients\" type=\"input\" reorderable focus-target=\"recipient\">\n  <ki-chip value=\"ana\" removable>Ana García</ki-chip>\n  <ki-chip value=\"luis\" removable>Luis</ki-chip>\n</ki-chip-group>\n<input id=\"recipient\" aria-label=\"Add recipient\">\n```\n"
+      },
+      "props": [
+        {
+          "name": "focusTarget",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "focus-target",
+          "reflectToAttr": true,
+          "docs": "ID of the entry field in the same document or shadow root for focus after the last chip.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the group or list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "reorderAnnouncement",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "reorder-announcement",
+          "reflectToAttr": true,
+          "docs": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{label} moved to position {position} of {total}.'"
+            }
+          ],
+          "default": "'{label} moved to position {position} of {total}.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "reorderable",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "reorderable",
+          "reflectToAttr": true,
+          "docs": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "type",
+          "type": "\"assist\" | \"filter\" | \"input\"",
+          "complexType": {
+            "original": "KiChipType",
+            "resolved": "\"assist\" | \"filter\" | \"input\"",
+            "references": {
+              "KiChipType": {
+                "location": "import",
+                "path": "../ki-chip/ki-chip.dom.js",
+                "id": "src/components/ki-chip/ki-chip.dom.ts::KiChipType",
+                "referenceLocation": "KiChipType"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "type",
+          "reflectToAttr": true,
+          "docs": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'filter'"
+            }
+          ],
+          "default": "'filter'",
+          "values": [
+            {
+              "value": "assist",
+              "type": "string"
+            },
+            {
+              "value": "filter",
+              "type": "string"
+            },
+            {
+              "value": "input",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-reorder",
+          "detail": "KiChipReorderDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiChipReorderDetail",
+            "resolved": "KiChipReorderDetail",
+            "references": {
+              "KiChipReorderDetail": {
+                "location": "local",
+                "path": "src/components/ki-chip-group/ki-chip-group.tsx",
+                "id": "src/components/ki-chip-group/ki-chip-group.tsx::KiChipReorderDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "dragstart",
+          "capture": false,
+          "passive": true
+        },
+        {
+          "event": "dragover",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "drop",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "dragend",
+          "capture": false,
+          "passive": true
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-chip children in reading order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The wrapping chip layout."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-counter/ki-counter.tsx",
       "encapsulation": "shadow",
       "tag": "ki-counter",
@@ -3225,7 +4031,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
+          "text": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
         },
         {
           "name": "slot",
@@ -3360,6 +4166,32 @@
           "setter": false
         },
         {
+          "name": "expanded",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "expanded",
+          "reflectToAttr": false,
+          "docs": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "label",
           "type": "string",
           "complexType": {
@@ -3436,6 +4268,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pressed",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pressed",
+          "reflectToAttr": false,
+          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -7069,6 +7927,228 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-skeleton/ki-skeleton.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-skeleton",
+      "docs": "Decorative placeholder shapes that reserve space for loading content.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region."
+        },
+        {
+          "name": "part",
+          "text": "shape - Each painted text line, circle or rectangle."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-skeleton\n\nDefine the component when using direct imports.\n\n```js\nimport { defineCustomElement } from '@kimen/elements/ki-skeleton';\ndefineCustomElement();\n```\n\n## Match the expected layout\n\n```html\n<section aria-label=\"Assistant is writing\" aria-busy=\"true\">\n  <ki-skeleton lines=\"3\"></ki-skeleton>\n</section>\n\n<section aria-label=\"Loading project\" aria-busy=\"true\">\n  <ki-skeleton shape=\"circle\" size=\"2.5rem\"></ki-skeleton>\n  <ki-skeleton shape=\"rect\" block-size=\"6rem\"></ki-skeleton>\n</section>\n```\n\nThe last of multiple text lines is shorter. Use `inline-size` and `block-size` to match the dimensions of the incoming content. Set `animated=\"false\"` to use a static fill.\n\n## Skip the flash on fast loads\n\nReserve the expected block size immediately. Use `hidden` until the request has been pending for about 300 ms.\n\n```html\n<section id=\"project\" aria-label=\"Loading project\" aria-busy=\"true\" style=\"min-block-size:6rem\">\n  <ki-skeleton hidden shape=\"rect\" block-size=\"6rem\"></ki-skeleton>\n</section>\n```\n\n```js\nconst region = document.querySelector('#project');\nconst placeholder = region.querySelector('ki-skeleton');\nconst reveal = setTimeout(() => {\n  placeholder.hidden = false;\n}, 300);\n\ntry {\n  const project = await new Promise((resolve) => {\n    setTimeout(() => resolve({ name: 'Roadmap' }), 900);\n  });\n  region.textContent = project.name;\n} finally {\n  clearTimeout(reveal);\n  placeholder.remove();\n  region.setAttribute('aria-busy', 'false');\n  region.setAttribute('aria-label', 'Project');\n}\n```\n\nUse this script in a module after the section is mounted. Change the simulated request to 150 ms to see the fast path. In an application, use the real request and show its error state in the same region.\n"
+      },
+      "props": [
+        {
+          "name": "animated",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "animated",
+          "reflectToAttr": false,
+          "docs": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "blockSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "block-size",
+          "reflectToAttr": false,
+          "docs": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "inlineSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "inline-size",
+          "reflectToAttr": false,
+          "docs": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "lines",
+          "reflectToAttr": false,
+          "docs": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            },
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "maximum",
+              "text": "20"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "shape",
+          "type": "\"circle\" | \"rect\" | \"text\"",
+          "complexType": {
+            "original": "'text' | 'circle' | 'rect'",
+            "resolved": "\"circle\" | \"rect\" | \"text\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "shape",
+          "reflectToAttr": false,
+          "docs": "Match the placeholder to the expected text, avatar, or rectangular content.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'text'"
+            }
+          ],
+          "default": "'text'",
+          "values": [
+            {
+              "value": "circle",
+              "type": "string"
+            },
+            {
+              "value": "rect",
+              "type": "string"
+            },
+            {
+              "value": "text",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": false,
+          "docs": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "shape",
+          "docs": "Each painted text line, circle or rectangle."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",
       "encapsulation": "shadow",
       "tag": "ki-spinner",
@@ -9777,6 +10857,21 @@
       "declaration": "export interface KiCheckboxGroupChangeDetail {\n  value: string[];\n}",
       "docstring": "",
       "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx"
+    },
+    "src/components/ki-chip/ki-chip.dom.ts::KiChipType": {
+      "declaration": "export type KiChipType = 'filter' | 'input' | 'assist';",
+      "docstring": "",
+      "path": "src/components/ki-chip/ki-chip.dom.ts"
+    },
+    "src/components/ki-chip/ki-chip.tsx::KiChipSize": {
+      "declaration": "export type KiChipSize = 'sm' | 'md';",
+      "docstring": "",
+      "path": "src/components/ki-chip/ki-chip.tsx"
+    },
+    "src/components/ki-chip-group/ki-chip-group.tsx::KiChipReorderDetail": {
+      "declaration": "export interface KiChipReorderDetail {\n  value: string;\n  fromIndex: number;\n  toIndex: number;\n}",
+      "docstring": "",
+      "path": "src/components/ki-chip-group/ki-chip-group.tsx"
     },
     "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",

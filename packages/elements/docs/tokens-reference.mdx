@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 408 semantic
-and 1319 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 435 semantic
+and 1386 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -45,6 +45,18 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-control-border-width` | `1px` | Stroke width of the boundary of a compact control. |
+| `--ki-control-compact-pill-backdrop-filter` | `none` | Default compact pill surface leaves the backdrop unfiltered. |
+| `--ki-control-compact-pill-bg-image` | `none` | Default compact pill surface uses a solid color. |
+| `--ki-control-compact-pill-border-width` | `1px` | Default thickness of a compact pill border. |
+| `--ki-control-compact-pill-collection-gap` | `0.5rem` | Gap between adjacent compact pills. |
+| `--ki-control-compact-pill-gap` | `0.375rem` | Gap between content in a compact pill. |
+| `--ki-control-compact-pill-height` | `2rem` | Default height of a compact pill. |
+| `--ki-control-compact-pill-height-sm` | `1.5rem` | Small height of a compact pill. |
+| `--ki-control-compact-pill-icon-size` | `1rem` | Icon size inside a compact pill. |
+| `--ki-control-compact-pill-inset` | `0.75rem` | Default inline padding of a compact pill. |
+| `--ki-control-compact-pill-inset-action` | `0.25rem` | Trailing inset beside a pill action. |
+| `--ki-control-compact-pill-inset-sm` | `0.5rem` | Small inline padding of a compact pill. |
+| `--ki-control-compact-pill-radius` | `1000px` | Fully rounded compact pill shape. |
 | `--ki-control-icon-gap` | `0.375rem` | Separation between a control label and its leading icon. |
 | `--ki-control-radius-item` | `8px` | Corner radius of an individual control inside a track. |
 | `--ki-control-radius-track` | `10px` | Corner radius of a track containing adjacent controls. |
@@ -57,6 +69,8 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-corner-action-frame` | `10px` | Outside corner of an action surface. |
+| `--ki-corner-action-seam` | `0px` | Square corner at an edge shared by two actions. |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
@@ -307,10 +321,28 @@ every component at once.
 | `--ki-overlay-med-em` | `rgba(0, 0, 0, 0.24)` | semantic color for overlay med em. |
 | `--ki-overlay-med-em-inverse` | `rgba(255, 255, 255, 0.03)` | semantic color for overlay med em inverse. |
 
+### `ki.placeholder`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-placeholder-circle-radius` | `50%` | Proportional radius that preserves round loading shapes across sizes. |
+| `--ki-placeholder-circle-size` | `2.5rem` | Default diameter of a loading avatar placeholder. |
+| `--ki-placeholder-last-line-scale` | `0.7` | Fraction of available inline space reserved by the final loading text line. |
+| `--ki-placeholder-line-size` | `0.75rem` | Block size reserved by one loading text line. |
+| `--ki-placeholder-radius` | `6px` | Corner radius shared by loading text lines and rectangular placeholders. |
+| `--ki-placeholder-rect-size` | `6rem` | Default block size of a loading media placeholder. |
+| `--ki-placeholder-shimmer-duration` | `1400ms` | Duration of one loading highlight sweep. |
+| `--ki-placeholder-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | A soft currentColor highlight that can sweep across a loading placeholder. |
+
 ### `ki.spacing`
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-spacing-action-compact-gap` | `0.125rem` | Compact gap between adjacent toolbar actions. |
+| `--ki-spacing-action-gap` | `0.5rem` | Gap between distinct actions in a horizontal group. |
+| `--ki-spacing-action-hairline` | `1px` | Width of the frame and divider in an action surface. |
+| `--ki-spacing-action-inset` | `0.25rem` | Interior space at the edge of an action surface or divider. |
+| `--ki-spacing-action-joined-gap` | `0rem` | Space between actions that share an edge. |
 | `--ki-spacing-activity-dot-gap` | `0.25rem` | Gap between typing dots. |
 | `--ki-spacing-activity-label-gap` | `0.5rem` | Gap between an inline activity mark and its label. |
 | `--ki-spacing-block` | `0.75rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. |
@@ -989,6 +1021,26 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-xs-radius` | `6px` | dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns). |
 | `--ki-button-xs-spinner-size` | `0.875rem` | dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
 
+### `ki-button-group`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-button-group-attached-gap` | `0rem` | Gap between joined actions. |
+| `--ki-button-group-attached-radius` | `0px` | Radius of the logical corners along a shared button edge. |
+| `--ki-button-group-backdrop-filter` | `none` | Complete optional backdrop filter for the toolbar surface. |
+| `--ki-button-group-bg` | `#f9f7f4` | Toolbar surface colour. |
+| `--ki-button-group-bg-image` | `none` | Optional decorative image over the toolbar surface. |
+| `--ki-button-group-border-color` | `rgba(24, 22, 19, 0.1)` | Thin toolbar frame colour. |
+| `--ki-button-group-border-width` | `1px` | Thickness of the toolbar frame and divider. |
+| `--ki-button-group-divider` | `rgba(24, 22, 19, 0.1)` | Decorative toolbar separator ink. |
+| `--ki-button-group-divider-size` | `1.25rem` | Block size of a vertical toolbar separator. |
+| `--ki-button-group-fg` | `#181613` | Default toolbar foreground on its raised surface. |
+| `--ki-button-group-gap` | `0.5rem` | Gap between actions in a spaced group. |
+| `--ki-button-group-padding` | `0.25rem` | Toolbar frame inset and divider margin. |
+| `--ki-button-group-radius` | `10px` | Logical outside radius of the toolbar frame. |
+| `--ki-button-group-seam-overlap` | `1px` | Shared-edge overlap between adjacent attached actions. |
+| `--ki-button-group-toolbar-gap` | `0.125rem` | Gap between toolbar actions. |
+
 ### `ki-card`
 
 | Token | Value (onmars light) | Description |
@@ -1091,6 +1143,54 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-checkbox-group-gap` | `0.5rem` | Space between checkbox options and the group label and messages. |
+
+### `ki-chip`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-chip-assist-icon-fg` | `#ad411c` | Decorative glyph in an assist chip. |
+| `--ki-chip-backdrop-filter` | `none` | Default compact pill surface leaves the backdrop unfiltered. |
+| `--ki-chip-bg` | `rgba(0, 0, 0, 0)` | Resting filter and assist surface. |
+| `--ki-chip-bg-image` | `none` | Default compact pill surface uses a solid color. |
+| `--ki-chip-border` | `#86827b` | Outline of an unselected filter or assist chip. |
+| `--ki-chip-border-width` | `1px` | Default thickness of a compact pill border. |
+| `--ki-chip-disabled-border` | `rgba(24, 22, 19, 0.1)` | Outline of a disabled chip. |
+| `--ki-chip-disabled-ink` | `#cbc7bf` | Label on a disabled chip. |
+| `--ki-chip-fg` | `#181613` | Resting filter and assist label. |
+| `--ki-chip-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family for the visible chip label. |
+| `--ki-chip-font-size` | `0.8125rem` | Default chip label size. |
+| `--ki-chip-font-size-sm` | `0.75rem` | Small chip label size. |
+| `--ki-chip-font-weight` | `600` | Weight for a chip label. |
+| `--ki-chip-gap` | `0.375rem` | Gap between content in a compact pill. |
+| `--ki-chip-height` | `2rem` | Default height of a compact pill. |
+| `--ki-chip-height-sm` | `1.5rem` | Small height of a compact pill. |
+| `--ki-chip-hover-bg` | `#f3f0eb` | Surface under the hovering pointer. |
+| `--ki-chip-hover-fg` | `#181613` | Label over the hover surface. |
+| `--ki-chip-icon-size` | `1rem` | Icon size inside a compact pill. |
+| `--ki-chip-input-bg` | `#f3f0eb` | Surface of a picked value. |
+| `--ki-chip-input-fg` | `#181613` | Label of a picked value. |
+| `--ki-chip-inset` | `0.75rem` | Default inline padding of a compact pill. |
+| `--ki-chip-inset-action` | `0.25rem` | Trailing inset beside a pill action. |
+| `--ki-chip-inset-sm` | `0.5rem` | Small inline padding of a compact pill. |
+| `--ki-chip-line-height` | `1.5rem` | Default line height of the chip label. |
+| `--ki-chip-line-height-sm` | `1rem` | Small line height of the chip label. |
+| `--ki-chip-pressed-bg` | `#ebe7e1` | Surface while the activation is held. |
+| `--ki-chip-pressed-fg` | `#181613` | Label while the activation is held. |
+| `--ki-chip-radius` | `1000px` | Fully rounded compact pill shape. |
+| `--ki-chip-remove-bg` | `#f3f0eb` | Remove button surface inside an input chip. |
+| `--ki-chip-remove-fg` | `#5e5953` | Resting remove glyph. |
+| `--ki-chip-remove-hover-bg` | `#e0dcd4` | Remove button hover surface. |
+| `--ki-chip-remove-hover-fg` | `#181613` | Remove glyph over the hover surface. |
+| `--ki-chip-selected-bg` | `#ffebe5` | Selected filter surface. |
+| `--ki-chip-selected-border` | `#bc4c26` | Accessible boundary of a selected filter. |
+| `--ki-chip-selected-fg` | `#9a3715` | Selected filter label and check. |
+
+### `ki-chip-group`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-chip-group-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family inherited by chip group content. |
+| `--ki-chip-group-gap` | `0.5rem` | Gap between adjacent chips and rows. |
 
 ### `ki-counter`
 
@@ -1690,6 +1790,25 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-xs-line-height` | `1rem` | dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595). |
 | `--ki-select-xs-padding-inline` | `0.375rem` | dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px). |
 | `--ki-select-xs-radius` | `6px` | dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs). |
+
+### `ki-skeleton`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-skeleton-backdrop-filter` | `none` | Complete backdrop filter behind a loading shape. Defaults to none. |
+| `--ki-skeleton-bg` | `#ebe7e1` | Base fill of the decorative loading shapes. |
+| `--ki-skeleton-bg-image` | `none` | Optional image layered over the static fill. Defaults to none. |
+| `--ki-skeleton-circle-radius` | `50%` | Proportional corner radius of the circular shape. |
+| `--ki-skeleton-circle-size` | `2.5rem` | Default diameter of the circle. |
+| `--ki-skeleton-highlight` | `#f9f7f4` | Peak colour of the animated loading highlight. |
+| `--ki-skeleton-last-line-scale` | `0.7` | Fraction of the usual line width occupied by the final line in multiline text. |
+| `--ki-skeleton-line-gap` | `0.5rem` | Block-axis space between text lines. |
+| `--ki-skeleton-line-size` | `0.75rem` | Default height of each text line. |
+| `--ki-skeleton-radius` | `6px` | Corner radius of text lines and rectangles. |
+| `--ki-skeleton-rect-size` | `6rem` | Default block size of the rectangle. |
+| `--ki-skeleton-shimmer-duration` | `1400ms` | Duration of a shimmer sweep. |
+| `--ki-skeleton-shimmer-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the shimmer sweep. |
+| `--ki-skeleton-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | Image of the moving highlight. Use currentColor to inherit the highlight colour. |
 
 ### `ki-spinner`
 

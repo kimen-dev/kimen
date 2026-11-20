@@ -11,8 +11,12 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiDialogCommand } from "./utils/dialog-invoker";
+import { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
+import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
+import { KiChipSize } from "./components/ki-chip/ki-chip";
+import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -45,8 +49,12 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiDialogCommand } from "./utils/dialog-invoker";
+export { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
+export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
+export { KiChipSize } from "./components/ki-chip/ki-chip";
+export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -265,6 +273,33 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
+     * Arranges related actions as a spaced group, attached group, or keyboard toolbar.
+     * @whenToUse place two to five related actions together, present a primary
+     * action with a menu of alternatives, or give formatting tools one Tab stop.
+     * @whenNotToUse for a single-choice setting, unrelated actions, or navigation.
+     * Use a segmented control for a single-choice setting and links for navigation.
+     */
+    interface KiButtonGroup {
+        /**
+          * Joins neighboring actions at their inner edges. Buttons share the first button's variant and use its size when the group has no explicit size. Use for a closely related set of actions or for a split button.
+          * @default false
+         */
+        "attached": boolean;
+        /**
+          * Required accessible name for the group or toolbar (for example, "Text formatting"). Provide a localized name that describes the actions' shared purpose.
+         */
+        "label": string;
+        /**
+          * Applies one token-backed size to each button while it belongs to the group. Omit it to keep individual sizes in spaced mode.
+         */
+        "size"?: KiButtonSize1;
+        /**
+          * Gives the group toolbar semantics, a framed surface and one Tab stop. Horizontal arrows, Home and End move between the toolbar's actions.
+          * @default false
+         */
+        "toolbar": boolean;
+    }
+    /**
      * A card surface for grouping related content, with an optional primary link or action.
      * @whenToUse group related media, a title, supporting text and actions into
      * one scannable surface. Set `href` for navigation or `interactive` for a
@@ -404,6 +439,80 @@ export namespace Components {
           * @default []
          */
         "value": string[];
+    }
+    /**
+     * A compact filter toggle, removable picked value, or contextual action.
+     * @whenToUse apply independent filters, represent values selected in an entry
+     * field, or offer a small contextual action alongside content.
+     * @whenNotToUse static status (ki-badge), primary actions (ki-button), suggested
+     * prompts, or mutually exclusive choices (ki-radio-group).
+     */
+    interface KiChip {
+        /**
+          * Prevents activation, removal and moving the chip.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Gives an input chip a trailing remove button and keyboard deletion.
+          * @default false
+         */
+        "removable": boolean;
+        /**
+          * Localized action prefix in the remove button's accessible name, followed by the chip label.
+          * @default 'Remove'
+         */
+        "removeLabel": string;
+        /**
+          * The pressed state of a filter chip. The user can toggle it in place.
+          * @default false
+         */
+        "selected": boolean;
+        /**
+          * Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.
+          * @default 'md'
+         */
+        "size": KiChipSize;
+        /**
+          * Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.
+         */
+        "type"?: KiChipType;
+        /**
+          * Value sent with removal, contextual activation and reorder events.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
+     * A named collection of filter, input or assist chips, with optional ordering.
+     * @whenToUse label related chips or let people change their reading order.
+     * @whenNotToUse choose exactly one option or submit a form value.
+     */
+    interface KiChipGroup {
+        /**
+          * ID of the entry field in the same document or shadow root for focus after the last chip.
+         */
+        "focusTarget"?: string;
+        /**
+          * Accessible name for the group or list.
+          * @default ''
+         */
+        "label": string;
+        /**
+          * Localized polite message using {label}, {position} and {total}. Position is one-based.
+          * @default '{label} moved to position {position} of {total}.'
+         */
+        "reorderAnnouncement": string;
+        /**
+          * Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.
+          * @default false
+         */
+        "reorderable": boolean;
+        /**
+          * Shared chip kind and collection semantics. Input chips are presented as a list.
+          * @default 'filter'
+         */
+        "type": KiChipType;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -551,7 +660,7 @@ export namespace Components {
      * sighted discoverability. While the action it started is in progress, set
      * `loading` instead of disabling it.
      * @whenNotToUse whenever a visible label fits (use ki-button), toggling
-     * state (a future toggle icon button), navigation (use a link), or form
+     * state without supplying `pressed`, navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
      * visible label communicates the consequence).
      */
@@ -572,6 +681,10 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
+          * Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
+         */
+        "expanded"?: boolean;
+        /**
           * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
          */
         "label": string;
@@ -585,6 +698,10 @@ export namespace Components {
           * @default 'Loading'
          */
         "loadingLabel": string;
+        /**
+          * Application-owned toggle state. The native icon button exposes this as `aria-pressed`. Omit for a momentary action.
+         */
+        "pressed"?: boolean;
         /**
           * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
           * @default 'md'
@@ -1169,6 +1286,45 @@ export namespace Components {
         "value": string;
     }
     /**
+     * Decorative placeholder shapes that reserve space for loading content.
+     * @whenToUse Reserve the expected layout of a card, list, or assistant reply
+     * while it loads. Give the surrounding region an accessible name and set
+     * its aria-busy state. Show the skeleton after about 300 ms of waiting.
+     * @whenNotToUse For a standalone loading announcement, progress measurement,
+     * or interactive control. Put content and loading feedback in the caller's region.
+     */
+    interface KiSkeleton {
+        /**
+          * Sweep a highlight while the user permits motion. Set false to use a static placeholder. Shimmer also stops under reduced motion and forced colours.
+          * @default true
+         */
+        "animated": boolean;
+        /**
+          * CSS length for the block axis. For text, this is the height of each line. Use it to reserve the height of the content that will replace the shape.
+         */
+        "blockSize"?: string;
+        /**
+          * CSS length for the inline axis. Use it to match a fixed content width. Text and rectangles otherwise fill available inline space.
+         */
+        "inlineSize"?: string;
+        /**
+          * Number of text lines. Use a whole number from 1 to 20 for the expected paragraph length. Extra lines are ignored for circles and rectangles.
+          * @default 1
+          * @minimum 1
+          * @maximum 20
+         */
+        "lines": number;
+        /**
+          * Match the placeholder to the expected text, avatar, or rectangular content.
+          * @default 'text'
+         */
+        "shape": 'text' | 'circle' | 'rect';
+        /**
+          * CSS length shared by both axes. Use it for circles or square blocks. An axis-specific override takes precedence.
+         */
+        "size"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -1608,6 +1764,14 @@ export interface KiCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCheckboxGroupElement;
 }
+export interface KiChipCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiChipElement;
+}
+export interface KiChipGroupCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiChipGroupElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -1731,6 +1895,19 @@ declare global {
         prototype: HTMLKiButtonElement;
         new (): HTMLKiButtonElement;
     };
+    /**
+     * Arranges related actions as a spaced group, attached group, or keyboard toolbar.
+     * @whenToUse place two to five related actions together, present a primary
+     * action with a menu of alternatives, or give formatting tools one Tab stop.
+     * @whenNotToUse for a single-choice setting, unrelated actions, or navigation.
+     * Use a segmented control for a single-choice setting and links for navigation.
+     */
+    interface HTMLKiButtonGroupElement extends Components.KiButtonGroup, HTMLStencilElement {
+    }
+    var HTMLKiButtonGroupElement: {
+        prototype: HTMLKiButtonGroupElement;
+        new (): HTMLKiButtonGroupElement;
+    };
     interface HTMLKiCardElementEventMap {
         "ki-activate": void;
     }
@@ -1806,6 +1983,58 @@ declare global {
     var HTMLKiCheckboxGroupElement: {
         prototype: HTMLKiCheckboxGroupElement;
         new (): HTMLKiCheckboxGroupElement;
+    };
+    interface HTMLKiChipElementEventMap {
+        "ki-change": {
+    selected: boolean;
+  };
+        "ki-remove": { value: string };
+        "ki-activate": {
+    value: string;
+  };
+    }
+    /**
+     * A compact filter toggle, removable picked value, or contextual action.
+     * @whenToUse apply independent filters, represent values selected in an entry
+     * field, or offer a small contextual action alongside content.
+     * @whenNotToUse static status (ki-badge), primary actions (ki-button), suggested
+     * prompts, or mutually exclusive choices (ki-radio-group).
+     */
+    interface HTMLKiChipElement extends Components.KiChip, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiChipElementEventMap>(type: K, listener: (this: HTMLKiChipElement, ev: KiChipCustomEvent<HTMLKiChipElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiChipElementEventMap>(type: K, listener: (this: HTMLKiChipElement, ev: KiChipCustomEvent<HTMLKiChipElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiChipElement: {
+        prototype: HTMLKiChipElement;
+        new (): HTMLKiChipElement;
+    };
+    interface HTMLKiChipGroupElementEventMap {
+        "ki-reorder": KiChipReorderDetail;
+    }
+    /**
+     * A named collection of filter, input or assist chips, with optional ordering.
+     * @whenToUse label related chips or let people change their reading order.
+     * @whenNotToUse choose exactly one option or submit a form value.
+     */
+    interface HTMLKiChipGroupElement extends Components.KiChipGroup, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiChipGroupElementEventMap>(type: K, listener: (this: HTMLKiChipGroupElement, ev: KiChipGroupCustomEvent<HTMLKiChipGroupElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiChipGroupElementEventMap>(type: K, listener: (this: HTMLKiChipGroupElement, ev: KiChipGroupCustomEvent<HTMLKiChipGroupElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiChipGroupElement: {
+        prototype: HTMLKiChipGroupElement;
+        new (): HTMLKiChipGroupElement;
     };
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -1904,7 +2133,7 @@ declare global {
      * sighted discoverability. While the action it started is in progress, set
      * `loading` instead of disabling it.
      * @whenNotToUse whenever a visible label fits (use ki-button), toggling
-     * state (a future toggle icon button), navigation (use a link), or form
+     * state without supplying `pressed`, navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
      * visible label communicates the consequence).
      */
@@ -2215,6 +2444,20 @@ declare global {
         new (): HTMLKiSelectElement;
     };
     /**
+     * Decorative placeholder shapes that reserve space for loading content.
+     * @whenToUse Reserve the expected layout of a card, list, or assistant reply
+     * while it loads. Give the surrounding region an accessible name and set
+     * its aria-busy state. Show the skeleton after about 300 ms of waiting.
+     * @whenNotToUse For a standalone loading announcement, progress measurement,
+     * or interactive control. Put content and loading feedback in the caller's region.
+     */
+    interface HTMLKiSkeletonElement extends Components.KiSkeleton, HTMLStencilElement {
+    }
+    var HTMLKiSkeletonElement: {
+        prototype: HTMLKiSkeletonElement;
+        new (): HTMLKiSkeletonElement;
+    };
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -2468,9 +2711,12 @@ declare global {
         "ki-avatar-group": HTMLKiAvatarGroupElement;
         "ki-badge": HTMLKiBadgeElement;
         "ki-button": HTMLKiButtonElement;
+        "ki-button-group": HTMLKiButtonGroupElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
+        "ki-chip": HTMLKiChipElement;
+        "ki-chip-group": HTMLKiChipGroupElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
@@ -2493,6 +2739,7 @@ declare global {
         "ki-segment": HTMLKiSegmentElement;
         "ki-segmented-control": HTMLKiSegmentedControlElement;
         "ki-select": HTMLKiSelectElement;
+        "ki-skeleton": HTMLKiSkeletonElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
@@ -2709,6 +2956,33 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
+     * Arranges related actions as a spaced group, attached group, or keyboard toolbar.
+     * @whenToUse place two to five related actions together, present a primary
+     * action with a menu of alternatives, or give formatting tools one Tab stop.
+     * @whenNotToUse for a single-choice setting, unrelated actions, or navigation.
+     * Use a segmented control for a single-choice setting and links for navigation.
+     */
+    interface KiButtonGroup {
+        /**
+          * Joins neighboring actions at their inner edges. Buttons share the first button's variant and use its size when the group has no explicit size. Use for a closely related set of actions or for a split button.
+          * @default false
+         */
+        "attached"?: boolean;
+        /**
+          * Required accessible name for the group or toolbar (for example, "Text formatting"). Provide a localized name that describes the actions' shared purpose.
+         */
+        "label": string;
+        /**
+          * Applies one token-backed size to each button while it belongs to the group. Omit it to keep individual sizes in spaced mode.
+         */
+        "size"?: KiButtonSize1;
+        /**
+          * Gives the group toolbar semantics, a framed surface and one Tab stop. Horizontal arrows, Home and End move between the toolbar's actions.
+          * @default false
+         */
+        "toolbar"?: boolean;
+    }
+    /**
      * A card surface for grouping related content, with an optional primary link or action.
      * @whenToUse group related media, a title, supporting text and actions into
      * one scannable surface. Set `href` for navigation or `interactive` for a
@@ -2866,6 +3140,100 @@ declare namespace LocalJSX {
         "value"?: string[];
     }
     /**
+     * A compact filter toggle, removable picked value, or contextual action.
+     * @whenToUse apply independent filters, represent values selected in an entry
+     * field, or offer a small contextual action alongside content.
+     * @whenNotToUse static status (ki-badge), primary actions (ki-button), suggested
+     * prompts, or mutually exclusive choices (ki-radio-group).
+     */
+    interface KiChip {
+        /**
+          * Prevents activation, removal and moving the chip.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Emitted by an assist chip when its native button is activated.
+         */
+        "onKi-activate"?: (event: KiChipCustomEvent<{
+    value: string;
+  }>) => void;
+        /**
+          * Emitted after a filter chip changes its pressed state.
+         */
+        "onKi-change"?: (event: KiChipCustomEvent<{
+    selected: boolean;
+  }>) => void;
+        /**
+          * Remove request for an input chip. Cancel it to keep application ownership of the chip.
+         */
+        "onKi-remove"?: (event: KiChipCustomEvent<{ value: string }>) => void;
+        /**
+          * Gives an input chip a trailing remove button and keyboard deletion.
+          * @default false
+         */
+        "removable"?: boolean;
+        /**
+          * Localized action prefix in the remove button's accessible name, followed by the chip label.
+          * @default 'Remove'
+         */
+        "removeLabel"?: string;
+        /**
+          * The pressed state of a filter chip. The user can toggle it in place.
+          * @default false
+         */
+        "selected"?: boolean;
+        /**
+          * Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.
+          * @default 'md'
+         */
+        "size"?: KiChipSize;
+        /**
+          * Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.
+         */
+        "type"?: KiChipType;
+        /**
+          * Value sent with removal, contextual activation and reorder events.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
+     * A named collection of filter, input or assist chips, with optional ordering.
+     * @whenToUse label related chips or let people change their reading order.
+     * @whenNotToUse choose exactly one option or submit a form value.
+     */
+    interface KiChipGroup {
+        /**
+          * ID of the entry field in the same document or shadow root for focus after the last chip.
+         */
+        "focusTarget"?: string;
+        /**
+          * Accessible name for the group or list.
+          * @default ''
+         */
+        "label"?: string;
+        /**
+          * Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
+         */
+        "onKi-reorder"?: (event: KiChipGroupCustomEvent<KiChipReorderDetail>) => void;
+        /**
+          * Localized polite message using {label}, {position} and {total}. Position is one-based.
+          * @default '{label} moved to position {position} of {total}.'
+         */
+        "reorderAnnouncement"?: string;
+        /**
+          * Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.
+          * @default false
+         */
+        "reorderable"?: boolean;
+        /**
+          * Shared chip kind and collection semantics. Input chips are presented as a list.
+          * @default 'filter'
+         */
+        "type"?: KiChipType;
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -3007,7 +3375,7 @@ declare namespace LocalJSX {
      * sighted discoverability. While the action it started is in progress, set
      * `loading` instead of disabling it.
      * @whenNotToUse whenever a visible label fits (use ki-button), toggling
-     * state (a future toggle icon button), navigation (use a link), or form
+     * state without supplying `pressed`, navigation (use a link), or form
      * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
      * visible label communicates the consequence).
      */
@@ -3028,6 +3396,10 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
+         */
+        "expanded"?: boolean;
+        /**
           * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
          */
         "label": string;
@@ -3041,6 +3413,10 @@ declare namespace LocalJSX {
           * @default 'Loading'
          */
         "loadingLabel"?: string;
+        /**
+          * Application-owned toggle state. The native icon button exposes this as `aria-pressed`. Omit for a momentary action.
+         */
+        "pressed"?: boolean;
         /**
           * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
           * @default 'md'
@@ -3645,6 +4021,45 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * Decorative placeholder shapes that reserve space for loading content.
+     * @whenToUse Reserve the expected layout of a card, list, or assistant reply
+     * while it loads. Give the surrounding region an accessible name and set
+     * its aria-busy state. Show the skeleton after about 300 ms of waiting.
+     * @whenNotToUse For a standalone loading announcement, progress measurement,
+     * or interactive control. Put content and loading feedback in the caller's region.
+     */
+    interface KiSkeleton {
+        /**
+          * Sweep a highlight while the user permits motion. Set false to use a static placeholder. Shimmer also stops under reduced motion and forced colours.
+          * @default true
+         */
+        "animated"?: boolean;
+        /**
+          * CSS length for the block axis. For text, this is the height of each line. Use it to reserve the height of the content that will replace the shape.
+         */
+        "blockSize"?: string;
+        /**
+          * CSS length for the inline axis. Use it to match a fixed content width. Text and rectangles otherwise fill available inline space.
+         */
+        "inlineSize"?: string;
+        /**
+          * Number of text lines. Use a whole number from 1 to 20 for the expected paragraph length. Extra lines are ignored for circles and rectangles.
+          * @default 1
+          * @minimum 1
+          * @maximum 20
+         */
+        "lines"?: number;
+        /**
+          * Match the placeholder to the expected text, avatar, or rectangular content.
+          * @default 'text'
+         */
+        "shape"?: 'text' | 'circle' | 'rect';
+        /**
+          * CSS length shared by both axes. Use it for circles or square blocks. An axis-specific override takes precedence.
+         */
+        "size"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -4118,6 +4533,12 @@ declare namespace LocalJSX {
         "loading": boolean;
         "loadingLabel": string;
     }
+    interface KiButtonGroupAttributes {
+        "label": string;
+        "attached": boolean;
+        "toolbar": boolean;
+        "size": KiButtonSize;
+    }
     interface KiCardAttributes {
         "variant": 'default' | 'elevated' | 'filled' | 'outlined';
         "href": string;
@@ -4144,6 +4565,22 @@ declare namespace LocalJSX {
         "min": number;
         "max": number;
         "orientation": KiCheckboxGroupOrientation;
+    }
+    interface KiChipAttributes {
+        "type": KiChipType;
+        "value": string;
+        "selected": boolean;
+        "removable": boolean;
+        "size": KiChipSize;
+        "disabled": boolean;
+        "removeLabel": string;
+    }
+    interface KiChipGroupAttributes {
+        "label": string;
+        "type": KiChipType;
+        "reorderable": boolean;
+        "focusTarget": string;
+        "reorderAnnouncement": string;
     }
     interface KiCounterAttributes {
         "value": number;
@@ -4180,6 +4617,8 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "loading": boolean;
         "loadingLabel": string;
+        "pressed": boolean;
+        "expanded": boolean;
     }
     interface KiImageAttributes {
         "src": string;
@@ -4286,6 +4725,14 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiSkeletonAttributes {
+        "shape": 'text' | 'circle' | 'rect';
+        "lines": number;
+        "size": string;
+        "inlineSize": string;
+        "blockSize": string;
+        "animated": boolean;
+    }
     interface KiSpinnerAttributes {
         "label": string;
         "variant": 'ring' | 'dots';
@@ -4368,9 +4815,12 @@ declare namespace LocalJSX {
         "ki-avatar-group": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K] };
         "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
+        "ki-button-group": Omit<KiButtonGroup, keyof KiButtonGroupAttributes> & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes]?: KiButtonGroup[K] } & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes as `attr:${K}`]?: KiButtonGroupAttributes[K] } & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes as `prop:${K}`]?: KiButtonGroup[K] } & OneOf<"label", KiButtonGroup["label"], KiButtonGroupAttributes["label"]>;
         "ki-card": Omit<KiCard, keyof KiCardAttributes> & { [K in keyof KiCard & keyof KiCardAttributes]?: KiCard[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `attr:${K}`]?: KiCardAttributes[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `prop:${K}`]?: KiCard[K] };
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
+        "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
+        "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
@@ -4393,6 +4843,7 @@ declare namespace LocalJSX {
         "ki-segment": Omit<KiSegment, keyof KiSegmentAttributes> & { [K in keyof KiSegment & keyof KiSegmentAttributes]?: KiSegment[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `attr:${K}`]?: KiSegmentAttributes[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `prop:${K}`]?: KiSegment[K] } & OneOf<"value", KiSegment["value"], KiSegmentAttributes["value"]>;
         "ki-segmented-control": Omit<KiSegmentedControl, keyof KiSegmentedControlAttributes> & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes]?: KiSegmentedControl[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `attr:${K}`]?: KiSegmentedControlAttributes[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `prop:${K}`]?: KiSegmentedControl[K] } & OneOf<"label", KiSegmentedControl["label"], KiSegmentedControlAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
+        "ki-skeleton": Omit<KiSkeleton, keyof KiSkeletonAttributes> & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes]?: KiSkeleton[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `attr:${K}`]?: KiSkeletonAttributes[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `prop:${K}`]?: KiSkeleton[K] };
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
@@ -4478,6 +4929,14 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
+             * Arranges related actions as a spaced group, attached group, or keyboard toolbar.
+             * @whenToUse place two to five related actions together, present a primary
+             * action with a menu of alternatives, or give formatting tools one Tab stop.
+             * @whenNotToUse for a single-choice setting, unrelated actions, or navigation.
+             * Use a segmented control for a single-choice setting and links for navigation.
+             */
+            "ki-button-group": LocalJSX.IntrinsicElements["ki-button-group"] & JSXBase.HTMLAttributes<HTMLKiButtonGroupElement>;
+            /**
              * A card surface for grouping related content, with an optional primary link or action.
              * @whenToUse group related media, a title, supporting text and actions into
              * one scannable surface. Set `href` for navigation or `interactive` for a
@@ -4516,6 +4975,20 @@ declare module "@stencil/core" {
              * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
              */
             "ki-checkbox-group": LocalJSX.IntrinsicElements["ki-checkbox-group"] & JSXBase.HTMLAttributes<HTMLKiCheckboxGroupElement>;
+            /**
+             * A compact filter toggle, removable picked value, or contextual action.
+             * @whenToUse apply independent filters, represent values selected in an entry
+             * field, or offer a small contextual action alongside content.
+             * @whenNotToUse static status (ki-badge), primary actions (ki-button), suggested
+             * prompts, or mutually exclusive choices (ki-radio-group).
+             */
+            "ki-chip": LocalJSX.IntrinsicElements["ki-chip"] & JSXBase.HTMLAttributes<HTMLKiChipElement>;
+            /**
+             * A named collection of filter, input or assist chips, with optional ordering.
+             * @whenToUse label related chips or let people change their reading order.
+             * @whenNotToUse choose exactly one option or submit a form value.
+             */
+            "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
             /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an
@@ -4577,7 +5050,7 @@ declare module "@stencil/core" {
              * sighted discoverability. While the action it started is in progress, set
              * `loading` instead of disabling it.
              * @whenNotToUse whenever a visible label fits (use ki-button), toggling
-             * state (a future toggle icon button), navigation (use a link), or form
+             * state without supplying `pressed`, navigation (use a link), or form
              * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
              * visible label communicates the consequence).
              */
@@ -4780,6 +5253,15 @@ declare module "@stencil/core" {
              * are silent.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
+            /**
+             * Decorative placeholder shapes that reserve space for loading content.
+             * @whenToUse Reserve the expected layout of a card, list, or assistant reply
+             * while it loads. Give the surrounding region an accessible name and set
+             * its aria-busy state. Show the skeleton after about 300 ms of waiting.
+             * @whenNotToUse For a standalone loading announcement, progress measurement,
+             * or interactive control. Put content and loading feedback in the caller's region.
+             */
+            "ki-skeleton": LocalJSX.IntrinsicElements["ki-skeleton"] & JSXBase.HTMLAttributes<HTMLKiSkeletonElement>;
             /**
              * A compact status for an indeterminate wait.
              * @whenToUse show brief inline activity such as saving a change or running a
