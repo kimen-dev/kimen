@@ -93,7 +93,7 @@ export class KiSources {
     return true;
   };
 
-  private onToggle = (event: ToggleEvent): void => {
+  private onToggle = (event: Event): void => {
     if (event.currentTarget instanceof HTMLDetailsElement) {
       this.open = event.currentTarget.open;
     }
