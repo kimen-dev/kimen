@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 400 semantic
-and 1273 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 402 semantic
+and 1285 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -47,6 +47,7 @@ every component at once.
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
+| `--ki-corner-sheet` | `16px` | Inner corner radius of an edge-aligned sheet. |
 
 ### `ki.density`
 
@@ -153,6 +154,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
+| `--ki-layout-sheet-size` | `18rem` | Default inline size or block-size cap of a compact sheet. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
@@ -1132,6 +1134,23 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-divider-radius` | `1000px` | dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps). |
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
 | `--ki-divider-thickness` | `1px` | dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). |
+
+### `ki-drawer`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-drawer-backdrop-filter` | `none` | Complete backdrop filter applied behind the drawer surface. |
+| `--ki-drawer-bg` | `#f9f7f4` | Raised surface color of the drawer. |
+| `--ki-drawer-bg-image` | `none` | Optional image layered over the drawer surface. |
+| `--ki-drawer-close-size` | `2rem` | Preferred size of the Close button before the density minimum. |
+| `--ki-drawer-fg` | `#181613` | Foreground color on the drawer surface. |
+| `--ki-drawer-handle-color` | `#86827b` | Color of the bottom-sheet handle. |
+| `--ki-drawer-handle-size` | `2rem` | Inline extent of the bottom-sheet handle. |
+| `--ki-drawer-handle-thickness` | `0.25rem` | Thickness of the bottom-sheet handle. |
+| `--ki-drawer-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the drawer title. |
+| `--ki-drawer-radius` | `16px` | Radius of the corners on the inner edge of the drawer. |
+| `--ki-drawer-shadow` | `0 4px 12px 0 rgba(24, 22, 19, 0.07), 0 20px 44px 0 rgba(24, 22, 19, 0.12), 0 18px 40px 0 transparent` | Resting elevation of the drawer. |
+| `--ki-drawer-size` | `18rem` | Default inline size of a side sheet and block-size cap of a bottom sheet. |
 
 ### `ki-icon`
 

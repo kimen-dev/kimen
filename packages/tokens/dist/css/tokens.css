@@ -939,6 +939,7 @@
   --ki-notification-marker-radius:var(--ki-radius-round);
   --ki-corner-inline:var(--ki-radius-xxs);
   --ki-corner-control:var(--ki-radius-md);
+  --ki-corner-sheet:var(--ki-radius-big-component-xs);
   --ki-corner-activity-mark:var(--ki-radius-round);
   --ki-motion-duration-fast:var(--ki-duration-fast);
   --ki-motion-duration-short-1:var(--ki-duration-fast);
@@ -979,6 +980,7 @@
   --ki-activity-size-stroke:var(--ki-size-border-thin);
   --ki-activity-size-stroke-lg:var(--ki-size-border-medium);
   --ki-activity-size-dot:var(--ki-space-sm);
+  --ki-layout-sheet-size:var(--ki-size-surface-xxs);
   --ki-layout-spacing-zero:var(--ki-space-zero);
   --ki-layout-spacing-xxs:var(--ki-space-xxs);
   --ki-layout-spacing-xs:var(--ki-space-xs);
@@ -1557,6 +1559,18 @@
   --ki-divider-color:var(--ki-outline-base-em);
   --ki-divider-radius:var(--ki-radius-round);
   --ki-divider-spacing:var(--ki-space-md);
+  --ki-drawer-bg:var(--ki-surface-s1);
+  --ki-drawer-bg-image:var(--ki-surface-image-none);
+  --ki-drawer-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-drawer-fg:var(--ki-text-high-em);
+  --ki-drawer-shadow:var(--ki-elevation-e4);
+  --ki-drawer-size:var(--ki-layout-sheet-size);
+  --ki-drawer-radius:var(--ki-corner-sheet);
+  --ki-drawer-heading-font-family:var(--ki-typography-family-heading);
+  --ki-drawer-close-size:var(--ki-layout-spacing-10xl);
+  --ki-drawer-handle-size:var(--ki-layout-spacing-10xl);
+  --ki-drawer-handle-thickness:var(--ki-layout-spacing-xs);
+  --ki-drawer-handle-color:var(--ki-outline-control);
   --ki-icon-button-xs-size:var(--ki-space-7xl);
   --ki-icon-button-xs-icon-size:var(--ki-space-3xl);
   --ki-icon-button-xs-spinner-size:var(--ki-space-3xl);

@@ -2236,6 +2236,374 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-drawer/ki-drawer.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-drawer",
+      "docs": "An edge-aligned sheet for a focused task that keeps the current page in context.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Edit an item beside its list or offer a short set of actions in a\nbottom sheet. Supply a heading and wire slotted actions in the application.\nUse non-modal mode if people need to interact with the page while editing."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Menus, hover hints, permanent navigation, or work that needs a\nfull page. For a short interrupting decision in the center, use ki-dialog."
+        },
+        {
+          "name": "slot",
+          "text": "- The drawer's content, such as fields or a short list of actions."
+        },
+        {
+          "name": "slot",
+          "text": "header-actions - Optional actions between the heading and Close button."
+        },
+        {
+          "name": "slot",
+          "text": "footer - Optional actions such as Save. Wire these in the application."
+        },
+        {
+          "name": "part",
+          "text": "dialog - The native sheet surface."
+        },
+        {
+          "name": "part",
+          "text": "handle - The decorative bottom-sheet swipe handle."
+        },
+        {
+          "name": "part",
+          "text": "header - The heading and action layout."
+        },
+        {
+          "name": "part",
+          "text": "heading - The visible title that names the sheet."
+        },
+        {
+          "name": "part",
+          "text": "close - The built-in Close button."
+        },
+        {
+          "name": "part",
+          "text": "body - The scrollable content region."
+        },
+        {
+          "name": "part",
+          "text": "footer - The action row, collapsed when empty."
+        }
+      ],
+      "usage": {
+        "examples": "## Edit details beside a list\n\nUse `heading` to name the sheet. Open it from a focused trigger so focus can\nreturn there. The app wires its own footer actions.\n\n```html\n<ki-button id=\"edit-incident\" type=\"button\">Edit incident</ki-button>\n<ki-drawer id=\"incident-editor\" heading=\"Edit incident\" placement=\"end\">\n  <ki-input label=\"Title\" value=\"Search index rebuild\"></ki-input>\n  <ki-button slot=\"footer\" id=\"save-incident\" type=\"button\" variant=\"primary\">\n    Save\n  </ki-button>\n</ki-drawer>\n\n<script type=\"module\">\n  const editor = document.querySelector('#incident-editor');\n  document.querySelector('#edit-incident').addEventListener('click', () => editor.show());\n  document.querySelector('#save-incident').addEventListener('click', () => {\n    // Save the app's changes first.\n    editor.close();\n  });\n  editor.addEventListener('ki-close', (event) => {\n    if (editor.hasAttribute('data-unsaved')) event.preventDefault();\n  });\n</script>\n```\n\n## Offer a short list of actions\n\nA bottom sheet has a swipe handle and a keyboard-accessible Close button.\nUse `close-label` to translate the button for your audience.\n\n```html\n<ki-drawer heading=\"Share incident\" placement=\"bottom\" size=\"20rem\" open>\n  <p>Choose how to share the incident.</p>\n  <ki-button slot=\"footer\" variant=\"secondary\">Email</ki-button>\n  <ki-button slot=\"footer\" variant=\"primary\">Copy link</ki-button>\n</ki-drawer>\n```\n\nUse `modal=\"false\"` when the page behind the drawer should stay interactive.\n`placement=\"start\"` and `placement=\"end\"` follow the inherited direction.\n"
+      },
+      "props": [
+        {
+          "name": "closeLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "close-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Close'"
+            }
+          ],
+          "default": "'Close'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "heading",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading",
+          "reflectToAttr": false,
+          "docs": "Title and accessible name. Provide a heading whenever the drawer opens.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "modal",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "modal",
+          "reflectToAttr": false,
+          "docs": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placement",
+          "type": "\"bottom\" | \"end\" | \"start\"",
+          "complexType": {
+            "original": "KiDrawerPlacement",
+            "resolved": "\"bottom\" | \"end\" | \"start\"",
+            "references": {
+              "KiDrawerPlacement": {
+                "location": "local",
+                "path": "src/components/ki-drawer/ki-drawer.tsx",
+                "id": "src/components/ki-drawer/ki-drawer.tsx::KiDrawerPlacement"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "placement",
+          "reflectToAttr": true,
+          "docs": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'end'"
+            }
+          ],
+          "default": "'end'",
+          "values": [
+            {
+              "value": "bottom",
+              "type": "string"
+            },
+            {
+              "value": "end",
+              "type": "string"
+            },
+            {
+              "value": "start",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": false,
+          "docs": "Optional CSS length. Overrides the 18rem themed width or bottom height cap.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "close",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<void>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "close() => Promise<void>",
+          "parameters": [],
+          "docs": "Requests dismissal. An application can veto it by canceling ki-close.",
+          "docsTags": []
+        },
+        {
+          "name": "show",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<void>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "show() => Promise<void>",
+          "parameters": [],
+          "docs": "Opens the sheet. A focused invoker receives focus again after modal dismissal.",
+          "docsTags": []
+        }
+      ],
+      "events": [
+        {
+          "event": "ki-close",
+          "detail": "KiDrawerCloseDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiDrawerCloseDetail",
+            "resolved": "KiDrawerCloseDetail",
+            "references": {
+              "KiDrawerCloseDetail": {
+                "location": "local",
+                "path": "src/components/ki-drawer/ki-drawer.tsx",
+                "id": "src/components/ki-drawer/ki-drawer.tsx::KiDrawerCloseDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The drawer's content, such as fields or a short list of actions."
+        },
+        {
+          "name": "footer",
+          "docs": "Optional actions such as Save. Wire these in the application."
+        },
+        {
+          "name": "header-actions",
+          "docs": "Optional actions between the heading and Close button."
+        }
+      ],
+      "parts": [
+        {
+          "name": "body",
+          "docs": "The scrollable content region."
+        },
+        {
+          "name": "close",
+          "docs": "The built-in Close button."
+        },
+        {
+          "name": "dialog",
+          "docs": "The native sheet surface."
+        },
+        {
+          "name": "footer",
+          "docs": "The action row, collapsed when empty."
+        },
+        {
+          "name": "handle",
+          "docs": "The decorative bottom-sheet swipe handle."
+        },
+        {
+          "name": "header",
+          "docs": "The heading and action layout."
+        },
+        {
+          "name": "heading",
+          "docs": "The visible title that names the sheet."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-drawer": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-grid/ki-grid.tsx",
       "encapsulation": "shadow",
       "tag": "ki-grid",
@@ -2637,9 +3005,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-drawer"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-drawer": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -8803,6 +9177,16 @@
       "declaration": "export type KiDividerOrientation = 'horizontal' | 'vertical';",
       "docstring": "",
       "path": "src/components/ki-divider/ki-divider.tsx"
+    },
+    "src/components/ki-drawer/ki-drawer.tsx::KiDrawerPlacement": {
+      "declaration": "export type KiDrawerPlacement = 'start' | 'end' | 'bottom';",
+      "docstring": "",
+      "path": "src/components/ki-drawer/ki-drawer.tsx"
+    },
+    "src/components/ki-drawer/ki-drawer.tsx::KiDrawerCloseDetail": {
+      "declaration": "export interface KiDrawerCloseDetail {\n  /** The source of the dismissal request. Open-state changes report `method`. */\n  reason: KiDrawerCloseReason;\n}",
+      "docstring": "",
+      "path": "src/components/ki-drawer/ki-drawer.tsx"
     },
     "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
       "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",

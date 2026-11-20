@@ -16,6 +16,7 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
+import { defineCustomElement as defineKiDrawer } from '@kimen/elements/components/ki-drawer.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
 import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
@@ -295,6 +296,36 @@ export class KiDivider {
 
 
 export declare interface KiDivider extends Components.KiDivider {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiDrawer,
+  inputs: ['closeLabel', 'heading', 'modal', 'open', 'placement', 'size'],
+  methods: ['show', 'close']
+})
+@Component({
+  selector: 'ki-drawer',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['closeLabel', { name: 'heading', required: true }, 'modal', 'open', 'placement', 'size'],
+})
+export class KiDrawer {
+  protected el: HTMLKiDrawerElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiDrawer extends Components.KiDrawer {
+  /**
+   * Requests dismissal before the drawer closes. Call preventDefault() to keep it open,
+for example when edits are unsaved. The event carries the reason in detail.reason.
+   */
+}
 
 
 @ProxyCmp({

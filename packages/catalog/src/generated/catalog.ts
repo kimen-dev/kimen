@@ -543,6 +543,56 @@ export const catalogData = {
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
     },
+    "ki-drawer": {
+      "description": "An edge-aligned sheet for a focused task that keeps the current page in context.",
+      "events": {
+        "ki-close": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason."
+      },
+      "props": {
+        "close-label": {
+          "type": "string",
+          "description": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
+          "default": "Close"
+        },
+        "heading": {
+          "type": "string",
+          "description": "Title and accessible name. Provide a heading whenever the drawer opens.",
+          "required": true
+        },
+        "modal": {
+          "type": "boolean",
+          "description": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
+          "default": true
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom",
+            "end",
+            "start"
+          ],
+          "description": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
+          "default": "end"
+        },
+        "size": {
+          "type": "string",
+          "description": "Optional CSS length. Overrides the 18rem themed width or bottom height cap."
+        }
+      },
+      "slots": {
+        "": "The drawer's content, such as fields or a short list of actions.",
+        "footer": "Optional actions such as Save. Wire these in the application.",
+        "header-actions": "Optional actions between the heading and Close button."
+      },
+      "tag": "ki-drawer",
+      "whenNotToUse": "Menus, hover hints, permanent navigation, or work that needs a\nfull page. For a short interrupting decision in the center, use ki-dialog.",
+      "whenToUse": "Edit an item beside its list or offer a short set of actions in a\nbottom sheet. Supply a heading and wire slotted actions in the application.\nUse non-modal mode if people need to interact with the page while editing."
+    },
     "ki-grid": {
       "description": "A passive responsive grid for content items.",
       "events": {},

@@ -14,6 +14,7 @@ import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+import { KiDrawerCloseDetail, KiDrawerPlacement } from "./components/ki-drawer/ki-drawer";
 import { KiLayoutGap } from "./utils/layout-gap";
 import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -45,6 +46,7 @@ export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+export { KiDrawerCloseDetail, KiDrawerPlacement } from "./components/ki-drawer/ki-drawer";
 export { KiLayoutGap } from "./utils/layout-gap";
 export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -415,6 +417,52 @@ export namespace Components {
           * @default 'horizontal'
          */
         "orientation": KiDividerOrientation;
+    }
+    /**
+     * An edge-aligned sheet for a focused task that keeps the current page in context.
+     * @whenToUse Edit an item beside its list or offer a short set of actions in a
+     * bottom sheet. Supply a heading and wire slotted actions in the application.
+     * Use non-modal mode if people need to interact with the page while editing.
+     * @whenNotToUse Menus, hover hints, permanent navigation, or work that needs a
+     * full page. For a short interrupting decision in the center, use ki-dialog.
+     */
+    interface KiDrawer {
+        /**
+          * Requests dismissal. An application can veto it by canceling ki-close.
+         */
+        "close": () => Promise<void>;
+        /**
+          * Accessible name for the built-in Close button. Translate this for localized interfaces.
+          * @default 'Close'
+         */
+        "closeLabel"?: string;
+        /**
+          * Title and accessible name. Provide a heading whenever the drawer opens.
+         */
+        "heading": string;
+        /**
+          * Makes the page behind the sheet inert. Set modal="false" for continued page interaction.
+          * @default true
+         */
+        "modal": boolean;
+        /**
+          * Reflected live state. Setting it to false requests dismissal and may be vetoed.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.
+          * @default 'end'
+         */
+        "placement": KiDrawerPlacement;
+        /**
+          * Opens the sheet. A focused invoker receives focus again after modal dismissal.
+         */
+        "show": () => Promise<void>;
+        /**
+          * Optional CSS length. Overrides the 18rem themed width or bottom height cap.
+         */
+        "size"?: string;
     }
     /**
      * A passive responsive grid for content items.
@@ -1468,6 +1516,10 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
 }
+export interface KiDrawerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiDrawerElement;
+}
 export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
@@ -1684,6 +1736,31 @@ declare global {
     var HTMLKiDividerElement: {
         prototype: HTMLKiDividerElement;
         new (): HTMLKiDividerElement;
+    };
+    interface HTMLKiDrawerElementEventMap {
+        "ki-close": KiDrawerCloseDetail;
+    }
+    /**
+     * An edge-aligned sheet for a focused task that keeps the current page in context.
+     * @whenToUse Edit an item beside its list or offer a short set of actions in a
+     * bottom sheet. Supply a heading and wire slotted actions in the application.
+     * Use non-modal mode if people need to interact with the page while editing.
+     * @whenNotToUse Menus, hover hints, permanent navigation, or work that needs a
+     * full page. For a short interrupting decision in the center, use ki-dialog.
+     */
+    interface HTMLKiDrawerElement extends Components.KiDrawer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiDrawerElementEventMap>(type: K, listener: (this: HTMLKiDrawerElement, ev: KiDrawerCustomEvent<HTMLKiDrawerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiDrawerElementEventMap>(type: K, listener: (this: HTMLKiDrawerElement, ev: KiDrawerCustomEvent<HTMLKiDrawerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiDrawerElement: {
+        prototype: HTMLKiDrawerElement;
+        new (): HTMLKiDrawerElement;
     };
     /**
      * A passive responsive grid for content items.
@@ -2256,6 +2333,7 @@ declare global {
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
+        "ki-drawer": HTMLKiDrawerElement;
         "ki-grid": HTMLKiGridElement;
         "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
@@ -2645,6 +2723,48 @@ declare namespace LocalJSX {
           * @default 'horizontal'
          */
         "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * An edge-aligned sheet for a focused task that keeps the current page in context.
+     * @whenToUse Edit an item beside its list or offer a short set of actions in a
+     * bottom sheet. Supply a heading and wire slotted actions in the application.
+     * Use non-modal mode if people need to interact with the page while editing.
+     * @whenNotToUse Menus, hover hints, permanent navigation, or work that needs a
+     * full page. For a short interrupting decision in the center, use ki-dialog.
+     */
+    interface KiDrawer {
+        /**
+          * Accessible name for the built-in Close button. Translate this for localized interfaces.
+          * @default 'Close'
+         */
+        "closeLabel"?: string;
+        /**
+          * Title and accessible name. Provide a heading whenever the drawer opens.
+         */
+        "heading": string;
+        /**
+          * Makes the page behind the sheet inert. Set modal="false" for continued page interaction.
+          * @default true
+         */
+        "modal"?: boolean;
+        /**
+          * Requests dismissal before the drawer closes. Call preventDefault() to keep it open, for example when edits are unsaved. The event carries the reason in detail.reason.
+         */
+        "onKi-close"?: (event: KiDrawerCustomEvent<KiDrawerCloseDetail>) => void;
+        /**
+          * Reflected live state. Setting it to false requests dismissal and may be vetoed.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.
+          * @default 'end'
+         */
+        "placement"?: KiDrawerPlacement;
+        /**
+          * Optional CSS length. Overrides the 18rem themed width or bottom height cap.
+         */
+        "size"?: string;
     }
     /**
      * A passive responsive grid for content items.
@@ -3777,6 +3897,14 @@ declare namespace LocalJSX {
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
     }
+    interface KiDrawerAttributes {
+        "heading": string;
+        "placement": KiDrawerPlacement;
+        "open": boolean;
+        "size": string;
+        "modal": boolean;
+        "closeLabel": string;
+    }
     interface KiGridAttributes {
         "columns": number;
         "minColumn": string;
@@ -3977,6 +4105,7 @@ declare namespace LocalJSX {
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-drawer": Omit<KiDrawer, keyof KiDrawerAttributes> & { [K in keyof KiDrawer & keyof KiDrawerAttributes]?: KiDrawer[K] } & { [K in keyof KiDrawer & keyof KiDrawerAttributes as `attr:${K}`]?: KiDrawerAttributes[K] } & { [K in keyof KiDrawer & keyof KiDrawerAttributes as `prop:${K}`]?: KiDrawer[K] } & OneOf<"heading", KiDrawer["heading"], KiDrawerAttributes["heading"]>;
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
         "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
@@ -4144,6 +4273,15 @@ declare module "@stencil/core" {
              * (prefer white space).
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
+            /**
+             * An edge-aligned sheet for a focused task that keeps the current page in context.
+             * @whenToUse Edit an item beside its list or offer a short set of actions in a
+             * bottom sheet. Supply a heading and wire slotted actions in the application.
+             * Use non-modal mode if people need to interact with the page while editing.
+             * @whenNotToUse Menus, hover hints, permanent navigation, or work that needs a
+             * full page. For a short interrupting decision in the center, use ki-dialog.
+             */
+            "ki-drawer": LocalJSX.IntrinsicElements["ki-drawer"] & JSXBase.HTMLAttributes<HTMLKiDrawerElement>;
             /**
              * A passive responsive grid for content items.
              * @whenToUse lay out items on responsive tracks with consistent token spacing.
