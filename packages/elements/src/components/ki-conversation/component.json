@@ -1,7 +1,22 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
-  "budgetGroup": { "members": ["ki-conversation", "ki-message"] },
-  "visual": { "material3Dark": true }
+  "budgetGroup": {
+    "members": ["ki-conversation", "ki-message"]
+  },
+  "visual": {
+    "material3Dark": true
+  },
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 20730,
+      "gzip": 5124,
+      "brotli": 2988
+    }
+  }
 }

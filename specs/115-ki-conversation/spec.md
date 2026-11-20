@@ -38,7 +38,8 @@ Each interpretation below is the **agent's choice, pending founder confirmation*
   1,200 ms activity pulse and stays still under reduced motion.
 - Conversation and Message use sibling tag folders and share the Conversation
   token sources and a composite bundle budget, following Kimen discovery.
-  The jump control is internal. Catalog entries declare no emitted actions,
+  Conversation's metadata records the MCP server bundle's measured increase
+  over the branch base. The jump control is internal. Catalog entries declare no emitted actions,
   and authored actions can be supplied through the message's `actions` slot.
 
 ## Scenario Family Coverage
