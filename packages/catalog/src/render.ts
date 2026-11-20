@@ -24,6 +24,7 @@ import { MARKDOWN_ORIGINS_ATTRIBUTE } from './generated/url-scheme.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
 import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
+import { sourceTags } from './source-reference.js';
 import { renderableTagViolation } from './tag-grammar.js';
 import type {
   Catalog,
@@ -151,6 +152,10 @@ export interface GuardState {
  * produces on an activatable element.
  */
 const DEFAULT_ACTIVATION_EVENT = 'click';
+
+// Source references are local to one guarded render, even on a shared page.
+// The elements package reads this mark before joining a citation to a URL.
+const sourceScopeKey = Symbol.for('kimen.sources.render-scope.v1');
 
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
@@ -545,9 +550,13 @@ export function createNodeElement(
   doc: Document,
   component: string,
   allowedUrlOrigins: readonly string[] | undefined,
+  sourceScope: symbol,
 ): Element {
   const element = doc.createElement(component);
   pinNative(element, component);
+  if (sourceTags.has(component)) {
+    Object.defineProperty(element, sourceScopeKey, { value: sourceScope });
+  }
   if (component === 'ki-markdown' && allowedUrlOrigins !== undefined) {
     const origins = Array.isArray(allowedUrlOrigins) ? Array.from<unknown>(allowedUrlOrigins) : [];
     element.setAttribute(
@@ -707,8 +716,9 @@ function buildNode(
   entries: Readonly<Record<string, CatalogEntry>>,
   idFor: DialogIdFor,
   allowedUrlOrigins: readonly string[] | undefined,
+  sourceScope: symbol,
 ): Element {
-  const element = createNodeElement(doc, node.component, allowedUrlOrigins);
+  const element = createNodeElement(doc, node.component, allowedUrlOrigins, sourceScope);
   const props = node.props ?? {};
   writeProps(element, node.component, props, idFor);
   writeDialogId(element, node.id, idFor);
@@ -736,6 +746,7 @@ function buildNode(
           entries,
           idFor,
           allowedUrlOrigins,
+          sourceScope,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -921,6 +932,7 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
       catalog.components,
       scopedDialogIds(options.surface),
       options.allowedUrlOrigins,
+      Symbol(),
     ),
   );
   return { diagnostics: [], ok: true };
@@ -957,6 +969,7 @@ export function createStreamingRenderer(
   const context: ValidationContext = { allowedUrlOrigins: options.allowedUrlOrigins, catalog };
   const doc = ownerDocument(options.surface);
   const declaredActions = options.actions ?? [];
+  const sourceScope = Symbol();
   let accumulatedBytes = 0;
   let accumulatedNodes = 0;
   // Attach order of the next chunk: each top-level chunk is addressed as
@@ -1044,6 +1057,7 @@ export function createStreamingRenderer(
           catalog.components,
           scopedDialogIds(options.surface),
           context.allowedUrlOrigins,
+          sourceScope,
         ),
       );
       return { diagnostics: [], ok: true };

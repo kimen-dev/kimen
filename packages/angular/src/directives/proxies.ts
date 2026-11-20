@@ -18,12 +18,11 @@ import { defineCustomElement as defineKiBreadcrumbItem } from '@kimen/elements/c
 import { defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
 import { defineCustomElement as defineKiButtonGroup } from '@kimen/elements/components/ki-button-group.js';
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
-import { defineCustomElement as defineKiCarousel } from '@kimen/elements/components/ki-carousel.js';
-import { defineCustomElement as defineKiCarouselItem } from '@kimen/elements/components/ki-carousel-item.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
+import { defineCustomElement as defineKiCitation } from '@kimen/elements/components/ki-citation.js';
 import { defineCustomElement as defineKiCodeBlock } from '@kimen/elements/components/ki-code-block.js';
 import { defineCustomElement as defineKiCodeInput } from '@kimen/elements/components/ki-code-input.js';
 import { defineCustomElement as defineKiCombobox } from '@kimen/elements/components/ki-combobox.js';
@@ -84,6 +83,8 @@ import { defineCustomElement as defineKiSidebarGroup } from '@kimen/elements/com
 import { defineCustomElement as defineKiSidebarItem } from '@kimen/elements/components/ki-sidebar-item.js';
 import { defineCustomElement as defineKiSkeleton } from '@kimen/elements/components/ki-skeleton.js';
 import { defineCustomElement as defineKiSlider } from '@kimen/elements/components/ki-slider.js';
+import { defineCustomElement as defineKiSource } from '@kimen/elements/components/ki-source.js';
+import { defineCustomElement as defineKiSources } from '@kimen/elements/components/ki-sources.js';
 import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStat } from '@kimen/elements/components/ki-stat.js';
@@ -397,54 +398,6 @@ export declare interface KiCard extends Components.KiCard {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiCarousel,
-  inputs: ['autoplay', 'carouselRoleDescription', 'current', 'label', 'layout', 'loop', 'navigation', 'nextLabel', 'pagination', 'pauseLabel', 'playLabel', 'positionLabel', 'previousLabel', 'slideLabel', 'slideRoleDescription', 'slidesPerMove', 'slidesPerView'],
-  methods: ['next', 'previous', 'goTo']
-})
-@Component({
-  selector: 'ki-carousel',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['autoplay', 'carouselRoleDescription', 'current', { name: 'label', required: true }, 'layout', 'loop', 'navigation', 'nextLabel', 'pagination', 'pauseLabel', 'playLabel', 'positionLabel', 'previousLabel', 'slideLabel', 'slideRoleDescription', 'slidesPerMove', 'slidesPerView'],
-})
-export class KiCarousel {
-  protected el: HTMLKiCarouselElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-
-export declare interface KiCarousel extends Components.KiCarousel {
-}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiCarouselItem
-})
-@Component({
-  selector: 'ki-carousel-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class KiCarouselItem {
-  protected el: HTMLKiCarouselItemElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiCarouselItem extends Components.KiCarouselItem {}
-
-
-@ProxyCmp({
   defineCustomElementFn: defineKiCheckbox,
   inputs: ['checked', 'disabled', 'errorText', 'helpText', 'indeterminate', 'labelHint', 'name', 'required', 'size', 'value']
 })
@@ -540,6 +493,29 @@ export class KiChipGroup {
 
 export declare interface KiChipGroup extends Components.KiChipGroup {
 }
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiCitation,
+  inputs: ['citationRef', 'labelTemplate']
+})
+@Component({
+  selector: 'ki-citation',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [{ name: 'citationRef', required: true }, 'labelTemplate'],
+})
+export class KiCitation {
+  protected el: HTMLKiCitationElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiCitation extends Components.KiCitation {}
 
 
 @ProxyCmp({
@@ -1970,6 +1946,52 @@ export class KiSlider {
 
 
 export declare interface KiSlider extends Components.KiSlider {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSource,
+  inputs: ['href', 'snippet', 'sourceId', 'sourceTitle']
+})
+@Component({
+  selector: 'ki-source',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [{ name: 'href', required: true }, 'snippet', 'sourceId', { name: 'sourceTitle', required: true }],
+})
+export class KiSource {
+  protected el: HTMLKiSourceElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSource extends Components.KiSource {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSources,
+  inputs: ['open', 'sourceCountLabel', 'sourcesCountLabel']
+})
+@Component({
+  selector: 'ki-sources',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['open', 'sourceCountLabel', 'sourcesCountLabel'],
+})
+export class KiSources {
+  protected el: HTMLKiSourcesElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSources extends Components.KiSources {}
 
 
 @ProxyCmp({

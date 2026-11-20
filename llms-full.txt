@@ -1566,148 +1566,6 @@ CSS custom properties:
 - `--ki-typography-line-height-title-1`: semantic dimension for typography line height title 1.
 - `--ki-typography-size-title-1`: semantic dimension for typography size title 1.
 
-### ki-carousel
-
-An ordered, swipeable sequence with previous and next controls and position feedback.
-
-When to use: show a short set of related highlights, onboarding steps or media panels.
-Give the carousel a meaningful label and supply one ki-carousel-item per slide.
-When NOT to use: hide essential content behind rotation, replace ordinary page navigation,
-or present slides that readers need to compare side by side at the same time.
-
-Examples:
-
-# Carousel examples
-
-```html
-<ki-carousel label="Product tour" slides-per-view="2" slides-per-move="2">
-  <ki-carousel-item>Discover the tools</ki-carousel-item>
-  <ki-carousel-item>Pick a theme</ki-carousel-item>
-  <ki-carousel-item>Set up your workspace</ki-carousel-item>
-  <ki-carousel-item>Share your first surface</ki-carousel-item>
-</ki-carousel>
-```
-
-```js
-const carousel = document.querySelector('ki-carousel');
-carousel.addEventListener('ki-slide-change', ({ detail }) => {
-  console.log(detail.index);
-});
-await carousel.goTo(3);
-```
-
-With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
-
-Attributes:
-- `autoplay` (number | undefined, minimum 1, maximum 2147483647): Rotation interval in milliseconds. Omitting it leaves rotation off.
-- `carousel-role-description` (string, default 'carousel'): Accessible role description of the region.
-- `current` (number, default 1, minimum 1): One-based leading slide. Setting it moves the carousel and clamps the index to the available leading positions.
-- `label` (string, required): Required accessible name of the carousel region.
-- `layout` ("full-screen" | "hero" | "multi-browse" | "single" | "uncontained", default 'single'): Item arrangement. Full-screen uses a vertical, full-viewport slide.
-- `loop` (boolean, default false): Whether navigating past one endpoint wraps to the other.
-- `navigation` (boolean, default true): Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.
-- `next-label` (string, default 'Next slide'): Accessible label of the Next button.
-- `pagination` (boolean, default true): Whether to show the noninteractive slide position indicator.
-- `pause-label` (string, default 'Pause'): Visible and accessible label of the Pause button.
-- `play-label` (string, default 'Play'): Visible and accessible label of the Play button.
-- `position-label` (string, default 'Slide position'): Accessible label of the position indicator.
-- `previous-label` (string, default 'Previous slide'): Accessible label of the Previous button.
-- `slide-label` (string, default '{index} of {count}'): Spoken slide name and announcement. Use {index} and {count} as placeholders.
-- `slide-role-description` (string, default 'slide'): Accessible role description of each slide group.
-- `slides-per-move` (number, default 1, minimum 1): Number of positions advanced by Previous, Next and automatic rotation.
-- `slides-per-view` (number, default 1, minimum 1): Number of slides visible together in the single layout. Material 3 layouts determine their own item widths.
-
-Slots:
-- (default): Direct ki-carousel-item children in reading order.
-
-Parts:
-- `announcement`: Visually hidden live region for manual changes.
-- `controls`: Row containing slide position and navigation.
-- `next`: Next slide button.
-- `position`: Position indicator and optional numeric position.
-- `previous`: Previous slide button.
-- `rotation`: Play or Pause button when automatic rotation is configured.
-- `viewport`: Scroll-snap viewport and its keyboard focus outline.
-
-Events:
-- `ki-slide-change` (CustomEvent<CarouselSlideChangeDetail>): Reports the one-based index when the leading slide changes.
-
-Methods:
-- `goTo(index)` (Promise<void>): Moves to the requested one-based leading position within the available range.
-- `next()` (Promise<void>): Advances by slidesPerMove.
-- `previous()` (Promise<void>): Moves back by slidesPerMove.
-
-CSS custom properties:
-- `--ki-carousel-control-backdrop-filter`: Complete optional backdrop filter for the carousel controls.
-- `--ki-carousel-control-bg`: Surface of the carousel navigation and rotation controls.
-- `--ki-carousel-control-bg-image`: Optional image layered over the carousel control background color.
-- `--ki-carousel-control-border`: Visible control boundary against the surrounding surface.
-- `--ki-carousel-control-fg`: Text and glyph ink against the carousel control surface.
-- `--ki-carousel-control-gap`: Spacing between carousel controls.
-- `--ki-carousel-control-icon-size`: Glyph size in the carousel navigation controls.
-- `--ki-carousel-control-radius`: Corner radius of the carousel controls.
-- `--ki-carousel-control-shadow`: Resting elevation of the carousel controls.
-- `--ki-carousel-control-size`: Resting carousel control size before applying the density target floor.
-- `--ki-carousel-full-screen-block-size`: Block size of the vertical carousel viewport.
-- `--ki-carousel-gap`: Gap between carousel slides and between the viewport and the controls.
-- `--ki-carousel-preview-min-inline-size`: Minimum inline size of a decorative carousel preview when space permits.
-- `--ki-carousel-radius`: Corner radius shared by the carousel viewport and slide surfaces.
-- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-
-### ki-carousel-item
-
-A slide in an ordered ki-carousel sequence.
-
-When to use: supply a single slide to a ki-carousel. Put the full slide in the
-default slot and optional decorative preview media in the preview slot.
-When NOT to use: present a standalone card or a layout container outside a carousel.
-
-Examples:
-
-# Carousel item example
-
-```html
-<ki-carousel label="Getting started" layout="hero">
-  <ki-carousel-item><a href="/guide">Read the guide</a></ki-carousel-item>
-  <ki-carousel-item>
-    <img slot="preview" src="/cover.jpg" alt="">
-    <a href="/themes">Explore themes</a>
-  </ki-carousel-item>
-</ki-carousel>
-```
-
-Attributes: none
-
-Slots:
-- (default): The full slide content, including any links and controls.
-- `preview`: Decorative, noninteractive media shown when the item is a reduced preview.
-
-Parts:
-- `content`: Surface that holds the full slide.
-- `preview`: Decorative surface used in small or partly shown previews.
-
-Events: none
-
-Methods: none
-
-CSS custom properties:
-- `--ki-carousel-item-backdrop-filter`: Complete optional backdrop filter for the slide surface.
-- `--ki-carousel-item-bg`: Surface for carousel slide content and its decorative preview.
-- `--ki-carousel-item-bg-image`: Optional image layered over the slide background color.
-- `--ki-carousel-item-fg`: Text on the carousel slide surface.
-- `--ki-carousel-item-min-block-size`: Minimum block size of a full slide.
-- `--ki-carousel-item-padding`: Inset of full slide content.
-- `--ki-carousel-radius`: Corner radius shared by the carousel viewport and slide surfaces.
-- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-
 ### ki-checkbox
 
 A form-associated checkbox for selecting independent options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
@@ -2132,6 +1990,77 @@ CSS custom properties:
 - `--ki-chip-group-gap`: Gap between adjacent chips and rows.
 - `--ki-chip-height-sm`: Small height of a compact pill.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+
+### ki-citation
+
+A numbered inline link from an answer to a source card.
+
+When to use: Next to a claim supported by a `ki-source` in the same document
+or shadow root. Repeat the same reference for subsequent mentions.
+When NOT to use: To cite a source outside this tree or replace a standalone
+link. Use `ki-link` for direct navigation.
+
+Examples:
+
+# Using ki-citation
+
+Place a citation after its claim and set `ref` to the matching source identifier.
+
+```html
+<p>The methods account for the difference<ki-citation ref="methods"></ki-citation>.</p>
+<ki-sources>
+  <ki-source id="methods" title="Study design" href="/methods"></ki-source>
+</ki-sources>
+```
+
+Use `citationRef` in JSX. Tab to the link for a preview. Escape dismisses the
+preview, and Enter opens the list and moves focus to the source link.
+
+Attributes:
+- `ref` (string, required): ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.
+- `label-template` (string, default 'Source {number}: {title}'): Localized link name with `{number}` and `{title}` placeholders.
+
+Slots: none
+
+Parts:
+- `link`: Focusable citation link.
+- `marker`: Visible citation number.
+- `preview`: Anchored title and hostname preview.
+- `preview-domain`: Hostname in the preview.
+- `preview-title`: Title in the preview.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-citation-backdrop-filter`: Complete backdrop filter for a citation marker.
+- `--ki-citation-bg`: Background of a citation marker.
+- `--ki-citation-bg-image`: Optional decorative image over a citation marker.
+- `--ki-citation-fg`: Text on a citation marker.
+- `--ki-citation-hover-bg`: Background of a hovered citation marker.
+- `--ki-citation-hover-fg`: Text on a hovered citation marker.
+- `--ki-citation-padding`: Inline padding of the citation number.
+- `--ki-citation-preview-backdrop-filter`: Complete backdrop filter for the citation preview.
+- `--ki-citation-preview-bg`: Background of the title and hostname preview.
+- `--ki-citation-preview-bg-image`: Optional decorative image over the citation preview.
+- `--ki-citation-preview-border`: Edge color of the citation preview.
+- `--ki-citation-preview-border-width`: Edge width of the citation preview.
+- `--ki-citation-preview-fg`: Text on the citation preview.
+- `--ki-citation-preview-max-inline-size`: Maximum width of the citation preview.
+- `--ki-citation-preview-padding`: Inset around the preview content.
+- `--ki-citation-preview-radius`: Corner radius of the citation preview.
+- `--ki-citation-preview-shadow`: Elevation of the citation preview.
+- `--ki-citation-radius`: Corner radius of a citation marker.
+- `--ki-citation-size`: Minimum painted edge of a citation marker.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
 
 ### ki-code-block
 
@@ -8326,6 +8255,146 @@ CSS custom properties:
 - `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+
+### ki-source
+
+Declares one named web source for a `ki-sources` list.
+
+When to use: As a direct child of `ki-sources`. In HTML provide an `id`,
+`href` and `title`; in guarded specs provide `source-id`, `href` and
+`title`. Use the same identifier on any citation of the source.
+When NOT to use: For standalone links outside a source list; use `ki-link`.
+
+Examples:
+
+# Using ki-source
+
+Declare a source directly inside the default slot of `ki-sources`.
+
+```html
+<ki-sources open>
+  <ki-source id="methods" href="/methods" title="Study design" snippet="How the study ran."></ki-source>
+</ki-sources>
+```
+
+Use a unique identifier in the current document or shadow root. In a
+guarded spec, use the `source-id` prop instead of the native `id`. The
+disclosure displays the hostname from the resolved URL.
+
+Attributes:
+- `href` (string, required, URL): Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.
+- `snippet` (string | undefined): Optional plain-text excerpt displayed in the source card.
+- `source-id` (string | undefined): Source identifier in this document or shadow root. Overrides the native HTML `id` when set. Use this value in guarded specs and in citation refs.
+- `title` (string, required): Required plain-text source title. In HTML use the `title` attribute.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-sources
+
+A disclosure with the ordered sources behind an answer.
+
+When to use: To show the evidence behind an answer. Add direct `ki-source`
+children and place `ki-citation` markers next to the claims they support.
+When NOT to use: For ordinary navigation, unrelated links, or form controls.
+
+Examples:
+
+# Using Sources
+
+Put a citation immediately after the clause it supports. Put the source
+definitions directly inside the corresponding disclosure. The list shows
+sources in order of first citation and adds uncited sources in declaration order.
+
+```html
+<p>The study design<ki-citation ref="methods"></ki-citation> explains the results.</p>
+<ki-sources>
+  <ki-source
+    id="methods"
+    href="https://example.org/methods"
+    title="Study design"
+    snippet="How the study ran."
+  ></ki-source>
+</ki-sources>
+```
+
+Use `open` to start with the list expanded. Use unique source identifiers
+within each document or shadow root. Hover or focus a citation to see its
+title and hostname. Activate it to expand the list and focus the title link.
+The card links can be used independently of the inline markers.
+
+When importing individual elements, register all three tags with their
+respective `defineCustomElement()` functions. Use `citationRef` and
+`sourceTitle` as component props in JSX. In a guarded spec, use keys
+`ref`, `source-id`, `title` and `href` on their respective nodes. Put
+the citation in a `div` primitive if it shares a line with text.
+
+Provide the local language through `label-template`, `source-count-label`,
+and `sources-count-label`. Titles and snippets are plain text. HTTP(S) URLs
+and relative web references work in authored HTML. Guarded specs also follow
+the application's allowed-origin policy.
+
+Attributes:
+- `open` (boolean, default false): Whether the disclosure is expanded. Set to show the list initially.
+- `source-count-label` (string, default '{count} source'): Localized summary when there is one source. Use `{count}` for its number.
+- `sources-count-label` (string, default '{count} sources'): Localized summary for multiple sources. Use `{count}` for their number.
+
+Slots:
+- (default): Direct `ki-source` definitions for this answer.
+
+Parts:
+- `disclosure`: Native expandable section.
+- `domain`: Hostname derived from the link destination.
+- `list`: Ordered list of sources.
+- `number`: Source order marker inside the card.
+- `snippet`: Optional excerpt.
+- `source`: Source card link.
+- `summary`: Disclosure control with the localized source count.
+- `title`: Visible title of the link.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-source-card-backdrop-filter`: Complete backdrop filter for a source card.
+- `--ki-source-card-bg`: Resting background of a source card.
+- `--ki-source-card-bg-image`: Optional decorative image over a source card.
+- `--ki-source-card-border`: Border color of a source card.
+- `--ki-source-card-border-width`: Border width of a source card.
+- `--ki-source-card-fg`: Text on a resting source card.
+- `--ki-source-card-hover-bg`: Background of a hovered source card.
+- `--ki-source-card-hover-fg`: Text on a hovered source card.
+- `--ki-source-card-padding`: Inset around source card content.
+- `--ki-source-card-radius`: Corner radius of a source card.
+- `--ki-source-number-bg`: Background of the number in a source card.
+- `--ki-source-number-fg`: Text color of the number in a source card.
+- `--ki-source-number-radius`: Corner radius of the number in a source card.
+- `--ki-source-number-size`: Minimum size of the number in a source card.
+- `--ki-sources-list-gap`: Gap between source cards.
+- `--ki-sources-max-inline-size`: Maximum line length of the source disclosure.
+- `--ki-sources-summary-bg`: Background of the source-count control.
+- `--ki-sources-summary-fg`: Text on the source-count control.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
 
 ### ki-spinner
 

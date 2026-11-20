@@ -690,128 +690,6 @@ export const catalogData = {
       "whenNotToUse": "as a form field, fieldset, page landmark, section replacement\nor nested card. Use a standalone button or link for a control without\nsupporting content.",
       "whenToUse": "group related media, a title, supporting text and actions into\none scannable surface. Set `href` for navigation or `interactive` for a\ndeclared action. Give a clickable card one text heading in the header\nslot and place secondary controls in the body or footer."
     },
-    "ki-carousel": {
-      "description": "An ordered, swipeable sequence with previous and next controls and position feedback.",
-      "events": {
-        "ki-slide-change": "Reports the one-based index when the leading slide changes."
-      },
-      "props": {
-        "autoplay": {
-          "type": "number",
-          "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
-          "minimum": 1,
-          "maximum": 2147483647
-        },
-        "carousel-role-description": {
-          "type": "string",
-          "description": "Accessible role description of the region.",
-          "default": "carousel"
-        },
-        "current": {
-          "type": "number",
-          "description": "One-based leading slide. Setting it moves the carousel and clamps the index to\nthe available leading positions.",
-          "default": 1,
-          "minimum": 1
-        },
-        "label": {
-          "type": "string",
-          "description": "Required accessible name of the carousel region.",
-          "required": true
-        },
-        "layout": {
-          "type": "enum",
-          "values": [
-            "full-screen",
-            "hero",
-            "multi-browse",
-            "single",
-            "uncontained"
-          ],
-          "description": "Item arrangement. Full-screen uses a vertical, full-viewport slide.",
-          "default": "single"
-        },
-        "loop": {
-          "type": "boolean",
-          "description": "Whether navigating past one endpoint wraps to the other.",
-          "default": false
-        },
-        "navigation": {
-          "type": "boolean",
-          "description": "Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.",
-          "default": true
-        },
-        "next-label": {
-          "type": "string",
-          "description": "Accessible label of the Next button.",
-          "default": "Next slide"
-        },
-        "pagination": {
-          "type": "boolean",
-          "description": "Whether to show the noninteractive slide position indicator.",
-          "default": true
-        },
-        "pause-label": {
-          "type": "string",
-          "description": "Visible and accessible label of the Pause button.",
-          "default": "Pause"
-        },
-        "play-label": {
-          "type": "string",
-          "description": "Visible and accessible label of the Play button.",
-          "default": "Play"
-        },
-        "position-label": {
-          "type": "string",
-          "description": "Accessible label of the position indicator.",
-          "default": "Slide position"
-        },
-        "previous-label": {
-          "type": "string",
-          "description": "Accessible label of the Previous button.",
-          "default": "Previous slide"
-        },
-        "slide-label": {
-          "type": "string",
-          "description": "Spoken slide name and announcement. Use {index} and {count} as placeholders.",
-          "default": "{index} of {count}"
-        },
-        "slide-role-description": {
-          "type": "string",
-          "description": "Accessible role description of each slide group.",
-          "default": "slide"
-        },
-        "slides-per-move": {
-          "type": "number",
-          "description": "Number of positions advanced by Previous, Next and automatic rotation.",
-          "default": 1,
-          "minimum": 1
-        },
-        "slides-per-view": {
-          "type": "number",
-          "description": "Number of slides visible together in the single layout. Material 3 layouts\ndetermine their own item widths.",
-          "default": 1,
-          "minimum": 1
-        }
-      },
-      "slots": {
-        "": "Direct ki-carousel-item children in reading order."
-      },
-      "tag": "ki-carousel",
-      "whenNotToUse": "hide essential content behind rotation, replace ordinary page navigation,\nor present slides that readers need to compare side by side at the same time.",
-      "whenToUse": "show a short set of related highlights, onboarding steps or media panels.\nGive the carousel a meaningful label and supply one ki-carousel-item per slide."
-    },
-    "ki-carousel-item": {
-      "description": "A slide in an ordered ki-carousel sequence.",
-      "events": {},
-      "props": {},
-      "slots": {
-        "": "The full slide content, including any links and controls.",
-        "preview": "Decorative, noninteractive media shown when the item is a reduced preview."
-      },
-      "tag": "ki-carousel-item",
-      "whenNotToUse": "present a standalone card or a layout container outside a carousel.",
-      "whenToUse": "supply a single slide to a ki-carousel. Put the full slide in the\ndefault slot and optional decorative preview media in the preview slot."
-    },
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
@@ -1031,6 +909,26 @@ export const catalogData = {
       "tag": "ki-chip-group",
       "whenNotToUse": "choose exactly one option or submit a form value.",
       "whenToUse": "label related chips or let people change their reading order."
+    },
+    "ki-citation": {
+      "description": "A numbered inline link from an answer to a source card.",
+      "events": {},
+      "props": {
+        "label-template": {
+          "type": "string",
+          "description": "Localized link name with `{number}` and `{title}` placeholders.",
+          "default": "Source {number}: {title}"
+        },
+        "ref": {
+          "type": "string",
+          "description": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
+          "required": true
+        }
+      },
+      "slots": {},
+      "tag": "ki-citation",
+      "whenNotToUse": "To cite a source outside this tree or replace a standalone\nlink. Use `ki-link` for direct navigation.",
+      "whenToUse": "Next to a claim supported by a `ki-source` in the same document\nor shadow root. Repeat the same reference for subsequent mentions."
     },
     "ki-code-block": {
       "description": "Presents source code with a named header, syntax colors, line controls and\nclipboard feedback.",
@@ -4274,6 +4172,62 @@ export const catalogData = {
       "tag": "ki-slider",
       "whenNotToUse": "when people need to enter exact numbers or choose among a\nfew named options. Use a number input or radio group for those tasks.",
       "whenToUse": "coarse adjustments such as volume, balance or a price filter,\nwith a descriptive label."
+    },
+    "ki-source": {
+      "description": "Declares one named web source for a `ki-sources` list.",
+      "events": {},
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
+          "required": true,
+          "format": "url"
+        },
+        "snippet": {
+          "type": "string",
+          "description": "Optional plain-text excerpt displayed in the source card."
+        },
+        "source-id": {
+          "type": "string",
+          "description": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs."
+        },
+        "title": {
+          "type": "string",
+          "description": "Required plain-text source title. In HTML use the `title` attribute.",
+          "required": true
+        }
+      },
+      "slots": {},
+      "tag": "ki-source",
+      "whenNotToUse": "For standalone links outside a source list; use `ki-link`.",
+      "whenToUse": "As a direct child of `ki-sources`. In HTML provide an `id`,\n`href` and `title`; in guarded specs provide `source-id`, `href` and\n`title`. Use the same identifier on any citation of the source."
+    },
+    "ki-sources": {
+      "description": "A disclosure with the ordered sources behind an answer.",
+      "events": {},
+      "props": {
+        "open": {
+          "type": "boolean",
+          "description": "Whether the disclosure is expanded. Set to show the list initially.",
+          "default": false
+        },
+        "source-count-label": {
+          "type": "string",
+          "description": "Localized summary when there is one source. Use `{count}` for its number.",
+          "default": "{count} source"
+        },
+        "sources-count-label": {
+          "type": "string",
+          "description": "Localized summary for multiple sources. Use `{count}` for their number.",
+          "default": "{count} sources"
+        }
+      },
+      "slots": {
+        "": "Direct `ki-source` definitions for this answer."
+      },
+      "tag": "ki-sources",
+      "whenNotToUse": "For ordinary navigation, unrelated links, or form controls.",
+      "whenToUse": "To show the evidence behind an answer. Add direct `ki-source`\nchildren and place `ki-citation` markers next to the claims they support."
     },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",

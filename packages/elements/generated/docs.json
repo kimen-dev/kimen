@@ -3204,803 +3204,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-carousel/ki-carousel.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-carousel",
-      "docs": "An ordered, swipeable sequence with previous and next controls and position feedback.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "show a short set of related highlights, onboarding steps or media panels.\nGive the carousel a meaningful label and supply one ki-carousel-item per slide."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "hide essential content behind rotation, replace ordinary page navigation,\nor present slides that readers need to compare side by side at the same time."
-        },
-        {
-          "name": "slot",
-          "text": "- Direct ki-carousel-item children in reading order."
-        },
-        {
-          "name": "part",
-          "text": "viewport - Scroll-snap viewport and its keyboard focus outline."
-        },
-        {
-          "name": "part",
-          "text": "controls - Row containing slide position and navigation."
-        },
-        {
-          "name": "part",
-          "text": "previous - Previous slide button."
-        },
-        {
-          "name": "part",
-          "text": "next - Next slide button."
-        },
-        {
-          "name": "part",
-          "text": "rotation - Play or Pause button when automatic rotation is configured."
-        },
-        {
-          "name": "part",
-          "text": "position - Position indicator and optional numeric position."
-        },
-        {
-          "name": "part",
-          "text": "announcement - Visually hidden live region for manual changes."
-        }
-      ],
-      "usage": {
-        "examples": "# Carousel examples\n\n```html\n<ki-carousel label=\"Product tour\" slides-per-view=\"2\" slides-per-move=\"2\">\n  <ki-carousel-item>Discover the tools</ki-carousel-item>\n  <ki-carousel-item>Pick a theme</ki-carousel-item>\n  <ki-carousel-item>Set up your workspace</ki-carousel-item>\n  <ki-carousel-item>Share your first surface</ki-carousel-item>\n</ki-carousel>\n```\n\n```js\nconst carousel = document.querySelector('ki-carousel');\ncarousel.addEventListener('ki-slide-change', ({ detail }) => {\n  console.log(detail.index);\n});\nawait carousel.goTo(3);\n```\n\nWith per-tag imports, define both `ki-carousel` and `ki-carousel-item`.\n"
-      },
-      "props": [
-        {
-          "name": "autoplay",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "autoplay",
-          "reflectToAttr": false,
-          "docs": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "maximum",
-              "text": "2147483647"
-            }
-          ],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "carouselRoleDescription",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "carousel-role-description",
-          "reflectToAttr": false,
-          "docs": "Accessible role description of the region.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'carousel'"
-            }
-          ],
-          "default": "'carousel'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "current",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "current",
-          "reflectToAttr": true,
-          "docs": "One-based leading slide. Setting it moves the carousel and clamps the index to\nthe available leading positions.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Required accessible name of the carousel region.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "layout",
-          "type": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\"",
-          "complexType": {
-            "original": "CarouselLayout",
-            "resolved": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\"",
-            "references": {
-              "CarouselLayout": {
-                "location": "local",
-                "path": "src/components/ki-carousel/ki-carousel.tsx",
-                "id": "src/components/ki-carousel/ki-carousel.tsx::CarouselLayout"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "layout",
-          "reflectToAttr": false,
-          "docs": "Item arrangement. Full-screen uses a vertical, full-viewport slide.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'single'"
-            }
-          ],
-          "default": "'single'",
-          "values": [
-            {
-              "value": "full-screen",
-              "type": "string"
-            },
-            {
-              "value": "hero",
-              "type": "string"
-            },
-            {
-              "value": "multi-browse",
-              "type": "string"
-            },
-            {
-              "value": "single",
-              "type": "string"
-            },
-            {
-              "value": "uncontained",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "loop",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "loop",
-          "reflectToAttr": false,
-          "docs": "Whether navigating past one endpoint wraps to the other.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "navigation",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "navigation",
-          "reflectToAttr": false,
-          "docs": "Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "true"
-            }
-          ],
-          "default": "true",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "nextLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "next-label",
-          "reflectToAttr": false,
-          "docs": "Accessible label of the Next button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Next slide'"
-            }
-          ],
-          "default": "'Next slide'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "pagination",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "pagination",
-          "reflectToAttr": false,
-          "docs": "Whether to show the noninteractive slide position indicator.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "true"
-            }
-          ],
-          "default": "true",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "pauseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "pause-label",
-          "reflectToAttr": false,
-          "docs": "Visible and accessible label of the Pause button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Pause'"
-            }
-          ],
-          "default": "'Pause'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "playLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "play-label",
-          "reflectToAttr": false,
-          "docs": "Visible and accessible label of the Play button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Play'"
-            }
-          ],
-          "default": "'Play'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "positionLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "position-label",
-          "reflectToAttr": false,
-          "docs": "Accessible label of the position indicator.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Slide position'"
-            }
-          ],
-          "default": "'Slide position'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "previousLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "previous-label",
-          "reflectToAttr": false,
-          "docs": "Accessible label of the Previous button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Previous slide'"
-            }
-          ],
-          "default": "'Previous slide'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "slideLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "slide-label",
-          "reflectToAttr": false,
-          "docs": "Spoken slide name and announcement. Use {index} and {count} as placeholders.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{index} of {count}'"
-            }
-          ],
-          "default": "'{index} of {count}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "slideRoleDescription",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "slide-role-description",
-          "reflectToAttr": false,
-          "docs": "Accessible role description of each slide group.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'slide'"
-            }
-          ],
-          "default": "'slide'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "slidesPerMove",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "slides-per-move",
-          "reflectToAttr": false,
-          "docs": "Number of positions advanced by Previous, Next and automatic rotation.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "slidesPerView",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "slides-per-view",
-          "reflectToAttr": false,
-          "docs": "Number of slides visible together in the single layout. Material 3 layouts\ndetermine their own item widths.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [
-        {
-          "name": "goTo",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "(index: number) => Promise<void>",
-            "parameters": [
-              {
-                "name": "index",
-                "type": "number",
-                "docs": ""
-              }
-            ],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "goTo(index: number) => Promise<void>",
-          "parameters": [
-            {
-              "name": "index",
-              "type": "number",
-              "docs": ""
-            }
-          ],
-          "docs": "Moves to the requested one-based leading position within the available range.",
-          "docsTags": []
-        },
-        {
-          "name": "next",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "() => Promise<void>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "next() => Promise<void>",
-          "parameters": [],
-          "docs": "Advances by slidesPerMove.",
-          "docsTags": []
-        },
-        {
-          "name": "previous",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "() => Promise<void>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "previous() => Promise<void>",
-          "parameters": [],
-          "docs": "Moves back by slidesPerMove.",
-          "docsTags": []
-        }
-      ],
-      "events": [
-        {
-          "event": "ki-slide-change",
-          "detail": "CarouselSlideChangeDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "CarouselSlideChangeDetail",
-            "resolved": "CarouselSlideChangeDetail",
-            "references": {
-              "CarouselSlideChangeDetail": {
-                "location": "local",
-                "path": "src/components/ki-carousel/ki-carousel.tsx",
-                "id": "src/components/ki-carousel/ki-carousel.tsx::CarouselSlideChangeDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Reports the one-based index when the leading slide changes.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Direct ki-carousel-item children in reading order."
-        }
-      ],
-      "parts": [
-        {
-          "name": "announcement",
-          "docs": "Visually hidden live region for manual changes."
-        },
-        {
-          "name": "controls",
-          "docs": "Row containing slide position and navigation."
-        },
-        {
-          "name": "next",
-          "docs": "Next slide button."
-        },
-        {
-          "name": "position",
-          "docs": "Position indicator and optional numeric position."
-        },
-        {
-          "name": "previous",
-          "docs": "Previous slide button."
-        },
-        {
-          "name": "rotation",
-          "docs": "Play or Pause button when automatic rotation is configured."
-        },
-        {
-          "name": "viewport",
-          "docs": "Scroll-snap viewport and its keyboard focus outline."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-indicator",
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-carousel": [
-          "ki-indicator",
-          "ki-icon"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-carousel-item/ki-carousel-item.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-carousel-item",
-      "docs": "A slide in an ordered ki-carousel sequence.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "supply a single slide to a ki-carousel. Put the full slide in the\ndefault slot and optional decorative preview media in the preview slot."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "present a standalone card or a layout container outside a carousel."
-        },
-        {
-          "name": "slot",
-          "text": "- The full slide content, including any links and controls."
-        },
-        {
-          "name": "slot",
-          "text": "preview - Decorative, noninteractive media shown when the item is a reduced preview."
-        },
-        {
-          "name": "part",
-          "text": "content - Surface that holds the full slide."
-        },
-        {
-          "name": "part",
-          "text": "preview - Decorative surface used in small or partly shown previews."
-        }
-      ],
-      "usage": {
-        "examples": "# Carousel item example\n\n```html\n<ki-carousel label=\"Getting started\" layout=\"hero\">\n  <ki-carousel-item><a href=\"/guide\">Read the guide</a></ki-carousel-item>\n  <ki-carousel-item>\n    <img slot=\"preview\" src=\"/cover.jpg\" alt=\"\">\n    <a href=\"/themes\">Explore themes</a>\n  </ki-carousel-item>\n</ki-carousel>\n```\n"
-      },
-      "props": [],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "The full slide content, including any links and controls."
-        },
-        {
-          "name": "preview",
-          "docs": "Decorative, noninteractive media shown when the item is a reduced preview."
-        }
-      ],
-      "parts": [
-        {
-          "name": "content",
-          "docs": "Surface that holds the full slide."
-        },
-        {
-          "name": "preview",
-          "docs": "Decorative surface used in small or partly shown previews."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
       "filePath": "src/components/ki-checkbox/ki-checkbox.tsx",
       "encapsulation": "shadow",
       "tag": "ki-checkbox",
@@ -5362,6 +4565,130 @@
         {
           "name": "group",
           "docs": "The wrapping chip layout."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-citation/ki-citation.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-citation",
+      "docs": "A numbered inline link from an answer to a source card.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Next to a claim supported by a `ki-source` in the same document\nor shadow root. Repeat the same reference for subsequent mentions."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "To cite a source outside this tree or replace a standalone\nlink. Use `ki-link` for direct navigation."
+        },
+        {
+          "name": "part",
+          "text": "link - Focusable citation link."
+        },
+        {
+          "name": "part",
+          "text": "marker - Visible citation number."
+        },
+        {
+          "name": "part",
+          "text": "preview - Anchored title and hostname preview."
+        },
+        {
+          "name": "part",
+          "text": "preview-title - Title in the preview."
+        },
+        {
+          "name": "part",
+          "text": "preview-domain - Hostname in the preview."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-citation\n\nPlace a citation after its claim and set `ref` to the matching source identifier.\n\n```html\n<p>The methods account for the difference<ki-citation ref=\"methods\"></ki-citation>.</p>\n<ki-sources>\n  <ki-source id=\"methods\" title=\"Study design\" href=\"/methods\"></ki-source>\n</ki-sources>\n```\n\nUse `citationRef` in JSX. Tab to the link for a preview. Escape dismisses the\npreview, and Enter opens the list and moves focus to the source link.\n"
+      },
+      "props": [
+        {
+          "name": "citationRef",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "ref",
+          "reflectToAttr": false,
+          "docs": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelTemplate",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-template",
+          "reflectToAttr": false,
+          "docs": "Localized link name with `{number}` and `{title}` placeholders.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Source {number}: {title}'"
+            }
+          ],
+          "default": "'Source {number}: {title}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "link",
+          "docs": "Focusable citation link."
+        },
+        {
+          "name": "marker",
+          "docs": "Visible citation number."
+        },
+        {
+          "name": "preview",
+          "docs": "Anchored title and hostname preview."
+        },
+        {
+          "name": "preview-domain",
+          "docs": "Hostname in the preview."
+        },
+        {
+          "name": "preview-title",
+          "docs": "Title in the preview."
         }
       ],
       "states": [],
@@ -12952,7 +12279,6 @@
         "ki-ai-label",
         "ki-audio",
         "ki-breadcrumb",
-        "ki-carousel",
         "ki-combobox",
         "ki-copy-button",
         "ki-date-picker",
@@ -12991,9 +12317,6 @@
           "ki-icon"
         ],
         "ki-breadcrumb": [
-          "ki-icon"
-        ],
-        "ki-carousel": [
           "ki-icon"
         ],
         "ki-combobox": [
@@ -14184,15 +13507,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-carousel"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-carousel": [
-          "ki-indicator"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-input/ki-input.tsx",
@@ -24370,6 +23687,342 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-source/ki-source.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-source",
+      "docs": "Declares one named web source for a `ki-sources` list.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "As a direct child of `ki-sources`. In HTML provide an `id`,\n`href` and `title`; in guarded specs provide `source-id`, `href` and\n`title`. Use the same identifier on any citation of the source."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For standalone links outside a source list; use `ki-link`."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-source\n\nDeclare a source directly inside the default slot of `ki-sources`.\n\n```html\n<ki-sources open>\n  <ki-source id=\"methods\" href=\"/methods\" title=\"Study design\" snippet=\"How the study ran.\"></ki-source>\n</ki-sources>\n```\n\nUse a unique identifier in the current document or shadow root. In a\nguarded spec, use the `source-id` prop instead of the native `id`. The\ndisclosure displays the hostname from the resolved URL.\n"
+      },
+      "props": [
+        {
+          "name": "href",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": true,
+          "docs": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "snippet",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "snippet",
+          "reflectToAttr": true,
+          "docs": "Optional plain-text excerpt displayed in the source card.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceId",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "source-id",
+          "reflectToAttr": true,
+          "docs": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceTitle",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "title",
+          "reflectToAttr": true,
+          "docs": "Required plain-text source title. In HTML use the `title` attribute.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-sources/ki-sources.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-sources",
+      "docs": "A disclosure with the ordered sources behind an answer.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "To show the evidence behind an answer. Add direct `ki-source`\nchildren and place `ki-citation` markers next to the claims they support."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For ordinary navigation, unrelated links, or form controls."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct `ki-source` definitions for this answer."
+        },
+        {
+          "name": "part",
+          "text": "disclosure - Native expandable section."
+        },
+        {
+          "name": "part",
+          "text": "summary - Disclosure control with the localized source count."
+        },
+        {
+          "name": "part",
+          "text": "list - Ordered list of sources."
+        },
+        {
+          "name": "part",
+          "text": "source - Source card link."
+        },
+        {
+          "name": "part",
+          "text": "number - Source order marker inside the card."
+        },
+        {
+          "name": "part",
+          "text": "title - Visible title of the link."
+        },
+        {
+          "name": "part",
+          "text": "domain - Hostname derived from the link destination."
+        },
+        {
+          "name": "part",
+          "text": "snippet - Optional excerpt."
+        }
+      ],
+      "usage": {
+        "examples": "# Using Sources\n\nPut a citation immediately after the clause it supports. Put the source\ndefinitions directly inside the corresponding disclosure. The list shows\nsources in order of first citation and adds uncited sources in declaration order.\n\n```html\n<p>The study design<ki-citation ref=\"methods\"></ki-citation> explains the results.</p>\n<ki-sources>\n  <ki-source\n    id=\"methods\"\n    href=\"https://example.org/methods\"\n    title=\"Study design\"\n    snippet=\"How the study ran.\"\n  ></ki-source>\n</ki-sources>\n```\n\nUse `open` to start with the list expanded. Use unique source identifiers\nwithin each document or shadow root. Hover or focus a citation to see its\ntitle and hostname. Activate it to expand the list and focus the title link.\nThe card links can be used independently of the inline markers.\n\nWhen importing individual elements, register all three tags with their\nrespective `defineCustomElement()` functions. Use `citationRef` and\n`sourceTitle` as component props in JSX. In a guarded spec, use keys\n`ref`, `source-id`, `title` and `href` on their respective nodes. Put\nthe citation in a `div` primitive if it shares a line with text.\n\nProvide the local language through `label-template`, `source-count-label`,\nand `sources-count-label`. Titles and snippets are plain text. HTTP(S) URLs\nand relative web references work in authored HTML. Guarded specs also follow\nthe application's allowed-origin policy.\n"
+      },
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the disclosure is expanded. Set to show the list initially.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceCountLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "source-count-label",
+          "reflectToAttr": false,
+          "docs": "Localized summary when there is one source. Use `{count}` for its number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} source'"
+            }
+          ],
+          "default": "'{count} source'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourcesCountLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "sources-count-label",
+          "reflectToAttr": false,
+          "docs": "Localized summary for multiple sources. Use `{count}` for their number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} sources'"
+            }
+          ],
+          "default": "'{count} sources'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct `ki-source` definitions for this answer."
+        }
+      ],
+      "parts": [
+        {
+          "name": "disclosure",
+          "docs": "Native expandable section."
+        },
+        {
+          "name": "domain",
+          "docs": "Hostname derived from the link destination."
+        },
+        {
+          "name": "list",
+          "docs": "Ordered list of sources."
+        },
+        {
+          "name": "number",
+          "docs": "Source order marker inside the card."
+        },
+        {
+          "name": "snippet",
+          "docs": "Optional excerpt."
+        },
+        {
+          "name": "source",
+          "docs": "Source card link."
+        },
+        {
+          "name": "summary",
+          "docs": "Disclosure control with the localized source count."
+        },
+        {
+          "name": "title",
+          "docs": "Visible title of the link."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",
       "encapsulation": "shadow",
       "tag": "ki-spinner",
@@ -31676,16 +31329,6 @@
       "declaration": "export type KiDialogCommand = 'show-modal' | 'close' | 'request-close';",
       "docstring": "",
       "path": "src/utils/dialog-invoker.ts"
-    },
-    "src/components/ki-carousel/ki-carousel.tsx::CarouselLayout": {
-      "declaration": "export type CarouselLayout = 'single' | 'multi-browse' | 'uncontained' | 'hero' | 'full-screen';",
-      "docstring": "",
-      "path": "src/components/ki-carousel/ki-carousel.tsx"
-    },
-    "src/components/ki-carousel/ki-carousel.tsx::CarouselSlideChangeDetail": {
-      "declaration": "export interface CarouselSlideChangeDetail {\n  index: number;\n}",
-      "docstring": "",
-      "path": "src/components/ki-carousel/ki-carousel.tsx"
     },
     "src/components/ki-checkbox/ki-checkbox.tsx::KiCheckboxSize": {
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",

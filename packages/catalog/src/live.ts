@@ -865,6 +865,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   const actions: readonly string[] = Object.freeze([...(options.actions ?? [])]);
   const surface = options.surface;
   const doc = surface.ownerDocument;
+  const sourceScope = Symbol();
   const onAction = options.onAction;
   const allowUserStateOverride = options.allowUserStateOverride === true;
   const skew = versionDiagnostic(options.catalogSchemaVersion, catalog.catalogSchemaVersion);
@@ -925,7 +926,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     slot: string,
     dialogIdFor: DialogIdFor,
   ): MNode => {
-    const element = createNodeElement(doc, node.component, context.allowedUrlOrigins);
+    const element = createNodeElement(doc, node.component, context.allowedUrlOrigins, sourceScope);
     const model: MNode = {
       action: node.action,
       component: node.component,
