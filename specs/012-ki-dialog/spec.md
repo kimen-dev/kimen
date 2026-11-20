@@ -20,6 +20,9 @@ dialog and returns to the invoker on close. First dialog-type interaction
 pattern in the repo — manual APG walkthrough required. The full-screen dialog
 is deferred as a future additive variant."
 
+[Spec 126](../126-fullscreen-dialog/spec.md) defines that additive layout for
+longer tasks in the same modal.
+
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is complete. Behavior enters the system exactly once, here (Art. II).
 
@@ -403,10 +406,10 @@ Feature: Dialog
 - **Catalog/agent legibility** (Art. I): when-to-use — an interrupting
   decision or short focused task that must be resolved before returning to
   the page: destructive confirmations, blocking choices, brief critical
-  input. When NOT to use — non-blocking feedback (ki-alert, future
-  ki-toast), supplementary hints (ki-tooltip), long forms or multi-step
-  flows (navigate, or the future full-screen variant), menus and pickers
-  (future components). Composition guidance: footer actions never close the
+  input. Use the [fullscreen layout](../126-fullscreen-dialog/spec.md) for
+  longer tasks that fit in one modal. When NOT to use — non-blocking feedback
+  (ki-alert, ki-toast), supplementary hints (ki-tooltip), multi-step flows
+  that need their own page, menus and pickers. Composition guidance: footer actions never close the
   dialog by themselves — wire each one to `close()` (FR-009); in destructive
   confirmations, place `autofocus` on the least destructive action so
   initial focus follows the APG dialog (modal) guidance (FR-005).
