@@ -655,6 +655,72 @@ export namespace Components {
     | 'danger';
     }
     /**
+     * Displays an ISO date or timestamp in the reader's language.
+     * @whenToUse For raw date and timestamp values in tables, records and prose.
+     * @whenNotToUse For an editable date or an elapsed time that should change as the clock advances.
+     * @cssprop --ki-format-date-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface KiFormatDate {
+        /**
+          * ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.
+         */
+        "date"?: string;
+        /**
+          * Date detail. Defaults to medium when neither date style nor time style is supplied.
+         */
+        "dateStyle"?: 'full' | 'long' | 'medium' | 'short';
+        /**
+          * Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.
+         */
+        "locale"?: string;
+        /**
+          * Time detail. Omit to show the date alone.
+         */
+        "timeStyle"?: 'full' | 'long' | 'medium' | 'short';
+        /**
+          * IANA time zone for a timestamp. A calendar date keeps its day in every zone.
+         */
+        "timeZone"?: string;
+    }
+    /**
+     * Displays a raw number using local number conventions and tabular figures.
+     * @whenToUse For numeric data, currency amounts, ratios and measurements in content.
+     * @whenNotToUse For numeric input or values that already include localized formatting.
+     * @cssprop --ki-format-number-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface KiFormatNumber {
+        /**
+          * ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.
+         */
+        "currency"?: string;
+        /**
+          * Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.
+         */
+        "formatStyle"?: 'decimal' | 'percent' | 'unit';
+        /**
+          * Maximum number of fraction digits.
+          * @minimum 0
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * Minimum number of fraction digits.
+          * @minimum 0
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * Use compact notation for abbreviated large numbers. Omit for standard notation.
+         */
+        "notation"?: 'compact';
+        /**
+          * Intl unit identifier, such as celsius or kilometer. Use with format-style="unit".
+         */
+        "unit"?: string;
+        /**
+          * Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.
+         */
+        "value"?: number;
+    }
+    /**
      * A passive responsive grid for content items.
      * @whenToUse lay out items on responsive tracks with consistent token spacing.
      * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
@@ -1276,6 +1342,33 @@ export namespace Components {
           * @default ''
          */
         "value": string;
+    }
+    /**
+     * Displays the elapsed or remaining time for a timestamp in the reader's language.
+     * @whenToUse For timestamps whose distance from the present matters, such as timeline entries or recent changes.
+     * @whenNotToUse For an interactive countdown or a date that should always show an absolute value.
+     * @cssprop --ki-relative-time-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface KiRelativeTime {
+        /**
+          * ISO calendar date or date-time. A timestamp without an offset uses local time.
+         */
+        "date"?: string;
+        /**
+          * Auto can show words such as yesterday. Always uses a number.
+          * @default 'auto'
+         */
+        "numeric": 'auto' | 'always';
+        /**
+          * Refresh the visible wording as the clock crosses a formatting boundary.
+          * @default false
+         */
+        "sync": boolean;
+        /**
+          * Display an absolute timestamp when the distance reaches this many seconds. Omit to keep relative wording at any distance.
+          * @minimum 0
+         */
+        "threshold"?: number;
     }
     /**
      * A bounded scroll container that clips its content along one declared axis
@@ -2300,6 +2393,30 @@ declare global {
         new (): HTMLKiEmptyStateElement;
     };
     /**
+     * Displays an ISO date or timestamp in the reader's language.
+     * @whenToUse For raw date and timestamp values in tables, records and prose.
+     * @whenNotToUse For an editable date or an elapsed time that should change as the clock advances.
+     * @cssprop --ki-format-date-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface HTMLKiFormatDateElement extends Components.KiFormatDate, HTMLStencilElement {
+    }
+    var HTMLKiFormatDateElement: {
+        prototype: HTMLKiFormatDateElement;
+        new (): HTMLKiFormatDateElement;
+    };
+    /**
+     * Displays a raw number using local number conventions and tabular figures.
+     * @whenToUse For numeric data, currency amounts, ratios and measurements in content.
+     * @whenNotToUse For numeric input or values that already include localized formatting.
+     * @cssprop --ki-format-number-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface HTMLKiFormatNumberElement extends Components.KiFormatNumber, HTMLStencilElement {
+    }
+    var HTMLKiFormatNumberElement: {
+        prototype: HTMLKiFormatNumberElement;
+        new (): HTMLKiFormatNumberElement;
+    };
+    /**
      * A passive responsive grid for content items.
      * @whenToUse lay out items on responsive tracks with consistent token spacing.
      * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
@@ -2608,6 +2725,18 @@ declare global {
     var HTMLKiRadioGroupElement: {
         prototype: HTMLKiRadioGroupElement;
         new (): HTMLKiRadioGroupElement;
+    };
+    /**
+     * Displays the elapsed or remaining time for a timestamp in the reader's language.
+     * @whenToUse For timestamps whose distance from the present matters, such as timeline entries or recent changes.
+     * @whenNotToUse For an interactive countdown or a date that should always show an absolute value.
+     * @cssprop --ki-relative-time-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface HTMLKiRelativeTimeElement extends Components.KiRelativeTime, HTMLStencilElement {
+    }
+    var HTMLKiRelativeTimeElement: {
+        prototype: HTMLKiRelativeTimeElement;
+        new (): HTMLKiRelativeTimeElement;
     };
     /**
      * A bounded scroll container that clips its content along one declared axis
@@ -2981,6 +3110,8 @@ declare global {
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-empty-state": HTMLKiEmptyStateElement;
+        "ki-format-date": HTMLKiFormatDateElement;
+        "ki-format-number": HTMLKiFormatNumberElement;
         "ki-grid": HTMLKiGridElement;
         "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
@@ -2999,6 +3130,7 @@ declare global {
         "ki-qr": HTMLKiQrElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
+        "ki-relative-time": HTMLKiRelativeTimeElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-segment": HTMLKiSegmentElement;
         "ki-segmented-control": HTMLKiSegmentedControlElement;
@@ -3629,6 +3761,72 @@ declare namespace LocalJSX {
     | 'success'
     | 'warning'
     | 'danger';
+    }
+    /**
+     * Displays an ISO date or timestamp in the reader's language.
+     * @whenToUse For raw date and timestamp values in tables, records and prose.
+     * @whenNotToUse For an editable date or an elapsed time that should change as the clock advances.
+     * @cssprop --ki-format-date-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface KiFormatDate {
+        /**
+          * ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.
+         */
+        "date"?: string;
+        /**
+          * Date detail. Defaults to medium when neither date style nor time style is supplied.
+         */
+        "dateStyle"?: 'full' | 'long' | 'medium' | 'short';
+        /**
+          * Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.
+         */
+        "locale"?: string;
+        /**
+          * Time detail. Omit to show the date alone.
+         */
+        "timeStyle"?: 'full' | 'long' | 'medium' | 'short';
+        /**
+          * IANA time zone for a timestamp. A calendar date keeps its day in every zone.
+         */
+        "timeZone"?: string;
+    }
+    /**
+     * Displays a raw number using local number conventions and tabular figures.
+     * @whenToUse For numeric data, currency amounts, ratios and measurements in content.
+     * @whenNotToUse For numeric input or values that already include localized formatting.
+     * @cssprop --ki-format-number-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface KiFormatNumber {
+        /**
+          * ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.
+         */
+        "currency"?: string;
+        /**
+          * Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.
+         */
+        "formatStyle"?: 'decimal' | 'percent' | 'unit';
+        /**
+          * Maximum number of fraction digits.
+          * @minimum 0
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * Minimum number of fraction digits.
+          * @minimum 0
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * Use compact notation for abbreviated large numbers. Omit for standard notation.
+         */
+        "notation"?: 'compact';
+        /**
+          * Intl unit identifier, such as celsius or kilometer. Use with format-style="unit".
+         */
+        "unit"?: string;
+        /**
+          * Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.
+         */
+        "value"?: number;
     }
     /**
      * A passive responsive grid for content items.
@@ -4268,6 +4466,33 @@ declare namespace LocalJSX {
           * @default ''
          */
         "value"?: string;
+    }
+    /**
+     * Displays the elapsed or remaining time for a timestamp in the reader's language.
+     * @whenToUse For timestamps whose distance from the present matters, such as timeline entries or recent changes.
+     * @whenNotToUse For an interactive countdown or a date that should always show an absolute value.
+     * @cssprop --ki-relative-time-font-family - Font family for the formatted text. Defaults to the body family.
+     */
+    interface KiRelativeTime {
+        /**
+          * ISO calendar date or date-time. A timestamp without an offset uses local time.
+         */
+        "date"?: string;
+        /**
+          * Auto can show words such as yesterday. Always uses a number.
+          * @default 'auto'
+         */
+        "numeric"?: 'auto' | 'always';
+        /**
+          * Refresh the visible wording as the clock crosses a formatting boundary.
+          * @default false
+         */
+        "sync"?: boolean;
+        /**
+          * Display an absolute timestamp when the distance reaches this many seconds. Omit to keep relative wording at any distance.
+          * @minimum 0
+         */
+        "threshold"?: number;
     }
     /**
      * A bounded scroll container that clips its content along one declared axis
@@ -5060,6 +5285,22 @@ declare namespace LocalJSX {
         "headingLevel": number;
         "announce": boolean;
     }
+    interface KiFormatDateAttributes {
+        "date": string;
+        "dateStyle": 'full' | 'long' | 'medium' | 'short';
+        "timeStyle": 'full' | 'long' | 'medium' | 'short';
+        "timeZone": string;
+        "locale": string;
+    }
+    interface KiFormatNumberAttributes {
+        "value": number;
+        "formatStyle": 'decimal' | 'percent' | 'unit';
+        "currency": string;
+        "unit": string;
+        "notation": 'compact';
+        "minimumFractionDigits": number;
+        "maximumFractionDigits": number;
+    }
     interface KiGridAttributes {
         "columns": number;
         "minColumn": string;
@@ -5178,6 +5419,12 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "helpText": string;
         "errorText": string;
+    }
+    interface KiRelativeTimeAttributes {
+        "date": string;
+        "numeric": 'auto' | 'always';
+        "sync": boolean;
+        "threshold": number;
     }
     interface KiScrollerAttributes {
         "orientation": KiScrollerOrientation;
@@ -5316,6 +5563,8 @@ declare namespace LocalJSX {
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-empty-state": Omit<KiEmptyState, keyof KiEmptyStateAttributes> & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes]?: KiEmptyState[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `attr:${K}`]?: KiEmptyStateAttributes[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `prop:${K}`]?: KiEmptyState[K] } & OneOf<"heading", KiEmptyState["heading"], KiEmptyStateAttributes["heading"]>;
+        "ki-format-date": Omit<KiFormatDate, keyof KiFormatDateAttributes> & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes]?: KiFormatDate[K] } & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes as `attr:${K}`]?: KiFormatDateAttributes[K] } & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes as `prop:${K}`]?: KiFormatDate[K] };
+        "ki-format-number": Omit<KiFormatNumber, keyof KiFormatNumberAttributes> & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes]?: KiFormatNumber[K] } & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes as `attr:${K}`]?: KiFormatNumberAttributes[K] } & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes as `prop:${K}`]?: KiFormatNumber[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
         "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
@@ -5334,6 +5583,7 @@ declare namespace LocalJSX {
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
+        "ki-relative-time": Omit<KiRelativeTime, keyof KiRelativeTimeAttributes> & { [K in keyof KiRelativeTime & keyof KiRelativeTimeAttributes]?: KiRelativeTime[K] } & { [K in keyof KiRelativeTime & keyof KiRelativeTimeAttributes as `attr:${K}`]?: KiRelativeTimeAttributes[K] } & { [K in keyof KiRelativeTime & keyof KiRelativeTimeAttributes as `prop:${K}`]?: KiRelativeTime[K] };
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-segment": Omit<KiSegment, keyof KiSegmentAttributes> & { [K in keyof KiSegment & keyof KiSegmentAttributes]?: KiSegment[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `attr:${K}`]?: KiSegmentAttributes[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `prop:${K}`]?: KiSegment[K] } & OneOf<"value", KiSegment["value"], KiSegmentAttributes["value"]>;
         "ki-segmented-control": Omit<KiSegmentedControl, keyof KiSegmentedControlAttributes> & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes]?: KiSegmentedControl[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `attr:${K}`]?: KiSegmentedControlAttributes[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `prop:${K}`]?: KiSegmentedControl[K] } & OneOf<"label", KiSegmentedControl["label"], KiSegmentedControlAttributes["label"]>;
@@ -5529,6 +5779,20 @@ declare module "@stencil/core" {
              * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
              */
             "ki-empty-state": LocalJSX.IntrinsicElements["ki-empty-state"] & JSXBase.HTMLAttributes<HTMLKiEmptyStateElement>;
+            /**
+             * Displays an ISO date or timestamp in the reader's language.
+             * @whenToUse For raw date and timestamp values in tables, records and prose.
+             * @whenNotToUse For an editable date or an elapsed time that should change as the clock advances.
+             * @cssprop --ki-format-date-font-family - Font family for the formatted text. Defaults to the body family.
+             */
+            "ki-format-date": LocalJSX.IntrinsicElements["ki-format-date"] & JSXBase.HTMLAttributes<HTMLKiFormatDateElement>;
+            /**
+             * Displays a raw number using local number conventions and tabular figures.
+             * @whenToUse For numeric data, currency amounts, ratios and measurements in content.
+             * @whenNotToUse For numeric input or values that already include localized formatting.
+             * @cssprop --ki-format-number-font-family - Font family for the formatted text. Defaults to the body family.
+             */
+            "ki-format-number": LocalJSX.IntrinsicElements["ki-format-number"] & JSXBase.HTMLAttributes<HTMLKiFormatNumberElement>;
             /**
              * A passive responsive grid for content items.
              * @whenToUse lay out items on responsive tracks with consistent token spacing.
@@ -5727,6 +5991,13 @@ declare module "@stencil/core" {
              * it for programmatic `value` writes, which are silent.
              */
             "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
+            /**
+             * Displays the elapsed or remaining time for a timestamp in the reader's language.
+             * @whenToUse For timestamps whose distance from the present matters, such as timeline entries or recent changes.
+             * @whenNotToUse For an interactive countdown or a date that should always show an absolute value.
+             * @cssprop --ki-relative-time-font-family - Font family for the formatted text. Defaults to the body family.
+             */
+            "ki-relative-time": LocalJSX.IntrinsicElements["ki-relative-time"] & JSXBase.HTMLAttributes<HTMLKiRelativeTimeElement>;
             /**
              * A bounded scroll container that clips its content along one declared axis
              * and replaces platform scrollbar chrome with a token-resolved indicator.

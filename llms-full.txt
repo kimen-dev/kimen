@@ -1824,6 +1824,94 @@ CSS custom properties:
 - `--ki-empty-state-tile-warning-fg`: Glyph ink on the warning decorative tile.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
+### ki-format-date
+
+Displays an ISO date or timestamp in the reader's language.
+
+When to use: For raw date and timestamp values in tables, records and prose.
+When NOT to use: For an editable date or an elapsed time that should change as the clock advances.
+
+Examples:
+
+# Format a date
+
+Use a calendar date when the day is the value, and send an offset or `Z` when
+the value is a timestamp. Set `lang` on the surrounding document or section.
+
+```html
+<section lang="es-ES">
+  <ki-format-date date="2026-11-19" date-style="long"></ki-format-date>
+  <ki-format-date
+    date="2026-11-19T23:41:00Z"
+    date-style="long"
+    time-style="short"
+    time-zone="Europe/Madrid"
+  ></ki-format-date>
+</section>
+```
+
+Attributes:
+- `date` (string | undefined): ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.
+- `date-style` ("full" | "long" | "medium" | "short" | undefined): Date detail. Defaults to medium when neither date style nor time style is supplied.
+- `lang` (string | undefined): Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.
+- `time-style` ("full" | "long" | "medium" | "short" | undefined): Time detail. Omit to show the date alone.
+- `time-zone` (string | undefined): IANA time zone for a timestamp. A calendar date keeps its day in every zone.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-format-date-font-family`: Default body font family for ki-format-date on a bare page.
+
+### ki-format-number
+
+Displays a raw number using local number conventions and tabular figures.
+
+When to use: For numeric data, currency amounts, ratios and measurements in content.
+When NOT to use: For numeric input or values that already include localized formatting.
+
+Examples:
+
+# Format a number
+
+Pass raw numbers and let the nearest `lang` declaration select the separators,
+spacing and symbols. A percent takes a ratio.
+
+```html
+<section lang="es-ES">
+  <ki-format-number value="1284.5"></ki-format-number>
+  <ki-format-number value="49" currency="EUR"></ki-format-number>
+  <ki-format-number value="0.496" format-style="percent" maximum-fraction-digits="1"></ki-format-number>
+  <ki-format-number value="23" format-style="unit" unit="celsius"></ki-format-number>
+  <ki-format-number value="59320" notation="compact"></ki-format-number>
+</section>
+```
+
+Attributes:
+- `currency` (string | undefined): ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.
+- `format-style` ("decimal" | "percent" | "unit" | undefined): Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.
+- `maximum-fraction-digits` (number | undefined, minimum 0): Maximum number of fraction digits.
+- `minimum-fraction-digits` (number | undefined, minimum 0): Minimum number of fraction digits.
+- `notation` ("compact" | undefined): Use compact notation for abbreviated large numbers. Omit for standard notation.
+- `unit` (string | undefined): Intl unit identifier, such as celsius or kilometer. Use with format-style="unit".
+- `value` (number | undefined): Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-format-number-font-family`: Default body font family for ki-format-number on a bare page.
+
 ### ki-grid
 
 A passive responsive grid for content items.
@@ -3527,6 +3615,42 @@ CSS custom properties:
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+
+### ki-relative-time
+
+Displays the elapsed or remaining time for a timestamp in the reader's language.
+
+When to use: For timestamps whose distance from the present matters, such as timeline entries or recent changes.
+When NOT to use: For an interactive countdown or a date that should always show an absolute value.
+
+Examples:
+
+# Format a relative timestamp
+
+Use `sync` to update the visible wording as time passes. A threshold of
+86,400 seconds switches to the formatted timestamp at one day's distance.
+Assistive technology and the tooltip expose the absolute timestamp throughout.
+
+```html
+<ki-relative-time date="2026-11-19T08:41:00Z" sync threshold="86400"></ki-relative-time>
+```
+
+Attributes:
+- `date` (string | undefined): ISO calendar date or date-time. A timestamp without an offset uses local time.
+- `numeric` ("always" | "auto", default 'auto'): Auto can show words such as yesterday. Always uses a number.
+- `sync` (boolean, default false): Refresh the visible wording as the clock crosses a formatting boundary.
+- `threshold` (number | undefined, minimum 0): Display an absolute timestamp when the distance reaches this many seconds. Omit to keep relative wording at any distance.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-relative-time-font-family`: Default body font family for ki-relative-time on a bare page.
 
 ### ki-scroller
 

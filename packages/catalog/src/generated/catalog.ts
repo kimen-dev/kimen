@@ -832,6 +832,96 @@ export const catalogData = {
       "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
       "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction."
     },
+    "ki-format-date": {
+      "description": "Displays an ISO date or timestamp in the reader's language.",
+      "events": {},
+      "props": {
+        "date": {
+          "type": "string",
+          "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time."
+        },
+        "date-style": {
+          "type": "enum",
+          "values": [
+            "full",
+            "long",
+            "medium",
+            "short"
+          ],
+          "description": "Date detail. Defaults to medium when neither date style nor time style is supplied."
+        },
+        "lang": {
+          "type": "string",
+          "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted."
+        },
+        "time-style": {
+          "type": "enum",
+          "values": [
+            "full",
+            "long",
+            "medium",
+            "short"
+          ],
+          "description": "Time detail. Omit to show the date alone."
+        },
+        "time-zone": {
+          "type": "string",
+          "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone."
+        }
+      },
+      "slots": {},
+      "tag": "ki-format-date",
+      "whenNotToUse": "For an editable date or an elapsed time that should change as the clock advances.",
+      "whenToUse": "For raw date and timestamp values in tables, records and prose."
+    },
+    "ki-format-number": {
+      "description": "Displays a raw number using local number conventions and tabular figures.",
+      "events": {},
+      "props": {
+        "currency": {
+          "type": "string",
+          "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted."
+        },
+        "format-style": {
+          "type": "enum",
+          "values": [
+            "decimal",
+            "percent",
+            "unit"
+          ],
+          "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal."
+        },
+        "maximum-fraction-digits": {
+          "type": "number",
+          "description": "Maximum number of fraction digits.",
+          "minimum": 0
+        },
+        "minimum-fraction-digits": {
+          "type": "number",
+          "description": "Minimum number of fraction digits.",
+          "minimum": 0
+        },
+        "notation": {
+          "type": "enum",
+          "values": [
+            "compact"
+          ],
+          "description": "Use compact notation for abbreviated large numbers. Omit for standard notation."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\"."
+        },
+        "value": {
+          "type": "number",
+          "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%."
+        }
+      },
+      "slots": {},
+      "tag": "ki-format-number",
+      "whenNotToUse": "For numeric input or values that already include localized formatting.",
+      "whenToUse": "For numeric data, currency amounts, ratios and measurements in content."
+    },
     "ki-grid": {
       "description": "A passive responsive grid for content items.",
       "events": {},
@@ -1611,6 +1701,39 @@ export const catalogData = {
       "tag": "ki-radio-group",
       "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
       "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once."
+    },
+    "ki-relative-time": {
+      "description": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
+      "events": {},
+      "props": {
+        "date": {
+          "type": "string",
+          "description": "ISO calendar date or date-time. A timestamp without an offset uses local time."
+        },
+        "numeric": {
+          "type": "enum",
+          "values": [
+            "always",
+            "auto"
+          ],
+          "description": "Auto can show words such as yesterday. Always uses a number.",
+          "default": "auto"
+        },
+        "sync": {
+          "type": "boolean",
+          "description": "Refresh the visible wording as the clock crosses a formatting boundary.",
+          "default": false
+        },
+        "threshold": {
+          "type": "number",
+          "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+          "minimum": 0
+        }
+      },
+      "slots": {},
+      "tag": "ki-relative-time",
+      "whenNotToUse": "For an interactive countdown or a date that should always show an absolute value.",
+      "whenToUse": "For timestamps whose distance from the present matters, such as timeline entries or recent changes."
     },
     "ki-scroller": {
       "description": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",

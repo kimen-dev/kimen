@@ -21,6 +21,8 @@ import { defineCustomElement as defineKiCounter } from '@kimen/elements/componen
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
+import { defineCustomElement as defineKiFormatDate } from '@kimen/elements/components/ki-format-date.js';
+import { defineCustomElement as defineKiFormatNumber } from '@kimen/elements/components/ki-format-number.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
 import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
@@ -39,6 +41,7 @@ import { defineCustomElement as defineKiProgress } from '@kimen/elements/compone
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
+import { defineCustomElement as defineKiRelativeTime } from '@kimen/elements/components/ki-relative-time.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
@@ -449,6 +452,52 @@ export class KiEmptyState {
 
 
 export declare interface KiEmptyState extends Components.KiEmptyState {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFormatDate,
+  inputs: ['date', 'dateStyle', 'locale', 'timeStyle', 'timeZone']
+})
+@Component({
+  selector: 'ki-format-date',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['date', 'dateStyle', 'locale', 'timeStyle', 'timeZone'],
+})
+export class KiFormatDate {
+  protected el: HTMLKiFormatDateElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiFormatDate extends Components.KiFormatDate {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFormatNumber,
+  inputs: ['currency', 'formatStyle', 'maximumFractionDigits', 'minimumFractionDigits', 'notation', 'unit', 'value']
+})
+@Component({
+  selector: 'ki-format-number',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['currency', 'formatStyle', 'maximumFractionDigits', 'minimumFractionDigits', 'notation', 'unit', 'value'],
+})
+export class KiFormatNumber {
+  protected el: HTMLKiFormatNumberElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiFormatNumber extends Components.KiFormatNumber {}
 
 
 @ProxyCmp({
@@ -873,6 +922,29 @@ export class KiRadioGroup {
 
 
 export declare interface KiRadioGroup extends Components.KiRadioGroup {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiRelativeTime,
+  inputs: ['date', 'numeric', 'sync', 'threshold']
+})
+@Component({
+  selector: 'ki-relative-time',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['date', 'numeric', 'sync', 'threshold'],
+})
+export class KiRelativeTime {
+  protected el: HTMLKiRelativeTimeElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiRelativeTime extends Components.KiRelativeTime {}
 
 
 @ProxyCmp({

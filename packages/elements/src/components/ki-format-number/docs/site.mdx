@@ -1,0 +1,28 @@
+---
+title: ki-format-number
+description: Display localized numbers, currencies, percentages and units.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Pass a finite raw number. The formatter reads the closest `lang` declaration
+and shows tabular figures, which align neatly in columns.
+
+<Demo layout="block" code={`<div lang="es-ES">
+  <p><ki-format-number value="1284.5"></ki-format-number></p>
+  <p><ki-format-number value="49" currency="EUR"></ki-format-number></p>
+  <p><ki-format-number value="0.496" format-style="percent" maximum-fraction-digits="1"></ki-format-number></p>
+</div>`} />
+
+Set `currency` to an ISO currency code. Use `format-style="percent"` for ratios
+and `format-style="unit"` with an Intl unit identifier. Set `notation="compact"`
+to abbreviate large values, and fraction-digit bounds to control precision.
+
+## API reference
+
+<CemApi tag="ki-format-number" />
+
+## Workshop
+
+[Open ki-format-number in Storybook](/storybook/?path=/docs/docs-components-ki-format-number--docs)
