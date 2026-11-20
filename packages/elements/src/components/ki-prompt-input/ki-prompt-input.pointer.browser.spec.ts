@@ -41,22 +41,24 @@ it('S18 enlarges attach and send targets when touch density is requested', async
     const send = page.getByRole('button', { name: 'Send' });
     await expect.element(attach).toBeEnabled();
     await expect.element(send).toBeEnabled();
-    expect(matchMedia('(pointer: coarse)').matches).toBe(true);
-    const attachControl = attach.element();
-    const sendControl = send.element();
-    const heights = [attachControl, sendControl].map(
-      (button) => button.getBoundingClientRect().height,
-    );
-    expect(heights).toEqual([32, 32]);
+    await expect.poll(() => matchMedia('(pointer: coarse)').matches).toBe(true);
+    const controls = [attach.element(), send.element()];
+    const box = (button: Element) => button.getBoundingClientRect();
+    expect(controls.map((button) => [box(button).width, box(button).height])).toEqual([
+      [32, 32],
+      [32, 32],
+    ]);
     fixture.setAttribute('data-ki-density', 'touch');
     await expect
       .poll(() =>
-        [attachControl, sendControl].every((button, index) => {
-          const bounds = button.getBoundingClientRect();
+        controls.every((button) => {
+          const { left, top, width, height } = box(button);
           const root = button.getRootNode() as ShadowRoot;
-          const midpoint = bounds.left + bounds.width / 2;
-          const hit = root.elementFromPoint(midpoint, bounds.top - 4);
-          return bounds.height >= 44 || (bounds.height === heights[index] && hit === button);
+          return (
+            width >= 44 &&
+            height >= 44 &&
+            root.elementFromPoint(left + 3, top + height / 2) === button
+          );
         }),
       )
       .toBe(true);

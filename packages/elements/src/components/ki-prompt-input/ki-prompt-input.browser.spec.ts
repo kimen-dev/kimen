@@ -12,7 +12,7 @@ interface Composer extends HTMLElement {
 
 const tokens = document.createElement('style');
 const media = commands as unknown as {
-  emulateForcedColors: (value: 'active' | null) => Promise<boolean | undefined>;
+  emulateForcedColors: (value: 'active' | null) => Promise<void>;
   emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
 };
 
@@ -24,11 +24,13 @@ beforeAll(() => {
 
 afterEach(async () => {
   document.body.replaceChildren();
-  document.documentElement.style.removeProperty('--ki-surface-raised');
+  document.documentElement.style.removeProperty('--ki-surface-s1');
   await parkPointer();
 });
 
-afterAll(() => { tokens.remove(); });
+afterAll(() => {
+  tokens.remove();
+});
 
 async function mount(attributes = '', wrapper = '<main>CONTENT</main>'): Promise<Composer> {
   document.body.innerHTML = wrapper.replace(
@@ -98,9 +100,12 @@ it('S1 sends the original text and files, clears the draft and focuses the texta
   drop(host, attached);
   await expect.element(removeFile()).toBeVisible();
   const sent = requests(host);
+  const input = vi.fn(() => host.value);
+  host.addEventListener('input', input);
   await userEvent.click(sendButton());
   expect(sent).toHaveBeenCalledTimes(1);
   expectDraft(sent.mock.calls[0]?.[0], ' Summarise the incidents ', [attached]);
+  expect(input).toHaveReturnedWith('');
   await expect.poll(() => textbox(host).value).toBe('');
   await expect.poll(() => host.shadowRoot?.activeElement).toBe(textbox(host));
   await expect.element(removeFile()).not.toBeInTheDocument();
@@ -126,7 +131,9 @@ it.each(['picker', 'drop', 'paste'])('S3 accepts CSV files using %s', async (sou
   if (source === 'picker') {
     const picker = host.shadowRoot?.querySelector<HTMLInputElement>('input[type=file]');
     if (!picker) throw new Error('Missing file picker');
-    const open = vi.fn((event: MouseEvent) => { event.preventDefault(); });
+    const open = vi.fn((event: MouseEvent) => {
+      event.preventDefault();
+    });
     picker.addEventListener('click', open);
     const attach = page.getByRole('button', { name: 'Attach files' });
     await userEvent.click(attach);
@@ -203,6 +210,15 @@ it('S7 hides attachment controls when accepted types are empty', async () => {
   drop(host, file());
   await expect.element(page.getByRole('button', { name: 'Attach files' })).not.toBeInTheDocument();
   await expect.element(page.getByRole('list', { name: 'Attachments' })).not.toBeInTheDocument();
+});
+
+it('S7 removes selected files when the accept attribute is removed', async () => {
+  const host = await mount('accept=".csv"');
+  drop(host, file());
+  await expect.element(removeFile()).toBeVisible();
+  host.removeAttribute('accept');
+  await expect.element(page.getByRole('list', { name: 'Attachments' })).not.toBeInTheDocument();
+  await expect.element(sendButton()).toBeDisabled();
 });
 
 it('supports the tools and attachments slots with caller-owned content', async () => {
@@ -315,7 +331,9 @@ describe('form participation', () => {
     drop(host, file());
     await expect.element(removeFile()).toBeVisible();
     expect(new FormData(form()).getAll('message')).toEqual(['Edited']);
-    const submitted = vi.fn((event: Event) => { event.preventDefault(); });
+    const submitted = vi.fn((event: Event) => {
+      event.preventDefault();
+    });
     form().addEventListener('submit', submitted);
     await userEvent.click(sendButton());
     expect(submitted).not.toHaveBeenCalled();
@@ -346,7 +364,7 @@ describe('form participation', () => {
 
 it('S16 uses the surrounding raised surface token', async () => {
   const host = await mount();
-  document.documentElement.style.setProperty('--ki-surface-raised', 'rgb(222, 231, 238)');
+  document.documentElement.style.setProperty('--ki-surface-s1', 'rgb(222, 231, 238)');
   await expect
     .poll(() => getComputedStyle(part(host, 'field')).backgroundColor)
     .toBe('rgb(222, 231, 238)');
@@ -354,6 +372,10 @@ it('S16 uses the surrounding raised surface token', async () => {
 
 it('S17 mirrors attachment and send positions in RTL without overflow', async () => {
   const host = await mount('accept=".csv" value="Text"');
+  host.style.inlineSize = '220px';
+  host.value = 'LongDraft'.repeat(20);
+  drop(host, file(`${'LongFilename'.repeat(12)}.csv`));
+  await expect.element(page.getByRole('list', { name: 'Attachments' })).toBeVisible();
   const attach = part(host, 'attach');
   const send = part(host, 'send');
   expect(attach.getBoundingClientRect().x).toBeLessThan(send.getBoundingClientRect().x);
@@ -361,22 +383,30 @@ it('S17 mirrors attachment and send positions in RTL without overflow', async ()
   await expect
     .poll(() => attach.getBoundingClientRect().x > send.getBoundingClientRect().x)
     .toBe(true);
+  const field = part(host, 'field');
   expect(getComputedStyle(textbox(host)).direction).toBe('rtl');
+  expect(field.scrollWidth - field.clientWidth).toBeLessThanOrEqual(0.5);
 });
 
 it('S19 keeps the border and keyboard focus visible in forced colours', async ({ skip }) => {
-  if ((await media.emulateForcedColors('active')) === false) {
-    skip();
-    return;
-  }
+  const host = await mount();
+  const field = part(host, 'field');
+  const control = textbox(host);
+  await userEvent.tab();
+  const normal = getComputedStyle(control).outlineColor;
   try {
-    const host = await mount();
-    await userEvent.tab();
-    const field = part(host, 'field');
-    expect(host.shadowRoot?.activeElement).toBe(textbox(host));
+    await media.emulateForcedColors('active');
+    const forcedColors = matchMedia('(forced-colors: active)');
+    if (!navigator.userAgent.includes('Chrome/') && !forcedColors.matches) {
+      skip('This engine does not emulate forced colours');
+      return;
+    }
+    await expect.poll(() => forcedColors.matches).toBe(true);
+    expect(host.shadowRoot?.activeElement).toBe(control);
     expect(getComputedStyle(field).borderBlockStartStyle).toBe('solid');
-    expect(getComputedStyle(textbox(host)).outlineStyle).toBe('solid');
-    expect(parseFloat(getComputedStyle(textbox(host)).outlineWidth)).toBeGreaterThan(0);
+    expect(getComputedStyle(control).outlineStyle).toBe('solid');
+    expect(parseFloat(getComputedStyle(control).outlineWidth)).toBeGreaterThan(0);
+    expect(getComputedStyle(control).outlineColor).not.toBe(normal);
   } finally {
     await media.emulateForcedColors(null);
   }
@@ -385,6 +415,7 @@ it('S19 keeps the border and keyboard focus visible in forced colours', async ({
 it('S20 exposes writing in reduced motion without animating the state change', async () => {
   await media.emulateReducedMotion('reduce');
   try {
+    await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
     const host = await mount();
     host.status = 'streaming';
     await expect.element(stopButton()).toBeVisible();

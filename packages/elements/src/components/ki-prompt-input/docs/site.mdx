@@ -1,0 +1,37 @@
+---
+title: Prompt input
+description: Compose assistant messages with a growing draft, file attachments and send or stop controls.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `<ki-prompt-input>` to compose assistant messages. Give every composer a `label` so its native textarea has an accessible name. The draft grows until `--ki-prompt-input-max-height` and then scrolls.
+
+<Demo code={`<ki-prompt-input
+  label="Message Kimen Assistant"
+  placeholder="Ask anything, or drop a file"
+  accept=".csv,.pdf,image/*"
+  max-files="5"
+  max-size="5000000"
+></ki-prompt-input>`} />
+
+## Sending and stopping
+
+Listen for `ki-submit` on the composer. Its detail contains the original `text` and the local `files`. The composer clears the sent draft and focuses the textarea. Set `status` to `submitted` while waiting and `streaming` when the assistant begins writing. Handle `ki-stop` to stop the response and return to `idle` when it finishes. The writing message is announced politely.
+
+Enter sends by default. With `submit-on="mod-enter"`, use Control+Enter or Command+Enter. Shift+Enter always adds a line.
+
+## Tools and files
+
+Place an application-owned model picker or another action in `tools`. Use a button with `type="button"` when the composer is inside a form. When `accept` is set, the picker, drop, and paste can attach local files. `max-size` is bytes per file. Use the `attachments` slot for supplemental `<li>` elements in the labelled list. Files from the picker, drop, and paste appear as removable chips.
+
+A named composer contributes its text to an enclosing form. Use `ki-submit` to read files. In a guarded Kimen surface, one declared action handles both requests. The action data includes `status` and the current draft `value`. Local files are available on the DOM event.
+
+## API reference
+
+<CemApi tag="ki-prompt-input" />
+
+## Workshop
+
+[Open PromptInput in Storybook](/storybook/?path=/docs/docs-components-ki-prompt-input--docs)

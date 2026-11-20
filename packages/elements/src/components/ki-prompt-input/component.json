@@ -1,0 +1,7 @@
+{
+  "barePage": { "keyboardPressed": false },
+  "pointer": { "hoverWitness": false },
+  "catalog": true,
+  "formBinding": "text",
+  "visual": { "material3Dark": true }
+}
