@@ -573,6 +573,68 @@ export namespace Components {
         "type": KiChipType;
     }
     /**
+     * Presents source code with a named header, syntax colors, line controls and
+     * clipboard feedback.
+     * @whenToUse display a multiline example, generated code or a tool result that
+     * readers should be able to inspect and copy.
+     * @whenNotToUse when the reader should edit the source or when the code belongs
+     * inline in a sentence. Use an editor or a native inline code element.
+     */
+    interface KiCodeBlock {
+        /**
+          * Polite announcement after a successful clipboard write.
+          * @default 'Copied'
+         */
+        "copiedLabel": string;
+        /**
+          * Polite announcement after a failed clipboard write.
+          * @default "Couldn't copy"
+         */
+        "copyErrorLabel": string;
+        /**
+          * Accessible name of the copy button.
+          * @default 'Copy code'
+         */
+        "copyLabel": string;
+        /**
+          * Show the copy control. Set `copyable="false"` in HTML to hide it.
+          * @default true
+         */
+        "copyable": boolean;
+        /**
+          * File name shown in the header beside the language.
+         */
+        "filename"?: string;
+        /**
+          * Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
+         */
+        "highlight"?: string;
+        /**
+          * Localizable prefix for the accessible description of highlighted lines.
+          * @default 'Highlighted lines'
+         */
+        "highlightLabel": string;
+        /**
+          * Figure and scroll area label when there is no language or filename.
+          * @default 'Code'
+         */
+        "label"?: string;
+        /**
+          * Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
+         */
+        "language"?: string;
+        /**
+          * Show decorative one-based line numbers.
+          * @default false
+         */
+        "lineNumbers": boolean;
+        /**
+          * Soft-wrap long lines within the available width.
+          * @default false
+         */
+        "wrap": boolean;
+    }
+    /**
      * Copies text to the clipboard and confirms the result in the same button.
      * @whenToUse let a person copy a link, identifier, token or code sample. Supply
      * a direct value or point to a source in the same document or shadow root.
@@ -2489,6 +2551,10 @@ export interface KiChipGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiChipGroupElement;
 }
+export interface KiCodeBlockCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCodeBlockElement;
+}
 export interface KiCopyButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCopyButtonElement;
@@ -2790,6 +2856,32 @@ declare global {
     var HTMLKiChipGroupElement: {
         prototype: HTMLKiChipGroupElement;
         new (): HTMLKiChipGroupElement;
+    };
+    interface HTMLKiCodeBlockElementEventMap {
+        "ki-copy": { value: string };
+        "ki-copy-error": void;
+    }
+    /**
+     * Presents source code with a named header, syntax colors, line controls and
+     * clipboard feedback.
+     * @whenToUse display a multiline example, generated code or a tool result that
+     * readers should be able to inspect and copy.
+     * @whenNotToUse when the reader should edit the source or when the code belongs
+     * inline in a sentence. Use an editor or a native inline code element.
+     */
+    interface HTMLKiCodeBlockElement extends Components.KiCodeBlock, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCodeBlockElementEventMap>(type: K, listener: (this: HTMLKiCodeBlockElement, ev: KiCodeBlockCustomEvent<HTMLKiCodeBlockElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCodeBlockElementEventMap>(type: K, listener: (this: HTMLKiCodeBlockElement, ev: KiCodeBlockCustomEvent<HTMLKiCodeBlockElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCodeBlockElement: {
+        prototype: HTMLKiCodeBlockElement;
+        new (): HTMLKiCodeBlockElement;
     };
     interface HTMLKiCopyButtonElementEventMap {
         "ki-copy": { value: string };
@@ -3753,6 +3845,7 @@ declare global {
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-code-block": HTMLKiCodeBlockElement;
         "ki-copy-button": HTMLKiCopyButtonElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
@@ -4322,6 +4415,76 @@ declare namespace LocalJSX {
           * @default 'filter'
          */
         "type"?: KiChipType;
+    }
+    /**
+     * Presents source code with a named header, syntax colors, line controls and
+     * clipboard feedback.
+     * @whenToUse display a multiline example, generated code or a tool result that
+     * readers should be able to inspect and copy.
+     * @whenNotToUse when the reader should edit the source or when the code belongs
+     * inline in a sentence. Use an editor or a native inline code element.
+     */
+    interface KiCodeBlock {
+        /**
+          * Polite announcement after a successful clipboard write.
+          * @default 'Copied'
+         */
+        "copiedLabel"?: string;
+        /**
+          * Polite announcement after a failed clipboard write.
+          * @default "Couldn't copy"
+         */
+        "copyErrorLabel"?: string;
+        /**
+          * Accessible name of the copy button.
+          * @default 'Copy code'
+         */
+        "copyLabel"?: string;
+        /**
+          * Show the copy control. Set `copyable="false"` in HTML to hide it.
+          * @default true
+         */
+        "copyable"?: boolean;
+        /**
+          * File name shown in the header beside the language.
+         */
+        "filename"?: string;
+        /**
+          * Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
+         */
+        "highlight"?: string;
+        /**
+          * Localizable prefix for the accessible description of highlighted lines.
+          * @default 'Highlighted lines'
+         */
+        "highlightLabel"?: string;
+        /**
+          * Figure and scroll area label when there is no language or filename.
+          * @default 'Code'
+         */
+        "label"?: string;
+        /**
+          * Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
+         */
+        "language"?: string;
+        /**
+          * Show decorative one-based line numbers.
+          * @default false
+         */
+        "lineNumbers"?: boolean;
+        /**
+          * CopyButton reports a successful write with the original source text.
+         */
+        "onKi-copy"?: (event: KiCodeBlockCustomEvent<{ value: string }>) => void;
+        /**
+          * CopyButton reports an unsuccessful clipboard write.
+         */
+        "onKi-copy-error"?: (event: KiCodeBlockCustomEvent<void>) => void;
+        /**
+          * Soft-wrap long lines within the available width.
+          * @default false
+         */
+        "wrap"?: boolean;
     }
     /**
      * Copies text to the clipboard and confirms the result in the same button.
@@ -6372,6 +6535,19 @@ declare namespace LocalJSX {
         "focusTarget": string;
         "reorderAnnouncement": string;
     }
+    interface KiCodeBlockAttributes {
+        "language": string;
+        "filename": string;
+        "lineNumbers": boolean;
+        "highlight": string;
+        "wrap": boolean;
+        "copyable": boolean;
+        "label": string;
+        "highlightLabel": string;
+        "copyLabel": string;
+        "copiedLabel": string;
+        "copyErrorLabel": string;
+    }
     interface KiCopyButtonAttributes {
         "value": string;
         "from": string;
@@ -6751,6 +6927,7 @@ declare namespace LocalJSX {
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-code-block": Omit<KiCodeBlock, keyof KiCodeBlockAttributes> & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes]?: KiCodeBlock[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `attr:${K}`]?: KiCodeBlockAttributes[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `prop:${K}`]?: KiCodeBlock[K] };
         "ki-copy-button": Omit<KiCopyButton, keyof KiCopyButtonAttributes> & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes]?: KiCopyButton[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `attr:${K}`]?: KiCopyButtonAttributes[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `prop:${K}`]?: KiCopyButton[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
@@ -6947,6 +7124,15 @@ declare module "@stencil/core" {
              * @whenNotToUse choose exactly one option or submit a form value.
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
+            /**
+             * Presents source code with a named header, syntax colors, line controls and
+             * clipboard feedback.
+             * @whenToUse display a multiline example, generated code or a tool result that
+             * readers should be able to inspect and copy.
+             * @whenNotToUse when the reader should edit the source or when the code belongs
+             * inline in a sentence. Use an editor or a native inline code element.
+             */
+            "ki-code-block": LocalJSX.IntrinsicElements["ki-code-block"] & JSXBase.HTMLAttributes<HTMLKiCodeBlockElement>;
             /**
              * Copies text to the clipboard and confirms the result in the same button.
              * @whenToUse let a person copy a link, identifier, token or code sample. Supply
