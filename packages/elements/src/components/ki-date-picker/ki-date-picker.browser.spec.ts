@@ -223,6 +223,16 @@ it('S14 resets the live value to its authored default', async () => {
   expect(picker.value).toBe('2026-11-12');
 });
 
+it('clears the field and form value when the value attribute is removed', async () => {
+  const { picker, form, events } = mount();
+  await expect.element(field()).toHaveValue('12/11/2026');
+  picker.removeAttribute('value');
+  await expect.element(field()).toHaveValue('');
+  expect(picker.value).toBe('');
+  expect(new FormData(form).get('departure')).toBe('');
+  expect(events).toEqual([]);
+});
+
 it('S15 gets its popup surface from the raised semantic color', async () => {
   fixture.style.setProperty('--ki-surface-raised', 'rgb(249, 247, 243)');
   mount();

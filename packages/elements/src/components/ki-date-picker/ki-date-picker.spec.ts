@@ -11,6 +11,11 @@ import {
 } from './ki-date-picker.dates';
 
 describe('date value', () => {
+  it('treats a removed value attribute as empty', () => {
+    const result: unknown = Reflect.apply(normalizeValue, undefined, [null, 'single']);
+    expect(result).toBe('');
+  });
+
   it.each(['2026-02-29', '2026-11-31', '0000-01-01', '2026-1-05'])(
     'rejects impossible or noncanonical ISO date %s',
     (value) => {
