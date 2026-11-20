@@ -16,6 +16,7 @@ export const KiPopover: StencilVueComponent<JSX.KiPopover> = /*@__PURE__*/ defin
   'label',
   'arrow',
   'kind',
+  'appearance',
   'ki-open',
   'ki-close'
 ], [

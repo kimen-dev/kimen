@@ -4,7 +4,7 @@
 
 ## When to use
 
-Show filters, details, a small form, or a text toggletip.
+Show filters, details, a small form, or an explanation opened by click. Use a rich toggletip for a short explanation with actions.
 
 ## When not to use
 
@@ -30,20 +30,33 @@ Use a toggletip to announce supplementary text and keep focus on the trigger.
 </ki-popover>
 ```
 
+Use a rich toggletip for an explanation with actions. Opening the panel
+moves focus inside, and Escape restores it to the trigger.
+
+```html
+<ki-button id="contrast-mode" type="button" variant="ghost">Contrast mode</ki-button>
+<ki-popover for="contrast-mode" kind="toggletip" appearance="rich" label="About contrast mode" arrow="false">
+  <strong>Contrast mode</strong>
+  <p>Kimen follows the system setting.</p>
+  <ki-button type="button" size="sm" variant="ghost">Learn more</ki-button>
+</ki-popover>
+```
+
 Use `open` to drive visibility and listen for `ki-open` and `ki-close` to observe it. In guarded catalog markup, bind actions to slotted controls. A trusted host can listen to the popover's two lifecycle events through the DOM.
 
 ## Attributes
 
+- `appearance` ("default" | "rich" | undefined, default 'default'): Rich shares the tooltip's raised surface, body and heading styles. With `kind="toggletip"` it enables actions and moves focus inside on open.
 - `arrow` (boolean, default true): Shows the arrow toward the trigger.
 - `for` (string | undefined): ID of the button in the same document or shadow tree.
-- `kind` ("dialog" | "toggletip", default 'dialog'): Use dialog for controls or toggletip for supplemental text.
+- `kind` ("dialog" | "toggletip", default 'dialog'): Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.
 - `label` (string | undefined, default 'Popover'): Accessible name of a dialog popover.
 - `open` (boolean, default false): Visibility. Reflects activation and native dismissal.
 - `placement` ("bottom" | "bottom-end" | "bottom-start" | "end" | "end-end" | "end-start" | "start" | "start-end" | "start-start" | "top" | "top-end" | "top-start", default 'bottom-start'): Preferred side and logical alignment. Flips when room is limited.
 
 ## Slots
 
-- (default): Dialog content or toggletip text.
+- (default): Dialog content or toggletip text. A rich toggletip also accepts actions.
 
 ## Parts
 
@@ -74,6 +87,25 @@ None.
 - `--ki-popover-padding`: Interior padding for a small anchored surface.
 - `--ki-popover-radius`: Corner radius for a small anchored surface.
 - `--ki-popover-shadow`: Popover elevation.
+- `--ki-tooltip-rich-backdrop-filter`: Complete backdrop filter of the rich surface.
+- `--ki-tooltip-rich-bg`: Fill of the rich tooltip or rich popover.
+- `--ki-tooltip-rich-bg-image`: Optional image layer over the rich surface fill.
+- `--ki-tooltip-rich-border-color`: Outline ink of the rich surface.
+- `--ki-tooltip-rich-border-width`: Outline thickness of the rich surface.
+- `--ki-tooltip-rich-fg`: Ink of the rich surface body text.
+- `--ki-tooltip-rich-font-size`: Body text size of the rich surface.
+- `--ki-tooltip-rich-font-weight`: Body text weight of the rich surface.
+- `--ki-tooltip-rich-heading-family`: Typeface of the rich surface heading.
+- `--ki-tooltip-rich-heading-fg`: Ink of the rich surface heading over the shared fill.
+- `--ki-tooltip-rich-heading-gap`: Distance between the rich heading and its body.
+- `--ki-tooltip-rich-heading-size`: Text size of the rich surface heading.
+- `--ki-tooltip-rich-heading-weight`: Text weight of the rich surface heading.
+- `--ki-tooltip-rich-line-height`: Body text line height of the rich surface.
+- `--ki-tooltip-rich-max-width`: Maximum inline size of the rich surface.
+- `--ki-tooltip-rich-padding-block`: Block-axis inset of the rich surface, before density scaling.
+- `--ki-tooltip-rich-padding-inline`: Inline-axis inset of the rich surface, before density scaling.
+- `--ki-tooltip-rich-radius`: Corner radius of the rich surface.
+- `--ki-tooltip-rich-shadow`: Raised elevation of the rich surface.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 - `--ki-typography-line-height-para`: semantic dimension for typography line height para.
 - `--ki-typography-size-body-1`: semantic dimension for typography size body 1.

@@ -329,6 +329,7 @@ const SHARED_SURFACE_FOREGROUNDS = {
     '--ki-stat-delta-success-fg',
     '--ki-stat-delta-danger-fg',
   ],
+  '--ki-tooltip-rich-bg': ['--ki-tooltip-rich-heading-fg'],
 };
 
 export function componentPairs(declarations) {

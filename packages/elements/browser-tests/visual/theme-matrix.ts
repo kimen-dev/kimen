@@ -58,6 +58,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-table',
   'ki-time-input',
   'ki-toolbar',
+  'ki-tooltip',
   'ki-top-nav',
 ]);
 

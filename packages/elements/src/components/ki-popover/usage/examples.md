@@ -16,4 +16,16 @@ Use a toggletip to announce supplementary text and keep focus on the trigger.
 </ki-popover>
 ```
 
+Use a rich toggletip for an explanation with actions. Opening the panel
+moves focus inside, and Escape restores it to the trigger.
+
+```html
+<ki-button id="contrast-mode" type="button" variant="ghost">Contrast mode</ki-button>
+<ki-popover for="contrast-mode" kind="toggletip" appearance="rich" label="About contrast mode" arrow="false">
+  <strong>Contrast mode</strong>
+  <p>Kimen follows the system setting.</p>
+  <ki-button type="button" size="sm" variant="ghost">Learn more</ki-button>
+</ki-popover>
+```
+
 Use `open` to drive visibility and listen for `ki-open` and `ki-close` to observe it. In guarded catalog markup, bind actions to slotted controls. A trusted host can listen to the popover's two lifecycle events through the DOM.

@@ -158,3 +158,16 @@ export const InsideDialog: Story = {
   ),
   play: focusTrigger,
 };
+
+export const Rich: Story = {
+  args: { for: 'story-retention', heading: 'Grace period', placement: 'bottom' },
+  render: (args) => (
+    <div style={{ minBlockSize: 'var(--ki-anchored-surface-max-width)' }}>
+      <button id="story-retention" type="button" style={triggerStyle}>
+        Retention
+      </button>
+      <ki-tooltip {...args}>Deleted projects stay restorable for 30 days.</ki-tooltip>
+    </div>
+  ),
+  play: focusTrigger,
+};

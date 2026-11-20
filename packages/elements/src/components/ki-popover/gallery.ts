@@ -6,6 +6,7 @@ export default {
     <div style="display:flex; flex-wrap:wrap; gap:var(--ki-space-md);">
       <ki-button id="gallery-filters" variant="secondary" type="button">Filters</ki-button>
       <ki-button id="gallery-retention" variant="ghost" type="button">About retention</ki-button>
+      <ki-button id="gallery-contrast" variant="ghost" type="button">Contrast mode</ki-button>
     </div>
     <ki-popover for="gallery-filters" label="Incident filters">
       <div style="display:grid; gap:var(--ki-space-md);">
@@ -21,14 +22,19 @@ export default {
     <ki-popover for="gallery-retention" kind="toggletip">
       Logs are kept for 30 days. Exports are retained separately.
     </ki-popover>
+    <ki-popover for="gallery-contrast" kind="toggletip" appearance="rich" label="About contrast mode" arrow="false">
+      <strong>Contrast mode</strong>
+      <p>Kimen follows the system setting.</p>
+      <ki-button size="sm" variant="ghost" type="button">Learn more</ki-button>
+    </ki-popover>
   `,
   minHeight: 275,
   prepare: async (wrapper) => {
-    const filters = wrapper.querySelector<HTMLElement & { open: boolean }>(
-      'ki-popover[for="gallery-filters"]',
+    const rich = wrapper.querySelector<HTMLElement & { open: boolean }>(
+      'ki-popover[for="gallery-contrast"]',
     );
-    if (filters) {
-      filters.open = true;
+    if (rich) {
+      rich.open = true;
     }
     await settleFrames(2);
   },
