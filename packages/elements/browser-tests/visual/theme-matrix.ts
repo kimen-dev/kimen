@@ -44,6 +44,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-note',
   'ki-pagination',
   'ki-popover',
+  'ki-prompt-input',
   'ki-rating',
   'ki-reasoning',
   'ki-relative-time',

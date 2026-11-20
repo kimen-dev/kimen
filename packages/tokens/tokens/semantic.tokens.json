@@ -2277,6 +2277,21 @@
       }
     },
     "control": {
+      "multiline": {
+        "$type": "dimension",
+        "min-size": {
+          "$value": "{ki.space.14xl}",
+          "$description": "Minimum block size for a growing multiline draft."
+        },
+        "max-size": {
+          "$value": "{ki.size.prompt-input-max}",
+          "$description": "Block size at which a growing multiline draft scrolls."
+        },
+        "border-width": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "Outline thickness for a multiline draft enclosure."
+        }
+      },
       "size": {
         "$type": "dimension",
         "xs": {

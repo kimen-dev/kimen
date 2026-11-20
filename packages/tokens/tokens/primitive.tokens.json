@@ -868,6 +868,10 @@
         "$value": "44px",
         "$description": "The pointer target of the touch density (spec 045 Amendment A1): WCAG 2.5.5 Target Size (Enhanced, AAA) and Apple's Human Interface Guidelines ask for 44 x 44 CSS px. In px for the same reason as target-min."
       },
+      "prompt-input-max": {
+        "$value": "12rem",
+        "$description": "Height cap for a growing assistant draft before it scrolls."
+      },
       "menu-inline-min": {
         "$value": "14rem",
         "$description": "Default minimum inline size from the menu reference, bounded by the viewport."

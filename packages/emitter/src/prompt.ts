@@ -75,14 +75,19 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
     }
   }
   const eventNames = Object.keys(entry.events);
+  const modeEvents: Readonly<Record<string, string>> = {
+    'ki-chip':
+      'chip actions use ki-change for filter, ki-remove for removable input, and ki-activate for assist, based on the chip or parent group type',
+    'ki-prompt-input':
+      'composer actions use ki-submit while idle and ki-stop while streaming; action data includes status and draft value, and local files stay on the DOM event',
+  };
   if (eventNames.length > 0) {
-    lines.push(
-      tag === 'ki-chip'
-        ? '- Events (chip actions use ki-change for filter, ki-remove for removable input, and ki-activate for assist, based on the chip or parent group type):'
-        : entry.activationEvent === undefined
-          ? '- Events (a spec never names an event: an "action" on this component fires on its one listed event, and a binding is rejected when more than one is listed):'
-          : `- Events (an "action" on this component fires on \`${entry.activationEvent}\`):`,
-    );
+    const routing =
+      modeEvents[tag] ??
+      (entry.activationEvent === undefined
+        ? 'a spec never names an event: an "action" on this component fires on its one listed event, and a binding is rejected when more than one is listed'
+        : `an "action" on this component fires on \`${entry.activationEvent}\``);
+    lines.push(`- Events (${routing}):`);
     for (const name of eventNames) {
       lines.push(`  - \`${name}\` — ${entry.events[name] ?? ''}`);
     }

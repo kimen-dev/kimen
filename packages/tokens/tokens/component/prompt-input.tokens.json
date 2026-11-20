@@ -1,0 +1,70 @@
+{
+  "ki": {
+    "prompt-input": {
+      "bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Raised surface behind the prompt composer."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional background image painted above the composer surface."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Optional whole backdrop filter behind the composer."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Draft text on the composer surface."
+      },
+      "placeholder-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Placeholder and writing status on the composer surface."
+      },
+      "feedback-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Surface immediately behind attachment rejection text."
+      },
+      "feedback-fg": {
+        "$value": "{ki.text.danger-high-em}",
+        "$description": "Attachment rejection text on the composer surface."
+      },
+      "border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Outline around the composer."
+      },
+      "border-width": {
+        "$value": "{ki.control.multiline.border-width}",
+        "$description": "Outline thickness around the composer."
+      },
+      "radius": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Corner radius of the composer surface."
+      },
+      "padding": {
+        "$value": "{ki.space.md}",
+        "$description": "Inset and spacing between rows in the composer."
+      },
+      "editor-padding-block": {
+        "$value": "{ki.space.xs}",
+        "$description": "Block inset for the native text field and its sizer."
+      },
+      "editor-padding-inline": {
+        "$value": "{ki.space.md}",
+        "$description": "Inline inset for the native text field and its sizer."
+      },
+      "action-gap": {
+        "$value": "{ki.space.sm}",
+        "$description": "Default spacing between attachments and toolbar controls."
+      },
+      "min-height": {
+        "$value": "{ki.control.multiline.min-size}",
+        "$description": "Minimum height of the editable draft."
+      },
+      "max-height": {
+        "$value": "{ki.control.multiline.max-size}",
+        "$description": "Maximum height of the draft before the textarea scrolls."
+      }
+    }
+  }
+}

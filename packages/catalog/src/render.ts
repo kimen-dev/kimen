@@ -161,6 +161,16 @@ export function declaredEvents(entry: CatalogEntry | undefined): readonly string
   return Object.keys(entry?.events ?? {});
 }
 
+const PROMPT_INPUT_ACTIVATIONS = ['ki-submit', 'ki-stop'] as const;
+
+function promptInputActivations(tag: string, events: readonly string[]): boolean {
+  return (
+    tag === 'ki-prompt-input' &&
+    events.length === PROMPT_INPUT_ACTIVATIONS.length &&
+    PROMPT_INPUT_ACTIVATIONS.every((event) => events.includes(event))
+  );
+}
+
 /** These buttons use their declared change only when the spec enables toggle mode. */
 export function hasToggleActivation(entry: CatalogEntry | undefined): boolean {
   return (
@@ -257,9 +267,9 @@ export function guardNode(
       });
     }
   }
-  // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
-  // activation event. Chips select it by type. Other multi-event entries
-  // must declare which of their events activates the action.
+  // Renderer-native activation guard (FR-003, S19): a bound action needs one
+  // event in its current mode. Chip type and composer status select that
+  // event. Other multi-event entries must identify their activation event.
   if (node.action !== undefined) {
     const entry = ownEntry(state.components, node.component);
     const events = declaredEvents(entry);
@@ -272,13 +282,15 @@ export function guardNode(
         rule: 'ambiguous-activation-event',
         value: node.action,
       });
-    } else if (activation !== undefined && !events.includes(activation)) {
-      state.diagnostics.push({
-        message: `${node.component} activationEvent must name a declared event`,
-        path: `${path}.action`,
-        rule: 'invalid-activation-event',
-        value: node.action,
-      });
+    } else if (activation !== undefined) {
+      if (!events.includes(activation)) {
+        state.diagnostics.push({
+          message: `${node.component} activationEvent must name a declared event`,
+          path: `${path}.action`,
+          rule: 'invalid-activation-event',
+          value: node.action,
+        });
+      }
     } else if (chipActivations(node.component, events)) {
       const kind =
         node.props?.['type'] ??
@@ -291,7 +303,7 @@ export function guardNode(
           value: node.action,
         });
       }
-    } else if (activation === undefined && events.length > 1) {
+    } else if (events.length > 1 && !promptInputActivations(node.component, events)) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
@@ -602,9 +614,14 @@ export function wireActivation(
     return;
   }
   const events = declaredEvents(entry);
-  const variantActivation = chipActivations(element.localName, events);
-  const activation = entry?.activationEvent ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
-  const clickActivated = !variantActivation && activation === DEFAULT_ACTIVATION_EVENT;
+  const declaredActivation = entry?.activationEvent;
+  const variantActivation =
+    declaredActivation === undefined && chipActivations(element.localName, events);
+  const composerActivation =
+    declaredActivation === undefined && promptInputActivations(element.localName, events);
+  const activation = declaredActivation ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
+  const clickActivated =
+    !variantActivation && !composerActivation && activation === DEFAULT_ACTIVATION_EVENT;
   const toggleActivation = hasToggleActivation(entry);
   const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
   const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
@@ -634,14 +651,33 @@ export function wireActivation(
 
   // Accept only the component's own event for its current mode (S17–S19).
   // The control's default behavior remains intact, and actions carry its live state.
-  for (const name of variantActivation ? CHIP_ACTIVATIONS : [activation]) {
+  const activationEvents = variantActivation
+    ? CHIP_ACTIVATIONS
+    : composerActivation
+      ? PROMPT_INPUT_ACTIVATIONS
+      : [activation];
+  for (const name of activationEvents) {
     element.addEventListener(name, (event: Event) => {
       if (event.target !== element || !claim(event)) return;
       const props = currentProps();
       if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
       if (variantActivation && chipActivation(element, props) !== name) return;
       if (toggleActivation && props['toggle'] !== true) return;
-      dispatch(liveData(element, props, entry, event));
+      const data = liveData(element, props, entry, event);
+      if (composerActivation) {
+        const status: unknown = Reflect.get(element, 'status') ?? props['status'] ?? 'idle';
+        const constraint = ownEntry(entry?.props, 'status');
+        if (constraint === undefined || !matchesConstraint(status, constraint)) return;
+        if (
+          !(
+            (status === 'idle' && name === 'ki-submit') ||
+            (status === 'streaming' && name === 'ki-stop')
+          )
+        )
+          return;
+        data['status'] = status;
+      }
+      dispatch(data);
     });
   }
 }
