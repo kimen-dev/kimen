@@ -16163,6 +16163,518 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-step.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiStep",
+          "customElement": true,
+          "tagName": "ki-step",
+          "description": "One authored step in a Stepper.",
+          "whenToUse": "Place directly inside ki-stepper in task order. Its default slot\nis the step label and its properties describe the step to the owning list.",
+          "whenNotToUse": "Standalone or with interactive content in the label.\nA completed step can make the label itself a link.",
+          "attributes": [
+            {
+              "name": "description",
+              "fieldName": "description",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional supporting text displayed below the label."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Destination for a completed step. Omit for a passive step.",
+              "format": "url"
+            },
+            {
+              "name": "state",
+              "fieldName": "state",
+              "type": {
+                "text": "\"current\" | \"done\" | \"error\" | \"upcoming\""
+              },
+              "default": "'upcoming'",
+              "description": "The step's progress state. Mark the active step as current."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "description",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional supporting text displayed below the label.",
+              "attribute": "description",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Destination for a completed step. Omit for a passive step.",
+              "attribute": "href",
+              "reflects": true,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "state",
+              "privacy": "public",
+              "type": {
+                "text": "\"current\" | \"done\" | \"error\" | \"upcoming\""
+              },
+              "default": "'upcoming'",
+              "description": "The step's progress state. Mark the active step as current.",
+              "attribute": "state",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The visible label. Use text or passive inline markup."
+            }
+          ],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiStep",
+          "declaration": {
+            "name": "KiStep",
+            "module": "dist/components/ki-step.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-step",
+          "declaration": {
+            "name": "KiStep",
+            "module": "dist/components/ki-step.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-stepper.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiStepper",
+          "customElement": true,
+          "tagName": "ki-stepper",
+          "description": "An ordered, responsive view of progress through named steps.",
+          "whenToUse": "Show the current place in onboarding, checkout or a wizard.\nProvide a label and direct ki-step children in task order.",
+          "whenNotToUse": "A percentage or indeterminate task, a carousel position,\nor navigation among peer views. The task owner updates step states.",
+          "attributes": [
+            {
+              "name": "count-label",
+              "fieldName": "countLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Steps ({total})'",
+              "description": "Compact disclosure text without a current step. Include {total}."
+            },
+            {
+              "name": "current-label",
+              "fieldName": "currentLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Current'",
+              "description": "Localized text for the current step."
+            },
+            {
+              "name": "done-label",
+              "fieldName": "doneLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Completed'",
+              "description": "Localized text for a completed step."
+            },
+            {
+              "name": "error-label",
+              "fieldName": "errorLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Error'",
+              "description": "Localized text for a step that has an error."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the list. Use a localized description of the task.",
+              "required": true
+            },
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'horizontal'",
+              "description": "Use vertical for a stacked list. Horizontal layout compacts below 22rem."
+            },
+            {
+              "name": "summary-label",
+              "fieldName": "summaryLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Step {current} of {total}'",
+              "description": "Compact disclosure text. Place {current} and {total} in the local order."
+            },
+            {
+              "name": "upcoming-label",
+              "fieldName": "upcomingLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Not started'",
+              "description": "Localized text for an upcoming step."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "countLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Steps ({total})'",
+              "description": "Compact disclosure text without a current step. Include {total}.",
+              "attribute": "count-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "currentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Current'",
+              "description": "Localized text for the current step.",
+              "attribute": "current-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "doneLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Completed'",
+              "description": "Localized text for a completed step.",
+              "attribute": "done-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "errorLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Error'",
+              "description": "Localized text for a step that has an error.",
+              "attribute": "error-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the list. Use a localized description of the task.",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "privacy": "public",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'horizontal'",
+              "description": "Use vertical for a stacked list. Horizontal layout compacts below 22rem.",
+              "attribute": "orientation",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "summaryLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Step {current} of {total}'",
+              "description": "Compact disclosure text. Place {current} and {total} in the local order.",
+              "attribute": "summary-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "upcomingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Not started'",
+              "description": "Localized text for an upcoming step.",
+              "attribute": "upcoming-label",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Direct ki-step children in task order. The stepper assigns each\nchild to its row automatically."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "connector",
+              "description": "The decorative line leading to the next step."
+            },
+            {
+              "name": "description",
+              "description": "Optional supporting text below the label."
+            },
+            {
+              "name": "list",
+              "description": "The ordered list."
+            },
+            {
+              "name": "marker",
+              "description": "The decorative step number or state glyph."
+            },
+            {
+              "name": "step",
+              "description": "A list item in the sequence."
+            },
+            {
+              "name": "summary",
+              "description": "The compact disclosure button."
+            },
+            {
+              "name": "title",
+              "description": "The label, rendered as a link when a completed step has a destination."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-corner-activity-mark",
+              "description": "Round corners for rings and typing dots."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-layout-spacing-7xl",
+              "description": "The 7xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-sm",
+              "description": "The sm spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xxs",
+              "description": "The xxs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-step-description-bg",
+              "description": "Backing of a step description."
+            },
+            {
+              "name": "--ki-step-description-fg",
+              "description": "Ink of a step description."
+            },
+            {
+              "name": "--ki-stepper-connector",
+              "description": "Decorative connector from a step that is still incomplete."
+            },
+            {
+              "name": "--ki-stepper-connector-done",
+              "description": "Decorative connector from a completed step."
+            },
+            {
+              "name": "--ki-stepper-current-bg",
+              "description": "Fill of the current step marker."
+            },
+            {
+              "name": "--ki-stepper-current-border",
+              "description": "Outline of the current step marker."
+            },
+            {
+              "name": "--ki-stepper-current-fg",
+              "description": "Number ink on the current step marker."
+            },
+            {
+              "name": "--ki-stepper-done-bg",
+              "description": "Fill of a completed step marker."
+            },
+            {
+              "name": "--ki-stepper-done-fg",
+              "description": "Glyph ink on the completed step marker."
+            },
+            {
+              "name": "--ki-stepper-dot-size",
+              "description": "Diameter of the step marker."
+            },
+            {
+              "name": "--ki-stepper-error-bg",
+              "description": "Fill of the step error marker."
+            },
+            {
+              "name": "--ki-stepper-error-border",
+              "description": "Outline of the step error marker."
+            },
+            {
+              "name": "--ki-stepper-error-fg",
+              "description": "Glyph ink of the step error marker."
+            },
+            {
+              "name": "--ki-stepper-glyph-size",
+              "description": "Size of the marker and disclosure glyphs."
+            },
+            {
+              "name": "--ki-stepper-label-bg",
+              "description": "Default backing of a step label."
+            },
+            {
+              "name": "--ki-stepper-label-fg",
+              "description": "Default ink of a step label."
+            },
+            {
+              "name": "--ki-stepper-stroke",
+              "description": "Width of the marker outline and connector."
+            },
+            {
+              "name": "--ki-stepper-summary-bg",
+              "description": "Backing of the compact disclosure."
+            },
+            {
+              "name": "--ki-stepper-summary-fg",
+              "description": "Ink of the compact disclosure."
+            },
+            {
+              "name": "--ki-stepper-upcoming-bg",
+              "description": "Fill of an upcoming step marker."
+            },
+            {
+              "name": "--ki-stepper-upcoming-border",
+              "description": "Outline of an upcoming step marker."
+            },
+            {
+              "name": "--ki-stepper-upcoming-fg",
+              "description": "Number and label ink of an upcoming step."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiStepper",
+          "declaration": {
+            "name": "KiStepper",
+            "module": "dist/components/ki-stepper.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-stepper",
+          "declaration": {
+            "name": "KiStepper",
+            "module": "dist/components/ki-stepper.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-switch.js",
       "declarations": [
         {
