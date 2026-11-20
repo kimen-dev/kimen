@@ -186,6 +186,14 @@
         "replacement": null,
         "required": false,
         "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
       }
     },
     "description": "An icon and visible label for one mobile navigation destination.",

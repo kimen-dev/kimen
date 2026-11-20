@@ -8366,6 +8366,10 @@
             {
               "name": "--ki-mobile-nav-item-target-min",
               "description": "Minimum block and inline link target size."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
             }
           ]
         }

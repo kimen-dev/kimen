@@ -54,10 +54,11 @@ it('S5 exposes the named landmark, current page and full localizable unread coun
   const root = mount();
   const nav = page.getByRole('navigation', { name: 'Main', exact: true });
   const home = page.getByRole('link', { name: 'Home', exact: true });
-  const inbox = page.getByRole('link', { name: 'Inbox, 3 new', exact: true });
+  const inbox = page.getByRole('link', { name: /^Inbox\s*,\s*3 new$/u });
   await expect.element(nav).toBeVisible();
   await expect.element(home).toHaveAttribute('aria-current', 'page');
   await expect.element(inbox).toBeVisible();
+  await expect.element(inbox).not.toHaveAttribute('aria-label');
   await expect.element(inbox).not.toHaveAttribute('aria-current');
   await expectAccessible(root);
 
@@ -68,21 +69,27 @@ it('S5 exposes the named landmark, current page and full localizable unread coun
   await expect.poll(indicator).toBe('3');
   item?.setAttribute('count', '125');
   item?.setAttribute('count-label', '{count} unread');
-  await expect
-    .element(page.getByRole('link', { name: 'Inbox, 125 unread', exact: true }))
-    .toBeVisible();
+  const localized = page.getByRole('link', { name: /^Inbox\s*,\s*125 unread$/u });
+  await expect.element(localized).toBeVisible();
+  await expect.element(localized).not.toHaveAttribute('aria-label');
 
   await expect.poll(indicator).toBe('99+');
 
   if (item) item.textContent = 'Messages';
   await expect
-    .element(page.getByRole('link', { name: 'Messages, 125 unread', exact: true }))
+    .element(page.getByRole('link', { name: /^Messages\s*,\s*125 unread$/u }))
     .toBeVisible();
+
+  item?.setAttribute('count', '0');
+  await expect.element(page.getByRole('link', { name: 'Messages', exact: true })).toBeVisible();
+  await expect.poll(indicator).toBeUndefined();
 });
 
 it('S6 distinguishes the current icon with a theme override and under display preferences', async () => {
   const root = mount();
-  root.style.setProperty('--ki-mobile-nav-indicator-bg', 'rgb(220, 235, 250)');
+  const themedFill = 'rgb(220, 235, 250)';
+  root.style.setProperty('--ki-mobile-nav-indicator-bg', themedFill);
+  const bar = page.getByRole('navigation', { name: 'Main' });
   const home = page.getByRole('link', { name: 'Home' });
   const search = page.getByRole('link', { name: 'Search' });
   await expect.element(home).toBeVisible();
@@ -91,13 +98,14 @@ it('S6 distinguishes the current icon with a theme override and under display pr
   const ordinary = search.element().querySelector('[part="indicator"]');
   if (!current || !ordinary) throw new Error('Missing icon indicators');
 
-  expect(getComputedStyle(current).backgroundColor).toBe('rgb(220, 235, 250)');
+  expect(getComputedStyle(current).backgroundColor).toBe(themedFill);
   expect(getComputedStyle(current).outlineStyle).toBe('solid');
   expect(getComputedStyle(ordinary).outlineStyle).toBe('none');
 
   await preferences.emulateReducedMotion('reduce');
-  expect(getComputedStyle(current).animationName).toBe('none');
-  expect(getComputedStyle(page.getByRole('navigation').element()).animationName).toBe('none');
+  await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+  expect(getComputedStyle(current).getPropertyValue('animation-name')).toBe('none');
+  expect(getComputedStyle(bar.element()).getPropertyValue('animation-name')).toBe('none');
 
   await preferences.emulateForcedColors('active');
   const forcedColors = matchMedia('(forced-colors: active)');
@@ -105,12 +113,17 @@ it('S6 distinguishes the current icon with a theme override and under display pr
     await expect.poll(() => forcedColors.matches).toBe(true);
   }
   if (forcedColors.matches) {
-    await expect.poll(() => getComputedStyle(current).forcedColorAdjust).toBe('none');
+    // WebKit can apply the media rule without exposing forced-color-adjust in CSSOM.
     await expect
-      .poll(
-        () =>
-          getComputedStyle(current).backgroundColor !== getComputedStyle(ordinary).backgroundColor,
-      )
-      .toBe(true);
+      .poll(() => {
+        const fill = getComputedStyle(current).backgroundColor;
+        return {
+          repainted: fill !== themedFill,
+          distinguished:
+            fill !== getComputedStyle(ordinary).backgroundColor &&
+            fill !== getComputedStyle(bar.element()).backgroundColor,
+        };
+      })
+      .toEqual({ repainted: true, distinguished: true });
   }
 });

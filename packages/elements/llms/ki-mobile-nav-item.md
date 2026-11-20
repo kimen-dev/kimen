@@ -73,3 +73,4 @@ None.
 - `--ki-mobile-nav-item-icon-size`: Destination glyph size.
 - `--ki-mobile-nav-item-line-height`: Destination label line height.
 - `--ki-mobile-nav-item-target-min`: Minimum block and inline link target size.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.

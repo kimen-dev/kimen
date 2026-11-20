@@ -1,4 +1,4 @@
-import { Component, Element, Prop, State, h } from '@stencil/core';
+import { Component, Prop, h } from '@stencil/core';
 import { formatCount } from '../ki-counter/ki-counter.count';
 
 /**
@@ -17,9 +17,6 @@ import { formatCount } from '../ki-counter/ki-counter.count';
   shadow: true,
 })
 export class KiMobileNavItem {
-  @Element() private readonly host!: HTMLElement;
-  @State() private labelText = '';
-
   /**
    * Destination URL. Relative paths and fragments use native anchor resolution.
    * @format url
@@ -48,49 +45,21 @@ export class KiMobileNavItem {
    */
   @Prop() countLabel = '{count} new';
 
-  private observer?: MutationObserver;
-
-  connectedCallback(): void {
-    this.readLabel();
-    if (typeof MutationObserver === 'undefined') return;
-
-    this.observer = new MutationObserver(() => {
-      this.readLabel();
-    });
-    this.observer.observe(this.host, { childList: true, characterData: true, subtree: true });
-  }
-
-  disconnectedCallback(): void {
-    this.observer?.disconnect();
-  }
-
-  private readLabel(): void {
-    const host: Node = this.host;
-    this.labelText = (host.textContent ?? '').replace(/\s+/gu, ' ').trim();
-  }
-
   render() {
     const value = this.count;
     const count = formatCount(value, Number.MAX_VALUE);
-    const name =
-      count && this.labelText
-        ? `${this.labelText}, ${this.countLabel.replace('{count}', count)}`
-        : undefined;
 
     return (
-      <a
-        part="link"
-        href={this.href}
-        tabindex={0}
-        aria-current={this.current ? 'page' : undefined}
-        aria-label={name}
-      >
+      <a part="link" href={this.href} tabindex={0} aria-current={this.current ? 'page' : undefined}>
         <span part="indicator" aria-hidden="true">
           <ki-icon name={this.iconName} />
           {value !== undefined && count !== undefined && <ki-counter value={value} />}
         </span>
         <span part="label">
           <slot />
+          {count !== undefined && (
+            <span class="count-announcement">{`, ${this.countLabel.replace('{count}', count)}`}</span>
+          )}
         </span>
       </a>
     );

@@ -30,6 +30,7 @@
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-mobile-nav-item-icon-size": "60f3e0713447263c1120654c0fa4135492663b06e4d63829234e98f047ac3036",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-mobile-nav-item-line-height": "a11a20bbf92353a16066d38babb2bb6666942aca9123cb50eaea92679d73bd41",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-mobile-nav-item-target-min": "2e994f8777d87cccd1add7bc70e09da250a02ce23e3dc5b000d824336201b06c",
+    "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-typography-visually-hidden-size": "ad8571e91a13c3a99852daa3355d57c2f575056919c68110b8c367340ea7950e",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/description": "0aa8d235a55612795184d70c2daa2bd7d8892aa12207118f46fa1eb04f042355",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/parts/indicator": "86396e3e73c4c29f2a8237bf0ef183216bef6c5f6a8dac6b8788caa938d5591b",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/parts/label": "f5215af53d52c5197f57c185e4515b430a32c47cbf60f8ded935118c2e6ea5e0",
