@@ -313,7 +313,9 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
  * bytes each, so an agent can always afford to read it before it has chosen
  * anything. A test holds both committed indexes to it.
  */
-export const LLMS_INDEX_MAX_BYTES = 16_384;
+// Raised from 16 KiB on 2026-11-20 when document 2 roughly doubled the component
+// count (approved to publish): about six thousand tokens still fit an agent's first read.
+export const LLMS_INDEX_MAX_BYTES = 24_576;
 
 // The names every index links. They are part of the published contract: the
 // package ships them at these paths and the site serves them at these URLs.
