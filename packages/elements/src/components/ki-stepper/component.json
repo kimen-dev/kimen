@@ -13,15 +13,15 @@
     "mcpApps": {
       "raw": 12730,
       "gzip": 3242,
-      "brotli": 2529
+      "brotli": 2206
     },
     "mcpServer": {
       "raw": 22506,
-      "gzip": 4560,
-      "brotli": 3097
+      "gzip": 4570,
+      "brotli": 2901
     },
     "tokenStylesheets": {
-      "onmars": 109
+      "onmars": 113
     }
   }
 }

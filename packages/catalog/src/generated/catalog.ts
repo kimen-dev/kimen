@@ -2492,6 +2492,94 @@ export const catalogData = {
       "whenNotToUse": "short labeled status text (that pill is ki-badge — this dot\nnever renders text), notification counters or the overlay attachment\nmechanism (a future, separate nav-badge concern), messages that need\nattention or announcement (ki-alert — the dot has no live region),\nprogress or loading (ki-progress). An unlabeled dot without adjacent\nvisible text is an authoring mistake (WCAG 1.4.1).",
       "whenToUse": "mark a state with minimal footprint adjacent to (or overlaid\non) the item it describes: presence on an avatar, health of a service\nlist entry, connection state in a toolbar. Label it (`label`) or pair it\nwith adjacent visible text — color is never the only carrier of the\nmeaning (WCAG 1.4.1)."
     },
+    "ki-step": {
+      "description": "One authored step in a Stepper.",
+      "events": {},
+      "props": {
+        "description": {
+          "type": "string",
+          "description": "Optional supporting text displayed below the label."
+        },
+        "href": {
+          "type": "string",
+          "description": "Destination for a completed step. Omit for a passive step.",
+          "format": "url"
+        },
+        "state": {
+          "type": "enum",
+          "values": [
+            "current",
+            "done",
+            "error",
+            "upcoming"
+          ],
+          "description": "The step's progress state. Mark the active step as current.",
+          "default": "upcoming"
+        }
+      },
+      "slots": {
+        "": "The visible label. Use text or passive inline markup."
+      },
+      "tag": "ki-step",
+      "whenNotToUse": "Standalone or with interactive content in the label.\nA completed step can make the label itself a link.",
+      "whenToUse": "Place directly inside ki-stepper in task order. Its default slot\nis the step label and its properties describe the step to the owning list."
+    },
+    "ki-stepper": {
+      "description": "An ordered, responsive view of progress through named steps.",
+      "events": {},
+      "props": {
+        "count-label": {
+          "type": "string",
+          "description": "Compact disclosure text without a current step. Include {total}.",
+          "default": "Steps ({total})"
+        },
+        "current-label": {
+          "type": "string",
+          "description": "Localized text for the current step.",
+          "default": "Current"
+        },
+        "done-label": {
+          "type": "string",
+          "description": "Localized text for a completed step.",
+          "default": "Completed"
+        },
+        "error-label": {
+          "type": "string",
+          "description": "Localized text for a step that has an error.",
+          "default": "Error"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the list. Use a localized description of the task.",
+          "required": true
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Use vertical for a stacked list. Horizontal layout compacts below 22rem.",
+          "default": "horizontal"
+        },
+        "summary-label": {
+          "type": "string",
+          "description": "Compact disclosure text. Place {current} and {total} in the local order.",
+          "default": "Step {current} of {total}"
+        },
+        "upcoming-label": {
+          "type": "string",
+          "description": "Localized text for an upcoming step.",
+          "default": "Not started"
+        }
+      },
+      "slots": {
+        "": "Direct ki-step children in task order. The stepper assigns each\nchild to its row automatically."
+      },
+      "tag": "ki-stepper",
+      "whenNotToUse": "A percentage or indeterminate task, a carousel position,\nor navigation among peer views. The task owner updates step states.",
+      "whenToUse": "Show the current place in onboarding, checkout or a wizard.\nProvide a label and direct ki-step children in task order."
+    },
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
