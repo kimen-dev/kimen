@@ -259,10 +259,7 @@ it('S10: reveals a scroll-hidden toolbar immediately on keyboard focus', async (
 });
 
 it('S11: exposes the name and preserves the toggle’s pressed state and Space activation', async () => {
-  const { surface } = await mount(
-    '',
-    '<button type="button" aria-label="Bold" aria-pressed="false">B</button>',
-  );
+  const { surface } = await mount('', '<button type="button" aria-pressed="false">Bold</button>');
   const bold = rendered('Bold');
   bold.addEventListener(
     'click',
