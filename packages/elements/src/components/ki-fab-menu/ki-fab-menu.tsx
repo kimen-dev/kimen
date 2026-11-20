@@ -292,9 +292,9 @@ export class KiFabMenu {
           tabIndex={0}
           disabled={!this.hasActions}
           aria-label={open ? this.closeLabel : this.label}
-          aria-haspopup="menu"
+          aria-haspopup={open ? undefined : 'menu'}
           aria-expanded={open ? 'true' : 'false'}
-          aria-controls={menuId}
+          aria-controls={open ? menuId : undefined}
           data-variant={open ? 'primary' : this.variant}
           onClick={this.onTriggerClick}
           onKeyDown={this.onTriggerKeyDown}

@@ -65,13 +65,22 @@ function control(index: number): HTMLElement {
   return part(item, 'control');
 }
 
+async function expectClosedMenu(host: HTMLElement, itemIndex: number): Promise<void> {
+  await expect.element(part(host, 'menu')).toHaveAttribute('hidden');
+  // The slotted controls stay connected. Check layout and the real AX tree.
+  await expect.poll(() => control(itemIndex).getClientRects().length).toBe(0);
+  const snapshot = await browser.ariaSnapshot('ki-fab-menu');
+  expect(snapshot).not.toMatch(/^\s*-\s+menu(?:item)?\b/m);
+}
+
 it('S1: stacks actions above the FAB and uses a close control while open', async () => {
   const host = mount();
   const opened = vi.fn();
   const closed = vi.fn();
   host.addEventListener('ki-open', opened);
   host.addEventListener('ki-close', closed);
-  await expect.element(menu).not.toBeInTheDocument();
+  await expect.element(create).toHaveAttribute('aria-expanded', 'false');
+  await expectClosedMenu(host, 0);
 
   await create.click();
 
@@ -88,8 +97,8 @@ it('S1: stacks actions above the FAB and uses a close control while open', async
   expect(opened).toHaveBeenCalledTimes(1);
 
   await close.click();
-  await expect.element(create).toBeVisible();
-  await expect.element(message).not.toBeInTheDocument();
+  await expect.element(create).toHaveAttribute('aria-expanded', 'false');
+  await expectClosedMenu(host, 0);
   expect(closed).toHaveBeenCalledTimes(1);
 });
 
@@ -163,7 +172,7 @@ it('S4: limits the stack and keyboard range to six visible direct items', async 
 it('S5: enables the trigger when a second action becomes available', async () => {
   const host = mount('', '<ki-fab-menu-item>New message</ki-fab-menu-item>');
   await expect.element(create).toBeDisabled();
-  await expect.element(menu).not.toBeInTheDocument();
+  await expectClosedMenu(host, 0);
 
   host.insertAdjacentHTML('beforeend', '<ki-fab-menu-item>New event</ki-fab-menu-item>');
   await expect.element(create).toBeEnabled();
@@ -172,7 +181,7 @@ it('S5: enables the trigger when a second action becomes available', async () =>
 
   host.querySelector('ki-fab-menu-item')?.setAttribute('hidden', '');
   await expect.element(create).toBeDisabled();
-  await expect.element(eventItem).not.toBeInTheDocument();
+  await expectClosedMenu(host, 1);
 });
 
 it.each([
@@ -259,10 +268,12 @@ it('S11: exposes the trigger relationship and menu ownership in the accessibilit
   const host = mount();
   await expect.element(create).toHaveAttribute('aria-haspopup', 'menu');
   await expect.element(create).toHaveAttribute('aria-expanded', 'false');
+  await expect.element(create).not.toHaveAttribute('aria-controls');
   await create.click();
 
   await expect.element(close).toHaveAttribute('aria-expanded', 'true');
   await expect.element(close).toHaveAttribute('aria-controls', part(host, 'menu').id);
+  await expect.element(close).not.toHaveAttribute('aria-haspopup');
   await expect.element(message).toBeVisible();
   await expect.element(eventItem).toBeVisible();
   expect(control(0).tagName).toBe('BUTTON');
@@ -317,15 +328,16 @@ it('S14: forced colors preserve the control edges and keyboard focus', async (te
     }
     const host = mount();
     await expect.element(create).toBeVisible();
-    part(host, 'trigger').focus();
-    await userEvent.keyboard('{Enter}');
+    fixture.querySelector('button')?.focus();
+    await userEvent.keyboard('{Tab}');
+    const trigger = part(host, 'trigger');
+    await expect.poll(() => trigger.matches(':focus-visible')).toBe(true);
+    await userEvent.keyboard('{ArrowDown}');
     await expect.element(message).toBeVisible();
 
-    expect(
-      parseFloat(getComputedStyle(part(host, 'trigger')).borderInlineStartWidth),
-    ).toBeGreaterThan(0);
+    expect(parseFloat(getComputedStyle(trigger).borderInlineStartWidth)).toBeGreaterThan(0);
     expect(parseFloat(getComputedStyle(control(0)).borderInlineStartWidth)).toBeGreaterThan(0);
-    expect(control(0).matches(':focus-visible')).toBe(true);
+    await expect.poll(() => control(0).matches(':focus-visible')).toBe(true);
     expect(parseFloat(getComputedStyle(control(0)).outlineWidth)).toBeGreaterThan(0);
   } finally {
     await browser.emulateForcedColors(null);
