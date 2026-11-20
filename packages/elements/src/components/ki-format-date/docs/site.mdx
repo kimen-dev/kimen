@@ -1,0 +1,26 @@
+---
+title: ki-format-date
+description: Display a localized date or timestamp from an ISO value.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Pass `YYYY-MM-DD` for a calendar day, or use an ISO date-time for a timestamp.
+The formatter uses the closest `lang` declaration, including its own. Set
+`time-zone` to display a timestamp in an IANA time zone. Calendar dates always
+keep their source day.
+
+<Demo layout="block" code={`<ki-format-date date="2026-11-19" date-style="long" lang="es-ES"></ki-format-date>`} />
+
+`date-style` and `time-style` accept `full`, `long`, `medium` and `short`.
+With both omitted, the formatter shows a medium date. The result is a native
+`time` element with its original ISO value in `datetime`.
+
+## API reference
+
+<CemApi tag="ki-format-date" />
+
+## Workshop
+
+[Open ki-format-date in Storybook](/storybook/?path=/docs/docs-components-ki-format-date--docs)

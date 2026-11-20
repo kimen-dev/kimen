@@ -1625,10 +1625,6 @@
   --ki-chip-font-weight:var(--ki-typography-weight-body-medium);
   --ki-chip-line-height:var(--ki-typography-line-height-body-1);
   --ki-chip-line-height-sm:var(--ki-typography-line-height-caption-2);
-  --ki-copy-button-success-bg:var(--ki-surface-success-low-em);
-  --ki-copy-button-success-fg:var(--ki-text-success-high-em);
-  --ki-copy-button-error-bg:var(--ki-surface-danger-low-em);
-  --ki-copy-button-error-fg:var(--ki-text-danger-high-em);
   --ki-counter-size:var(--ki-notification-marker-count-size);
   --ki-counter-dot-size:var(--ki-notification-marker-dot-size);
   --ki-counter-bg:var(--ki-surface-danger-high-em);
@@ -1723,6 +1719,9 @@
   --ki-empty-state-tile-warning-fg:var(--ki-text-warning-high-em);
   --ki-empty-state-tile-danger-bg:var(--ki-surface-danger-tint);
   --ki-empty-state-tile-danger-fg:var(--ki-text-danger-high-em);
+  --ki-format-date-font-family:var(--ki-typography-family-body);
+  --ki-format-number-font-family:var(--ki-typography-family-body);
+  --ki-relative-time-font-family:var(--ki-typography-family-body);
   --ki-icon-button-xs-size:var(--ki-space-7xl);
   --ki-icon-button-xs-icon-size:var(--ki-space-3xl);
   --ki-icon-button-xs-spinner-size:var(--ki-space-3xl);
