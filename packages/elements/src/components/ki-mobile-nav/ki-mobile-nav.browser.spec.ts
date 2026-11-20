@@ -23,7 +23,9 @@ afterEach(async () => {
   await parkPointer();
 });
 
-afterAll(() => { tokens.remove(); });
+afterAll(() => {
+  tokens.remove();
+});
 
 function mount(content = '', attributes = '', extraItems = ''): HTMLElement {
   fixture = document.createElement('main');
@@ -53,7 +55,7 @@ it('S1 shows all five labels and full-size links in a bar at the viewport edge',
 
   const bar = page.getByRole('navigation', { name: 'Main' });
   await expect.element(bar).toBeVisible();
-  const links = bar.getByRole('link');
+  const links = page.getByRole('link');
   await expect.poll(() => links.elements().length).toBe(5);
 
   const rect = bar.element().getBoundingClientRect();
@@ -62,8 +64,17 @@ it('S1 shows all five labels and full-size links in a bar at the viewport edge',
   expect(Math.abs(rect.bottom - window.innerHeight)).toBeLessThan(0.5);
 
   for (const name of ['Home', 'Search', 'Inbox', 'Settings', 'Profile']) {
-    const link = bar.getByRole('link', { name, exact: true });
-    await expect.element(link.getByText(name, { exact: true })).toBeVisible();
+    const link = page.getByRole('link', { name, exact: true });
+    await expect.element(link).toBeVisible();
+    const label = link.element().querySelector('slot');
+    expect(
+      label
+        ?.assignedNodes()
+        .map((node) => node.textContent)
+        .join('')
+        .trim(),
+    ).toBe(name);
+    expect(label?.parentElement?.getBoundingClientRect().height).toBeGreaterThan(0);
     const target = link.element().getBoundingClientRect();
     expect(target.width).toBeGreaterThanOrEqual(48);
     expect(target.height).toBeGreaterThanOrEqual(48);
@@ -73,15 +84,22 @@ it('S1 shows all five labels and full-size links in a bar at the viewport edge',
 it('S2 insets the floating bar and lets the final content scroll above it', async () => {
   await page.viewport(320, 640);
   const root = mount(
-    '<div style="block-size:140vh"></div><p id="mobile-last">Last content</p>',
+    '<div style="block-size:140vh"></div><div id="mobile-last">Last content</div>',
     'variant="floating"',
   );
+  root.style.setProperty('--ki-mobile-nav-item-font-size', '1.25rem');
+  const first = root.querySelector('ki-mobile-nav-item');
+  if (first) first.textContent = 'Subscriber preferences and alerts';
   const bar = page.getByRole('navigation');
   await expect.element(bar).toBeVisible();
+  await expect
+    .element(page.getByRole('link', { name: 'Subscriber preferences and alerts' }))
+    .toBeVisible();
   const rect = bar.element().getBoundingClientRect();
   expect(rect.left).toBeGreaterThan(0);
   expect(rect.right).toBeLessThan(document.documentElement.clientWidth);
   expect(rect.bottom).toBeLessThan(window.innerHeight);
+  expect(rect.height).toBeGreaterThan(66);
 
   const last = root.querySelector('#mobile-last');
   expect(last).toBeInstanceOf(HTMLElement);
@@ -112,9 +130,15 @@ it('S3 hides the bar during keyboard occlusion and restores it when the viewport
   };
 
   try {
+    resize(height - 300);
+    await expect.element(bar).toBeVisible();
+    resize(height);
     input.focus();
     await expect.element(bar).toBeVisible();
     resize(height - 300);
+    await expect.element(bar).not.toBeInTheDocument();
+    input.blur();
+    await Promise.resolve();
     await expect.element(bar).not.toBeInTheDocument();
     resize(height);
     await expect.element(bar).toBeVisible();
@@ -146,6 +170,8 @@ it('S4 tabs through native links, reverses direction, and follows the Inbox link
     await page.getByRole('button', { name: 'Before' }).click();
     await userEvent.keyboard('{Tab}');
     await expectFocus(home.element());
+    expect(home.element().matches(':focus-visible')).toBe(true);
+    expect(Number.parseFloat(getComputedStyle(home.element()).outlineWidth)).toBeGreaterThan(0);
     await userEvent.keyboard('{Tab}');
     await expectFocus(search.element());
     await userEvent.keyboard('{Shift>}{Tab}{/Shift}');

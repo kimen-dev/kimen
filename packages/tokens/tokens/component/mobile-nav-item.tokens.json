@@ -1,10 +1,41 @@
 {
   "ki": {
     "mobile-nav-item": {
-      "text-color": {
-        "$type": "color",
-        "$value": "{ki.text.high-em}",
-        "$description": "Text color used by the ki-mobile-nav-item component."
+      "fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Foreground ink of an inactive destination on the fixed or floating bar."
+      },
+      "current-fg": {
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Label ink of the current destination on the fixed or floating bar."
+      },
+      "target-min": {
+        "$value": "{ki.navigation-bar.destination-target}",
+        "$description": "Minimum block and inline link target size."
+      },
+      "gap": {
+        "$value": "{ki.navigation-bar.destination-gap}",
+        "$description": "Gap between the glyph and its label."
+      },
+      "focus-radius": {
+        "$value": "{ki.corner.control}",
+        "$description": "Corner radius of the keyboard focus indication."
+      },
+      "icon-size": {
+        "$value": "{ki.glyph.size.md}",
+        "$description": "Destination glyph size."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.caption-1}",
+        "$description": "Destination label font size."
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "Destination label font weight."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.caption-1}",
+        "$description": "Destination label line height."
       }
     }
   }

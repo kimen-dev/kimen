@@ -1,14 +1,48 @@
 ---
 title: ki-mobile-nav
-description: Describe the purpose of ki-mobile-nav from the approved contract.
+description: Fixed or floating bottom navigation for three to five phone destinations.
 ---
 
 import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
 import Demo from '../../../../../../site/docs/src/components/Demo.astro';
 
-{/* TODO(spec): document when to use this component and the accessible usage patterns. */}
+Use MobileNav for the main destinations of a phone layout. Use buttons for actions.
+Switch to the app's TopNav or Sidebar at the same breakpoint you use for the
+wider layout. For more than five destinations, use a navigation pattern with
+room for the full set.
 
-<Demo code={`<ki-mobile-nav label="Example"></ki-mobile-nav>`} />
+## App shell
+
+Place one bar after the content in the app shell. Its host reserves the bar's
+height and bottom inset so the last content can scroll clear. The default
+`fixed` variant spans the bottom edge. Set `variant="floating"` for an inset
+raised bar. Both variants account for the bottom safe area. Use
+`viewport-fit=cover` in the page's viewport metadata when drawing edge to edge.
+
+Register the icons used by each destination.
+
+```js
+import '@kimen/elements/icons/house';
+import '@kimen/elements/icons/search';
+import '@kimen/elements/icons/inbox';
+```
+
+<Demo live={false} code={`<main>
+  <!-- App content -->
+</main>
+<ki-mobile-nav label="Main" variant="floating">
+  <ki-mobile-nav-item href="/" icon-name="house" current>Home</ki-mobile-nav-item>
+  <ki-mobile-nav-item href="/search" icon-name="search">Search</ki-mobile-nav-item>
+  <ki-mobile-nav-item href="/inbox" icon-name="inbox" count="3">Inbox</ki-mobile-nav-item>
+</ki-mobile-nav>`} />
+
+## Accessibility
+
+Use a unique landmark label when several navigation landmarks appear on the
+page. Keep each destination's text short and visible, and update `current` as
+the route changes. Each item is a native link in the Tab order. When the browser
+reports or exposes the software keyboard through viewport geometry, the bar
+temporarily hides.
 
 ## API reference
 
@@ -16,4 +50,4 @@ import Demo from '../../../../../../site/docs/src/components/Demo.astro';
 
 ## Workshop
 
-[Open ki-mobile-nav in Storybook](/storybook/?path=/docs/docs-components-ki-mobile-nav--docs)
+[Open MobileNav in Storybook](/storybook/?path=/docs/docs-components-ki-mobile-nav--docs)

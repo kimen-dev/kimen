@@ -32,7 +32,9 @@ afterEach(async () => {
   await parkPointer();
 });
 
-afterAll(() => { tokens.remove(); });
+afterAll(() => {
+  tokens.remove();
+});
 
 function mount(): HTMLElement {
   fixture = document.createElement('main');
@@ -51,23 +53,30 @@ function mount(): HTMLElement {
 it('S5 exposes the named landmark, current page and full localizable unread count', async () => {
   const root = mount();
   const nav = page.getByRole('navigation', { name: 'Main', exact: true });
-  const home = nav.getByRole('link', { name: 'Home', exact: true });
-  const inbox = nav.getByRole('link', { name: 'Inbox, 3 new', exact: true });
+  const home = page.getByRole('link', { name: 'Home', exact: true });
+  const inbox = page.getByRole('link', { name: 'Inbox, 3 new', exact: true });
+  await expect.element(nav).toBeVisible();
   await expect.element(home).toHaveAttribute('aria-current', 'page');
   await expect.element(inbox).toBeVisible();
   await expect.element(inbox).not.toHaveAttribute('aria-current');
   await expectAccessible(root);
 
   const item = root.querySelector('ki-mobile-nav-item[count]');
+  const indicator = () =>
+    item?.shadowRoot?.querySelector('ki-counter')?.shadowRoot?.querySelector('[part="indicator"]')
+      ?.textContent;
+  await expect.poll(indicator).toBe('3');
   item?.setAttribute('count', '125');
   item?.setAttribute('count-label', '{count} unread');
   await expect
-    .element(nav.getByRole('link', { name: 'Inbox, 125 unread', exact: true }))
+    .element(page.getByRole('link', { name: 'Inbox, 125 unread', exact: true }))
     .toBeVisible();
+
+  await expect.poll(indicator).toBe('99+');
 
   if (item) item.textContent = 'Messages';
   await expect
-    .element(nav.getByRole('link', { name: 'Messages, 125 unread', exact: true }))
+    .element(page.getByRole('link', { name: 'Messages, 125 unread', exact: true }))
     .toBeVisible();
 });
 
@@ -77,6 +86,7 @@ it('S6 distinguishes the current icon with a theme override and under display pr
   const home = page.getByRole('link', { name: 'Home' });
   const search = page.getByRole('link', { name: 'Search' });
   await expect.element(home).toBeVisible();
+  await expect.element(search).toBeVisible();
   const current = home.element().querySelector('[part="indicator"]');
   const ordinary = search.element().querySelector('[part="indicator"]');
   if (!current || !ordinary) throw new Error('Missing icon indicators');
@@ -88,7 +98,12 @@ it('S6 distinguishes the current icon with a theme override and under display pr
   expect(getComputedStyle(page.getByRole('navigation').element()).animationName).toBe('none');
 
   await preferences.emulateForcedColors('active');
-  if (matchMedia('(forced-colors: active)').matches) {
+  const forcedColors = matchMedia('(forced-colors: active)');
+  if (navigator.userAgent.includes('Chrome/')) {
+    await expect.poll(() => forcedColors.matches).toBe(true);
+  }
+  if (forcedColors.matches) {
+    await expect.poll(() => getComputedStyle(current).forcedColorAdjust).toBe('none');
     await expect
       .poll(
         () =>

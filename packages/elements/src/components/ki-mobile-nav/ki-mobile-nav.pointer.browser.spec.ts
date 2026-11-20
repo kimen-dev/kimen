@@ -26,7 +26,9 @@ afterEach(async () => {
   await parkPointer();
 });
 
-afterAll(() => { tokens.remove(); });
+afterAll(() => {
+  tokens.remove();
+});
 
 it('S7 follows RTL reading order and preserves full targets on a coarse pointer', async (context) => {
   const emulated = await pointer.emulateHoverCapability('none');
@@ -49,14 +51,15 @@ it('S7 follows RTL reading order and preserves full targets on a coarse pointer'
   `;
   document.body.append(fixture);
 
-  const nav = page.getByRole('navigation', { name: 'Main' });
-  const links = nav.getByRole('link');
+  await expect.element(page.getByRole('navigation', { name: 'Main' })).toBeVisible();
+  const links = page.getByRole('link');
   await expect.poll(() => links.elements().length).toBe(5);
 
   const rects = links.elements().map((link) => link.getBoundingClientRect());
   expect(rects.map((rect) => rect.left)).toEqual(
     rects.map((rect) => rect.left).sort((a, b) => b - a),
   );
+  expect(rects[0]?.left).toBeGreaterThan(rects.at(-1)?.left ?? Infinity);
   expect(Math.min(...rects.map((rect) => rect.width))).toBeGreaterThanOrEqual(48);
   expect(Math.min(...rects.map((rect) => rect.height))).toBeGreaterThanOrEqual(48);
 });

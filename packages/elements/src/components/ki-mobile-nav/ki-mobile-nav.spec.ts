@@ -22,6 +22,11 @@ describe('keyboard occlusion', () => {
     },
     { name: 'pinch zoom', change: { visualHeight: 500, scale: 1.6 }, obscured: false },
     {
+      name: 'keyboard occlusion while zoomed',
+      change: { visualHeight: 300, scale: 1.6 },
+      obscured: true,
+    },
+    {
       name: 'viewport resize without editing',
       change: { editing: false, visualHeight: 500 },
       obscured: false,

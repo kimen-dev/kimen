@@ -1,11 +1,13 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ItemStories from '../ki-mobile-nav-item.stories';
 
 <Meta title="Docs/Components/ki-mobile-nav-item" />
 
 # ki-mobile-nav-item
 
-{/* TODO(spec): document intended use, examples, customization and accessibility. */}
+Provide a registered icon, a URL and visible text. Set `current` on the item
+that matches the route. Use `count-label` with a `{count}` placeholder to
+localize the unread suffix.
 
-```html
-<ki-mobile-nav-item label="Example"></ki-mobile-nav-item>
-```
+<Canvas of={ItemStories.Destination} />
+<Canvas of={ItemStories.AbbreviatedCount} />

@@ -1,9 +1,13 @@
 {
   "ki": {
     "mobile-nav-item": {
-      "text-color": {
-        "$value": "{ki.text.high-em}",
-        "$description": "Material 3 text color used by the ki-mobile-nav-item component."
+      "fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Foreground ink of an inactive destination on the fixed or floating bar."
+      },
+      "current-fg": {
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Label ink of the current destination on the fixed or floating bar."
       }
     }
   }
