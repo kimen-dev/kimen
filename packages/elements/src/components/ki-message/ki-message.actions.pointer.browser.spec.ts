@@ -11,6 +11,7 @@ import { defineCustomElement as defineMessage } from '../../../dist/components/k
 const browserCommands = commands as unknown as {
   emulateHoverCapability: (capability: 'hover' | 'none' | null) => Promise<boolean>;
 };
+const HOVER_SETTLE_DEADLINE_MS = 2000;
 const fixture = document.createElement('main');
 const style = document.createElement('style');
 
@@ -36,12 +37,19 @@ afterAll(() => {
 });
 
 async function restOpacity(): Promise<'0' | '1'> {
-  // CDP can disable touch emulation, but a headless engine can still report
-  // no hovering device. Check the actual media query in either case.
   const emulated = await browserCommands.emulateHoverCapability('hover');
   expect(emulated).toBe(navigator.userAgent.includes('Chrome/'));
+  const hover = matchMedia('(hover: hover)');
+  if (emulated) {
+    // CDP acknowledges emulation before the page updates its media queries.
+    // Headless Chromium can also report no hovering device after the wait.
+    const deadline = performance.now() + HOVER_SETTLE_DEADLINE_MS;
+    while (!hover.matches && performance.now() < deadline) {
+      await new Promise<number>((resolve) => requestAnimationFrame(resolve));
+    }
+  }
   await showTranscript(fixture);
-  return matchMedia('(hover: hover)').matches ? '0' : '1';
+  return hover.matches ? '0' : '1';
 }
 
 it('S1 shows the latest assistant toolbar even after a user turn', async () => {
