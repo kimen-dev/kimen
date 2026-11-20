@@ -1,11 +1,23 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SuggestionsStories from '../ki-suggestions.stories';
 
 <Meta title="Docs/Components/ki-suggestions" />
 
-# ki-suggestions
+# Suggestions
 
-{/* TODO(spec): document intended use, examples, customization and accessibility. */}
+## Conversation starters
 
-```html
-<ki-suggestions label="Example"></ki-suggestions>
-```
+Choose a card to replace the draft and move focus to the composer. Edit the
+draft before sending it from the conversation interface.
+
+<Canvas of={SuggestionsStories.FillComposer} story={{ autoplay: true }} />
+
+## Follow-ups
+
+Use chips to offer a short set of next steps after an answer.
+
+<Canvas of={SuggestionsStories.FollowUps} />
+
+## Right-to-left reading order
+
+<Canvas of={SuggestionsStories.RightToLeft} />

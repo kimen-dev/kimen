@@ -1,9 +1,59 @@
 {
   "ki": {
-    "suggestions": {
-      "text-color": {
+    "suggestion": {
+      "border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Resting chip boundary."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Chip surface on a hovering device."
+      },
+      "hover-fg": {
         "$value": "{ki.text.high-em}",
-        "$description": "Material 3 text color used by the ki-suggestions component."
+        "$description": "Title over the chip hover surface."
+      },
+      "card-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Resting card surface."
+      },
+      "card-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Resting card title."
+      },
+      "card-border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Resting card boundary."
+      },
+      "card-hover-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Card surface on a hovering device."
+      },
+      "card-hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Title over the card hover surface."
+      },
+      "card-description-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Resting card surface beneath the description."
+      },
+      "card-description-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Resting card description."
+      },
+      "card-hover-description-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Hover card surface beneath the description."
+      },
+      "card-hover-description-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Description over the card hover surface."
+      }
+    },
+    "suggestions": {
+      "gap": {
+        "$value": "{ki.control.compact-pill.collection-gap}",
+        "$description": "Spacing between suggestions."
       }
     }
   }

@@ -1,19 +1,26 @@
 ---
-title: ki-suggestion
-description: Describe the purpose of ki-suggestion from the approved contract.
+title: Suggestion
+description: Supply a prompt title and optional description in a suggestions group.
 ---
 
 import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
 import Demo from '../../../../../../site/docs/src/components/Demo.astro';
 
-{/* TODO(spec): document when to use this component and the accessible usage patterns. */}
+Place each `ki-suggestion` directly inside a suggestions group. Put the prompt
+as plain text in the default slot. The visible title supplies the button's
+accessible name and the prompt text emitted by the group.
 
-<Demo code={`<ki-suggestion label="Example"></ki-suggestion>`} />
+<Demo layout="block" code={`<ki-suggestions label="Start a conversation" variant="cards">
+  <ki-suggestion description="For the merged pull requests">Draft release notes</ki-suggestion>
+  <ki-suggestion>Plan the next release</ki-suggestion>
+</ki-suggestions>`} />
+
+Use `description` for optional context, such as the source material or the
+scope of the prompt. Cards render it under the title. When supplied, it gives
+assistive technology separate context in either variant.
 
 ## API reference
 
 <CemApi tag="ki-suggestion" />
 
-## Workshop
-
-[Open ki-suggestion in Storybook](/storybook/?path=/docs/docs-components-ki-suggestion--docs)
+[Configure the group and composer](/docs/components/suggestions/)

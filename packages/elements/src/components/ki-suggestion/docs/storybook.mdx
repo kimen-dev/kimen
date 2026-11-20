@@ -1,11 +1,13 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SuggestionStories from '../ki-suggestion.stories';
 
 <Meta title="Docs/Components/ki-suggestion" />
 
-# ki-suggestion
+# Suggestion
 
-{/* TODO(spec): document intended use, examples, customization and accessibility. */}
+A prompt title supplies the button's accessible name. A card can show a
+separate description beneath the title.
 
-```html
-<ki-suggestion label="Example"></ki-suggestion>
-```
+<Canvas of={SuggestionStories.DescribedCard} />
+
+<Canvas of={SuggestionStories.TitleOnly} />

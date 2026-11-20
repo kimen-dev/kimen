@@ -1,16 +1,93 @@
-/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
- * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
-  display: block;
+  display: inline-flex;
+  align-items: var(--_ki-suggestion-align, center);
+  min-inline-size: min(100%, var(--ki-density-target-min));
+  max-inline-size: 100%;
+  min-block-size: var(--ki-density-target-min);
+  font-family: var(--ki-suggestion-font-family);
 }
 
-/* The HTML hidden attribute outranks the host's own display. */
-:host([hidden]) {
+:host([hidden]),
+:host([data-ki-suggestion-empty]) {
   display: none;
 }
 
-.label {
-  color: var(--ki-suggestion-text-color);
-  font-family: var(--ki-typography-family-base);
-  font-size: var(--ki-typography-size-body-1);
+button {
+  display: grid;
+  position: relative;
+  box-sizing: border-box;
+  flex: 1;
+  align-content: center;
+  gap: var(--ki-suggestion-card-gap);
+  min-inline-size: 0;
+  min-block-size: var(--ki-suggestion-height);
+  padding-block: var(--_ki-suggestion-block-inset, 0);
+  padding-inline: var(--ki-suggestion-inset);
+  margin: 0;
+  border: var(--ki-suggestion-border-width) solid var(--_ki-suggestion-border, var(--ki-suggestion-border));
+  border-radius: var(--_ki-suggestion-radius, var(--ki-suggestion-radius));
+  appearance: none;
+  background-color: var(--_ki-suggestion-bg, var(--ki-suggestion-bg));
+  background-image: var(--_ki-suggestion-bg-image, var(--ki-suggestion-bg-image));
+  backdrop-filter: var(--_ki-suggestion-backdrop-filter, var(--ki-suggestion-backdrop-filter));
+  color: var(--_ki-suggestion-fg, var(--ki-suggestion-fg));
+  font-family: inherit;
+  font-size: var(--ki-suggestion-font-size);
+  font-weight: var(--_ki-suggestion-weight, var(--ki-suggestion-weight));
+  line-height: var(--ki-suggestion-line-height);
+  overflow-wrap: anywhere;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Keep the compact pill's paint while extending its touch hit area. */
+button::after {
+  position: absolute;
+  inset-block: min(0px, calc((100% - var(--ki-density-target-min)) / 2));
+  inset-inline: min(0px, calc((100% - var(--ki-density-target-min)) / 2));
+  border-radius: inherit;
+  content: "";
+}
+
+[part="description"] {
+  display: var(--_ki-suggestion-description-display, none);
+  color: var(--ki-suggestion-card-description-fg);
+  font-size: var(--ki-suggestion-description-size);
+  font-weight: var(--ki-suggestion-weight);
+  line-height: var(--ki-suggestion-description-line-height);
+}
+
+@media (hover: hover) {
+  button:hover {
+    background-color: var(--_ki-suggestion-hover-bg, var(--ki-suggestion-hover-bg));
+    color: var(--_ki-suggestion-hover-fg, var(--ki-suggestion-hover-fg));
+  }
+
+  button:hover [part="description"] {
+    color: var(--ki-suggestion-card-hover-description-fg);
+  }
+}
+
+button:is(:active, [data-ki-pressed]) {
+  background-color: var(--_ki-suggestion-pressed-bg, var(--ki-suggestion-pressed-bg));
+  color: var(--_ki-suggestion-pressed-fg, var(--ki-suggestion-pressed-fg));
+}
+
+button:is(:active, [data-ki-pressed]) [part="description"] {
+  color: var(--ki-suggestion-card-pressed-description-fg);
+}
+
+button:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+@media (forced-colors: active) {
+  button {
+    border-color: ButtonText;
+  }
+
+  button:focus-visible {
+    outline-color: Highlight;
+  }
 }

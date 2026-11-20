@@ -1,4 +1,9 @@
 {
   "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false }
+  "pointer": { "hoverWitness": false },
+  "catalog": true,
+  "budgetGroup": { "members": ["ki-suggestions", "ki-suggestion"] },
+  "sizeBudget": {
+    "mcpServer": { "raw": 18582, "gzip": 4133 }
+  }
 }

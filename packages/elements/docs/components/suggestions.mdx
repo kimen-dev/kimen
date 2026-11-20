@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Recipes/Connecting suggestions to a composer" />
+
+# Connecting suggestions to a composer
+
+Use cards to offer prompts for an empty conversation. Each card can give a
+short description of what the prompt covers. In fill mode, choosing a card
+puts the title in the composer and focuses it for editing.
+
+```html
+<ki-suggestions id="starters" label="Start a conversation" variant="cards" mode="fill">
+  <ki-suggestion description="For the merged pull requests">Draft release notes</ki-suggestion>
+  <ki-suggestion description="From the on-call reports">Summarise the incidents</ki-suggestion>
+</ki-suggestions>
+<label for="draft">Message</label>
+<textarea id="draft"></textarea>
+```
+
+```js
+const composer = document.querySelector('#draft');
+document.querySelector('#starters').composer = composer;
+```
+
+Use the default chips and send mode for follow-ups. The application sends the
+title it receives in `event.detail.text`. The group restores focus to the
+assigned composer and preserves its draft.
+
+```html
+<ki-suggestions id="follow-ups" label="Follow-up suggestions">
+  <ki-suggestion>Which ones recur?</ki-suggestion>
+  <ki-suggestion>Group them by service</ki-suggestion>
+</ki-suggestions>
+```
+
+```js
+const followUps = document.querySelector('#follow-ups');
+followUps.composer = composer;
+followUps.addEventListener('ki-select', ({ detail }) => {
+  sendPrompt(detail.text);
+});
+```
+
+Call `preventDefault()` on `ki-select` when your application manages the
+composer's value and focus. To use a custom composer, pass an object with a
+writable string `value` and a `focus()` method. Register both
+`ki-suggestions` and `ki-suggestion` when using direct imports or wrappers.

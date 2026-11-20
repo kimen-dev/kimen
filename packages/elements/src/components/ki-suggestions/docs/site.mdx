@@ -1,19 +1,55 @@
 ---
-title: ki-suggestions
-description: Describe the purpose of ki-suggestions from the approved contract.
+title: Suggestions
+description: Offer prompt starters and follow-up suggestions in a conversation.
 ---
 
 import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
 import Demo from '../../../../../../site/docs/src/components/Demo.astro';
 
-{/* TODO(spec): document when to use this component and the accessible usage patterns. */}
+Use cards to offer conversation starters with a short description. Use chips
+for follow-up prompts after an answer.
 
-<Demo code={`<ki-suggestions label="Example"></ki-suggestions>`} />
+<Demo layout="block" code={`<ki-suggestions id="starters" label="Start a conversation" variant="cards" mode="fill">
+  <ki-suggestion description="From the on-call reports">Summarise the incidents</ki-suggestion>
+  <ki-suggestion description="For the merged pull requests">Draft release notes</ki-suggestion>
+</ki-suggestions>`} />
+
+<Demo layout="block" code={`<ki-suggestions label="Follow-up suggestions">
+  <ki-suggestion>Which ones recur?</ki-suggestion>
+  <ki-suggestion>Group them by service</ki-suggestion>
+  <ki-suggestion>Turn this into a table</ki-suggestion>
+</ki-suggestions>`} />
+
+Supply a group `label` and place each `ki-suggestion` directly inside it.
+Write the prompt as plain text. That title is also the button's accessible
+name. A supplied description gives assistive technology separate context.
+Tab moves through the buttons in reading order. Enter or Space chooses the
+focused suggestion.
+
+## Connect a composer
+
+The group dispatches a bubbling, composed and cancelable `ki-select`. Read
+`event.detail.text` to get the chosen prompt. In the default `send` mode, the
+application's event handler sends the prompt. Set `mode="fill"` to populate
+the composer's draft for editing.
+
+Assign `composer` in JavaScript. It accepts a writable string `value` and a
+`focus()` method. Both modes focus the composer after dispatch. Fill mode
+also replaces its draft. Cancel the event with `preventDefault()` when your
+handler takes over value or focus.
+
+Add a draft field after the starter group in the first example.
+
+<Demo code={`<label for="draft">Message</label>
+<textarea id="draft"></textarea>`} live={false} />
+
+<Demo code={`const suggestions = document.querySelector('#starters');
+suggestions.composer = document.querySelector('#draft');`} lang="js" live={false} />
+
+Register both tags when using direct imports or framework wrappers.
 
 ## API reference
 
 <CemApi tag="ki-suggestions" />
-
-## Workshop
 
 [Open ki-suggestions in Storybook](/storybook/?path=/docs/docs-components-ki-suggestions--docs)

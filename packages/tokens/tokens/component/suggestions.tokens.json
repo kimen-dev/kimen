@@ -1,10 +1,171 @@
 {
   "ki": {
-    "suggestions": {
-      "text-color": {
-        "$type": "color",
+    "suggestion": {
+      "bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Resting chip surface."
+      },
+      "fg": {
         "$value": "{ki.text.high-em}",
-        "$description": "Text color used by the ki-suggestions component."
+        "$description": "Resting chip title."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Image layered over the chip surface."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Filter behind the chip surface."
+      },
+      "border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Resting chip boundary."
+      },
+      "border-width": {
+        "$value": "{ki.control.border-width}",
+        "$description": "Boundary width for either suggestion variant."
+      },
+      "radius": {
+        "$value": "{ki.control.compact-pill.radius}",
+        "$description": "Rounded outline of a chip."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Chip surface on a hovering device."
+      },
+      "hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Title over the chip hover surface."
+      },
+      "pressed-bg": {
+        "$value": "{ki.surface.s3}",
+        "$description": "Chip surface while a pointer or key holds activation."
+      },
+      "pressed-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Title over the pressed chip surface."
+      },
+      "height": {
+        "$value": "{ki.control.compact-pill.height}",
+        "$description": "Minimum painted height of a chip."
+      },
+      "inset": {
+        "$value": "{ki.control.compact-pill.inset}",
+        "$description": "Inline padding for either variant."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Typeface of the suggestion text."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Type size of the prompt title."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Line height of the prompt title."
+      },
+      "weight": {
+        "$value": "{ki.typography.weight.body.normal}",
+        "$description": "Weight of chip titles and card descriptions."
+      },
+      "description-size": {
+        "$value": "{ki.typography.size.caption-2}",
+        "$description": "Type size of the card description."
+      },
+      "description-line-height": {
+        "$value": "{ki.typography.line-height.caption-2}",
+        "$description": "Line height of the card description."
+      },
+      "card-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Resting card surface."
+      },
+      "card-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Resting card title."
+      },
+      "card-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Image layered over the card surface."
+      },
+      "card-backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Filter behind the card surface."
+      },
+      "card-border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Resting card boundary."
+      },
+      "card-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corners of a starter card."
+      },
+      "card-hover-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Card surface on a hovering device."
+      },
+      "card-hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Title over the card hover surface."
+      },
+      "card-pressed-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Card surface while a pointer or key holds activation."
+      },
+      "card-pressed-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Title over the pressed card surface."
+      },
+      "card-gap": {
+        "$value": "{ki.control.track-inset}",
+        "$description": "Space between the card title and description."
+      },
+      "card-inset": {
+        "$value": "{ki.control.compact-pill.inset}",
+        "$description": "Block padding of each starter card."
+      },
+      "card-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "Weight of the card title."
+      },
+      "card-description-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Resting card surface beneath the description."
+      },
+      "card-description-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Resting card description."
+      },
+      "card-hover-description-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Hover card surface beneath the description."
+      },
+      "card-hover-description-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Description over the card hover surface."
+      },
+      "card-pressed-description-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Pressed card surface beneath the description."
+      },
+      "card-pressed-description-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Description over the pressed card surface."
+      }
+    },
+    "suggestions": {
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Typeface inherited by the suggestion group."
+      },
+      "gap": {
+        "$value": "{ki.control.compact-pill.collection-gap}",
+        "$description": "Spacing between suggestions."
+      },
+      "card-width": {
+        "$value": "{ki.layout.grid-min}",
+        "$description": "Maximum inline size of each starter card."
       }
     }
   }

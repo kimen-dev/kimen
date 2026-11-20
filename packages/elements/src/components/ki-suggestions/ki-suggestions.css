@@ -1,16 +1,39 @@
-/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
- * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
   display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-suggestions-font-family);
 }
 
-/* The HTML hidden attribute outranks the host's own display. */
 :host([hidden]) {
   display: none;
 }
 
-.label {
-  color: var(--ki-suggestions-text-color);
-  font-family: var(--ki-typography-family-base);
-  font-size: var(--ki-typography-size-body-1);
+[part="group"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--ki-suggestions-gap) * var(--ki-density-space-scale));
+}
+
+:host([variant="cards"]) [part="group"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, var(--ki-suggestions-card-width)));
+  align-items: stretch;
+}
+
+:host([variant="cards"]) ::slotted(ki-suggestion) {
+  --_ki-suggestion-bg: var(--ki-suggestion-card-bg);
+  --_ki-suggestion-fg: var(--ki-suggestion-card-fg);
+  --_ki-suggestion-bg-image: var(--ki-suggestion-card-bg-image);
+  --_ki-suggestion-backdrop-filter: var(--ki-suggestion-card-backdrop-filter);
+  --_ki-suggestion-border: var(--ki-suggestion-card-border);
+  --_ki-suggestion-radius: var(--ki-suggestion-card-radius);
+  --_ki-suggestion-hover-bg: var(--ki-suggestion-card-hover-bg);
+  --_ki-suggestion-hover-fg: var(--ki-suggestion-card-hover-fg);
+  --_ki-suggestion-pressed-bg: var(--ki-suggestion-card-pressed-bg);
+  --_ki-suggestion-pressed-fg: var(--ki-suggestion-card-pressed-fg);
+  --_ki-suggestion-block-inset: var(--ki-suggestion-card-inset);
+  --_ki-suggestion-weight: var(--ki-suggestion-card-weight);
+  --_ki-suggestion-align: stretch;
+  --_ki-suggestion-description-display: block;
 }
