@@ -3,12 +3,15 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath, URLSearchParams } from 'node:url';
 import {
+  mcpServerMetadataPath,
+  mcpServerPinPaths,
   prepareManifest,
   releaseNotes,
   releasePackages,
   releaseProposal,
   releaseTitlePattern,
   releaseVersionPattern,
+  verifyMcpServerVersion,
 } from './release-plan.mjs';
 
 const releaseBranch = 'release/next';
@@ -20,7 +23,13 @@ const generatedFiles = [
   'packages/elements/generated/public-api/index.json',
   'packages/catalog/src/generated/catalog.ts',
 ];
-const releaseCommitFiles = ['CHANGELOG.md', ...releasePackages.values(), ...generatedFiles];
+export const releaseCommitFiles = [
+  'CHANGELOG.md',
+  ...releasePackages.values(),
+  mcpServerMetadataPath,
+  ...mcpServerPinPaths,
+  ...generatedFiles,
+];
 
 export function mergedReleaseVersion(pulls, { repository, sha }) {
   const pull = pulls.find(
@@ -137,13 +146,17 @@ function releaseGit(repository, token) {
 }
 
 async function verifyManifests(version) {
+  const manifests = new Map();
   for (const [name, path] of releasePackages) {
     const manifest = JSON.parse(await readFile(path, 'utf8'));
     if (manifest.name !== name || manifest.private !== false) {
       throw new Error(`${path} must declare the publishable ${name} package`);
     }
     prepareManifest(manifest, version);
+    manifests.set(name, manifest);
   }
+  const { mcpName } = manifests.get('@kimen/mcp-server');
+  await verifyMcpServerVersion((path) => readFile(path, 'utf8'), version, mcpName);
 }
 
 async function proposeRelease({ github, remote, repository, sha, version }) {
