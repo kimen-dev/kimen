@@ -16,6 +16,7 @@ Link and action destinations belong to the consuming app.
 - Agent's choice, pending founder confirmation. Expose localized menu labels
   as props. Use TopNav-owned anchored menus with Menu keyboard behavior
   because the shared Menu element is absent from the assigned branch.
+  Position them with scoped CSS anchors and viewport flip fallbacks.
 - Agent's choice, pending founder confirmation. Three direct actions stay
   visible and subsequent named buttons or links appear in overflow. The
   search slot replaces the visible heading in a one-row bar while keeping
@@ -24,15 +25,23 @@ Link and action destinations belong to the consuming app.
   link and the account trigger with the page author. Put the notification
   count in the button name as well as in its decorative Counter slot.
 
-## Scenario family coverage
+- Agent's choice, pending founder confirmation. Keep the HTML `title`
+  attribute and use `screenTitle` for the framework property because Stencil
+  reserves the native property name.
+- Agent's choice, pending founder confirmation. Use supporting ink for
+  ordinary links and subtitles. Its standard value is medium emphasis and
+  the contrast-more mode strengthens it. Draw the current indicator as a
+  logical border so forced colors can preserve the mark.
 
-| Family | IDs |
-| --- | --- |
-| Core behavior | S1–S7 |
-| Keyboard path | S8–S11 |
-| Assistive-tech outcome | S12–S14 |
-| Form participation | N/A. TopNav is a layout and navigation component. Slotted controls own any form behavior. |
-| Theming | S15–S19 |
+## Scenario Family Coverage
+
+| Family                 | Scenario IDs                            | N/A justification                                                        |
+| ---------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| Core behavior          | S1, S2, S3, S4, S5, S6, S7              |                                                                          |
+| Keyboard path          | S8, S9, S10, S11                        |                                                                          |
+| Assistive-tech outcome | S12, S13, S14                           |                                                                          |
+| Form participation     | N/A                                     | TopNav owns no value. Slotted controls participate on their own terms.    |
+| Theming                | S15, S16, S17, S18, S19                 |                                                                          |
 
 ## Gherkin contract
 

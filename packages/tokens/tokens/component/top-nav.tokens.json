@@ -1,0 +1,229 @@
+{
+  "ki": {
+    "top-nav": {
+      "height": {
+        "$value": "{ki.layout.spacing.18xl}",
+        "$description": "Height of a normal application header."
+      },
+      "height-compact": {
+        "$value": "{ki.layout.spacing.16xl}",
+        "$description": "Height of a small application header."
+      },
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Application header fill."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Application header brand and control ink."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image above the header fill."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Filter applied to the entire header backdrop."
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.low-em}",
+        "$description": "Edge color for sticky bars and menus."
+      },
+      "border-width": {
+        "$value": "{ki.layout.surface-border-width}",
+        "$description": "Edge width for sticky bars and menus."
+      },
+      "padding-inline": {
+        "$value": "{ki.layout.spacing.3xl}",
+        "$description": "Padding at the inline edges of both bars."
+      },
+      "gap": {
+        "$value": "{ki.layout.spacing.7xl}",
+        "$description": "Gap between header regions."
+      },
+      "action-gap": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Gap between actions and inner menu padding."
+      },
+      "item-padding-inline": {
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Inline padding for links and menu items."
+      },
+      "item-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Primary navigation item resting surface."
+      },
+      "item-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Primary navigation item resting ink."
+      },
+      "item-current-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Current navigation destination surface."
+      },
+      "item-current-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Current navigation destination ink."
+      },
+      "item-hover-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "Hovered control or highlighted menu item surface."
+      },
+      "item-hover-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Hovered control or highlighted menu item ink."
+      },
+      "indicator": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Bar marking the current primary destination."
+      },
+      "indicator-width": {
+        "$value": "{ki.layout.selection-indicator-width}",
+        "$description": "Thickness of the current-destination bar."
+      },
+      "control-size": {
+        "$value": "{ki.layout.spacing.12xl}",
+        "$description": "Trigger size before applying the density target floor."
+      },
+      "menu-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Navigation and overflow menu fill."
+      },
+      "menu-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Overflow menu item ink."
+      },
+      "menu-disabled-fg": {
+        "$type": "color",
+        "$value": "{ki.text.low-em}",
+        "$description": "Disabled overflow menu item ink."
+      },
+      "menu-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image above the menu fill."
+      },
+      "menu-backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Filter applied to the entire menu backdrop."
+      },
+      "menu-shadow": {
+        "$value": "{ki.elevation.e3}",
+        "$description": "Elevation of the anchored menu."
+      },
+      "menu-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Menu and trigger corner radius."
+      },
+      "menu-max-size": {
+        "$value": "{ki.layout.menu-max-size}",
+        "$description": "Maximum group dimension for the anchored menu."
+      }
+    },
+    "app-bar": {
+      "height": {
+        "$value": "{ki.layout.spacing.18xl}",
+        "$description": "Height of a normal or collapsed app bar."
+      },
+      "height-compact": {
+        "$value": "{ki.layout.spacing.16xl}",
+        "$description": "Height of a small app bar."
+      },
+      "lg-height": {
+        "$value": "{ki.layout.app-bar.lg-height}",
+        "$description": "Expanded height of a large app bar."
+      },
+      "xl-height": {
+        "$value": "{ki.layout.app-bar.xl-height}",
+        "$description": "Expanded height of an extra-large app bar."
+      },
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Resting app-bar fill."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Resting app-bar title and control ink."
+      },
+      "scrolled-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "App-bar fill when its container scrolls."
+      },
+      "scrolled-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "App-bar title and control ink when its container scrolls."
+      },
+      "subtitle-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s0}",
+        "$description": "Resting surface behind the app-bar subtitle."
+      },
+      "subtitle-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Resting app-bar subtitle ink."
+      },
+      "scrolled-subtitle-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "Scrolled surface behind the app-bar subtitle."
+      },
+      "scrolled-subtitle-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "App-bar subtitle ink when its container scrolls."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image above the app-bar fill."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Filter applied to the entire app-bar backdrop."
+      },
+      "title-font-family": {
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Screen heading typeface."
+      },
+      "title-font-weight": {
+        "$value": "{ki.typography.weight.body.semibold}",
+        "$description": "Screen heading font weight."
+      },
+      "title-size": {
+        "$value": "{ki.typography.size.title-2}",
+        "$description": "One-row app-bar title size."
+      },
+      "title-line-height": {
+        "$value": "{ki.typography.line-height.title-2}",
+        "$description": "One-row app-bar title line height."
+      },
+      "lg-title-size": {
+        "$value": "{ki.typography.size.heading-2}",
+        "$description": "Expanded two-row app-bar title size."
+      },
+      "lg-title-line-height": {
+        "$value": "{ki.typography.line-height.heading-2}",
+        "$description": "Expanded two-row app-bar title line height."
+      },
+      "title-padding": {
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Block-end padding under the expanded title group."
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@
 | `sticky` | `false` | Stick to the scroll container's block-start edge with a bottom border. |
 | `navigation-label` | `Open navigation` | Localized name of the collapsible navigation trigger and its menu. |
 | `overflow-label` | `More actions` | Localized name of the app-bar overflow trigger and its menu. |
-| `title`, `subtitle` | — | Screen heading and supporting text. |
+| `title`, `subtitle` | — | Screen heading and supporting text. Frameworks set the heading with `screenTitle`. |
 | `heading-level` | `1` | HTML heading level from 1 through 6. |
 | `title-align` | `start` | `center` is available for compact one-row bars with up to one action. |
 | `scroll-behavior` | `elevate` | `none`, tint with `elevate`, or tint and reduce tall bars to medium with `collapse`. |

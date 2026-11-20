@@ -1,6 +1,6 @@
 // @spec:105-ki-top-nav
 import tokensCss from '@kimen/tokens/css?raw';
-import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
@@ -37,9 +37,14 @@ beforeAll(() => {
   document.body.append(fixture);
 });
 
+beforeEach(async () => {
+  await page.viewport(912, 700);
+});
+
 afterEach(async () => {
   fixture.replaceChildren();
   fixture.removeAttribute('dir');
+  await page.viewport(414, 896);
   await parkPointer();
 });
 
@@ -106,7 +111,7 @@ it('S1: shows five primary links and a current-page indicator on a wide bar', as
   await expect.element(page.getByRole('navigation').getByRole('link')).toHaveLength(5);
   await expect.element(page.getByRole('button', { name: 'Notifications, 3 unread' })).toBeVisible();
   const current = required(host.querySelector('[aria-current="page"]'));
-  expect(Number.parseFloat(getComputedStyle(current, '::after').blockSize)).toBeGreaterThanOrEqual(
+  expect(Number.parseFloat(getComputedStyle(current).borderBlockEndWidth)).toBeGreaterThanOrEqual(
     2,
   );
 });
@@ -265,7 +270,8 @@ it('S11: lets a page-owned first skip link bypass the header', async () => {
     <main id="top-nav-content" tabindex="-1">Content</main>`;
   const skip = page.getByRole('link', { name: 'Skip to content' });
   expect(fixture.querySelector('a, button')).toBe(skip.element());
-  await skip.click();
+  (skip.element() as HTMLAnchorElement).focus();
+  await userEvent.keyboard('{Enter}');
   await expect.element(page.getByRole('main')).toHaveFocus();
 });
 
@@ -351,13 +357,12 @@ it('S17: keeps a drawn current-page indicator in forced colors', async () => {
     await expect.poll(() => matchMedia('(forced-colors: active)').matches).toBe(true);
     const host = wideHeader();
     await expect.element(page.getByRole('link', { name: 'Projects' })).toBeVisible();
-    const indicator = getComputedStyle(
-      required(host.querySelector('[aria-current="page"]')),
-      '::after',
+    const indicator = getComputedStyle(required(host.querySelector('[aria-current="page"]')));
+    expect(indicator.borderBlockEndStyle).toBe('solid');
+    expect(indicator.borderBlockEndColor).not.toBe(
+      getComputedStyle(part(host, 'bar')).backgroundColor,
     );
-    expect(indicator.forcedColorAdjust).toBe('none');
-    expect(indicator.backgroundColor).not.toBe(getComputedStyle(part(host, 'bar')).backgroundColor);
-    expect(Number.parseFloat(indicator.blockSize)).toBeGreaterThanOrEqual(2);
+    expect(Number.parseFloat(indicator.borderBlockEndWidth)).toBeGreaterThanOrEqual(2);
   } finally {
     await media.emulateForcedColors(null);
   }

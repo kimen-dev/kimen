@@ -812,6 +812,16 @@
     },
     "size": {
       "$type": "dimension",
+      "app-bar": {
+        "lg": {
+          "$value": "7rem",
+          "$description": "Height of a large two-row app bar."
+        },
+        "xl": {
+          "$value": "9.5rem",
+          "$description": "Height of an extra-large two-row app bar."
+        }
+      },
       "border": {
         "hairline": {
           "$value": "1px",

@@ -1,19 +1,21 @@
-// RED-phase scaffold. The corresponding layout behavior is defined by the tests.
-export function appBarSize(size: string, behavior: string, scrolled: boolean): string {
-  throw new Error(`Unimplemented app bar size: ${size}, ${behavior}, ${String(scrolled)}`);
+export type TopNavSize = 'sm' | 'md' | 'lg' | 'xl';
+
+export function appBarSize(size: string, behavior: string, scrolled: boolean): TopNavSize {
+  if (size === 'lg' || size === 'xl') {
+    return behavior === 'collapse' && scrolled ? 'md' : size;
+  }
+  return size === 'sm' ? 'sm' : 'md';
 }
 
 export function hasCenteredTitle(
-  size: string,
+  size: TopNavSize,
   align: string,
   compact: boolean,
-  count: number,
+  actionCount: number,
 ): boolean {
-  throw new Error(
-    `Unimplemented title alignment: ${size}, ${align}, ${String(compact)}, ${String(count)}`,
-  );
+  return compact && align === 'center' && (size === 'sm' || size === 'md') && actionCount <= 1;
 }
 
 export function headingTag(level: number): string {
-  throw new Error(`Unimplemented heading tag: ${String(level)}`);
+  return Number.isInteger(level) && level >= 1 && level <= 6 ? `h${String(level)}` : 'h1';
 }
