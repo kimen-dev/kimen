@@ -1,10 +1,5 @@
 ---
-// Every documentation page carries the Umami tag emitted by astro.config.mjs,
-// and D8 makes the privacy declaration a prerequisite for measuring anything.
-// The landing and the playground link `/privacy/` from their own footers; the
-// docs site had no route to it at all. Overriding Starlight's Footer covers
-// every documentation page at once, which an entry in a single content page
-// could not do — /docs/* is the largest measured surface, not one page of it.
+// Keep the privacy declaration reachable from every documentation page.
 import Default from '@astrojs/starlight/components/Footer.astro';
 
 const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
@@ -13,20 +8,32 @@ const siteBase = docsBase.replace(/docs\/?$/u, '');
 
 <Default><slot /></Default>
 
-<p class="kimen-docs-legal">
+<nav class="kimen-docs-legal" aria-label="Footer">
+  <a class="kimen-docs-footer-site" href={siteBase}>Home</a>
+  <a class="kimen-docs-footer-site" href={`${siteBase}playground/`}>Playground</a>
   <a href={`${siteBase}privacy/`}>Privacy</a>
-</p>
+</nav>
 
 <style>
   .kimen-docs-legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--ki-space-xl);
     margin-block-start: var(--ki-space-5xl);
-    font-size: var(--ki-docs-small-size);
+    font-size: var(--ki-typography-size-body-1);
     color: var(--ki-text-med-em);
     text-align: center;
   }
 
   .kimen-docs-legal a {
     color: inherit;
+  }
+
+  @media (width >= 90rem) {
+    .kimen-docs-footer-site {
+      display: none;
+    }
   }
 
   .kimen-docs-legal a:hover {

@@ -1,90 +1,141 @@
 ---
-const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
-const siteBase = docsBase.replace(/docs\/?$/, '');
-const homeLink = { href: siteBase, label: 'Home' } as const;
+import { Icon } from '@astrojs/starlight/components';
+import Search from '@astrojs/starlight/components/Search.astro';
+
+const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
+const siteBase = docsBase.replace(/docs\/?$/u, '');
+const { entry } = Astro.locals.starlightRoute;
+const guidePaths = ['guides/ui-spec', 'guides/emitting-specs', 'guides/a2ui', 'guides/mcp-apps'];
+const isDocsHome = Astro.url.pathname.replace(/\/$/u, '') === docsBase.slice(0, -1);
+const componentIndex = { href: docsBase, label: 'Components' };
+const sections = [
+  { label: 'Start', path: 'getting-started', current: isDocsHome || entry.id === 'getting-started' },
+  { label: 'Guides', path: 'guides/theming', current: entry.id.startsWith('guides/') && !guidePaths.includes(entry.id) },
+  { label: 'Generative UI', path: 'guides/ui-spec', current: guidePaths.includes(entry.id) },
+  { ...componentIndex, path: '#docs-components-title', current: entry.id.startsWith('components/') },
+  { label: 'Tokens', path: 'tokens/reference', current: entry.id.startsWith('tokens/') },
+  { label: 'Resources', path: 'resources/working-with-ai', current: entry.id.startsWith('resources/') },
+];
 const siteLinks = [
-  { href: docsBase, label: 'Components', current: true },
-  { href: `${siteBase}playground/`, label: 'Playground', current: false },
-  { href: 'https://github.com/kimen-dev/kimen', label: 'GitHub', current: false },
-] as const;
+  { href: siteBase, label: 'Home' },
+  { href: `${siteBase}playground/`, label: 'Playground' },
+];
+const schemes = ['Auto', 'Light', 'Dark'] as const;
 ---
 
 <div class="kimen-docs-header">
-  <a class="kimen-docs-identity" href={homeLink.href}>
-    <span class="kimen-docs-brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 24 24" focusable="false">
-        <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9"></path>
-      </svg>
-    </span>
+  <a class="kimen-docs-identity" href={docsBase}>
+    <svg class="kimen-docs-brand-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9"></path>
+    </svg>
     <span class="kimen-docs-site-title" translate="no">Kimen</span>
     <span class="kimen-docs-stage">pre-v1</span>
-    <span class="visually-hidden">{homeLink.label}</span>
+    <span class="visually-hidden">documentation home</span>
   </a>
 
-  <nav class="kimen-docs-primary-nav" aria-label="Site">
+  <nav class="kimen-docs-tabs" aria-label="Documentation sections">
     {
-      siteLinks.map(({ href, label, current }) => (
-        <a href={href} aria-current={current ? 'page' : undefined}>
-          {label}
+      sections.map((section) => (
+        <a
+          href={'href' in section ? `${section.href}${section.path}` : `${docsBase}${section.path}/`}
+          aria-current={entry.id === section.path ? 'page' : section.current ? 'location' : undefined}
+        >
+          {section.label}
         </a>
       ))
     }
   </nav>
 
+  <div class="kimen-docs-search"><Search /></div>
+
   <fieldset class="kimen-docs-scheme" data-docs-scheme-control>
     <legend class="visually-hidden">Color scheme</legend>
-    <label><input type="radio" name="docs-scheme" value="auto" /><span>Auto</span></label>
-    <label><input type="radio" name="docs-scheme" value="light" /><span>Light</span></label>
-    <label><input type="radio" name="docs-scheme" value="dark" checked /><span>Dark</span></label>
+    {
+      schemes.map((name) => (
+        <label>
+          <input type="radio" name="docs-scheme" value={name.toLowerCase()} checked={name === 'Auto'} />
+          <span>{name}</span>
+        </label>
+      ))
+    }
   </fieldset>
+
+  <label class="kimen-docs-scheme-compact">
+    <span class="visually-hidden">Color scheme</span>
+    <select data-docs-scheme-control>
+      {schemes.map((name) => <option value={name.toLowerCase()}>{name}</option>)}
+    </select>
+  </label>
+
+  <nav class="kimen-docs-primary-nav" aria-label="Site">
+    {siteLinks.map(({ href, label }) => <a href={href}>{label}</a>)}
+    <a class="kimen-docs-github" href="https://github.com/kimen-dev/kimen">
+      <Icon name="github" />
+      <span class="visually-hidden">GitHub</span>
+    </a>
+  </nav>
 </div>
 
 <script>
   type Scheme = 'auto' | 'light' | 'dark';
 
-  const controls = document.querySelectorAll<HTMLInputElement>(
-    '[data-docs-scheme-control] input[type="radio"]',
-  );
   const root = document.documentElement;
-  const media = window.matchMedia('(prefers-color-scheme: light)');
+  const radios = document.querySelectorAll<HTMLInputElement>('[data-docs-scheme-control] input');
+  const select = document.querySelector<HTMLSelectElement>('select[data-docs-scheme-control]');
+  const media = matchMedia('(prefers-color-scheme: light)');
 
-  const storedScheme = (): Scheme => {
-    const value = localStorage.getItem('kimen-scheme');
-    if (value === 'auto' || value === 'light' || value === 'dark') return value;
+  const isScheme = (value: unknown): value is Scheme =>
+    value === 'auto' || value === 'light' || value === 'dark';
 
-    const legacyValue = localStorage.getItem('starlight-theme');
-    return legacyValue === 'light' || legacyValue === 'dark' ? legacyValue : 'dark';
-  };
+  function readScheme(): Scheme {
+    try {
+      const stored = localStorage.getItem('kimen-scheme');
+      if (isScheme(stored)) return stored;
+    } catch {
+      // The inline provider still resolves the current page.
+    }
+    return 'auto';
+  }
 
-  const syncControls = (scheme: Scheme) => {
-    for (const control of controls) control.checked = control.value === scheme;
-  };
-
-  const applyScheme = (scheme: Scheme) => {
+  function applyScheme(scheme: Scheme) {
     const resolved = scheme === 'auto' ? (media.matches ? 'light' : 'dark') : scheme;
+    root.dataset.kimenScheme = scheme;
     root.dataset.theme = resolved;
     root.dataset.kiColorScheme = resolved;
-    localStorage.setItem('kimen-scheme', scheme);
-    localStorage.setItem('starlight-theme', scheme === 'auto' ? '' : scheme);
-    syncControls(scheme);
-  };
+    for (const radio of radios) radio.checked = radio.value === scheme;
+    if (select) select.value = scheme;
+  }
 
-  document.addEventListener('change', (event) => {
+  function chooseScheme(event: Event) {
     const target = event.target;
-    if (
-      target instanceof HTMLInputElement &&
-      target.checked &&
-      target.closest('[data-docs-scheme-control]')
-    ) {
-      applyScheme(target.value as Scheme);
+    if (!(target instanceof HTMLInputElement || target instanceof HTMLSelectElement)) return;
+    const scheme = target.value;
+    if (!isScheme(scheme)) return;
+    applyScheme(scheme);
+    try {
+      localStorage.setItem('kimen-scheme', scheme);
+    } catch {
+      // Changing the scheme for the current page needs no storage.
     }
-  });
+  }
 
+  for (const radio of radios) radio.addEventListener('change', chooseScheme);
+  select?.addEventListener('change', chooseScheme);
   media.addEventListener('change', () => {
-    if ([...controls].some((control) => control.checked && control.value === 'auto')) {
-      applyScheme('auto');
-    }
+    if (root.dataset.kimenScheme === 'auto') applyScheme('auto');
+  });
+  window.addEventListener('storage', ({ key }) => {
+    if (key === 'kimen-scheme' || key === null) applyScheme(readScheme());
+    if (key === 'kimen-theme' || key === null) applyTheme();
   });
 
-  applyScheme(storedScheme());
+  function applyTheme() {
+    try {
+      root.dataset.kiTheme = localStorage.getItem('kimen-theme') === 'material3' ? 'material3' : 'onmars';
+    } catch {
+      root.dataset.kiTheme = 'onmars';
+    }
+  }
+
+  applyScheme(readScheme());
 </script>
