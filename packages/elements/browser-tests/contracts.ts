@@ -244,9 +244,23 @@ export function textMeasurements(
   return measurements;
 }
 
-/** What a theme or scheme change can alter: every node's box and paint. */
+/**
+ * What a theme or scheme change can alter: every node's box and paint.
+ *
+ * A node that generates no box paints nothing. It is recorded as unrendered,
+ * and its computed style is not read. This covers the fallback content of a
+ * slot that has assigned nodes, a light-DOM child that no slot takes, a slot
+ * (display: contents), and anything inside a closed popover. WebKit does not
+ * restyle those nodes when an inherited value changes: getComputedStyle()
+ * keeps returning the style they had before the change. Nothing on screen is
+ * stale: once such a node renders after a live switch, it paints exactly as
+ * in a fresh mount. Whether a node renders must still match.
+ */
 export function fingerprint(root: Element): string[] {
   return deepElements(root).map((element) => {
+    if (!element.checkVisibility()) {
+      return `${element.localName} | unrendered`;
+    }
     const style = getComputedStyle(element);
     const box = element.getBoundingClientRect();
     const half = (value: number): number => Math.round(value * 2) / 2;
