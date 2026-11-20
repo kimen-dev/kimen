@@ -15,6 +15,8 @@ export interface VisualGallery {
    * caret-free (no text fields: a blinking caret never stabilizes).
    */
   focusFirst?: boolean;
+  /** Require every example to fit inside the capture viewport. */
+  fitViewport?: boolean;
   html: string;
   /** Extra block size so top-layer or popup content stays inside the capture. */
   minHeight?: number;

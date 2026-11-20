@@ -269,6 +269,11 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
           await nextFrame();
         }
 
+        if (gallery.fitViewport === true) {
+          expect(wrapper.scrollWidth, 'gallery width').toBeLessThanOrEqual(gallery.width ?? 640);
+          expect(wrapper.scrollHeight, 'gallery height').toBeLessThanOrEqual(VIEWPORT_HEIGHT);
+        }
+
         await expect(wrapper).toMatchScreenshot(screenshotName, {
           timeout: CAPTURE_TIMEOUT_MS,
         });
