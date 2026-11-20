@@ -15,8 +15,12 @@ const BASE_BUDGETS = {
   // absorbs that approved growth so the release can ship; re-measuring each
   // component's marginal is a follow-up.
   // Plus about 1% for Linux CI's zlib/brotli output, which differs slightly from macOS.
-  mcpApps: { raw: 780_000, gzip: 177_000, brotli: 140_000 },
-  mcpServer: { raw: 2_570_000, gzip: 484_000, brotli: 380_000 },
+  // Spec 152 (guardrail containment, approved 2026-11-20) measured against
+  // main 61eb8d2b: the reference and form-action checks in the shared catalog
+  // code add 1,383 / 349 / 306 B to the MCP Apps document and 3,176 / 697 /
+  // 341 B to kimen-mcp.
+  mcpApps: { raw: 781_383, gzip: 177_349, brotli: 140_306 },
+  mcpServer: { raw: 2_573_176, gzip: 484_697, brotli: 380_341 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.

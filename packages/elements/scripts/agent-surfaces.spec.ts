@@ -745,10 +745,15 @@ describe('agent surfaces', () => {
     };
 
     expect(await violationsFor('string', [{ name: 'format', text: 'uri' }])).toEqual([
-      'ki-button.variant: @format must be "url", received "uri"',
+      'ki-button.variant: @format must be "url" or "idref", received "uri"',
     ]);
     expect(await violationsFor('number', [{ name: 'format', text: 'url' }])).toEqual([
       'ki-button.variant: @format url applies to string props only',
+    ]);
+    // Spec 152: a prop naming another element by id declares `@format idref`.
+    expect(await violationsFor('string', [{ name: 'format', text: 'idref' }])).toEqual([]);
+    expect(await violationsFor('boolean', [{ name: 'format', text: 'idref' }])).toEqual([
+      'ki-button.variant: @format idref applies to string props only',
     ]);
     expect(
       await violationsFor('string', [

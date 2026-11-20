@@ -45,7 +45,7 @@ write. Use a button or link for those actions.
 - `copied-label` (string, default 'Copied'): Polite announcement after a successful write. Override for localized interfaces.
 - `copy-error-label` (string, default "Couldn't copy"): Polite announcement after a failed write or missing source. Override for localized interfaces.
 - `feedback-duration` (number, default 1500, minimum 0): Milliseconds to show feedback after a write settles. Zero keeps the outcome visible until the next result. Invalid values use 1500 ms.
-- `from` (string | undefined): ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+- `from` (string | undefined, ID of another element of the same spec): ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
 - `label` (string, default 'Copy'): Accessible name for the icon-only control. Visible slot text supplies the name when present.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Match the size of adjacent controls.
 - `value` (string | undefined): Exact clipboard text, including whitespace. Supply it when the text is known directly.

@@ -53,7 +53,10 @@ let nextId = 0;
 export class KiMenu {
   @Element() host!: HTMLElement;
 
-  /** Literal ID of the menu button in the same document or containing shadow root. */
+  /**
+   * Literal ID of the menu button in the same document or containing shadow root.
+   * @format idref
+   */
   @Prop() anchor = '';
 
   /** Whether the popup is open. Reflected when the user opens or dismisses it. */
