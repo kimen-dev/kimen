@@ -75,6 +75,25 @@ find "$OUT/assets/elements" -name '*.js' -exec sed -i.bak 's|^//# sourceMappingU
   || find "$OUT/assets/elements" -name '*.js' -exec sed -i '' 's|^//# sourceMappingURL=.*$||' {} +
 find "$OUT/assets/elements" -name '*.js.bak' -delete
 
+# The landing's component count (#520, item 15) is written at build time from
+# the manifest the wall renders, so it reads as a number on first paint, and
+# without JavaScript, instead of "See the live wall" until the wall loads. It
+# counts ki-* tags the way landing.js's componentDeclarations() does.
+node -e '
+const { readFileSync, writeFileSync } = require("node:fs");
+const [page, manifestPath] = process.argv.slice(1);
+const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+const tags = new Set();
+for (const module of manifest.modules ?? [])
+  for (const declaration of module.declarations ?? [])
+    if (/^ki-[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u.test(declaration.tagName ?? "")) tags.add(declaration.tagName);
+if (tags.size === 0) throw new Error(`no ki-* components in ${manifestPath}`);
+const source = readFileSync(page, "utf8");
+const count = /(<a href="#components" data-component-count>)[^<]*(<\/a>)/u;
+if (!count.test(source)) throw new Error(`missing component count: ${page}`);
+writeFileSync(page, source.replace(count, `$1${tags.size}$2`));
+' "$OUT/index.html" packages/elements/generated/custom-elements.json
+
 # Docs site (Astro build is already base-aware: /docs/).
 cp -R site/docs/dist/. "$OUT/docs/"
 

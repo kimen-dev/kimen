@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" data-ki-theme="onmars" data-ki-color-scheme="light">
+  <head>
+    <meta charset="utf-8" />
+    <!-- base -->
+    <title>Kimen social card</title>
+    <!-- The 1200×630 social card (og:image) for every kimen.dev page, rendered by
+         scripts/og-image/render.mjs from the site's own token stylesheet and fonts.
+         Regenerate it after changing the brand, the headline or the onmars tokens. -->
+    <link rel="stylesheet" href="packages/tokens/dist/css/tokens.css" />
+    <style>
+      @font-face {
+        font-family: "Instrument Sans";
+        font-weight: 400 700;
+        src: url("packages/tokens/fonts/InstrumentSansVariable.woff2") format("woff2");
+      }
+
+      @font-face {
+        font-family: Newsreader;
+        font-weight: 200 800;
+        src: url("packages/tokens/fonts/NewsreaderVariable.woff2") format("woff2");
+      }
+
+      html,
+      body {
+        margin: 0;
+        inline-size: 1200px;
+        block-size: 630px;
+      }
+
+      body {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        padding: 72px 88px 64px;
+        background-color: var(--ki-surface-special-dark-s0-light-s1);
+        color: var(--ki-text-high-em);
+        font-family: var(--ki-typography-family-body);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 34px;
+        font-weight: var(--ki-typography-weight-body-semibold);
+        letter-spacing: -0.01em;
+      }
+
+      .brand svg {
+        inline-size: 44px;
+        block-size: 44px;
+        fill: none;
+        stroke: var(--ki-text-primary-high-em);
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      h1 {
+        align-self: center;
+        margin: 0;
+        font-family: var(--ki-typography-family-display);
+        font-size: 92px;
+        font-weight: var(--ki-typography-weight-display-semibold);
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+      }
+
+      h1 em {
+        display: block;
+        color: var(--ki-text-primary-high-em);
+        font-style: normal;
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+        padding-block-start: 24px;
+        border-block-start: 1px solid var(--ki-outline-low-em);
+        color: var(--ki-text-med-em);
+        font-size: 26px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="brand">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9" />
+      </svg>
+      Kimen
+    </div>
+    <h1>Agents write data. <em>Kimen renders real UI.</em></h1>
+    <footer>
+      <span>Web components for generative UI</span>
+      <span>kimen.dev</span>
+    </footer>
+  </body>
+</html>

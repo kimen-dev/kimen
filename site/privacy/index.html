@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ki-color-scheme="dark">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,37 +19,46 @@
       content="What Kimen's public site measures and keeps. No accounts, no cookies, no advertising, no cross-site profile."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://kimen.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Kimen: Agents write data. Kimen renders real UI." />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#1b1916" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#f9f7f4" media="(prefers-color-scheme: light)" />
     <link rel="stylesheet" href="../assets/tokens/tokens.css" />
     <link rel="stylesheet" href="../fonts.css" />
     <link rel="stylesheet" href="../landing.css" />
     <link rel="stylesheet" href="../pages.css" />
+    <link rel="stylesheet" href="../segmented.css" />
     <link rel="stylesheet" href="./privacy.css" />
     <script>
-      // Keep the initial paint in the saved palette when storage is available.
+      // Paint the saved scheme, or the system's when nothing is saved, before first paint.
       (() => {
+        const root = document.documentElement;
+        let scheme = "auto";
+        let theme = "onmars";
         try {
-          const root = document.documentElement;
-          const scheme = localStorage.getItem("kimen-scheme");
-          if (scheme === "auto") {
-            root.dataset.kiColorScheme = matchMedia("(prefers-color-scheme: light)").matches
-              ? "light"
-              : "dark";
-          } else if (scheme === "light" || scheme === "dark") {
-            root.dataset.kiColorScheme = scheme;
-          }
-          if (localStorage.getItem("kimen-theme") === "material3") {
-            root.dataset.kiTheme = "material3";
-            const link = document.createElement("link");
-            link.id = "material3-css";
-            link.rel = "stylesheet";
-            link.href = "../assets/tokens/tokens.material3.css";
-            link.addEventListener("error", () => link.remove(), { once: true });
-            document.head.append(link);
-          }
+          const saved = localStorage.getItem("kimen-scheme");
+          if (saved === "light" || saved === "dark") scheme = saved;
+          if (localStorage.getItem("kimen-theme") === "material3") theme = "material3";
         } catch {
-          // The default palette also works when storage is unavailable.
+          // Without storage the page follows the system and the default theme.
+        }
+        root.dataset.kiColorScheme =
+          scheme === "auto"
+            ? matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark"
+            : scheme;
+        if (theme === "material3") {
+          root.dataset.kiTheme = "material3";
+          const link = document.createElement("link");
+          link.id = "material3-css";
+          link.rel = "stylesheet";
+          link.href = "../assets/tokens/tokens.material3.css";
+          link.addEventListener("error", () => link.remove(), { once: true });
+          document.head.append(link);
         }
       })();
     </script>
@@ -81,14 +90,29 @@
           <span class="visually-hidden">GitHub</span>
         </a>
       </nav>
-      <label class="header-scheme scheme-picker" data-privacy-scheme hidden>
-        <span class="visually-hidden">Color scheme</span>
-        <select data-scheme-control>
-          <option value="auto">Auto</option>
-          <option value="light">Light</option>
-          <option value="dark" selected>Dark</option>
-        </select>
-      </label>
+      <div class="header-scheme" data-privacy-scheme hidden>
+        <fieldset class="seg seg-scheme" data-scheme-control>
+          <legend>Color scheme</legend>
+          <label
+            ><input type="radio" name="privacy-scheme" value="auto" checked /><span
+              ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="14" x="2" y="3" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" /></svg
+              ><span class="seg-text">Auto</span></span
+            ></label
+          >
+          <label
+            ><input type="radio" name="privacy-scheme" value="light" /><span
+              ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg
+              ><span class="seg-text">Light</span></span
+            ></label
+          >
+          <label
+            ><input type="radio" name="privacy-scheme" value="dark" /><span
+              ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg
+              ><span class="seg-text">Dark</span></span
+            ></label
+          >
+        </fieldset>
+      </div>
     </header>
 
     <main id="main" tabindex="-1" class="privacy">
@@ -153,14 +177,6 @@
         <a href="../storybook/">Storybook</a>
         <a href="https://github.com/kimen-dev/kimen">GitHub</a>
       </nav>
-      <label class="footer-scheme scheme-picker" data-privacy-scheme hidden>
-        <span class="visually-hidden">Color scheme</span>
-        <select data-scheme-control>
-          <option value="auto">Auto</option>
-          <option value="light">Light</option>
-          <option value="dark" selected>Dark</option>
-        </select>
-      </label>
     </footer>
   </body>
 </html>

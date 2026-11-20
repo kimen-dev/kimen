@@ -19,6 +19,8 @@ import landingHtml from '../../../site/index.html?raw';
 // @ts-expect-error -- the hand-written site module intentionally has no declaration artifact
 import { initializeLanding, renderCatalog } from '../../../site/landing.js';
 import pagesCss from '../../../site/pages.css?raw';
+// @ts-expect-error -- the hand-written site module intentionally has no declaration artifact
+import { initializePrivacy } from '../../../site/pages.js';
 import playgroundCss from '../../../site/playground/playground.css?raw';
 import playgroundHtml from '../../../site/playground/index.html?raw';
 // @ts-expect-error -- the hand-written site module intentionally has no declaration artifact
@@ -29,6 +31,7 @@ import { initializePlayground } from '../../../site/playground/playground.js';
 // other two.
 import privacyHtml from '../../../site/privacy/index.html?raw';
 import privacyCss from '../../../site/privacy/privacy.css?raw';
+import segmentedCss from '../../../site/segmented.css?raw';
 /* eslint-enable @nx/enforce-module-boundaries */
 import customElementsManifestJson from '../generated/custom-elements.json?raw';
 import robotoWoff2Url from './visual/fonts/RobotoVariable.woff2?url';
@@ -66,6 +69,7 @@ let siteFontsLoaded = false;
 const browserCommands = commands as unknown as {
   ariaSnapshot: (selector: string) => Promise<string>;
   emulateReducedMotion: (value: 'reduce' | 'no-preference' | null) => Promise<void>;
+  emulateColorScheme: (value: 'dark' | 'light' | null) => Promise<void>;
 };
 
 // Every stylesheet a public page links, by its path under site/. A page is
@@ -80,6 +84,7 @@ const siteStylesheets: Readonly<Record<string, string>> = {
   'pages.css': pagesCss,
   'playground/playground.css': playgroundCss,
   'privacy/privacy.css': privacyCss,
+  'segmented.css': segmentedCss,
 };
 
 const pageSources: Record<PageName, { path: string; html: string; initialize?: PageInitializer }> =
@@ -94,11 +99,12 @@ const pageSources: Record<PageName, { path: string; html: string; initialize?: P
       html: playgroundHtml,
       initialize: initializePlayground as PageInitializer,
     },
-    // No initializer: the privacy page only loads the shared preference
-    // module, whose scheme picker is progressive enhancement.
+    // The privacy page's only script is the shared preference module, which
+    // wires its scheme control.
     privacy: {
       path: 'privacy/index.html',
       html: privacyHtml,
+      initialize: initializePrivacy as PageInitializer,
     },
   };
 
@@ -248,6 +254,7 @@ async function resetExperience(): Promise<void> {
   localStorage.removeItem('kimen-theme');
   localStorage.removeItem('kimen-scheme');
   await browserCommands.emulateReducedMotion(null);
+  await browserCommands.emulateColorScheme(null);
   await page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height);
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   await nextFrame();
@@ -551,12 +558,15 @@ const APPROVED_LANDING = {
   specFile: [0, 104, 460.8, 41],
   specFirstLine: [0, 161, 460.8, 22.1],
   verdictBottom: 976,
+  // The reference ends the row with a 36px scheme icon button. The shared
+  // segmented scheme control that replaced it (#520, item 9) is 127.5px wider,
+  // so every link sits that much further left; widths and the row are unchanged.
   primaryLinks: [
-    [932.5, 30, 78.4, 24],
-    [1042.9, 30, 33.4, 24],
-    [1108.3, 30, 30.4, 24],
-    [1170.7, 30, 68.6, 24],
-    [1271.3, 30, 43.1, 24],
+    [805.0, 30, 78.4, 24],
+    [915.4, 30, 33.4, 24],
+    [980.8, 30, 30.4, 24],
+    [1043.2, 30, 68.6, 24],
+    [1143.8, 30, 43.1, 24],
   ],
   pitch: [518.4, 120, 864, 384.1],
   title: [518.4, 120, 864, 165.1],
@@ -647,12 +657,15 @@ describe('Kimen public site experience in a real browser', () => {
   });
 
   it('S2 persists and synchronizes Material 3 dark across landing and playground', async () => {
+    // Given: nothing is saved and the system prefers light, so the landing
+    // follows it in Onmars (031 FR-003).
+    await browserCommands.emulateColorScheme('light');
     await mountPage('landing');
     expect(document.querySelector(MATERIAL3_STYLESHEET_SELECTOR)).toBeNull();
     expect(document.documentElement.hasAttribute('data-ki-theme')).toBe(false);
-    expect(document.documentElement.dataset.kiColorScheme).toBe('dark');
+    expect(document.documentElement.dataset.kiColorScheme).toBe('light');
     expectSynchronizedControls('theme', 'onmars');
-    expectSynchronizedControls('scheme', 'dark');
+    expectSynchronizedControls('scheme', 'auto');
 
     await userEvent.click(requireRadio('theme', 'material3'));
     await finishMaterial3Load();
@@ -671,6 +684,71 @@ describe('Kimen public site experience in a real browser', () => {
     expect(document.documentElement.dataset.kiColorScheme).toBe('dark');
     expectSynchronizedControls('theme', 'material3');
     expectSynchronizedControls('scheme', 'dark');
+  });
+
+  // The live review of kimen.dev (#520, item 8): the landing, playground and
+  // privacy pages opened dark with nothing saved while the docs followed the
+  // system. Every page now starts in the system scheme, on Auto.
+  it.each([
+    ['landing', 'dark'],
+    ['landing', 'light'],
+    ['playground', 'dark'],
+    ['playground', 'light'],
+    ['privacy', 'dark'],
+    ['privacy', 'light'],
+  ] as const)(
+    'S2 starts the %s in the system %s scheme when nothing is saved',
+    async (name, system) => {
+      await browserCommands.emulateColorScheme(system);
+      await mountPage(name);
+
+      expect(document.documentElement.dataset.kiColorScheme).toBe(system);
+      expectSynchronizedControls('scheme', 'auto');
+      expect(localStorage.getItem('kimen-scheme')).toBeNull();
+    },
+  );
+
+  // #520, item 9: four different scheme controls became one, segmented Auto /
+  // Light / Dark, that turns compact (icons, names kept) below 50rem.
+  it.each([
+    ['landing', 1280],
+    ['landing', 375],
+    ['playground', 1280],
+    ['playground', 375],
+    ['privacy', 1280],
+    ['privacy', 375],
+  ] as const)('shows the %s one shared scheme control at %i CSS pixels', async (name, width) => {
+    await page.viewport(width, DEFAULT_VIEWPORT.height);
+    await mountPage(name);
+
+    const controls = [...document.querySelectorAll<HTMLElement>('[data-scheme-control]')];
+    expect(controls.length).toBeGreaterThan(0);
+    expect(document.querySelector('select')).toBeNull();
+    for (const control of controls) {
+      expect(control.localName).toBe('fieldset');
+      expect(control.classList.contains('seg')).toBe(true);
+      expect(control.querySelector('legend')?.textContent.trim()).toBe('Color scheme');
+      const options = [...control.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
+      expect(options.map(({ value }) => value)).toEqual(['auto', 'light', 'dark']);
+      expect(options.map((option) => option.labels?.[0]?.textContent.trim())).toEqual([
+        'Auto',
+        'Light',
+        'Dark',
+      ]);
+    }
+    const shown = controls.find(isRendered);
+    expect(shown, `${name} shows a scheme control`).toBeInstanceOf(HTMLElement);
+    const icon = shown?.querySelector<SVGElement>('.seg-icon');
+    const text = shown?.querySelector<HTMLElement>('.seg-text');
+    if (!icon || !text) throw new Error('the scheme control has no icon or text');
+    if (width < 800) {
+      expect(getComputedStyle(icon).display, 'compact: the icon shows').not.toBe('none');
+      expect(text.getBoundingClientRect().width, 'compact: the name is visually hidden').toBe(1);
+    } else {
+      expect(getComputedStyle(icon).display).toBe('none');
+      expect(text.getBoundingClientRect().width).toBeGreaterThan(1);
+    }
+    expect(horizontalOverflow(), overflowDiagnostics()).toBeLessThanOrEqual(0);
   });
 
   it('S3 selects and applies Material 3 with ArrowRight', async () => {
@@ -1004,8 +1082,10 @@ describe('Kimen public site experience in a real browser', () => {
     ]);
   });
 
-  it('keeps the desktop playground geometry and ten-token inspector of the approved design', async () => {
+  it('keeps the desktop playground geometry and full semantic inspector of the approved design', async () => {
     await browserCommands.emulateReducedMotion('reduce');
+    // The approved reference is dark; with nothing saved the page follows the system.
+    await browserCommands.emulateColorScheme('dark');
     await page.viewport(1440, 1000);
     await mountPage('playground');
 
@@ -1042,23 +1122,36 @@ describe('Kimen public site experience in a real browser', () => {
     expect(titleStyle.fontSize).toBe('22px');
     expect(Number.parseFloat(titleStyle.lineHeight)).toBeCloseTo(28, 1);
 
-    // The reference lists every semantic token; the published inspector keeps
-    // the ten the contract names (site-contract.test.mjs), at the reference's
-    // row geometry, each resolved from this document.
+    // The reference lists every semantic token, and so does the published
+    // inspector (#520, item 16): each group holds its full set, every row at
+    // least the reference's row height, each resolved from this document.
     const rows = [...document.querySelectorAll<HTMLElement>('.token-table tbody > .token-row')];
-    expect(rows).toHaveLength(10);
+    const groups = new Map<string, number>();
+    for (const row of rows) {
+      const group = row.dataset.group ?? '';
+      groups.set(group, (groups.get(group) ?? 0) + 1);
+    }
+    expect([...groups.keys()]).toEqual([
+      'surface',
+      'primary',
+      'text',
+      'outline',
+      'status',
+      'shape',
+    ]);
+    for (const [group, size] of groups) {
+      expect(size, `${group} lists its full semantic set`).toBeGreaterThan(5);
+    }
     const [, rowY] = boxOf(rows[0] ?? element('.token-row'));
     expect(Math.abs(rowY - approved.tokenRow.y)).toBeLessThanOrEqual(1.5);
     for (const row of rows) {
-      expect(
-        Math.abs(boxOf(row)[3] - approved.tokenRow.height),
-        row.textContent,
-      ).toBeLessThanOrEqual(1);
+      expect(boxOf(row)[3], row.textContent).toBeGreaterThanOrEqual(approved.tokenRow.height - 1);
       const declared = row.querySelector('[data-token-declared]')?.textContent.trim() ?? '';
       const current = row.querySelector('[data-token-value]')?.textContent.trim() ?? '';
       expect(declared, `${row.dataset.group ?? ''} token declaration`).not.toMatch(
         /^(?:|Unavailable)$/u,
       );
+      expect(declared, 'declared values keep a space after each comma').not.toMatch(/,\S/u);
       expect(current, `${row.dataset.group ?? ''} token value`).not.toMatch(/^(?:|Unavailable)$/u);
     }
     expect(
@@ -1123,6 +1216,34 @@ describe('Kimen public site experience in a real browser', () => {
       const rows = new Set([...range.getClientRects()].map(({ top }) => Math.round(top))).size;
       expect(rows, `"${link.textContent.trim()}" sits on one line`).toBeLessThanOrEqual(1);
     }
+  });
+
+  // #520, item 16: at 375 the Declared column stayed and token names broke
+  // mid-word. Below 40rem the column leaves and names wrap at their hyphens.
+  it('fits the token inspector to a 375 CSS pixel viewport', async () => {
+    await page.viewport(375, DEFAULT_VIEWPORT.height);
+    await mountPage('playground');
+
+    const headers = [...document.querySelectorAll<HTMLElement>('.token-table thead th')];
+    expect(headers.filter(isRendered).map((cell) => cell.textContent.trim())).toEqual([
+      'Token',
+      expect.stringMatching(/^Now · /u),
+    ]);
+    for (const name of document.querySelectorAll<HTMLElement>('.token-table tbody th code')) {
+      const range = document.createRange();
+      const text = name.firstChild;
+      if (!text) continue;
+      // Every row break falls right after a hyphen, never inside a word.
+      for (let index = 1; index < (text.textContent ?? '').length; index += 1) {
+        range.setStart(text, index - 1);
+        range.setEnd(text, index + 1);
+        const rows = new Set([...range.getClientRects()].map(({ top }) => Math.round(top)));
+        if (rows.size > 1) {
+          expect(text.textContent?.[index - 1], `${name.textContent} breaks mid-word`).toBe('-');
+        }
+      }
+    }
+    expect(horizontalOverflow(), overflowDiagnostics()).toBeLessThanOrEqual(0);
   });
 
   it.each([

@@ -37,6 +37,14 @@ const siteLinks = [
   { href: `${siteBase}playground/`, label: 'Playground' },
 ];
 const schemes = ['Auto', 'Light', 'Dark'] as const;
+// The same icons as the shared control on the other site pages (site/segmented.css):
+// below 50rem each option shows only its icon and keeps its name for assistive technology.
+const schemeIcons: Record<(typeof schemes)[number], string> = {
+  Auto: '<rect width="20" height="14" x="2" y="3" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" />',
+  Light:
+    '<circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />',
+  Dark: '<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />',
+};
 ---
 
 <div class="kimen-docs-header">
@@ -70,18 +78,20 @@ const schemes = ['Auto', 'Light', 'Dark'] as const;
       schemes.map((name) => (
         <label>
           <input type="radio" name="docs-scheme" value={name.toLowerCase()} checked={name === 'Auto'} />
-          <span>{name}</span>
+          <span>
+            <svg
+              class="kimen-docs-scheme-icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+              set:html={schemeIcons[name]}
+            />
+            <span class="kimen-docs-scheme-text">{name}</span>
+          </span>
         </label>
       ))
     }
   </fieldset>
-
-  <label class="kimen-docs-scheme-compact">
-    <span class="visually-hidden">Color scheme</span>
-    <select data-docs-scheme-control>
-      {schemes.map((name) => <option value={name.toLowerCase()}>{name}</option>)}
-    </select>
-  </label>
 
   <nav class="kimen-docs-primary-nav" aria-label="Site">
     {siteLinks.map(({ href, label }) => <a href={href}>{label}</a>)}
@@ -141,7 +151,6 @@ const schemes = ['Auto', 'Light', 'Dark'] as const;
 
   const root = document.documentElement;
   const radios = document.querySelectorAll<HTMLInputElement>('[data-docs-scheme-control] input');
-  const select = document.querySelector<HTMLSelectElement>('select[data-docs-scheme-control]');
   const media = matchMedia('(prefers-color-scheme: light)');
 
   const isScheme = (value: unknown): value is Scheme =>
@@ -163,12 +172,11 @@ const schemes = ['Auto', 'Light', 'Dark'] as const;
     root.dataset.theme = resolved;
     root.dataset.kiColorScheme = resolved;
     for (const radio of radios) radio.checked = radio.value === scheme;
-    if (select) select.value = scheme;
   }
 
   function chooseScheme(event: Event) {
     const target = event.target;
-    if (!(target instanceof HTMLInputElement || target instanceof HTMLSelectElement)) return;
+    if (!(target instanceof HTMLInputElement)) return;
     const scheme = target.value;
     if (!isScheme(scheme)) return;
     applyScheme(scheme);
@@ -180,7 +188,6 @@ const schemes = ['Auto', 'Light', 'Dark'] as const;
   }
 
   for (const radio of radios) radio.addEventListener('change', chooseScheme);
-  select?.addEventListener('change', chooseScheme);
   media.addEventListener('change', () => {
     if (root.dataset.kimenScheme === 'auto') applyScheme('auto');
   });

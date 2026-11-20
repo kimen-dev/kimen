@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ki-color-scheme="dark">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,6 +17,11 @@
     <meta property="og:description" content="Agents write data. Kimen renders real UI.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kimen.dev/">
+    <meta property="og:image" content="https://kimen.dev/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Kimen: Agents write data. Kimen renders real UI.">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#f9f7f4" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#1b1916" media="(prefers-color-scheme: dark)">
     <link
@@ -36,22 +41,34 @@
     <link rel="stylesheet" href="./assets/tokens/tokens.css">
     <link rel="stylesheet" href="./fonts.css">
     <link rel="stylesheet" href="./landing.css">
+    <link rel="stylesheet" href="./segmented.css">
     <script>
-    // Apply the stored colour scheme before first paint, so a returning visitor never sees a flash.
+    // Paint the saved scheme, or the system's when nothing is saved, before first paint.
     (() => {
+      const root = document.documentElement;
+      let scheme = 'auto';
+      let theme = 'onmars';
       try {
-        const scheme = localStorage.getItem('kimen-scheme');
-        if (scheme === 'auto') {
-          document.documentElement.dataset.kiColorScheme = window.matchMedia(
-            '(prefers-color-scheme: light)',
-          ).matches
-            ? 'light'
-            : 'dark';
-        } else if (scheme === 'light' || scheme === 'dark') {
-          document.documentElement.dataset.kiColorScheme = scheme;
-        }
+        const saved = localStorage.getItem('kimen-scheme');
+        if (saved === 'light' || saved === 'dark') scheme = saved;
+        if (localStorage.getItem('kimen-theme') === 'material3') theme = 'material3';
       } catch {
-        // Storage can be unavailable in a hardened or private context.
+        // Without storage the page follows the system and the default theme.
+      }
+      root.dataset.kiColorScheme =
+        scheme === 'auto'
+          ? window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark'
+          : scheme;
+      if (theme === 'material3') {
+        root.dataset.kiTheme = 'material3';
+        const link = document.createElement('link');
+        link.id = 'material3-css';
+        link.rel = 'stylesheet';
+        link.href = './assets/tokens/tokens.material3.css';
+        link.addEventListener('error', () => link.remove(), { once: true });
+        document.head.append(link);
       }
     })();
     </script>
@@ -78,27 +95,6 @@
         <symbol id="i-replay" viewBox="0 0 24 24">
           <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
           <path d="M3 3v5h5" />
-        </symbol>
-        <symbol id="i-sun" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2" />
-          <path d="M12 20v2" />
-          <path d="m4.93 4.93 1.41 1.41" />
-          <path d="m17.66 17.66 1.41 1.41" />
-          <path d="M2 12h2" />
-          <path d="M20 12h2" />
-          <path d="m6.34 17.66-1.41 1.41" />
-          <path d="m19.07 4.93-1.41 1.41" />
-        </symbol>
-        <symbol id="i-moon" viewBox="0 0 24 24">
-          <path
-            d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
-          />
-        </symbol>
-        <symbol id="i-auto" viewBox="0 0 24 24">
-          <rect width="20" height="14" x="2" y="3" rx="2" />
-          <path d="M8 21h8" />
-          <path d="M12 17v4" />
         </symbol>
         <symbol id="i-arrow" viewBox="0 0 24 24">
           <path d="M5 12h14" />
@@ -149,23 +145,27 @@
           <a href="./docs/">Docs</a>
           <a href="./playground/">Playground</a>
           <a href="https://github.com/kimen-dev/kimen">GitHub</a>
-          <button
-            class="scheme"
-            type="button"
-            data-scheme
-            hidden
-            aria-label="Colour scheme: follow the system"
-          >
-            <svg aria-hidden="true" focusable="false" class="icon" data-scheme-icon="auto">
-              <use href="#i-auto" />
-            </svg>
-            <svg aria-hidden="true" focusable="false" class="icon" data-scheme-icon="light">
-              <use href="#i-sun" />
-            </svg>
-            <svg aria-hidden="true" focusable="false" class="icon" data-scheme-icon="dark">
-              <use href="#i-moon" />
-            </svg>
-          </button>
+          <fieldset class="seg seg-scheme" data-scheme-control data-header-scheme hidden>
+            <legend>Color scheme</legend>
+            <label
+              ><input type="radio" name="landing-header-scheme" value="auto" checked><span
+                ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="14" x="2" y="3" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" /></svg
+                ><span class="seg-text">Auto</span></span
+              ></label
+            >
+            <label
+              ><input type="radio" name="landing-header-scheme" value="light"><span
+                ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg
+                ><span class="seg-text">Light</span></span
+              ></label
+            >
+            <label
+              ><input type="radio" name="landing-header-scheme" value="dark"><span
+                ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg
+                ><span class="seg-text">Dark</span></span
+              ></label
+            >
+          </fieldset>
         </nav>
         <div class="pitch">
           <h1 id="hero-title">Agents write data. <em>Kimen renders real UI.</em></h1>
@@ -302,8 +302,8 @@
             <dd><a href="#components" data-component-count>See the live wall</a></dd>
           </div>
           <div>
-            <dt>Themes, 1 attribute</dt>
-            <dd>2</dd>
+            <dt>Themes</dt>
+            <dd>2 <span class="stat-note">one attribute to switch</span></dd>
           </div>
           <div>
             <dt>Allowed axe violations</dt>
@@ -314,8 +314,8 @@
             <dd>3</dd>
           </div>
           <div>
-            <dt>Component budget</dt>
-            <dd>Single-digit KB</dd>
+            <dt>Size budget</dt>
+            <dd>Under 10 KB per component</dd>
           </div>
           <div>
             <dt>Token-styled</dt>
@@ -466,23 +466,46 @@
               <a href="./docs/guides/theming/">Theming guide</a>
             </p>
             <div class="theme-preferences" data-theme-preferences hidden>
-              <fieldset data-theme-control>
-                <legend>Page theme</legend>
-                <label
-                  ><input type="radio" name="landing-theme" value="onmars" checked>
-                  onmars</label
-                >
-                <label
-                  ><input type="radio" name="landing-theme" value="material3">
-                  Material 3</label
-                >
-              </fieldset>
-              <fieldset data-scheme-control>
-                <legend>Colour scheme</legend>
-                <label><input type="radio" name="landing-scheme" value="auto"> System</label>
-                <label><input type="radio" name="landing-scheme" value="light"> Light</label>
-                <label><input type="radio" name="landing-scheme" value="dark" checked> Dark</label>
-              </fieldset>
+              <div class="pref-pair">
+                <span class="pref-label" aria-hidden="true">Theme</span>
+                <fieldset class="seg" data-theme-control>
+                  <legend>Theme</legend>
+                  <label
+                    ><input type="radio" name="landing-theme" value="onmars" checked><span
+                      >onmars</span
+                    ></label
+                  >
+                  <label
+                    ><input type="radio" name="landing-theme" value="material3"><span
+                      >Material 3</span
+                    ></label
+                  >
+                </fieldset>
+              </div>
+              <div class="pref-pair">
+                <span class="pref-label" aria-hidden="true">Scheme</span>
+                <fieldset class="seg seg-scheme" data-scheme-control>
+                  <legend>Color scheme</legend>
+                  <label
+                    ><input type="radio" name="landing-scheme" value="auto" checked><span
+                      ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="14" x="2" y="3" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" /></svg
+                      ><span class="seg-text">Auto</span></span
+                    ></label
+                  >
+                  <label
+                    ><input type="radio" name="landing-scheme" value="light"><span
+                      ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg
+                      ><span class="seg-text">Light</span></span
+                    ></label
+                  >
+                  <label
+                    ><input type="radio" name="landing-scheme" value="dark"><span
+                      ><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg
+                      ><span class="seg-text">Dark</span></span
+                    ></label
+                  >
+                </fieldset>
+              </div>
             </div>
           </div>
         </section>
@@ -1124,7 +1147,7 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
                   </tr>
                   <tr>
                     <th scope="row">Size discipline</th>
-                    <td class="kimen-column">Single-digit-KB budget per component, gated</td>
+                    <td class="kimen-column">Under 10 KB per component, gated</td>
                     <td>Varies</td>
                     <td>Varies</td>
                   </tr>
@@ -1181,7 +1204,7 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
               </tr>
               <tr>
                 <th scope="row">Size budget</th>
-                <td>Under <code>10 KB</code> per component, measured on packed tarballs</td>
+                <td>Under 10 KB per component, measured on packed tarballs</td>
                 <td>
                   <span class="state ok"
                     ><svg aria-hidden="true" focusable="false" class="icon">

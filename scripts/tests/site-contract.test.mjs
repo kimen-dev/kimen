@@ -20,10 +20,10 @@ async function readSiteFile(path) {
 function assertSemanticShell(source, path) {
   assert.match(source, /<!doctype html>/iu, `${path} must be an HTML document`);
   assert.match(source, /<html\b[^>]*\blang=["']en["']/iu, `${path} must declare its language`);
-  assert.match(
+  assert.doesNotMatch(
     source,
-    /<html\b[^>]*\bdata-ki-color-scheme=["']dark["']/iu,
-    `${path} must expose the approved dark scheme without JavaScript`,
+    /<html\b[^>]*\bdata-ki-color-scheme=/iu,
+    `${path} must not fix a color scheme: without JavaScript it follows the system (031 FR-003)`,
   );
   assert.match(source, /<header\b/iu, `${path} must expose a header without JavaScript`);
   assert.match(source, /<nav\b/iu, `${path} must expose navigation without JavaScript`);
@@ -154,7 +154,7 @@ test('the public pages retain the approved desktop design structure and density'
   assert.equal(
     (playground.match(/class=["'][^"']*\btoken-row\b/gu) ?? []).length,
     10,
-    'playground inspector must retain ten resolved token rows',
+    'the no-JavaScript playground inspector keeps its ten sample rows (playground.js lists the full semantic set)',
   );
 });
 

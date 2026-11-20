@@ -1,6 +1,12 @@
 /* Progressive enhancement for the Calma landing. The document retains its
    navigation, example spec and disclosures without JavaScript. */
-import { applyScheme, ensureMaterial3, readScheme, readTheme, writePreference } from './pages.js';
+import {
+  ensureMaterial3,
+  readScheme,
+  readTheme,
+  wireSchemeControls,
+  writePreference,
+} from './pages.js';
 
 let elementsRequest;
 
@@ -10,28 +16,14 @@ export function loadKimenElements() {
   return elementsRequest;
 }
 
-const SCHEMES = ['auto', 'light', 'dark'];
-const SCHEME_LABELS = { auto: 'follow the system', light: 'light', dark: 'dark' };
-
 function wirePreferences(root, view, signal) {
-  const button = root.querySelector('[data-scheme]');
-  const radios = [...root.querySelectorAll('[data-scheme-control] input')];
+  const headerScheme = root.querySelector('[data-header-scheme]');
   const themeRadios = [...root.querySelectorAll('[data-theme-control] input')];
   const preferences = root.querySelector('[data-theme-preferences]');
-  const systemScheme = view.matchMedia('(prefers-color-scheme: light)');
-  let scheme = readScheme(root);
+  // The header's and the themes section's scheme controls are the shared segmented control;
+  // pages.js keeps them in sync, remembers a choice and follows the system on Auto.
+  const setScheme = wireSchemeControls(root, { signal });
   let themeRequest = 0;
-
-  function setScheme(next, persist = false) {
-    scheme = next;
-    applyScheme(scheme, root);
-    for (const radio of radios) radio.checked = radio.value === scheme;
-    if (button) {
-      button.dataset.mode = scheme;
-      button.setAttribute('aria-label', `Colour scheme: ${SCHEME_LABELS[scheme]}`);
-    }
-    if (persist) writePreference(root, 'kimen-scheme', scheme);
-  }
 
   async function setTheme(theme, persist = false) {
     const request = ++themeRequest;
@@ -51,36 +43,14 @@ function wirePreferences(root, view, signal) {
 
   restorePreferences();
   if (preferences) preferences.hidden = false;
-  if (button) {
-    button.hidden = false;
-    button.addEventListener(
-      'click',
-      () => {
-        const next = SCHEMES[(SCHEMES.indexOf(scheme) + 1) % SCHEMES.length];
-        setScheme(next, true);
-      },
-      { signal },
-    );
-  }
+  if (headerScheme) headerScheme.hidden = false;
   // A click on the choice already shown is still an explicit choice and is remembered;
   // it fires no change event, so both events select.
-  for (const radio of radios) {
-    for (const type of ['change', 'click']) {
-      radio.addEventListener(type, () => setScheme(radio.value, true), { signal });
-    }
-  }
   for (const radio of themeRadios) {
     for (const type of ['change', 'click']) {
       radio.addEventListener(type, () => void setTheme(radio.value, true), { signal });
     }
   }
-  systemScheme.addEventListener(
-    'change',
-    () => {
-      if (scheme === 'auto') setScheme(scheme);
-    },
-    { signal },
-  );
   view.addEventListener(
     'pageshow',
     (event) => {

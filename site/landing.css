@@ -533,33 +533,10 @@ body:has(.home-page) {
     color: var(--ki-text-high-em);
   }
 
-  .scheme {
-    display: inline-grid;
-    place-items: center;
-    inline-size: var(--ki-site-square-target);
-    block-size: var(--ki-site-square-target);
-    padding: 0;
-    border: var(--ki-site-rule-width) solid var(--ki-outline-low-em);
-    border-radius: var(--ki-radius-round);
-    background: transparent;
-    color: var(--ki-text-med-em);
-    cursor: pointer;
-  }
-
-  .scheme:hover {
-    color: var(--ki-text-high-em);
-  }
-
-  .scheme .icon {
-    grid-area: 1 / 1;
-    visibility: hidden;
-  }
-
-  .scheme[data-mode="auto"] [data-scheme-icon="auto"],
-  .scheme[data-mode="light"] [data-scheme-icon="light"],
-  .scheme[data-mode="dark"] [data-scheme-icon="dark"],
-  .scheme:not([data-mode]) [data-scheme-icon="dark"] {
-    visibility: visible;
+  /* The shared scheme control keeps the row height of the icon button it replaced. */
+  .topnav .seg {
+    align-items: center;
+    min-block-size: var(--ki-site-square-target);
   }
 
   .pitch {
@@ -1656,6 +1633,13 @@ body:has(.home-page) {
     font-weight: var(--ki-typography-weight-body-semibold);
   }
 
+  .stat-note {
+    display: block;
+    color: var(--ki-text-med-em);
+    font-size: var(--ki-typography-size-caption-2);
+    font-weight: var(--ki-typography-weight-body-normal);
+  }
+
   .themes-foot > * + * {
     margin-block-start: var(--ki-space-3xl);
   }
@@ -1670,26 +1654,15 @@ body:has(.home-page) {
     gap: var(--ki-space-3xl);
   }
 
-  .theme-preferences fieldset {
-    min-inline-size: 0;
-    padding: var(--ki-space-md) var(--ki-space-xl);
-    margin: 0;
-    border: var(--ki-site-hairline);
-    border-radius: var(--ki-radius-component-md);
-  }
-
-  .theme-preferences label {
+  .pref-pair {
     display: inline-flex;
     align-items: center;
-    min-block-size: var(--ki-site-action-height);
-    gap: var(--ki-space-sm);
-    margin-inline-end: var(--ki-space-xl);
-    cursor: pointer;
+    gap: var(--ki-space-md);
   }
 
-  .theme-preferences input {
-    margin: 0;
-    accent-color: var(--ki-text-primary-high-em);
+  .pref-label {
+    color: var(--ki-text-med-em);
+    font-size: var(--ki-typography-size-caption-2);
   }
 
   .catalog-title {

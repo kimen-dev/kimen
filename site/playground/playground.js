@@ -9,7 +9,7 @@ import {
 
 const initializedDocuments = new WeakMap();
 const INITIAL_THEME = 'onmars';
-const INITIAL_SCHEME = 'dark';
+const INITIAL_SCHEME = 'auto';
 const CHANGE_HIGHLIGHT_MS = 600;
 
 /** Normalize the common computed rgb()/rgba() forms for easy comparison. */
@@ -56,12 +56,100 @@ function tokenDeclarations(root, tokens) {
   return declarations;
 }
 
-/** Show primitives by their short names, as the reference does: var(--ki-color-white-100) reads white-100. */
+/**
+ * Show primitives by their short names, as the reference does: var(--ki-color-white-100) reads
+ * white-100. The minified token CSS has no space after its commas; put one back.
+ */
 function shortDeclaration(value) {
-  return value.replace(
-    /var\(--ki-(?:color-|foundation-migrated-[a-z]+-(?:material3-(?:dark-)?)?)([a-z0-9-]+)\)/gu,
-    '$1',
-  );
+  return value
+    .replace(
+      /var\(--ki-(?:color-|foundation-migrated-[a-z]+-(?:material3-(?:dark-)?)?)([a-z0-9-]+)\)/gu,
+      '$1',
+    )
+    .replace(/,(?=\S)/gu, ', ');
+}
+
+// The drawer's groups, matched in this order: status and primary tokens also start with
+// surface-, text- or outline-. Shape is the semantic corner set; --ki-radius-* is the
+// primitive scale it points at.
+const TOKEN_GROUPS = [
+  ['status', /^--ki-(?:surface|text|outline)-(?:success|danger|warning|info)(?:-|$)/u],
+  ['primary', /^--ki-(?:surface|text|outline)-primary(?:-|$)/u],
+  ['surface', /^--ki-surface-/u],
+  ['text', /^--ki-text-/u],
+  ['outline', /^--ki-outline-/u],
+  ['shape', /^--ki-corner-/u],
+];
+const GROUP_ORDER = ['surface', 'primary', 'text', 'outline', 'status', 'shape'];
+
+/** Every semantic token the shipped stylesheets declare at the root, by drawer group. */
+function semanticTokens(root) {
+  const groups = new Map(GROUP_ORDER.map((group) => [group, []]));
+  const seen = new Set();
+  const walk = (rules) => {
+    for (const rule of rules) {
+      if (rule.cssRules) walk(rule.cssRules);
+      if (!rule.style || !rule.selectorText?.includes(':root')) continue;
+      for (const name of rule.style) {
+        if (seen.has(name)) continue;
+        const group = TOKEN_GROUPS.find(([, pattern]) => pattern.test(name))?.[0];
+        if (!group) continue;
+        seen.add(name);
+        groups.get(group).push(name);
+      }
+    }
+  };
+  for (const sheet of root.styleSheets) {
+    try {
+      walk(sheet.cssRules);
+    } catch {
+      // Cross-origin sheets are unreadable and are not token sources.
+    }
+  }
+  return GROUP_ORDER.flatMap((group) => groups.get(group).map((token) => ({ group, token })));
+}
+
+/**
+ * Replace the no-JavaScript sample rows with the full semantic set (#520, item 16). A token
+ * whose value is a color gets a swatch; dimensions and images do not.
+ */
+function renderTokenRows(root) {
+  const tbody = root.querySelector('.token-table tbody');
+  const empty = tbody?.querySelector('[data-token-empty]');
+  const tokens = semanticTokens(root);
+  if (!tbody || !empty || tokens.length === 0) return;
+  const styles = root.defaultView.getComputedStyle(root.documentElement);
+  const rows = tokens.map(({ group, token }) => {
+    const row = root.createElement('tr');
+    row.className = 'token-row';
+    row.dataset.group = group;
+    const name = root.createElement('th');
+    name.scope = 'row';
+    const code = root.createElement('code');
+    code.textContent = token;
+    name.append(code);
+    const declared = root.createElement('td');
+    const declaredValue = root.createElement('span');
+    declaredValue.dataset.tokenDeclared = '';
+    declaredValue.textContent = '—';
+    declared.append(declaredValue);
+    const current = root.createElement('td');
+    if (root.defaultView.CSS.supports('color', styles.getPropertyValue(token).trim())) {
+      const swatch = root.createElement('span');
+      swatch.className = 'token-swatch';
+      swatch.dataset.swatch = '';
+      swatch.setAttribute('aria-hidden', 'true');
+      current.append(swatch);
+    }
+    const value = root.createElement('span');
+    value.dataset.tokenValue = token;
+    value.textContent = '—';
+    current.append(value);
+    row.append(name, declared, current);
+    return row;
+  });
+  for (const row of tbody.querySelectorAll('.token-row')) row.remove();
+  empty.before(...rows);
 }
 
 function inspectTokens(root, rows, previous) {
@@ -79,7 +167,9 @@ function inspectTokens(root, rows, previous) {
   const changed = [];
   for (const { row, token, declared, current, swatch } of rows) {
     const raw = styles.getPropertyValue(token).trim();
-    let value = raw || 'Unavailable';
+    // A token declared `initial` is deliberately unset in this theme (onmars draws no
+    // tooltip arrow image, for instance): say so rather than report it unavailable.
+    let value = raw || (declarations.get(token) === 'initial' ? 'unset' : 'Unavailable');
     if (swatch && raw) {
       probe.style.color = `var(${token})`;
       value = formatColor(view.getComputedStyle(probe).color);
@@ -170,6 +260,7 @@ export function initializePlayground(root = document) {
   const { documentElement: html } = root;
   const controller = new view.AbortController();
   const { signal } = controller;
+  renderTokenRows(root);
   const rows = [...root.querySelectorAll('.token-row')].map((row) => {
     const current = row.querySelector('[data-token-value]');
     return {
