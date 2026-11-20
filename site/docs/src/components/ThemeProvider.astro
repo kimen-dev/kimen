@@ -1,48 +1,24 @@
----
-// Starlight override (declared in astro.config.mjs → components.ThemeProvider).
-// Wraps the default provider and bridges Starlight's resolved theme
-// (`data-theme="dark|light"` on <html>) into Kimen's scheme attribute
-// (`data-ki-color-scheme`), so the token layer — and with it every live
-// ki-* demo — follows the docs theme toggle, including the "Auto" setting.
-import StarlightThemeProvider from '@astrojs/starlight/components/ThemeProvider.astro';
----
-
-<StarlightThemeProvider {...Astro.props} />
-
+{/* Resolve the shared Kimen preferences before the browser paints the docs. */}
 <script is:inline>
   (() => {
     const root = document.documentElement;
-    let storedTheme = null;
     let storedScheme = null;
+    let storedTheme = null;
     try {
-      storedTheme = localStorage.getItem('starlight-theme');
       storedScheme = localStorage.getItem('kimen-scheme');
+      storedTheme = localStorage.getItem('kimen-theme');
     } catch {
-      // Hardened browsing contexts can disable storage.
+      // Browsing contexts can disable storage.
     }
-    const systemScheme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    const initialScheme =
-      storedScheme === 'auto'
-        ? systemScheme
-        : storedScheme === 'light' || storedScheme === 'dark'
-          ? storedScheme
-          : storedTheme === 'light' || storedTheme === 'dark'
-            ? storedTheme
-            : 'dark';
-    root.dataset.theme = initialScheme;
-    root.dataset.kiColorScheme = initialScheme;
-    const sync = () => {
-      const theme = root.dataset.theme;
-      if (theme === 'dark' || theme === 'light') {
-        root.setAttribute('data-ki-color-scheme', theme);
-      }
-    };
-    // Starlight's inline provider script has already resolved the persisted
-    // preference by the time this runs, so the first sync happens pre-paint.
-    sync();
-    new MutationObserver(sync).observe(root, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
+    const validScheme = storedScheme === 'auto' || storedScheme === 'light' || storedScheme === 'dark';
+    const preference = validScheme ? storedScheme : 'auto';
+    const resolved = preference === 'auto'
+      ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+      : preference;
+
+    root.dataset.kimenScheme = preference;
+    root.dataset.theme = resolved;
+    root.dataset.kiColorScheme = resolved;
+    root.dataset.kiTheme = storedTheme === 'material3' ? 'material3' : 'onmars';
   })();
 </script>

@@ -22,13 +22,9 @@ interface PressEndEvent {
   readonly currentTarget: EventTarget | null;
 }
 
-function pressTarget(event: PressEndEvent): PressTarget | null {
-  return (event.currentTarget as PressTarget | null) ?? null;
-}
-
 /** keydown on the inner button: Space starts a press. */
 export function startKeyboardPress(event: PressKeyEvent): void {
-  const target = pressTarget(event);
+  const target = event.currentTarget as PressTarget | null;
   if (event.key !== ' ' || target === null || target.disabled === true) {
     return;
   }
@@ -45,5 +41,6 @@ export function releaseKeyboardPress(event: PressKeyEvent): void {
 
 /** blur of the inner button: a press never outlives the focus it began with. */
 export function endKeyboardPress(event: PressEndEvent): void {
-  pressTarget(event)?.removeAttribute(KEYBOARD_PRESSED_ATTRIBUTE);
+  const target = event.currentTarget as PressTarget | null;
+  target?.removeAttribute(KEYBOARD_PRESSED_ATTRIBUTE);
 }

@@ -1,0 +1,56 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-top-nav" />
+
+# TopNav
+
+Choose the default header for site-wide primary navigation. Use
+`variant="app-bar"` for a screen heading, a leading control and screen actions.
+
+```html
+<a class="skip-link" href="#main">Skip to content</a>
+
+<ki-top-nav label="Workspace" sticky>
+  <a slot="brand" href="/">Kimen</a>
+  <a href="/overview" aria-current="page">Overview</a>
+  <a href="/projects">Projects</a>
+  <ki-icon-button slot="actions" variant="ghost" label="Notifications, 3 unread">
+    <ki-icon name="bell"></ki-icon>
+    <ki-counter slot="counter" value="3"></ki-counter>
+  </ki-icon-button>
+</ki-top-nav>
+
+<main id="main" tabindex="-1">Workspace content</main>
+```
+
+Import `@kimen/elements/icons/bell` before mounting the example. If the account
+control opens a menu, give its trigger an accessible name and wire that menu
+through the application. The navigation menu and the app-bar overflow have
+their own localized names, set through `navigation-label` and `overflow-label`.
+
+## Screen layouts
+
+`sm` and `md` use one row. Compact one-row bars can center their title with
+`title-align="center"` when they have at most one action. In app-bar mode,
+`lg` and `xl` give the title its own row. Use `scroll-behavior="collapse"` to
+shrink either size on scroll, or `none` to keep the resting layout and tint.
+
+```html
+<ki-top-nav variant="app-bar" title="Release notes" subtitle="Version 2.4"
+  heading-level="2" size="lg" sticky scroll-behavior="collapse">
+  <button type="button" slot="leading">Back</button>
+  <button type="button" slot="actions">Share</button>
+  <button type="button" slot="actions">Edit</button>
+  <button type="button" slot="actions">Pin</button>
+  <button type="button" slot="actions">Archive</button>
+</ki-top-nav>
+```
+
+The first three actions stay on the bar. More actions presents subsequent
+named controls and invokes the original control on activation. A search
+control in the `search` slot occupies the central area of the main row.
+
+Override `--ki-top-nav-bg` and `--ki-top-nav-fg` for the site header, or
+`--ki-app-bar-bg`, `--ki-app-bar-fg` and `--ki-app-bar-scrolled-bg` for screen
+bars. Background images and backdrop filters are opt-in surface tokens.
+Use `--ki-app-bar-title-font-family` to customize only this heading.

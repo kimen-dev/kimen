@@ -334,8 +334,8 @@ Feature: Kimen MCP server
     # S3
     Scenario: Describing a component outside the catalog is refused by name
       Given a Kimen MCP server started over stdio
-      When the agent describes the component "ki-carousel"
-      Then the call fails naming "ki-carousel" as not in the catalog
+      When the agent describes the component "ki-unlisted"
+      Then the call fails naming "ki-unlisted" as not in the catalog
       And the failure points the agent to listing the catalog
 
     # S4
@@ -362,7 +362,7 @@ Feature: Kimen MCP server
 
       Examples:
         | defect                                                | code              | path                | offender    |
-        | the component "ki-carousel"                           | unknown-component | root.component      | ki-carousel |
+        | the component "ki-unlisted"                           | unknown-component | root.component      | ki-unlisted |
         | a "ki-button" bound to the undeclared action "delete" | undeclared-action | root.action         | delete      |
         | a "ki-badge" whose prop "tone" is "loud"              | invalid-prop-type | root.props.tone     | loud        |
         | a "ki-button" with the key "__proto__"                | forbidden-key     | spec.root.__proto__ | __proto__   |

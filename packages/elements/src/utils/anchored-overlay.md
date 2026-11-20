@@ -1,9 +1,14 @@
 # Anchored overlay
 
-Use one `AnchoredOverlay` instance per floating surface. Render the surface
-with `popover="manual"` and pass its element and the trigger element to
-`show(popup, trigger, options)`. The component owns its open state, ARIA,
-keyboard commands, and initial focus.
+Use one `AnchoredOverlay` instance per floating surface and pass the surface
+and trigger elements to `show(popup, trigger, options)`. The component owns
+its open state, ARIA, keyboard commands, and initial focus.
+
+- For a component that owns dismissal, render the surface with
+  `popover="manual"`. For native light dismissal, render it with
+  `popover="auto"`, pass the native invoker as `source`, and synchronize
+  component state on `toggle`. Omit the manual dismissal options on this
+  path. A native close stops placement updates until the next open.
 
 - Menu and Popover can resolve `anchor` or `for` using
   `resolveOverlayAnchor(this.host, id)`. The ID is looked up in the host's
@@ -25,6 +30,8 @@ keyboard commands, and initial focus.
   scope. The utility applies CSS anchor offsets against the measured anchor
   box and uses fixed coordinates if the name cannot be resolved, including
   across scopes where CSS cannot see the anchor.
+  An auto popover can pass its invoker as `source` to use the implicit CSS
+  anchor with the same measured fallback.
 - Managed positioning updates on viewport resize, ancestor scroll, trigger or
   popup resize, and connected reparenting. Call `reposition()` after other
   layout changes. Call `hide()` on close and from `disconnectedCallback`.

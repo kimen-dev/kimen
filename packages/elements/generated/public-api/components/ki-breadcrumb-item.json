@@ -1,0 +1,88 @@
+{
+  "component": {
+    "attributes": {
+      "current": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Explicitly marks the final level as current. The owning breadcrumb treats\nits final level as current by position, including when this marker is omitted.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native destination for an ancestor level. Leaves the label as text when omitted.\nThe final level never links away from the current page.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "One declarative level in a breadcrumb path.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "current": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Explicitly marks the final level as current. The owning breadcrumb treats\nits final level as current by position, including when this marker is omitted.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native destination for an ancestor level. Leaves the label as text when omitted.\nThe final level never links away from the current page.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Plain-text label mirrored by the owning breadcrumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-breadcrumb-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-breadcrumb-item.d.ts",
+    "symbols": {
+      "KiBreadcrumbItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiBreadcrumbItem extends Components.KiBreadcrumbItem, HTMLElement {\n}\nexport const KiBreadcrumbItem: {\n    prototype: KiBreadcrumbItem;\n    new (): KiBreadcrumbItem;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-breadcrumb-item.js"
+  }
+}

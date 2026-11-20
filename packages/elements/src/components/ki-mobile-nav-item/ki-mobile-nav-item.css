@@ -1,0 +1,93 @@
+:host {
+  display: grid;
+  min-inline-size: 0;
+  color: var(--ki-mobile-nav-item-fg);
+  font-family: var(--ki-mobile-nav-font-family);
+  font-size: var(--ki-mobile-nav-item-font-size);
+  font-weight: var(--ki-mobile-nav-item-font-weight);
+  line-height: var(--ki-mobile-nav-item-line-height);
+}
+
+:host([current]) {
+  color: var(--ki-mobile-nav-item-current-fg);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ki-mobile-nav-item-gap);
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--ki-mobile-nav-item-target-min);
+  min-block-size: var(--ki-mobile-nav-item-target-min);
+  padding-block: var(--ki-mobile-nav-item-gap);
+  box-sizing: border-box;
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+}
+
+a:focus-visible {
+  border-radius: var(--ki-mobile-nav-item-focus-radius);
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+[part="label"] {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+.count-announcement {
+  position: absolute;
+  inline-size: var(--ki-typography-visually-hidden-size);
+  block-size: var(--ki-typography-visually-hidden-size);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[part="indicator"] {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: min(100%, var(--ki-mobile-nav-indicator-inline-size));
+  block-size: var(--ki-mobile-nav-indicator-block-size);
+  border-radius: var(--ki-mobile-nav-indicator-radius);
+  font-size: var(--ki-mobile-nav-item-icon-size);
+}
+
+:host([current]) [part="indicator"] {
+  background-color: var(--ki-mobile-nav-indicator-bg);
+  color: var(--ki-mobile-nav-indicator-fg);
+  outline: var(--ki-mobile-nav-border-width) solid currentcolor;
+  outline-offset: calc(-1 * var(--ki-mobile-nav-border-width));
+}
+
+ki-counter {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}
+
+@media (forced-colors: active) {
+  a {
+    color: LinkText;
+  }
+
+  a:focus-visible {
+    outline-color: Highlight;
+  }
+
+  :host([current]) [part="indicator"] {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+    outline-color: Highlight;
+  }
+}

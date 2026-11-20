@@ -205,6 +205,44 @@
           "$value": "{ki.typography.line-height.title-2}",
           "$description": "dimension used by the tab component for xl line height (Tab-nav-item 10048:1068 xl: UI/title-2)."
         }
+      },
+      "primary": {
+        "indicator-height": {
+          "$value": "{ki.control.indicator-width.medium}",
+          "$description": "Height of the content-width indicator on a primary icon tab."
+        }
+      },
+      "secondary": {
+        "indicator-height": {
+          "$value": "{ki.control.indicator-width.thin}",
+          "$description": "Height of the full-width indicator on a secondary tab."
+        }
+      },
+      "icon": {
+        "size": {
+          "$value": "{ki.glyph.size.md}",
+          "$description": "Inline and block size of a decorative tab icon."
+        },
+        "inline-gap": {
+          "$value": "{ki.layout.spacing.md}",
+          "$description": "Gap from an inline tab icon to its label."
+        },
+        "stacked-gap": {
+          "$value": "{ki.layout.spacing.xxs}",
+          "$description": "Gap from a stacked tab icon to its label."
+        },
+        "stacked-min-block-size": {
+          "$value": "{ki.layout.spacing.18xl}",
+          "$description": "Minimum block size for a tab with a stacked icon."
+        }
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional surface image for a tab."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for a tab surface."
       }
     }
   }

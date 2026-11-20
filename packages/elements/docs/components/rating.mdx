@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-rating" />
+
+# ki-rating
+
+Use a rating to show an average review score or collect an answer on a small, ordered scale.
+
+```html
+<ki-rating readonly label="Average review score" value="4.3"></ki-rating>
+<ki-rating label="How useful was this answer?" name="usefulness" required></ki-rating>
+```
+
+A read-only rating presents one accessible image and shows the exact score alongside artwork rounded to the nearest half star. In input mode, the label names a radio group. Tab enters at the selection or first choice, arrows move and select with wrapping, and Space selects the focused choice. The visible score updates alongside the filled glyphs.
+
+Each editable choice is a whole star by default. Use `precision="0.5"` for half steps and set `max` to a whole number from 1 to 10. A named editable rating submits its selected value as a decimal string. An unanswered optional field is omitted. Set `required` to block submission until a choice is made. A disabled rating is skipped and form reset restores the starting value.
+
+Listen for `ki-change` with numeric `detail.value`. Import any alternative Lucide icon before mounting and pass its name to `icon-name`. Use `option-singular-label` and `option-label` to name choices for that glyph. Set `rated-label`, `score-label` and `required-message` to localize the remaining strings. The label patterns use `{value}` and `{max}` as placeholders.
+
+The `--ki-rating-on-fg`, `--ki-rating-off-fg`, `--ki-rating-size` and `--ki-rating-gap` tokens control the artwork. Interactive targets respect the surrounding Kimen density.

@@ -38,6 +38,32 @@
           "$value": "{ki.space.10xl}",
           "$description": "dimension used by the tabs component for the xl gap between tabs (Tab-nav 10048:1249 xl binds Space/10xl, 32px)."
         }
+      },
+      "secondary": {
+        "unselected": {
+          "rest": {
+            "fg": {
+              "$value": "{ki.text.supporting}",
+              "$description": "Secondary tab label foreground at rest."
+            },
+            "bg": {
+              "$value": "{ki.transparent-inverse}",
+              "$description": "Secondary tab background at rest."
+            }
+          }
+        },
+        "selected": {
+          "rest": {
+            "fg": {
+              "$value": "{ki.text.high-em}",
+              "$description": "Selected secondary tab label foreground at rest."
+            },
+            "bg": {
+              "$value": "{ki.transparent-inverse}",
+              "$description": "Selected secondary tab background at rest."
+            }
+          }
+        }
       }
     }
   }

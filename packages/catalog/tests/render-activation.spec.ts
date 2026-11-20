@@ -1,4 +1,5 @@
 // @spec:028-guarded-renderer
+// @spec:094-toggle-icon-button
 // Activation events of bound actions (FR-003, S4, S17-S19): a bound action
 // fires on the activation event its catalog entry declares — never by
 // cancelling the control's own change — and carries the control's live,
@@ -12,6 +13,7 @@ import {
   type Catalog,
   catalogData,
   createCatalog,
+  createLiveSurface,
   createStreamingRenderer,
   renderUiSpec,
 } from '../src/index.js';
@@ -120,6 +122,73 @@ describe('renderUiSpec — bound actions fire on the declared activation event',
     });
   });
 
+  it('routes only a Combobox commit and reports the current multiple selection', () => {
+    const entry = builtIn.components['ki-combobox'];
+    expect(Object.keys(entry?.events ?? {})).toEqual(['change', 'ki-input']);
+    expect(entry?.activationEvent).toBe('change');
+    const extended = createCatalog(
+      {
+        components: {
+          'acme-tip': {
+            description: 'A tip.',
+            events: {},
+            props: {},
+            slots: {},
+            tag: 'acme-tip',
+            whenToUse: 'Offer brief guidance.',
+            whenNotToUse: 'Request a decision.',
+          },
+        },
+      },
+      { extend: builtIn },
+    );
+    expect(extended.ok && extended.catalog.components['ki-combobox']?.activationEvent).toBe(
+      'change',
+    );
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    const live = createLiveSurface({ actions: ['pick'], surface, onAction });
+    expect(
+      live.apply({
+        ops: [
+          {
+            op: 'insert',
+            node: {
+              id: 'choices',
+              component: 'ki-combobox',
+              action: 'pick',
+              props: { label: 'Labels', multiple: true, value: '[ "bug" ]' },
+            },
+          },
+        ],
+      }).ok,
+    ).toBe(true);
+    const combobox = rendered('ki-combobox');
+    change(combobox, 'ki-input');
+    expect(onAction).not.toHaveBeenCalled();
+
+    combobox['value'] = ['bug', 'a,b'];
+    change(combobox);
+    expect(onAction).toHaveBeenCalledOnce();
+    expect(onAction.mock.calls[0]?.[0]?.data['value']).toBe('["bug","a,b"]');
+
+    const set = live.apply({
+      ops: [
+        {
+          op: 'set',
+          id: 'choices',
+          props: { value: '["search"]' },
+        },
+      ],
+    });
+    expect(set.diagnostics[0]?.rule).toBe('user-state-conflict');
+    const remove = live.apply({ ops: [{ op: 'remove', id: 'choices' }] });
+    expect(remove.diagnostics[0]?.rule).toBe('user-state-conflict');
+
+    combobox['value'] = ['bug'];
+    change(combobox);
+    expect(live.apply({ ops: [{ op: 'remove', id: 'choices' }] }).ok).toBe(true);
+  });
+
   it('S18 a click inside the selected panel dispatches nothing', () => {
     const onAction = vi.fn<(event: ActionEvent) => void>();
     renderUiSpec(tabsSpec(), { surface, onAction });
@@ -130,6 +199,24 @@ describe('renderUiSpec — bound actions fire on the declared activation event',
     change(panel, 'input');
     change(panel, 'ki-change');
     expect(onAction).not.toHaveBeenCalled();
+  });
+
+  it('omits a cleared optional value from a bound action', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    renderUiSpec(
+      {
+        version: 1,
+        actions: ['pick'],
+        root: { component: 'ki-input', action: 'pick', props: { label: 'Name', value: 'Initial' } },
+      },
+      { surface, onAction },
+    );
+    const control = rendered('ki-input');
+    control['value'] = undefined;
+
+    change(control);
+
+    expect(onAction.mock.calls[0]?.[0]?.data).toEqual({ label: 'Name' });
   });
 
   it('S17 the live payload carries only catalog-declared props of their declared type', () => {
@@ -157,11 +244,43 @@ describe('renderUiSpec — bound actions fire on the declared activation event',
     );
     const button = rendered('ki-button');
     change(button);
+    change(button, 'ki-change');
     expect(onAction).not.toHaveBeenCalled();
     expect(click(button).defaultPrevented).toBe(true);
     expect(onAction).toHaveBeenCalledTimes(1);
     expect(onAction.mock.calls[0]?.[0]?.data).toEqual({ variant: 'primary' });
   });
+
+  it.each(['ki-button', 'ki-icon-button'])(
+    'S1 %s relays one declared toggle action with live selection',
+    (tag) => {
+      const onAction = vi.fn<(event: ActionEvent) => void>();
+      const props =
+        tag === 'ki-icon-button' ? { toggle: true, label: 'Bookmark' } : { toggle: true };
+      expect(
+        renderUiSpec(
+          {
+            version: 1,
+            actions: ['bookmark'],
+            root: { component: tag, action: 'bookmark', props },
+          },
+          { surface, onAction },
+        ).ok,
+      ).toBe(true);
+      const button = rendered(tag);
+
+      expect(Object.keys(builtIn.components[tag]?.events ?? {})).toEqual(['ki-change']);
+      expect(click(button).defaultPrevented).toBe(false);
+      expect(onAction).not.toHaveBeenCalled();
+      button['selected'] = true;
+      change(button, 'ki-change');
+      expect(onAction).toHaveBeenCalledExactlyOnceWith({
+        action: 'bookmark',
+        data: { ...props, selected: true },
+        path: 'root',
+      });
+    },
+  );
 
   it('S4 a change-bound control inside a click-bound card dispatches exactly one action', () => {
     const onAction = vi.fn<(event: ActionEvent) => void>();
@@ -272,5 +391,67 @@ describe('renderUiSpec — an ambiguous activation event fails closed', () => {
     expect(result.ok).toBe(false);
     expect(result.diagnostics[0]?.rule).toBe('ambiguous-activation-event');
     expect(surface.childNodes).toHaveLength(0);
+  });
+});
+
+describe('chip variant actions', () => {
+  it.each([
+    [{}, 'ki-change'],
+    [{ type: 'assist' }, 'ki-activate'],
+    [{ type: 'input', removable: true }, 'ki-remove'],
+  ] as const)('uses only the event declared for %j', (props, activation) => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    const result = renderUiSpec(
+      {
+        version: 1,
+        actions: ['pick'],
+        root: { component: 'ki-chip', props, action: 'pick', slots: { '': ['Design'] } },
+      },
+      { surface, onAction },
+    );
+    expect(result.ok).toBe(true);
+    const chip = rendered('ki-chip');
+    chip['selected'] = true;
+    for (const event of ['ki-change', 'ki-activate', 'ki-remove']) {
+      if (event !== activation) {
+        change(chip, event);
+      }
+    }
+    expect(onAction).not.toHaveBeenCalled();
+    change(chip, activation);
+    expect(onAction).toHaveBeenCalledTimes(1);
+    expect(onAction.mock.calls[0]?.[0]).toMatchObject({ action: 'pick', data: { selected: true } });
+  });
+
+  it('uses input collection type for a child with no explicit type', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    expect(
+      renderUiSpec(
+        {
+          version: 1,
+          actions: ['pick'],
+          root: {
+            component: 'ki-chip-group',
+            props: { label: 'Recipients', type: 'input' },
+            slots: {
+              '': [
+                {
+                  component: 'ki-chip',
+                  props: { removable: true },
+                  action: 'pick',
+                  slots: { '': ['Ana'] },
+                },
+              ],
+            },
+          },
+        },
+        { surface, onAction },
+      ).ok,
+    ).toBe(true);
+    const chip = rendered('ki-chip');
+    change(chip, 'ki-change');
+    expect(onAction).not.toHaveBeenCalled();
+    change(chip, 'ki-remove');
+    expect(onAction).toHaveBeenCalledTimes(1);
   });
 });

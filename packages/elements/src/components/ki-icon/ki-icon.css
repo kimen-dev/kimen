@@ -27,4 +27,7 @@ svg {
   inline-size: var(--_ki-icon-size);
   block-size: var(--_ki-icon-size);
   stroke-width: var(--ki-icon-stroke-width);
+
+  /* Internal hook for components that use the same glyph as a fill indicator. */
+  fill: var(--_ki-icon-fill, none);
 }

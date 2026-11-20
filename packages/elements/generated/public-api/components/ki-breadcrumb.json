@@ -1,0 +1,417 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": "'Breadcrumb'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "max-items": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional overflow threshold. Above it, keep the first and last two levels\nvisible. Positive values are rounded down and clamped to four. Omit this\nprop, or pass a non-positive or non-finite value, to show the full trail.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "more-label": {
+        "default": "'Show {n} more levels'",
+        "deprecatedSince": null,
+        "description": "Localizable name of the overflow control. Use {n} for the hidden level count.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-breadcrumb-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Transparent backing for ancestor text and the overflow trigger.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-current-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Transparent backing for the current level.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-current-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emphasized foreground of the current level.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium-emphasis ink for ancestors and the overflow trigger, strengthened in more-contrast mode.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between breadcrumb rows, levels and their chevrons.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-glyph-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the ellipsis glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Backing for the active overflow trigger and highlighted overflow links.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for the active overflow trigger and highlighted overflow links.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-menu-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter of the overflow menu, none by default.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-menu-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface behind the overflow menu entries.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-menu-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over the overflow menu surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-menu-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text of overflow menu entries.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-menu-max-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum block size of the scrollable overflow menu.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-menu-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset around the overflow menu entries.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-menu-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outer radius of the overflow menu.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-menu-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Elevation of the overflow menu above the page.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block inset of a level label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline inset of a level label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Radius of the overflow trigger and level focus outlines.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-separator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the decorative breadcrumb chevron.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-separator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge length of the decorative chevron before rotation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-breadcrumb-separator-stroke": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the decorative chevron.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-underline-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between text and its underline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A path of ancestor links ending at the current page, with optional overflow.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "current": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The current page label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The label of an ancestor with no destination.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "link": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A visible native ancestor link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "list": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The ordered list of visible levels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "list-item": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A list entry for a level or the overflow control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "menu": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The anchored menu of collapsed levels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "menu-item": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A destination or unavailable level in the overflow menu.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "more-button": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The overflow menu button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "navigation": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": "'Breadcrumb'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "maxItems": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional overflow threshold. Above it, keep the first and last two levels\nvisible. Positive values are rounded down and clamped to four. Omit this\nprop, or pass a non-positive or non-finite value, to show the full trail.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "moreLabel": {
+        "default": "'Show {n} more levels'",
+        "deprecatedSince": null,
+        "description": "Localizable name of the overflow control. Use {n} for the hidden level count.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct ki-breadcrumb-item children in hierarchy order.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-breadcrumb.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-breadcrumb.d.ts",
+    "symbols": {
+      "KiBreadcrumb": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiBreadcrumb extends Components.KiBreadcrumb, HTMLElement {\n}\nexport const KiBreadcrumb: {\n    prototype: KiBreadcrumb;\n    new (): KiBreadcrumb;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-breadcrumb.js"
+  }
+}

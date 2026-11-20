@@ -247,7 +247,7 @@
    render at the cell type scale (13/24) in muted label emphasis — the state
    var keeps them on the disabled ladder automatically (harness audit,
    supersedes review round 1 Important-3 "intrinsic sizing"). */
-slot::slotted(*) {
+slot:is([name="start"], [name="end"])::slotted(*) {
   flex: 0 0 auto;
   color: var(--_ki-input-label-fg);
   font-size: var(--_ki-input-font-size);
@@ -255,10 +255,19 @@ slot::slotted(*) {
 }
 
 /* Icon-shaped adornments get the 18px icon box (MarsUI Left_md/Right_md). */
-slot::slotted(svg),
-slot::slotted(img) {
+slot:is([name="start"], [name="end"])::slotted(svg),
+slot:is([name="start"], [name="end"])::slotted(img) {
   inline-size: var(--_ki-input-icon-size);
   block-size: var(--_ki-input-icon-size);
+}
+
+/* Replace the row gap and end padding only at the action's edges. A flex
+   host centers the painted button without an inline text baseline. */
+slot[name="action"]::slotted(:not([hidden])) {
+  display: flex;
+  flex: 0 0 auto;
+  margin-inline: calc(var(--ki-input-action-gap) - var(--ki-input-gap))
+    calc(var(--ki-input-action-padding-end) - var(--_ki-input-padding-inline));
 }
 
 /* Micro-motion (MarsUI soft-surface language): fill/border crossfade on

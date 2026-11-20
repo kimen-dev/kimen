@@ -287,7 +287,7 @@ describe('language-model index and documents', () => {
       expect(whenToUse.slice(note.length)).toMatch(/^$|^\s+[A-Z]/u);
     }
     expect(components.find((link) => link.name === 'ki-button')?.note).toBe(
-      'trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.',
+      'trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, or persistent actions such as Bold with `toggle`.',
     );
   });
 
@@ -338,9 +338,9 @@ describe('language-model index and documents', () => {
       ),
     );
 
-    // About four thousand tokens at four bytes each: an agent can always
+    // About six thousand tokens at four bytes each: an agent can always
     // afford to read the index before it has chosen anything.
-    expect(LLMS_INDEX_MAX_BYTES).toBe(16_384);
+    expect(LLMS_INDEX_MAX_BYTES).toBe(24_576);
     for (const index of indexes) {
       expect(index.byteLength).toBeLessThanOrEqual(LLMS_INDEX_MAX_BYTES);
       expect(indexLinks(index.toString('utf8')).length).toBeGreaterThan(0);

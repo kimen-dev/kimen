@@ -1,4 +1,5 @@
 // @spec:035-live-surface
+// @spec:094-toggle-icon-button
 // The live surface as a security boundary and as a minimal-change renderer:
 // batches addressed by stable ids are validated against the resulting state
 // before any DOM write, change only what they name, never overwrite the
@@ -200,6 +201,66 @@ describe('035 — a batch changes only what it names', () => {
     expect(live.snapshot().nodes[0]?.slots?.['footer']?.[0]).toMatchObject({
       props: { disabled: false },
     });
+    expect(canonical(surface)).toBe(freshHtml(live));
+  });
+
+  it('S1 switches a bound button to toggle activation and preserves the user selection', () => {
+    const { live, events } = mount();
+    const button = one('ki-button');
+    button.click();
+    expect(events.map(({ data }) => data)).toEqual([{ variant: 'primary' }]);
+
+    const set = (props: { toggle?: boolean; selected?: boolean; type?: string | null }) =>
+      live.apply({ ops: [{ id: 'pay', op: 'set', props }] });
+    expect(set({ toggle: true }).ok).toBe(true);
+    button.click();
+    expect(events).toHaveLength(1);
+    Reflect.set(button, 'selected', true);
+    button.dispatchEvent(new CustomEvent('ki-change', { bubbles: true }));
+    expect(events.map(({ data }) => data)).toEqual([
+      { variant: 'primary' },
+      { variant: 'primary', toggle: true, selected: true },
+    ]);
+
+    expect(set({ selected: false })).toMatchObject({
+      ok: false,
+      diagnostics: [{ rule: 'user-state-conflict' }],
+    });
+    expect(set({ type: 'submit' }).ok).toBe(true);
+    expect(set({ toggle: false, type: null }).ok).toBe(true);
+    expect(button.getAttribute('type')).toBe('button');
+    button.click();
+    expect(events.at(-1)?.data).toEqual({ variant: 'primary', toggle: false });
+  });
+
+  it('updates and unsets a Kimen boolean that defaults to true', () => {
+    const { live } = mount();
+    const inserted = live.apply({
+      ops: [
+        {
+          node: { component: 'ki-popover', id: 'filters', props: { arrow: false } },
+          op: 'insert',
+          parent: 'board',
+        },
+      ],
+    });
+    expect(inserted.ok).toBe(true);
+    const popover = one('ki-popover');
+    expect(popover.outerHTML).toBe('<ki-popover arrow="false"></ki-popover>');
+
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: true } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover arrow=""></ki-popover>');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: false } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover arrow="false"></ki-popover>');
+    expect(live.apply({ ops: [{ id: 'filters', op: 'set', props: { arrow: null } }] }).ok).toBe(
+      true,
+    );
+    expect(popover.outerHTML).toBe('<ki-popover></ki-popover>');
+    expect(one('ki-popover')).toBe(popover);
     expect(canonical(surface)).toBe(freshHtml(live));
   });
 
@@ -959,5 +1020,72 @@ describe('035 — property: random batches keep the DOM equal to the snapshot (S
     // The generator exercises both paths, not only rejections.
     expect(applied).toBeGreaterThan(100);
     expect(rejected).toBeGreaterThan(100);
+  });
+});
+
+describe('live chip collections', () => {
+  it('keeps a remove request in the model until the host patches it', () => {
+    const { live, events } = mount({}, false);
+    expect(
+      live.apply({
+        ops: [
+          {
+            op: 'insert',
+            node: {
+              component: 'ki-chip',
+              id: 'ana',
+              action: 'pick',
+              props: { type: 'input', removable: true, value: 'ana' },
+              slots: { '': ['Ana'] },
+            },
+          },
+        ],
+      }).ok,
+    ).toBe(true);
+    const request = new CustomEvent('ki-remove', { cancelable: true });
+    expect(one('ki-chip').dispatchEvent(request)).toBe(false);
+    expect(events[0]?.action).toBe('pick');
+    expect(live.snapshot().nodes).toHaveLength(1);
+    expect(live.apply({ ops: [{ op: 'remove', id: 'ana' }] }).ok).toBe(true);
+    expect(surface.querySelector('ki-chip')).toBeNull();
+  });
+
+  it('updates a previously cached snapshot and action paths after a user move', () => {
+    const { live, events } = mount({}, false);
+    expect(
+      live.apply({
+        ops: [
+          {
+            op: 'insert',
+            node: {
+              component: 'ki-chip-group',
+              id: 'team',
+              props: { label: 'Team', reorderable: true },
+              slots: {
+                '': [
+                  {
+                    component: 'ki-chip',
+                    id: 'design',
+                    action: 'pick',
+                    props: { value: 'design' },
+                  },
+                  { component: 'ki-chip', id: 'eng', action: 'pick', props: { value: 'eng' } },
+                ],
+              },
+            },
+          },
+        ],
+      }).ok,
+    ).toBe(true);
+    const before = live.snapshot();
+    expect(before.nodes[0]?.slots?.['']?.[0]).toMatchObject({ id: 'design' });
+    const group = one('ki-chip-group');
+    const design = one('ki-chip[value="design"]');
+    group.append(design);
+    group.dispatchEvent(new CustomEvent('ki-reorder'));
+    expect(live.snapshot()).not.toBe(before);
+    expect(live.snapshot().nodes[0]?.slots?.['']?.[0]).toMatchObject({ id: 'eng' });
+    design.dispatchEvent(new CustomEvent('ki-change'));
+    expect(events[0]?.path).toBe('surface[0].slots.[1]');
   });
 });

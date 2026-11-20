@@ -1,0 +1,62 @@
+---
+title: Reasoning
+description: Show an assistant's plan or supporting steps in a disclosure.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-reasoning` for supporting steps that a reader can open on demand. Keep
+the assistant's answer outside the disclosure. The disclosure starts collapsed
+and its summary reads “Thinking…” while the assistant works.
+
+## Thinking
+
+Append steps to the default slot as they arrive. An open disclosure shows the new
+steps in order. Set `open` to display the steps immediately.
+
+<Demo code={`<ki-reasoning open>
+  <ol>
+    <li>Check the inputs.</li>
+    <li>Compare the available outcomes.</li>
+  </ol>
+</ki-reasoning>`} />
+
+## Completed
+
+Set `status="done"` when the assistant finishes. Supply elapsed milliseconds in
+`duration` for a summary such as “Thought for 12 seconds.” The component rounds
+the elapsed time to the nearest second. Without a valid elapsed time, the
+summary reads “Thought.” The disclosure keeps its current open state.
+
+<Demo code={`<ki-reasoning status="done" duration="12000">
+  <ol>
+    <li>Check the inputs.</li>
+    <li>Compare the available outcomes.</li>
+  </ol>
+</ki-reasoning>`} />
+
+## Accessibility and customization
+
+The native summary opens and closes with Enter or Space. Status changes have a
+polite announcement, and reduced motion keeps the thinking text still. Localize
+the summary with `thinking-label`, `done-label`, `singular-duration-label`, and
+`duration-label`. Include `{seconds}` in the two duration labels where the
+number belongs.
+
+Use `--ki-reasoning-fg` to customize the text and `--ki-reasoning-border` to
+customize the rule beside the steps. The backing is transparent by default.
+Use `--ki-reasoning-bg`, `--ki-reasoning-bg-image`, and
+`--ki-reasoning-backdrop-filter` to style it. The `summary` and `body` parts
+allow additional styling.
+
+Listen for `ki-toggle` to read `event.detail.open` after a reader opens or closes
+the disclosure.
+
+## API reference
+
+<CemApi tag="ki-reasoning" />
+
+## Workshop
+
+[Open ki-reasoning in Storybook](/storybook/?path=/docs/docs-components-ki-reasoning--docs)

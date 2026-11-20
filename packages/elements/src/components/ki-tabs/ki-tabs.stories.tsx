@@ -77,25 +77,40 @@ export const AllDisabled: Story = {
   ),
 };
 
-export const WithIcons: Story = {
-  render: (args) => (
-    <ki-tabs {...args}>
-      <ki-tab value="email">
-        <span slot="start" aria-hidden="true">
-          @
-        </span>
-        Email
+function MailTabs(args: JSX.KiTabs) {
+  return (
+    <ki-tabs label="Mail" {...args}>
+      <ki-tab value="inbox">
+        <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 5h18v14H3zM3 5l9 7 9-7" />
+        </svg>
+        Inbox
       </ki-tab>
-      <ki-tab value="security">
-        <span slot="start" aria-hidden="true">
-          #
-        </span>
-        Security
+      <ki-tab value="sent">
+        <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m3 10 18-7-7 18-3-8-8-3zM11 13 21 3" />
+        </svg>
+        Sent
       </ki-tab>
-      <ki-tab-panel value="email">Email panel</ki-tab-panel>
-      <ki-tab-panel value="security">Security panel</ki-tab-panel>
+      <ki-tab-panel value="inbox">Incoming messages</ki-tab-panel>
+      <ki-tab-panel value="sent">Sent messages</ki-tab-panel>
     </ki-tabs>
-  ),
+  );
+}
+
+export const WithIcons: Story = {
+  args: { label: 'Mail', value: 'inbox', variant: 'primary' },
+  render: (args) => <MailTabs {...args} />,
+};
+
+export const Secondary: Story = {
+  args: { label: 'Mail sections', value: 'sent', variant: 'secondary' },
+  render: (args) => <MailTabs {...args} />,
+};
+
+export const PrimaryInline: Story = {
+  args: { label: 'Mail', value: 'inbox', variant: 'primary', iconLayout: 'inline' },
+  render: (args) => <MailTabs {...args} />,
 };
 
 export const Fallback: Story = {

@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Recipes/Tracking order updates" />
+
+# Tracking order updates
+
+Use a timeline to show a sequence of events with its current state in plain
+language. For order tracking, start with the earliest event and put carrier
+information in a disclosure.
+
+```html
+<ki-timeline label="Order updates" order="oldest-first">
+  <ki-timeline-item datetime="2024-11-19" tone="success">Order received</ki-timeline-item>
+  <ki-timeline-item datetime="2024-11-20T11:45:00Z" details-label="Carrier details">
+    Dispatch confirmed
+    <div slot="details">The parcel is with the carrier.</div>
+  </ki-timeline-item>
+  <ki-timeline-item>Delivery pending</ki-timeline-item>
+</ki-timeline>
+```
+
+Use date-times with an offset for events shared across time zones. A
+date-only value shows a calendar date. Leave the date off when an event has
+no timestamp. Undated entries appear after the dated events.
+
+Set `--ki-timeline-dot-size`, `--ki-timeline-line` and `--ki-timeline-time-fg`
+on the enclosing timeline to adjust its markers, connector and time text.

@@ -6,6 +6,7 @@
  * written from spec data must never be. Internal module — not part of the
  * package's public surface.
  */
+import { MARKDOWN_ORIGINS_ATTRIBUTE } from './generated/url-scheme.js';
 
 /** Why a prop name cannot be written as an attribute from spec data. */
 export type PropNameViolation = 'event-handler' | 'reserved' | 'malformed';
@@ -19,6 +20,7 @@ const EVENT_HANDLER_PROP = /^on/iu;
 // `style` is a CSS-injection path and breaks a CSP with style-src-attr 'none',
 // `class` couples spec data to the host page's stylesheets, `slot` fights the
 // renderer's own slot assignment and `id` collides with the host page's ids.
+// The Markdown origin scope belongs to the host's render options.
 // Case-insensitive for the same setAttribute reason.
 const RESERVED_ATTRIBUTE_PROP = /^(?:class|id|slot|style)$/iu;
 
@@ -38,7 +40,7 @@ export function propNameViolation(name: string): PropNameViolation | null {
   if (EVENT_HANDLER_PROP.test(name)) {
     return 'event-handler';
   }
-  if (RESERVED_ATTRIBUTE_PROP.test(name)) {
+  if (RESERVED_ATTRIBUTE_PROP.test(name) || name.toLowerCase() === MARKDOWN_ORIGINS_ATTRIBUTE) {
     return 'reserved';
   }
   if (!SAFE_PROP_NAME.test(name)) {

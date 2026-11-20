@@ -94,6 +94,23 @@ test('component sweep is generic: any component bg/fg pair, semantic layers and 
   ]);
 });
 
+test('Stat checks every text ink against its single card surface', () => {
+  const names = [
+    '--ki-stat-label-fg',
+    '--ki-stat-value-fg',
+    '--ki-stat-delta-neutral-fg',
+    '--ki-stat-delta-success-fg',
+    '--ki-stat-delta-danger-fg',
+  ];
+  const declarations = new Map(names.map((name) => [name, '#111111']));
+  declarations.set('--ki-stat-bg', '#ffffff');
+
+  assert.deepEqual(
+    componentPairs(declarations),
+    names.map((text) => ({ component: 'stat', text, surface: '--ki-stat-bg', minRatio: 4.5 })),
+  );
+});
+
 test('non-text control cells (radio ring/dot, checkbox mark) require 3:1, text cells 4.5:1', () => {
   const declarations = new Map([
     ['--ki-radio-selected-rest-bg', '#ffffff'],
@@ -606,6 +623,32 @@ test('switch glyph contrast sweeps visible checked and unchecked glyphs against 
     ['rest', 'hover', 'active'].map(
       (state) =>
         `onmars+reduced-transparency/light --ki-switch-glyph-unchecked on --ki-switch-unchecked-${state}-thumb: 1 (min 3)`,
+    ),
+  );
+});
+
+test('toggle button fills must distinguish both states on every page surface', () => {
+  const failures = evaluateCss(
+    'material3',
+    `${built('tokens.css')}\n${built('tokens.material3.css')}
+    :root:where([data-ki-contrast='more']) {
+      --ki-button-ghost-selected-bg: var(--ki-button-toggle-quiet-bg);
+      --ki-button-ghost-selected-fg: var(--ki-button-toggle-quiet-fg);
+      --ki-icon-button-outline-selected-bg: var(--ki-icon-button-outline-rest-bg);
+      --ki-icon-button-outline-selected-fg: var(--ki-icon-button-outline-rest-fg);
+    }`,
+  );
+
+  assert.equal(failures.length, 12);
+  assert.ok(failures.every((failure) => failure.startsWith('material3+contrast-more/')));
+  assert.ok(
+    failures.includes(
+      'material3+contrast-more/light --ki-button-ghost-selected-bg against --ki-button-toggle-quiet-bg over --ki-surface-s0: 1 (min 3)',
+    ),
+  );
+  assert.ok(
+    failures.includes(
+      'material3+contrast-more/dark --ki-icon-button-outline-selected-bg against --ki-icon-button-outline-rest-bg over --ki-surface-s2: 1 (min 3)',
     ),
   );
 });

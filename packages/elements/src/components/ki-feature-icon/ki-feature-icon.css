@@ -1,0 +1,96 @@
+:host {
+  display: inline-flex;
+  flex: none;
+  inline-size: var(--ki-feature-icon-size);
+  block-size: var(--ki-feature-icon-size);
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([tone="primary"]) {
+  --ki-feature-icon-bg: var(--ki-feature-icon-primary-bg);
+  --ki-feature-icon-fg: var(--ki-feature-icon-primary-fg);
+}
+
+:host([tone="primary-light"]) {
+  --ki-feature-icon-bg: var(--ki-feature-icon-primary-light-bg);
+  --ki-feature-icon-fg: var(--ki-feature-icon-primary-light-fg);
+}
+
+:host([tone="info"]) {
+  --ki-feature-icon-bg: var(--ki-feature-icon-info-bg);
+  --ki-feature-icon-fg: var(--ki-feature-icon-info-fg);
+}
+
+:host([tone="success"]) {
+  --ki-feature-icon-bg: var(--ki-feature-icon-success-bg);
+  --ki-feature-icon-fg: var(--ki-feature-icon-success-fg);
+}
+
+:host([tone="warning"]) {
+  --ki-feature-icon-bg: var(--ki-feature-icon-warning-bg);
+  --ki-feature-icon-fg: var(--ki-feature-icon-warning-fg);
+}
+
+:host([tone="danger"]) {
+  --ki-feature-icon-bg: var(--ki-feature-icon-danger-bg);
+  --ki-feature-icon-fg: var(--ki-feature-icon-danger-fg);
+}
+
+:host([size="xs"]) {
+  --ki-feature-icon-size: var(--ki-feature-icon-xs-size);
+  --ki-feature-icon-radius: var(--ki-feature-icon-xs-radius);
+}
+
+:host([size="sm"]) {
+  --ki-feature-icon-size: var(--ki-feature-icon-sm-size);
+  --ki-feature-icon-radius: var(--ki-feature-icon-sm-radius);
+}
+
+:host([size="lg"]) {
+  --ki-feature-icon-size: var(--ki-feature-icon-lg-size);
+  --ki-feature-icon-radius: var(--ki-feature-icon-lg-radius);
+}
+
+:host([size="xl"]) {
+  --ki-feature-icon-size: var(--ki-feature-icon-xl-size);
+  --ki-feature-icon-radius: var(--ki-feature-icon-xl-radius);
+}
+
+:host([shape="circle"]) {
+  --ki-feature-icon-radius: var(--ki-feature-icon-circle-radius);
+}
+
+[part="tile"] {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: var(--ki-feature-icon-radius);
+  background-color: var(--ki-feature-icon-bg);
+  background-image: var(--ki-feature-icon-bg-image);
+  backdrop-filter: var(--ki-feature-icon-backdrop-filter);
+  color: var(--ki-feature-icon-fg);
+
+  /* Both inline SVGs and inherited-size ki-icon glyphs use this scale. */
+  font-size: calc(var(--ki-feature-icon-size) / 2);
+}
+
+::slotted(svg) {
+  display: block;
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+@media (forced-colors: active) {
+  [part="tile"] {
+    background-color: Canvas;
+    background-image: none;
+    backdrop-filter: none;
+    color: CanvasText;
+    outline: thin solid CanvasText;
+  }
+}

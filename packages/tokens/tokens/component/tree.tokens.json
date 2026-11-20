@@ -1,0 +1,112 @@
+{
+  "ki": {
+    "tree": {
+      "bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Base surface of the hierarchy."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on the base surface."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the tree surface."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Complete backdrop filter behind the surface."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Fill of an unselected row hovered by a fine pointer."
+      },
+      "hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text of an unselected row hovered by a fine pointer."
+      },
+      "selected-bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Fill of a selected or checked row."
+      },
+      "selected-fg": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Text and glyph ink on a selected row."
+      },
+      "icon-fg": {
+        "$value": "{ki.text.med-em}",
+        "$description": "Default ink of the decorative row icons."
+      },
+      "indent": {
+        "$value": "{ki.tree-layout.indent}",
+        "$description": "Inline indentation per hierarchy level."
+      },
+      "row-height": {
+        "$value": "{ki.tree-layout.row-min}",
+        "$description": "Minimum block size before density adjustment."
+      },
+      "touch-row-min": {
+        "$value": "{ki.tree-layout.touch-row-min}",
+        "$description": "Minimum row block size on a coarse pointer."
+      },
+      "padding": {
+        "$value": "{ki.spacing.action-inset}",
+        "$description": "Interior padding of the hierarchy surface."
+      },
+      "radius": {
+        "$value": "{ki.tree-layout.surface-radius}",
+        "$description": "Rounding of the hierarchy surface."
+      },
+      "edge-width": {
+        "$value": "{ki.menu-layout.edge-width}",
+        "$description": "Width of the surface and checkbox outlines."
+      },
+      "edge": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Perimeter color of the hierarchy surface."
+      },
+      "focus-ring-width": {
+        "$value": "{ki.focus.ring-width}",
+        "$description": "Width of the focused row outline."
+      },
+      "focus-ring-color": {
+        "$value": "{ki.focus.ring-color}",
+        "$description": "Ink of the focused row outline."
+      },
+      "disclosure-duration": {
+        "$value": "{ki.motion.duration.short-3}",
+        "$description": "Disclosure turn duration."
+      },
+      "disclosure-easing": {
+        "$value": "{ki.motion.easing.standard}",
+        "$description": "Disclosure turn easing."
+      },
+      "item": {
+        "radius": {
+          "$value": "{ki.tree-layout.row-radius}",
+          "$description": "Rounding of a highlighted item row."
+        },
+        "gap": {
+          "$value": "{ki.spacing.action-inset}",
+          "$description": "Space between an optional item icon and its label."
+        },
+        "padding": {
+          "$value": "{ki.spacing.action-gap}",
+          "$description": "Inline-end inset of an item row."
+        },
+        "target": {
+          "$value": "{ki.tree-layout.item-target}",
+          "$description": "Minimum inline target of a disclosure or checkbox."
+        },
+        "box-size": {
+          "$value": "{ki.glyph.size.sm}",
+          "$description": "Size of the visual checkbox indicator."
+        },
+        "box-radius": {
+          "$value": "{ki.corner.inline}",
+          "$description": "Rounding of the visual checkbox indicator."
+        }
+      }
+    }
+  }
+}

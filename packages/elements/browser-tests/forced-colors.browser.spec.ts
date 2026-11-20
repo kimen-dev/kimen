@@ -1,4 +1,9 @@
 // @spec:062-solid-surface-background
+// @spec:104-ki-fab
+// @spec:092-ki-stepper
+// @spec:101-input-action
+// @spec:085-ki-details
+// @spec:113-tabs-variants
 // Forced-colors contract (Art. III: the reproduction IS a failing test).
 //
 // A forced palette — Windows Contrast themes, `forced-colors: active` — is the
@@ -257,6 +262,32 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     document.documentElement.setAttribute('data-ki-theme', theme);
   });
 
+  it('S7 preserves the input boundary and the slotted action focus ring', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(`
+      <form role="search">
+        <ki-input label="Search docs" type="search">
+          <ki-button slot="action" size="sm" variant="secondary" type="submit">Search</ki-button>
+        </ki-input>
+      </form>
+    `);
+    const field = await partOf(fixture, 'ki-input', '[part="field"]');
+    const input = await partOf(fixture, 'ki-input', '[part="input"]');
+    const action = await partOf(fixture, 'ki-button', '[part="button"]');
+
+    input.focus();
+    await userEvent.keyboard('{Tab}');
+
+    const fieldStyle = getComputedStyle(field);
+    expect(Number.parseFloat(fieldStyle.borderBlockEndWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(fieldStyle.borderBlockEndColor)).not.toBeNull();
+    expect(action.matches(':focus-visible')).toBe(true);
+    const focus = getComputedStyle(action);
+    expect(focus.outlineStyle).toBe('solid');
+    expect(Number.parseFloat(focus.outlineWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(focus.outlineColor)).not.toBeNull();
+  });
+
   it('ki-link keeps its underline and focus ring visible', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
@@ -271,6 +302,29 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     await userEvent.keyboard('{Tab}');
     expect(link.matches(':focus-visible')).toBe(true);
     const focused = getComputedStyle(link);
+    expect(focused.outlineStyle).toBe('solid');
+    expect(Number.parseFloat(focused.outlineWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();
+  });
+
+  it('S16 ki-fab keeps its edge, ink and focus ring in the forced palette', async (test) => {
+    const fixture = await mount(
+      '<input aria-label="Before"><ki-fab label="Compose" extended>' +
+        '<svg slot="icon" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" ' +
+        'fill="none" stroke="currentColor"/></svg></ki-fab>',
+    );
+    const control = await partOf(fixture, 'ki-fab', '[part="control"]');
+    const label = await partOf(fixture, 'ki-fab', '[part="label"]');
+    control.tabIndex = 0;
+    fixture.querySelector('input')?.focus();
+    await userEvent.keyboard('{Tab}');
+
+    await underForcedColors(test);
+
+    expect(edgeOf(control)).not.toBeNull();
+    expect(parseColor(getComputedStyle(label).color).ink).not.toBe(textBackdropOf(control));
+    expect(control.matches(':focus-visible')).toBe(true);
+    const focused = getComputedStyle(control);
     expect(focused.outlineStyle).toBe('solid');
     expect(Number.parseFloat(focused.outlineWidth)).toBeGreaterThan(0);
     expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();
@@ -341,30 +395,42 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     },
   );
 
-  it('ki-tab marks the selected tab and only that one', async (test) => {
-    await underForcedColors(test);
-    const fixture = await mount(
-      '<ki-tabs label="Settings" value="email">' +
-        '<ki-tab value="email">Email</ki-tab>' +
-        '<ki-tab value="billing">Billing</ki-tab>' +
-        '<ki-tab-panel value="email">Email settings.</ki-tab-panel>' +
-        '<ki-tab-panel value="billing">Billing settings.</ki-tab-panel>' +
-        '</ki-tabs>',
-    );
-    const selected = await partOf(fixture, 'ki-tab[value="email"]', '[part="indicator"]');
-    const other = await partOf(fixture, 'ki-tab[value="billing"]', '[part="indicator"]');
+  it.for(['primary', 'secondary'])(
+    'S5 ki-tab distinguishes selected text and indicator in %s',
+    async (variant, test) => {
+      await underForcedColors(test);
+      const fixture = await mount(
+        `<ki-tabs label="Mail" value="inbox" variant="${variant}">` +
+          '<ki-tab value="inbox"><span>Inbox</span></ki-tab>' +
+          '<ki-tab value="sent"><span>Sent</span></ki-tab>' +
+          '<ki-tab-panel value="inbox">Incoming mail.</ki-tab-panel>' +
+          '<ki-tab-panel value="sent">Sent mail.</ki-tab-panel>' +
+          '</ki-tabs>',
+      );
+      const selected = await partOf(fixture, 'ki-tab[value="sent"]', '[part="indicator"]');
+      const other = await partOf(fixture, 'ki-tab[value="inbox"]', '[part="indicator"]');
+      const sentText = fixture.querySelector('ki-tab[value="sent"] span');
+      const inboxText = fixture.querySelector('ki-tab[value="inbox"] span');
+      if (!sentText || !inboxText) throw new Error('Missing label text');
 
-    await expect.poll(() => getComputedStyle(selected).opacity).toBe('1');
-    expect(selected.getBoundingClientRect().height).toBeGreaterThan(0);
-    expect(
-      fillOf(selected),
-      'the selection indicator is Canvas on Canvas: no tab reads as selected',
-    ).not.toBeNull();
-    expect(
-      other.getBoundingClientRect().height === 0 || getComputedStyle(other).opacity === '0',
-      'an unselected tab shows the selection indicator too',
-    ).toBe(true);
-  });
+      fixture.querySelector<HTMLElement>('ki-tab[value="sent"]')?.click();
+
+      await expect.poll(() => getComputedStyle(selected).opacity).toBe('1');
+      expect(selected.getBoundingClientRect().height).toBeGreaterThan(0);
+      expect(fillOf(selected), 'the indicator paints against Canvas').not.toBeNull();
+      await expect
+        .poll(
+          () =>
+            other.getBoundingClientRect().height === 0 || getComputedStyle(other).opacity === '0',
+        )
+        .toBe(true);
+      const selectedInk = inkOnCanvas(getComputedStyle(sentText).color);
+      expect(selectedInk, 'selected text paints against Canvas').not.toBeNull();
+      expect(selectedInk, 'the selected label has its own ink').not.toBe(
+        inkOnCanvas(getComputedStyle(inboxText).color),
+      );
+    },
+  );
 
   it('S5 ki-select tells the selected option, the active option and the rest apart', async (test) => {
     await underForcedColors(test);
@@ -504,6 +570,30 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(edgeOf(surface), 'the dialog has no edge against the page').not.toBeNull();
   });
 
+  it('ki-menu preserves its popup boundary, focus ring and checkmark', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(`
+      <button id="menu-actions" type="button">Actions</button>
+      <ki-menu anchor="menu-actions">
+        <ki-menu-item type="checkbox" value="pin" checked>Pin to sidebar</ki-menu-item>
+      </ki-menu>
+    `);
+    const trigger = fixture.querySelector('button');
+    if (!trigger) throw new Error('Missing trigger');
+    await expect.poll(() => trigger.getAttribute('aria-expanded')).toBe('false');
+    trigger.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const surface = await partOf(fixture, 'ki-menu', '[part="popup"]');
+    const row = await partOf(fixture, 'ki-menu-item', '[part="item"]');
+    const check = await partOf(fixture, 'ki-menu-item', '[part="check"]');
+
+    expect(isOpaqueCanvas(surface)).toBe(true);
+    expect(edgeOf(surface)).not.toBeNull();
+    expect(getComputedStyle(row).outlineStyle).toBe('solid');
+    expect(getComputedStyle(check).visibility).toBe('visible');
+    expect(inkOnCanvas(getComputedStyle(check).stroke)).not.toBeNull();
+  });
+
   it('S5 ki-tooltip is an opaque surface with an edge', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
@@ -567,6 +657,53 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(paintOf(current), 'the current dot paints like a resting one').not.toBe(
       paintOf(resting),
     );
+  });
+
+  it('S10 preserves Stepper glyphs and distinct current and upcoming edges', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-stepper label="Setup progress" orientation="vertical">' +
+        '<ki-step state="done">Account</ki-step><ki-step state="current">Invite</ki-step>' +
+        '<ki-step>Review</ki-step><ki-step state="error">Publish</ki-step></ki-stepper>',
+    );
+    const done = await partOf(fixture, 'ki-stepper', '[data-state="done"] [part="marker"]');
+    const current = await partOf(fixture, 'ki-stepper', '[data-state="current"] [part="marker"]');
+    const upcoming = await partOf(fixture, 'ki-stepper', '[data-state="upcoming"] [part="marker"]');
+    const error = await partOf(fixture, 'ki-stepper', '[data-state="error"] [part="marker"]');
+    const glyph = (marker: HTMLElement): SVGElement | null | undefined =>
+      marker.querySelector('ki-icon')?.shadowRoot?.querySelector('svg');
+
+    await expect.poll(() => glyph(done)?.getBoundingClientRect().width ?? 0).toBeGreaterThan(0);
+    await expect.poll(() => glyph(error)?.getBoundingClientRect().width ?? 0).toBeGreaterThan(0);
+    const checkMark = glyph(done);
+    const errorMark = glyph(error);
+    if (!checkMark || !errorMark) throw new Error('The Stepper glyphs did not render');
+    expect(getComputedStyle(checkMark).stroke).not.toBe(getComputedStyle(done).backgroundColor);
+    expect(inkOnCanvas(getComputedStyle(errorMark).stroke)).not.toBeNull();
+    expect(edgeOf(current)).not.toBeNull();
+    expect(edgeOf(upcoming)).not.toBeNull();
+    expect(getComputedStyle(current).borderBlockStartStyle).not.toBe(
+      getComputedStyle(upcoming).borderBlockStartStyle,
+    );
+  });
+
+  it('S14: ki-details keeps its edge and keyboard focus under forced colors', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<button tabindex="0">Before</button><ki-details summary="Permissions">Invite users.</ki-details>',
+    );
+    const details = fixture.querySelector('ki-details');
+    const findPanel = () => details?.shadowRoot?.querySelector('details') ?? null;
+    await expect.poll(findPanel).not.toBeNull();
+    const panel = findPanel();
+    const summary = panel?.querySelector('summary');
+    if (!panel || !summary) throw new Error('Missing native disclosure');
+
+    fixture.querySelector('button')?.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(details?.shadowRoot?.activeElement).toBe(summary);
+    expect(edgeOf(panel)).not.toBeNull();
+    expect(edgeOf(summary)).not.toBeNull();
   });
 
   it.for([

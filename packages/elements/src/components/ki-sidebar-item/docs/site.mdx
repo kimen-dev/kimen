@@ -1,0 +1,20 @@
+---
+title: ki-sidebar-item
+description: A named destination within Sidebar navigation.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Give an item its native link destination with `href` and its name through the
+default slot. Mark the current destination with `current`. Use
+`icon-name` for a registered glyph or the `start` slot for a decorative glyph.
+
+<Demo code={`<ki-sidebar label="Main" collapsible>
+  <ki-sidebar-item href="#inbox" count="12" current>Inbox</ki-sidebar-item>
+</ki-sidebar>`} />
+
+A positive count shows as a pill in the panel and a dot in the rail.
+`count-label` localizes the accessible name using `{label}` and `{count}`.
+
+<CemApi tag="ki-sidebar-item" />

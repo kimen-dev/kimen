@@ -424,8 +424,9 @@ describe('ki-tooltip pointer path in a real browser', () => {
   });
 
   it('S1 S3 renders the solid onmars inverse card geometry and typography', async () => {
+    // Fit the host anchor to the native button independently of font metrics.
     const { host, trigger } = await mount({
-      style: { marginBlockStart: '160px', marginInlineStart: '160px' },
+      style: { display: 'inline-flex', marginBlockStart: '160px', marginInlineStart: '160px' },
     });
     await hoverTrigger(host, trigger);
     // The distance below is measured on the settled bubble: mid-slide it is
@@ -703,13 +704,14 @@ describe('ki-tooltip pointer path in a real browser', () => {
   // Tooltip master (12089:7621): every direction draws a pointer toward the
   // trigger, 16px across and 8px deep. Drawn as a square turned 45 degrees and
   // centred on the bubble edge, so its box is 16x16 and its centre on that edge.
+  // A flex host gives the CSS anchor and its slotted button the same centre.
   it.each(placements)(
     'S1 S11 a %s tooltip points its arrow at the centre of the trigger',
     async (placement) => {
       const { host, trigger } = await mount({
         label: 'Sends now',
         placement,
-        style: { margin: '120px 140px' },
+        style: { display: 'inline-flex', margin: '120px 140px' },
       });
       trigger.focus();
       await settleTooltip(host);

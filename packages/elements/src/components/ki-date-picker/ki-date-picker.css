@@ -1,0 +1,285 @@
+:host {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ki-layout-spacing-xs);
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-body);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-body-1);
+
+  --_day-size: max(var(--ki-date-picker-day-size), var(--ki-density-target-min));
+  --_control-size: max(var(--ki-control-size-sm), var(--ki-density-target-min));
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="help"],
+[part="error"] {
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+}
+
+[part="help"] {
+  color: var(--ki-text-supporting);
+}
+
+[part="error"] {
+  color: var(--ki-text-danger-high-em);
+}
+
+[part="error"]:empty {
+  position: absolute;
+}
+
+[part="field"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--_day-size);
+  anchor-name: --ki-date-picker-field;
+  padding-inline-start: var(--ki-layout-spacing-lg);
+  background-color: var(--ki-date-picker-field-bg);
+  color: var(--ki-date-picker-field-fg);
+  border: var(--ki-control-border-width) solid var(--ki-outline-control);
+  border-radius: var(--ki-control-radius-track);
+}
+
+[part="field"]:has([aria-invalid="true"]) {
+  border-color: var(--ki-outline-danger-high-em);
+}
+
+input,
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+}
+
+input {
+  min-inline-size: 0;
+  align-self: stretch;
+  padding: 0;
+  background: none;
+  outline: none;
+}
+
+button {
+  min-block-size: var(--_control-size);
+  border-radius: var(--ki-date-picker-day-radius);
+  background-color: var(--ki-surface-transparent);
+}
+
+[part="field"]:focus-within,
+button:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+.icon-button,
+.calendar-footer button {
+  min-inline-size: var(--_control-size);
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+ki-icon {
+  font-size: var(--ki-glyph-size-md);
+}
+
+[part="popup"] {
+  position: fixed;
+  inset: auto;
+  box-sizing: border-box;
+  inline-size: calc(
+    7 *
+    var(--_day-size) +
+    2 *
+    (var(--ki-layout-spacing-xl) + var(--ki-control-border-width))
+  );
+  max-inline-size: 100vi;
+  max-block-size: calc(100% - var(--ki-layout-spacing-xs));
+  overflow: auto;
+  margin: 0;
+  margin-block-start: var(--ki-layout-spacing-xs);
+  padding: var(--ki-layout-spacing-xl);
+  position-anchor: --ki-date-picker-field;
+  position-area: block-end span-inline-end;
+  position-try-fallbacks:
+    flip-block,
+    flip-inline,
+    flip-block flip-inline;
+  position-try-order: most-block-size;
+  justify-self: start;
+  color: var(--ki-date-picker-fg);
+  background-color: var(--ki-date-picker-bg);
+  background-image: var(--ki-date-picker-bg-image);
+  backdrop-filter: var(--ki-date-picker-backdrop-filter);
+  border: var(--ki-control-border-width) solid var(--ki-date-picker-border);
+  border-radius: var(--ki-date-picker-radius);
+  box-shadow: var(--ki-date-picker-shadow);
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  margin-block-end: var(--ki-layout-spacing-md);
+  text-align: center;
+}
+
+:dir(ltr) .next ki-icon,
+:dir(rtl) .previous ki-icon {
+  transform: scaleX(-1);
+}
+
+h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--ki-date-picker-heading-family);
+  font-size: inherit;
+  font-weight: var(--ki-typography-weight-body-semibold);
+}
+
+table {
+  inline-size: 100%;
+  table-layout: fixed;
+  border-spacing: 0;
+}
+
+th,
+td,
+.day {
+  padding: 0;
+}
+
+th {
+  block-size: var(--ki-control-size-sm);
+  color: var(--ki-date-picker-weekday-fg);
+  background-color: var(--ki-date-picker-weekday-bg);
+  font-size: var(--ki-typography-size-caption-2);
+}
+
+label,
+th {
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+.day {
+  inline-size: 100%;
+  min-block-size: var(--_day-size);
+}
+
+.outside {
+  background-color: var(--ki-date-picker-outside-bg);
+}
+
+.outside,
+.day[aria-disabled="true"] {
+  color: var(--ki-date-picker-outside-fg);
+}
+
+.day[aria-disabled="true"] {
+  text-decoration: line-through;
+}
+
+.in-range {
+  color: var(--ki-date-picker-range-fg);
+  background-color: var(--ki-date-picker-range-bg);
+}
+
+.in-range:is(:last-child, :has(+ td:not(.in-range))) {
+  border-start-end-radius: var(--ki-date-picker-day-radius);
+  border-end-end-radius: var(--ki-date-picker-day-radius);
+}
+
+.in-range:is(:first-child, td:not(.in-range) + td) {
+  border-start-start-radius: var(--ki-date-picker-day-radius);
+  border-end-start-radius: var(--ki-date-picker-day-radius);
+}
+
+.day.selected,
+.apply:enabled {
+  --_today-border: currentcolor;
+
+  color: var(--ki-date-picker-selected-fg);
+  background-color: var(--ki-date-picker-selected-bg);
+  font-weight: var(--ki-typography-weight-body-semibold);
+}
+
+.day[aria-current="date"] {
+  border: var(--ki-control-border-width) solid
+    var(--_today-border, var(--ki-date-picker-today-border));
+}
+
+.calendar-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ki-layout-spacing-md);
+  margin-block-start: var(--ki-layout-spacing-md);
+}
+
+.calendar-footer button {
+  padding-inline: var(--ki-layout-spacing-lg);
+}
+
+@media (hover: hover) {
+  button:hover:not(:disabled, [aria-disabled="true"], .selected, .apply) {
+    color: var(--ki-date-picker-day-hover-fg);
+    background-color: var(--ki-date-picker-day-hover-bg);
+  }
+}
+
+@media (pointer: coarse) {
+  :host {
+    --_day-size: max(
+      var(--ki-date-picker-day-size),
+      var(--ki-control-size-touch),
+      var(--ki-density-target-min)
+    );
+    --_control-size: var(--_day-size);
+  }
+
+  table {
+    min-inline-size: calc(7 * var(--ki-control-size-touch));
+  }
+
+  input {
+    font-size: max(var(--ki-typography-size-body-1), var(--ki-layout-spacing-3xl));
+  }
+}
+
+@media (forced-colors: active) {
+  :host {
+    --_today-border: CanvasText;
+  }
+
+  [part="field"]:focus-within,
+  button:focus-visible {
+    outline-color: Highlight;
+  }
+
+  .day.selected,
+  .apply:enabled {
+    forced-color-adjust: none;
+    color: HighlightText;
+    background-color: Highlight;
+  }
+
+  .in-range .day:not(.selected) {
+    border: var(--ki-control-border-width) solid CanvasText;
+  }
+
+  .day[aria-disabled="true"] {
+    color: GrayText;
+  }
+}

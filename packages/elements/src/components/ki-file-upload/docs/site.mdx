@@ -1,0 +1,53 @@
+---
+title: ki-file-upload
+description: Collect files, explain rejected selections and show application-reported upload progress.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-file-upload` for attachments, data imports or media. Give the field
+a label and explain the file limits where people choose their files. The
+Browse button opens the native file picker with a keyboard, pointer or touch.
+
+<Demo layout="block" code={`<ki-file-upload
+  label="Incident attachments"
+  name="attachments"
+  accept=".csv,.pdf"
+  max-size="10MB"
+  max-files="3"
+  help-text="Choose up to three CSV or PDF files, up to 10 MB each."
+  multiple
+></ki-file-upload>`} />
+
+`accept` accepts extensions, MIME types and MIME wildcards. Give `max-size`
+as bytes or use decimal units such as `10MB`. Set `multiple` to allow more
+than one file and `max-files` to cap the selection. Rejected files stay in
+the list with a reason. Use the `help` slot to provide the guidance as markup.
+
+## Send the files
+
+For a standard form submission, give the field a `name` and use
+`enctype="multipart/form-data"` on the form. Each accepted original
+`File` contributes an entry with that name. Read all entries in JavaScript
+with `new FormData(form).getAll('attachments')`. Mark the field `required`
+to make an accepted file necessary before submission.
+
+For application-managed transfers, start work from `ki-files-add`, which
+reports the newly accepted rows. Update the `files` property with a new array
+and keep each row's original `file` when changing its status or progress.
+Uploading rows show determinate progress when you provide a percentage.
+
+Handle `ki-file-cancel` to stop an in-progress transfer and update the row.
+`ki-file-remove` identifies the row after the field removes it.
+Completion and failures are announced politely with the associated filenames.
+When translating row action and progress labels, keep the `{file}` placeholder
+so the label identifies the affected file.
+
+## API reference
+
+<CemApi tag="ki-file-upload" />
+
+## Workshop
+
+[Open ki-file-upload in Storybook](/storybook/?path=/docs/docs-components-ki-file-upload--docs)

@@ -33,3 +33,8 @@ The `start` and `end` slots hold leading and trailing icons or media (they follo
   <ki-tab-panel value="releases">Published releases</ki-tab-panel>
 </ki-tabs>
 ```
+
+For a decorative SVG, use the `icon` slot and give the tab a visible text
+label in the default slot. The label names the tab and its linked panel.
+The group's `icon-layout` controls whether the icon is above the label or
+inline with it.

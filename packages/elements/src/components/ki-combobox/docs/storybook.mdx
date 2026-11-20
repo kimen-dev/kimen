@@ -1,0 +1,24 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-combobox" />
+
+# ki-combobox
+
+Search a long list of `ki-option` children and choose one value or several.
+
+```html
+<ki-combobox label="Assignee" name="assignee" placeholder="Search people">
+  <ki-option value="ana" description="ana@example.com">Ana Ruiz</ki-option>
+  <ki-option value="juan" description="juan@example.com">Juan Antón</ki-option>
+</ki-combobox>
+```
+
+Use `multiple` for removable tags and `allow-custom` for free entry. A
+multiple-selection value is a string array in JavaScript and a JSON array
+string in HTML. Use `filter="none"` and listen for `ki-input` to supply
+remote results.
+
+Customize the floating surface with `--ki-combobox-listbox-bg` and
+`--ki-combobox-listbox-fg`. Active options and tags have their own background
+and foreground token pairs. Give each field a label and localize the result,
+loading, empty, add and remove messages alongside it.

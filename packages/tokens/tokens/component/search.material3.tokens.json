@@ -1,0 +1,14 @@
+{
+  "ki": {
+    "search": {
+      "bar-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Material 3 search bar fill from the theme's surface scale."
+      },
+      "view-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Material 3 search view fill from the theme's raised surface scale."
+      }
+    }
+  }
+}

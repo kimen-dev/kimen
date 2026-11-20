@@ -1,0 +1,13 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SuggestionStories from '../ki-suggestion.stories';
+
+<Meta title="Docs/Components/ki-suggestion" />
+
+# Suggestion
+
+A prompt title supplies the button's accessible name. A card can show a
+separate description beneath the title.
+
+<Canvas of={SuggestionStories.DescribedCard} />
+
+<Canvas of={SuggestionStories.TitleOnly} />

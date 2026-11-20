@@ -1,0 +1,74 @@
+{
+  "ki": {
+    "mobile-nav": {
+      "height": {
+        "$value": "{ki.navigation-bar.bar-height}",
+        "$description": "Minimum height before the safe area and border are added."
+      },
+      "bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Fixed bar surface."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional decorative image for either bar variant."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete optional backdrop filter for either bar variant."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Stroke along the fixed bar or around the floating bar."
+      },
+      "border-width": {
+        "$value": "{ki.spacing.action-hairline}",
+        "$description": "Bar border width."
+      },
+      "floating-bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Floating bar surface."
+      },
+      "floating-inset": {
+        "$value": "{ki.navigation-bar.bar-inset}",
+        "$description": "Space beside and below the floating bar."
+      },
+      "floating-padding": {
+        "$value": "{ki.navigation-bar.bar-padding}",
+        "$description": "Inline padding inside the floating bar."
+      },
+      "floating-radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "Floating bar pill shape."
+      },
+      "floating-shadow": {
+        "$value": "{ki.elevation.e4}",
+        "$description": "Elevation of the floating bar."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Typeface for the bar and its destination labels."
+      },
+      "indicator-bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Fill behind the current destination icon."
+      },
+      "indicator-fg": {
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Icon ink on the current destination fill."
+      },
+      "indicator-inline-size": {
+        "$value": "{ki.navigation-bar.indicator-inline-size}",
+        "$description": "Current icon pill width."
+      },
+      "indicator-block-size": {
+        "$value": "{ki.navigation-bar.indicator-block-size}",
+        "$description": "Current icon pill height."
+      },
+      "indicator-radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "Current icon pill corner radius."
+      }
+    }
+  }
+}

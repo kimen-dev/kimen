@@ -1,0 +1,549 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Disable editing, sequential focus and form participation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "error-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message for a failing code constraint. Omit to use the browser's message.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Instructions saying where the code was sent and how long it is valid.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible accessible name. Supply a label in the language of the form.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "length": {
+        "default": "6",
+        "deprecatedSince": null,
+        "description": "Number of cells and maximum code length. Unsupported lengths fall back to six.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Key for the single value submitted to the enclosing form.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Require a complete code before submitting. An optional field may be empty.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Medium or small cells. The form region's density adjusts both sizes.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "type": {
+        "default": "'numeric'",
+        "deprecatedSince": null,
+        "description": "Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.",
+        "replacement": null,
+        "required": false,
+        "type": "\"alphanumeric\" | \"numeric\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "The current code, including leading zeros. Use the attribute to declare\nthe reset value. Programmatic assignments are normalized and silent.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-code-input-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Focus outline around the active or selected cells.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional compositing filter behind a code cell.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting code cell fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted over the code cell fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-blink-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Duration of one code caret blink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting code cell boundary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-cell-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default code cell edge before applying control density.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-cell-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small code cell edge before applying control density.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Code character ink while the field is disabled.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-error-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Code cell boundary after failed validation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting code character ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Code character size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline space between code cells.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Code cell corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-selection-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a selected code character.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-selection-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a selected code character.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-input-touch-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum native input text size on a coarse pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the boundary of a compact control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-mono": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family mono.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A form-associated verification field with one native text input and a visual box per character.",
+    "events": {
+      "ki-complete": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted after the input event when the edited code fills all the cells.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiCodeInputDetail>"
+      },
+      "ki-input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted when a user edit changes the code.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiCodeInputDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "cell": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative box for one code character.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Polite validation message that replaces the instructions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "field": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Enclosure of the native input and its visual boxes.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Delivery and validity instructions read with the field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Single native text input, responsible for editing and autofill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label supplying the native input's accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Disable editing, sequential focus and form participation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "errorText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message for a failing code constraint. Omit to use the browser's message.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Instructions saying where the code was sent and how long it is valid.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible accessible name. Supply a label in the language of the form.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "length": {
+        "default": "6",
+        "deprecatedSince": null,
+        "description": "Number of cells and maximum code length. Unsupported lengths fall back to six.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Key for the single value submitted to the enclosing form.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Require a complete code before submitting. An optional field may be empty.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Medium or small cells. The form region's density adjusts both sizes.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "type": {
+        "default": "'numeric'",
+        "deprecatedSince": null,
+        "description": "Allowed characters and keyboard hint. Alphanumeric mode preserves ASCII letter case.",
+        "replacement": null,
+        "required": false,
+        "type": "\"alphanumeric\" | \"numeric\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "The current code, including leading zeros. Use the attribute to declare\nthe reset value. Programmatic assignments are normalized and silent.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-code-input.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-code-input.d.ts",
+    "symbols": {
+      "KiCodeInput": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiCodeInput extends Components.KiCodeInput, HTMLElement {\n}\nexport const KiCodeInput: {\n    prototype: KiCodeInput;\n    new (): KiCodeInput;\n};"
+      },
+      "KiCodeInputDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiCodeInputDetail {\n    value: string;\n}"
+      },
+      "KiCodeInputType": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiCodeInputType = 'numeric' | 'alphanumeric';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-code-input.js"
+  }
+}

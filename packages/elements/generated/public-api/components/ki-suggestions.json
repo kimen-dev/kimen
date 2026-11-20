@@ -1,0 +1,268 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required accessible name for the group.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "mode": {
+        "default": "'send'",
+        "deprecatedSince": null,
+        "description": "Send through the application or fill its attached editor for revision.",
+        "replacement": null,
+        "required": false,
+        "type": "\"fill\" | \"send\""
+      },
+      "variant": {
+        "default": "'chips'",
+        "deprecatedSince": null,
+        "description": "Wrapping chips for follow-ups or cards with room for a description.",
+        "replacement": null,
+        "required": false,
+        "type": "\"cards\" | \"chips\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Filter behind the card surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting card surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Image layered over the card surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting card boundary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting card title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Card surface on a hovering device.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Title over the card hover surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block padding of each starter card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-pressed-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Card surface while a pointer or key holds activation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-pressed-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Title over the pressed card surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corners of a starter card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of the card title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestions-card-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum inline size of each starter card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestions-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface inherited by the suggestion group.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestions-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Spacing between suggestions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A labelled group of prompt starters or follow-up suggestions.",
+    "events": {
+      "ki-select": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Reports the chosen prompt title. Use this event to send the prompt in\nsend mode. Cancel it to take over the default composer write and focus.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ text: string }>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "group": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The container that lays out the suggested prompts.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "composer": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional composer supplied by application code. Fill mode sets its value.\nBoth modes focus it after an uncancelled selection.",
+        "replacement": null,
+        "required": false,
+        "type": "KiSuggestionsComposer | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required accessible name for the group.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "mode": {
+        "default": "'send'",
+        "deprecatedSince": null,
+        "description": "Send through the application or fill its attached editor for revision.",
+        "replacement": null,
+        "required": false,
+        "type": "\"fill\" | \"send\""
+      },
+      "variant": {
+        "default": "'chips'",
+        "deprecatedSince": null,
+        "description": "Wrapping chips for follow-ups or cards with room for a description.",
+        "replacement": null,
+        "required": false,
+        "type": "\"cards\" | \"chips\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct ki-suggestion children in reading order.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-suggestions.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-suggestions.d.ts",
+    "symbols": {
+      "KiSuggestions": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSuggestions extends Components.KiSuggestions, HTMLElement {\n}\nexport const KiSuggestions: {\n    prototype: KiSuggestions;\n    new (): KiSuggestions;\n};"
+      },
+      "KiSuggestionsComposer": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiSuggestionsComposer {\n    value: string;\n    focus(): void;\n}"
+      },
+      "KiSuggestionsMode": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiSuggestionsMode = 'send' | 'fill';"
+      },
+      "KiSuggestionsVariant": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiSuggestionsVariant = 'chips' | 'cards';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-suggestions.js"
+  }
+}

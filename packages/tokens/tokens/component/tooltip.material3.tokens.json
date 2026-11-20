@@ -75,6 +75,84 @@
       "arrow-size": {
         "$value": "{ki.space.zero}",
         "$description": "Material 3 plain tooltips have no arrow."
+      },
+      "rich": {
+        "bg": {
+          "$value": "{ki.surface.raised}",
+          "$description": "Fill of the rich tooltip or rich popover."
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image layer over the rich surface fill."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$description": "Complete backdrop filter of the rich surface."
+        },
+        "fg": {
+          "$value": "{ki.text.supporting}",
+          "$description": "Ink of the rich surface body text."
+        },
+        "heading-fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Ink of the rich surface heading over the shared fill."
+        },
+        "radius": {
+          "$value": "{ki.anchored-surface.radius}",
+          "$description": "Corner radius of the rich surface."
+        },
+        "shadow": {
+          "$value": "{ki.elevation.e2}",
+          "$description": "Raised elevation of the rich surface."
+        },
+        "max-width": {
+          "$value": "{ki.anchored-surface.rich-max-width}",
+          "$description": "Maximum inline size of the rich surface."
+        },
+        "border-width": {
+          "$value": "{ki.anchored-surface.border-width}",
+          "$description": "Outline thickness of the rich surface."
+        },
+        "border-color": {
+          "$value": "{ki.outline.low-em}",
+          "$description": "Outline ink of the rich surface."
+        },
+        "padding-block": {
+          "$value": "{ki.anchored-surface.padding}",
+          "$description": "Block-axis inset of the rich surface, before density scaling."
+        },
+        "padding-inline": {
+          "$value": "{ki.layout.spacing.3xl}",
+          "$description": "Inline-axis inset of the rich surface, before density scaling."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "Body text size of the rich surface."
+        },
+        "font-weight": {
+          "$value": "{ki.typography.weight.body.normal}",
+          "$description": "Body text weight of the rich surface."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.para}",
+          "$description": "Body text line height of the rich surface."
+        },
+        "heading-family": {
+          "$value": "{ki.typography.family.heading}",
+          "$description": "Typeface of the rich surface heading."
+        },
+        "heading-size": {
+          "$value": "{ki.typography.size.title-1}",
+          "$description": "Text size of the rich surface heading."
+        },
+        "heading-weight": {
+          "$value": "{ki.typography.weight.body.semibold}",
+          "$description": "Text weight of the rich surface heading."
+        },
+        "heading-gap": {
+          "$value": "{ki.layout.spacing.xxs}",
+          "$description": "Distance between the rich heading and its body."
+        }
       }
     }
   }

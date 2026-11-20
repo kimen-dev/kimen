@@ -4,12 +4,13 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
 // @spec:014-ki-tabs
+// @spec:113-tabs-variants
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III).
 import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
-import { expectAccessible } from './axe';
+import { expectAccessible, parkPointer } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { moveToNewParent } from './reconnect';
 
@@ -29,11 +30,12 @@ beforeAll(() => {
   defineKiTabPanel();
 });
 
-afterEach(() => {
+afterEach(async () => {
   document.body.replaceChildren();
   document.documentElement.removeAttribute('dir');
   document.documentElement.removeAttribute('data-ki-theme');
   document.documentElement.removeAttribute('data-ki-color-scheme');
+  await parkPointer();
 });
 
 function ensureTokens(): void {
@@ -879,12 +881,15 @@ describe('ki-tabs narrow viewport behavior in a real browser', () => {
   });
 
   it.each([
-    ['first', 'a', '{Home}'],
-    ['last', 'f', '{End}'],
+    ['first', 'a', '{Home}', 'ltr'],
+    ['last', 'f', '{End}', 'ltr'],
+    ['first', 'a', '{Home}', 'rtl'],
+    ['last', 'f', '{End}', 'rtl'],
   ])(
-    'S4 the focus ring of the %s tab is not clipped by the strip',
-    async (_position, value, key) => {
+    'S4 the focus ring of the %s tab (%s, %s) fits inside the strip under %s',
+    async (_position, value, key, dir) => {
       await narrow(async () => {
+        document.documentElement.dir = dir;
         const tabs = await mount(sixTabs());
         tab(tabs, 'c').focus();
 
@@ -901,6 +906,7 @@ describe('ki-tabs narrow viewport behavior in a real browser', () => {
         expect(box.right + ring).toBeLessThanOrEqual(clip.right + 0.5);
         expect(box.top - ring).toBeGreaterThanOrEqual(clip.top - 0.5);
         expect(box.bottom + ring).toBeLessThanOrEqual(clip.bottom + 0.5);
+        expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
       });
     },
   );
@@ -1073,5 +1079,188 @@ describe('ki-tabs boolean presence in a real browser', () => {
     await frames();
 
     await expectBillingInert(tabs);
+  });
+});
+
+const inboxIcon =
+  '<svg slot="icon" role="img" aria-label="Envelope" viewBox="0 0 20 20"><title>Mail glyph</title><rect x="2" y="5" width="16" height="10" fill="currentColor"/></svg>';
+
+function iconTabFixture(attributes = '', inboxLabel = '<span>Inbox</span>'): string {
+  return `<ki-tabs label="Mail" ${attributes}>
+    <ki-tab value="inbox">${inboxIcon}${inboxLabel}</ki-tab>
+    <ki-tab value="drafts" disabled>Drafts</ki-tab>
+    <ki-tab value="sent">Sent</ki-tab>
+    <ki-tab-panel value="inbox">Incoming mail</ki-tab-panel>
+    <ki-tab-panel value="drafts">Draft mail</ki-tab-panel>
+    <ki-tab-panel value="sent">Sent mail</ki-tab-panel>
+  </ki-tabs>`;
+}
+
+function inboxGeometry(group: KiTabsElement): { icon: DOMRect; label: DOMRect } {
+  const inbox = tab(group, 'inbox');
+  const icon = inbox.querySelector('svg');
+  const label = inbox.querySelector('span');
+  if (!icon || !label) throw new Error('Missing inbox icon or label');
+  return { icon: icon.getBoundingClientRect(), label: label.getBoundingClientRect() };
+}
+
+function indicatorOf(group: KiTabsElement): HTMLElement {
+  const indicator = tab(group, 'inbox').shadowRoot?.querySelector<HTMLElement>(
+    '[part="indicator"]',
+  );
+  if (!indicator) throw new Error('Missing inbox indicator');
+  return indicator;
+}
+
+describe('tabs variants and decorative icons', () => {
+  it.each([
+    ['', 'stacked'],
+    ['variant="primary"', 'stacked'],
+    ['variant="secondary"', 'inline'],
+    ['variant="primary" icon-layout="inline"', 'inline'],
+    ['variant="secondary" icon-layout="stacked"', 'stacked'],
+  ])('S1 lays out icons with %s as %s', async (attributes, layout) => {
+    const group = await mount(iconTabFixture(attributes));
+
+    await expect
+      .poll(() => {
+        const { icon, label } = inboxGeometry(group);
+        const iconLeads =
+          layout === 'stacked' ? icon.bottom <= label.top : icon.right <= label.left;
+        return icon.width > 0 && icon.height > 0 && iconLeads;
+      })
+      .toBe(true);
+  });
+
+  it.each(['primary', 'secondary'])('S2 keeps automatic APG activation in %s', async (variant) => {
+    const group = await mount(iconTabFixture(`variant="${variant}"`));
+    const sent = page.getByRole('tab', { name: 'Sent', exact: true });
+
+    tab(group, 'inbox').focus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    await expect.element(sent).toHaveFocus();
+    await expect.element(sent).toHaveAttribute('aria-selected', 'true');
+    expect(tab(group, 'inbox').tabIndex).toBe(-1);
+    expect(tab(group, 'drafts').tabIndex).toBe(-1);
+    expect(tab(group, 'sent').tabIndex).toBe(0);
+    const visiblePanel = page.getByRole('tabpanel', { name: 'Sent', exact: true });
+    await expect.element(visiblePanel).toBeVisible();
+    await userEvent.tab();
+    await expect.element(visiblePanel).toHaveFocus();
+  });
+
+  it('S3 names the tab and panel for the label alone and passes axe', async () => {
+    await mount(iconTabFixture('variant="secondary"'));
+
+    await expect
+      .element(page.getByRole('tab', { name: 'Inbox', exact: true }))
+      .toHaveAttribute('aria-selected', 'true');
+    await expect.element(page.getByRole('tabpanel', { name: 'Inbox', exact: true })).toBeVisible();
+    expect(page.getByRole('img', { name: 'Envelope' }).query()).toBeNull();
+    await expectAccessible(main());
+  });
+
+  it('S3 keeps a slotted icon decorative and restores its authored accessibility when moved out', async () => {
+    const group = await mount(iconTabFixture());
+    const otherGroup = await mount(fixture());
+    const icon = tab(group, 'inbox').querySelector('svg');
+    if (!icon) throw new Error('Missing inbox icon');
+
+    await expect.poll(() => icon.getAttribute('aria-hidden')).toBe('true');
+    icon.setAttribute('aria-hidden', 'false');
+    await expect.poll(() => icon.getAttribute('aria-hidden')).toBe('true');
+    expect(page.getByRole('img', { name: 'Envelope' }).query()).toBeNull();
+
+    tab(otherGroup, 'email').append(icon);
+    await expect.poll(() => icon.assignedSlot?.name).toBe('icon');
+    expect(page.getByRole('img', { name: 'Envelope' }).query()).toBeNull();
+
+    main().append(icon);
+
+    await expect.element(page.getByRole('img', { name: 'Envelope' })).toBeVisible();
+    expect(icon.getAttribute('aria-hidden')).toBe('false');
+  });
+
+  it('S4 omits an icon-only tab and restores it when a visible label arrives', async () => {
+    const group = await mount(iconTabFixture('variant="primary" value="inbox"', '  '));
+    const inbox = tab(group, 'inbox');
+    inbox.setAttribute('aria-label', 'Inbox');
+
+    await expect
+      .element(page.getByRole('tab', { name: 'Sent', exact: true }))
+      .toHaveAttribute('aria-selected', 'true');
+    expect(page.getByRole('tab', { name: 'Inbox', exact: true }).query()).toBeNull();
+    expect(inbox.tabIndex).toBe(-1);
+    expect(panel(group, 'inbox').hidden).toBe(true);
+
+    inbox.removeAttribute('aria-label');
+    inbox.append('Inbox');
+    await expect.element(page.getByRole('tab', { name: 'Inbox', exact: true })).toBeVisible();
+  });
+
+  it('S6 paints primary content-width and secondary full-width indicators using their tokens', async () => {
+    const primary = await mount(
+      iconTabFixture(
+        'label="Primary mail" style="--ki-tab-padding-inline: 16px; --ki-tab-primary-indicator-height: 5px; --ki-tab-indicator-color: rgb(16, 42, 88)"',
+      ),
+    );
+    const secondary = await mount(
+      iconTabFixture(
+        'variant="secondary" style="--ki-tab-padding-inline: 16px; --ki-tab-secondary-indicator-height: 4px; --ki-tab-indicator-color: rgb(16, 42, 88)"',
+      ),
+    );
+
+    await expect
+      .poll(() => {
+        const indicator = indicatorOf(primary).getBoundingClientRect();
+        const host = tab(primary, 'inbox').getBoundingClientRect();
+        const { icon, label } = inboxGeometry(primary);
+        return (
+          Math.abs(indicator.width - Math.max(icon.width, label.width)) < 0.5 &&
+          indicator.width < host.width
+        );
+      })
+      .toBe(true);
+    await expect
+      .poll(() => {
+        const width = indicatorOf(secondary).getBoundingClientRect().width;
+        return Math.abs(width - tab(secondary, 'inbox').getBoundingClientRect().width) < 0.5;
+      })
+      .toBe(true);
+    const primaryInk = getComputedStyle(indicatorOf(primary));
+    const secondaryInk = getComputedStyle(indicatorOf(secondary));
+    expect(primaryInk.blockSize).toBe('5px');
+    expect(primaryInk.borderStartStartRadius).toBe('5px');
+    expect(primaryInk.borderEndStartRadius).toBe('0px');
+    expect(secondaryInk.blockSize).toBe('4px');
+    expect(secondaryInk.borderStartStartRadius).toBe('0px');
+    expect(primaryInk.backgroundColor).toBe('rgb(16, 42, 88)');
+    expect(secondaryInk.backgroundColor).toBe('rgb(16, 42, 88)');
+  });
+
+  it('S7 positions an inline SVG before the label in RTL', async () => {
+    const group = await mount(iconTabFixture('dir="rtl" variant="secondary"'));
+
+    await expect
+      .poll(() => {
+        const { icon, label } = inboxGeometry(group);
+        return icon.left >= label.right && icon.width > 0;
+      })
+      .toBe(true);
+  });
+
+  it('shows the new icon variant without motion when the preference is reduced', async () => {
+    const group = await mount(iconTabFixture('variant="secondary"'));
+    try {
+      await browserCommands.emulateReducedMotion('reduce');
+      await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+      await expect.poll(() => getComputedStyle(indicatorOf(group)).transitionDuration).toBe('0s');
+      await expect.poll(() => getComputedStyle(indicatorOf(group)).transform).toBe('none');
+      await page.getByRole('tab', { name: 'Sent', exact: true }).click();
+      await expect.element(page.getByRole('tabpanel', { name: 'Sent', exact: true })).toBeVisible();
+    } finally {
+      await browserCommands.emulateReducedMotion(null);
+    }
   });
 });

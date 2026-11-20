@@ -1,0 +1,36 @@
+---
+title: ki-timeline
+description: Present events in chronological order with a timestamp for each entry.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-timeline` for activity feeds, audit logs, run histories and order
+updates. Give the ordered list a `label` and put each event in a direct
+[`ki-timeline-item`](/docs/components/timeline-item/) child.
+
+<Demo layout="block" code={`<ki-timeline label="Deployment activity">
+  <ki-timeline-item tone="danger" datetime="2024-11-19T10:42:00Z" details-label="Build log">
+    Preview deploy failed
+    <div slot="details">The runner timed out while compiling the web app.</div>
+  </ki-timeline-item>
+  <ki-timeline-item datetime="2024-11-19T10:41:00Z">
+    <ki-avatar slot="start" size="xs" initials="LP"></ki-avatar>
+    Luis Perez merged <code>fix/search-index</code>
+  </ki-timeline-item>
+</ki-timeline>`} />
+
+Events appear newest first. Set `order="oldest-first"` to start with the
+earliest event. Equal dates keep their order in the markup, and entries with
+missing or invalid dates follow the dated entries.
+
+Append new items as events arrive. After the initial list renders, additions
+within a short interval share one polite announcement. Write the event's
+outcome in its text so the status is available along with its marker tone.
+
+## API reference
+
+<CemApi tag="ki-timeline" />
+
+[Open ki-timeline in Storybook](/storybook/?path=/docs/docs-components-ki-timeline--docs)

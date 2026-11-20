@@ -1,0 +1,116 @@
+---
+title: ki-conversation
+description: Display and optionally follow a transcript of user messages, replies and system events.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use the conversation for a chronological exchange between a person and an
+assistant. Add a [ki-message](../message/) for each turn or system event. Keep
+the composer outside the transcript so it stays outside the live region.
+
+<Demo
+  layout="block"
+  code={`<ki-conversation label="Component help">
+  <ki-message message-role="user">Which inputs handle form errors?</ki-message>
+  <ki-message message-role="event" icon-name="search">Searched the component docs</ki-message>
+  <ki-message message-role="assistant" author="Ava said">
+    Input, textarea and select show field errors.
+  </ki-message>
+</ki-conversation>`}
+/>
+
+## Following the conversation
+
+Give the host a block size and set `stick-to-bottom` to follow new messages
+and growing replies. When the person scrolls back, the log stays at their
+reading position and a **Jump to latest** button appears. Scrolling to the
+end or activating the button resumes following. Omit `stick-to-bottom` for
+manual scrolling.
+
+<Demo
+  layout="block"
+  code={`<ki-conversation label="Release history" stick-to-bottom style="block-size: 9rem">
+  <ki-message>The first release added forms.</ki-message>
+  <ki-message>The next release added navigation.</ki-message>
+  <ki-message>The third release introduced the icon set.</ki-message>
+  <ki-message>The fourth release added page layouts.</ki-message>
+  <ki-message>The latest release adds conversation views.</ki-message>
+</ki-conversation>`}
+/>
+
+## Message actions
+
+Set `actions-label` on an assistant reply to give its actions one Tab stop.
+Left and Right Arrow move through the controls, and Home and End move to the
+first and last controls. The latest assistant reply shows its toolbar.
+Earlier replies reveal theirs on hover or when focus enters the reply. Devices
+without hover keep the actions visible.
+
+Use [ButtonGroup](../button-group/) in its default layout mode. The message
+handles keyboard movement across Copy, Regenerate, the rating buttons, the
+More trigger and the branch picker. Give each More trigger a unique ID and
+point [Menu](../menu/) to it. CopyButton can read the current reply from the
+element identified by `from`.
+
+<Demo
+  layout="block"
+  live={false}
+  code={`<ki-conversation label="Export help">
+  <ki-message id="reply" actions-label="Reply actions" branch-index="2" branch-count="3">
+    <span id="reply-text">Choose JSON from the export menu.</span>
+    <ki-button-group slot="actions" label="Reply commands">
+      <ki-copy-button from="reply-text" size="sm" label="Copy reply"></ki-copy-button>
+      <ki-icon-button data-message-action="regenerate" size="sm" variant="ghost" label="Regenerate">
+        <ki-icon name="refresh-cw"></ki-icon>
+      </ki-icon-button>
+      <ki-icon-button data-message-action="good" size="sm" variant="ghost" label="Good response">
+        <ki-icon name="thumbs-up"></ki-icon>
+      </ki-icon-button>
+      <ki-icon-button data-message-action="bad" size="sm" variant="ghost" label="Bad response">
+        <ki-icon name="thumbs-down"></ki-icon>
+      </ki-icon-button>
+      <ki-icon-button id="reply-more" size="sm" variant="ghost" label="More actions">
+        <ki-icon name="ellipsis"></ki-icon>
+      </ki-icon-button>
+      <ki-menu anchor="reply-more">
+        <ki-menu-item value="sources">View sources</ki-menu-item>
+      </ki-menu>
+    </ki-button-group>
+  </ki-message>
+</ki-conversation>`}
+/>
+
+Import the four glyphs using the [per-icon modules](../icon/). Keep the labels
+of the rating buttons stable. The message sets their pressed states and emits
+`ki-feedback` with `{ value: 'good' | 'bad' }`. Store the rating in the app if it
+should persist. A form for additional feedback is optional. Handle
+`ki-regenerate` to request a new answer and `ki-select` for the menu action.
+
+`ki-branch-change` carries `{ index }`, a one-based request. Update the reply
+text and `branchIndex` together after accepting it. Set `feedback` to that
+branch's saved rating, or remove it to clear both pressed states. CopyButton
+reads the updated text on the next activation. Localize the branch picker
+with `previous-branch-label`, `next-branch-label` and `branch-status-label`.
+The status template takes `{index}` and `{count}`.
+
+## Accessibility
+
+The `label` prop names the polite log. Give each transcript a distinct name
+if a page contains more than one. Localize **Jump to latest** with
+`jump-label`. After the person activates that button with the keyboard,
+focus returns to the log.
+
+A streaming reply exposes a busy article while the text arrives. Clear
+`streaming` once the final reply is in the DOM so assistive technology can
+present it as a single update. Use `author` to localize the accessible name
+of each article. See the [message guide](../message/) for role defaults.
+
+## API reference
+
+<CemApi tag="ki-conversation" />
+
+## Workshop
+
+[Open ki-conversation in Storybook](/storybook/?path=/docs/docs-components-ki-conversation--docs)

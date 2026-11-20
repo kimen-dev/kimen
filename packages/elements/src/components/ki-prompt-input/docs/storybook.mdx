@@ -1,0 +1,23 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-prompt-input" />
+
+# Prompt input
+
+Compose an assistant message, optionally add local attachments and stop a streaming response.
+
+```html
+<ki-prompt-input
+  label="Message Kimen Assistant"
+  placeholder="Ask anything, or drop a file"
+  accept=".csv,.pdf,image/*"
+  max-files="5"
+  max-size="5000000"
+></ki-prompt-input>
+```
+
+Enter sends an idle draft. Shift+Enter adds a line. To reserve Enter for editing, set `submit-on="mod-enter"` and use Control+Enter or Command+Enter to send. The app receives `{ text, files }` in `ki-submit` and sets `status` to `submitted` or `streaming` as the request progresses. While streaming, Stop emits `ki-stop` and the writing message is announced politely.
+
+Use `tools` for a model picker or extra controls, and `attachments` for supplemental list items. `max-size` is bytes per file. A named composer contributes its text to form data. Override the action labels and feedback props for the surrounding language.
+
+The surface uses `--ki-prompt-input-bg`, `-border`, `-radius` and `-padding`. `--ki-prompt-input-max-height` controls where the draft begins to scroll.

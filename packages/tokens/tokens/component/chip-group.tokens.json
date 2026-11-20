@@ -1,0 +1,14 @@
+{
+  "ki": {
+    "chip-group": {
+      "gap": {
+        "$value": "{ki.control.compact-pill.collection-gap}",
+        "$description": "Gap between adjacent chips and rows."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Font family inherited by chip group content."
+      }
+    }
+  }
+}

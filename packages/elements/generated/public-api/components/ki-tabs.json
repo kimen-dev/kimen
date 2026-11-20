@@ -1,6 +1,14 @@
 {
   "component": {
     "attributes": {
+      "icon-layout": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Positions the decorative icon relative to its tab label. When omitted,\nprimary stacks the icon above the label and secondary puts it inline.",
+        "replacement": null,
+        "required": false,
+        "type": "\"inline\" | \"stacked\" | undefined"
+      },
       "label": {
         "default": null,
         "deprecatedSince": null,
@@ -24,9 +32,33 @@
         "replacement": null,
         "required": false,
         "type": "string"
+      },
+      "variant": {
+        "default": "'primary'",
+        "deprecatedSince": null,
+        "description": "Visual treatment for the group. Use one primary group per screen and\nsecondary groups within content.",
+        "replacement": null,
+        "required": false,
+        "type": "\"primary\" | \"secondary\" | undefined"
       }
     },
     "cssProperties": {
+      "--ki-tab-icon-stacked-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap from a stacked tab icon to its label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-icon-stacked-min-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum block size for a tab with a stacked icon.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-tab-lg-font-size": {
         "default": null,
         "deprecatedSince": null,
@@ -47,6 +79,30 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the tab component for lg min block size (Tab-nav-item 10048:1068 lg: 48px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-padding-block-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-primary-indicator-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Height of the content-width indicator on a primary icon tab.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-secondary-indicator-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Height of the full-width indicator on a secondary tab.",
         "replacement": null,
         "required": false,
         "type": null
@@ -155,6 +211,38 @@
         "required": false,
         "type": null
       },
+      "--ki-tabs-secondary-selected-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Selected secondary tab background at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tabs-secondary-selected-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Selected secondary tab label foreground at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tabs-secondary-unselected-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Secondary tab background at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tabs-secondary-unselected-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Secondary tab label foreground at rest.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-tabs-sm-gap": {
         "default": null,
         "deprecatedSince": null,
@@ -211,6 +299,14 @@
       }
     },
     "properties": {
+      "iconLayout": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Positions the decorative icon relative to its tab label. When omitted,\nprimary stacks the icon above the label and secondary puts it inline.",
+        "replacement": null,
+        "required": false,
+        "type": "\"inline\" | \"stacked\" | undefined"
+      },
       "label": {
         "default": null,
         "deprecatedSince": null,
@@ -234,6 +330,14 @@
         "replacement": null,
         "required": false,
         "type": "string"
+      },
+      "variant": {
+        "default": "'primary'",
+        "deprecatedSince": null,
+        "description": "Visual treatment for the group. Use one primary group per screen and\nsecondary groups within content.",
+        "replacement": null,
+        "required": false,
+        "type": "\"primary\" | \"secondary\" | undefined"
       }
     },
     "slots": {

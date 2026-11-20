@@ -1,0 +1,44 @@
+---
+title: Slider
+description: Choose a value or an interval on a continuous scale.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-slider` for approximate values such as volume, exposure or a price
+filter. Use a number input for exact entry and a radio group for a few named
+choices.
+
+<Demo code={`<ki-slider label="Volume" name="volume" value="60" marks="5" format="percent"></ki-slider>
+<ki-slider label="Price per night" name="price" range value="20,80" format="currency" currency="EUR"></ki-slider>`} />
+
+Use `centered` to fill from the midpoint and show a center tick on a
+single-thumb scale. Set `orientation="vertical"` to increase from bottom to
+top. Horizontal scales follow the enclosing writing direction.
+
+<Demo code={`<ki-slider label="Exposure" centered min="-50" max="50" value="-20"></ki-slider>
+<ki-slider label="Bass" orientation="vertical" max="10" value="4"></ki-slider>`} />
+
+## Keyboard and forms
+
+Tab reaches each thumb in order. The arrows move one step, Page Up and Page
+Down move ten, and Home and End reach the focused thumb's current limits.
+Horizontal arrows follow the scale's direction. Up always increases.
+
+Provide a specific `label` and use `help-text` for extra context. Use
+`minimum-label` and `maximum-label` to localize the range thumb suffixes.
+`format` changes the readout and the accessible value. A value of 60
+displays as 60% in percent format.
+
+Each named slider submits one form entry. The range above submits `20,80`.
+Reset restores the initial selection. Listen for `input` to preview changes
+and `change` to act after a pointer release or keyboard adjustment.
+
+## API reference
+
+<CemApi tag="ki-slider" />
+
+## Workshop
+
+[Open ki-slider in Storybook](/storybook/?path=/docs/docs-components-ki-slider--docs)

@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-pagination" />
+
+# ki-pagination
+
+Move among pages of a long result set, or append another batch in place.
+
+```html
+<ki-pagination page="5" pages="12" label="Search pages"></ki-pagination>
+<ki-pagination page="5" pages="12" variant="compact" label="Table pages"></ki-pagination>
+<ki-pagination variant="load-more" shown="20" total="240" label="More results"></ki-pagination>
+```
+
+The numbered variant uses the compact stepper below 480 CSS pixels of
+available width. Set `href-template="?page={page}"` to provide native links
+to server-rendered result pages.
+
+| Event | Host response |
+| --- | --- |
+| `ki-page-change` | Read `event.detail.page`, replace the results, update `page`, and move focus to the updated heading or start of the results. |
+| `ki-load-more` | Append the results and update `shown`. Keep focus on the button so the polite count can update in place. |
+
+Give each pagination landmark a distinct `label` when a page has more
+than one. Localize its control labels and text templates together.

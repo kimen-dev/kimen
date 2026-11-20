@@ -1,0 +1,24 @@
+{
+  "ki": {
+    "time-input": {
+      "list": {
+        "bg": {
+          "$value": "{ki.surface.s2}",
+          "$description": "Material 3 menu surface for the suggested times list."
+        },
+        "border-color": {
+          "$value": "{ki.outline.none}",
+          "$description": "Material 3 menu outline, transparent by default."
+        },
+        "radius": {
+          "$value": "{ki.corner.popup-tight}",
+          "$description": "Material 3 extra-small menu corner radius."
+        },
+        "shadow": {
+          "$value": "{ki.elevation.e2}",
+          "$description": "Material 3 level-two menu elevation."
+        }
+      }
+    }
+  }
+}
