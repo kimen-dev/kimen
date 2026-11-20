@@ -32,8 +32,41 @@ import { NATIVE_PRIMITIVES } from './primitives.mjs';
  * `deprecatedValues` accepted in old specs and omitted from new schemas.
  * 1.5.0 (issue #387): a numeric-or-string property preserves both scalar
  * values and serialized intervals.
+ * 1.6.0 (spec 152): a string prop that names another element by id carries
+ * `format: "idref"` and resolves only to a node of the same spec; a
+ * form-action `type` (an enum offering `button` with `submit` or `reset`)
+ * offers agents `button` alone. A 1.5.0 boundary refuses a 1.6.0 spec
+ * rather than resolving references it cannot contain.
  */
-export const CATALOG_SCHEMA_VERSION = '1.5.0';
+export const CATALOG_SCHEMA_VERSION = '1.6.0';
+
+/**
+ * A spec owns no form, so a submit or reset button in it could only act on
+ * the host page's form (spec 152 FR-006): the agent catalog narrows a
+ * form-action `type` to `button`, and the renderers pin it.
+ */
+const FORM_ACTIONS = ['reset', 'submit'];
+
+function narrowFormActionType(name, entry) {
+  if (
+    name !== 'type' ||
+    entry.type !== 'enum' ||
+    !entry.values.includes('button') ||
+    !entry.values.some((value) => FORM_ACTIONS.includes(value))
+  ) {
+    return;
+  }
+  entry.values = ['button'];
+  entry.default = 'button';
+  if (entry.deprecatedValues !== undefined) {
+    entry.deprecatedValues = entry.deprecatedValues.filter(
+      (value) => !FORM_ACTIONS.includes(value),
+    );
+    if (entry.deprecatedValues.length === 0) {
+      delete entry.deprecatedValues;
+    }
+  }
+}
 
 const isBlank = (text) => typeof text !== 'string' || text.trim() === '';
 
@@ -227,16 +260,21 @@ export function buildCatalog(
         }
         Object.assign(entry, bounds);
         // `@format url` on the component prop: the value is held to the URL
-        // policy. One format exists; any other shape is a derivation defect.
+        // policy. `@format idref` (spec 152): the value names another node
+        // of the same spec. Any other shape is a derivation defect.
         if (attribute.format !== undefined) {
-          if (attribute.format !== 'url' || constraint.type !== 'string') {
+          if (
+            (attribute.format !== 'url' && attribute.format !== 'idref') ||
+            constraint.type !== 'string'
+          ) {
             violations.push(
               `${tag}.${attribute.name}: unsupported format ${JSON.stringify(attribute.format)} on a ${constraint.type} attribute`,
             );
             continue;
           }
-          entry.format = 'url';
+          entry.format = attribute.format;
         }
+        narrowFormActionType(attribute.name, entry);
         props.set(attribute.name, entry);
       }
       const action = catalogActions.get(tag);

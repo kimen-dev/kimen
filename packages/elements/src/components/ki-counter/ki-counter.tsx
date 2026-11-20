@@ -54,6 +54,7 @@ export class KiCounter {
    * indicator at its block-start inline-end corner and hides it while the
    * trigger is unavailable. For a named host slot, omit this property.
    * @default undefined
+   * @format idref
    */
   @Prop({ reflect: true }) for?: string;
 

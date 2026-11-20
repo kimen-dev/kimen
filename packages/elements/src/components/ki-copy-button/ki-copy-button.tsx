@@ -49,6 +49,7 @@ export class KiCopyButton {
    * ID of a source in this button's document or shadow root. A nonempty ID
    * takes precedence over `value`. The source's current string value or
    * its text content is read on activation.
+   * @format idref
    */
   @Prop() from?: string;
 

@@ -5149,7 +5149,12 @@
           "attr": "focus-target",
           "reflectToAttr": true,
           "docs": "ID of the entry field in the same document or shadow root for focus after the last chip.",
-          "docsTags": [],
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "idref"
+            }
+          ],
           "values": [
             {
               "type": "string"
@@ -7872,7 +7877,12 @@
           "attr": "from",
           "reflectToAttr": false,
           "docs": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
-          "docsTags": [],
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "idref"
+            }
+          ],
           "values": [
             {
               "type": "string"
@@ -8184,6 +8194,10 @@
             {
               "name": "default",
               "text": "undefined"
+            },
+            {
+              "name": "format",
+              "text": "idref"
             }
           ],
           "values": [
@@ -16224,6 +16238,10 @@
           "docs": "Literal ID of the menu button in the same document or containing shadow root.",
           "docsTags": [
             {
+              "name": "format",
+              "text": "idref"
+            },
+            {
               "name": "default",
               "text": "''"
             }
@@ -19332,7 +19350,12 @@
           "attr": "for",
           "reflectToAttr": false,
           "docs": "ID of the button in the same document or shadow tree.",
-          "docsTags": [],
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "idref"
+            }
+          ],
           "values": [
             {
               "type": "string"
@@ -31626,7 +31649,12 @@
           "attr": "for",
           "reflectToAttr": false,
           "docs": "ID of the rich tooltip's external trigger in the same document or shadow tree.",
-          "docsTags": [],
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "idref"
+            }
+          ],
           "values": [
             {
               "type": "string"

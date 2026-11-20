@@ -78,7 +78,7 @@ the event detail.
 
 ## Attributes
 
-- `anchor` (string, default ''): Literal ID of the menu button in the same document or containing shadow root.
+- `anchor` (string, default '', ID of another element of the same spec): Literal ID of the menu button in the same document or containing shadow root.
 - `filter-label` (string, default ''): Accessible name and placeholder of the filter. Omit to hide the field.
 - `filter-results-label` (string, default 'Matching actions: {count}'): Polite results message. The menu substitutes the number of matches for `{count}`.
 - `open` (boolean, default false): Whether the popup is open. Reflected when the user opens or dismisses it.

@@ -2119,7 +2119,7 @@ announced on each move. Listen for `ki-reorder` to persist the new order.
 ```
 
 Attributes:
-- `focus-target` (string | undefined): ID of the entry field in the same document or shadow root for focus after the last chip.
+- `focus-target` (string | undefined, ID of another element of the same spec): ID of the entry field in the same document or shadow root for focus after the last chip.
 - `label` (string, default ''): Accessible name for the group or list.
 - `reorder-announcement` (string, default '{label} moved to position {position} of {total}.'): Localized polite message using {label}, {position} and {total}. Position is one-based.
 - `reorderable` (boolean, default false): Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.
@@ -2815,7 +2815,7 @@ Attributes:
 - `copied-label` (string, default 'Copied'): Polite announcement after a successful write. Override for localized interfaces.
 - `copy-error-label` (string, default "Couldn't copy"): Polite announcement after a failed write or missing source. Override for localized interfaces.
 - `feedback-duration` (number, default 1500, minimum 0): Milliseconds to show feedback after a write settles. Zero keeps the outcome visible until the next result. Invalid values use 1500 ms.
-- `from` (string | undefined): ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+- `from` (string | undefined, ID of another element of the same spec): ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
 - `label` (string, default 'Copy'): Accessible name for the icon-only control. Visible slot text supplies the name when present.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Match the size of adjacent controls.
 - `value` (string | undefined): Exact clipboard text, including whitespace. Supply it when the text is known directly.
@@ -3091,7 +3091,7 @@ write one localized announcement to the pre-existing status region.
 
 Attributes:
 - `dot` (boolean, default false): Show a dot independently of the count, including when the value is zero.
-- `for` (string | undefined): Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
+- `for` (string | undefined, ID of another element of the same spec): Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
 - `max` (number, default 99): Largest count displayed in full. Higher values display the cap with a plus sign. Fractional caps round down; invalid caps use 99.
 - `tone` ("danger" | "neutral" | "primary" | "success", default 'danger'): Semantic palette of the pill or dot. An unknown tone uses danger.
 - `value` (number | undefined): Count of unread or pending items. Finite values are rounded down. Values below one and non-finite values hide the count.
@@ -5787,7 +5787,7 @@ listeners can read the selected item's `value` and optional `checked` from
 the event detail.
 
 Attributes:
-- `anchor` (string, default ''): Literal ID of the menu button in the same document or containing shadow root.
+- `anchor` (string, default '', ID of another element of the same spec): Literal ID of the menu button in the same document or containing shadow root.
 - `filter-label` (string, default ''): Accessible name and placeholder of the filter. Omit to hide the field.
 - `filter-results-label` (string, default 'Matching actions: {count}'): Polite results message. The menu substitutes the number of matches for `{count}`.
 - `open` (boolean, default false): Whether the popup is open. Reflected when the user opens or dismisses it.
@@ -6693,7 +6693,7 @@ Use `open` to drive visibility and listen for `ki-open` and `ki-close` to observ
 Attributes:
 - `appearance` ("default" | "rich" | undefined, default 'default'): Rich shares the tooltip's raised surface, body and heading styles. With `kind="toggletip"` it enables actions and moves focus inside on open.
 - `arrow` (boolean, default true): Shows the arrow toward the trigger.
-- `for` (string | undefined): ID of the button in the same document or shadow tree.
+- `for` (string | undefined, ID of another element of the same spec): ID of the button in the same document or shadow tree.
 - `kind` ("dialog" | "toggletip", default 'dialog'): Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.
 - `label` (string | undefined, default 'Popover'): Accessible name of a dialog popover.
 - `open` (boolean, default false): Visibility. Reflects activation and native dismissal.
@@ -10940,7 +10940,7 @@ For an explanation with controls, use `ki-popover` with
 `kind="toggletip"` and `appearance="rich"`.
 
 Attributes:
-- `for` (string | undefined): ID of the rich tooltip's external trigger in the same document or shadow tree.
+- `for` (string | undefined, ID of another element of the same spec): ID of the rich tooltip's external trigger in the same document or shadow tree.
 - `heading` (string | undefined): Rich tooltip heading. Pair it with `for` and optional direct text in the default slot.
 - `label` (string, default ''): The entire plain tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a popover.
 - `placement` ("bottom" | "end" | "start" | "top", default 'top'): Preferred placement for the tooltip. The component may flip or clamp the rendered placement to keep the bubble inside the viewport; unknown runtime values fall back to `top`. When NOT to use: do not depend on placement for meaning or reading order.

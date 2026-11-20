@@ -66,9 +66,13 @@ export interface CatalogPropConstraint {
   /**
    * `'url'` marks a `string` prop the browser may load or navigate to: its
    * value must pass the URL policy (`url-scheme`, and `url-origin` under
-   * `allowedUrlOrigins`). Absent means opaque text.
+   * `allowedUrlOrigins`). `'idref'` marks a `string` prop that names another
+   * element: its value must be the `id` of a node of the same spec or live
+   * surface (`invalid-reference`), and renderers write it as the DOM id they
+   * allocated for that node, never as a host page id (spec 152). Absent
+   * means opaque text.
    */
-  readonly format?: 'url';
+  readonly format?: 'idref' | 'url';
   readonly description: string;
 }
 
@@ -142,6 +146,7 @@ export interface ValidationIssue {
     | 'invalid-command-target'
     | 'invalid-id'
     | 'invalid-prop-type'
+    | 'invalid-reference'
     | 'malformed-spec'
     | 'missing-required-prop'
     | 'prop-out-of-range'
@@ -625,6 +630,13 @@ function checkId(
 export interface NodeValidationScope {
   readonly ids: Map<string, string>;
   readonly commandTargets: { readonly id: string; readonly path: string }[];
+  /** Every `idref` prop value of the scope, resolved after all nodes (spec 152). */
+  readonly references: { readonly id: string; readonly path: string }[];
+}
+
+/** A fresh scope for one tree or one live surface state. */
+export function createValidationScope(): NodeValidationScope {
+  return { commandTargets: [], ids: new Map<string, string>(), references: [] };
 }
 
 function checkDialogCommand(node: UiSpecNode, path: string, context: CheckContext): void {
@@ -663,7 +675,74 @@ export function checkCommandTargets(scope: NodeValidationScope): ValidationIssue
       });
     }
   }
+  // Spec 152: a reference names a node of the same spec or surface. An id
+  // no node carries would resolve in the host page, outside the surface.
+  for (const { id, path } of scope.references) {
+    if (!scope.ids.has(id)) {
+      issues.push({
+        code: 'invalid-reference',
+        message: `"${id}" names no node of the same surface; a reference may only name a node id of the spec`,
+        path,
+        value: id,
+      });
+    }
+  }
   return issues;
+}
+
+/**
+ * A reference prop's value (spec 152): a node id by grammar, resolved
+ * against the whole scope once every node is known.
+ */
+function checkReference(
+  value: boolean | number | string,
+  constraint: CatalogPropConstraint,
+  path: string,
+  context: CheckContext,
+): void {
+  if (constraint.format !== 'idref' || typeof value !== 'string') {
+    return;
+  }
+  if (!NODE_ID_GRAMMAR.test(value)) {
+    context.issues.push({
+      code: 'invalid-reference',
+      message: `"${value}" is not a node id; a reference may only name a node id of the spec`,
+      path,
+      value,
+    });
+    return;
+  }
+  context.scope.references.push({ id: value, path });
+}
+
+/**
+ * A form-action `type` (an enum offering `button` with `submit` or `reset`)
+ * accepts only `button` in a spec (spec 152 FR-005): a spec owns no form,
+ * so any other value could only submit or reset the host page's form. The
+ * built-in catalog already offers `button` alone; this holds every catalog.
+ */
+function checkFormAction(
+  component: string,
+  name: string,
+  value: boolean | number | string,
+  constraint: CatalogPropConstraint,
+  path: string,
+  issues: ValidationIssue[],
+): void {
+  if (
+    name === 'type' &&
+    constraint.type === 'enum' &&
+    constraint.values?.includes('button') === true &&
+    (value === 'submit' || value === 'reset') &&
+    acceptsEnumValue(value, constraint)
+  ) {
+    issues.push({
+      code: 'invalid-prop-type',
+      message: `${component} prop "type" "${value}" would act on the host page's form; a spec may only use "button"`,
+      path,
+      value,
+    });
+  }
 }
 
 /**
@@ -707,7 +786,9 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
     if (constraint !== undefined) {
       const propPath = `${path}.props.${name}`;
       checkProp(node.component, name, value, constraint, propPath, issues);
+      checkFormAction(node.component, name, value, constraint, propPath, issues);
       checkUrl(node.component, name, value, constraint, propPath, context);
+      checkReference(value, constraint, propPath, context);
     }
   }
   if (entry !== undefined) {
@@ -866,7 +947,7 @@ export function validatePlainData(
   }
 
   const issues: ValidationIssue[] = [];
-  const nodeScope = scope ?? { commandTargets: [], ids: new Map<string, string>() };
+  const nodeScope = scope ?? createValidationScope();
   checkNode(parsed.data.root, rootPath, {
     allowedUrlOrigins: context.allowedUrlOrigins,
     declaredActions: new Set(parsed.data.actions ?? []),
