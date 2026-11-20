@@ -33,7 +33,7 @@ import { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-men
 import { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
-import { KiPopoverKind, KiPopoverPlacement } from "./components/ki-popover/ki-popover";
+import { KiPopoverAppearance, KiPopoverKind, KiPopoverPlacement } from "./components/ki-popover/ki-popover";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
@@ -77,7 +77,7 @@ export { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-men
 export { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
-export { KiPopoverKind, KiPopoverPlacement } from "./components/ki-popover/ki-popover";
+export { KiPopoverAppearance, KiPopoverKind, KiPopoverPlacement } from "./components/ki-popover/ki-popover";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
@@ -1298,10 +1298,15 @@ export namespace Components {
     }
     /**
      * A non-modal popover anchored to a button.
-     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenToUse Show filters, details, a small form, or an explanation opened by click. Use a rich toggletip for a short explanation with actions.
      * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
      */
     interface KiPopover {
+        /**
+          * Rich shares the tooltip's raised surface, body and heading styles. With `kind="toggletip"` it enables actions and moves focus inside on open.
+          * @default 'default'
+         */
+        "appearance"?: KiPopoverAppearance;
         /**
           * Shows the arrow toward the trigger.
           * @default true
@@ -1312,7 +1317,7 @@ export namespace Components {
          */
         "for"?: string;
         /**
-          * Use dialog for controls or toggletip for supplemental text.
+          * Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.
           * @default 'dialog'
          */
         "kind": KiPopoverKind;
@@ -2210,18 +2215,26 @@ export namespace Components {
         "show": (options: KiToastShowOptions) => Promise<HTMLElement>;
     }
     /**
-     * A transient, text-only description bubble for one slotted trigger.
+     * A transient, text-only hint with an optional heading.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
      * elsewhere in the interface.
      * @whenNotToUse essential or unique information in a tooltip; interactive
-     * or rich content in a tooltip; form validation messages, disabled controls,
-     * or touch-primary flows. Use visible layout text or a future `ki-popover`
-     * pattern for those cases.
+     * content in a tooltip; form validation messages, disabled controls, or
+     * touch-primary flows. Use visible layout text or a rich `ki-popover` with
+     * `kind="toggletip"` when the content includes actions.
      */
     interface KiTooltip {
         /**
-          * The entire tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a future popover.
+          * ID of the rich tooltip's external trigger in the same document or shadow tree.
+         */
+        "for"?: string;
+        /**
+          * Rich tooltip heading. Pair it with `for` and optional direct text in the default slot.
+         */
+        "heading"?: string;
+        /**
+          * The entire plain tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a popover.
           * @default ''
          */
         "label": string;
@@ -2926,7 +2939,7 @@ declare global {
     }
     /**
      * A non-modal popover anchored to a button.
-     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenToUse Show filters, details, a small form, or an explanation opened by click. Use a rich toggletip for a short explanation with actions.
      * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
      */
     interface HTMLKiPopoverElement extends Components.KiPopover, HTMLStencilElement {
@@ -3367,14 +3380,14 @@ declare global {
         new (): HTMLKiToasterElement;
     };
     /**
-     * A transient, text-only description bubble for one slotted trigger.
+     * A transient, text-only hint with an optional heading.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
      * elsewhere in the interface.
      * @whenNotToUse essential or unique information in a tooltip; interactive
-     * or rich content in a tooltip; form validation messages, disabled controls,
-     * or touch-primary flows. Use visible layout text or a future `ki-popover`
-     * pattern for those cases.
+     * content in a tooltip; form validation messages, disabled controls, or
+     * touch-primary flows. Use visible layout text or a rich `ki-popover` with
+     * `kind="toggletip"` when the content includes actions.
      */
     interface HTMLKiTooltipElement extends Components.KiTooltip, HTMLStencilElement {
     }
@@ -4737,10 +4750,15 @@ declare namespace LocalJSX {
     }
     /**
      * A non-modal popover anchored to a button.
-     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenToUse Show filters, details, a small form, or an explanation opened by click. Use a rich toggletip for a short explanation with actions.
      * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
      */
     interface KiPopover {
+        /**
+          * Rich shares the tooltip's raised surface, body and heading styles. With `kind="toggletip"` it enables actions and moves focus inside on open.
+          * @default 'default'
+         */
+        "appearance"?: KiPopoverAppearance;
         /**
           * Shows the arrow toward the trigger.
           * @default true
@@ -4751,7 +4769,7 @@ declare namespace LocalJSX {
          */
         "for"?: string;
         /**
-          * Use dialog for controls or toggletip for supplemental text.
+          * Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.
           * @default 'dialog'
          */
         "kind"?: KiPopoverKind;
@@ -5685,18 +5703,26 @@ declare namespace LocalJSX {
         "placement"?: KiToasterPlacement | (string & {});
     }
     /**
-     * A transient, text-only description bubble for one slotted trigger.
+     * A transient, text-only hint with an optional heading.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
      * elsewhere in the interface.
      * @whenNotToUse essential or unique information in a tooltip; interactive
-     * or rich content in a tooltip; form validation messages, disabled controls,
-     * or touch-primary flows. Use visible layout text or a future `ki-popover`
-     * pattern for those cases.
+     * content in a tooltip; form validation messages, disabled controls, or
+     * touch-primary flows. Use visible layout text or a rich `ki-popover` with
+     * `kind="toggletip"` when the content includes actions.
      */
     interface KiTooltip {
         /**
-          * The entire tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a future popover.
+          * ID of the rich tooltip's external trigger in the same document or shadow tree.
+         */
+        "for"?: string;
+        /**
+          * Rich tooltip heading. Pair it with `for` and optional direct text in the default slot.
+         */
+        "heading"?: string;
+        /**
+          * The entire plain tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a popover.
           * @default ''
          */
         "label"?: string;
@@ -5982,6 +6008,7 @@ declare namespace LocalJSX {
         "label": string | undefined;
         "arrow": boolean;
         "kind": KiPopoverKind;
+        "appearance": KiPopoverAppearance;
     }
     interface KiProgressAttributes {
         "value": number;
@@ -6148,6 +6175,8 @@ declare namespace LocalJSX {
     }
     interface KiTooltipAttributes {
         "label": string;
+        "for": string;
+        "heading": string;
         "placement": KiTooltipPlacement;
     }
     interface KiVideoAttributes {
@@ -6558,7 +6587,7 @@ declare module "@stencil/core" {
             "ki-option": LocalJSX.IntrinsicElements["ki-option"] & JSXBase.HTMLAttributes<HTMLKiOptionElement>;
             /**
              * A non-modal popover anchored to a button.
-             * @whenToUse Show filters, details, a small form, or a text toggletip.
+             * @whenToUse Show filters, details, a small form, or an explanation opened by click. Use a rich toggletip for a short explanation with actions.
              * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
              */
             "ki-popover": LocalJSX.IntrinsicElements["ki-popover"] & JSXBase.HTMLAttributes<HTMLKiPopoverElement>;
@@ -6843,14 +6872,14 @@ declare module "@stencil/core" {
              */
             "ki-toaster": LocalJSX.IntrinsicElements["ki-toaster"] & JSXBase.HTMLAttributes<HTMLKiToasterElement>;
             /**
-             * A transient, text-only description bubble for one slotted trigger.
+             * A transient, text-only hint with an optional heading.
              * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
              * otherwise ambiguous control when the same information is discoverable
              * elsewhere in the interface.
              * @whenNotToUse essential or unique information in a tooltip; interactive
-             * or rich content in a tooltip; form validation messages, disabled controls,
-             * or touch-primary flows. Use visible layout text or a future `ki-popover`
-             * pattern for those cases.
+             * content in a tooltip; form validation messages, disabled controls, or
+             * touch-primary flows. Use visible layout text or a rich `ki-popover` with
+             * `kind="toggletip"` when the content includes actions.
              */
             "ki-tooltip": LocalJSX.IntrinsicElements["ki-tooltip"] & JSXBase.HTMLAttributes<HTMLKiTooltipElement>;
             /**

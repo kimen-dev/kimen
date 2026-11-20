@@ -11,6 +11,8 @@ import { defineCustomElement as defineKiTooltip } from '@kimen/elements/componen
 
 export const KiTooltip: StencilVueComponent<JSX.KiTooltip> = /*@__PURE__*/ defineContainer<JSX.KiTooltip>('ki-tooltip', defineKiTooltip, [
   'label',
+  'for',
+  'heading',
   'placement'
 ]);
 

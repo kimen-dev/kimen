@@ -892,14 +892,14 @@ export declare interface KiOption extends Components.KiOption {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiPopover,
-  inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement']
+  inputs: ['appearance', 'arrow', 'for', 'kind', 'label', 'open', 'placement']
 })
 @Component({
   selector: 'ki-popover',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement'],
+  inputs: ['appearance', 'arrow', 'for', 'kind', 'label', 'open', 'placement'],
 })
 export class KiPopover {
   protected el: HTMLKiPopoverElement;
@@ -1454,14 +1454,14 @@ export declare interface KiToaster extends Components.KiToaster {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiTooltip,
-  inputs: ['label', 'placement']
+  inputs: ['for', 'heading', 'label', 'placement']
 })
 @Component({
   selector: 'ki-tooltip',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['label', 'placement'],
+  inputs: ['for', 'heading', 'label', 'placement'],
 })
 export class KiTooltip {
   protected el: HTMLKiTooltipElement;

@@ -1704,6 +1704,15 @@ export const catalogData = {
         "ki-open": "Emitted when the popover opens."
       },
       "props": {
+        "appearance": {
+          "type": "enum",
+          "values": [
+            "default",
+            "rich"
+          ],
+          "description": "Rich shares the tooltip's raised surface, body and heading styles. With\n`kind=\"toggletip\"` it enables actions and moves focus inside on open.",
+          "default": "default"
+        },
         "arrow": {
           "type": "boolean",
           "description": "Shows the arrow toward the trigger.",
@@ -1719,7 +1728,7 @@ export const catalogData = {
             "dialog",
             "toggletip"
           ],
-          "description": "Use dialog for controls or toggletip for supplemental text.",
+          "description": "Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.",
           "default": "dialog"
         },
         "label": {
@@ -1753,11 +1762,11 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Dialog content or toggletip text."
+        "": "Dialog content or toggletip text. A rich toggletip also accepts actions."
       },
       "tag": "ki-popover",
       "whenNotToUse": "Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.",
-      "whenToUse": "Show filters, details, a small form, or a text toggletip."
+      "whenToUse": "Show filters, details, a small form, or an explanation opened by click. Use a rich toggletip for a short explanation with actions."
     },
     "ki-progress": {
       "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",
@@ -2742,12 +2751,20 @@ export const catalogData = {
       "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
     },
     "ki-tooltip": {
-      "description": "A transient, text-only description bubble for one slotted trigger.",
+      "description": "A transient, text-only hint with an optional heading.",
       "events": {},
       "props": {
+        "for": {
+          "type": "string",
+          "description": "ID of the rich tooltip's external trigger in the same document or shadow tree."
+        },
+        "heading": {
+          "type": "string",
+          "description": "Rich tooltip heading. Pair it with `for` and optional direct text in the default slot."
+        },
         "label": {
           "type": "string",
-          "description": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover.",
+          "description": "The entire plain tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a popover.",
           "default": ""
         },
         "placement": {
@@ -2763,10 +2780,10 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Exactly one interactive trigger. The component reflects `label` to\nthe trigger's `aria-description`."
+        "": "One trigger for a plain tooltip, or direct explanatory text when\n`for` and `heading` are provided. Rich tooltips accept text only."
       },
       "tag": "ki-tooltip",
-      "whenNotToUse": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases.",
+      "whenNotToUse": "essential or unique information in a tooltip; interactive\ncontent in a tooltip; form validation messages, disabled controls, or\ntouch-primary flows. Use visible layout text or a rich `ki-popover` with\n`kind=\"toggletip\"` when the content includes actions.",
       "whenToUse": "add a brief clarifying hint for an icon-only, abbreviated, or\notherwise ambiguous control when the same information is discoverable\nelsewhere in the interface."
     },
     "ki-video": {

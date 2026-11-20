@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 467 semantic
-and 1561 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 468 semantic
+and 1580 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -50,6 +50,7 @@ every component at once.
 | `--ki-anchored-surface-max-width` | `20rem` | Maximum inline size of a small anchored surface. |
 | `--ki-anchored-surface-padding` | `0.75rem` | Interior padding for a small anchored surface. |
 | `--ki-anchored-surface-radius` | `12px` | Corner radius for a small anchored surface. |
+| `--ki-anchored-surface-rich-max-width` | `19rem` | Maximum inline size of an anchored help card. |
 
 ### `ki.control`
 
@@ -2426,6 +2427,25 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tooltip-padding-block` | `0.375rem` | dimension used by the tooltip component for padding block (MarsUI card padding Space/xl 12px on all sides). |
 | `--ki-tooltip-padding-inline` | `0.625rem` | dimension used by the tooltip component for padding inline (MarsUI card padding Space/xl 12px on all sides). |
 | `--ki-tooltip-radius` | `8px` | dimension used by the tooltip component for radius (MarsUI Tooltip master 12089:7621 List_wrap: Radius/big_component/radius_xs 16px). |
+| `--ki-tooltip-rich-backdrop-filter` | `none` | Complete backdrop filter of the rich surface. |
+| `--ki-tooltip-rich-bg` | `#f9f7f4` | Fill of the rich tooltip or rich popover. |
+| `--ki-tooltip-rich-bg-image` | `none` | Optional image layer over the rich surface fill. |
+| `--ki-tooltip-rich-border-color` | `rgba(24, 22, 19, 0.1)` | Outline ink of the rich surface. |
+| `--ki-tooltip-rich-border-width` | `1px` | Outline thickness of the rich surface. |
+| `--ki-tooltip-rich-fg` | `#5e5953` | Ink of the rich surface body text. |
+| `--ki-tooltip-rich-font-size` | `0.8125rem` | Body text size of the rich surface. |
+| `--ki-tooltip-rich-font-weight` | `500` | Body text weight of the rich surface. |
+| `--ki-tooltip-rich-heading-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the rich surface heading. |
+| `--ki-tooltip-rich-heading-fg` | `#181613` | Ink of the rich surface heading over the shared fill. |
+| `--ki-tooltip-rich-heading-gap` | `0.125rem` | Distance between the rich heading and its body. |
+| `--ki-tooltip-rich-heading-size` | `0.9375rem` | Text size of the rich surface heading. |
+| `--ki-tooltip-rich-heading-weight` | `700` | Text weight of the rich surface heading. |
+| `--ki-tooltip-rich-line-height` | `1.25rem` | Body text line height of the rich surface. |
+| `--ki-tooltip-rich-max-width` | `19rem` | Maximum inline size of the rich surface. |
+| `--ki-tooltip-rich-padding-block` | `0.75rem` | Block-axis inset of the rich surface, before density scaling. |
+| `--ki-tooltip-rich-padding-inline` | `1rem` | Inline-axis inset of the rich surface, before density scaling. |
+| `--ki-tooltip-rich-radius` | `12px` | Corner radius of the rich surface. |
+| `--ki-tooltip-rich-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Raised elevation of the rich surface. |
 | `--ki-tooltip-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap). |
 | `--ki-tooltip-show-delay` | `500ms` | duration used by the tooltip component for tooltip show delay. |
 

@@ -8435,7 +8435,7 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "Show filters, details, a small form, or a text toggletip."
+          "text": "Show filters, details, a small form, or an explanation opened by click. Use a rich toggletip for a short explanation with actions."
         },
         {
           "name": "whenNotToUse",
@@ -8443,7 +8443,7 @@
         },
         {
           "name": "slot",
-          "text": "- Dialog content or toggletip text."
+          "text": "- Dialog content or toggletip text. A rich toggletip also accepts actions."
         },
         {
           "name": "part",
@@ -8455,9 +8455,52 @@
         }
       ],
       "usage": {
-        "examples": "Use a named dialog popover for interactive filters. The host supplies the trigger in the same document or shadow tree.\n\n```html\n<ki-button id=\"filters\" type=\"button\" variant=\"secondary\">Filters</ki-button>\n<ki-popover for=\"filters\" label=\"Incident filters\" placement=\"bottom-start\">\n  <ki-checkbox checked>Open incidents</ki-checkbox>\n</ki-popover>\n```\n\nUse a toggletip to announce supplementary text and keep focus on the trigger.\n\n```html\n<ki-button id=\"retention\" type=\"button\" variant=\"ghost\">About retention</ki-button>\n<ki-popover for=\"retention\" kind=\"toggletip\" arrow=\"false\">\n  Logs are kept for 30 days.\n</ki-popover>\n```\n\nUse `open` to drive visibility and listen for `ki-open` and `ki-close` to observe it. In guarded catalog markup, bind actions to slotted controls. A trusted host can listen to the popover's two lifecycle events through the DOM.\n"
+        "examples": "Use a named dialog popover for interactive filters. The host supplies the trigger in the same document or shadow tree.\n\n```html\n<ki-button id=\"filters\" type=\"button\" variant=\"secondary\">Filters</ki-button>\n<ki-popover for=\"filters\" label=\"Incident filters\" placement=\"bottom-start\">\n  <ki-checkbox checked>Open incidents</ki-checkbox>\n</ki-popover>\n```\n\nUse a toggletip to announce supplementary text and keep focus on the trigger.\n\n```html\n<ki-button id=\"retention\" type=\"button\" variant=\"ghost\">About retention</ki-button>\n<ki-popover for=\"retention\" kind=\"toggletip\" arrow=\"false\">\n  Logs are kept for 30 days.\n</ki-popover>\n```\n\nUse a rich toggletip for an explanation with actions. Opening the panel\nmoves focus inside, and Escape restores it to the trigger.\n\n```html\n<ki-button id=\"contrast-mode\" type=\"button\" variant=\"ghost\">Contrast mode</ki-button>\n<ki-popover for=\"contrast-mode\" kind=\"toggletip\" appearance=\"rich\" label=\"About contrast mode\" arrow=\"false\">\n  <strong>Contrast mode</strong>\n  <p>Kimen follows the system setting.</p>\n  <ki-button type=\"button\" size=\"sm\" variant=\"ghost\">Learn more</ki-button>\n</ki-popover>\n```\n\nUse `open` to drive visibility and listen for `ki-open` and `ki-close` to observe it. In guarded catalog markup, bind actions to slotted controls. A trusted host can listen to the popover's two lifecycle events through the DOM.\n"
       },
       "props": [
+        {
+          "name": "appearance",
+          "type": "\"default\" | \"rich\" | undefined",
+          "complexType": {
+            "original": "KiPopoverAppearance",
+            "resolved": "\"default\" | \"rich\" | undefined",
+            "references": {
+              "KiPopoverAppearance": {
+                "location": "local",
+                "path": "src/components/ki-popover/ki-popover.tsx",
+                "id": "src/components/ki-popover/ki-popover.tsx::KiPopoverAppearance"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "appearance",
+          "reflectToAttr": false,
+          "docs": "Rich shares the tooltip's raised surface, body and heading styles. With\n`kind=\"toggletip\"` it enables actions and moves focus inside on open.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "rich",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "arrow",
           "type": "boolean",
@@ -8530,7 +8573,7 @@
           "mutable": false,
           "attr": "kind",
           "reflectToAttr": false,
-          "docs": "Use dialog for controls or toggletip for supplemental text.",
+          "docs": "Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.",
           "docsTags": [
             {
               "name": "default",
@@ -8731,7 +8774,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Dialog content or toggletip text."
+          "docs": "Dialog content or toggletip text. A rich toggletip also accepts actions."
         }
       ],
       "parts": [
@@ -14168,7 +14211,7 @@
       "filePath": "src/components/ki-tooltip/ki-tooltip.tsx",
       "encapsulation": "shadow",
       "tag": "ki-tooltip",
-      "docs": "A transient, text-only description bubble for one slotted trigger.",
+      "docs": "A transient, text-only hint with an optional heading.",
       "docsTags": [
         {
           "name": "whenToUse",
@@ -14176,11 +14219,11 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases."
+          "text": "essential or unique information in a tooltip; interactive\ncontent in a tooltip; form validation messages, disabled controls, or\ntouch-primary flows. Use visible layout text or a rich `ki-popover` with\n`kind=\"toggletip\"` when the content includes actions."
         },
         {
           "name": "slot",
-          "text": "- Exactly one interactive trigger. The component reflects `label` to\nthe trigger's `aria-description`."
+          "text": "- One trigger for a plain tooltip, or direct explanatory text when\n`for` and `heading` are provided. Rich tooltips accept text only."
         },
         {
           "name": "part",
@@ -14188,9 +14231,61 @@
         }
       ],
       "usage": {
-        "examples": "`label` is the entire tooltip content, reflected to the slotted trigger's accessible description; the trigger must already carry its own accessible name:\n\n```html\n<ki-tooltip label=\"Copies a shareable link to the clipboard\">\n  <ki-button type=\"button\">Copy link</ki-button>\n</ki-tooltip>\n```\n\n`placement` (default `top`; also `bottom`, `start`, `end`) is a preference — the component flips or clamps it to keep the bubble inside the viewport:\n\n```html\n<ki-tooltip label=\"Downloads the report as PDF\" placement=\"bottom\">\n  <ki-button type=\"button\">Export</ki-button>\n</ki-tooltip>\n```\n\nAn empty or whitespace-only `label` renders no tooltip and exposes no description — useful for conditional hints; never put essential or unique information in a tooltip:\n\n```html\n<ki-tooltip label=\"\">\n  <ki-button type=\"button\">No hint here</ki-button>\n</ki-tooltip>\n```\n"
+        "examples": "`label` is the entire plain tooltip content, reflected to the slotted trigger's accessible description; the trigger must already carry its own accessible name:\n\n```html\n<ki-tooltip label=\"Copies a shareable link to the clipboard\">\n  <ki-button type=\"button\">Copy link</ki-button>\n</ki-tooltip>\n```\n\n`placement` (default `top`; also `bottom`, `start`, `end`) is a preference — the component flips or clamps it to keep the bubble inside the viewport:\n\n```html\n<ki-tooltip label=\"Downloads the report as PDF\" placement=\"bottom\">\n  <ki-button type=\"button\">Export</ki-button>\n</ki-tooltip>\n```\n\nAn empty or whitespace-only `label` renders no tooltip and exposes no description — useful for conditional hints; never put essential or unique information in a tooltip:\n\n```html\n<ki-tooltip label=\"\">\n  <ki-button type=\"button\">No hint here</ki-button>\n</ki-tooltip>\n```\n\nUse a heading and direct text when the explanation needs more structure.\nThe external trigger must be in the same document or shadow tree.\n\n```html\n<button id=\"retention-info\" type=\"button\">Retention</button>\n<ki-tooltip for=\"retention-info\" heading=\"Grace period\">\n  Deleted projects stay restorable for 30 days.\n</ki-tooltip>\n```\n\nFor an explanation with controls, use `ki-popover` with\n`kind=\"toggletip\"` and `appearance=\"rich\"`.\n"
       },
       "props": [
+        {
+          "name": "for",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "for",
+          "reflectToAttr": false,
+          "docs": "ID of the rich tooltip's external trigger in the same document or shadow tree.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "heading",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading",
+          "reflectToAttr": false,
+          "docs": "Rich tooltip heading. Pair it with `for` and optional direct text in the default slot.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "label",
           "type": "string",
@@ -14202,7 +14297,7 @@
           "mutable": false,
           "attr": "label",
           "reflectToAttr": false,
-          "docs": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover.",
+          "docs": "The entire plain tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a popover.",
           "docsTags": [
             {
               "name": "default",
@@ -14277,7 +14372,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Exactly one interactive trigger. The component reflects `label` to\nthe trigger's `aria-description`."
+          "docs": "One trigger for a plain tooltip, or direct explanatory text when\n`for` and `heading` are provided. Rich tooltips accept text only."
         }
       ],
       "parts": [
@@ -14580,6 +14675,11 @@
     },
     "src/components/ki-popover/ki-popover.tsx::KiPopoverKind": {
       "declaration": "export type KiPopoverKind = 'dialog' | 'toggletip';",
+      "docstring": "",
+      "path": "src/components/ki-popover/ki-popover.tsx"
+    },
+    "src/components/ki-popover/ki-popover.tsx::KiPopoverAppearance": {
+      "declaration": "export type KiPopoverAppearance = 'default' | 'rich';",
       "docstring": "",
       "path": "src/components/ki-popover/ki-popover.tsx"
     },
