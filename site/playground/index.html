@@ -18,33 +18,36 @@
       content="A live canvas made from the same Kimen custom elements, token themes and public contracts that the package ships."
     />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f9f9fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1b1916" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f9f7f4" media="(prefers-color-scheme: light)" />
     <link rel="stylesheet" href="../assets/tokens/tokens.css" />
     <link rel="stylesheet" href="../fonts.css" />
-    <link rel="stylesheet" href="../landing.css" />
+    <link rel="stylesheet" href="../pages.css" />
     <link rel="stylesheet" href="./playground.css" />
     <script>
-      // Mirror the landing's pre-paint preference bootstrap so direct visits
-      // never flash the default theme before the shared module initializes.
+      // Keep the initial paint in the saved palette when storage is available.
       (() => {
         try {
-          const theme = localStorage.getItem('kimen-theme');
-          const scheme = localStorage.getItem('kimen-scheme') ?? 'dark';
           const root = document.documentElement;
-          if (theme === 'material3') {
-            root.setAttribute('data-ki-theme', 'material3');
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = '../assets/tokens/tokens.material3.css';
-            link.id = 'material3-css';
-            document.head.appendChild(link);
+          const scheme = localStorage.getItem("kimen-scheme");
+          if (scheme === "auto") {
+            root.dataset.kiColorScheme = matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
+          } else if (scheme === "light" || scheme === "dark") {
+            root.dataset.kiColorScheme = scheme;
           }
-          if (scheme === 'light' || scheme === 'dark') {
-            root.setAttribute('data-ki-color-scheme', scheme);
+          if (localStorage.getItem("kimen-theme") === "material3") {
+            root.dataset.kiTheme = "material3";
+            const link = document.createElement("link");
+            link.id = "material3-css";
+            link.rel = "stylesheet";
+            link.href = "../assets/tokens/tokens.material3.css";
+            link.addEventListener("error", () => link.remove(), { once: true });
+            document.head.append(link);
           }
         } catch {
-          // Storage may be unavailable in a hardened/private browsing context.
+          // The default palette also works when storage is unavailable.
         }
       })();
     </script>
@@ -53,92 +56,113 @@
   </head>
   <body data-kimen-page="playground">
     <a class="skip-link" href="#main">Skip to playground</a>
-    <div class="aurora" aria-hidden="true"></div>
+    <svg class="sprite" aria-hidden="true" focusable="false">
+      <symbol id="i-reset" viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+        <path d="M3 3v5h5" />
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+    </svg>
 
     <header class="site-header">
       <a class="brand" href="../">
-        <svg class="brand-mark" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-          <path
-            d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9" />
         </svg>
         <span class="brand-name">Kimen</span>
         <span class="brand-stage">pre-v1</span>
         <span class="visually-hidden">home</span>
       </a>
-
-      <div class="header-desktop">
-        <nav class="site-nav" aria-label="Primary">
-          <a href="../docs/components/alert/">Components</a>
-          <a href="./" aria-current="page">Playground</a>
-          <a href="https://github.com/kimen-dev/kimen">GitHub</a>
-        </nav>
-        <fieldset class="segmented segmented-compact playground-header-scheme" data-scheme-control>
-          <legend class="visually-hidden">Color scheme</legend>
-          <label><input type="radio" name="header-scheme" value="auto" /><span>Auto</span></label>
-          <label><input type="radio" name="header-scheme" value="light" /><span>Light</span></label>
-          <label><input type="radio" name="header-scheme" value="dark" /><span>Dark</span></label>
-        </fieldset>
-      </div>
-
-      <details class="mobile-menu">
-        <summary>Menu</summary>
-        <div class="mobile-menu-panel">
-          <nav aria-label="Primary mobile">
-            <a href="../docs/components/alert/">Components</a>
-            <a href="./" aria-current="page">Playground</a>
-            <a href="https://github.com/kimen-dev/kimen">GitHub</a>
-          </nav>
-          <fieldset class="segmented" data-scheme-control>
-            <legend class="visually-hidden">Color scheme</legend>
-            <label><input type="radio" name="mobile-scheme" value="auto" /><span>Auto</span></label>
-            <label><input type="radio" name="mobile-scheme" value="light" /><span>Light</span></label>
-            <label><input type="radio" name="mobile-scheme" value="dark" /><span>Dark</span></label>
-          </fieldset>
-        </div>
-      </details>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="../docs/">Docs</a>
+        <a href="../docs/components/alert/">Components</a>
+        <a href="./" aria-current="page">Playground</a>
+        <a class="github" href="https://github.com/kimen-dev/kimen">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+            />
+          </svg>
+          <span class="visually-hidden">GitHub</span>
+        </a>
+      </nav>
     </header>
 
-    <main id="main" class="playground-main site-shell">
-      <section class="playground-intro" aria-labelledby="playground-title">
-        <div>
-          <h1 id="playground-title">Theme playground</h1>
-          <p>
-            One attribute swaps the theme. Every surface below re-resolves primitive → semantic →
-            component.
-          </p>
+    <main id="main" tabindex="-1" class="pg" aria-labelledby="playground-title">
+      <div class="pg-toolbar">
+        <h1 id="playground-title">Theme playground</h1>
+        <div
+          class="pg-controls"
+          role="group"
+          aria-label="Playground appearance"
+          data-playground-controls
+          hidden
+        >
+          <div class="pg-pair">
+            <span class="pg-toolbar-label" aria-hidden="true">Theme</span>
+            <fieldset class="seg" data-theme-control>
+              <legend class="visually-hidden">Token theme</legend>
+              <label
+                ><input type="radio" name="playground-theme" value="onmars" checked /><span
+                  >onmars</span
+                ></label
+              >
+              <label
+                ><input type="radio" name="playground-theme" value="material3" /><span
+                  >Material 3</span
+                ></label
+              >
+            </fieldset>
+          </div>
+          <div class="pg-pair">
+            <span class="pg-toolbar-label" aria-hidden="true">Scheme</span>
+            <fieldset class="seg" data-scheme-control>
+              <legend class="visually-hidden">Color scheme</legend>
+              <label
+                ><input type="radio" name="playground-scheme" value="auto" /><span
+                  >Auto</span
+                ></label
+              >
+              <label
+                ><input type="radio" name="playground-scheme" value="light" /><span
+                  >Light</span
+                ></label
+              >
+              <label
+                ><input type="radio" name="playground-scheme" value="dark" checked /><span
+                  >Dark</span
+                ></label
+              >
+            </fieldset>
+          </div>
+          <output class="pg-resolved" id="resolved-theme">onmars · dark</output>
+          <button class="pg-reset" type="button" data-reset>
+            <svg class="icon" aria-hidden="true"><use href="#i-reset" /></svg>Reset
+          </button>
         </div>
-        <div class="playground-theme-controls" role="group" aria-label="Playground appearance">
-          <fieldset class="segmented" data-theme-control>
-            <legend class="visually-hidden">Token theme</legend>
-            <label><input type="radio" name="playground-theme" value="onmars" /><span>Onmars</span></label>
-            <label><input type="radio" name="playground-theme" value="material3" /><span>Material 3</span></label>
-          </fieldset>
-          <fieldset class="segmented" data-scheme-control>
-            <legend class="visually-hidden">Color scheme</legend>
-            <label><input type="radio" name="playground-scheme" value="auto" /><span>Auto</span></label>
-            <label><input type="radio" name="playground-scheme" value="light" /><span>Light</span></label>
-            <label><input type="radio" name="playground-scheme" value="dark" /><span>Dark</span></label>
-          </fieldset>
-        </div>
-      </section>
+      </div>
 
-      <div class="playground-workspace">
-        <section class="playground-canvas panel" aria-labelledby="canvas-title" data-component-surface>
-          <header class="canvas-toolbar">
-            <div class="canvas-identity">
+      <noscript
+        ><p class="pg-noscript">
+          Enable JavaScript to use the demo and resolve the token values.
+        </p></noscript
+      >
+
+      <section class="pg-canvas" aria-labelledby="canvas-title">
+        <div class="relay">
+          <header class="relay-head">
+            <div class="relay-identity">
               <ki-avatar initials="RM" label="Relay mission console" size="lg"></ki-avatar>
               <div>
                 <h2 id="canvas-title">Relay — mission console</h2>
                 <p>A demo product wearing whatever theme you pick</p>
               </div>
             </div>
-            <div class="canvas-team" role="group" aria-label="Active operators">
+            <div class="relay-team" role="group" aria-label="Active operators">
               <ki-avatar-group max="3" size="sm">
                 <ki-avatar initials="MG" label="Mars Gotta"></ki-avatar>
                 <ki-avatar initials="AI" label="Build agent"></ki-avatar>
@@ -149,11 +173,9 @@
             </div>
           </header>
 
-          <ki-divider class="canvas-divider"></ki-divider>
-
-          <div class="canvas-grid">
-            <form class="deployment-form" id="deployment-form">
-              <header class="surface-heading">
+          <div class="relay-grid">
+            <form class="relay-panel deployment-form" id="deployment-form">
+              <header class="relay-panel-head">
                 <h3>New deployment</h3>
                 <ki-badge tone="info" size="sm">form-associated</ki-badge>
               </header>
@@ -175,9 +197,13 @@
 
               <fieldset class="deployment-options">
                 <legend class="visually-hidden">Release guardrails</legend>
-                <ki-checkbox name="checks" value="gates" checked>Run the gate suite first</ki-checkbox>
+                <ki-checkbox name="checks" value="gates" checked
+                  >Run the gate suite first</ki-checkbox
+                >
                 <ki-checkbox name="checks" value="tokens">Pin token versions</ki-checkbox>
-                <ki-switch name="rollout" value="progressive" checked>Progressive rollout</ki-switch>
+                <ki-switch name="rollout" value="progressive" checked
+                  >Progressive rollout</ki-switch
+                >
               </fieldset>
 
               <div class="deployment-actions">
@@ -186,21 +212,18 @@
               </div>
             </form>
 
-            <section class="release-panel" aria-labelledby="release-title">
-              <ki-alert
-                id="deployment-status"
-                tone="success"
-                heading="Deployed"
-                dismissible
-                hidden
-              >
+            <section class="relay-side" aria-labelledby="release-title">
+              <ki-alert id="deployment-status" tone="success" heading="Deployed" dismissible hidden>
                 relay-gateway is deployed to eu-west.
               </ki-alert>
 
-              <article class="release-card">
-                <header class="surface-heading">
+              <article class="relay-panel">
+                <header class="relay-panel-head">
                   <h3 id="release-title">Rollout</h3>
-                  <output id="deployment-progress-value" for="deployment-form">62%</output>
+                  <span class="relay-figure"
+                    ><span class="relay-sample">sample</span
+                    ><span id="deployment-progress-value">62%</span></span
+                  >
                 </header>
                 <ki-progress
                   id="deployment-progress"
@@ -215,9 +238,9 @@
                 </ul>
               </article>
 
-              <article class="release-card checks-card">
-                <h3>Checks</h3>
-                <ki-tabs label="Checks" value="gates">
+              <article class="relay-panel checks-card">
+                <h3>Example checks</h3>
+                <ki-tabs label="Example checks" value="gates">
                   <ki-tab value="gates">Gates</ki-tab>
                   <ki-tab value="a11y">A11y</ki-tab>
                   <ki-tab value="size">Size</ki-tab>
@@ -245,76 +268,169 @@
                   </ki-tab-panel>
                   <ki-tab-panel value="a11y">
                     <ki-alert tone="success" heading="No accessibility violations">
-                      Keyboard, focus and axe checks pass for the public experience.
+                      Sample result for keyboard, focus and axe checks.
                     </ki-alert>
                   </ki-tab-panel>
                   <ki-tab-panel value="size">
                     <ki-alert tone="info" heading="Inside the component budget">
-                      Each published element stays inside its declared size gate.
+                      Sample result for a component size check against its declared budget.
                     </ki-alert>
                   </ki-tab-panel>
                 </ki-tabs>
               </article>
             </section>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <aside class="token-inspector panel" aria-labelledby="inspector-title">
-          <header>
-            <h2 id="inspector-title">Token inspector</h2>
-            <p>Semantic layer, resolved live from this document.</p>
-          </header>
-          <dl class="token-list">
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-surface"></span><code>--ki-surface-s0</code></dt>
-              <dd><output data-token-value="--ki-surface-s0">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-surface-1"></span><code>--ki-surface-s1</code></dt>
-              <dd><output data-token-value="--ki-surface-s1">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-surface-2"></span><code>--ki-surface-s2</code></dt>
-              <dd><output data-token-value="--ki-surface-s2">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-primary"></span><code>--ki-surface-primary-high-em</code></dt>
-              <dd><output data-token-value="--ki-surface-primary-high-em">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-text"></span><code>--ki-text-high-em</code></dt>
-              <dd><output data-token-value="--ki-text-high-em">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-text-med"></span><code>--ki-text-med-em</code></dt>
-              <dd><output data-token-value="--ki-text-med-em">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-outline"></span><code>--ki-outline-low-em</code></dt>
-              <dd><output data-token-value="--ki-outline-low-em">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-success"></span><code>--ki-surface-success-high-em</code></dt>
-              <dd><output data-token-value="--ki-surface-success-high-em">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-danger"></span><code>--ki-surface-danger-high-em</code></dt>
-              <dd><output data-token-value="--ki-surface-danger-high-em">resolved by CSS</output></dd>
-            </div>
-            <div class="token-row">
-              <dt><span class="token-swatch token-swatch-radius"></span><code>--ki-radius-component-md</code></dt>
-              <dd><output data-token-value="--ki-radius-component-md">resolved by CSS</output></dd>
-            </div>
-          </dl>
-          <p class="inspector-note">
-            Flip the theme or scheme above and watch every row re-resolve — no component ships a
-            hardcoded value.
-          </p>
-        </aside>
-      </div>
+      <section class="pg-drawer" id="token-drawer" aria-labelledby="inspector-title">
+        <header class="pg-drawer-head">
+          <h2 id="inspector-title">Tokens</h2>
+          <p class="pg-drawer-note">Semantic layer, resolved live from this document.</p>
+          <p class="visually-hidden" role="status" data-token-results></p>
+          <fieldset class="pg-groups" data-token-groups hidden>
+            <legend class="visually-hidden">Token group</legend>
+            <label
+              ><input type="radio" name="token-group" value="all" checked /><span>All</span></label
+            >
+            <label
+              ><input type="radio" name="token-group" value="surface" /><span>Surface</span></label
+            >
+            <label
+              ><input type="radio" name="token-group" value="primary" /><span>Primary</span></label
+            >
+            <label><input type="radio" name="token-group" value="text" /><span>Text</span></label>
+            <label
+              ><input type="radio" name="token-group" value="outline" /><span>Outline</span></label
+            >
+            <label
+              ><input type="radio" name="token-group" value="status" /><span>Status</span></label
+            >
+            <label><input type="radio" name="token-group" value="shape" /><span>Shape</span></label>
+          </fieldset>
+          <label class="pg-filter" data-token-search hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-search" /></svg>
+            <span class="visually-hidden">Filter tokens by name</span>
+            <input type="search" placeholder="Filter tokens" autocomplete="off" data-token-filter />
+          </label>
+          <button
+            class="pg-collapse"
+            type="button"
+            hidden
+            aria-expanded="true"
+            aria-controls="token-table-wrap"
+            data-drawer-toggle
+          >
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg>
+            <span class="visually-hidden">Token table</span>
+          </button>
+        </header>
+        <div
+          class="pg-table-wrap"
+          id="token-table-wrap"
+          role="region"
+          aria-label="Token table"
+          tabindex="0"
+        >
+          <table class="token-table">
+            <thead>
+              <tr>
+                <th scope="col">Token</th>
+                <th scope="col">Declared as</th>
+                <th scope="col" id="current-col">Now</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="token-row" data-group="surface">
+                <th scope="row"><code>--ki-surface-s0</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-surface-s0">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="surface">
+                <th scope="row"><code>--ki-surface-s1</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-surface-s1">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="surface">
+                <th scope="row"><code>--ki-surface-s2</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-surface-s2">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="primary">
+                <th scope="row"><code>--ki-surface-primary-high-em</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-surface-primary-high-em">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="text">
+                <th scope="row"><code>--ki-text-high-em</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-text-high-em">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="text">
+                <th scope="row"><code>--ki-text-med-em</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-text-med-em">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="outline">
+                <th scope="row"><code>--ki-outline-low-em</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-outline-low-em">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="status">
+                <th scope="row"><code>--ki-surface-success-high-em</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-surface-success-high-em">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="status">
+                <th scope="row"><code>--ki-surface-danger-high-em</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td>
+                  <span class="token-swatch" data-swatch aria-hidden="true"></span
+                  ><span data-token-value="--ki-surface-danger-high-em">—</span>
+                </td>
+              </tr>
+              <tr class="token-row" data-group="shape">
+                <th scope="row"><code>--ki-radius-component-md</code></th>
+                <td><span data-token-declared>—</span></td>
+                <td><span data-token-value="--ki-radius-component-md">—</span></td>
+              </tr>
+              <tr class="token-empty" data-token-empty hidden>
+                <td colspan="3">
+                  No token matches that filter.
+                  <button type="button" data-clear-filter>Clear the filter</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
 
-    <footer class="site-footer playground-footer">
+    <footer class="site-footer">
       <p>Production components, canonical tokens and progressive enhancement.</p>
       <nav aria-label="Footer">
         <a href="../">Home</a>

@@ -1,7 +1,20 @@
 ---
 const { entry } = Astro.locals.starlightRoute;
-const category = entry.id.startsWith('components/') ? 'Component' : 'Guide';
+const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
+const siteBase = docsBase.replace(/docs\/?$/u, '');
+const isDocsHome = Astro.url.pathname.replace(/\/$/u, '') === docsBase.slice(0, -1);
+const component = entry.id.startsWith('components/')
+  ? `ki-${entry.id.slice('components/'.length)}`
+  : null;
 ---
 
-<p class="kimen-page-eyebrow">{category}</p>
-<h1 id="_top">{entry.data.title}</h1>
+{!isDocsHome && <h1 id="_top">{entry.data.title}</h1>}
+{
+  component && (
+    <ul class="kimen-page-facts" aria-label={`${component} at a glance`}>
+      <li><code>{`@kimen/elements/${component}`}</code></li>
+      <li><a href={`https://github.com/kimen-dev/kimen/tree/main/packages/elements/src/components/${component}`}>Source</a></li>
+      <li><a href={`${siteBase}llms/${component}.md`}>Agent reference</a></li>
+    </ul>
+  )
+}
