@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 468 semantic
-and 1580 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 479 semantic
+and 1607 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -85,6 +85,12 @@ every component at once.
 | `--ki-corner-action-seam` | `0px` | Square corner at an edge shared by two actions. |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
+| `--ki-corner-feature-tile-circle` | `1000px` | Fully rounded corners of a circular feature tile. |
+| `--ki-corner-feature-tile-lg` | `12px` | Corner radius of a large square feature tile. |
+| `--ki-corner-feature-tile-md` | `10px` | Corner radius of a medium square feature tile. |
+| `--ki-corner-feature-tile-sm` | `8px` | Corner radius of a small square feature tile. |
+| `--ki-corner-feature-tile-xl` | `16px` | Corner radius of an extra-large square feature tile. |
+| `--ki-corner-feature-tile-xs` | `6px` | Corner radius of an extra-small square feature tile. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
 
 ### `ki.density`
@@ -385,6 +391,16 @@ every component at once.
 | `--ki-scale-control-thumb-border-width` | `0.125rem` | Outline thickness of the visible grip. |
 | `--ki-scale-control-track-height` | `0.25rem` | Thickness of the inactive rail of a value scale. |
 | `--ki-scale-control-vertical-length` | `8rem` | Length of a vertical value scale. |
+
+### `ki.size`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-size-feature-tile-lg` | `3rem` | Large feature tile edge, 48px at the default root size. |
+| `--ki-size-feature-tile-md` | `2.5rem` | Medium feature tile edge, 40px at the default root size. |
+| `--ki-size-feature-tile-sm` | `2rem` | Small feature tile edge, 32px at the default root size. |
+| `--ki-size-feature-tile-xl` | `4rem` | Extra-large feature tile edge, 64px at the default root size. |
+| `--ki-size-feature-tile-xs` | `1.5rem` | Extra-small feature tile edge, 24px at the default root size. |
 
 ### `ki.spacing`
 
@@ -1403,6 +1419,38 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-fab-xl-icon-size` | `2.25rem` | Glyph size of the large FAB. |
 | `--ki-fab-xl-radius` | `28px` | Corner radius of the large FAB. |
 | `--ki-fab-xl-size` | `6rem` | Minimum footprint of the large FAB. |
+
+### `ki-feature-icon`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-feature-icon-backdrop-filter` | `none` | Complete filter applied behind the feature icon tile. |
+| `--ki-feature-icon-bg` | `#f3f0eb` | Background color of a neutral feature icon tile. |
+| `--ki-feature-icon-bg-image` | `none` | Optional background image painted over the feature icon tile color. |
+| `--ki-feature-icon-circle-radius` | `1000px` | Corner radius of a circular feature icon tile. |
+| `--ki-feature-icon-danger-bg` | `#ffebeb` | Background color of a danger feature icon tile. |
+| `--ki-feature-icon-danger-fg` | `#c21a45` | Glyph color of a danger feature icon tile. |
+| `--ki-feature-icon-fg` | `#181613` | Glyph color of a neutral feature icon tile. |
+| `--ki-feature-icon-info-bg` | `#e6f1fb` | Background color of an info feature icon tile. |
+| `--ki-feature-icon-info-fg` | `#085268` | Glyph color of an info feature icon tile. |
+| `--ki-feature-icon-lg-radius` | `12px` | Corner radius of a large square feature icon tile. |
+| `--ki-feature-icon-lg-size` | `3rem` | Edge length of a large feature icon tile. |
+| `--ki-feature-icon-primary-bg` | `#1d1a16` | Background color of a primary feature icon tile. |
+| `--ki-feature-icon-primary-fg` | `#ffffff` | Glyph color of a primary feature icon tile. |
+| `--ki-feature-icon-primary-light-bg` | `#ffebe5` | Background color of a primary-light feature icon tile. |
+| `--ki-feature-icon-primary-light-fg` | `#9a3715` | Glyph color of a primary-light feature icon tile. |
+| `--ki-feature-icon-radius` | `10px` | Default corner radius of a square feature icon tile. |
+| `--ki-feature-icon-size` | `2.5rem` | Default edge length of a feature icon tile. |
+| `--ki-feature-icon-sm-radius` | `8px` | Corner radius of a small square feature icon tile. |
+| `--ki-feature-icon-sm-size` | `2rem` | Edge length of a small feature icon tile. |
+| `--ki-feature-icon-success-bg` | `#e4f4ea` | Background color of a success feature icon tile. |
+| `--ki-feature-icon-success-fg` | `#2c6a2b` | Glyph color of a success feature icon tile. |
+| `--ki-feature-icon-warning-bg` | `#fcf0dc` | Background color of a warning feature icon tile. |
+| `--ki-feature-icon-warning-fg` | `#945b05` | Glyph color of a warning feature icon tile. |
+| `--ki-feature-icon-xl-radius` | `16px` | Corner radius of an extra-large square feature icon tile. |
+| `--ki-feature-icon-xl-size` | `4rem` | Edge length of an extra-large feature icon tile. |
+| `--ki-feature-icon-xs-radius` | `6px` | Corner radius of an extra-small square feature icon tile. |
+| `--ki-feature-icon-xs-size` | `1.5rem` | Edge length of an extra-small feature icon tile. |
 
 ### `ki-format`
 

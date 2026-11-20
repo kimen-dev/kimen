@@ -22,6 +22,7 @@ import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiFabPosition, KiFabSize, KiFabVariant } from "./components/ki-fab/ki-fab";
+import { KiFeatureIconShape, KiFeatureIconSize, KiFeatureIconTone } from "./components/ki-feature-icon/ki-feature-icon";
 import { KiLayoutGap } from "./utils/layout-gap";
 import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -66,6 +67,7 @@ export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiFabPosition, KiFabSize, KiFabVariant } from "./components/ki-fab/ki-fab";
+export { KiFeatureIconShape, KiFeatureIconSize, KiFeatureIconTone } from "./components/ki-feature-icon/ki-feature-icon";
 export { KiLayoutGap } from "./utils/layout-gap";
 export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -755,6 +757,36 @@ export namespace Components {
           * @default 'secondary'
          */
         "variant": KiFabVariant;
+    }
+    /**
+     * A decorative glyph centered on a tinted tile.
+     * @whenToUse Place a decorative icon beside the visible heading of a feature,
+     * empty state or settings section. The heading carries the meaning.
+     * @whenNotToUse For an action (use ki-icon-button), a status (use ki-badge),
+     * or the sole label of a section.
+     * @cssprop --ki-feature-icon-size - Tile inline and block size, with the glyph at half that size.
+     * @cssprop --ki-feature-icon-radius - Corner radius of the tile.
+     * @cssprop --ki-feature-icon-bg - Surface colour.
+     * @cssprop --ki-feature-icon-fg - Glyph colour.
+     * @cssprop --ki-feature-icon-bg-image - Optional image layered over the surface colour.
+     * @cssprop --ki-feature-icon-backdrop-filter - Optional filter applied behind the tile.
+     */
+    interface KiFeatureIcon {
+        /**
+          * Rounded square or circle. Unknown values use square.
+          * @default 'square'
+         */
+        "shape": KiFeatureIconShape;
+        /**
+          * Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.
+          * @default 'md'
+         */
+        "size": KiFeatureIconSize;
+        /**
+          * Colour pair for the tile and its glyph. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone": KiFeatureIconTone;
     }
     /**
      * Displays an ISO date or timestamp in the reader's language.
@@ -2681,6 +2713,25 @@ declare global {
         new (): HTMLKiFabElement;
     };
     /**
+     * A decorative glyph centered on a tinted tile.
+     * @whenToUse Place a decorative icon beside the visible heading of a feature,
+     * empty state or settings section. The heading carries the meaning.
+     * @whenNotToUse For an action (use ki-icon-button), a status (use ki-badge),
+     * or the sole label of a section.
+     * @cssprop --ki-feature-icon-size - Tile inline and block size, with the glyph at half that size.
+     * @cssprop --ki-feature-icon-radius - Corner radius of the tile.
+     * @cssprop --ki-feature-icon-bg - Surface colour.
+     * @cssprop --ki-feature-icon-fg - Glyph colour.
+     * @cssprop --ki-feature-icon-bg-image - Optional image layered over the surface colour.
+     * @cssprop --ki-feature-icon-backdrop-filter - Optional filter applied behind the tile.
+     */
+    interface HTMLKiFeatureIconElement extends Components.KiFeatureIcon, HTMLStencilElement {
+    }
+    var HTMLKiFeatureIconElement: {
+        prototype: HTMLKiFeatureIconElement;
+        new (): HTMLKiFeatureIconElement;
+    };
+    /**
      * Displays an ISO date or timestamp in the reader's language.
      * @whenToUse For raw date and timestamp values in tables, records and prose.
      * @whenNotToUse For an editable date or an elapsed time that should change as the clock advances.
@@ -3440,6 +3491,7 @@ declare global {
         "ki-divider": HTMLKiDividerElement;
         "ki-empty-state": HTMLKiEmptyStateElement;
         "ki-fab": HTMLKiFabElement;
+        "ki-feature-icon": HTMLKiFeatureIconElement;
         "ki-format-date": HTMLKiFormatDateElement;
         "ki-format-number": HTMLKiFormatNumberElement;
         "ki-grid": HTMLKiGridElement;
@@ -4195,6 +4247,36 @@ declare namespace LocalJSX {
           * @default 'secondary'
          */
         "variant"?: KiFabVariant;
+    }
+    /**
+     * A decorative glyph centered on a tinted tile.
+     * @whenToUse Place a decorative icon beside the visible heading of a feature,
+     * empty state or settings section. The heading carries the meaning.
+     * @whenNotToUse For an action (use ki-icon-button), a status (use ki-badge),
+     * or the sole label of a section.
+     * @cssprop --ki-feature-icon-size - Tile inline and block size, with the glyph at half that size.
+     * @cssprop --ki-feature-icon-radius - Corner radius of the tile.
+     * @cssprop --ki-feature-icon-bg - Surface colour.
+     * @cssprop --ki-feature-icon-fg - Glyph colour.
+     * @cssprop --ki-feature-icon-bg-image - Optional image layered over the surface colour.
+     * @cssprop --ki-feature-icon-backdrop-filter - Optional filter applied behind the tile.
+     */
+    interface KiFeatureIcon {
+        /**
+          * Rounded square or circle. Unknown values use square.
+          * @default 'square'
+         */
+        "shape"?: KiFeatureIconShape;
+        /**
+          * Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.
+          * @default 'md'
+         */
+        "size"?: KiFeatureIconSize;
+        /**
+          * Colour pair for the tile and its glyph. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone"?: KiFeatureIconTone;
     }
     /**
      * Displays an ISO date or timestamp in the reader's language.
@@ -5892,6 +5974,11 @@ declare namespace LocalJSX {
         "position": KiFabPosition;
         "href": string;
     }
+    interface KiFeatureIconAttributes {
+        "tone": KiFeatureIconTone;
+        "size": KiFeatureIconSize;
+        "shape": KiFeatureIconShape;
+    }
     interface KiFormatDateAttributes {
         "date": string;
         "dateStyle": 'full' | 'long' | 'medium' | 'short';
@@ -6201,6 +6288,7 @@ declare namespace LocalJSX {
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-empty-state": Omit<KiEmptyState, keyof KiEmptyStateAttributes> & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes]?: KiEmptyState[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `attr:${K}`]?: KiEmptyStateAttributes[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `prop:${K}`]?: KiEmptyState[K] } & OneOf<"heading", KiEmptyState["heading"], KiEmptyStateAttributes["heading"]>;
         "ki-fab": Omit<KiFab, keyof KiFabAttributes> & { [K in keyof KiFab & keyof KiFabAttributes]?: KiFab[K] } & { [K in keyof KiFab & keyof KiFabAttributes as `attr:${K}`]?: KiFabAttributes[K] } & { [K in keyof KiFab & keyof KiFabAttributes as `prop:${K}`]?: KiFab[K] } & OneOf<"label", KiFab["label"], KiFabAttributes["label"]>;
+        "ki-feature-icon": Omit<KiFeatureIcon, keyof KiFeatureIconAttributes> & { [K in keyof KiFeatureIcon & keyof KiFeatureIconAttributes]?: KiFeatureIcon[K] } & { [K in keyof KiFeatureIcon & keyof KiFeatureIconAttributes as `attr:${K}`]?: KiFeatureIconAttributes[K] } & { [K in keyof KiFeatureIcon & keyof KiFeatureIconAttributes as `prop:${K}`]?: KiFeatureIcon[K] };
         "ki-format-date": Omit<KiFormatDate, keyof KiFormatDateAttributes> & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes]?: KiFormatDate[K] } & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes as `attr:${K}`]?: KiFormatDateAttributes[K] } & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes as `prop:${K}`]?: KiFormatDate[K] };
         "ki-format-number": Omit<KiFormatNumber, keyof KiFormatNumberAttributes> & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes]?: KiFormatNumber[K] } & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes as `attr:${K}`]?: KiFormatNumberAttributes[K] } & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes as `prop:${K}`]?: KiFormatNumber[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
@@ -6434,6 +6522,20 @@ declare module "@stencil/core" {
              * @event click - Native activation click. The page or guarded renderer handles the declared action.
              */
             "ki-fab": LocalJSX.IntrinsicElements["ki-fab"] & JSXBase.HTMLAttributes<HTMLKiFabElement>;
+            /**
+             * A decorative glyph centered on a tinted tile.
+             * @whenToUse Place a decorative icon beside the visible heading of a feature,
+             * empty state or settings section. The heading carries the meaning.
+             * @whenNotToUse For an action (use ki-icon-button), a status (use ki-badge),
+             * or the sole label of a section.
+             * @cssprop --ki-feature-icon-size - Tile inline and block size, with the glyph at half that size.
+             * @cssprop --ki-feature-icon-radius - Corner radius of the tile.
+             * @cssprop --ki-feature-icon-bg - Surface colour.
+             * @cssprop --ki-feature-icon-fg - Glyph colour.
+             * @cssprop --ki-feature-icon-bg-image - Optional image layered over the surface colour.
+             * @cssprop --ki-feature-icon-backdrop-filter - Optional filter applied behind the tile.
+             */
+            "ki-feature-icon": LocalJSX.IntrinsicElements["ki-feature-icon"] & JSXBase.HTMLAttributes<HTMLKiFeatureIconElement>;
             /**
              * Displays an ISO date or timestamp in the reader's language.
              * @whenToUse For raw date and timestamp values in tables, records and prose.
