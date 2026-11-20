@@ -1,0 +1,34 @@
+---
+title: ki-checkbox-group
+description: Group independent checkbox options under one label and form field.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-checkbox-group` when people can choose several answers to one question.
+Give the group a visible `label` and place each option directly in its default
+slot as a `ki-checkbox` with its own label and value.
+
+<Demo code={`<ki-checkbox-group label="Regions" name="regions" min="1"
+  help-text="Choose the regions you serve." error-text="Choose at least one region.">
+  <ki-checkbox value="eu" checked>Europe</ki-checkbox>
+  <ki-checkbox value="am">Americas</ki-checkbox>
+  <ki-checkbox value="apac">Asia-Pacific</ki-checkbox>
+</ki-checkbox-group>`} />
+
+Each checked option adds a form entry with the group’s `name`. Set `min` and
+`max` for selection limits. The group shows its error after a blocked
+submission or after focus leaves the group. Tab moves through the enabled
+options and Space toggles the focused option.
+
+Set a fresh JavaScript `value` array to update the selection. Listen for
+`ki-change` to receive the selection after a user toggle.
+
+## API reference
+
+<CemApi tag="ki-checkbox-group" />
+
+## Workshop
+
+[Open ki-checkbox-group in Storybook](/storybook/?path=/docs/docs-components-ki-checkbox-group--docs)

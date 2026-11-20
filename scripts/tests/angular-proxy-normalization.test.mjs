@@ -1,58 +1,89 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  copyFileSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { test } from 'node:test';
+import test from 'node:test';
+import { normalizeAngularProxies } from '../../packages/elements/scripts/normalize-angular-proxies.mjs';
 
-const normalizer = new URL(
-  '../../packages/elements/scripts/normalize-angular-proxies.mjs',
-  import.meta.url,
-);
-
-function normalize(t, metadata) {
-  const root = mkdtempSync(join(tmpdir(), 'kimen-angular-proxies-'));
-  t.after(() => rmSync(root, { force: true, recursive: true }));
-  const scripts = join(root, 'packages/elements/scripts');
-  const directives = join(root, 'packages/angular/src/directives');
-  mkdirSync(scripts, { recursive: true });
-  mkdirSync(directives, { recursive: true });
-  const script = join(scripts, 'normalize-angular-proxies.mjs');
-  const proxies = join(directives, 'proxies.ts');
-  copyFileSync(normalizer, script);
-  writeFileSync(
-    proxies,
-    `import { Component, Output, EventEmitter } from '@angular/core';
+const raw = `import { Component, EventEmitter, Output } from '@angular/core';
+import type { Components } from '@kimen/elements/components';
+import type { ChipEvent } from '@kimen/elements/components';
 @Component({
-  outputs: [${metadata}],
+  outputs: ['ki-change', 'ki-remove', 'ki-activate'],
 })
-export class Example {
-  @Output() kiInput = new EventEmitter<CustomEvent<string>>();
-  @Output() kiSearch = new EventEmitter<CustomEvent<string>>();
+class Chip {
+  @Output() kiChange = new EventEmitter<ChipEvent>();
+  @Output() kiRemove = new EventEmitter<ChipEvent>();
+  @Output() kiActivate = new EventEmitter<ChipEvent>();
 }
-export declare interface Example {
-  'ki-input': EventEmitter<CustomEvent<string>>;
-  'ki-search': EventEmitter<CustomEvent<string>>;
+interface Chip extends Components.KiChip {
+  'ki-change': EventEmitter<ChipEvent>;
+  'ki-remove': EventEmitter<ChipEvent>;
+  'ki-activate': EventEmitter<ChipEvent>;
 }
-`,
-  );
-  return {
-    result: spawnSync(process.execPath, [script], { encoding: 'utf8' }),
-    source: readFileSync(proxies, 'utf8'),
-  };
-}
+`;
 
-test('normalizes multiple native events in one Angular outputs declaration', (t) => {
-  const { result, source } = normalize(t, "'ki-input', 'ki-search'");
-  assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /removed 2 broken output surfaces/u);
-  assert.doesNotMatch(source, /outputs:|@Output|EventEmitter/u);
-  assert.match(source, /import \{ Component \}/u);
+test('Angular strips all events from a proxy with a shared outputs list', () => {
+  const { source } = normalizeAngularProxies(raw);
+  assert.doesNotMatch(source, /outputs:|@Output|EventEmitter|ChipEvent/u);
+  assert.match(source, /import type \{ Components \}/u);
+  assert.equal(normalizeAngularProxies(source).source, source);
 });
 
-test('still rejects mismatched Angular output metadata and fields', (t) => {
-  const { result, source } = normalize(t, "'ki-input'");
-  assert.equal(result.status, 1);
-  assert.match(result.stderr, /inconsistent upstream event shape/u);
-  assert.match(source, /@Output/u);
+test('Angular rejects mismatched event metadata', () => {
+  assert.throws(
+    () => normalizeAngularProxies(raw.replace(", 'ki-activate'", '')),
+    /3 @Output, 2 outputs metadata, 3 interface fields/u,
+  );
+});
+
+test('normalizes each kebab-case output when one directive declares multiple events', (t) => {
+  const fixture = realpathSync(mkdtempSync(join(tmpdir(), 'kimen-angular-proxies-')));
+  t.after(() => rmSync(fixture, { recursive: true, force: true }));
+  const scripts = join(fixture, 'elements/scripts');
+  const directives = join(fixture, 'angular/src/directives');
+  mkdirSync(scripts, { recursive: true });
+  mkdirSync(directives, { recursive: true });
+  const normalizer = join(scripts, 'normalize-angular-proxies.mjs');
+  copyFileSync(
+    new URL('../../packages/elements/scripts/normalize-angular-proxies.mjs', import.meta.url),
+    normalizer,
+  );
+  const proxies = join(directives, 'proxies.ts');
+  writeFileSync(
+    proxies,
+    [
+      "import { Component, Output, EventEmitter } from '@angular/core';",
+      "import type { CopyEvent } from '@kimen/elements/components';",
+      '@Component({',
+      "  selector: 'ki-copy-button',",
+      "  outputs: ['ki-copy', 'ki-copy-error'],",
+      '})',
+      'export class KiCopyButton {',
+      '  @Output() kiCopy = new EventEmitter<CopyEvent<{ value: string }>>();',
+      '  @Output() kiCopyError = new EventEmitter<CopyEvent<void>>();',
+      '}',
+      'export declare interface KiCopyButton {',
+      "  'ki-copy': EventEmitter<CopyEvent<{ value: string }>>;",
+      "  'ki-copy-error': EventEmitter<CopyEvent<void>>;",
+      '}',
+      '',
+    ].join('\n'),
+  );
+
+  const result = spawnSync(process.execPath, [normalizer], { encoding: 'utf8' });
+
+  assert.equal(result.status, 0, result.stderr);
+  const source = readFileSync(proxies, 'utf8');
+  assert.doesNotMatch(source, /@Output|EventEmitter|outputs:|CopyEvent/u);
+  assert.match(source, /selector: 'ki-copy-button'/u);
 });

@@ -1,0 +1,44 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonGroupStories from '../ki-button-group.stories';
+
+<Meta title="Docs/Components/ki-button-group" />
+
+# ki-button-group
+
+Group related actions such as Undo and Redo or text formatting. Use a
+segmented control for a single setting with several choices. Give the group a
+label that identifies what the actions do together.
+
+## Spaced and attached
+
+Spaced groups leave room between actions. Attached groups share an edge and
+use the first button's visual variant and size. A group `size` overrides the
+size of every button in any mode.
+
+<Canvas of={ButtonGroupStories.Playground} />
+<Canvas of={ButtonGroupStories.Attached} />
+
+## Toolbar
+
+Tab enters or leaves the toolbar. Left and right arrows move between visible,
+enabled actions. Home and End reach the first and last available actions.
+Wrap each icon action in a `ki-tooltip` with the same label. Keep toggle
+labels stable and update `pressed` when the application changes their
+state.
+
+<Canvas of={ButtonGroupStories.FormattingToolbar} />
+
+## Split button
+
+The preview shows the attached shapes. In an application, a menu anchored to
+the chevron trigger supplies the alternate actions. See the Save split button
+recipe in the Docs section.
+
+<Canvas of={ButtonGroupStories.SplitAppearance} />
+
+## Touch density
+
+A `data-ki-density="touch"` region enlarges button targets, including the
+`xs` buttons in this example.
+
+<Canvas of={ButtonGroupStories.TouchDensity} />

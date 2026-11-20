@@ -1,0 +1,398 @@
+{
+  "component": {
+    "attributes": {
+      "anchor": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Literal ID of the menu button in the same document or containing shadow root.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "filter-label": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Accessible name and placeholder of the filter. Omit to hide the field.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "filter-results-label": {
+        "default": "'Matching actions: {count}'",
+        "deprecatedSince": null,
+        "description": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "placement": {
+        "default": "'bottom-start'",
+        "deprecatedSince": null,
+        "description": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bottom-end\" | \"bottom-start\" | \"top-end\" | \"top-start\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter applied to the popup.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Base fill of the popup surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image composited over the popup fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Popup edge and the filter divider.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of menu border and dividers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text over the popup surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-filter-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the search icon.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-focus-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of a visible keyboard focus outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-focus-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of a visible keyboard focus outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Family for action labels and the filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text size for action labels and the filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline space between the parts of a row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-inline-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Start and end inset of an action, group label, or filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default action row minimum height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Action row corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height for action labels and the filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-max-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum popup height, bounded by the viewport.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-max-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum popup width, bounded by the viewport.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-meta-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground for shortcut hints and the filter placeholder.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-min-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default minimum popup width, bounded by the viewport.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space inside the popup.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Popup corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Popup elevation shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-touch-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum action and filter height for coarse pointers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A popup of actions opened by a button in the same document or shadow root.",
+    "events": {
+      "ki-select": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Reports the selected action and, for a checkbox or radio, its new checked state.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiMenuSelectDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The filter field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "header": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The informational header.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "menu": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named menu containing the actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "popup": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The anchored surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "anchor": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Literal ID of the menu button in the same document or containing shadow root.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "filterLabel": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Accessible name and placeholder of the filter. Omit to hide the field.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "filterResultsLabel": {
+        "default": "'Matching actions: {count}'",
+        "deprecatedSince": null,
+        "description": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "placement": {
+        "default": "'bottom-start'",
+        "deprecatedSince": null,
+        "description": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bottom-end\" | \"bottom-start\" | \"top-end\" | \"top-start\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Place ki-menu-item, ki-menu-group, and ki-divider here.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "header": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Informational content above the actions, such as account details.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-menu.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-menu.d.ts",
+    "symbols": {
+      "KiMenu": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiMenu extends Components.KiMenu, HTMLElement {\n}\nexport const KiMenu: {\n    prototype: KiMenu;\n    new (): KiMenu;\n};"
+      },
+      "KiMenuPlacement": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiMenuPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';"
+      },
+      "KiMenuSelectDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiMenuSelectDetail {\n    value: string;\n    checked?: boolean;\n}"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-menu.js"
+  }
+}

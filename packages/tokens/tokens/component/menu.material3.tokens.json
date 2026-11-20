@@ -1,0 +1,18 @@
+{
+  "ki": {
+    "menu": {
+      "bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Material 3 action menu surface."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Material 3 popup edge."
+      },
+      "shadow": {
+        "$value": "{ki.elevation.e3}",
+        "$description": "Material 3 popup elevation."
+      }
+    }
+  }
+}

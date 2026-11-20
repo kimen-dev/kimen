@@ -1,0 +1,3 @@
+:host {
+  font-family: var(--ki-format-date-font-family, inherit);
+}
