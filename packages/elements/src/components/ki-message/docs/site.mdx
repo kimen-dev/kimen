@@ -1,0 +1,54 @@
+---
+title: ki-message
+description: Present a user turn, an assistant reply or a system event in a transcript.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a message for each chronological entry in a [ki-conversation](../conversation/).
+The `user` role aligns a bubble at the inline end. The default `assistant`
+role shows a reply with an avatar at the inline start. An `event` is a
+centered note with an optional decorative `icon-name`.
+
+<Demo
+  layout="block"
+  code={`<ki-conversation label="Export help">
+  <ki-message message-role="user">Can I export these settings?</ki-message>
+  <ki-message message-role="assistant" author="Ava said">
+    <ki-avatar slot="avatar" size="xs" initials="AV"></ki-avatar>
+    <strong>Yes.</strong> Choose <code>JSON</code> from the export menu.
+    <details slot="actions">
+      <summary>View source</summary>
+      Settings export guide
+    </details>
+  </ki-message>
+  <ki-message message-role="event" icon-name="search">Found the export guide</ki-message>
+</ki-conversation>`}
+/>
+
+## Compose the message
+
+Use the default slot for text or formatted content. Give an assistant reply
+a custom `avatar` when it has its own identity. Supply controls such as
+links or buttons in `actions` and handle them in your application. Import any
+additional event glyphs the same way you would for [ki-icon](../icon/).
+
+## Accessible names and streaming
+
+`author` sets the article's complete accessible name. The role defaults
+are “You said,” “Assistant said” and “System event.” Supply a localized
+author string such as “Ava dijo” for a Spanish transcript. The visible
+message content is separate from the name.
+
+Set `streaming` while appending chunks to the content. The caret stays
+visible and still with reduced motion. Clear `streaming` when the response
+is complete so the polite conversation log can present it as one update.
+
+## API reference
+
+<CemApi tag="ki-message" />
+
+## Workshop
+
+[Open ki-message in Storybook](/storybook/?path=/docs/elements-ki-message--examples)

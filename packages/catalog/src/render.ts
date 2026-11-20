@@ -153,9 +153,9 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
 
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
- * bound node activates on the only one (FR-003, S17) or, when there is none,
- * on the platform click. Multiple events require a source-owned discriminator
- * on a validated prop. Otherwise the guard rejects the binding (S19).
+ * bound node activates through a declared event or falls back to a platform
+ * click. Multiple events need an explicit activation or a source-owned mode
+ * discriminator on a validated prop (S19).
  */
 export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
@@ -250,11 +250,20 @@ export function guardNode(
     }
   }
   // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
-  // activation event. Chip type supplies an explicit discriminator. Other
-  // ambiguous entries are rejected before the binding is built.
+  // activation event. Chips select it by type. Other multi-event entries
+  // must declare which of their events activates the action.
   if (node.action !== undefined) {
-    const events = declaredEvents(ownEntry(state.components, node.component));
-    if (chipActivations(node.component, events)) {
+    const entry = ownEntry(state.components, node.component);
+    const events = declaredEvents(entry);
+    const activation = entry?.activationEvent;
+    if (activation !== undefined && !events.includes(activation)) {
+      state.diagnostics.push({
+        message: `${node.component} activationEvent must name a declared event`,
+        path: `${path}.action`,
+        rule: 'invalid-activation-event',
+        value: node.action,
+      });
+    } else if (chipActivations(node.component, events)) {
       const kind =
         node.props?.['type'] ??
         (parent?.component === 'ki-chip-group' ? parent.props?.['type'] : undefined);
@@ -266,7 +275,7 @@ export function guardNode(
           value: node.action,
         });
       }
-    } else if (events.length > 1) {
+    } else if (activation === undefined && events.length > 1) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
@@ -320,7 +329,7 @@ export function payloadBytes(data: unknown): number {
  */
 const LIVE_STATE_PROPS = ['checked', 'selected', 'value'] as const;
 
-export function matchesConstraint(
+function matchesConstraint(
   value: unknown,
   constraint: CatalogPropConstraint,
 ): value is boolean | number | string {
@@ -338,6 +347,52 @@ export function matchesConstraint(
   }
 }
 
+function isMultipleChoiceValue(element: Element, name: string): boolean {
+  return (
+    name === 'value' && element.localName === 'ki-combobox' && element.hasAttribute('multiple')
+  );
+}
+
+/** Reads a catalog-declared value without letting non-scalar objects cross the guard. */
+export function readLiveScalar(
+  element: Element,
+  name: string,
+  constraint: CatalogPropConstraint,
+): Scalar | undefined {
+  const value: unknown = Reflect.get(element, name);
+  if (matchesConstraint(value, constraint)) return value;
+  if (
+    constraint.type === 'string' &&
+    isMultipleChoiceValue(element, name) &&
+    Array.isArray(value)
+  ) {
+    const choices: unknown[] = Array.from(value);
+    if (choices.every((choice) => typeof choice === 'string')) return JSON.stringify(choices);
+  }
+  return undefined;
+}
+
+/** Match the combobox's multiple-value attribute semantics in live conflict checks. */
+export function authoredLiveScalar(
+  element: Element,
+  name: string,
+  value: Scalar | undefined,
+): Scalar | undefined {
+  if (typeof value !== 'string' || !isMultipleChoiceValue(element, name)) return value;
+  if (value === '') return '[]';
+  if (value.trimStart().startsWith('[')) {
+    try {
+      const choices: unknown = JSON.parse(value);
+      if (Array.isArray(choices) && choices.every((choice) => typeof choice === 'string')) {
+        return JSON.stringify([...new Set(choices)]);
+      }
+    } catch {
+      // A bracket can also be part of a literal option value.
+    }
+  }
+  return JSON.stringify([value]);
+}
+
 function liveData(
   element: Element,
   props: Readonly<Record<string, Scalar>>,
@@ -349,9 +404,8 @@ function liveData(
     if (constraint === undefined) {
       continue;
     }
-    // Reads the rendered component's own property (its code, never spec data).
-    const live: unknown = Reflect.get(element, name);
-    if (matchesConstraint(live, constraint)) {
+    const live = readLiveScalar(element, name, constraint);
+    if (live !== undefined) {
       data[name] = live;
     } else if (
       name === 'value' &&
@@ -514,7 +568,7 @@ export function wireActivation(
   }
   const events = declaredEvents(entry);
   const variantActivation = chipActivations(element.localName, events);
-  const activation = events[0] ?? DEFAULT_ACTIVATION_EVENT;
+  const activation = entry?.activationEvent ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
   const clickActivated = !variantActivation && activation === DEFAULT_ACTIVATION_EVENT;
   const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
   const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {

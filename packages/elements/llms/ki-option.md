@@ -1,10 +1,10 @@
 # ki-option
 
-> A declarative data option rendered by its owning `ki-select`.
+> A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
 
 ## When to use
 
-declare one choice inside a `ki-select`; its text is the
+declare one choice inside a `ki-select` or `ki-combobox`; its text is the
 human-facing label and its `value` is the submitted value.
 
 ## When not to use
@@ -49,12 +49,14 @@ Never author selection on the option — assign `ki-select.value` and the first 
 
 ## Attributes
 
+- `description` (string | undefined): Secondary text shown below the label in a combobox choice row.
 - `disabled` (boolean, default false): Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
 - `value` (string | undefined): Submission and selection value for this option. When omitted, the value falls back to the trimmed option text, matching native `<option>` parity. When NOT to use: do not use this as selection state; set `ki-select.value`.
 
 ## Slots
 
-- (default): Text label mirrored by the owning select.
+- (default): Text label mirrored by the owning choice field.
+- `start`: Decorative content shown before the label in a combobox row.
 
 ## Parts
 

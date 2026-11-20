@@ -52,6 +52,14 @@ export function parseTypeText(text) {
   ) {
     return { type: withoutUndefined[0] };
   }
+  // DOM string-array properties still receive strings through HTML attributes.
+  if (
+    withoutUndefined.length === 2 &&
+    withoutUndefined.includes('string') &&
+    withoutUndefined.includes('string[]')
+  ) {
+    return { type: 'string' };
+  }
   if (
     withoutUndefined.length === 2 &&
     withoutUndefined.includes('number') &&
@@ -238,8 +246,13 @@ export function buildCatalog(
       if (action !== undefined && events.length !== 1) {
         violations.push(`${tag}: catalog action ${action} is not a declared event`);
       }
+      const activationEvent = declaration.catalogAction;
+      if (activationEvent !== undefined && !events.some(({ name }) => name === activationEvent)) {
+        violations.push(`${tag}: catalog action must name a declared event`);
+      }
       components.set(tag, {
         description: declaration.description,
+        ...(activationEvent === undefined ? {} : { activationEvent }),
         events: sortedRecord(events.map((event) => [event.name, event.description ?? ''])),
         props: sortedRecord(props),
         slots: sortedRecord(

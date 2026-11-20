@@ -30,14 +30,15 @@ import {
   ABSOLUTE_MAX_BYTES,
   type ActionEvent,
   attachText,
+  authoredLiveScalar,
   createNodeElement,
   DEFAULT_RENDER_BUDGETS,
   declaredEvents,
   type GuardState,
   guardNode,
-  matchesConstraint,
   payloadBytes,
   pinButtonType,
+  readLiveScalar,
   type RenderBudgets,
   type RenderDiagnostic,
   type RenderResult,
@@ -452,12 +453,13 @@ function heldUserState(
       if (constraint === undefined) {
         continue;
       }
-      // Reads the rendered component's own property (its code, never spec data).
-      const live: unknown = Reflect.get(origin.dom, name);
-      if (
-        !matchesConstraint(live, constraint) ||
-        live === (ownEntry(origin.props, name) ?? constraint.default)
-      ) {
+      const live = readLiveScalar(origin.dom, name, constraint);
+      const written = authoredLiveScalar(
+        origin.dom,
+        name,
+        ownEntry(origin.props, name) ?? constraint.default,
+      );
+      if (live === undefined || live === written) {
         continue;
       }
       if (!force) {
@@ -603,13 +605,16 @@ function userStateConflict(
   ) {
     return null;
   }
-  // Reads the rendered component's own property (its code, never spec data).
-  const live: unknown = Reflect.get(origin.dom, name);
-  if (!matchesConstraint(live, constraint)) {
+  const live = readLiveScalar(origin.dom, name, constraint);
+  if (live === undefined) {
     return null;
   }
-  const written = ownEntry(origin.props, name) ?? constraint.default;
-  const wanted = next ?? constraint.default;
+  const written = authoredLiveScalar(
+    origin.dom,
+    name,
+    ownEntry(origin.props, name) ?? constraint.default,
+  );
+  const wanted = authoredLiveScalar(origin.dom, name, next ?? constraint.default);
   if (live === written || live === wanted) {
     return null;
   }

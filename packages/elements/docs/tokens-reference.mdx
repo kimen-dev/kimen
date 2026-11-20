@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 478 semantic
-and 1620 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 494 semantic
+and 1756 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -83,6 +83,8 @@ every component at once.
 | `--ki-corner-action-frame` | `10px` | Outside corner of an action surface. |
 | `--ki-corner-action-seam` | `0px` | Square corner at an edge shared by two actions. |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
+| `--ki-corner-anchored-panel` | `12px` | Corner radius of an anchored explanation panel. |
+| `--ki-corner-compact-mark` | `6px` | Corner radius of a compact inline mark. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-feature-tile-circle` | `1000px` | Fully rounded corners of a circular feature tile. |
 | `--ki-corner-feature-tile-lg` | `12px` | Corner radius of a large square feature tile. |
@@ -90,6 +92,8 @@ every component at once.
 | `--ki-corner-feature-tile-sm` | `8px` | Corner radius of a small square feature tile. |
 | `--ki-corner-feature-tile-xl` | `16px` | Corner radius of an extra-large square feature tile. |
 | `--ki-corner-feature-tile-xs` | `6px` | Corner radius of an extra-small square feature tile. |
+| `--ki-corner-field-item` | `8px` | Corner radius for choices and tokens inside an editable field. |
+| `--ki-corner-field-surface` | `10px` | Corner radius for an editable field and its floating choice surface. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
 
 ### `ki.density`
@@ -204,6 +208,14 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-layout-conversation-avatar-radius` | `1000px` | Round corner radius of the fallback assistant avatar. |
+| `--ki-layout-conversation-bubble-end-radius` | `6px` | Smaller radius of the end corner of a user bubble. |
+| `--ki-layout-conversation-bubble-padding` | `0.5rem 0.75rem` | Block and inline insets for a user bubble. |
+| `--ki-layout-conversation-bubble-radius` | `16px` | Standard corner radius of a user bubble. |
+| `--ki-layout-conversation-caret-block-size` | `1em` | Block size of a streaming caret. |
+| `--ki-layout-conversation-caret-inline-size` | `0.5em` | Inline size of a streaming caret. |
+| `--ki-layout-conversation-max-width` | `42rem` | Maximum inline size for a conversation transcript. |
+| `--ki-layout-conversation-user-max-width` | `80%` | Maximum width of a user bubble relative to the transcript. |
 | `--ki-layout-floating-action-lg` | `5rem` | Medium floating action footprint (80px at the default root size). |
 | `--ki-layout-floating-action-lg-icon` | `1.75rem` | Medium floating action glyph (28px at the default root size). |
 | `--ki-layout-floating-action-md` | `3.5rem` | Default floating action footprint (56px at the default root size). |
@@ -211,6 +223,7 @@ every component at once.
 | `--ki-layout-floating-action-xl-icon` | `2.25rem` | Large floating action glyph (36px at the default root size). |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
+| `--ki-layout-rule-width` | `1px` | The width of a hairline rule separating adjacent content. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
@@ -322,6 +335,7 @@ every component at once.
 | `--ki-outline-danger-low-em` | `#ffcccf` | semantic color for outline danger low em. |
 | `--ki-outline-danger-low-em-alpha` | `rgba(239, 78, 105, 0.4)` | semantic color for outline danger low em alpha. |
 | `--ki-outline-danger-med-em` | `#f1989f` | semantic color for outline danger med em. |
+| `--ki-outline-hairline-width` | `1px` | Width of a hairline component surface edge. |
 | `--ki-outline-high-em` | `rgba(0, 0, 0, 0.12)` | semantic color for outline high em. |
 | `--ki-outline-info-base-em` | `#dff3ff` | semantic color for outline info base em. |
 | `--ki-outline-info-base-em-alpha` | `rgba(19, 185, 236, 0.2)` | semantic color for outline info base em alpha. |
@@ -413,6 +427,7 @@ every component at once.
 | `--ki-spacing-activity-dot-gap` | `0.25rem` | Gap between typing dots. |
 | `--ki-spacing-activity-label-gap` | `0.5rem` | Gap between an inline activity mark and its label. |
 | `--ki-spacing-block` | `0.75rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. |
+| `--ki-spacing-floating-surface-max-block` | `20rem` | Maximum block size of a compact floating surface before it scrolls. |
 | `--ki-spacing-inline` | `0.5rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. |
 | `--ki-spacing-media-caption` | `0.25rem` | Block spacing between a media frame and its caption. |
 
@@ -523,6 +538,12 @@ every component at once.
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
+
+### `ki.surface-size`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-surface-size-compact` | `18rem` | Inline size of a compact anchored surface. |
 
 ### `ki.text`
 
@@ -651,6 +672,34 @@ every component at once.
 
 The public styling contract of each element. Reassign them on `:root` for a
 theme-wide change or on any subtree for a scoped one.
+
+### `ki-ai-label`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-ai-label-backdrop-filter` | `none` | Complete filter behind the AI provenance mark. Defaults to none. |
+| `--ki-ai-label-bg` | `#ffebe5` | Fill of the AI provenance mark. |
+| `--ki-ai-label-bg-image` | `none` | Optional image over the AI provenance fill. Defaults to none. |
+| `--ki-ai-label-border-width` | `1px` | Border width of the panel and the forced-colors mark. |
+| `--ki-ai-label-fg` | `#9a3715` | Text and icon ink of the AI provenance mark. |
+| `--ki-ai-label-gap` | `0.25rem` | Gap between the mark and its icon or between provenance metadata items. |
+| `--ki-ai-label-md-height` | `1.5rem` | Minimum painted block size of the medium AI mark. |
+| `--ki-ai-label-md-icon-size` | `1rem` | Sparkles icon size in the medium AI mark. |
+| `--ki-ai-label-md-padding-inline` | `0.5rem` | Inline inset of the medium AI mark. |
+| `--ki-ai-label-popover-backdrop-filter` | `none` | Complete filter behind the provenance explanation. Defaults to none. |
+| `--ki-ai-label-popover-bg` | `#f9f7f4` | Raised fill of the provenance explanation. |
+| `--ki-ai-label-popover-bg-image` | `none` | Optional image over the provenance explanation fill. Defaults to none. |
+| `--ki-ai-label-popover-border` | `rgba(24, 22, 19, 0.1)` | Hairline color of the explanation panel. |
+| `--ki-ai-label-popover-fg` | `#181613` | Ink of the provenance explanation and metadata. |
+| `--ki-ai-label-popover-gap` | `0.5rem` | Gap between the panel sections and between the panel and trigger. |
+| `--ki-ai-label-popover-padding` | `0.75rem` | Inset of the explanation panel. |
+| `--ki-ai-label-popover-radius` | `12px` | Corner radius of the explanation panel. |
+| `--ki-ai-label-popover-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the explanation panel. |
+| `--ki-ai-label-popover-width` | `18rem` | Preferred inline size of the explanation panel. |
+| `--ki-ai-label-radius` | `6px` | Corner radius of the AI provenance mark. |
+| `--ki-ai-label-sm-height` | `1.25rem` | Minimum painted block size of the small AI mark. |
+| `--ki-ai-label-sm-icon-size` | `0.75rem` | Sparkles icon size in the small AI mark. |
+| `--ki-ai-label-sm-padding-inline` | `0.375rem` | Inline inset of the small AI mark. |
 
 ### `ki-alert`
 
@@ -817,6 +866,33 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-badge-xs-line-height` | `1rem` | dimension used by the badge component for xs line height (caption_2 16px, the same height as caption_1). |
 | `--ki-badge-xs-padding-inline` | `0.375rem` | dimension used by the badge component for xs padding inline (Tag 10106:4651 xs: Space/xs plus the Text_wrap Space/xxs, 6px). |
 | `--ki-badge-xs-radius` | `6px` | dimension used by the badge component for xs radius (Tag 10106:4651 xs binds Radius/small-component/xs). |
+
+### `ki-breadcrumb`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-breadcrumb-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for ancestor text and the overflow trigger. |
+| `--ki-breadcrumb-current-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for the current level. |
+| `--ki-breadcrumb-current-fg` | `#181613` | Emphasized foreground of the current level. |
+| `--ki-breadcrumb-fg` | `#5e5953` | Medium-emphasis ink for ancestors and the overflow trigger, strengthened in more-contrast mode. |
+| `--ki-breadcrumb-gap` | `0.25rem` | Gap between breadcrumb rows, levels and their chevrons. |
+| `--ki-breadcrumb-glyph-size` | `1rem` | Size of the ellipsis glyph. |
+| `--ki-breadcrumb-hover-bg` | `#f3f0eb` | Backing for the active overflow trigger and highlighted overflow links. |
+| `--ki-breadcrumb-hover-fg` | `#181613` | Foreground for the active overflow trigger and highlighted overflow links. |
+| `--ki-breadcrumb-menu-backdrop-filter` | `none` | Complete backdrop filter of the overflow menu, none by default. |
+| `--ki-breadcrumb-menu-bg` | `#f9f7f4` | Surface behind the overflow menu entries. |
+| `--ki-breadcrumb-menu-bg-image` | `none` | Optional image layered over the overflow menu surface. |
+| `--ki-breadcrumb-menu-fg` | `#181613` | Text of overflow menu entries. |
+| `--ki-breadcrumb-menu-max-block-size` | `9rem` | Maximum block size of the scrollable overflow menu. |
+| `--ki-breadcrumb-menu-padding` | `0.25rem` | Inset around the overflow menu entries. |
+| `--ki-breadcrumb-menu-radius` | `2px` | Outer radius of the overflow menu. |
+| `--ki-breadcrumb-menu-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Elevation of the overflow menu above the page. |
+| `--ki-breadcrumb-padding-block` | `0.125rem` | Block inset of a level label. |
+| `--ki-breadcrumb-padding-inline` | `0.25rem` | Inline inset of a level label. |
+| `--ki-breadcrumb-radius` | `2px` | Radius of the overflow trigger and level focus outlines. |
+| `--ki-breadcrumb-separator` | `#6b665f` | Foreground of the decorative breadcrumb chevron. |
+| `--ki-breadcrumb-separator-size` | `0.375rem` | Edge length of the decorative chevron before rotation. |
+| `--ki-breadcrumb-separator-stroke` | `2px` | Stroke width of the decorative chevron. |
 
 ### `ki-button`
 
@@ -1260,6 +1336,94 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-chip-group-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family inherited by chip group content. |
 | `--ki-chip-group-gap` | `0.5rem` | Gap between adjacent chips and rows. |
 
+### `ki-code-block`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-code-backdrop-filter` | `none` | Whole backdrop filter for the figure. |
+| `--ki-code-bg` | `#f9f7f4` | Solid backing for the header and source. |
+| `--ki-code-bg-image` | `none` | Optional image layer above the solid backing. |
+| `--ki-code-border` | `rgba(24, 22, 19, 0.1)` | Frame and header divider. |
+| `--ki-code-border-width` | `1px` | Width of the frame and header divider. |
+| `--ki-code-comment` | `#5e5953` | Supporting syntax ink for comments. |
+| `--ki-code-fg` | `#181613` | Default source ink. |
+| `--ki-code-focus-color` | `#bb4e2a` | Keyboard focus ring of the scroll area. |
+| `--ki-code-focus-width` | `0.125rem` | Width of the scroll area's focus ring. |
+| `--ki-code-font-family` | `'JetBrains Mono', ui-monospace, monospace` | Typeface for source and line numbers. |
+| `--ki-code-font-size` | `0.75rem` | Compact text size for caption and source. |
+| `--ki-code-function` | `#085268` | Syntax ink for function names. |
+| `--ki-code-header-fg` | `#5e5953` | Supporting language and filename ink. |
+| `--ki-code-header-padding` | `0.25rem` | Compact header inset and gap. |
+| `--ki-code-highlight-bg` | `#ebe7e1` | Fill of a highlighted line. |
+| `--ki-code-highlight-marker` | `#bc4c26` | Inline rule identifying a highlighted line. |
+| `--ki-code-highlight-marker-width` | `0.125rem` | Width of the highlighted line rule. |
+| `--ki-code-keyword` | `#ad411c` | Syntax ink for keywords. |
+| `--ki-code-line-height` | `1rem` | Line box height for caption and source. |
+| `--ki-code-line-number` | `#5e5953` | Ink for the decorative line numbers. |
+| `--ki-code-number` | `#945b05` | Syntax ink for numbers. |
+| `--ki-code-padding` | `0.75rem` | Inset of the source and leading caption edge. |
+| `--ki-code-radius` | `12px` | Corner radius of the figure. |
+| `--ki-code-string` | `#2c6a2b` | Syntax ink for strings. |
+
+### `ki-combobox`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-combobox-field-bg` | `#f9f7f4` | Fill for the editable field. |
+| `--ki-combobox-field-border` | `#86827b` | Outline around the editable field. |
+| `--ki-combobox-field-fg` | `#181613` | Text on the editable field. |
+| `--ki-combobox-field-height` | `2.5rem` | Resting minimum block size of the field. |
+| `--ki-combobox-icon-size` | `1rem` | Size of search, selection and remove glyphs. |
+| `--ki-combobox-input-basis` | `3.5rem` | Preferred text-entry width before a row of tags wraps. |
+| `--ki-combobox-input-touch-font-size` | `1rem` | Minimum editable text size for coarse-pointer input. |
+| `--ki-combobox-listbox-backdrop-filter` | `none` | Complete backdrop filter for the floating listbox. |
+| `--ki-combobox-listbox-bg` | `#f9f7f4` | Fill for the floating listbox. |
+| `--ki-combobox-listbox-bg-image` | `none` | Optional image layered over the floating listbox. |
+| `--ki-combobox-listbox-border` | `rgba(24, 22, 19, 0.1)` | Outline around the floating listbox. |
+| `--ki-combobox-listbox-fg` | `#181613` | Text on the floating listbox. |
+| `--ki-combobox-listbox-max-block-size` | `20rem` | Maximum listbox block size before options scroll. |
+| `--ki-combobox-listbox-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the floating listbox. |
+| `--ki-combobox-match-fg` | `#181613` | Foreground of the first bolded query match. |
+| `--ki-combobox-option-active-bg` | `#f3f0eb` | Fill for the active option. |
+| `--ki-combobox-option-active-fg` | `#181613` | Text on the active option. |
+| `--ki-combobox-tag-bg` | `#f3f0eb` | Fill for the selected tag. |
+| `--ki-combobox-tag-fg` | `#181613` | Text on the selected tag. |
+
+### `ki-confirmation`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-confirmation-backdrop-filter` | `none` | Complete backdrop effect behind the confirmation. |
+| `--ki-confirmation-bg` | `#f9f7f4` | Solid raised background of the confirmation prompt and summary. |
+| `--ki-confirmation-bg-image` | `none` | Optional image painted over the solid confirmation background. |
+| `--ki-confirmation-border` | `rgba(24, 22, 19, 0.16)` | Boundary of the confirmation surface. |
+| `--ki-confirmation-border-width` | `1px` | Stroke width of the confirmation boundary. |
+| `--ki-confirmation-fg` | `#181613` | Text on the confirmation surface. |
+| `--ki-confirmation-gap` | `0.75rem` | Block separation between confirmation rows. |
+| `--ki-confirmation-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the pending question. |
+| `--ki-confirmation-inline-gap` | `0.5rem` | Space between text and controls in a row. |
+| `--ki-confirmation-padding` | `1rem` | Space between the prompt's edge and its content. |
+| `--ki-confirmation-radius` | `16px` | Corner radius of the confirmation surface. |
+
+### `ki-conversation`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-conversation-gap` | `1rem` | Space between messages in the transcript. |
+| `--ki-conversation-max-width` | `42rem` | Maximum inline size of the transcript. |
+| `--ki-message-assistant-fg` | `#181613` | Text ink of an assistant reply on the page surface. |
+| `--ki-message-avatar-backdrop-filter` | `none` | Complete filter behind the default assistant avatar. |
+| `--ki-message-avatar-bg` | `#ffebe5` | Solid primary container of the default assistant avatar. |
+| `--ki-message-avatar-bg-image` | `none` | Optional image over the default assistant avatar background. |
+| `--ki-message-avatar-fg` | `#9a3715` | Glyph ink inside the default assistant avatar. |
+| `--ki-message-event-fg` | `#5e5953` | Text and icon ink of a system event on the page surface. |
+| `--ki-message-padding` | `0.5rem 0.75rem` | Block and inline padding inside a user bubble, in that order. |
+| `--ki-message-radius` | `16px` | Radius of the user bubble corners. |
+| `--ki-message-user-backdrop-filter` | `none` | Complete filter behind the user bubble. |
+| `--ki-message-user-bg` | `#f3f0eb` | Solid background of a user bubble. |
+| `--ki-message-user-bg-image` | `none` | Optional image over the user bubble background. |
+| `--ki-message-user-fg` | `#181613` | Text ink in a user bubble. |
+
 ### `ki-copy-button`
 
 | Token | Value (onmars light) | Description |
@@ -1527,6 +1691,8 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-input-action-gap` | `0.25rem` | Gap between the input action and the preceding control or adornment. |
+| `--ki-input-action-padding-end` | `0.25rem` | Inline-end inset between the input action and the inside edge of the field border. |
 | `--ki-input-border-block-end-width` | `1px` | dimension used by the input component for border block end width. |
 | `--ki-input-border-block-start-width` | `1px` | dimension used by the input component for border block start width. |
 | `--ki-input-border-inline-end-width` | `1px` | dimension used by the input component for border inline end width. |
@@ -1784,43 +1950,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-note-warning-bg` | `#fcf0dc` | Background of a warning note. |
 | `--ki-note-warning-fg` | `#181613` | Text ink of a warning note. |
 | `--ki-note-warning-icon` | `#945b05` | Decorative icon ink of a warning note. |
-
-### `ki-number-input`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-number-input-border-block-end-width` | `1px` | Field border width at block end. |
-| `--ki-number-input-border-block-start-width` | `1px` | Field border width at block start. |
-| `--ki-number-input-border-inline-width` | `1px` | Field border width at either inline edge. |
-| `--ki-number-input-field-backdrop-filter` | `none` | Complete backdrop filter behind the field. |
-| `--ki-number-input-field-bg` | `#ffffff` | Resting NumberInput field fill. |
-| `--ki-number-input-field-bg-image` | `none` | Optional theme image layered over the field fill. |
-| `--ki-number-input-field-border` | `#86827b` | Resting NumberInput field boundary. |
-| `--ki-number-input-field-disabled-bg` | `#f3f0eb` | Field fill when disabled. |
-| `--ki-number-input-field-disabled-border` | `rgba(24, 22, 19, 0.1)` | Boundary when the entire field is disabled. |
-| `--ki-number-input-field-disabled-fg` | `#cbc7bf` | Numeric entry ink when disabled. |
-| `--ki-number-input-field-fg` | `#181613` | Foreground of the numeric entry. |
-| `--ki-number-input-field-focus-bg` | `#ffffff` | Field fill while focused. |
-| `--ki-number-input-field-focus-fg` | `#181613` | Numeric entry ink while focused. |
-| `--ki-number-input-field-invalid-border` | `#ef4e69` | Field boundary when a validation message is visible. |
-| `--ki-number-input-font-size` | `0.8125rem` | Font size of the numeric entry and its suffix. |
-| `--ki-number-input-font-size-touch` | `1rem` | Minimum input font size under a coarse pointer. |
-| `--ki-number-input-height` | `2.5rem` | Medium field height before applying regional density. |
-| `--ki-number-input-label-font-size` | `0.8125rem` | Field label font size. |
-| `--ki-number-input-label-font-weight` | `600` | Field label font weight. |
-| `--ki-number-input-label-gap` | `0.25rem` | Gap between the label, field and supporting messages. |
-| `--ki-number-input-label-line-height` | `1.25rem` | Line height of the field label. |
-| `--ki-number-input-line-height` | `1.5rem` | Line height of the numeric entry and its suffix. |
-| `--ki-number-input-padding-inline` | `0.625rem` | Inline padding for the plain field and unit suffix. |
-| `--ki-number-input-radius` | `10px` | Field corners. |
-| `--ki-number-input-stepper-bg` | `rgba(0, 0, 0, 0)` | Resting stepper button fill. |
-| `--ki-number-input-stepper-disabled-fg` | `#6b665f` | Stepper icon ink when disabled. |
-| `--ki-number-input-stepper-fg` | `#181613` | Resting stepper icon ink. |
-| `--ki-number-input-stepper-hover-bg` | `#f3f0eb` | Stepper fill when hovered. |
-| `--ki-number-input-stepper-hover-fg` | `#181613` | Stepper icon ink when hovered. |
-| `--ki-number-input-stepper-padding-inline` | `0.125rem` | Editor inline padding between the steppers. |
-| `--ki-number-input-unit-bg` | `rgba(0, 0, 0, 0)` | Backing of the unit suffix within the field. |
-| `--ki-number-input-unit-fg` | `#5e5953` | Unit suffix ink. Medium emphasis in the standard contrast setting. |
 
 ### `ki-option`
 
@@ -2205,6 +2334,33 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-status-success-color` | `#409b3f` | color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500). |
 | `--ki-status-warning-color` | `#945b05` | color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008). |
 
+### `ki-stepper`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-step-description-bg` | `rgba(0, 0, 0, 0)` | Backing of a step description. |
+| `--ki-step-description-fg` | `#5e5953` | Ink of a step description. |
+| `--ki-stepper-connector` | `rgba(24, 22, 19, 0.1)` | Decorative connector from a step that is still incomplete. |
+| `--ki-stepper-connector-done` | `#1d1a16` | Decorative connector from a completed step. |
+| `--ki-stepper-current-bg` | `rgba(0, 0, 0, 0)` | Fill of the current step marker. |
+| `--ki-stepper-current-border` | `#1d1a16` | Outline of the current step marker. |
+| `--ki-stepper-current-fg` | `#ad411c` | Number ink on the current step marker. |
+| `--ki-stepper-done-bg` | `#1d1a16` | Fill of a completed step marker. |
+| `--ki-stepper-done-fg` | `#ffffff` | Glyph ink on the completed step marker. |
+| `--ki-stepper-dot-size` | `1.5rem` | Diameter of the step marker. |
+| `--ki-stepper-error-bg` | `rgba(0, 0, 0, 0)` | Fill of the step error marker. |
+| `--ki-stepper-error-border` | `#c21a45` | Outline of the step error marker. |
+| `--ki-stepper-error-fg` | `#c21a45` | Glyph ink of the step error marker. |
+| `--ki-stepper-glyph-size` | `0.875rem` | Size of the marker and disclosure glyphs. |
+| `--ki-stepper-label-bg` | `rgba(0, 0, 0, 0)` | Default backing of a step label. |
+| `--ki-stepper-label-fg` | `#181613` | Default ink of a step label. |
+| `--ki-stepper-stroke` | `2px` | Width of the marker outline and connector. |
+| `--ki-stepper-summary-bg` | `rgba(0, 0, 0, 0)` | Backing of the compact disclosure. |
+| `--ki-stepper-summary-fg` | `#181613` | Ink of the compact disclosure. |
+| `--ki-stepper-upcoming-bg` | `rgba(0, 0, 0, 0)` | Fill of an upcoming step marker. |
+| `--ki-stepper-upcoming-border` | `#86827b` | Outline of an upcoming step marker. |
+| `--ki-stepper-upcoming-fg` | `#5e5953` | Number and label ink of an upcoming step. |
+
 ### `ki-switch`
 
 | Token | Value (onmars light) | Description |
@@ -2354,6 +2510,42 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-panel-focus-ring-width` | `0.125rem` | dimension used by the tab panel component for focus ring width. |
 | `--ki-tab-panel-padding-block` | `0.625rem` | dimension used by the tab panel component for padding block. |
 | `--ki-tab-panel-padding-inline` | `0.625rem` | dimension used by the tab panel component for padding inline. |
+
+### `ki-table`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-table-backdrop-filter` | `none` | Complete filter applied behind the frame. |
+| `--ki-table-bg` | `#ffffff` | Table frame and caption surface. |
+| `--ki-table-bg-image` | `none` | Optional image layered over the table frame. |
+| `--ki-table-border` | `rgba(24, 22, 19, 0.1)` | Frame and row dividers. |
+| `--ki-table-border-width` | `1px` | Frame and row divider stroke. |
+| `--ki-table-caption-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the native table caption. |
+| `--ki-table-cell-padding-inline` | `0.75rem` | Horizontal space inside cells. |
+| `--ki-table-fg` | `#181613` | Primary record and caption ink. |
+| `--ki-table-focus-radius` | `2px` | Corner radius of the sort button focus ring. |
+| `--ki-table-focus-ring-color` | `#bb4e2a` | Keyboard focus outline ink. |
+| `--ki-table-focus-ring-offset` | `0.125rem` | Space between a focus outline and its control. |
+| `--ki-table-focus-ring-width` | `0.125rem` | Keyboard focus outline stroke. |
+| `--ki-table-header-bg` | `#f9f7f4` | Column header surface, including when sticky. |
+| `--ki-table-header-bg-image` | `none` | Optional image layered over the column header. |
+| `--ki-table-header-fg` | `#5e5953` | Column header ink. |
+| `--ki-table-header-height` | `2.5rem` | Column header row height. |
+| `--ki-table-meta-bg` | `#ffffff` | Surface behind secondary and numeric values at rest. |
+| `--ki-table-meta-fg` | `#5e5953` | Secondary and numeric value ink. |
+| `--ki-table-radius` | `12px` | Outer frame corner radius. |
+| `--ki-table-row-height` | `3rem` | Default data row height. |
+| `--ki-table-row-height-compact` | `2.5rem` | Compact data row height. |
+| `--ki-table-row-hover-bg` | `#f9f7f4` | Surface under a record on hover. |
+| `--ki-table-row-hover-fg` | `#181613` | Record ink on hover. |
+| `--ki-table-row-selected-bg` | `#ffebe5` | Surface under a selected record. |
+| `--ki-table-row-selected-fg` | `#181613` | Record ink when selected. |
+| `--ki-table-skeleton` | `#ebe7e1` | Decorative loading bar fill. |
+| `--ki-table-skeleton-height` | `0.625rem` | Loading bar height. |
+| `--ki-table-skeleton-radius` | `1000px` | Loading bar corner radius. |
+| `--ki-table-sort-gap` | `0.25rem` | Space between a column label and sort indicator. |
+| `--ki-table-sort-glyph-size` | `0.875rem` | Decorative sort indicator edge. |
+| `--ki-table-touch-target-min` | `2.75rem` | Minimum width and height of controls with a coarse pointer. |
 
 ### `ki-tabs`
 

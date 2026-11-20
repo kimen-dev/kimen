@@ -513,10 +513,11 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     if (!Array.isArray(options)) {
       throw it.malformed('options', 'ChoicePicker options must be a list');
     }
+    const searchable = options.length > 15;
     const selected = it.value('value');
     const first = Array.isArray(selected) ? toText(selected[0]) : toText(selected);
     const selectedValues = new Set(
-      multiple && Array.isArray(selected)
+      multiple && !searchable && Array.isArray(selected)
         ? selected.filter((value): value is string => typeof value === 'string')
         : [],
     );
@@ -531,7 +532,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         option['label'] === undefined ? '' : toText(resolveOption(it, option['label'], index));
       const value = option['value'];
       return node(
-        multiple ? 'ki-checkbox' : 'ki-radio',
+        searchable ? 'ki-option' : multiple ? 'ki-checkbox' : 'ki-radio',
         { value, ...(selectedValues.has(value) ? { checked: true } : {}) },
         label === '' ? [] : [label],
       );
@@ -540,12 +541,19 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     if (multiple && label.trim() === '') {
       throw new Degrade('unsupported-variant', 'multipleSelection requires a group label');
     }
+    const value =
+      searchable && multiple
+        ? JSON.stringify(
+            Array.isArray(selected) ? selected.map(toText) : first === '' ? [] : [first],
+          )
+        : first;
     return [
       node(
-        multiple ? 'ki-checkbox-group' : 'ki-radio-group',
+        searchable ? 'ki-combobox' : multiple ? 'ki-checkbox-group' : 'ki-radio-group',
         {
           ...(label === '' ? {} : { label }),
-          ...(!multiple && first !== '' ? { value: first } : {}),
+          ...(searchable && multiple ? { multiple: true } : {}),
+          ...((searchable || !multiple) && value !== '' ? { value } : {}),
         },
         choices,
       ),

@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-ai-label" />
+
+# ki-ai-label
+
+Mark finished content or a field value that AI generated. Use a static mark
+for provenance at a glance and add an explanation when people can inspect
+the source.
+
+```html
+<ki-ai-label
+  explanation="Written from the incident reports of the last 30 days."
+  model="Standard"
+  generated-at="2026-11-19T10:32"
+></ki-ai-label>
+```
+
+The mark defaults to `size="sm"`. Use `size="md"` for a larger mark.
+The model and generation time are optional plain text.
+
+## Suggested field values and reversion
+
+```html
+<ki-input label="Subject" value="Incident summary">
+  <ki-ai-label slot="end" explanation="Suggested from the incident reports." revertible></ki-ai-label>
+</ki-input>
+```
+
+The directly slotted label adds “Suggested by AI” to the field description.
+Handle the bubbling `ki-revert` event to restore the original from
+application state, then remove the label when provenance no longer applies.
+
+## Customization
+
+The mark reads `--ki-ai-label-bg`, `--ki-ai-label-fg` and
+`--ki-ai-label-radius`. The disclosure has its own
+`--ki-ai-label-popover-bg` and `--ki-ai-label-popover-fg` color pair.
+The optional image and backdrop filter tokens default to `none` on both
+surfaces. Style the mark, trigger and panel with the `label`, `trigger`
+and `popover` parts.

@@ -170,6 +170,7 @@ export function buildManifest(docs, inputs = {}) {
         description: component.docs ?? '',
         whenToUse: getDocsTag(component, 'whenToUse'),
         whenNotToUse: getDocsTag(component, 'whenNotToUse'),
+        ...compactObject({ catalogAction: getDocsTag(component, 'catalogAction') || undefined }),
         attributes: (component.props ?? [])
           .filter((prop) => prop.attr)
           .map((prop) =>
