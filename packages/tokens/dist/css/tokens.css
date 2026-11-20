@@ -1625,6 +1625,10 @@
   --ki-chip-font-weight:var(--ki-typography-weight-body-medium);
   --ki-chip-line-height:var(--ki-typography-line-height-body-1);
   --ki-chip-line-height-sm:var(--ki-typography-line-height-caption-2);
+  --ki-copy-button-success-bg:var(--ki-surface-success-low-em);
+  --ki-copy-button-success-fg:var(--ki-text-success-high-em);
+  --ki-copy-button-error-bg:var(--ki-surface-danger-low-em);
+  --ki-copy-button-error-fg:var(--ki-text-danger-high-em);
   --ki-counter-size:var(--ki-notification-marker-count-size);
   --ki-counter-dot-size:var(--ki-notification-marker-dot-size);
   --ki-counter-bg:var(--ki-surface-danger-high-em);
