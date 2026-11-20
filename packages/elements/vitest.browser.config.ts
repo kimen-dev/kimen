@@ -41,6 +41,7 @@ const browserSpecPatterns = (suffix: string): string[] =>
 const inputDeviceSpecs = [
   pointerCapabilitySpec,
   'src/components/ki-icon/ki-icon.browser.spec.ts',
+  'src/components/ki-segment/ki-segment.browser.spec.ts',
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
   ...browserSpecPatterns('*.pointer'),
@@ -167,6 +168,23 @@ export default defineConfig({
             return true;
           },
         ),
+        tapWithCoarsePointer: defineBrowserCommand(async ({ page }, selector: string) => {
+          const session = await cdpSessions.get(page);
+          if (!session) throw new Error('Touch emulation must be enabled before tapping');
+          for (const frame of page.frames()) {
+            const target = frame.locator(selector);
+            if ((await target.count()) === 0) continue;
+            const bounds = await target.first().boundingBox();
+            if (!bounds) throw new Error(`Touch target is not visible: ${selector}`);
+            await session.send('Input.dispatchTouchEvent', {
+              type: 'touchStart',
+              touchPoints: [{ x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 }],
+            });
+            await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+            return;
+          }
+          throw new Error(`Touch target not found: ${selector}`);
+        }),
         // The real computed accessibility tree (Playwright's ariaSnapshot,
         // returned as a YAML role/name outline). Needed for roles set via
         // ElementInternals.role, which dom-accessibility-api (getByRole) and

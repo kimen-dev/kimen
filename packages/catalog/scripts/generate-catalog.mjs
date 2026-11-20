@@ -72,6 +72,14 @@ export function parseDefault(source, constraint) {
   if (stringMatch !== null) {
     return stringMatch[1];
   }
+  if (source.startsWith('"')) {
+    try {
+      const value = JSON.parse(source);
+      return typeof value === 'string' ? value : undefined;
+    } catch {
+      return undefined;
+    }
+  }
   if (source === 'true' || source === 'false') {
     return source === 'true';
   }
@@ -143,7 +151,12 @@ const sortedRecord = (entries) =>
  */
 export function buildCatalog(
   manifest,
-  { elementsVersion, catalogTags = new Set(), primitives = NATIVE_PRIMITIVES },
+  {
+    elementsVersion,
+    catalogTags = new Set(),
+    catalogActions = new Map(),
+    primitives = NATIVE_PRIMITIVES,
+  },
 ) {
   const violations = [];
   const components = new Map();
@@ -209,11 +222,16 @@ export function buildCatalog(
         }
         props.set(attribute.name, entry);
       }
+      const action = catalogActions.get(tag);
+      const publicEvents = declaration.events ?? [];
+      const events =
+        action === undefined ? publicEvents : publicEvents.filter(({ name }) => name === action);
+      if (action !== undefined && events.length !== 1) {
+        violations.push(`${tag}: catalog action ${action} is not a declared event`);
+      }
       components.set(tag, {
         description: declaration.description,
-        events: sortedRecord(
-          (declaration.events ?? []).map((event) => [event.name, event.description ?? '']),
-        ),
+        events: sortedRecord(events.map((event) => [event.name, event.description ?? ''])),
         props: sortedRecord(props),
         slots: sortedRecord(
           (declaration.slots ?? []).map((slot) => [slot.name ?? '', slot.description ?? '']),
@@ -282,9 +300,27 @@ if (
   const catalogTags = new Set(
     [...metadata].filter(([, entry]) => entry.catalog === true).map(([tag]) => tag),
   );
-  const output = buildCatalog(manifest, { elementsVersion, catalogTags });
-  mkdirSync(join(repoRoot, 'packages/catalog/src/generated'), { recursive: true });
-  writeFileSync(join(repoRoot, 'packages/catalog/src/generated/catalog.ts'), output, 'utf8');
+  const catalogActions = new Map(
+    [...metadata]
+      .filter(([, entry]) => entry.catalogAction !== undefined)
+      .map(([tag, entry]) => [tag, entry.catalogAction]),
+  );
+  const output = buildCatalog(manifest, { elementsVersion, catalogTags, catalogActions });
+  const schemePolicy = readFileSync(
+    join(repoRoot, 'packages/elements/src/utils/url-scheme.ts'),
+    'utf8',
+  );
+  const outputDir = join(repoRoot, 'packages/catalog/src/generated');
+  mkdirSync(outputDir, { recursive: true });
+  writeFileSync(join(outputDir, 'catalog.ts'), output, 'utf8');
+  // The default scheme rules are shared with the element; the catalog adds
+  // host origin rules without importing the built elements package. Expose
+  // the control-character predicate here for the catalog-only origin check.
+  writeFileSync(
+    join(outputDir, 'url-scheme.ts'),
+    `// GENERATED from packages/elements/src/utils/url-scheme.ts.\n${schemePolicy}\nexport { isControlOrSpace };\n`,
+    'utf8',
+  );
   process.stdout.write(
     `catalog: generated src/generated/catalog.ts (schema ${CATALOG_SCHEMA_VERSION})\n`,
   );

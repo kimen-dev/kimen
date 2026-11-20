@@ -1,0 +1,48 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-image" />
+
+# ki-image
+
+Use `ki-image` to show one informative or decorative image in a themed frame.
+The frame supports lazy loading, a native figure caption, and a fallback for
+failed or refused sources.
+
+## Examples
+
+Choose a fixed ratio when the frame must keep its size throughout loading.
+The default `auto` frame reserves a 16:9 shape and uses the image's natural ratio
+once available. `fit="cover"` fills the frame. Use `fit="contain"` when every
+edge of the image must remain visible.
+
+```html
+<ki-image src="/hills.jpg" alt="Low green hills under a pale sky" ratio="16:9">
+  <span slot="caption">View from the ridge</span>
+</ki-image>
+
+<ki-image src="/floor-plan.png" alt="Office floor plan" ratio="4:3" fit="contain"></ki-image>
+```
+
+`src` accepts HTTP(S) and relative references. The guarded catalog applies any
+configured origin allowlist before it renders the element. A failed or refused
+nonempty source emits a bubbling, composed `ki-error` event. Updating `src`
+starts a new attempt.
+
+## Accessibility
+
+- Supply nonblank `alt` text for meaningful images. Describe the details that
+  matter in context. An informative image with blank or missing `alt` enters
+  fallback before loading its source.
+- A fallback preserves the supplied description in its accessible name, for
+  example `Image unavailable: Office floor plan`. Set `fallback-label` to
+  translate the prefix.
+- Add `decorative` when an image contributes no information. Its image or
+  fallback stays out of the accessibility tree. A slotted caption remains
+  available in the native `figcaption`.
+
+## Customization
+
+`--ki-image-radius` sets the default frame corners. Use
+`--ki-image-fallback-bg` and `--ki-image-fallback-fg` to theme the fallback
+surface and icon. The shadow parts are `figure`, `frame`, `image`, `fallback`,
+and `caption`.

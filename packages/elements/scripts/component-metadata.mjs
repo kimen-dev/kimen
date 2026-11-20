@@ -40,8 +40,22 @@ export function readComponentMetadata(componentRoot, tag) {
       invalid(`${section}.${field}`);
     }
   }
+  if (
+    Object.hasOwn(metadata, 'visual') &&
+    (!isRecord(metadata.visual) || typeof metadata.visual.material3Dark !== 'boolean')
+  ) {
+    invalid('visual.material3Dark');
+  }
   if (Object.hasOwn(metadata, 'catalog') && typeof metadata.catalog !== 'boolean') {
     invalid('catalog');
+  }
+  if (
+    Object.hasOwn(metadata, 'catalogAction') &&
+    (metadata.catalog !== true ||
+      typeof metadata.catalogAction !== 'string' ||
+      metadata.catalogAction.trim() === '')
+  ) {
+    invalid('catalogAction');
   }
 
   if (

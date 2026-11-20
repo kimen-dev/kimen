@@ -12,11 +12,11 @@
         "$description": "Text and icon ink of the AI provenance mark."
       },
       "bg-image": {
-        "$value": "{ki.surface-image.flat}",
+        "$value": "{ki.surface-image.none}",
         "$description": "Optional image over the AI provenance fill. Defaults to none."
       },
       "backdrop-filter": {
-        "$value": "{ki.effect.component.flat-backdrop-filter}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete filter behind the AI provenance mark. Defaults to none."
       },
       "radius": {
@@ -55,7 +55,7 @@
           "$description": "Inline inset of the medium AI mark."
         },
         "icon-size": {
-          "$value": "{ki.layout.spacing.3xl}",
+          "$value": "{ki.glyph.size.sm}",
           "$description": "Sparkles icon size in the medium AI mark."
         }
       },
@@ -71,11 +71,11 @@
           "$description": "Ink of the provenance explanation and metadata."
         },
         "bg-image": {
-          "$value": "{ki.surface-image.flat}",
+          "$value": "{ki.surface-image.none}",
           "$description": "Optional image over the provenance explanation fill. Defaults to none."
         },
         "backdrop-filter": {
-          "$value": "{ki.effect.component.flat-backdrop-filter}",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
           "$description": "Complete filter behind the provenance explanation. Defaults to none."
         },
         "border": {
