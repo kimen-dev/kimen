@@ -65,6 +65,12 @@ function part(dialog: TestDialog, name: string): HTMLElement {
   return element;
 }
 
+function hasShadowFocus(control: Element): boolean {
+  // The document reports the dialog host for controls inside its shadow tree.
+  const root = control.getRootNode();
+  return root instanceof ShadowRoot && root.activeElement === control;
+}
+
 function fillsViewport(dialog: TestDialog): boolean {
   const rect = part(dialog, 'dialog').getBoundingClientRect();
   const { clientWidth, clientHeight } = document.documentElement;
@@ -216,17 +222,20 @@ it('S9 reaches the header and wraps Tab in both directions', async () => {
   mount('always', 'Save');
   await openDialog();
   await expect.element(field()).toHaveFocus();
+  await expect.element(confirm()).toBeVisible();
+  const closeButton = dismiss().element() as HTMLElement;
+  const confirmButton = confirm().element() as HTMLElement;
   // Some WebKit configurations omit buttons from sequential navigation
   // unless the native controls themselves specify tabindex.
-  (dismiss().element() as HTMLElement).tabIndex = 0;
-  (confirm().element() as HTMLElement).tabIndex = 0;
+  closeButton.tabIndex = 0;
+  confirmButton.tabIndex = 0;
 
   await userEvent.tab();
-  await expect.element(dismiss()).toHaveFocus();
+  await expect.poll(() => hasShadowFocus(closeButton)).toBe(true);
   await userEvent.tab({ shift: true });
   await expect.element(field()).toHaveFocus();
   await userEvent.tab({ shift: true });
-  await expect.element(confirm()).toHaveFocus();
+  await expect.poll(() => hasShadowFocus(confirmButton)).toBe(true);
 });
 
 it.each(['never', 'always'] as const)(
@@ -262,12 +271,14 @@ it('S12 shows the named modal, header and close focus indicator in forced colors
     await openDialog();
     await expect.element(dismiss()).toBeVisible();
     await expect.element(confirm()).toBeVisible();
+    await expect.element(field()).toHaveFocus();
 
-    (dismiss().element() as HTMLElement).tabIndex = 0;
+    const closeButton = dismiss().element() as HTMLElement;
+    closeButton.tabIndex = 0;
     (confirm().element() as HTMLElement).tabIndex = 0;
     await userEvent.tab();
-    await expect.element(dismiss()).toHaveFocus();
-    const style = getComputedStyle(dismiss().element());
+    await expect.poll(() => hasShadowFocus(closeButton)).toBe(true);
+    const style = getComputedStyle(closeButton);
     expect(style.outlineStyle).not.toBe('none');
     expect(Number.parseFloat(style.outlineWidth)).toBeGreaterThan(0);
     expect(getComputedStyle(part(dialog, 'header')).borderBlockEndStyle).toBe('solid');
