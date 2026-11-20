@@ -4,6 +4,7 @@ import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
+import type { Page } from 'playwright';
 import { defineConfig } from 'vitest/config';
 
 import { componentRegistrationPlugin } from './scripts/component-registration-plugin.mjs';
@@ -83,6 +84,50 @@ const cacheDir = cacheRoot ? join(cacheRoot, `vite/elements-browser-${browser}`)
 const provider = playwright(
   browser === 'chromium' ? { launchOptions: { channel: 'chromium' } } : undefined,
 );
+
+// Once Playwright has named an element through `aria-labelledby`, the Gecko
+// build it ships segfaults its content process on the next read of that
+// element's reflected `ariaLabelledByElements` getter, by the page or by
+// Playwright. Playwright reads the cached getter from its own script world,
+// and the cache it leaves behind breaks the read that follows. Page scripts
+// reading the getter on their own never crash, so components keep
+// `aria-labelledby`. The v0.1.0 release lost every Firefox file after
+// ki-chip-group S8: its snapshot polls name a chip's remove button, and its
+// axe scan then reads the same getter.
+//
+// Setting the attribute to its own value clears the cached getter, and the
+// next read resolves the references afresh. On Firefox, each snapshot
+// command does that in every frame and open shadow root before it returns
+// (browser-tests/aria-snapshot-reflection). Vitest's own role locators name
+// elements the same way, so a spec that reads the getter after a
+// `getByRole(…, { name })` action needs the same reset.
+async function dropGeckoLabelledByCache<T>(page: Page, read: () => Promise<T>): Promise<T> {
+  if (browser !== 'firefox') {
+    return read();
+  }
+  try {
+    return await read();
+  } finally {
+    await Promise.all(
+      page.frames().map((frame) =>
+        frame.evaluate(() => {
+          const reset = (root: Document | ShadowRoot): void => {
+            for (const element of root.querySelectorAll('*')) {
+              const references = element.getAttribute('aria-labelledby');
+              if (references !== null) {
+                element.setAttribute('aria-labelledby', references);
+              }
+              if (element.shadowRoot !== null) {
+                reset(element.shadowRoot);
+              }
+            }
+          };
+          reset(document);
+        }),
+      ),
+    );
+  }
+}
 
 // A consumer's production build of the named components, from the package
 // specifiers a consumer imports, minified and with the package's
@@ -314,7 +359,7 @@ export default defineConfig({
           for (const frame of page.frames()) {
             const locator = frame.locator(selector);
             if ((await locator.count()) > 0) {
-              return locator.first().ariaSnapshot();
+              return dropGeckoLabelledByCache(page, () => locator.first().ariaSnapshot());
             }
           }
           throw new Error(`ariaSnapshot: no frame contains ${selector}`);
@@ -470,13 +515,16 @@ export default defineConfig({
             await session.detach();
           }
         }),
+        // Resolving the role and name reads the same getter as the snapshot.
         ariaSnapshotByRole: defineBrowserCommand(
           async ({ page }, role: Parameters<typeof page.getByRole>[0], name?: string) =>
-            page
-              .locator('[data-vitest="true"]')
-              .contentFrame()
-              .getByRole(role, name === undefined ? undefined : { name })
-              .ariaSnapshot({ timeout: 1000 }),
+            dropGeckoLabelledByCache(page, () =>
+              page
+                .locator('[data-vitest="true"]')
+                .contentFrame()
+                .getByRole(role, name === undefined ? undefined : { name })
+                .ariaSnapshot({ timeout: 1000 }),
+            ),
         ),
         // Two-step arming of the visual gate (see browser-tests/README.md):
         // the harness asks the server whether the versioned ARMED marker is
