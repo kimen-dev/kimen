@@ -8,18 +8,19 @@ need continued interaction can open a non-modal drawer.
 
 ## Scenario family coverage
 
-| Family | Scenarios |
-| --- | --- |
-| Core behavior | S1–S6 |
-| Keyboard | S7–S8 |
-| Assistive technology | S9 |
-| Form participation | N/A. The drawer contributes no form value or validity. Slotted controls retain their own form behavior. |
-| Theming | S10–S13 |
+| Family | Scenarios | Justification when N/A |
+| --- | --- | --- |
+| Core behavior | S1, S2, S3, S4, S5, S6 | |
+| Keyboard path | S7, S8 | |
+| Assistive-tech outcome | S9 | |
+| Form participation | | N/A. the drawer contributes no form value or validity. Slotted controls retain their own form behavior. |
+| Theming | S10, S11, S12, S13 | |
 
 ## Interpretations
 
 - A drawer uses the same native dialog mechanism and focus utilities as
   `ki-dialog`. The scrim blocks interaction and does not dismiss the sheet.
+  The non-modal sheet uses fixed positioning in the page's stacking context.
   Agent's choice, pending founder confirmation.
 - A single `ki-close` request precedes dismissal by button, Escape, swipe,
   method, or a change to the open state. It reports a reason and can be
@@ -33,6 +34,9 @@ need continued interaction can open a non-modal drawer.
   down by at least 48 CSS pixels and farther down than sideways. The handle
   is decorative for assistive technology. Agent's choice, pending founder
   confirmation.
+- Touch density is opt-in, including on coarse pointers. The Close button
+  reaches the shared 44 CSS pixel minimum when touch density is selected.
+  Agent's choice, pending founder confirmation.
 - The size sets the side width or bottom height cap, bounded by the viewport.
   The sheet animates on entry and closes synchronously after an accepted
   request. Agent's choice, pending founder confirmation.

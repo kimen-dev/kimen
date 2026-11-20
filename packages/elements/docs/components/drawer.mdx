@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-drawer" />
+
+# ki-drawer
+
+A sheet for editing details beside a list or showing a short set of actions
+at the bottom of the screen. Side sheets follow the page direction. Use
+`placement="bottom"` for a sheet with a swipe handle.
+
+```html
+<ki-drawer heading="Edit incident" placement="end" size="20rem" open>
+  <ki-input label="Title" value="Search index rebuild"></ki-input>
+  <ki-button slot="header-actions" variant="ghost">Help</ki-button>
+  <ki-button slot="footer" type="button" variant="primary">Save</ki-button>
+</ki-drawer>
+```
+
+Call `show()` from the trigger or bind `open` to application state. The
+heading supplies the accessible name, focus enters the drawer and Tab stays
+inside while it is modal. Escape and the built-in Close button request
+dismissal. On an accepted dismissal, focus returns to the previously
+focused trigger. Use `modal="false"` when people should keep interacting
+with the page. Mount a non-modal drawer outside transformed containers so
+it can align to the viewport. Escape dismisses it while it contains focus.
+
+Listen for `ki-close` and call `event.preventDefault()` to keep the drawer
+open, for example while the app has unsaved edits. `detail.reason` reports
+`button`, `escape`, `method`, or `swipe`. Wire footer actions to the app
+and call `close()` when their work is complete. Translate the built-in
+button with `close-label`.
+
+The `size` property overrides `--ki-drawer-size`, which defaults to 18rem.
+It sets the side sheet width or the bottom sheet's maximum height. Customize
+the fill with `--ki-drawer-bg`, `--ki-drawer-fg`, and
+`--ki-drawer-bg-image`. The raised sheet uses `--ki-drawer-shadow`, rounds
+its inner corners with `--ki-drawer-radius`, and shares
+`--ki-dialog-backdrop-bg` with the dialog.

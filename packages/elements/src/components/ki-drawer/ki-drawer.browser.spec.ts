@@ -1,4 +1,5 @@
 // @spec:103-ki-drawer
+import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
@@ -24,7 +25,7 @@ type CloseEvent = CustomEvent<{ reason: string }>;
 beforeAll(() => {
   defineInput();
   defineCustomElement();
-  styles.textContent = tokensCss;
+  styles.textContent = `${tokensCss}\n${material3Css}`;
   document.head.append(styles);
   document.body.append(fixture);
 });
@@ -32,7 +33,9 @@ beforeAll(() => {
 afterEach(async () => {
   fixture.replaceChildren();
   fixture.removeAttribute('dir');
+  fixture.removeAttribute('data-ki-theme');
   fixture.removeAttribute('style');
+  document.documentElement.style.removeProperty('--ki-surface-s1');
   await browser.emulateForcedColors(null);
   await parkPointer();
 });
@@ -295,6 +298,13 @@ it('S7 focuses a slotted field, wraps Tab and restores the trigger on Escape', a
   await expect.element(trigger).toHaveFocus();
 });
 
+it('S7 honors an autofocus footer action on an initially open drawer', async () => {
+  mount({ open: '' }, '<button slot="footer" type="button" autofocus tabindex="0">Cancel</button>');
+
+  await expect.element(dialog()).toBeVisible();
+  await expect.element(page.getByRole('button', { name: 'Cancel' })).toHaveFocus();
+});
+
 it('S8 closes a bottom sheet via its localized Close button', async () => {
   const drawer = mount({ placement: 'bottom', 'close-label': 'Dismiss sheet' });
   await open(drawer);
@@ -303,6 +313,15 @@ it('S8 closes a bottom sheet via its localized Close button', async () => {
   await userEvent.keyboard('{Enter}');
 
   await expect.element(dialog()).not.toBeInTheDocument();
+});
+
+it('S8 restores the default name when the close-label attribute is cleared', async () => {
+  const drawer = mount({ 'close-label': 'Dismiss sheet' });
+  await open(drawer);
+
+  drawer.removeAttribute('close-label');
+
+  await expect.element(closeButton()).toHaveAccessibleName('Close');
 });
 
 it.each([true, false])(
@@ -320,7 +339,7 @@ it.each([true, false])(
 );
 
 it('S10 follows the raised surface and size tokens and accepts an explicit bottom height cap', async () => {
-  fixture.style.setProperty('--ki-surface-s1', 'rgb(242, 246, 250)');
+  document.documentElement.style.setProperty('--ki-surface-s1', 'rgb(242, 246, 250)');
   fixture.style.setProperty('--ki-drawer-size', '220px');
   const drawer = mount({}, '<p style="min-block-size:400px">Incident details</p>');
 
@@ -337,20 +356,24 @@ it('S10 follows the raised surface and size tokens and accepts an explicit botto
   await expect.poll(() => body.tabIndex).toBe(0);
 });
 
-it('S12 preserves the drawer edge and close affordance in forced colors', async (test) => {
-  await browser.emulateForcedColors('active');
-  if (!matchMedia('(forced-colors: active)').matches)
-    test.skip('Browser lacks forced-colors emulation');
-  const drawer = mount();
-  drawer.style.setProperty('--ki-drawer-bg-image', 'linear-gradient(red, blue)');
+it.for(['onmars', 'material3'])(
+  'S12 preserves the drawer edge and close affordance in %s forced colors',
+  async (theme, test) => {
+    await browser.emulateForcedColors('active');
+    if (!matchMedia('(forced-colors: active)').matches)
+      test.skip('Browser lacks forced-colors emulation');
+    fixture.setAttribute('data-ki-theme', theme);
+    const drawer = mount();
+    drawer.style.setProperty('--ki-drawer-bg-image', 'linear-gradient(red, blue)');
 
-  await open(drawer);
+    await open(drawer);
 
-  const surface = getComputedStyle(part(drawer, 'dialog'));
-  const close = getComputedStyle(part(drawer, 'close'));
-  expect(surface.backgroundImage).toBe('none');
-  expect(Number.parseFloat(surface.borderBlockStartWidth)).toBeGreaterThan(0);
-  expect(surface.borderBlockStartColor).not.toBe(surface.backgroundColor);
-  expect(close.color).not.toBe(close.backgroundColor);
-  await expect.element(closeButton()).toBeVisible();
-});
+    const surface = getComputedStyle(part(drawer, 'dialog'));
+    const close = getComputedStyle(part(drawer, 'close'));
+    expect(surface.backgroundImage).toBe('none');
+    expect(Number.parseFloat(surface.borderBlockStartWidth)).toBeGreaterThan(0);
+    expect(surface.borderBlockStartColor).not.toBe(surface.backgroundColor);
+    expect(close.color).not.toBe(close.backgroundColor);
+    await expect.element(closeButton()).toBeVisible();
+  },
+);
