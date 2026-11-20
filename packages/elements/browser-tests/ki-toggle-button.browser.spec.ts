@@ -350,16 +350,28 @@ it.each(themeCases)(
 it.each(tags)(
   'S10 %s draws the selected shape without a transition under reduced motion',
   async (tag) => {
-    await browserCommands.emulateReducedMotion('reduce');
+    const { host, control } = await mount(tag);
+    await expectSelection(host, control, false);
+    const unselected = getComputedStyle(control).borderStartStartRadius;
+
+    // WebKit re-evaluates the motion media query in shadow roots already
+    // mounted when the preference changes.
     try {
+      await browserCommands.emulateReducedMotion('reduce');
       expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
-      const { host, control } = await mount(tag);
-      const unselected = getComputedStyle(control).borderStartStartRadius;
+      await expect.poll(() => getComputedStyle(control).transitionDuration).toBe('0s');
 
       await userEvent.click(control);
       await expectSelection(host, control, true);
-      expect(getComputedStyle(control).borderStartStartRadius).not.toBe(unselected);
-      expect(getComputedStyle(control).transitionDuration).toBe('0s');
+      await expect
+        .poll(() => {
+          const style = getComputedStyle(control);
+          return {
+            shapeChanged: style.borderStartStartRadius !== unselected,
+            transitionDuration: style.transitionDuration,
+          };
+        })
+        .toEqual({ shapeChanged: true, transitionDuration: '0s' });
     } finally {
       await browserCommands.emulateReducedMotion(null);
     }
