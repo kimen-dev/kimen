@@ -1,7 +1,8 @@
 # Installing Kimen before the packages are on npm
 
-Kimen is pre-1.0. Until `npm view @kimen/elements version` prints a version,
-use the packages from a local build of the repository.
+Kimen is pre-1.0. Until `npm view @kimen/elements version` prints 0.1.0 or
+later, use the packages from a local build of the repository. Version `0.0.0`
+on npm only reserves the name: it contains no components.
 
 ## 1. Build the repository once
 
