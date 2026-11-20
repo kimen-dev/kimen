@@ -1,0 +1,14 @@
+# Format a number
+
+Pass raw numbers and let the nearest `lang` declaration select the separators,
+spacing and symbols. A percent takes a ratio.
+
+```html
+<section lang="es-ES">
+  <ki-format-number value="1284.5"></ki-format-number>
+  <ki-format-number value="49" currency="EUR"></ki-format-number>
+  <ki-format-number value="0.496" format-style="percent" maximum-fraction-digits="1"></ki-format-number>
+  <ki-format-number value="23" format-style="unit" unit="celsius"></ki-format-number>
+  <ki-format-number value="59320" notation="compact"></ki-format-number>
+</section>
+```
