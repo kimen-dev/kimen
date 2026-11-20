@@ -48,3 +48,20 @@ test('S8 every npm package in the actual bundle has its own notice section', asy
   assert.throws(() => verifyMcpBundleNotices(bundle, ''), /missing.*notice section/u);
   assert.throws(() => verifyMcpBundleNotices('#!/usr/bin/env node\n', notice), /inventory/u);
 });
+
+test('S8 one notice covers version bumps and a licence change requires a new matching section', async () => {
+  const { verifyMcpBundleNotices } = await import('../release/mcp-tarball.mjs');
+  const rule = '='.repeat(80);
+  const notice = `${rule}\nThird-party notices: example (MIT)\n${rule}\n\nReviewed release 1.0.0.\n`;
+  const bundleWith = (packages) =>
+    `#!/usr/bin/env node\n// Bundled npm packages: ${JSON.stringify(packages)}\n`;
+  const reviewed = { name: 'example', version: '1.0.0', license: 'MIT' };
+  const upgraded = { ...reviewed, version: '2.0.0' };
+
+  const inventory = [reviewed, upgraded];
+  assert.deepEqual(verifyMcpBundleNotices(bundleWith(inventory), notice), inventory);
+  assert.throws(
+    () => verifyMcpBundleNotices(bundleWith([{ ...upgraded, license: 'Apache-2.0' }]), notice),
+    /missing the notice section for example \(Apache-2\.0\)/u,
+  );
+});

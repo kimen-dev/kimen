@@ -96,7 +96,7 @@ test('a notice file with two sections of the same title is rejected', () => {
 test('the package notices include the third-party works shipped in each tarball', () => {
   const elementNotices = [
     'QR Code generator library (MIT)',
-    '@stencil/core@4.45.3 (MIT)',
+    '@stencil/core (MIT)',
     'Lucide 1.63.0 and Feather icons (ISC and MIT)',
   ];
   for (const name of ['@kimen/elements', '@kimen/adapter-mcp-apps']) {
@@ -104,9 +104,9 @@ test('the package notices include the third-party works shipped in each tarball'
   }
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/mcp-server'], [
     ...elementNotices,
-    '@modelcontextprotocol/core@2.4.0 (Apache-2.0)',
-    '@modelcontextprotocol/server@2.4.0 (Apache-2.0)',
-    'zod@4.6.7 (MIT)',
+    '@modelcontextprotocol/core (Apache-2.0)',
+    '@modelcontextprotocol/server (Apache-2.0)',
+    'zod (MIT)',
   ]);
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], ['onmars theme fonts (SIL OFL 1.1)']);
 });
@@ -116,7 +116,7 @@ test('the Stencil notice reproduces the licence the installed runtime ships with
     read('NOTICE'),
     read('packages/elements/node_modules/@stencil/core/LICENSE'),
   ]);
-  const section = noticeSections(notice).sections.get('@stencil/core@4.45.3 (MIT)');
+  const section = noticeSections(notice).sections.get('@stencil/core (MIT)');
   assert.ok(section, 'the repository NOTICE has no Stencil client runtime section');
   const flattened = section.replaceAll(/\s+/gu, ' ');
   const upstream = stencilLicence.split('-----')[0];

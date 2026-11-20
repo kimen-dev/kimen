@@ -54,8 +54,10 @@ MIT License (applies to the upstream material identified above):
   DEALINGS IN THE SOFTWARE.
 
 ================================================================================
-Third-party notices: @stencil/core@4.45.3 (MIT)
+Third-party notices: @stencil/core (MIT)
 ================================================================================
+
+Reviewed upstream release: 4.45.3.
 
 The lazy-loading builds of @kimen/elements and the MCP Apps surface embedded
 in @kimen/adapter-mcp-apps and @kimen/mcp-server distribute Stencil's client

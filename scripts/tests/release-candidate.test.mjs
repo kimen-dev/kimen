@@ -649,7 +649,7 @@ test('S8 candidate building rejects a bundled npm package absent from the packed
   ]);
   await assert.rejects(
     buildFixture(t, fixture),
-    /missing the notice section for new-library@1\.0\.0/u,
+    /missing the notice section for new-library \(MIT\)/u,
   );
 });
 
