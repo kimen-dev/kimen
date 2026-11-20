@@ -128,13 +128,18 @@ it.each(['Space', 'Enter'])(
 );
 
 it('S5 exposes the expanded call and its status without a separate spinner announcement', async () => {
-  const host = await mount('name="run_tests" status="running" open');
-  await expect.element(page.getByText('Running', { exact: true })).toBeVisible();
+  const host = await mount(
+    'name="run_tests" status="running" open',
+    '<span slot="input">suite.ts</span>',
+  );
+  await expect.element(page.getByText('suite.ts', { exact: true })).toBeVisible();
   const tree = await browser.ariaSnapshot('ki-tool-call details');
 
+  // Playwright serializes native details as a group without its expanded state.
+  expect(disclosure().open).toBe(true);
   expect(tree).toContain('run_tests');
   expect(tree).toContain('Running');
-  expect(tree).toContain('[expanded]');
+  expect(tree).toContain('suite.ts');
   expect(tree).not.toMatch(/^\s*- status\b/mu);
   expect(host.shadowRoot?.querySelector('ki-spinner')?.getAttribute('aria-hidden')).toBe('true');
 });
