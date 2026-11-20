@@ -47,9 +47,12 @@ methods, CSS custom properties and examples.
 - [ki-avatar-group](https://kimen.dev/llms/ki-avatar-group.md): a compact "who is involved" stack — the members of a shared document, project card or event row — where space deserves only the first few identities and an exact "+N" counter accounts for the rest.
 - [ki-badge](https://kimen.dev/llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.
 - [ki-button](https://kimen.dev/llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.
-- [ki-card](https://kimen.dev/llms/ki-card.md): group related media, heading, supporting text and actions into one scannable surface visually distinct from the page; fill any subset of regions.
+- [ki-button-group](https://kimen.dev/llms/ki-button-group.md): place two to five related actions together, present a primary action with a menu of alternatives, or give formatting tools one Tab stop.
+- [ki-card](https://kimen.dev/llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
 - [ki-checkbox](https://kimen.dev/llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
 - [ki-checkbox-group](https://kimen.dev/llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
+- [ki-chip](https://kimen.dev/llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
+- [ki-chip-group](https://kimen.dev/llms/ki-chip-group.md): label related chips or let people change their reading order.
 - [ki-counter](https://kimen.dev/llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](https://kimen.dev/llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](https://kimen.dev/llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
@@ -62,6 +65,9 @@ methods, CSS custom properties and examples.
 - [ki-link](https://kimen.dev/llms/ki-link.md): navigate to a page, section, or resource.
 - [ki-list](https://kimen.dev/llms/ki-list.md): settings, contacts, results or activity feeds where each item composes leading media, primary text, optional secondary text and trailing meta or a slotted control.
 - [ki-list-item](https://kimen.dev/llms/ki-list-item.md): only as a child of `ki-list`, for one read-only entry in a similar vertical collection.
+- [ki-menu](https://kimen.dev/llms/ki-menu.md): row actions, account commands, split buttons, and overflow actions.
+- [ki-menu-group](https://kimen.dev/llms/ki-menu-group.md): name a set of related actions or scope exclusive radio items in a menu.
+- [ki-menu-item](https://kimen.dev/llms/ki-menu-item.md): a command, independent checkbox action, or exclusive radio action in a menu.
 - [ki-note](https://kimen.dev/llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
 - [ki-option](https://kimen.dev/llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-progress](https://kimen.dev/llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
@@ -69,12 +75,13 @@ methods, CSS custom properties and examples.
 - [ki-radio](https://kimen.dev/llms/ki-radio.md): place inside `ki-radio-group` when a person must choose exactly one of a small visible set.
 - [ki-radio-group](https://kimen.dev/llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
 - [ki-scroller](https://kimen.dev/llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
+- [ki-segment](https://kimen.dev/llms/ki-segment.md): offer one mutually exclusive choice with text or a named icon.
+- [ki-segmented-control](https://kimen.dev/llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
 - [ki-select](https://kimen.dev/llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
-- [ki-sidebar](https://kimen.dev/llms/ki-sidebar.md): navigate more than five top-level destinations or organize application destinations in named groups.
-- [ki-sidebar-group](https://kimen.dev/llms/ki-sidebar-group.md): give related sidebar destinations a common heading.
-- [ki-sidebar-item](https://kimen.dev/llms/ki-sidebar-item.md): link to a named destination in ki-sidebar or ki-sidebar-group.
+- [ki-skeleton](https://kimen.dev/llms/ki-skeleton.md): Reserve the expected layout of a card, list, or assistant reply while it loads.
 - [ki-spinner](https://kimen.dev/llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](https://kimen.dev/llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
+- [ki-stat](https://kimen.dev/llms/ki-stat.md): Summarize one numeric metric in a dashboard or report.
 - [ki-status](https://kimen.dev/llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.
 - [ki-switch](https://kimen.dev/llms/ki-switch.md): binary settings whose change takes effect immediately, always with a slotted label.
 - [ki-tab](https://kimen.dev/llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional `start` and `end` slot media.
@@ -84,6 +91,8 @@ methods, CSS custom properties and examples.
 - [ki-toast](https://kimen.dev/llms/ki-toast.md): confirm an action that happened elsewhere on screen ("Changes saved", "Link copied"), report a background result ("Export ready"), or offer a quick undo.
 - [ki-toaster](https://kimen.dev/llms/ki-toaster.md): once per page (or once inside a modal `ki-dialog`), as the place every `ki-toast` of the application appears in: append toasts to it, or call `show()`.
 - [ki-tooltip](https://kimen.dev/llms/ki-tooltip.md): add a brief clarifying hint for an icon-only, abbreviated, or otherwise ambiguous control when the same information is discoverable elsewhere in the interface.
+- [ki-tree](https://kimen.dev/llms/ki-tree.md): browse nested files, categories or an outline, select items in a hierarchy, or navigate through linked destinations.
+- [ki-tree-item](https://kimen.dev/llms/ki-tree-item.md): label a file, category or destination in a hierarchy.
 - [ki-video](https://kimen.dev/llms/ki-video.md): playable content the person deliberately chooses to watch — product tours, talks, tutorials, announcements — presented as a poster with one play control.
 
 ## Generative UI

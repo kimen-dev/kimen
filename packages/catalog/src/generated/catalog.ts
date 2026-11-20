@@ -377,19 +377,81 @@ export const catalogData = {
       "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
       "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
-    "ki-card": {
-      "description": "A non-interactive card surface for grouping related content.",
+    "ki-button-group": {
+      "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
       "events": {},
-      "props": {},
+      "props": {
+        "attached": {
+          "type": "boolean",
+          "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+          "required": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode."
+        },
+        "toolbar": {
+          "type": "boolean",
+          "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+      },
+      "tag": "ki-button-group",
+      "whenNotToUse": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation.",
+      "whenToUse": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop."
+    },
+    "ki-card": {
+      "description": "A card surface for grouping related content, with an optional primary link or action.",
+      "events": {
+        "ki-activate": "Fires once when the user activates an action card by pointer or keyboard."
+      },
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "Destination for the card's title link. Supply a text heading in the\nheader slot. A nonblank href takes precedence over interactive.",
+          "format": "url"
+        },
+        "interactive": {
+          "type": "boolean",
+          "description": "Gives a titled card a primary button that emits ki-activate. Use href\nfor navigation. Keep other actions in separate controls in the card.",
+          "default": false
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "default",
+            "elevated",
+            "filled",
+            "outlined"
+          ],
+          "description": "Surface treatment. Choose elevated for a raised panel, filled for a\ntinted group or outlined for a bordered surface. Use default to follow\nthe theme's existing card treatment.",
+          "default": "default"
+        }
+      },
       "slots": {
         "": "Body region for supporting text or arbitrary composed content.",
         "footer": "Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1.",
-        "header": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics.",
+        "header": "Title region. Supply one nonempty text heading at the surrounding document level for a clickable card.",
         "media": "Leading visual region for an image, video or illustration."
       },
       "tag": "ki-card",
-      "whenNotToUse": "as a button or link target, form control, fieldset, page\nlandmark, section replacement or nested card. For an interactive card, slot\nthe button or link INSIDE a region (whole-card interactivity is a future\nfeature, not this component).",
-      "whenToUse": "group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology."
+      "whenNotToUse": "as a form field, fieldset, page landmark, section replacement\nor nested card. Use a standalone button or link for a control without\nsupporting content.",
+      "whenToUse": "group related media, a title, supporting text and actions into\none scannable surface. Set `href` for navigation or `interactive` for a\ndeclared action. Give a clickable card one text heading in the header\nslot and place secondary controls in the body or footer."
     },
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
@@ -507,6 +569,109 @@ export const catalogData = {
       "tag": "ki-checkbox-group",
       "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
       "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits."
+    },
+    "ki-chip": {
+      "description": "A compact filter toggle, removable picked value, or contextual action.",
+      "events": {
+        "ki-activate": "Emitted by an assist chip when its native button is activated.",
+        "ki-change": "Emitted after a filter chip changes its pressed state.",
+        "ki-remove": "Remove request for an input chip. Cancel it to keep application ownership of the chip."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Prevents activation, removal and moving the chip.",
+          "default": false
+        },
+        "removable": {
+          "type": "boolean",
+          "description": "Gives an input chip a trailing remove button and keyboard deletion.",
+          "default": false
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+          "default": "Remove"
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "The pressed state of a filter chip. The user can toggle it in place.",
+          "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+          "default": "md"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "assist",
+            "filter",
+            "input"
+          ],
+          "description": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter."
+        },
+        "value": {
+          "type": "string",
+          "description": "Value sent with removal, contextual activation and reorder events.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The visible text label. Use text or non-interactive markup.",
+        "start": "One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+      },
+      "tag": "ki-chip",
+      "whenNotToUse": "static status (ki-badge), primary actions (ki-button), suggested\nprompts, or mutually exclusive choices (ki-radio-group).",
+      "whenToUse": "apply independent filters, represent values selected in an entry\nfield, or offer a small contextual action alongside content."
+    },
+    "ki-chip-group": {
+      "description": "A named collection of filter, input or assist chips, with optional ordering.",
+      "events": {
+        "ki-reorder": "Emitted after moving a chip. Indices are zero-based positions in the visible chip collection."
+      },
+      "props": {
+        "focus-target": {
+          "type": "string",
+          "description": "ID of the entry field in the same document or shadow root for focus after the last chip."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the group or list.",
+          "default": ""
+        },
+        "reorder-announcement": {
+          "type": "string",
+          "description": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+          "default": "{label} moved to position {position} of {total}."
+        },
+        "reorderable": {
+          "type": "boolean",
+          "description": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+          "default": false
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "assist",
+            "filter",
+            "input"
+          ],
+          "description": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+          "default": "filter"
+        }
+      },
+      "slots": {
+        "": "Direct ki-chip children in reading order."
+      },
+      "tag": "ki-chip-group",
+      "whenNotToUse": "choose exactly one option or submit a form value.",
+      "whenToUse": "label related chips or let people change their reading order."
     },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
@@ -696,6 +861,10 @@ export const catalogData = {
           "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
           "default": false
         },
+        "expanded": {
+          "type": "boolean",
+          "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions."
+        },
         "label": {
           "type": "string",
           "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
@@ -710,6 +879,10 @@ export const catalogData = {
           "type": "string",
           "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
           "default": "Loading"
+        },
+        "pressed": {
+          "type": "boolean",
+          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
         },
         "size": {
           "type": "enum",
@@ -753,7 +926,7 @@ export const catalogData = {
         "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
       },
       "tag": "ki-icon-button",
-      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
       "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
     },
     "ki-image": {
@@ -1041,6 +1214,121 @@ export const catalogData = {
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
     },
+    "ki-menu": {
+      "description": "A popup of actions opened by a button in the same document or shadow root.",
+      "events": {
+        "ki-select": "Reports the selected action and, for a checkbox or radio, its new checked state."
+      },
+      "props": {
+        "anchor": {
+          "type": "string",
+          "description": "Literal ID of the menu button in the same document or containing shadow root.",
+          "default": ""
+        },
+        "filter-label": {
+          "type": "string",
+          "description": "Accessible name and placeholder of the filter. Omit to hide the field.",
+          "default": ""
+        },
+        "filter-results-label": {
+          "type": "string",
+          "description": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+          "default": "Matching actions: {count}"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom-end",
+            "bottom-start",
+            "top-end",
+            "top-start"
+          ],
+          "description": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+          "default": "bottom-start"
+        }
+      },
+      "slots": {
+        "": "Place ki-menu-item, ki-menu-group, and ki-divider here.",
+        "header": "Informational content above the actions, such as account details."
+      },
+      "tag": "ki-menu",
+      "whenNotToUse": "form values, navigation destinations, or long action lists.",
+      "whenToUse": "row actions, account commands, split buttons, and overflow actions."
+    },
+    "ki-menu-group": {
+      "description": "A named group of related actions in a ki-menu.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Visible and accessible group name.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The ki-menu-item and ki-divider children of the group."
+      },
+      "tag": "ki-menu-group",
+      "whenNotToUse": "standalone sections or nested menus.",
+      "whenToUse": "name a set of related actions or scope exclusive radio items in a menu."
+    },
+    "ki-menu-item": {
+      "description": "A pointer and keyboard action within a ki-menu.",
+      "events": {},
+      "props": {
+        "checked": {
+          "type": "boolean",
+          "description": "Checked state for checkbox and radio actions.",
+          "default": false
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disabled actions remain discoverable via menu navigation.",
+          "default": false
+        },
+        "shortcut": {
+          "type": "string",
+          "description": "Display-only keyboard shortcut. Applications own shortcut registration.",
+          "default": ""
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral"
+          ],
+          "description": "Apply the danger tone to a destructive action.",
+          "default": "neutral"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "checkbox",
+            "item",
+            "radio"
+          ],
+          "description": "Action role. A checkbox stays open. A radio selects one action within its group.",
+          "default": "item"
+        },
+        "value": {
+          "type": "string",
+          "description": "Action identifier reported by the parent menu.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The action's visible label.",
+        "start": "One decorative icon or avatar before the label."
+      },
+      "tag": "ki-menu-item",
+      "whenNotToUse": "standalone controls, navigational links, or form options.",
+      "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu."
+    },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",
       "events": {},
@@ -1266,6 +1554,72 @@ export const catalogData = {
       "whenNotToUse": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis.",
       "whenToUse": "a bounded region inside a view whose content can outgrow it:\nchat or message panes, code and log blocks, tag rows, sidebar navigation,\ntall menus inside cards. Give it bounds (its size comes entirely from your\nlayout) and a `label` (required: the accessible name of the scroll\nregion). Scrolling stays native — wheel, touch, keyboard and indicator\ndrag operate the viewport directly."
     },
+    "ki-segment": {
+      "description": "A single choice in a ki-segmented-control.",
+      "events": {},
+      "props": {
+        "aria-label": {
+          "type": "string",
+          "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Excludes the option from selection and keyboard navigation.",
+          "default": false
+        },
+        "value": {
+          "type": "string",
+          "description": "Required nonempty option identifier. Each value must be unique in its group.",
+          "required": true
+        }
+      },
+      "slots": {
+        "": "Noninteractive visible option label.",
+        "start": "Decorative leading icon. Supply aria-label for an icon-only option."
+      },
+      "tag": "ki-segment",
+      "whenNotToUse": "standalone, for navigation, or for form submission.",
+      "whenToUse": "offer one mutually exclusive choice with text or a named icon."
+    },
+    "ki-segmented-control": {
+      "description": "A compact control for one in-place choice among two to five options.",
+      "events": {
+        "ki-change": "Emitted once per changed user choice with the new resolved value."
+      },
+      "props": {
+        "full-width": {
+          "type": "boolean",
+          "description": "Distribute the available inline space evenly among all segments.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Required accessible name of the group. Use a short name for the setting.",
+          "required": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm",
+            "xs"
+          ],
+          "description": "Track size. The default heights are 28, 32 and 40 CSS px respectively;\nsurrounding density settings can increase or decrease targets.",
+          "default": "md"
+        },
+        "value": {
+          "type": "string",
+          "description": "Resolved selected value. Set it to choose an option programmatically.\nOmit it to select the first available option. The value is empty when\nthere are no available options. Programmatic changes are silent.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "Two to five direct ki-segment children with distinct nonempty values."
+      },
+      "tag": "ki-segmented-control",
+      "whenNotToUse": "switching between panels (ki-tabs), submitted form choices\n(ki-radio-group), or more than five options (ki-select).",
+      "whenToUse": "apply a chart range, view mode, or another immediate setting."
+    },
     "ki-select": {
       "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
@@ -1333,99 +1687,49 @@ export const catalogData = {
       "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
       "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited."
     },
-    "ki-sidebar": {
-      "description": "Side navigation with an expanded panel and an optional icon rail.",
-      "events": {
-        "ki-sidebar-change": "Reports the new collapsed state after a user toggle. Programmatic writes are silent."
-      },
-      "props": {
-        "collapse-label": {
-          "type": "string",
-          "description": "Accessible toggle name while the sidebar is expanded.",
-          "default": "Collapse sidebar"
-        },
-        "collapsed": {
-          "type": "boolean",
-          "description": "Display the icon rail. May also be assigned by the application.",
-          "default": false
-        },
-        "collapsible": {
-          "type": "boolean",
-          "description": "Show the expand and collapse control.",
-          "default": false
-        },
-        "expand-label": {
-          "type": "string",
-          "description": "Accessible toggle name while the sidebar is collapsed.",
-          "default": "Expand sidebar"
-        },
-        "label": {
-          "type": "string",
-          "description": "Accessible name for the navigation landmark.",
-          "default": "Main"
-        }
-      },
-      "slots": {
-        "": "Navigation routes and groups, in reading order.",
-        "brand": "Presentational brand content for the expanded panel.",
-        "footer": "Account trigger or other app-owned content available in both modes."
-      },
-      "tag": "ki-sidebar",
-      "whenNotToUse": "for a few destinations, use top navigation. For mobile\nnavigation, use a mobile navigation pattern or a drawer.",
-      "whenToUse": "navigate more than five top-level destinations or organize\napplication destinations in named groups."
-    },
-    "ki-sidebar-group": {
-      "description": "A named list of routes within sidebar navigation.",
+    "ki-skeleton": {
+      "description": "Decorative placeholder shapes that reserve space for loading content.",
       "events": {},
       "props": {
-        "label": {
+        "animated": {
+          "type": "boolean",
+          "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+          "default": true
+        },
+        "block-size": {
           "type": "string",
-          "description": "Visible group heading and accessible name of the nested list.",
-          "required": true
-        }
-      },
-      "slots": {
-        "": "One or more ki-sidebar-item routes."
-      },
-      "tag": "ki-sidebar-group",
-      "whenNotToUse": "as a destination or outside ki-sidebar.",
-      "whenToUse": "give related sidebar destinations a common heading."
-    },
-    "ki-sidebar-item": {
-      "description": "One destination in a sidebar.",
-      "events": {},
-      "props": {
-        "count": {
+          "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape."
+        },
+        "inline-size": {
+          "type": "string",
+          "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space."
+        },
+        "lines": {
           "type": "number",
-          "description": "Positive unread count. Fractional values round down."
+          "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 20
         },
-        "count-label": {
+        "shape": {
+          "type": "enum",
+          "values": [
+            "circle",
+            "rect",
+            "text"
+          ],
+          "description": "Match the placeholder to the expected text, avatar, or rectangular content.",
+          "default": "text"
+        },
+        "size": {
           "type": "string",
-          "description": "Accessible count template, using the {label} and {count} placeholders.",
-          "default": "{label}, {count} new"
-        },
-        "current": {
-          "type": "boolean",
-          "description": "Mark this destination as the current page.",
-          "default": false
-        },
-        "href": {
-          "type": "string",
-          "description": "Destination resolved by a native link. Omit for a static row.",
-          "format": "url"
-        },
-        "icon-name": {
-          "type": "string",
-          "description": "Name of a registered Lucide glyph. Import its per-icon entry point first."
+          "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence."
         }
       },
-      "slots": {
-        "": "The destination name as text or static inline content.",
-        "start": "One decorative icon that overrides icon-name."
-      },
-      "tag": "ki-sidebar-item",
-      "whenNotToUse": "for commands, nested controls, or standalone links outside the sidebar.",
-      "whenToUse": "link to a named destination in ki-sidebar or ki-sidebar-group.\nRegister ki-tooltip once when using direct component imports for a rail."
+      "slots": {},
+      "tag": "ki-skeleton",
+      "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
+      "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
     },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",
@@ -1553,6 +1857,60 @@ export const catalogData = {
       "tag": "ki-stack",
       "whenNotToUse": "for page shells, painted grouping (use ki-card), or tabular data.",
       "whenToUse": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing."
+    },
+    "ki-stat": {
+      "description": "A key metric with an optional comparison against a reference period.",
+      "events": {},
+      "props": {
+        "delta": {
+          "type": "number",
+          "description": "Optional finite change. Its sign determines the trend and its magnitude is displayed."
+        },
+        "delta-label": {
+          "type": "string",
+          "description": "Localized comparison period, such as \"vs last week\"."
+        },
+        "direction": {
+          "type": "enum",
+          "values": [
+            "higher-is-better",
+            "lower-is-better",
+            "neutral"
+          ],
+          "description": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+          "default": "higher-is-better"
+        },
+        "down-label": {
+          "type": "string",
+          "description": "Localized spoken direction for a negative delta.",
+          "default": "down"
+        },
+        "label": {
+          "type": "string",
+          "description": "Localized name of the metric, such as \"Median render time\".",
+          "required": true
+        },
+        "unit": {
+          "type": "string",
+          "description": "Literal suffix for decimal readings, such as \"ms\"."
+        },
+        "up-label": {
+          "type": "string",
+          "description": "Localized spoken direction for a positive delta.",
+          "default": "up"
+        },
+        "value": {
+          "type": "number",
+          "description": "Current finite reading.",
+          "required": true
+        }
+      },
+      "slots": {
+        "chart": "An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+      },
+      "tag": "ki-stat",
+      "whenNotToUse": "Present a sequence of readings or inspect multiple data\npoints. Use a chart or table with a text equivalent for that data.",
+      "whenToUse": "Summarize one numeric metric in a dashboard or report. Set\ndirection to lower-is-better for metrics such as latency and neutral for\nchanges that carry no favorable or unfavorable meaning."
     },
     "ki-status": {
       "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",
@@ -1908,6 +2266,85 @@ export const catalogData = {
       "tag": "ki-tooltip",
       "whenNotToUse": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases.",
       "whenToUse": "add a brief clarifying hint for an icon-only, abbreviated, or\notherwise ambiguous control when the same information is discoverable\nelsewhere in the interface."
+    },
+    "ki-tree": {
+      "description": "A named hierarchy with collapsible branches and independent keyboard focus.",
+      "events": {
+        "ki-selection-change": "Emitted after a user selection changes. Selected items are in tree order."
+      },
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the hierarchy. Localize it and make it distinct among nearby trees.",
+          "default": "Tree"
+        },
+        "selection": {
+          "type": "enum",
+          "values": [
+            "multiple",
+            "none",
+            "single"
+          ],
+          "description": "Use none for navigation, single for one selected item, or multiple for checkable branches.",
+          "default": "single"
+        }
+      },
+      "slots": {
+        "": "Direct ki-tree-item children in reading order."
+      },
+      "tag": "ki-tree",
+      "whenNotToUse": "flat lists of peers, menus of commands, or submitted form values.",
+      "whenToUse": "browse nested files, categories or an outline, select items in\na hierarchy, or navigate through linked destinations."
+    },
+    "ki-tree-item": {
+      "description": "An item or expandable branch inside a ki-tree.",
+      "events": {
+        "ki-collapse": "Emitted when an existing branch collapses.",
+        "ki-expand": "Emitted when an existing branch expands.",
+        "ki-load": "Emitted once when an empty lazy branch first opens. The listener supplies the children."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Keep the row discoverable by keyboard while preventing user activation.",
+          "default": false
+        },
+        "expanded": {
+          "type": "boolean",
+          "description": "Whether a branch reveals its children. Has no visible effect on a leaf.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Native destination of the row. Prefer selection=\"none\" for navigation trees.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Optional decorative icon. Import the named Kimen glyph before mounting the tree."
+        },
+        "lazy": {
+          "type": "boolean",
+          "description": "Request children on the first empty expansion. Clear it to finish an empty load.",
+          "default": false
+        },
+        "loading-label": {
+          "type": "string",
+          "description": "Localized text for the spinner status during an outstanding lazy request.",
+          "default": "Loading"
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "Selected state. The tree keeps it in sync with single selection or fully checked branches.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "The row label and directly nested ki-tree-item children."
+      },
+      "tag": "ki-tree-item",
+      "whenNotToUse": "standalone controls, form checkboxes, or a row with other\ninteractive descendants.",
+      "whenToUse": "label a file, category or destination in a hierarchy. Nest more\nki-tree-item children for a branch."
     },
     "ki-video": {
       "description": "A themed video surface: a calm poster facade with exactly one accessible\nplay control over a slotted native `<video>` element. From the first\nactivation on, playback, scrubbing, volume, captions and fullscreen belong\nto the native player — Kimen ships no custom chrome.",

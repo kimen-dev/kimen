@@ -63,6 +63,8 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-toolbar',
   'ki-tooltip',
   'ki-top-nav',
+  'ki-tree',
+  'ki-tree-item',
 ]);
 
 /** Both schemes are alternately themed when the component contract requires it. */

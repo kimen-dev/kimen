@@ -1,0 +1,25 @@
+---
+title: Tree item
+description: A row or a collapsible branch inside a Tree.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+
+Use a tree item inside [Tree](../tree/) or another tree item. A row contains
+its text label and any nested child items. Set `expanded` to start with its
+children visible. A disabled row remains reachable with the arrow keys.
+
+Import the glyph module before using its name in `icon-name`. The label
+text names the row and the icon is decorative.
+
+```js
+import '@kimen/elements/icons/file-code';
+```
+
+## API reference
+
+<CemApi tag="ki-tree-item" />
+
+## Workshop
+
+[Open Tree item in Storybook](/storybook/?path=/docs/docs-components-ki-tree-item--docs)

@@ -461,7 +461,6 @@
   --ki-checkbox-indeterminate-active-border:var(--ki-outline-none);
   --ki-checkbox-indeterminate-disabled-bg:var(--ki-surface-disabled-low-em);
   --ki-checkbox-indeterminate-disabled-fg:var(--ki-text-muted);
-  --ki-date-picker-radius:var(--ki-menu-layout-surface-radius);
   --ki-dialog-radius:var(--ki-radius-big-component-lg);
   --ki-dialog-gap:var(--ki-space-5xl);
   --ki-dialog-bg:var(--ki-surface-s3);
@@ -714,6 +713,7 @@
   --ki-tooltip-font-size:var(--ki-font-size-caption-2);
   --ki-tooltip-line-height:var(--ki-font-line-height-caption-2);
   --ki-tooltip-shadow:0 0 0 0 var(--ki-color-transparent-black);
+  --ki-tree-radius:var(--ki-corner-action-frame);
   --ki-video-frame-radius:var(--ki-radius-component-lg);
   --ki-video-scrim-color:var(--ki-transparent-inverse);
   --ki-video-scrim-padding:var(--ki-space-zero);
