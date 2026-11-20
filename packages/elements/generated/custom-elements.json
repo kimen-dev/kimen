@@ -6476,7 +6476,8 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "ID of the entry field in the same document or shadow root for focus after the last chip."
+              "description": "ID of the entry field in the same document or shadow root for focus after the last chip.",
+              "format": "idref"
             },
             {
               "name": "label",
@@ -6525,7 +6526,8 @@
               },
               "description": "ID of the entry field in the same document or shadow root for focus after the last chip.",
               "attribute": "focus-target",
-              "reflects": true
+              "reflects": true,
+              "format": "idref"
             },
             {
               "kind": "field",
@@ -9001,7 +9003,8 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
+              "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
+              "format": "idref"
             },
             {
               "name": "label",
@@ -9086,7 +9089,8 @@
               },
               "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
               "attribute": "from",
-              "reflects": false
+              "reflects": false,
+              "format": "idref"
             },
             {
               "kind": "field",
@@ -10059,7 +10063,8 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property."
+              "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property.",
+              "format": "idref"
             },
             {
               "name": "max",
@@ -10110,7 +10115,8 @@
               },
               "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property.",
               "attribute": "for",
-              "reflects": true
+              "reflects": true,
+              "format": "idref"
             },
             {
               "kind": "field",
@@ -18777,7 +18783,8 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Literal ID of the menu button in the same document or containing shadow root."
+              "description": "Literal ID of the menu button in the same document or containing shadow root.",
+              "format": "idref"
             },
             {
               "name": "filter-label",
@@ -18827,7 +18834,8 @@
               "default": "''",
               "description": "Literal ID of the menu button in the same document or containing shadow root.",
               "attribute": "anchor",
-              "reflects": false
+              "reflects": false,
+              "format": "idref"
             },
             {
               "kind": "field",
@@ -21869,7 +21877,8 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "ID of the button in the same document or shadow tree."
+              "description": "ID of the button in the same document or shadow tree.",
+              "format": "idref"
             },
             {
               "name": "kind",
@@ -21942,7 +21951,8 @@
               },
               "description": "ID of the button in the same document or shadow tree.",
               "attribute": "for",
-              "reflects": false
+              "reflects": false,
+              "format": "idref"
             },
             {
               "kind": "field",
@@ -35469,7 +35479,8 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "ID of the rich tooltip's external trigger in the same document or shadow tree."
+              "description": "ID of the rich tooltip's external trigger in the same document or shadow tree.",
+              "format": "idref"
             },
             {
               "name": "heading",
@@ -35508,7 +35519,8 @@
               },
               "description": "ID of the rich tooltip's external trigger in the same document or shadow tree.",
               "attribute": "for",
-              "reflects": false
+              "reflects": false,
+              "format": "idref"
             },
             {
               "kind": "field",

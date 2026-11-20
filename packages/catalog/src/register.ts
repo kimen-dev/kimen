@@ -80,7 +80,7 @@ const propConstraintSchema = z.strictObject({
   deprecatedValues: z.array(z.string()).optional(),
   description: z.string(),
   documentedValues: z.array(z.string()).optional(),
-  format: z.literal('url').optional(),
+  format: z.enum(['idref', 'url']).optional(),
   maximum: z.number().optional(),
   minimum: z.number().optional(),
   required: z.boolean().optional(),
@@ -387,7 +387,7 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
     required?: boolean;
     minimum?: number;
     maximum?: number;
-    format?: 'url';
+    format?: 'idref' | 'url';
     allowEmpty?: boolean;
   } = { description: input.description, type: input.type };
   if (input.values !== undefined) {

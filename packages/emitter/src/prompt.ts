@@ -27,7 +27,8 @@ function propLine(name: string, constraint: CatalogPropConstraint): string {
     constraint.type === 'enum'
       ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
       : `${constraint.type}${rangeText(constraint)}`;
-  const url = constraint.format === 'url' ? ', URL' : '';
+  const url =
+    constraint.format === 'url' ? ', URL' : constraint.format === 'idref' ? ', node id' : '';
   const emptiable = constraint.allowEmpty === true ? ', may be empty' : '';
   const required = constraint.required === true ? `, required${emptiable}` : '';
   const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
@@ -161,6 +162,7 @@ export function catalogPrompt(
     '- Only the components listed below exist. Only their listed props. Enum props allow only their listed values.',
     '- Props marked "required" MUST be present with a non-blank value unless marked "may be empty": a spec that omits one is rejected.',
     '- Props marked "URL" accept only http(s) URLs or relative references; every other scheme is rejected, and the host may accept only absolute URLs of the origins it allows.',
+    '- Props marked "node id" name another node of the same spec: give that node an "id" and use the same value; any other value is rejected.',
     '- Every "action" you bind MUST appear in the top-level "actions" list; actions are named intents delivered to the host as data.',
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',
     '- Styling is not expressible in a spec; appearance belongs to the host theme.',

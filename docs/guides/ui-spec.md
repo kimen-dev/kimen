@@ -57,6 +57,12 @@ Each **node** has up to five fields:
   rejected (`invalid-id`), a repeated one too (`duplicate-id`). Renderers
   never write it to the DOM; it is the address a live surface's operations
   target (see [Live surface](#live-surface)). Catalog schema `1.1.0`.
+  A prop the catalog marks `format: "idref"` (a menu's `anchor`, a popover's
+  or tooltip's `for`, a copy button's `from`, …) names another node by this
+  id, and only a node of the same spec or live surface: any other value is
+  rejected (`invalid-reference`). The renderer gives the named node a DOM id
+  of its own, so a reference never reaches an element of the host page.
+  Catalog schema `1.6.0`.
 - **`component`** — a catalog tag (`ki-button`, `ki-card`, …). A tag outside
   the catalog is rejected (`unknown-component`); there is no escape hatch to
   arbitrary elements.
@@ -239,10 +245,11 @@ On top of catalog validation the renderer enforces the safe-render semantics:
   (`ambiguous-activation-event`). A click activation suppresses the native
   default and stops bubbling, so a button inside a form submits nothing; the
   innermost bound node claims each interaction, so nested action-bound nodes
-  dispatch once. When the catalog types
-  a component's `type` prop with a `button` value and the spec leaves it
-  unset, the renderer pins `type="button"` so no native submit path runs
-  alongside the action.
+  dispatch once. A spec owns no form, so it never submits or resets one of
+  the host page's: a form-action `type` (an enum offering `button` with
+  `submit` or `reset`) accepts only `button`, and the renderer pins
+  `type="button"` on every such node the spec leaves unset, bound to an
+  action or not (spec 152).
 
 Every rejection is a `RenderDiagnostic` — `path`, `rule`, `message` and the
 offending `value` — pure data, safe to display anywhere because a host renders
