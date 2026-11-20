@@ -1,0 +1,11 @@
+{
+  "ki": {
+    "markdown": {
+      "text-color": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Text color used by the ki-markdown component."
+      }
+    }
+  }
+}
