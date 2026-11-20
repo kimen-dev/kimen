@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Recipes/Anchored filters and toggletips" />
+
+# Anchored filters and toggletips
+
+Place a trigger and its popover in the same document or shadow tree. A filter popover can hold a form with its own submission handler.
+
+```html
+<ki-button id="incident-filter-button" type="button" variant="secondary">
+  Filters
+</ki-button>
+<ki-popover for="incident-filter-button" label="Incident filters" placement="bottom-start">
+  <form>
+    <label>Search <input name="search" /></label>
+    <button type="submit">Apply</button>
+  </form>
+</ki-popover>
+```
+
+## Keyboard walkthrough
+
+1. Tab to **Filters**, then press Enter or Space. Focus moves to **Search**.
+2. Press Tab to reach **Apply** and continue to the next control on the page.
+3. With the popover open, press Escape. The popover closes and the trigger receives focus.
+4. Open a text-only toggletip. Its status text is announced politely and the trigger retains focus.
+
+## Guarded catalog
+
+The catalog exposes the default slot, the props and the two lifecycle events. The trusted host provides the trigger ID in the same tree. Mount an untrusted surface in a tree that contains only the triggers it may reference. Bind neutral actions to controls inside the popover. To listen to both lifecycle events, attach DOM listeners in the host.

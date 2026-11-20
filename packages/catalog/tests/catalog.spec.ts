@@ -88,7 +88,9 @@ describe('catalog derivation', () => {
         catalogAction === undefined ? publicEvents : [catalogAction],
       );
       for (const constraint of Object.values<{ type: string }>(entry.props)) {
-        expect(['boolean', 'number', 'string', 'enum']).toContain(constraint.type);
+        expect(['boolean', 'number', 'number-or-string', 'string', 'enum']).toContain(
+          constraint.type,
+        );
       }
     }
   });

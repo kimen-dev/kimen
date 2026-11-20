@@ -34,11 +34,18 @@ async function mountHidden(tag: string): Promise<HTMLElement> {
   document.body.append(host);
   await customElements.whenDefined(tag);
   await expect
-    .poll(() => host.shadowRoot?.adoptedStyleSheets.length ?? 0, {
-      message: `${tag} never adopted its stylesheet, so its hidden rule was not measured`,
-      timeout: STYLES_ADOPTED_DEADLINE_MS,
-    })
-    .toBeGreaterThan(0);
+    .poll(
+      () => {
+        // Table's scroll styles apply in light DOM, including while it is hidden.
+        if (tag === 'ki-table') return getComputedStyle(host).overflowX === 'auto';
+        return (host.shadowRoot?.adoptedStyleSheets.length ?? 0) > 0;
+      },
+      {
+        message: `${tag} never adopted its stylesheet, so its hidden rule was not measured`,
+        timeout: STYLES_ADOPTED_DEADLINE_MS,
+      },
+    )
+    .toBe(true);
   return host;
 }
 

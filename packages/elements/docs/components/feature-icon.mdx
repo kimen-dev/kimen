@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Layout and media/FeatureIcon" />
+
+# FeatureIcon
+
+Use a tinted icon tile beside the heading of a feature, empty state or
+settings section. Put the section name in the heading so it remains
+available to assistive technology. Use `ki-icon-button` for an action
+and `ki-badge` for a status label.
+
+```html
+<div style="display:flex;align-items:center;gap:var(--ki-space-md)">
+  <ki-feature-icon tone="success" shape="circle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="m16 9-5.5 5.5L8 12"></path>
+    </svg>
+  </ki-feature-icon>
+  <h2>Account verification</h2>
+</div>
+```
+
+The default slot also accepts a locally imported `ki-icon` with its inherited
+size. Each glyph occupies half the tile. The five sizes are `xs` through `xl`
+and default to `md`. The rounded square is the default shape.
+
+Use the `--ki-feature-icon-bg`, `--ki-feature-icon-fg`, `--ki-feature-icon-size`
+and `--ki-feature-icon-radius` custom properties on an individual tile to tune
+its colours or geometry. The paired tone tokens configure the palette for a
+theme. The background image and backdrop filter default to `none` and can be
+set through `--ki-feature-icon-bg-image` and `--ki-feature-icon-backdrop-filter`.
+The painted surface is exposed as `::part(tile)`.
+
+On a guarded surface, provide a catalogued `ki-icon` in the default slot.
+Register its glyph by importing it in the host. Bind actions to a separate
+control outside the tile.
+
+[Open the interactive FeatureIcon workshop](?path=/docs/docs-components-ki-feature-icon--docs)

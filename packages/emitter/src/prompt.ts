@@ -42,6 +42,7 @@ function exampleValue(constraint: CatalogPropConstraint): boolean | number | str
     case 'boolean':
       return true;
     case 'number':
+    case 'number-or-string':
       return Math.min(
         constraint.maximum ?? Number.POSITIVE_INFINITY,
         Math.max(constraint.minimum ?? Number.NEGATIVE_INFINITY, 1),

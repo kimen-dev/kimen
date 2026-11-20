@@ -246,6 +246,18 @@ describe('uiSpecJsonSchema', () => {
     },
   );
 
+  it('preserves both Slider value shapes in the schema', () => {
+    const validate = compile(deriveOrThrow(catalogData, { components: ['ki-slider'] }));
+    const spec = (value: boolean | number | string) => ({
+      root: { component: 'ki-slider', props: { label: 'Volume', value } },
+      version: 1,
+    });
+
+    expect(validate(spec(60))).toBe(true);
+    expect(validate(spec('20,80'))).toBe(true);
+    expect(validate(spec(false))).toBe(false);
+  });
+
   it('S19 admits stable node ids in the boundary grammar and rejects any other id', () => {
     const validate = compile(deriveOrThrow(catalogData));
     const spec = (rootId: unknown, childId: unknown) => ({

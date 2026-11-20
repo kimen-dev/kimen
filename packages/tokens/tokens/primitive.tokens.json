@@ -858,6 +858,10 @@
         "$value": "14rem",
         "$description": "Default minimum inline size from the menu reference, bounded by the viewport."
       },
+      "slider-vertical": {
+        "$value": "8rem",
+        "$description": "Length of the vertical slider rail."
+      },
       "qr": {
         "$value": "8rem",
         "$description": "QR symbol edge: the Figma master's 128x128 symbol frame (nodes 12019:6059 / 16158:27560), as a dedicated surface size decoupled from ki.space (DNA brief section 3). Replaces the interim 120px ki.space.24xl declaration."
