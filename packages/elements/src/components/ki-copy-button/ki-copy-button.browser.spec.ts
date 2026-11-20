@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from 'vite
 import { commands, page, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
+import { settleFrames } from '../../../browser-tests/visual/fixtures';
 import { defineCustomElement } from '../../../dist/components/ki-copy-button.js';
 
 const styles = document.createElement('style');
@@ -261,6 +262,21 @@ it('S6 follows updated slot text and returns to the icon-only label when removed
   await expect.element(page.getByRole('button', { name: 'Copy token' })).toBeVisible();
   text.data = 'Copy ID';
   await expect.element(page.getByRole('button', { name: 'Copy ID' })).toBeVisible();
+});
+
+it('S7 resets feedback on reconnect without rendering into the detached live region', async () => {
+  const host = await mount('<ki-copy-button value="token" feedback-duration="0"></ki-copy-button>');
+  const region = status(host);
+  part(host, 'button').click();
+  await expect.poll(() => region.textContent).toBe('Copied');
+
+  host.remove();
+  await settleFrames(3);
+  expect(region.textContent).toBe('Copied');
+
+  fixture.append(host);
+  await expect.poll(() => status(host).textContent).toBe('');
+  expect(outcome(host)).toBe('copy');
 });
 
 it('S7 restores the copy glyph and clears the same live region after 1500 ms', async () => {

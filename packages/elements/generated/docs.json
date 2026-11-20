@@ -3825,6 +3825,430 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-code-block/ki-code-block.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-code-block",
+      "docs": "Presents source code with a named header, syntax colors, line controls and\nclipboard feedback.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "display a multiline example, generated code or a tool result that\nreaders should be able to inspect and copy."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "when the reader should edit the source or when the code belongs\ninline in a sentence. Use an editor or a native inline code element."
+        },
+        {
+          "name": "slot",
+          "text": "- Literal source text. Escape markup in HTML or supply a text node."
+        },
+        {
+          "name": "part",
+          "text": "figure - Framed surface around the snippet."
+        },
+        {
+          "name": "part",
+          "text": "header - Caption containing the language, filename and copy control."
+        },
+        {
+          "name": "part",
+          "text": "scroll - Focusable native code scroll area."
+        },
+        {
+          "name": "part",
+          "text": "code - The monospaced source and its optional gutter."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-code-block examples\n\nDisplay a TypeScript snippet with line numbers and a highlighted line.\n\n```html\n<ki-code-block language=\"ts\" filename=\"main.ts\" line-numbers highlight=\"2\">// Load the current sample.\nconst sample = load(3);</ki-code-block>\n```\n\nUse plain text for unsupported syntax. In HTML, escape literal angle\nbrackets so they remain part of the source.\n\n```html\n<ki-code-block language=\"html\" filename=\"example.html\" wrap copyable=\"false\">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>\n```\n\nThe guarded catalog accepts source strings in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"actions\": [\"sampleCopied\"],\n  \"root\": {\n    \"component\": \"ki-code-block\",\n    \"props\": { \"language\": \"js\", \"filename\": \"index.js\", \"lineNumbers\": true },\n    \"slots\": { \"\": [\"const sample = load(3);\"] },\n    \"action\": \"sampleCopied\"\n  }\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "copiedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "copied-label",
+          "reflectToAttr": false,
+          "docs": "Polite announcement after a successful clipboard write.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Copied'"
+            }
+          ],
+          "default": "'Copied'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "copyErrorLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "copy-error-label",
+          "reflectToAttr": false,
+          "docs": "Polite announcement after a failed clipboard write.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "\"Couldn't copy\""
+            }
+          ],
+          "default": "\"Couldn't copy\"",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "copyLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "copy-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the copy button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Copy code'"
+            }
+          ],
+          "default": "'Copy code'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "copyable",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "copyable",
+          "reflectToAttr": false,
+          "docs": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "filename",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "filename",
+          "reflectToAttr": false,
+          "docs": "File name shown in the header beside the language.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "highlight",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "highlight",
+          "reflectToAttr": false,
+          "docs": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "highlightLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "highlight-label",
+          "reflectToAttr": false,
+          "docs": "Localizable prefix for the accessible description of highlighted lines.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Highlighted lines'"
+            }
+          ],
+          "default": "'Highlighted lines'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Figure and scroll area label when there is no language or filename.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Code'"
+            }
+          ],
+          "default": "'Code'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "language",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "language",
+          "reflectToAttr": false,
+          "docs": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "lineNumbers",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "line-numbers",
+          "reflectToAttr": false,
+          "docs": "Show decorative one-based line numbers.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "wrap",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "wrap",
+          "reflectToAttr": false,
+          "docs": "Soft-wrap long lines within the available width.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-copy",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: string }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "CopyButton reports a successful write with the original source text.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-copy-error",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "CopyButton reports an unsuccessful clipboard write.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Literal source text. Escape markup in HTML or supply a text node."
+        }
+      ],
+      "parts": [
+        {
+          "name": "code",
+          "docs": "The monospaced source and its optional gutter."
+        },
+        {
+          "name": "figure",
+          "docs": "Framed surface around the snippet."
+        },
+        {
+          "name": "header",
+          "docs": "Caption containing the language, filename and copy control."
+        },
+        {
+          "name": "scroll",
+          "docs": "Focusable native code scroll area."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-copy-button"
+      ],
+      "dependencyGraph": {
+        "ki-code-block": [
+          "ki-copy-button"
+        ],
+        "ki-copy-button": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-copy-button/ki-copy-button.tsx",
       "encapsulation": "shadow",
       "tag": "ki-copy-button",
@@ -4187,13 +4611,18 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-code-block"
+      ],
       "dependencies": [
         "ki-icon"
       ],
       "dependencyGraph": {
         "ki-copy-button": [
           "ki-icon"
+        ],
+        "ki-code-block": [
+          "ki-copy-button"
         ]
       }
     },
