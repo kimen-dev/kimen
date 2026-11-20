@@ -111,7 +111,7 @@ None.
 - `--ki-card-filled-bg`: Tinted card background.
 - `--ki-card-filled-fg`: Text on the filled card background.
 - `--ki-card-footer-padding`: dimension used by the card component for footer padding.
-- `--ki-card-gap`: dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override).
+- `--ki-card-gap`: dimension used by the card component for gap (MarsUI Dashboard_info/Chart rhythm between regions 12px; material3 keeps zero via its override).
 - `--ki-card-header-padding`: dimension used by the card component for header padding.
 - `--ki-card-hover-overlay`: Pointer hover state layer on a primary-action card.
 - `--ki-card-hover-shadow`: Hover shadow of a primary-action card.

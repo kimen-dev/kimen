@@ -110,7 +110,7 @@
       "hover": {
         "bg": {
           "$value": "{ki.surface.special.light-s2-dark-s3}",
-          "$description": "color used by the select component for hover background (MarsUI hover = rest fill + hover_overlay_inverse; nearest cross-scheme step that keeps the ramp monotonic in dark).",
+          "$description": "color used by the select component for hover background (MarsUI hover = rest fill + hover overlay inverse; nearest cross-scheme step that keeps the ramp monotonic in dark).",
           "$deprecated": "Nothing paints it: on hover the trigger keeps its resting fill under the inverse hover overlay.",
           "$extensions": {
             "dev.kimen.deprecation": {
@@ -176,7 +176,7 @@
       "listbox": {
         "bg": {
           "$value": "{ki.surface.special.blur-base-light}",
-          "$description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter)."
+          "$description": "color used by the select component for listbox background (MarsUI Dropmenu panel Surface/Special/blur_base_light, opaque in onmars v2; pair with --ki-select-listbox-backdrop-filter)."
         },
         "bg-image": {
           "$value": "{ki.surface-image.listbox}",
@@ -185,7 +185,7 @@
         "backdrop-blur": {
           "$value": "{ki.blur.48}",
           "$type": "dimension",
-          "$description": "backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override).",
+          "$description": "backdrop blur used by the select component listbox panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; none in onmars v2 and material3).",
           "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
           "$extensions": {
             "dev.kimen.deprecation": {

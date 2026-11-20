@@ -114,8 +114,8 @@ None.
 - `--ki-alert-danger-icon-fg`: color used by the alert component for the danger icon glyph (MarsUI Alert master Feature-icon glyph Text/danger-high-em).
 - `--ki-alert-dismiss-active-fg`: color used by the alert component for dismiss active foreground.
 - `--ki-alert-dismiss-backdrop-filter`: Complete backdrop filter behind the alert dismiss button.
-- `--ki-alert-dismiss-border-width`: dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline).
-- `--ki-alert-dismiss-hover-bg`: color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change).
+- `--ki-alert-dismiss-border-width`: dimension used by the alert component for the dismiss chip outline (MarsUI 24px circle: 1px Outline/secondary_button_top hairline).
+- `--ki-alert-dismiss-hover-bg`: color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash).
 - `--ki-alert-dismiss-hover-fg`: color used by the alert component for dismiss hover foreground.
 - `--ki-alert-dismiss-icon-size`: dimension used by the alert component for dismiss icon size (Figma close glyph box 16px inside the 24px raised circle; repointed from 18px per the fidelity audit).
 - `--ki-alert-dismiss-radius`: dimension used by the alert component for the dismiss chip shape (MarsUI Radius/radius_round full circle).

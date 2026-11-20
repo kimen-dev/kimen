@@ -649,7 +649,7 @@
       "$type": "dimension",
       "none": {
         "$value": "0px",
-        "$description": "Blur/0: backdrop blur disabled. Themes without glass surfaces (material3) alias the component backdrop blur here."
+        "$description": "Blur/0: backdrop blur disabled. Themes without translucent surfaces (onmars v2, material3) alias the component backdrop blur here."
       },
       "8": {
         "$value": "4px",
@@ -1014,7 +1014,7 @@
         }
       },
       "onmars-v1": {
-        "$description": "Temporary onmars v1 glass images. Read the legacy stop properties on the theme scope during their deprecation window.",
+        "$description": "Temporary onmars v1 translucent images. Read the legacy stop properties on the theme scope during their deprecation window.",
         "dialog-bg-image": {
           "$value": "linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))"
         },
@@ -2822,7 +2822,7 @@
       },
       "spring": {
         "$value": [0.34, 1.56, 0.64, 1],
-        "$description": "Gentle overshoot curve for glass pops and playful state transfers (completes the MarsUI single-curve family; no Figma motion variable exists)."
+        "$description": "Gentle overshoot curve for pops and playful state transfers (completes the MarsUI single-curve family; onmars v2 drops the overshoot)."
       },
       "linear": {
         "$value": [0, 0, 1, 1],

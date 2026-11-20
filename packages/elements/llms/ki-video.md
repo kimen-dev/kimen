@@ -90,15 +90,15 @@ None.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard-accelerate`: Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).
 - `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-video-backdrop-filter`: Complete backdrop filter behind the video play scrim and glass control.
+- `--ki-video-backdrop-filter`: Complete backdrop filter behind the video play scrim and control.
 - `--ki-video-focus-ring-color`: color used by the video component for the play control focus ring: the keyboard-reachable facade control (FR-004, S6) adopts the ki-dialog/ki-icon-button focus-ring pair verbatim.
 - `--ki-video-focus-ring-offset`: dimension used by the video component for the play control focus ring offset (ki-dialog precedent).
 - `--ki-video-focus-ring-width`: dimension used by the video component for the play control focus ring width (ki-dialog precedent).
 - `--ki-video-frame-radius`: dimension used by the video component for the frame corners: Radius/big_component/radius_xs, the exact variable bound to the Size=md Video frame (node 12089:6570, specs/025-ki-video/design-extraction.md) — the sm frame's radius_md is the scale demo, not a second API value.
 - `--ki-video-motion-duration`: duration used by the video component for the facade dismissal fade: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-013; disabled under reduced motion by construction, 024 precedent).
 - `--ki-video-play-bg`: color used by the video component for the play container surface: Surface/inverse_white, the exact variable bound to the Icon_button fill (black over light, white over dark) — the control carries its own surface so glyph contrast never depends on the poster imagery (FR-008).
-- `--ki-video-play-border-color`: color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel.
-- `--ki-video-play-border-width`: dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent).
+- `--ki-video-play-border-color`: color used by the video component for the play container edge: Outline/primary_button_top, the exact variable bound to the Icon_button stroke (as ki-button; none in onmars v2).
+- `--ki-video-play-border-width`: dimension used by the video component for the play container edge width (MarsUI hairline stroke, ki-icon-button precedent).
 - `--ki-video-play-fg`: color used by the video component for the play glyph: Text/inverse_black, the counterpart of the inverse container surface (white over light, black over dark) — the glyph inherits it via currentColor; the -bg/-fg pair is swept by the contrast gate (FR-008).
 - `--ki-video-play-icon-size`: dimension used by the video component for the play glyph: the 28px Icon/Placeholder_xl slot measured inside the Size=md play container (the ki-icon-button xl icon size).
 - `--ki-video-play-radius`: dimension used by the video component for the play container shape: Radius/component/radius_xl, the exact variable bound to the Size=md Icon_button instance (14px, the ki-icon-button xl radius).

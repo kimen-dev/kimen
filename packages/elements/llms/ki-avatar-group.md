@@ -73,14 +73,14 @@ None.
 
 ## CSS custom properties
 
-- `--ki-avatar-font-family`: font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter).
+- `--ki-avatar-font-family`: font family used by the avatar component for initials: the body family (Instrument Sans in onmars v2).
 - `--ki-avatar-font-weight`: font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600).
 - `--ki-avatar-group-counter-bg`: color used by the avatar group component for the +N counter surface: Surface/special/secondary_alpha_base, the exact variable on the secondary-button-styled counter of every capped Avatar_group frame.
-- `--ki-avatar-group-counter-border-color`: color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (the secondary-button bevel top edge).
+- `--ki-avatar-group-counter-border-color`: color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (a hairline in onmars v2).
 - `--ki-avatar-group-counter-border-width`: dimension used by the avatar group component for the counter border (MarsUI 1px hairline on the counter pill).
 - `--ki-avatar-group-counter-fg`: color used by the avatar group component for the +N counter text: Text/high_em, the exact variable on the counter label.
 - `--ki-avatar-group-counter-radius`: dimension used by the avatar group component for the counter shape: Radius/component/radius_* resolves to 1000 in the MarsUI Round mode — the pill is a radius token, never an attribute.
-- `--ki-avatar-group-counter-shadow`: shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3) without its backdrop blur (glass restraint, 021 decision 3).
+- `--ki-avatar-group-counter-shadow`: shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3), flat in onmars v2; no backdrop blur (021 decision 3).
 - `--ki-avatar-group-lg-counter-font-size`: dimension used by the avatar group component for the lg counter text (body_2 15px on the 48px frame).
 - `--ki-avatar-group-lg-counter-padding-inline`: dimension used by the avatar group component for the lg counter inline padding (Space/xl 12px on the 48px frame).
 - `--ki-avatar-group-lg-overlap`: dimension used by the avatar group component for the lg member overlap (the exact -12px on the 48px Avatar_group frame 10090:2873).

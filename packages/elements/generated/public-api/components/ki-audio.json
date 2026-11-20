@@ -246,7 +246,7 @@
       "--ki-button-primary-neutral-hover-border": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge).",
+        "description": "color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2).",
         "replacement": null,
         "required": false,
         "type": null
@@ -270,7 +270,7 @@
       "--ki-button-primary-neutral-rest-border": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).",
+        "description": "color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2).",
         "replacement": null,
         "required": false,
         "type": null
@@ -302,7 +302,7 @@
       "--ki-button-quaternary-neutral-hover-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill).",
+        "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill).",
         "replacement": null,
         "required": false,
         "type": null
@@ -310,7 +310,7 @@
       "--ki-button-quaternary-neutral-hover-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
+        "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent).",
         "replacement": null,
         "required": false,
         "type": null
@@ -326,7 +326,7 @@
       "--ki-button-quaternary-neutral-rest-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
+        "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent).",
         "replacement": null,
         "required": false,
         "type": null

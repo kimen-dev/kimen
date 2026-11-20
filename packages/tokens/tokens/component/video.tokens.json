@@ -20,7 +20,7 @@
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
         "$type": "dimension",
-        "$description": "dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override.",
+        "$description": "dimension used by the video component for the backdrop of the scrim and the play container (MarsUI Blur/24, as buttons; none in onmars v2 and material3).",
         "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
         "$extensions": {
           "dev.kimen.deprecation": {
@@ -33,7 +33,7 @@
       "backdrop-filter": {
         "$type": "other",
         "$value": "{ki.effect.component.backdrop-filter}",
-        "$description": "Complete backdrop filter behind the video play scrim and glass control."
+        "$description": "Complete backdrop filter behind the video play scrim and control."
       },
       "play-size": {
         "$value": "{ki.space.16xl}",
@@ -57,11 +57,11 @@
       },
       "play-border-color": {
         "$value": "{ki.outline.primary-button-top}",
-        "$description": "color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel."
+        "$description": "color used by the video component for the play container edge: Outline/primary_button_top, the exact variable bound to the Icon_button stroke (as ki-button; none in onmars v2)."
       },
       "play-border-width": {
         "$value": "{ki.size.border.hairline}",
-        "$description": "dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent)."
+        "$description": "dimension used by the video component for the play container edge width (MarsUI hairline stroke, ki-icon-button precedent)."
       },
       "play-shadow": {
         "$value": [

@@ -118,7 +118,7 @@
       "--ki-dialog-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image.",
+        "description": "Base background color of the dialog. Onmars v1 used a transparent backing beneath its translucent image.",
         "replacement": null,
         "required": false,
         "type": null
@@ -486,7 +486,7 @@
       "--ki-state-layer-hover": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark).",
+        "description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the hover overlay (White/5 light, Black/5 dark).",
         "replacement": null,
         "required": false,
         "type": null
@@ -494,7 +494,7 @@
       "--ki-state-layer-pressed": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark).",
+        "description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: one step above the hover overlay (White/8 light, Black/8 dark).",
         "replacement": null,
         "required": false,
         "type": null

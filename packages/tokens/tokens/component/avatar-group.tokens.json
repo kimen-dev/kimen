@@ -107,7 +107,7 @@
       },
       "counter-border-color": {
         "$value": "{ki.outline.secondary-button-top}",
-        "$description": "color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (the secondary-button bevel top edge)."
+        "$description": "color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (a hairline in onmars v2)."
       },
       "counter-radius": {
         "$value": "{ki.radius.round}",
@@ -116,7 +116,7 @@
       "counter-shadow": {
         "$value": "{ki.effect.component.secondary.default.shadow}",
         "$type": "shadow",
-        "$description": "shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3) without its backdrop blur (glass restraint, 021 decision 3)."
+        "$description": "shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3), flat in onmars v2; no backdrop blur (021 decision 3)."
       }
     }
   }

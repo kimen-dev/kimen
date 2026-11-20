@@ -105,7 +105,7 @@ None.
 - `--ki-radio-unselected-disabled-bg`: color used by the radio component for unselected disabled background (MarsUI Surface/disabled_med_em Gray/300).
 - `--ki-radio-unselected-disabled-border`: color used by the radio component for unselected disabled border (same as the fill: borderless look in the master).
 - `--ki-radio-unselected-disabled-fg`: color used by the radio component for unselected disabled dot color (dot is hidden unselected; kept coherent with the disabled ladder, retiring the deprecated ki.text.muted alias).
-- `--ki-radio-unselected-hover-bg`: color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3.
+- `--ki-radio-unselected-hover-bg`: color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3.
 - `--ki-radio-unselected-hover-border`: color used by the radio component for unselected hover border.
 - `--ki-radio-unselected-hover-fg`: color used by the radio component for unselected hover foreground.
 - `--ki-radio-unselected-rest-bg`: color used by the radio component for unselected rest background.

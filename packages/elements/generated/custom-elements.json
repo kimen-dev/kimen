@@ -750,11 +750,11 @@
             },
             {
               "name": "--ki-alert-dismiss-border-width",
-              "description": "dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline)."
+              "description": "dimension used by the alert component for the dismiss chip outline (MarsUI 24px circle: 1px Outline/secondary_button_top hairline)."
             },
             {
               "name": "--ki-alert-dismiss-hover-bg",
-              "description": "color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change)."
+              "description": "color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash)."
             },
             {
               "name": "--ki-alert-dismiss-hover-fg",
@@ -1449,7 +1449,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-hover-border",
-              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-hover-fg",
@@ -1461,7 +1461,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-rest-border",
-              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-rest-fg",
@@ -1477,11 +1477,11 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-bg",
-              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill)."
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-fg",
-              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-bg",
@@ -1489,7 +1489,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-fg",
-              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             {
               "name": "--ki-control-border-width",
@@ -1757,7 +1757,7 @@
             },
             {
               "name": "--ki-avatar-font-family",
-              "description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter)."
+              "description": "font family used by the avatar component for initials: the body family (Instrument Sans in onmars v2)."
             },
             {
               "name": "--ki-avatar-font-weight",
@@ -1949,7 +1949,7 @@
           "cssProperties": [
             {
               "name": "--ki-avatar-font-family",
-              "description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter)."
+              "description": "font family used by the avatar component for initials: the body family (Instrument Sans in onmars v2)."
             },
             {
               "name": "--ki-avatar-font-weight",
@@ -1961,7 +1961,7 @@
             },
             {
               "name": "--ki-avatar-group-counter-border-color",
-              "description": "color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (the secondary-button bevel top edge)."
+              "description": "color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (a hairline in onmars v2)."
             },
             {
               "name": "--ki-avatar-group-counter-border-width",
@@ -1977,7 +1977,7 @@
             },
             {
               "name": "--ki-avatar-group-counter-shadow",
-              "description": "shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3) without its backdrop blur (glass restraint, 021 decision 3)."
+              "description": "shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3), flat in onmars v2; no backdrop blur (021 decision 3)."
             },
             {
               "name": "--ki-avatar-group-lg-counter-font-size",
@@ -2255,7 +2255,7 @@
             },
             {
               "name": "--ki-badge-border-width",
-              "description": "dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral glass type draws its 1px bevel via ki.badge.neutral.border-width. material3 keeps its border via its override)."
+              "description": "dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral type draws its 1px edge via ki.badge.neutral.border-width. material3 keeps its border via its override)."
             },
             {
               "name": "--ki-badge-danger-bg",
@@ -2311,15 +2311,15 @@
             },
             {
               "name": "--ki-badge-neutral-bg",
-              "description": "color used by the badge component for neutral background (MarsUI secondary glass Tag: Surface/special/secondary_alpha_base Gray-100 alpha light / Dark-700 blur base dark — the same fill as ki-button secondary; completes the glass bevel/blur/shadow the component already draws. material3 keeps the opaque s2 chip via its override)."
+              "description": "color used by the badge component for neutral background (MarsUI secondary Tag: Surface/special/secondary_alpha_base, the same fill as ki-button secondary; opaque white in onmars v2, translucent only where a theme turns that back on. material3 keeps the opaque s2 chip via its override)."
             },
             {
               "name": "--ki-badge-neutral-border",
-              "description": "color used by the badge component for neutral border (MarsUI secondary Tag bevel: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width)."
+              "description": "color used by the badge component for neutral border (MarsUI secondary Tag edge: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width)."
             },
             {
               "name": "--ki-badge-neutral-border-width",
-              "description": "dimension used by the badge component for the neutral (secondary glass) border width: MarsUI draws the 1px bevel only on this type."
+              "description": "dimension used by the badge component for the neutral border width: MarsUI draws the 1px edge only on this type."
             },
             {
               "name": "--ki-badge-neutral-fg",
@@ -3116,11 +3116,11 @@
           "cssProperties": [
             {
               "name": "--ki-button-backdrop-filter",
-              "description": "Complete backdrop filter for glass button and icon-button variants."
+              "description": "Complete backdrop filter for button and icon-button variants; none in onmars v2."
             },
             {
               "name": "--ki-button-border-width",
-              "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
+              "description": "dimension used by the button component for border width (MarsUI outline stroke: 1px)."
             },
             {
               "name": "--ki-button-focus-ring-color",
@@ -3360,7 +3360,7 @@
             },
             {
               "name": "--ki-button-primary-danger-hover-border",
-              "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary danger hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-danger-hover-fg",
@@ -3372,7 +3372,7 @@
             },
             {
               "name": "--ki-button-primary-danger-rest-border",
-              "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary danger rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-danger-rest-fg",
@@ -3384,7 +3384,7 @@
             },
             {
               "name": "--ki-button-primary-hover-overlay",
-              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
+              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover overlay, White/5)."
             },
             {
               "name": "--ki-button-primary-hover-shadow",
@@ -3408,7 +3408,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-hover-border",
-              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-hover-fg",
@@ -3420,7 +3420,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-rest-border",
-              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-rest-fg",
@@ -3428,7 +3428,7 @@
             },
             {
               "name": "--ki-button-primary-rest-border-bottom",
-              "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
+              "description": "color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-rest-shadow",
@@ -3448,7 +3448,7 @@
             },
             {
               "name": "--ki-button-primary-success-hover-border",
-              "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary success hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-success-hover-fg",
@@ -3460,7 +3460,7 @@
             },
             {
               "name": "--ki-button-primary-success-rest-border",
-              "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary success rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-success-rest-fg",
@@ -3512,7 +3512,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-bg",
-              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill)."
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-border",
@@ -3520,7 +3520,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-fg",
-              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-bg",
@@ -3532,7 +3532,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-fg",
-              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             {
               "name": "--ki-button-quaternary-rest-shadow",
@@ -3580,7 +3580,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-hover-border",
-              "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary danger hover border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-hover-fg",
@@ -3592,7 +3592,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-rest-border",
-              "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary danger rest border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-rest-fg",
@@ -3604,7 +3604,7 @@
             },
             {
               "name": "--ki-button-secondary-hover-overlay",
-              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
+              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover overlay inverse, Black/3)."
             },
             {
               "name": "--ki-button-secondary-hover-shadow",
@@ -3628,7 +3628,7 @@
             },
             {
               "name": "--ki-button-secondary-neutral-hover-border",
-              "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for secondary neutral hover border (MarsUI top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-hover-fg",
@@ -3636,11 +3636,11 @@
             },
             {
               "name": "--ki-button-secondary-neutral-rest-bg",
-              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
+              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: neutral, not a brand tint; white in onmars v2)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-border",
-              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for secondary neutral rest border (MarsUI top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-fg",
@@ -3648,7 +3648,7 @@
             },
             {
               "name": "--ki-button-secondary-rest-border-bottom",
-              "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
+              "description": "color used by the button component for the secondary bottom edge (MarsUI Outline/secondary_button_bottom)."
             },
             {
               "name": "--ki-button-secondary-rest-shadow",
@@ -3668,7 +3668,7 @@
             },
             {
               "name": "--ki-button-secondary-success-hover-border",
-              "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary success hover border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-hover-fg",
@@ -3680,7 +3680,7 @@
             },
             {
               "name": "--ki-button-secondary-success-rest-border",
-              "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary success rest border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-rest-fg",
@@ -3736,7 +3736,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-hover-border",
-              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-danger-hover-fg",
@@ -3748,7 +3748,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-rest-border",
-              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-danger-rest-fg",
@@ -3784,7 +3784,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-border",
-              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-fg",
@@ -3796,7 +3796,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-border",
-              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-fg",
@@ -3804,7 +3804,7 @@
             },
             {
               "name": "--ki-button-tertiary-rest-border-bottom",
-              "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
+              "description": "color used by the button component for the tertiary bottom edge (MarsUI Outline/secondary_button_bottom, as secondary)."
             },
             {
               "name": "--ki-button-tertiary-rest-shadow",
@@ -3816,7 +3816,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-hover-border",
-              "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary success hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-success-hover-fg",
@@ -3828,7 +3828,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-rest-border",
-              "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-success-rest-fg",
@@ -4373,7 +4373,7 @@
             },
             {
               "name": "--ki-card-gap",
-              "description": "dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override)."
+              "description": "dimension used by the card component for gap (MarsUI Dashboard_info/Chart rhythm between regions 12px; material3 keeps zero via its override)."
             },
             {
               "name": "--ki-card-header-padding",
@@ -9179,11 +9179,11 @@
           "cssProperties": [
             {
               "name": "--ki-button-backdrop-filter",
-              "description": "Complete backdrop filter for glass button and icon-button variants."
+              "description": "Complete backdrop filter for button and icon-button variants; none in onmars v2."
             },
             {
               "name": "--ki-button-border-width",
-              "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
+              "description": "dimension used by the button component for border width (MarsUI outline stroke: 1px)."
             },
             {
               "name": "--ki-button-focus-ring-color",
@@ -9423,7 +9423,7 @@
             },
             {
               "name": "--ki-button-primary-danger-hover-border",
-              "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary danger hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-danger-hover-fg",
@@ -9435,7 +9435,7 @@
             },
             {
               "name": "--ki-button-primary-danger-rest-border",
-              "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary danger rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-danger-rest-fg",
@@ -9447,7 +9447,7 @@
             },
             {
               "name": "--ki-button-primary-hover-overlay",
-              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
+              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover overlay, White/5)."
             },
             {
               "name": "--ki-button-primary-hover-shadow",
@@ -9471,7 +9471,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-hover-border",
-              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-hover-fg",
@@ -9483,7 +9483,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-rest-border",
-              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-rest-fg",
@@ -9491,7 +9491,7 @@
             },
             {
               "name": "--ki-button-primary-rest-border-bottom",
-              "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
+              "description": "color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-rest-shadow",
@@ -9511,7 +9511,7 @@
             },
             {
               "name": "--ki-button-primary-success-hover-border",
-              "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary success hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-success-hover-fg",
@@ -9523,7 +9523,7 @@
             },
             {
               "name": "--ki-button-primary-success-rest-border",
-              "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary success rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-success-rest-fg",
@@ -9575,7 +9575,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-bg",
-              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill)."
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-border",
@@ -9583,7 +9583,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-fg",
-              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-bg",
@@ -9595,7 +9595,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-fg",
-              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             {
               "name": "--ki-button-quaternary-rest-shadow",
@@ -9643,7 +9643,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-hover-border",
-              "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary danger hover border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-hover-fg",
@@ -9655,7 +9655,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-rest-border",
-              "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary danger rest border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-rest-fg",
@@ -9667,7 +9667,7 @@
             },
             {
               "name": "--ki-button-secondary-hover-overlay",
-              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
+              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover overlay inverse, Black/3)."
             },
             {
               "name": "--ki-button-secondary-hover-shadow",
@@ -9691,7 +9691,7 @@
             },
             {
               "name": "--ki-button-secondary-neutral-hover-border",
-              "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for secondary neutral hover border (MarsUI top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-hover-fg",
@@ -9699,11 +9699,11 @@
             },
             {
               "name": "--ki-button-secondary-neutral-rest-bg",
-              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
+              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: neutral, not a brand tint; white in onmars v2)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-border",
-              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for secondary neutral rest border (MarsUI top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-fg",
@@ -9711,7 +9711,7 @@
             },
             {
               "name": "--ki-button-secondary-rest-border-bottom",
-              "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
+              "description": "color used by the button component for the secondary bottom edge (MarsUI Outline/secondary_button_bottom)."
             },
             {
               "name": "--ki-button-secondary-rest-shadow",
@@ -9731,7 +9731,7 @@
             },
             {
               "name": "--ki-button-secondary-success-hover-border",
-              "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary success hover border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-hover-fg",
@@ -9743,7 +9743,7 @@
             },
             {
               "name": "--ki-button-secondary-success-rest-border",
-              "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary success rest border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-rest-fg",
@@ -9799,7 +9799,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-hover-border",
-              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-danger-hover-fg",
@@ -9811,7 +9811,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-rest-border",
-              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-danger-rest-fg",
@@ -9847,7 +9847,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-border",
-              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-fg",
@@ -9859,7 +9859,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-border",
-              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-fg",
@@ -9867,7 +9867,7 @@
             },
             {
               "name": "--ki-button-tertiary-rest-border-bottom",
-              "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
+              "description": "color used by the button component for the tertiary bottom edge (MarsUI Outline/secondary_button_bottom, as secondary)."
             },
             {
               "name": "--ki-button-tertiary-rest-shadow",
@@ -9879,7 +9879,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-hover-border",
-              "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary success hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-success-hover-fg",
@@ -9891,7 +9891,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-rest-border",
-              "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-success-rest-fg",
@@ -10890,7 +10890,7 @@
             },
             {
               "name": "--ki-outline-control",
-              "description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
+              "description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as an edge over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
             },
             {
               "name": "--ki-outline-danger-high-em",
@@ -11450,7 +11450,7 @@
             },
             {
               "name": "--ki-dialog-bg",
-              "description": "Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image."
+              "description": "Base background color of the dialog. Onmars v1 used a transparent backing beneath its translucent image."
             },
             {
               "name": "--ki-dialog-bg-image",
@@ -11634,11 +11634,11 @@
             },
             {
               "name": "--ki-state-layer-hover",
-              "description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark)."
+              "description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the hover overlay (White/5 light, Black/5 dark)."
             },
             {
               "name": "--ki-state-layer-pressed",
-              "description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark)."
+              "description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: one step above the hover overlay (White/8 light, Black/8 dark)."
             },
             {
               "name": "--ki-surface-transparent",
@@ -15359,11 +15359,11 @@
           "cssProperties": [
             {
               "name": "--ki-button-backdrop-filter",
-              "description": "Complete backdrop filter for glass button and icon-button variants."
+              "description": "Complete backdrop filter for button and icon-button variants; none in onmars v2."
             },
             {
               "name": "--ki-button-border-width",
-              "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
+              "description": "dimension used by the button component for border width (MarsUI outline stroke: 1px)."
             },
             {
               "name": "--ki-button-focus-ring-color",
@@ -15495,7 +15495,7 @@
             },
             {
               "name": "--ki-button-primary-danger-hover-border",
-              "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary danger hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-danger-hover-fg",
@@ -15507,7 +15507,7 @@
             },
             {
               "name": "--ki-button-primary-danger-rest-border",
-              "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary danger rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-danger-rest-fg",
@@ -15519,7 +15519,7 @@
             },
             {
               "name": "--ki-button-primary-hover-overlay",
-              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
+              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover overlay, White/5)."
             },
             {
               "name": "--ki-button-primary-hover-shadow",
@@ -15543,7 +15543,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-hover-border",
-              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-hover-fg",
@@ -15555,7 +15555,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-rest-border",
-              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-rest-fg",
@@ -15563,7 +15563,7 @@
             },
             {
               "name": "--ki-button-primary-rest-border-bottom",
-              "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
+              "description": "color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-rest-shadow",
@@ -15575,7 +15575,7 @@
             },
             {
               "name": "--ki-button-primary-success-hover-border",
-              "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary success hover border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-success-hover-fg",
@@ -15587,7 +15587,7 @@
             },
             {
               "name": "--ki-button-primary-success-rest-border",
-              "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary success rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-success-rest-fg",
@@ -15639,7 +15639,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-bg",
-              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill)."
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-border",
@@ -15647,7 +15647,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-fg",
-              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-bg",
@@ -15659,7 +15659,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-fg",
-              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             {
               "name": "--ki-button-quaternary-rest-shadow",
@@ -15699,7 +15699,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-hover-border",
-              "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary danger hover border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-hover-fg",
@@ -15711,7 +15711,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-rest-border",
-              "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary danger rest border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-rest-fg",
@@ -15723,7 +15723,7 @@
             },
             {
               "name": "--ki-button-secondary-hover-overlay",
-              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
+              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover overlay inverse, Black/3)."
             },
             {
               "name": "--ki-button-secondary-hover-shadow",
@@ -15747,7 +15747,7 @@
             },
             {
               "name": "--ki-button-secondary-neutral-hover-border",
-              "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for secondary neutral hover border (MarsUI top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-hover-fg",
@@ -15755,11 +15755,11 @@
             },
             {
               "name": "--ki-button-secondary-neutral-rest-bg",
-              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
+              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: neutral, not a brand tint; white in onmars v2)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-border",
-              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for secondary neutral rest border (MarsUI top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-fg",
@@ -15767,7 +15767,7 @@
             },
             {
               "name": "--ki-button-secondary-rest-border-bottom",
-              "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
+              "description": "color used by the button component for the secondary bottom edge (MarsUI Outline/secondary_button_bottom)."
             },
             {
               "name": "--ki-button-secondary-rest-shadow",
@@ -15779,7 +15779,7 @@
             },
             {
               "name": "--ki-button-secondary-success-hover-border",
-              "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary success hover border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-hover-fg",
@@ -15791,7 +15791,7 @@
             },
             {
               "name": "--ki-button-secondary-success-rest-border",
-              "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
+              "description": "color used by the button component for secondary success rest border (MarsUI top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-rest-fg",
@@ -15815,7 +15815,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-hover-border",
-              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-danger-hover-fg",
@@ -15827,7 +15827,7 @@
             },
             {
               "name": "--ki-button-tertiary-danger-rest-border",
-              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-danger-rest-fg",
@@ -15863,7 +15863,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-border",
-              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-fg",
@@ -15875,7 +15875,7 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-border",
-              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-fg",
@@ -15883,7 +15883,7 @@
             },
             {
               "name": "--ki-button-tertiary-rest-border-bottom",
-              "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
+              "description": "color used by the button component for the tertiary bottom edge (MarsUI Outline/secondary_button_bottom, as secondary)."
             },
             {
               "name": "--ki-button-tertiary-rest-shadow",
@@ -15895,7 +15895,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-hover-border",
-              "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary success hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-success-hover-fg",
@@ -15907,7 +15907,7 @@
             },
             {
               "name": "--ki-button-tertiary-success-rest-border",
-              "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "description": "color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-success-rest-fg",
@@ -22928,7 +22928,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-rest-border",
-              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2)."
             },
             {
               "name": "--ki-button-primary-neutral-rest-fg",
@@ -22936,11 +22936,11 @@
             },
             {
               "name": "--ki-button-secondary-neutral-rest-bg",
-              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
+              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: neutral, not a brand tint; white in onmars v2)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-border",
-              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+              "description": "color used by the button component for secondary neutral rest border (MarsUI top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-fg",
@@ -23451,7 +23451,7 @@
             },
             {
               "name": "--ki-radio-unselected-hover-bg",
-              "description": "color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3."
+              "description": "color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3."
             },
             {
               "name": "--ki-radio-unselected-hover-border",
@@ -26326,7 +26326,7 @@
             },
             {
               "name": "--ki-effect-component-backdrop-filter",
-              "description": "Complete backdrop filter for glass components. Use none to turn the effect off."
+              "description": "Complete backdrop filter for translucent components. Use none to turn the effect off."
             },
             {
               "name": "--ki-effect-component-secondary-default-shadow",
@@ -26374,7 +26374,7 @@
             },
             {
               "name": "--ki-option-highlight-bg",
-              "description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; purple is reserved for the selected tint)."
+              "description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; the accent is reserved for the selected tint)."
             },
             {
               "name": "--ki-option-highlight-fg",
@@ -26382,7 +26382,7 @@
             },
             {
               "name": "--ki-option-hover-bg",
-              "description": "color used by the option component for hover background (MarsUI hover_overlay_inverse Black/3 wash over the glass panel — not a solid surface step)."
+              "description": "color used by the option component for hover background (MarsUI hover-overlay-inverse Black/3 wash over the panel — not a solid surface step)."
             },
             {
               "name": "--ki-option-hover-fg",
@@ -26402,7 +26402,7 @@
             },
             {
               "name": "--ki-option-rest-bg",
-              "description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the glass panel; only hover/selected paint)."
+              "description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the panel; only hover/selected paint)."
             },
             {
               "name": "--ki-option-rest-fg",
@@ -26590,7 +26590,7 @@
             },
             {
               "name": "--ki-select-listbox-bg",
-              "description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter)."
+              "description": "color used by the select component for listbox background (MarsUI Dropmenu panel Surface/Special/blur_base_light, opaque in onmars v2; pair with --ki-select-listbox-backdrop-filter)."
             },
             {
               "name": "--ki-select-listbox-bg-image",
@@ -29620,7 +29620,7 @@
             },
             {
               "name": "--ki-status-shadow",
-              "description": "shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers. The effect's backdrop blur is deliberately NOT applied: a 4px dot has no glass surface to blur (brief §5 perf note, glass restraint)."
+              "description": "shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers, flat in onmars v2. Its backdrop blur is not applied: a 4px dot has nothing to blur (brief §5 perf note)."
             },
             {
               "name": "--ki-status-size",
@@ -31359,7 +31359,7 @@
             },
             {
               "name": "--ki-tab-selected-active-fg",
-              "description": "color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
+              "description": "color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240)."
             },
             {
               "name": "--ki-tab-selected-disabled-bg",
@@ -31375,7 +31375,7 @@
             },
             {
               "name": "--ki-tab-selected-hover-fg",
-              "description": "color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
+              "description": "color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240)."
             },
             {
               "name": "--ki-tab-selected-rest-bg",
@@ -31383,7 +31383,7 @@
             },
             {
               "name": "--ki-tab-selected-rest-fg",
-              "description": "color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
+              "description": "color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240)."
             },
             {
               "name": "--ki-tab-unselected-active-bg",
@@ -35642,7 +35642,7 @@
             },
             {
               "name": "--ki-tooltip-bg",
-              "description": "Base background color of the tooltip. Onmars v1 uses a transparent backing beneath its glass image."
+              "description": "Base background color of the tooltip. Onmars v1 used a transparent backing beneath its translucent image."
             },
             {
               "name": "--ki-tooltip-bg-image",
@@ -35650,15 +35650,15 @@
             },
             {
               "name": "--ki-tooltip-border-color",
-              "description": "color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it."
+              "description": "color used by the tooltip component for its edge (MarsUI hairline, Outline/secondary_button_top); one token so a mode or a theme can strengthen it."
             },
             {
               "name": "--ki-tooltip-border-width",
-              "description": "dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending)."
+              "description": "dimension used by the tooltip component for the outline width (MarsUI card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending)."
             },
             {
               "name": "--ki-tooltip-fg",
-              "description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast)."
+              "description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; onmars v2 sets the inverse tooltip ink)."
             },
             {
               "name": "--ki-tooltip-font-size",
@@ -36952,7 +36952,7 @@
             },
             {
               "name": "--ki-video-backdrop-filter",
-              "description": "Complete backdrop filter behind the video play scrim and glass control."
+              "description": "Complete backdrop filter behind the video play scrim and control."
             },
             {
               "name": "--ki-video-focus-ring-color",
@@ -36980,11 +36980,11 @@
             },
             {
               "name": "--ki-video-play-border-color",
-              "description": "color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel."
+              "description": "color used by the video component for the play container edge: Outline/primary_button_top, the exact variable bound to the Icon_button stroke (as ki-button; none in onmars v2)."
             },
             {
               "name": "--ki-video-play-border-width",
-              "description": "dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent)."
+              "description": "dimension used by the video component for the play container edge width (MarsUI hairline stroke, ki-icon-button precedent)."
             },
             {
               "name": "--ki-video-play-fg",

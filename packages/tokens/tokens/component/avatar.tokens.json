@@ -107,7 +107,7 @@
       },
       "font-family": {
         "$value": "{ki.typography.family.body}",
-        "$description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter)."
+        "$description": "font family used by the avatar component for initials: the body family (Instrument Sans in onmars v2)."
       },
       "font-weight": {
         "$value": "{ki.typography.weight.body.medium}",

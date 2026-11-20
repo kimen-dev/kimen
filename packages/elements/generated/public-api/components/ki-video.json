@@ -78,7 +78,7 @@
       "--ki-video-backdrop-filter": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Complete backdrop filter behind the video play scrim and glass control.",
+        "description": "Complete backdrop filter behind the video play scrim and control.",
         "replacement": null,
         "required": false,
         "type": null
@@ -134,7 +134,7 @@
       "--ki-video-play-border-color": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel.",
+        "description": "color used by the video component for the play container edge: Outline/primary_button_top, the exact variable bound to the Icon_button stroke (as ki-button; none in onmars v2).",
         "replacement": null,
         "required": false,
         "type": null
@@ -142,7 +142,7 @@
       "--ki-video-play-border-width": {
         "default": null,
         "deprecatedSince": null,
-        "description": "dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent).",
+        "description": "dimension used by the video component for the play container edge width (MarsUI hairline stroke, ki-icon-button precedent).",
         "replacement": null,
         "required": false,
         "type": null

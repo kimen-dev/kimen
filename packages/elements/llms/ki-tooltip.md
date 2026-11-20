@@ -91,11 +91,11 @@ None.
 - `--ki-tooltip-arrow-radius`: dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step).
 - `--ki-tooltip-arrow-size`: dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger.
 - `--ki-tooltip-backdrop-filter`: Complete backdrop filter behind the tooltip bubble.
-- `--ki-tooltip-bg`: Base background color of the tooltip. Onmars v1 uses a transparent backing beneath its glass image.
+- `--ki-tooltip-bg`: Base background color of the tooltip. Onmars v1 used a transparent backing beneath its translucent image.
 - `--ki-tooltip-bg-image`: Optional CSS background image layered over the tooltip fill. Use none for a solid fill.
-- `--ki-tooltip-border-color`: color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.
-- `--ki-tooltip-border-width`: dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending).
-- `--ki-tooltip-fg`: color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast).
+- `--ki-tooltip-border-color`: color used by the tooltip component for its edge (MarsUI hairline, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.
+- `--ki-tooltip-border-width`: dimension used by the tooltip component for the outline width (MarsUI card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending).
+- `--ki-tooltip-fg`: color used by the tooltip component for foreground (MarsUI title row Text/high_em; onmars v2 sets the inverse tooltip ink).
 - `--ki-tooltip-font-size`: dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px).
 - `--ki-tooltip-font-weight`: font weight used by the tooltip component for font weight.
 - `--ki-tooltip-line-height`: dimension used by the tooltip component for line height (MarsUI line_height/para 20px).

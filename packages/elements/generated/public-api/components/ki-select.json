@@ -110,7 +110,7 @@
       "--ki-effect-component-backdrop-filter": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Complete backdrop filter for glass components. Use none to turn the effect off.",
+        "description": "Complete backdrop filter for translucent components. Use none to turn the effect off.",
         "replacement": null,
         "required": false,
         "type": null
@@ -206,7 +206,7 @@
       "--ki-option-highlight-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; purple is reserved for the selected tint).",
+        "description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; the accent is reserved for the selected tint).",
         "replacement": null,
         "required": false,
         "type": null
@@ -222,7 +222,7 @@
       "--ki-option-hover-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the option component for hover background (MarsUI hover_overlay_inverse Black/3 wash over the glass panel — not a solid surface step).",
+        "description": "color used by the option component for hover background (MarsUI hover-overlay-inverse Black/3 wash over the panel — not a solid surface step).",
         "replacement": null,
         "required": false,
         "type": null
@@ -262,7 +262,7 @@
       "--ki-option-rest-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the glass panel; only hover/selected paint).",
+        "description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the panel; only hover/selected paint).",
         "replacement": null,
         "required": false,
         "type": null
@@ -638,7 +638,7 @@
       "--ki-select-listbox-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter).",
+        "description": "color used by the select component for listbox background (MarsUI Dropmenu panel Surface/Special/blur_base_light, opaque in onmars v2; pair with --ki-select-listbox-backdrop-filter).",
         "replacement": null,
         "required": false,
         "type": null

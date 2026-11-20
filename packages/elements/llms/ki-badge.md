@@ -68,7 +68,7 @@ None.
 ## CSS custom properties
 
 - `--ki-badge-backdrop-filter`: Complete backdrop filter for the neutral badge surface.
-- `--ki-badge-border-width`: dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral glass type draws its 1px bevel via ki.badge.neutral.border-width. material3 keeps its border via its override).
+- `--ki-badge-border-width`: dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral type draws its 1px edge via ki.badge.neutral.border-width. material3 keeps its border via its override).
 - `--ki-badge-danger-bg`: color used by the badge component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-danger-border`: color used by the badge component for danger border.
 - `--ki-badge-danger-fg`: color used by the badge component for danger foreground.
@@ -82,9 +82,9 @@ None.
 - `--ki-badge-md-line-height`: dimension used by the badge component for md line height (MarsUI caption_2 16px).
 - `--ki-badge-md-padding-inline`: dimension used by the badge component for md padding inline (MarsUI total text inset 10px; paired with the border-width 0 + border-box change so the badge does not shrink).
 - `--ki-badge-md-radius`: dimension used by the badge component for md radius (MarsUI Tag: Radius/component/radius_sm 8px at both sm and md).
-- `--ki-badge-neutral-bg`: color used by the badge component for neutral background (MarsUI secondary glass Tag: Surface/special/secondary_alpha_base Gray-100 alpha light / Dark-700 blur base dark — the same fill as ki-button secondary; completes the glass bevel/blur/shadow the component already draws. material3 keeps the opaque s2 chip via its override).
-- `--ki-badge-neutral-border`: color used by the badge component for neutral border (MarsUI secondary Tag bevel: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width).
-- `--ki-badge-neutral-border-width`: dimension used by the badge component for the neutral (secondary glass) border width: MarsUI draws the 1px bevel only on this type.
+- `--ki-badge-neutral-bg`: color used by the badge component for neutral background (MarsUI secondary Tag: Surface/special/secondary_alpha_base, the same fill as ki-button secondary; opaque white in onmars v2, translucent only where a theme turns that back on. material3 keeps the opaque s2 chip via its override).
+- `--ki-badge-neutral-border`: color used by the badge component for neutral border (MarsUI secondary Tag edge: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width).
+- `--ki-badge-neutral-border-width`: dimension used by the badge component for the neutral border width: MarsUI draws the 1px edge only on this type.
 - `--ki-badge-neutral-fg`: color used by the badge component for neutral foreground.
 - `--ki-badge-sm-font-size`: dimension used by the badge component for sm font size.
 - `--ki-badge-sm-height`: dimension used by the badge component for sm height.

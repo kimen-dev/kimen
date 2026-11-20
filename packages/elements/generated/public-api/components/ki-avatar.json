@@ -70,7 +70,7 @@
       "--ki-avatar-font-family": {
         "default": null,
         "deprecatedSince": null,
-        "description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter).",
+        "description": "font family used by the avatar component for initials: the body family (Instrument Sans in onmars v2).",
         "replacement": null,
         "required": false,
         "type": null

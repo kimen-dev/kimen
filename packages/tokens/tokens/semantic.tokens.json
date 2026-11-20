@@ -572,7 +572,7 @@
       },
       "control": {
         "$value": "{ki.color.black.48}",
-        "$description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
+        "$description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as an edge over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
       },
       "control-hover": {
         "$value": "{ki.color.black.56}",
@@ -896,19 +896,19 @@
       "$type": "color",
       "hover": {
         "$value": "{ki.surface.hover-overlay}",
-        "$description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark)."
+        "$description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the hover overlay (White/5 light, Black/5 dark)."
       },
       "focus": {
         "$value": "{ki.color.white.8}",
-        "$description": "Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark)."
+        "$description": "Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: one step above the hover overlay (White/8 light, Black/8 dark)."
       },
       "pressed": {
         "$value": "{ki.color.white.8}",
-        "$description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark)."
+        "$description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: one step above the hover overlay (White/8 light, Black/8 dark)."
       },
       "dragged": {
         "$value": "{ki.color.white.12}",
-        "$description": "Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: MarsUI overlay two steps above hover_overlay (White/12 light, Black/12 dark)."
+        "$description": "Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: two steps above the hover overlay (White/12 light, Black/12 dark)."
       }
     },
     "elevation": {
@@ -1122,7 +1122,7 @@
         "backdrop-blur": {
           "$type": "dimension",
           "$value": "{ki.blur.24}",
-          "$description": "MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter.",
+          "$description": "MarsUI Blur/24 as the component backdrop; none in onmars v2. Legacy blur radius for the shared backdrop filter.",
           "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
           "$extensions": {
             "dev.kimen.deprecation": {
@@ -1135,7 +1135,7 @@
         "backdrop-filter": {
           "$type": "other",
           "$value": "blur({ki.effect.component.backdrop-blur})",
-          "$description": "Complete backdrop filter for glass components. Use none to turn the effect off."
+          "$description": "Complete backdrop filter for translucent components. Use none to turn the effect off."
         },
         "no-backdrop-filter": {
           "$type": "other",
@@ -1145,7 +1145,7 @@
         "listbox-backdrop-filter": {
           "$type": "other",
           "$value": "blur({ki.blur.48})",
-          "$description": "Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off."
+          "$description": "Complete listbox backdrop filter. The stronger onmars v1 blur; flat themes can turn it off."
         },
         "primary": {
           "default": {

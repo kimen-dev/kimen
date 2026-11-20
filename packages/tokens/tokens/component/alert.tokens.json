@@ -175,7 +175,7 @@
         },
         "border-width": {
           "$value": "{ki.size.border.hairline}",
-          "$description": "dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline)."
+          "$description": "dimension used by the alert component for the dismiss chip outline (MarsUI 24px circle: 1px Outline/secondary_button_top hairline)."
         },
         "radius": {
           "$value": "{ki.radius.round}",
@@ -194,7 +194,7 @@
           },
           "bg": {
             "$value": "{ki.surface.hover-overlay-inverse}",
-            "$description": "color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change)."
+            "$description": "color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash)."
           }
         },
         "active": {
