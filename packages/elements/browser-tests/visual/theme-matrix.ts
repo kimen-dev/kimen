@@ -4,8 +4,11 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-checkbox-group',
   'ki-chip',
   'ki-chip-group',
+  'ki-copy-button',
   'ki-counter',
   'ki-empty-state',
+  'ki-fab',
+  'ki-feature-icon',
   'ki-format-date',
   'ki-format-number',
   'ki-grid',
@@ -20,10 +23,10 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-segment',
   'ki-segmented-control',
   'ki-skeleton',
+  'ki-slider',
   'ki-spinner',
   'ki-stack',
   'ki-stat',
-  'ki-step',
   'ki-stepper',
 ]);
 

@@ -1,4 +1,5 @@
 // @spec:062-solid-surface-background
+// @spec:104-ki-fab
 // @spec:092-ki-stepper
 // Forced-colors contract (Art. III: the reproduction IS a failing test).
 //
@@ -272,6 +273,29 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     await userEvent.keyboard('{Tab}');
     expect(link.matches(':focus-visible')).toBe(true);
     const focused = getComputedStyle(link);
+    expect(focused.outlineStyle).toBe('solid');
+    expect(Number.parseFloat(focused.outlineWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();
+  });
+
+  it('S16 ki-fab keeps its edge, ink and focus ring in the forced palette', async (test) => {
+    const fixture = await mount(
+      '<input aria-label="Before"><ki-fab label="Compose" extended>' +
+        '<svg slot="icon" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" ' +
+        'fill="none" stroke="currentColor"/></svg></ki-fab>',
+    );
+    const control = await partOf(fixture, 'ki-fab', '[part="control"]');
+    const label = await partOf(fixture, 'ki-fab', '[part="label"]');
+    control.tabIndex = 0;
+    fixture.querySelector('input')?.focus();
+    await userEvent.keyboard('{Tab}');
+
+    await underForcedColors(test);
+
+    expect(edgeOf(control)).not.toBeNull();
+    expect(parseColor(getComputedStyle(label).color).ink).not.toBe(textBackdropOf(control));
+    expect(control.matches(':focus-visible')).toBe(true);
+    const focused = getComputedStyle(control);
     expect(focused.outlineStyle).toBe('solid');
     expect(Number.parseFloat(focused.outlineWidth)).toBeGreaterThan(0);
     expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();

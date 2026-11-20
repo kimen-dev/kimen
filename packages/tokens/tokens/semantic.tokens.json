@@ -1722,6 +1722,32 @@
       "action-seam": {
         "$value": "{ki.radius.0}",
         "$description": "Square corner at an edge shared by two actions."
+      },
+      "feature-tile": {
+        "xs": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "Corner radius of an extra-small square feature tile."
+        },
+        "sm": {
+          "$value": "{ki.radius.component.sm}",
+          "$description": "Corner radius of a small square feature tile."
+        },
+        "md": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "Corner radius of a medium square feature tile."
+        },
+        "lg": {
+          "$value": "{ki.radius.component.lg}",
+          "$description": "Corner radius of a large square feature tile."
+        },
+        "xl": {
+          "$value": "{ki.radius.big-component.xs}",
+          "$description": "Corner radius of an extra-large square feature tile."
+        },
+        "circle": {
+          "$value": "{ki.radius.round}",
+          "$description": "Fully rounded corners of a circular feature tile."
+        }
       }
     },
     "motion": {
@@ -2044,6 +2070,28 @@
       "grid-fixed-breakpoint": {
         "$value": "{ki.size.layout.grid-fixed-breakpoint}",
         "$description": "Minimum available inline size for a fixed grid to use multiple tracks."
+      },
+      "floating-action": {
+        "md": {
+          "$value": "{ki.space.16xl}",
+          "$description": "Default floating action footprint (56px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.20xl}",
+          "$description": "Medium floating action footprint (80px at the default root size)."
+        },
+        "xl": {
+          "$value": "{ki.space.22xl}",
+          "$description": "Large floating action footprint (96px at the default root size)."
+        },
+        "lg-icon": {
+          "$value": "{ki.space.9xl}",
+          "$description": "Medium floating action glyph (28px at the default root size)."
+        },
+        "xl-icon": {
+          "$value": "{ki.space.11xl}",
+          "$description": "Large floating action glyph (36px at the default root size)."
+        }
       }
     },
     "control": {
@@ -2232,6 +2280,54 @@
       "tile-compact": {
         "$value": "{ki.space.12xl}",
         "$description": "Size of the decorative tile in a compact empty view."
+      }
+    },
+    "scale-control": {
+      "$type": "dimension",
+      "track-height": {
+        "$value": "{ki.space.xs}",
+        "$description": "Thickness of the inactive rail of a value scale."
+      },
+      "thumb-border-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Outline thickness of the visible grip."
+      },
+      "mark-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Thickness of a tick marking an interval."
+      },
+      "vertical-length": {
+        "$value": "{ki.size.slider-vertical}",
+        "$description": "Length of a vertical value scale."
+      },
+      "coarse-target": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum grip target when a value scale has a coarse primary pointer."
+      }
+    },
+    "size": {
+      "feature-tile": {
+        "$type": "dimension",
+        "xs": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Extra-small feature tile edge, 24px at the default root size."
+        },
+        "sm": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Small feature tile edge, 32px at the default root size."
+        },
+        "md": {
+          "$value": "{ki.space.12xl}",
+          "$description": "Medium feature tile edge, 40px at the default root size."
+        },
+        "lg": {
+          "$value": "{ki.space.14xl}",
+          "$description": "Large feature tile edge, 48px at the default root size."
+        },
+        "xl": {
+          "$value": "{ki.space.18xl}",
+          "$description": "Extra-large feature tile edge, 64px at the default root size."
+        }
       }
     }
   }
