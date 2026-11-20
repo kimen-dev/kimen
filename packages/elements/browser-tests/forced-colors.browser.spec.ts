@@ -258,6 +258,25 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     document.documentElement.setAttribute('data-ki-theme', theme);
   });
 
+  it('ki-link keeps its underline and focus ring visible', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<button>Start</button><p>Read the <ki-link href="/catalog">catalog contract</ki-link>.</p>',
+    );
+    const link = await partOf(fixture, 'ki-link', '[part="link"]');
+    const paint = getComputedStyle(link);
+    expect(paint.textDecorationLine).toBe('underline');
+    expect(inkOnCanvas(paint.textDecorationColor)).not.toBeNull();
+
+    fixture.querySelector('button')?.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(link.matches(':focus-visible')).toBe(true);
+    const focused = getComputedStyle(link);
+    expect(focused.outlineStyle).toBe('solid');
+    expect(Number.parseFloat(focused.outlineWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();
+  });
+
   it('leaves layout surfaces transparent and keeps slotted controls in order', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
@@ -486,6 +505,30 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(edgeOf(surface), 'the dialog has no edge against the page').not.toBeNull();
   });
 
+  it('ki-menu preserves its popup boundary, focus ring and checkmark', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(`
+      <button id="menu-actions" type="button">Actions</button>
+      <ki-menu anchor="menu-actions">
+        <ki-menu-item type="checkbox" value="pin" checked>Pin to sidebar</ki-menu-item>
+      </ki-menu>
+    `);
+    const trigger = fixture.querySelector('button');
+    if (!trigger) throw new Error('Missing trigger');
+    await expect.poll(() => trigger.getAttribute('aria-expanded')).toBe('false');
+    trigger.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const surface = await partOf(fixture, 'ki-menu', '[part="popup"]');
+    const row = await partOf(fixture, 'ki-menu-item', '[part="item"]');
+    const check = await partOf(fixture, 'ki-menu-item', '[part="check"]');
+
+    expect(isOpaqueCanvas(surface)).toBe(true);
+    expect(edgeOf(surface)).not.toBeNull();
+    expect(getComputedStyle(row).outlineStyle).toBe('solid');
+    expect(getComputedStyle(check).visibility).toBe('visible');
+    expect(inkOnCanvas(getComputedStyle(check).stroke)).not.toBeNull();
+  });
+
   it('S5 ki-tooltip is an opaque surface with an edge', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
@@ -513,6 +556,17 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
       fillOf(arrow),
       'the arrow is Canvas on Canvas: the tooltip points nowhere',
     ).not.toBeNull();
+  });
+
+  it('ki-counter preserves a visible dot and readable count', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount('<ki-counter dot></ki-counter><ki-counter value="3"></ki-counter>');
+    const dot = await partOf(fixture, 'ki-counter[dot]', '[part="indicator"]');
+    const count = await partOf(fixture, 'ki-counter[value]', '[part="indicator"]');
+
+    expect(fillOf(dot)).not.toBeNull();
+    expect(fillOf(count)).not.toBeNull();
+    expect(parseColor(getComputedStyle(count).color).ink).not.toBe(textBackdropOf(count));
   });
 
   it('ki-divider paints its rule', async (test) => {

@@ -1,0 +1,111 @@
+{
+  "component": {
+    "attributes": {
+      "date": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ISO calendar date or date-time. A timestamp without an offset uses local time.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "numeric": {
+        "default": "'auto'",
+        "deprecatedSince": null,
+        "description": "Auto can show words such as yesterday. Always uses a number.",
+        "replacement": null,
+        "required": false,
+        "type": "\"always\" | \"auto\""
+      },
+      "sync": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Refresh the visible wording as the clock crosses a formatting boundary.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "threshold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-relative-time-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default body font family for ki-relative-time on a bare page.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "date": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ISO calendar date or date-time. A timestamp without an offset uses local time.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "numeric": {
+        "default": "'auto'",
+        "deprecatedSince": null,
+        "description": "Auto can show words such as yesterday. Always uses a number.",
+        "replacement": null,
+        "required": false,
+        "type": "\"always\" | \"auto\""
+      },
+      "sync": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Refresh the visible wording as the clock crosses a formatting boundary.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "threshold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-relative-time.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-relative-time.d.ts",
+    "symbols": {
+      "KiRelativeTime": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiRelativeTime extends Components.KiRelativeTime, HTMLElement {\n}\nexport const KiRelativeTime: {\n    prototype: KiRelativeTime;\n    new (): KiRelativeTime;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-relative-time.js"
+  }
+}

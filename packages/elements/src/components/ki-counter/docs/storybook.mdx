@@ -1,0 +1,12 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as CounterStories from '../ki-counter.stories';
+
+<Meta of={CounterStories} />
+
+# Counter playground
+
+<Canvas of={CounterStories.Playground} />
+<Controls of={CounterStories.Playground} />
+
+<Canvas of={CounterStories.NotificationButton} />
+<Canvas of={CounterStories.AvatarPresence} />

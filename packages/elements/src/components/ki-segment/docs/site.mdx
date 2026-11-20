@@ -1,0 +1,31 @@
+---
+title: ki-segment
+description: An option within a segmented control.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-segment` inside [ki-segmented-control](/docs/components/segmented-control/).
+Each option needs a distinct `value`. Use `disabled` to make an option unavailable.
+
+<Demo code={`<ki-segmented-control label="View">
+  <ki-segment value="list">List</ki-segment>
+  <ki-segment value="board" aria-label="Board">
+    <svg slot="start" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 2h4v12H2zm6 0h6v7H8z" fill="currentColor"></path>
+    </svg>
+  </ki-segment>
+</ki-segmented-control>`} />
+
+Use the default slot for text and `start` for leading artwork. An icon-only
+choice needs `aria-label`. The same label appears in its tooltip on focus or hover.
+
+The all-elements loader registers `ki-tooltip`. When using direct imports or
+framework wrappers, register it separately for icon-only options.
+
+## API reference
+
+<CemApi tag="ki-segment" />
+
+[Open ki-segment in Storybook](/storybook/?path=/docs/docs-components-ki-segment--docs)

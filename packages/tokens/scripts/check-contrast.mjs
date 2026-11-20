@@ -266,7 +266,7 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // GENERIC by construction (was per-component and silently ignored every new
 // matrix — Codex review of 003/016): any `--ki-<component>-…-bg` whose name is
 // NOT a semantic/primitive layer, paired with its `-fg` sibling when one
-// exists. New components are swept automatically, with no regex to extend.
+// exists. New adjacent component pairs are swept automatically.
 // Disabled cells are excluded (exempt), as are `-bg` tokens with no `-fg`
 // counterpart (non-text affordances measured elsewhere, not a text pair).
 const SEMANTIC_LAYERS = new Set([
@@ -297,6 +297,18 @@ const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)(?:-[\w-]+)?-bg$/u;
 // guard is defeated once any other component contributes a pair).
 const CANARY_COMPONENT = 'button';
 
+// Stat paints a continuous surface under all five inks, including any
+// theme image. Check the shared solid backing without introducing row fills.
+const SHARED_SURFACE_FOREGROUNDS = {
+  '--ki-stat-bg': [
+    '--ki-stat-label-fg',
+    '--ki-stat-value-fg',
+    '--ki-stat-delta-neutral-fg',
+    '--ki-stat-delta-success-fg',
+    '--ki-stat-delta-danger-fg',
+  ],
+};
+
 export function componentPairs(declarations) {
   const pairs = [];
 
@@ -305,14 +317,16 @@ export function componentPairs(declarations) {
     if (!match || SEMANTIC_LAYERS.has(match[1]) || /-disabled-/u.test(name)) {
       continue;
     }
-    const fg = name.replace(/-bg$/u, '-fg');
-    if (declarations.has(fg)) {
-      pairs.push({
-        component: match[1],
-        text: fg,
-        surface: name,
-        minRatio: NON_TEXT_COMPONENTS.has(match[1]) ? NON_TEXT_MIN_RATIO : MIN_RATIO,
-      });
+    const foregrounds = [name.replace(/-bg$/u, '-fg'), ...(SHARED_SURFACE_FOREGROUNDS[name] ?? [])];
+    for (const text of foregrounds) {
+      if (declarations.has(text)) {
+        pairs.push({
+          component: match[1],
+          text,
+          surface: name,
+          minRatio: NON_TEXT_COMPONENTS.has(match[1]) ? NON_TEXT_MIN_RATIO : MIN_RATIO,
+        });
+      }
     }
   }
 
@@ -1152,19 +1166,32 @@ function evaluateContext(theme, scheme, declarations) {
     );
   }
 
-  // Component cells may be translucent (ghost/quaternary): composite the
-  // cell background over the page surface before measuring.
-  const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
-
-  for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+  // A translucent component cell composites over the page. Inline links
+  // can also sit directly on higher surface levels, including inside cards.
+  // A component's -icon ink sits on its -bg at the non-text minimum.
+  const icons = swept.flatMap(({ surface }) => {
+    const ink = surface.replace(/-bg$/u, '-icon');
+    return declarations.has(ink) ? [{ text: ink, surface, minRatio: NON_TEXT_MIN_RATIO }] : [];
+  });
+  for (const pair of [...CONTRAST_PAIRS, ...swept, ...icons]) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
-    const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
-    const ratio = contrastRatio(text, surface);
+    const backdrops =
+      pair.component === 'link' && rawSurface.a < 1 ? CONTROL_PAGE_SURFACES : ['--ki-surface-s0'];
     const min = pair.minRatio ?? MIN_RATIO;
 
-    if (ratio < min) {
-      failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (min ${min})`);
+    for (const backdrop of backdrops) {
+      const surface =
+        rawSurface.a < 1
+          ? compositeOver(rawSurface, parseColor(resolveCustomProperty(backdrop, declarations)))
+          : rawSurface;
+      const ratio = contrastRatio(text, surface);
+      if (ratio < min) {
+        const suffix = backdrops.length > 1 ? ` over ${backdrop}` : '';
+        failures.push(
+          `${theme}/${scheme} ${pair.text} on ${pair.surface}${suffix}: ${ratio} (min ${min})`,
+        );
+      }
     }
   }
 

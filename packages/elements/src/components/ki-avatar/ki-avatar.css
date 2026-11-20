@@ -15,6 +15,7 @@
   --_avatar-icon-size: var(--ki-avatar-md-icon-size);
 
   display: inline-flex;
+  position: relative;
   font-family: var(--ki-avatar-font-family);
 }
 
@@ -118,4 +119,16 @@
       opacity: 0;
     }
   }
+}
+
+slot[name="counter"]::slotted(:not([for])) {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--ki-counter-ring-width));
+  inset-inline-end: calc(-1 * var(--ki-counter-ring-width));
+  pointer-events: none;
+}
+
+slot[name="counter"]::slotted([dot]:not([for])) {
+  inset-block: auto 0;
+  inset-inline-end: 0;
 }
