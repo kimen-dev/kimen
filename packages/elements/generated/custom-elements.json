@@ -4078,6 +4078,153 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-conversation.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiConversation",
+          "customElement": true,
+          "tagName": "ki-conversation",
+          "description": "An accessible chat transcript with optional following as messages arrive.",
+          "whenToUse": "Display chronological user, assistant and event messages. Give\nthe host a block-size constraint to keep scrolling within the transcript.",
+          "whenNotToUse": "Collect input, send messages or present a static sequence of\ncards. Place the composer outside the transcript.",
+          "attributes": [
+            {
+              "name": "jump-label",
+              "fieldName": "jumpLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Jump to latest'",
+              "description": "Visible and accessible label for the control that resumes following."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Conversation'",
+              "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page."
+            },
+            {
+              "name": "stick-to-bottom",
+              "fieldName": "stickToBottom",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Follow new or growing messages until the reader scrolls away from the end."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "jumpLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Jump to latest'",
+              "description": "Visible and accessible label for the control that resumes following.",
+              "attribute": "jump-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Conversation'",
+              "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "stickToBottom",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Follow new or growing messages until the reader scrolls away from the end.",
+              "attribute": "stick-to-bottom",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The chronological transcript, normally ki-message elements."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "jump",
+              "description": "The Jump to latest button shown while following is paused."
+            },
+            {
+              "name": "log",
+              "description": "The named polite live region and keyboard-focusable scrollport."
+            },
+            {
+              "name": "messages",
+              "description": "The stack of slotted messages inside the scrollport."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-conversation-gap",
+              "description": "Space between messages in the transcript."
+            },
+            {
+              "name": "--ki-conversation-max-width",
+              "description": "Maximum inline size of the transcript."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiConversation",
+          "declaration": {
+            "name": "KiConversation",
+            "module": "dist/components/ki-conversation.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-conversation",
+          "declaration": {
+            "name": "KiConversation",
+            "module": "dist/components/ki-conversation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-counter.js",
       "declarations": [
         {
@@ -7766,6 +7913,288 @@
           "declaration": {
             "name": "KiListItem",
             "module": "dist/components/ki-list-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-message.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMessage",
+          "customElement": true,
+          "tagName": "ki-message",
+          "description": "A named chat article styled as a person’s message, assistant reply or event.",
+          "whenToUse": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply.",
+          "whenNotToUse": "Collect a prompt, announce a page alert, or execute a tool.",
+          "attributes": [
+            {
+              "name": "author",
+              "fieldName": "author",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names."
+            },
+            {
+              "name": "message-role",
+              "fieldName": "messageRole",
+              "type": {
+                "text": "\"assistant\" | \"event\" | \"user\" | undefined"
+              },
+              "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
+            },
+            {
+              "name": "streaming",
+              "fieldName": "streaming",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the caret and mark the article busy until this message is complete."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "author",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+              "attribute": "author",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "messageRole",
+              "privacy": "public",
+              "type": {
+                "text": "\"assistant\" | \"event\" | \"user\" | undefined"
+              },
+              "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+              "attribute": "message-role",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "streaming",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the caret and mark the article busy until this message is complete.",
+              "attribute": "streaming",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Message content, including text or formatted elements."
+            },
+            {
+              "name": "actions",
+              "description": "Follow-up controls supplied by the consumer after the content."
+            },
+            {
+              "name": "avatar",
+              "description": "Optional avatar replacing the assistant’s decorative default."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "actions",
+              "description": "The group containing slotted follow-up controls."
+            },
+            {
+              "name": "avatar",
+              "description": "The leading assistant avatar container."
+            },
+            {
+              "name": "caret",
+              "description": "The decorative marker displayed while a message is streaming."
+            },
+            {
+              "name": "content",
+              "description": "The body of the article, including any event icon."
+            },
+            {
+              "name": "message",
+              "description": "The named article and role-specific layout."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-control-border-width",
+              "description": "Stroke width of the boundary of a compact control."
+            },
+            {
+              "name": "--ki-layout-spacing-2xl",
+              "description": "The 2xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-3xl",
+              "description": "The 3xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-9xl",
+              "description": "The 9xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xxs",
+              "description": "The xxs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-message-assistant-fg",
+              "description": "Text ink of an assistant reply on the page surface."
+            },
+            {
+              "name": "--ki-message-avatar-backdrop-filter",
+              "description": "Complete filter behind the default assistant avatar."
+            },
+            {
+              "name": "--ki-message-avatar-bg",
+              "description": "Solid primary container of the default assistant avatar."
+            },
+            {
+              "name": "--ki-message-avatar-bg-image",
+              "description": "Optional image over the default assistant avatar background."
+            },
+            {
+              "name": "--ki-message-avatar-fg",
+              "description": "Glyph ink inside the default assistant avatar."
+            },
+            {
+              "name": "--ki-message-avatar-radius",
+              "description": "Corner radius of the default assistant avatar."
+            },
+            {
+              "name": "--ki-message-caret-block-size",
+              "description": "Streaming caret height relative to its message text."
+            },
+            {
+              "name": "--ki-message-caret-duration",
+              "description": "Period of the streaming caret blink when motion is allowed."
+            },
+            {
+              "name": "--ki-message-caret-inline-size",
+              "description": "Streaming caret width relative to its message text."
+            },
+            {
+              "name": "--ki-message-event-fg",
+              "description": "Text and icon ink of a system event on the page surface."
+            },
+            {
+              "name": "--ki-message-padding",
+              "description": "Block and inline padding inside a user bubble, in that order."
+            },
+            {
+              "name": "--ki-message-radius",
+              "description": "Radius of the user bubble corners."
+            },
+            {
+              "name": "--ki-message-user-backdrop-filter",
+              "description": "Complete filter behind the user bubble."
+            },
+            {
+              "name": "--ki-message-user-bg",
+              "description": "Solid background of a user bubble."
+            },
+            {
+              "name": "--ki-message-user-bg-image",
+              "description": "Optional image over the user bubble background."
+            },
+            {
+              "name": "--ki-message-user-end-radius",
+              "description": "Radius of the user bubble at the block-end inline-end corner."
+            },
+            {
+              "name": "--ki-message-user-fg",
+              "description": "Text ink in a user bubble."
+            },
+            {
+              "name": "--ki-message-user-max-width",
+              "description": "Maximum share of the transcript width a user bubble occupies."
+            },
+            {
+              "name": "--ki-motion-easing-activity-pulse",
+              "description": "Symmetric easing for fluctuations in a typing pulse."
+            },
+            {
+              "name": "--ki-outline-low-em",
+              "description": "semantic color for outline low em."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-2",
+              "description": "semantic dimension for typography line height body 2."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-2",
+              "description": "semantic dimension for typography size body 2."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMessage",
+          "declaration": {
+            "name": "KiMessage",
+            "module": "dist/components/ki-message.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-message",
+          "declaration": {
+            "name": "KiMessage",
+            "module": "dist/components/ki-message.js"
           }
         }
       ]

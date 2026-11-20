@@ -44,6 +44,7 @@ methods, CSS custom properties and examples.
 - [ki-checkbox-group](llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
 - [ki-chip](llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
 - [ki-chip-group](llms/ki-chip-group.md): label related chips or let people change their reading order.
+- [ki-conversation](llms/ki-conversation.md): Display chronological user, assistant and event messages.
 - [ki-counter](llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
@@ -56,6 +57,7 @@ methods, CSS custom properties and examples.
 - [ki-link](llms/ki-link.md): navigate to a page, section, or resource.
 - [ki-list](llms/ki-list.md): settings, contacts, results or activity feeds where each item composes leading media, primary text, optional secondary text and trailing meta or a slotted control.
 - [ki-list-item](llms/ki-list-item.md): only as a child of `ki-list`, for one read-only entry in a similar vertical collection.
+- [ki-message](llms/ki-message.md): Display a transcript entry inside ki-conversation.
 - [ki-note](llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
 - [ki-option](llms/ki-option.md): declare one choice inside a `ki-select`; its text is the human-facing label and its `value` is the submitted value.
 - [ki-progress](llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.

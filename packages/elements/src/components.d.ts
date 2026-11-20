@@ -25,6 +25,7 @@ import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+import { KiMessageRole } from "./components/ki-message/ki-message";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -61,6 +62,7 @@ export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+export { KiMessageRole } from "./components/ki-message/ki-message";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -472,6 +474,30 @@ export namespace Components {
           * @default 'filter'
          */
         "type": KiChipType;
+    }
+    /**
+     * An accessible chat transcript with optional following as messages arrive.
+     * @whenToUse Display chronological user, assistant and event messages. Give
+     * the host a block-size constraint to keep scrolling within the transcript.
+     * @whenNotToUse Collect input, send messages or present a static sequence of
+     * cards. Place the composer outside the transcript.
+     */
+    interface KiConversation {
+        /**
+          * Visible and accessible label for the control that resumes following.
+          * @default 'Jump to latest'
+         */
+        "jumpLabel": string;
+        /**
+          * Accessible name of the transcript. Supply a distinct label when several logs share a page.
+          * @default 'Conversation'
+         */
+        "label": string;
+        /**
+          * Follow new or growing messages until the reader scrolls away from the end.
+          * @default false
+         */
+        "stickToBottom": boolean;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -895,6 +921,32 @@ export namespace Components {
           * @default 'md'
          */
         "size": KiListItemSize;
+    }
+    /**
+     * A named chat article styled as a person’s message, assistant reply or event.
+     * @whenToUse Display a transcript entry inside ki-conversation. Pass
+     * formatted content through the default slot and set streaming during a reply.
+     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     */
+    interface KiMessage {
+        /**
+          * Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
+         */
+        "author"?: string;
+        /**
+          * Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
+         */
+        "iconName"?: string;
+        /**
+          * The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
+          * @default 'assistant'
+         */
+        "messageRole"?: KiMessageRole;
+        /**
+          * Show the caret and mark the article busy until this message is complete.
+          * @default false
+         */
+        "streaming": boolean;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -1926,6 +1978,19 @@ declare global {
         new (): HTMLKiChipGroupElement;
     };
     /**
+     * An accessible chat transcript with optional following as messages arrive.
+     * @whenToUse Display chronological user, assistant and event messages. Give
+     * the host a block-size constraint to keep scrolling within the transcript.
+     * @whenNotToUse Collect input, send messages or present a static sequence of
+     * cards. Place the composer outside the transcript.
+     */
+    interface HTMLKiConversationElement extends Components.KiConversation, HTMLStencilElement {
+    }
+    var HTMLKiConversationElement: {
+        prototype: HTMLKiConversationElement;
+        new (): HTMLKiConversationElement;
+    };
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -2144,6 +2209,18 @@ declare global {
     var HTMLKiListItemElement: {
         prototype: HTMLKiListItemElement;
         new (): HTMLKiListItemElement;
+    };
+    /**
+     * A named chat article styled as a person’s message, assistant reply or event.
+     * @whenToUse Display a transcript entry inside ki-conversation. Pass
+     * formatted content through the default slot and set streaming during a reply.
+     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     */
+    interface HTMLKiMessageElement extends Components.KiMessage, HTMLStencilElement {
+    }
+    var HTMLKiMessageElement: {
+        prototype: HTMLKiMessageElement;
+        new (): HTMLKiMessageElement;
     };
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -2591,6 +2668,7 @@ declare global {
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-conversation": HTMLKiConversationElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
@@ -2603,6 +2681,7 @@ declare global {
         "ki-link": HTMLKiLinkElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
+        "ki-message": HTMLKiMessageElement;
         "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
@@ -3070,6 +3149,30 @@ declare namespace LocalJSX {
         "type"?: KiChipType;
     }
     /**
+     * An accessible chat transcript with optional following as messages arrive.
+     * @whenToUse Display chronological user, assistant and event messages. Give
+     * the host a block-size constraint to keep scrolling within the transcript.
+     * @whenNotToUse Collect input, send messages or present a static sequence of
+     * cards. Place the composer outside the transcript.
+     */
+    interface KiConversation {
+        /**
+          * Visible and accessible label for the control that resumes following.
+          * @default 'Jump to latest'
+         */
+        "jumpLabel"?: string;
+        /**
+          * Accessible name of the transcript. Supply a distinct label when several logs share a page.
+          * @default 'Conversation'
+         */
+        "label"?: string;
+        /**
+          * Follow new or growing messages until the reader scrolls away from the end.
+          * @default false
+         */
+        "stickToBottom"?: boolean;
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -3495,6 +3598,32 @@ declare namespace LocalJSX {
           * @default 'md'
          */
         "size"?: KiListItemSize;
+    }
+    /**
+     * A named chat article styled as a person’s message, assistant reply or event.
+     * @whenToUse Display a transcript entry inside ki-conversation. Pass
+     * formatted content through the default slot and set streaming during a reply.
+     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     */
+    interface KiMessage {
+        /**
+          * Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
+         */
+        "author"?: string;
+        /**
+          * Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
+         */
+        "iconName"?: string;
+        /**
+          * The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
+          * @default 'assistant'
+         */
+        "messageRole"?: KiMessageRole;
+        /**
+          * Show the caret and mark the article busy until this message is complete.
+          * @default false
+         */
+        "streaming"?: boolean;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -4353,6 +4482,11 @@ declare namespace LocalJSX {
         "focusTarget": string;
         "reorderAnnouncement": string;
     }
+    interface KiConversationAttributes {
+        "label": string;
+        "stickToBottom": boolean;
+        "jumpLabel": string;
+    }
     interface KiCounterAttributes {
         "value": number;
         "max": number;
@@ -4429,6 +4563,12 @@ declare namespace LocalJSX {
     }
     interface KiListItemAttributes {
         "size": KiListItemSize;
+    }
+    interface KiMessageAttributes {
+        "messageRole": KiMessageRole;
+        "streaming": boolean;
+        "author": string;
+        "iconName": string;
     }
     interface KiNoteAttributes {
         "tone": KiNoteTone;
@@ -4579,6 +4719,7 @@ declare namespace LocalJSX {
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-conversation": Omit<KiConversation, keyof KiConversationAttributes> & { [K in keyof KiConversation & keyof KiConversationAttributes]?: KiConversation[K] } & { [K in keyof KiConversation & keyof KiConversationAttributes as `attr:${K}`]?: KiConversationAttributes[K] } & { [K in keyof KiConversation & keyof KiConversationAttributes as `prop:${K}`]?: KiConversation[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
@@ -4591,6 +4732,7 @@ declare namespace LocalJSX {
         "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
         "ki-list": KiList;
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
+        "ki-message": Omit<KiMessage, keyof KiMessageAttributes> & { [K in keyof KiMessage & keyof KiMessageAttributes]?: KiMessage[K] } & { [K in keyof KiMessage & keyof KiMessageAttributes as `attr:${K}`]?: KiMessageAttributes[K] } & { [K in keyof KiMessage & keyof KiMessageAttributes as `prop:${K}`]?: KiMessage[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
@@ -4739,6 +4881,14 @@ declare module "@stencil/core" {
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
             /**
+             * An accessible chat transcript with optional following as messages arrive.
+             * @whenToUse Display chronological user, assistant and event messages. Give
+             * the host a block-size constraint to keep scrolling within the transcript.
+             * @whenNotToUse Collect input, send messages or present a static sequence of
+             * cards. Place the composer outside the transcript.
+             */
+            "ki-conversation": LocalJSX.IntrinsicElements["ki-conversation"] & JSXBase.HTMLAttributes<HTMLKiConversationElement>;
+            /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an
              * avatar. Supply the full meaning in the host's accessible name and use a
@@ -4876,6 +5026,13 @@ declare module "@stencil/core" {
              * tabular row, navigation link or whole-item clickable control.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
+            /**
+             * A named chat article styled as a person’s message, assistant reply or event.
+             * @whenToUse Display a transcript entry inside ki-conversation. Pass
+             * formatted content through the default slot and set streaming during a reply.
+             * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+             */
+            "ki-message": LocalJSX.IntrinsicElements["ki-message"] & JSXBase.HTMLAttributes<HTMLKiMessageElement>;
             /**
              * A compact, static explanation beside a control or inside a card.
              * @whenToUse Add a short constraint, tip or consequence next to the content

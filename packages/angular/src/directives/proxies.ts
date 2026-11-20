@@ -16,6 +16,7 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
+import { defineCustomElement as defineKiConversation } from '@kimen/elements/components/ki-conversation.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
@@ -28,6 +29,7 @@ import { defineCustomElement as defineKiInput } from '@kimen/elements/components
 import { defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
+import { defineCustomElement as defineKiMessage } from '@kimen/elements/components/ki-message.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
@@ -315,6 +317,29 @@ export declare interface KiChipGroup extends Components.KiChipGroup {
    * Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
    */
 }
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiConversation,
+  inputs: ['jumpLabel', 'label', 'stickToBottom']
+})
+@Component({
+  selector: 'ki-conversation',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['jumpLabel', 'label', 'stickToBottom'],
+})
+export class KiConversation {
+  protected el: HTMLKiConversationElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiConversation extends Components.KiConversation {}
 
 
 @ProxyCmp({
@@ -608,6 +633,29 @@ export class KiListItem {
 
 
 export declare interface KiListItem extends Components.KiListItem {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMessage,
+  inputs: ['author', 'iconName', 'messageRole', 'streaming']
+})
+@Component({
+  selector: 'ki-message',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['author', 'iconName', 'messageRole', 'streaming'],
+})
+export class KiMessage {
+  protected el: HTMLKiMessageElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMessage extends Components.KiMessage {}
 
 
 @ProxyCmp({

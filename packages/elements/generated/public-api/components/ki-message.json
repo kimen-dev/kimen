@@ -1,0 +1,431 @@
+{
+  "component": {
+    "attributes": {
+      "author": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "icon-name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "message-role": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+        "replacement": null,
+        "required": false,
+        "type": "\"assistant\" | \"event\" | \"user\" | undefined"
+      },
+      "streaming": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show the caret and mark the article busy until this message is complete.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-control-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the boundary of a compact control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-2xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 2xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-3xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 3xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-9xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 9xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The md spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xxs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xxs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-assistant-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink of an assistant reply on the page surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-avatar-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter behind the default assistant avatar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-avatar-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Solid primary container of the default assistant avatar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-avatar-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the default assistant avatar background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-avatar-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink inside the default assistant avatar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-avatar-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the default assistant avatar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-caret-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Streaming caret height relative to its message text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-caret-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Period of the streaming caret blink when motion is allowed.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-caret-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Streaming caret width relative to its message text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-event-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text and icon ink of a system event on the page surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block and inline padding inside a user bubble, in that order.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Radius of the user bubble corners.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-user-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter behind the user bubble.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-user-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Solid background of a user bubble.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-user-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the user bubble background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-user-end-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Radius of the user bubble at the block-end inline-end corner.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-user-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink in a user bubble.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-message-user-max-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum share of the transcript width a user bubble occupies.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-activity-pulse": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Symmetric easing for fluctuations in a typing pulse.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-outline-low-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for outline low em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A named chat article styled as a person’s message, assistant reply or event.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The group containing slotted follow-up controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "avatar": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The leading assistant avatar container.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "caret": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The decorative marker displayed while a message is streaming.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "content": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The body of the article, including any event icon.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "message": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named article and role-specific layout.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "author": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "iconName": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "messageRole": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+        "replacement": null,
+        "required": false,
+        "type": "\"assistant\" | \"event\" | \"user\" | undefined"
+      },
+      "streaming": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show the caret and mark the article busy until this message is complete.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Message content, including text or formatted elements.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Follow-up controls supplied by the consumer after the content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "avatar": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional avatar replacing the assistant’s decorative default.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-message.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-message.d.ts",
+    "symbols": {
+      "KiMessage": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiMessage extends Components.KiMessage, HTMLElement {\n}\nexport const KiMessage: {\n    prototype: KiMessage;\n    new (): KiMessage;\n};"
+      },
+      "KiMessageRole": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiMessageRole = 'user' | 'assistant' | 'event';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-message.js"
+  }
+}
