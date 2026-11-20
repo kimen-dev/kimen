@@ -85,12 +85,14 @@ export class KiCopyButton {
   @State() private hasLabel = false;
   @State() private feedback: { result: CopyResult; attempt: number } | undefined;
 
-  private labelObserver?: MutationObserver;
+  private labelObserver: MutationObserver | undefined;
   private attempt = 0;
   private pending = false;
   private feedbackTimer: number | undefined;
 
   connectedCallback(): void {
+    // Reset feedback where a render can run against a connected host.
+    this.feedback = undefined;
     this.updateLabel();
     this.labelObserver ??= new MutationObserver(this.updateLabel);
     this.labelObserver.observe(this.host, {
@@ -104,9 +106,9 @@ export class KiCopyButton {
 
   disconnectedCallback(): void {
     this.labelObserver?.disconnect();
+    this.labelObserver = undefined;
     this.attempt += 1;
     this.pending = false;
-    this.feedback = undefined;
     window.clearTimeout(this.feedbackTimer);
     this.feedbackTimer = undefined;
   }
