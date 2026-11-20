@@ -341,9 +341,6 @@
   --ki-alert-info-border:var(--ki-outline-med-em);
   --ki-alert-warning-bg:var(--ki-surface-s4);
   --ki-alert-warning-border:var(--ki-outline-high-em);
-  --ki-alert-shell-padding:var(--ki-space-zero);
-  --ki-alert-shell-radius:var(--ki-radius-component-lg);
-  --ki-alert-shell-bg:var(--ki-color-transparent-black);
   --ki-alert-card-shadow:0 0 0 0 var(--ki-color-transparent-black);
   --ki-audio-speed-radius:var(--ki-control-compact-pill-radius);
   --ki-avatar-group-counter-border-color:var(--ki-outline-none);
@@ -791,7 +788,6 @@
     --ki-surface-danger-tint:var(--ki-surface-danger-base-em);
     --ki-effect-component-backdrop-filter:none;
     --ki-effect-component-listbox-backdrop-filter:none;
-    --ki-alert-shell-bg:var(--ki-surface-s1);
   }
 }
 
@@ -808,7 +804,6 @@
   --ki-surface-danger-tint:var(--ki-surface-danger-base-em);
   --ki-effect-component-backdrop-filter:none;
   --ki-effect-component-listbox-backdrop-filter:none;
-  --ki-alert-shell-bg:var(--ki-surface-s1);
 }
 
 @media (prefers-contrast: more) {

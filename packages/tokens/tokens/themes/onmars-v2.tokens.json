@@ -442,6 +442,62 @@
     "alert": {
       "radius": {
         "$value": "{ki.radius.component.lg}"
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}"
+      },
+      "neutral": {
+        "border": {
+          "$value": "{ki.outline.low-em}"
+        }
+      },
+      "info": {
+        "bg": {
+          "$value": "{ki.surface.info-tint}"
+        },
+        "border": {
+          "$value": "{ki.outline.info-low-em}"
+        }
+      },
+      "success": {
+        "bg": {
+          "$value": "{ki.surface.success-tint}"
+        },
+        "border": {
+          "$value": "{ki.outline.success-low-em}"
+        }
+      },
+      "warning": {
+        "bg": {
+          "$value": "{ki.surface.warning-tint}"
+        },
+        "border": {
+          "$value": "{ki.outline.warning-low-em}"
+        }
+      },
+      "danger": {
+        "bg": {
+          "$value": "{ki.surface.danger-tint}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-low-em}"
+        }
+      },
+      "shell": {
+        "padding": {
+          "$value": "{ki.space.zero}"
+        },
+        "radius": {
+          "$value": "{ki.radius.component.lg}"
+        },
+        "bg": {
+          "$value": "{ki.color.transparent.black}"
+        }
+      },
+      "card": {
+        "shadow": {
+          "$value": "{ki.foundation.onmars-v2.elevation.flat-effect}"
+        }
       }
     },
     "avatar": {

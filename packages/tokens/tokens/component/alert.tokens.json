@@ -23,7 +23,7 @@
       },
       "border-width": {
         "$value": "{ki.space.zero}",
-        "$description": "dimension used by the alert component for the card border width (MarsUI never strokes alert surfaces: the Alert master card stroke is fully transparent. material3 keeps its 2px border via its override)."
+        "$description": "dimension used by the alert component for the card border width (the MarsUI Alert master card stroke is fully transparent). onmars v2 draws a hairline (spec 011 A2); material3 keeps its 2px border via its override."
       },
       "font-size": {
         "$value": "{ki.typography.size.body-1}",
@@ -60,7 +60,7 @@
       "neutral": {
         "bg": {
           "$value": "{ki.surface.special.light-s0-dark-s2}",
-          "$description": "color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
+          "$description": "color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 keeps that card for the neutral tone and edges it with a hairline (spec 011 A2)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -68,7 +68,7 @@
         },
         "border": {
           "$value": "{ki.outline.none}",
-          "$description": "color used by the alert component for neutral border."
+          "$description": "color used by the alert component for the neutral card edge. onmars v2 draws it as the outline.low-em hairline of any flat card (spec 011 A2)."
         },
         "icon-bg": {
           "$value": "{ki.surface.primary-base-em-alpha}",
@@ -82,7 +82,7 @@
       "success": {
         "bg": {
           "$value": "{ki.surface.special.light-s0-dark-s2}",
-          "$description": "color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
+          "$description": "color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.success-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -90,7 +90,7 @@
         },
         "border": {
           "$value": "{ki.outline.none}",
-          "$description": "color used by the alert component for success border (MarsUI draws no tone border on any alert/note/toast surface)."
+          "$description": "color used by the alert component for the success card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.success-low-em hairline around the tinted card (spec 011 A2)."
         },
         "icon-bg": {
           "$value": "{ki.surface.success-tint}",
@@ -104,7 +104,7 @@
       "danger": {
         "bg": {
           "$value": "{ki.surface.special.light-s0-dark-s2}",
-          "$description": "color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
+          "$description": "color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.danger-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -112,7 +112,7 @@
         },
         "border": {
           "$value": "{ki.outline.none}",
-          "$description": "color used by the alert component for danger border (MarsUI draws no tone border on any alert/note/toast surface)."
+          "$description": "color used by the alert component for the danger card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.danger-low-em hairline around the tinted card (spec 011 A2)."
         },
         "icon-bg": {
           "$value": "{ki.surface.danger-tint}",
@@ -126,7 +126,7 @@
       "info": {
         "bg": {
           "$value": "{ki.surface.special.light-s0-dark-s2}",
-          "$description": "color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
+          "$description": "color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.info-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -134,7 +134,7 @@
         },
         "border": {
           "$value": "{ki.outline.none}",
-          "$description": "color used by the alert component for info border (MarsUI draws no tone border on any alert/note/toast surface)."
+          "$description": "color used by the alert component for the info card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.info-low-em hairline around the tinted card (spec 011 A2)."
         },
         "icon-bg": {
           "$value": "{ki.surface.info-tint}",
@@ -148,7 +148,7 @@
       "warning": {
         "bg": {
           "$value": "{ki.surface.special.light-s0-dark-s2}",
-          "$description": "color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here)."
+          "$description": "color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.warning-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -156,7 +156,7 @@
         },
         "border": {
           "$value": "{ki.outline.none}",
-          "$description": "color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface)."
+          "$description": "color used by the alert component for the warning card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.warning-low-em hairline around the tinted card (spec 011 A2)."
         },
         "icon-bg": {
           "$value": "{ki.surface.warning-tint}",
@@ -226,15 +226,15 @@
       "shell": {
         "padding": {
           "$value": "{ki.space.xl}",
-          "$description": "dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides)."
+          "$description": "dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides). onmars v2 and material3 set it to zero, so the alert paints as one flat card (spec 011 A2, S31)."
         },
         "radius": {
           "$value": "{ki.radius.big-component.lg}",
-          "$description": "dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px)."
+          "$description": "dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px). A flat theme gives the shell the card radius."
         },
         "bg": {
           "$value": "{ki.inverse-white.alpha-3}",
-          "$description": "color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark)."
+          "$description": "color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark). onmars v2 and material3 paint no shell: it is transparent."
         },
         "backdrop-blur": {
           "$value": "{ki.effect.component.backdrop-blur}",
@@ -259,7 +259,7 @@
         "shadow": {
           "$value": "{ki.elevation.e5}",
           "$type": "shadow",
-          "$description": "shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5)."
+          "$description": "shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5). An inline alert does not float, so onmars v2 and material3 lay the card flat."
         }
       },
       "icon": {

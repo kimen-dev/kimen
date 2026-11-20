@@ -246,8 +246,8 @@ export namespace Components {
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
      * guaranteed.
-     * Every non-neutral alert should carry an icon: in the onmars theme the tone
-     * is drawn on the icon alone.
+     * Every non-neutral alert draws its tone's glyph in the icon frame (`info`,
+     * `circle-check`, `triangle-alert`, `octagon-alert`) unless an icon is slotted.
      */
     interface KiAlert {
         /**
@@ -5075,8 +5075,8 @@ declare global {
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
      * guaranteed.
-     * Every non-neutral alert should carry an icon: in the onmars theme the tone
-     * is drawn on the icon alone.
+     * Every non-neutral alert draws its tone's glyph in the icon frame (`info`,
+     * `circle-check`, `triangle-alert`, `octagon-alert`) unless an icon is slotted.
      */
     interface HTMLKiAlertElement extends Components.KiAlert, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiAlertElementEventMap>(type: K, listener: (this: HTMLKiAlertElement, ev: KiAlertCustomEvent<HTMLKiAlertElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -7333,8 +7333,8 @@ declare namespace LocalJSX {
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
      * guaranteed.
-     * Every non-neutral alert should carry an icon: in the onmars theme the tone
-     * is drawn on the icon alone.
+     * Every non-neutral alert draws its tone's glyph in the icon frame (`info`,
+     * `circle-check`, `triangle-alert`, `octagon-alert`) unless an icon is slotted.
      */
     interface KiAlert {
         /**
@@ -13341,8 +13341,8 @@ declare module "@stencil/core" {
              * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
              * page load are exposed with their role but platform announcement is not
              * guaranteed.
-             * Every non-neutral alert should carry an icon: in the onmars theme the tone
-             * is drawn on the icon alone.
+             * Every non-neutral alert draws its tone's glyph in the icon frame (`info`,
+             * `circle-check`, `triangle-alert`, `octagon-alert`) unless an icon is slotted.
              */
             "ki-alert": LocalJSX.IntrinsicElements["ki-alert"] & JSXBase.HTMLAttributes<HTMLKiAlertElement>;
             /**
