@@ -98,7 +98,7 @@ it('S1 commits the exact minute typed in the locale and keeps the suggestions cl
 });
 
 it('S2 replaces zone help with the configured error after out-of-range input loses focus', async () => {
-  await mount(
+  const host = await mount(
     'lang="en-GB" min="08:00" max="18:00" time-zone="Europe/Madrid" help-text="Local office time" error-text="Enter a time between 08:00 and 18:00"',
     (markup) => `<form>${markup}<button type="submit" tabindex="0">Save</button></form>`,
   );
@@ -106,14 +106,15 @@ it('S2 replaces zone help with the configured error after out-of-range input los
   const zone = page.getByText(/Europe\/Madrid/u);
 
   await field().fill('20:00');
+  expect(host.shadowRoot?.activeElement).toBe(input());
   await expect.element(zone).toBeVisible();
-  await expect.element(error).not.toBeVisible();
+  await expect.element(error).not.toBeInTheDocument();
   await userEvent.tab();
-  // The clock button may be the next focus stop. Leaving the text control
-  // still commits its draft and gives invalid input an accessible description.
+  await expect.element(page.getByRole('button', { name: 'Save' })).toHaveFocus();
   await expect.element(field()).toHaveAttribute('aria-invalid', 'true');
   await expect.element(error).toBeVisible();
-  await expect.element(zone).not.toBeVisible();
+  await expect.element(zone).not.toBeInTheDocument();
+  await expect.element(field()).toHaveAccessibleDescription('Enter a time between 08:00 and 18:00');
   expect(form().checkValidity()).toBe(false);
 });
 
@@ -146,6 +147,9 @@ it('S4 Escape closes the suggestions without replacing typed text or moving focu
 
 it('S5 exposes a named combobox, controlled listbox, and selected active time', async () => {
   const host = await mount('lang="en-GB" value="09:00" min="08:30" max="10:00"');
+  const controlled = host.shadowRoot?.getElementById(input().getAttribute('aria-controls') ?? '');
+  expect(controlled).toHaveAttribute('hidden');
+  await expect.element(suggestions()).not.toBeInTheDocument();
 
   await openWithArrow();
 
@@ -154,7 +158,8 @@ it('S5 exposes a named combobox, controlled listbox, and selected active time', 
   expect(popup.id).not.toBe('');
   expect(selected.id).not.toBe('');
   await expect.element(field()).toHaveAttribute('aria-expanded', 'true');
-  expect(host.shadowRoot?.getElementById(input().getAttribute('aria-controls') ?? '')).toBe(popup);
+  expect(popup).toBe(controlled);
+  await expect.element(popup).not.toHaveAttribute('hidden');
   expect(popup.contains(selected)).toBe(true);
   await expect.element(field()).toHaveAttribute('aria-activedescendant', selected.id);
   await expect.element(selected).toHaveAttribute('aria-selected', 'true');
@@ -305,7 +310,6 @@ it('keeps selected, active and plain options visibly distinct in forced colours'
 });
 
 it('opens the material3 suggestions without running motion when reduced motion is requested', async () => {
-  await browserCommands.emulateReducedMotion('reduce');
   try {
     fixture.dataset.kiTheme = 'material3';
     const host = await mount('lang="en-GB" min="09:00" max="10:00"');
@@ -313,7 +317,10 @@ it('opens the material3 suggestions without running motion when reduced motion i
     if (!enclosure) {
       throw new Error('missing field enclosure');
     }
-    expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+    // WebKit re-evaluates motion styles for already mounted shadow roots.
+    await browserCommands.emulateReducedMotion('reduce');
+    await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+    await expect.poll(() => getComputedStyle(enclosure).transitionDuration).toBe('0s');
 
     await openWithArrow();
 

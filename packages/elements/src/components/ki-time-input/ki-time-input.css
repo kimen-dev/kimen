@@ -150,9 +150,11 @@ slot[name="start"]::slotted(*) {
   font-size: var(--ki-input-icon-size);
 }
 
+/* Use the list's writing direction inside the viewport's inline span. */
 [part="listbox"] {
   position: fixed;
   inset: auto;
+  inset-inline-start: anchor(self-start);
   box-sizing: border-box;
   color: var(--ki-time-input-list-fg);
   background-color: var(--ki-time-input-list-bg);
@@ -170,7 +172,7 @@ slot[name="start"]::slotted(*) {
   margin: 0;
   list-style: none;
   position-anchor: --ki-time-input-field;
-  position-area: block-end span-inline-end;
+  position-area: block-end span-all;
   position-try-fallbacks:
     flip-block,
     flip-inline,
@@ -236,6 +238,16 @@ slot[name="start"]::slotted(*) {
       background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
       border-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
       box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host,
+  *,
+  *::before,
+  *::after {
+    transition: none;
+    animation: none;
   }
 }
 

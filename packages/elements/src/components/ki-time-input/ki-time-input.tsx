@@ -471,7 +471,6 @@ export class KiTimeInput {
             tabindex="-1"
             aria-label={this.pickerLabel}
             aria-haspopup="listbox"
-            aria-controls={listId}
             aria-expanded={String(this.expanded)}
             disabled={this.effectiveDisabled}
             onMouseDown={this.keepListFocus}
@@ -487,6 +486,7 @@ export class KiTimeInput {
           role="listbox"
           tabindex="-1"
           popover="manual"
+          hidden={!this.expanded}
           ref={(element) => {
             this.list = element;
           }}
