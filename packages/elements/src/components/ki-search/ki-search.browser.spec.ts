@@ -304,11 +304,14 @@ it('S14 makes background controls inert and returns focus from Back', async () =
   fixture.append(outside);
   await searchbox().click();
   await expectShadowFocus(search, combobox());
+  const bar = part(search, 'bar');
+  expect(bar.inert).toBe(true);
   outside.focus();
   expect(search.shadowRoot?.activeElement).toBe(combobox().element());
   await expectAccessible(fixture);
   await page.getByRole('button', { name: 'Back' }).click();
   await expectShadowFocus(search, searchbox());
+  expect(bar.inert).toBe(false);
 });
 
 it('S15 includes the query in submitted form data and honors disabled fieldsets', async () => {

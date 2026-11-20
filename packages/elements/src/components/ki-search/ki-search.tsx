@@ -9,7 +9,6 @@ import {
   Element,
   Event,
   type EventEmitter,
-  Host,
   Listen,
   Prop,
   State,
@@ -381,8 +380,7 @@ export class KiSearch {
   };
 
   private readonly handleInput = (event: InputEvent): void => {
-    if (!(event.currentTarget instanceof HTMLInputElement)) return;
-    this.value = event.currentTarget.value;
+    this.value = (event.currentTarget as HTMLInputElement).value;
     this.openFromBar();
     if (!event.isComposing) this.queueInput();
   };
@@ -471,7 +469,8 @@ export class KiSearch {
   }
 
   private renderBar(modal: boolean, count: number) {
-    const expanded = this.open && count > 0 && (modal || !this.fullscreen);
+    const inactive = !modal && this.open && this.fullscreen;
+    const expanded = this.open && count > 0 && !inactive;
     const semantics = expanded
       ? {
           role: 'combobox',
@@ -483,7 +482,13 @@ export class KiSearch {
         }
       : {};
     return (
-      <div class="bar" part={modal ? 'dialog-bar' : 'bar'} role="search" aria-label={this.label}>
+      <div
+        class="bar"
+        part={modal ? 'dialog-bar' : 'bar'}
+        role="search"
+        aria-label={this.label}
+        inert={inactive}
+      >
         {modal ? (
           <button
             type="button"
@@ -620,38 +625,36 @@ export class KiSearch {
 
   render() {
     const suggestions = this.suggestions;
-    return (
-      <Host>
-        {this.renderBar(false, suggestions.length)}
-        {this.fullscreen ? (
-          <dialog
-            class="modal"
-            part="view"
-            aria-label={this.label}
-            onCancel={this.handleCancel}
-            ref={(node) => {
-              this.dialog = node;
-            }}
-          >
-            {this.renderBar(true, suggestions.length)}
-            {this.renderView(suggestions)}
-          </dialog>
-        ) : (
-          <div
-            part="view"
-            class="dock"
-            popover="manual"
-            ref={(node) => {
-              this.dock = node;
-            }}
-          >
-            {this.renderView(suggestions)}
-          </div>
-        )}
-        <div hidden>
-          <slot />
+    return [
+      this.renderBar(false, suggestions.length),
+      this.fullscreen ? (
+        <dialog
+          class="modal"
+          part="view"
+          aria-label={this.label}
+          onCancel={this.handleCancel}
+          ref={(node) => {
+            this.dialog = node;
+          }}
+        >
+          {this.renderBar(true, suggestions.length)}
+          {this.renderView(suggestions)}
+        </dialog>
+      ) : (
+        <div
+          part="view"
+          class="dock"
+          popover="manual"
+          ref={(node) => {
+            this.dock = node;
+          }}
+        >
+          {this.renderView(suggestions)}
         </div>
-      </Host>
-    );
+      ),
+      <div hidden>
+        <slot />
+      </div>,
+    ];
   }
 }
