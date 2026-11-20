@@ -868,6 +868,33 @@ export const catalogData = {
       "whenNotToUse": "when the reader should edit the source or when the code belongs\ninline in a sentence. Use an editor or a native inline code element.",
       "whenToUse": "display a multiline example, generated code or a tool result that\nreaders should be able to inspect and copy."
     },
+    "ki-conversation": {
+      "description": "An accessible chat transcript with optional following as messages arrive.",
+      "events": {},
+      "props": {
+        "jump-label": {
+          "type": "string",
+          "description": "Visible and accessible label for the control that resumes following.",
+          "default": "Jump to latest"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
+          "default": "Conversation"
+        },
+        "stick-to-bottom": {
+          "type": "boolean",
+          "description": "Follow new or growing messages until the reader scrolls away from the end.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "The chronological transcript, normally ki-message elements."
+      },
+      "tag": "ki-conversation",
+      "whenNotToUse": "Collect input, send messages or present a static sequence of\ncards. Place the composer outside the transcript.",
+      "whenToUse": "Display chronological user, assistant and event messages. Give\nthe host a block-size constraint to keep scrolling within the transcript."
+    },
     "ki-copy-button": {
       "description": "Copies text to the clipboard and confirms the result in the same button.",
       "events": {
@@ -1869,6 +1896,42 @@ export const catalogData = {
       "tag": "ki-menu-item",
       "whenNotToUse": "standalone controls, navigational links, or form options.",
       "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu."
+    },
+    "ki-message": {
+      "description": "A named chat article styled as a person’s message, assistant reply or event.",
+      "events": {},
+      "props": {
+        "author": {
+          "type": "string",
+          "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names."
+        },
+        "message-role": {
+          "type": "enum",
+          "values": [
+            "assistant",
+            "event",
+            "user"
+          ],
+          "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
+        },
+        "streaming": {
+          "type": "boolean",
+          "description": "Show the caret and mark the article busy until this message is complete.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Message content, including text or formatted elements.",
+        "actions": "Follow-up controls supplied by the consumer after the content.",
+        "avatar": "Optional avatar replacing the assistant’s decorative default."
+      },
+      "tag": "ki-message",
+      "whenNotToUse": "Collect a prompt, announce a page alert, or execute a tool.",
+      "whenToUse": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply."
     },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",

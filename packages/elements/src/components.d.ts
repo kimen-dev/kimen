@@ -33,6 +33,7 @@ import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
 import { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
+import { KiMessageRole } from "./components/ki-message/ki-message";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiPopoverKind, KiPopoverPlacement } from "./components/ki-popover/ki-popover";
@@ -82,6 +83,7 @@ export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
 export { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
+export { KiMessageRole } from "./components/ki-message/ki-message";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiPopoverKind, KiPopoverPlacement } from "./components/ki-popover/ki-popover";
@@ -698,6 +700,30 @@ export namespace Components {
           * @default false
          */
         "wrap": boolean;
+    }
+    /**
+     * An accessible chat transcript with optional following as messages arrive.
+     * @whenToUse Display chronological user, assistant and event messages. Give
+     * the host a block-size constraint to keep scrolling within the transcript.
+     * @whenNotToUse Collect input, send messages or present a static sequence of
+     * cards. Place the composer outside the transcript.
+     */
+    interface KiConversation {
+        /**
+          * Visible and accessible label for the control that resumes following.
+          * @default 'Jump to latest'
+         */
+        "jumpLabel": string;
+        /**
+          * Accessible name of the transcript. Supply a distinct label when several logs share a page.
+          * @default 'Conversation'
+         */
+        "label": string;
+        /**
+          * Follow new or growing messages until the reader scrolls away from the end.
+          * @default false
+         */
+        "stickToBottom": boolean;
     }
     /**
      * Copies text to the clipboard and confirms the result in the same button.
@@ -1461,6 +1487,32 @@ export namespace Components {
           * @default ''
          */
         "value": string;
+    }
+    /**
+     * A named chat article styled as a person’s message, assistant reply or event.
+     * @whenToUse Display a transcript entry inside ki-conversation. Pass
+     * formatted content through the default slot and set streaming during a reply.
+     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     */
+    interface KiMessage {
+        /**
+          * Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
+         */
+        "author"?: string;
+        /**
+          * Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
+         */
+        "iconName"?: string;
+        /**
+          * The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
+          * @default 'assistant'
+         */
+        "messageRole"?: KiMessageRole;
+        /**
+          * Show the caret and mark the article busy until this message is complete.
+          * @default false
+         */
+        "streaming": boolean;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -2983,6 +3035,19 @@ declare global {
         prototype: HTMLKiCodeBlockElement;
         new (): HTMLKiCodeBlockElement;
     };
+    /**
+     * An accessible chat transcript with optional following as messages arrive.
+     * @whenToUse Display chronological user, assistant and event messages. Give
+     * the host a block-size constraint to keep scrolling within the transcript.
+     * @whenNotToUse Collect input, send messages or present a static sequence of
+     * cards. Place the composer outside the transcript.
+     */
+    interface HTMLKiConversationElement extends Components.KiConversation, HTMLStencilElement {
+    }
+    var HTMLKiConversationElement: {
+        prototype: HTMLKiConversationElement;
+        new (): HTMLKiConversationElement;
+    };
     interface HTMLKiCopyButtonElementEventMap {
         "ki-copy": { value: string };
         "ki-copy-error": void;
@@ -3340,6 +3405,18 @@ declare global {
     var HTMLKiMenuItemElement: {
         prototype: HTMLKiMenuItemElement;
         new (): HTMLKiMenuItemElement;
+    };
+    /**
+     * A named chat article styled as a person’s message, assistant reply or event.
+     * @whenToUse Display a transcript entry inside ki-conversation. Pass
+     * formatted content through the default slot and set streaming during a reply.
+     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     */
+    interface HTMLKiMessageElement extends Components.KiMessage, HTMLStencilElement {
+    }
+    var HTMLKiMessageElement: {
+        prototype: HTMLKiMessageElement;
+        new (): HTMLKiMessageElement;
     };
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -3947,6 +4024,7 @@ declare global {
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
         "ki-code-block": HTMLKiCodeBlockElement;
+        "ki-conversation": HTMLKiConversationElement;
         "ki-copy-button": HTMLKiCopyButtonElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
@@ -3968,6 +4046,7 @@ declare global {
         "ki-menu": HTMLKiMenuElement;
         "ki-menu-group": HTMLKiMenuGroupElement;
         "ki-menu-item": HTMLKiMenuItemElement;
+        "ki-message": HTMLKiMessageElement;
         "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
         "ki-popover": HTMLKiPopoverElement;
@@ -4653,6 +4732,30 @@ declare namespace LocalJSX {
           * @default false
          */
         "wrap"?: boolean;
+    }
+    /**
+     * An accessible chat transcript with optional following as messages arrive.
+     * @whenToUse Display chronological user, assistant and event messages. Give
+     * the host a block-size constraint to keep scrolling within the transcript.
+     * @whenNotToUse Collect input, send messages or present a static sequence of
+     * cards. Place the composer outside the transcript.
+     */
+    interface KiConversation {
+        /**
+          * Visible and accessible label for the control that resumes following.
+          * @default 'Jump to latest'
+         */
+        "jumpLabel"?: string;
+        /**
+          * Accessible name of the transcript. Supply a distinct label when several logs share a page.
+          * @default 'Conversation'
+         */
+        "label"?: string;
+        /**
+          * Follow new or growing messages until the reader scrolls away from the end.
+          * @default false
+         */
+        "stickToBottom"?: boolean;
     }
     /**
      * Copies text to the clipboard and confirms the result in the same button.
@@ -5432,6 +5535,32 @@ declare namespace LocalJSX {
           * @default ''
          */
         "value"?: string;
+    }
+    /**
+     * A named chat article styled as a person’s message, assistant reply or event.
+     * @whenToUse Display a transcript entry inside ki-conversation. Pass
+     * formatted content through the default slot and set streaming during a reply.
+     * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+     */
+    interface KiMessage {
+        /**
+          * Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
+         */
+        "author"?: string;
+        /**
+          * Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
+         */
+        "iconName"?: string;
+        /**
+          * The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
+          * @default 'assistant'
+         */
+        "messageRole"?: KiMessageRole;
+        /**
+          * Show the caret and mark the article busy until this message is complete.
+          * @default false
+         */
+        "streaming"?: boolean;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -6734,6 +6863,11 @@ declare namespace LocalJSX {
         "copiedLabel": string;
         "copyErrorLabel": string;
     }
+    interface KiConversationAttributes {
+        "label": string;
+        "stickToBottom": boolean;
+        "jumpLabel": string;
+    }
     interface KiCopyButtonAttributes {
         "value": string;
         "from": string;
@@ -6888,6 +7022,12 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "tone": KiMenuItemTone;
         "shortcut": string;
+    }
+    interface KiMessageAttributes {
+        "messageRole": KiMessageRole;
+        "streaming": boolean;
+        "author": string;
+        "iconName": string;
     }
     interface KiNoteAttributes {
         "tone": KiNoteTone;
@@ -7116,6 +7256,7 @@ declare namespace LocalJSX {
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
         "ki-code-block": Omit<KiCodeBlock, keyof KiCodeBlockAttributes> & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes]?: KiCodeBlock[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `attr:${K}`]?: KiCodeBlockAttributes[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `prop:${K}`]?: KiCodeBlock[K] };
+        "ki-conversation": Omit<KiConversation, keyof KiConversationAttributes> & { [K in keyof KiConversation & keyof KiConversationAttributes]?: KiConversation[K] } & { [K in keyof KiConversation & keyof KiConversationAttributes as `attr:${K}`]?: KiConversationAttributes[K] } & { [K in keyof KiConversation & keyof KiConversationAttributes as `prop:${K}`]?: KiConversation[K] };
         "ki-copy-button": Omit<KiCopyButton, keyof KiCopyButtonAttributes> & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes]?: KiCopyButton[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `attr:${K}`]?: KiCopyButtonAttributes[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `prop:${K}`]?: KiCopyButton[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
@@ -7137,6 +7278,7 @@ declare namespace LocalJSX {
         "ki-menu": Omit<KiMenu, keyof KiMenuAttributes> & { [K in keyof KiMenu & keyof KiMenuAttributes]?: KiMenu[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `attr:${K}`]?: KiMenuAttributes[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `prop:${K}`]?: KiMenu[K] };
         "ki-menu-group": Omit<KiMenuGroup, keyof KiMenuGroupAttributes> & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes]?: KiMenuGroup[K] } & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes as `attr:${K}`]?: KiMenuGroupAttributes[K] } & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes as `prop:${K}`]?: KiMenuGroup[K] };
         "ki-menu-item": Omit<KiMenuItem, keyof KiMenuItemAttributes> & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes]?: KiMenuItem[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `attr:${K}`]?: KiMenuItemAttributes[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `prop:${K}`]?: KiMenuItem[K] };
+        "ki-message": Omit<KiMessage, keyof KiMessageAttributes> & { [K in keyof KiMessage & keyof KiMessageAttributes]?: KiMessage[K] } & { [K in keyof KiMessage & keyof KiMessageAttributes as `attr:${K}`]?: KiMessageAttributes[K] } & { [K in keyof KiMessage & keyof KiMessageAttributes as `prop:${K}`]?: KiMessage[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-popover": Omit<KiPopover, keyof KiPopoverAttributes> & { [K in keyof KiPopover & keyof KiPopoverAttributes]?: KiPopover[K] } & { [K in keyof KiPopover & keyof KiPopoverAttributes as `attr:${K}`]?: KiPopoverAttributes[K] } & { [K in keyof KiPopover & keyof KiPopoverAttributes as `prop:${K}`]?: KiPopover[K] };
@@ -7331,6 +7473,14 @@ declare module "@stencil/core" {
              * inline in a sentence. Use an editor or a native inline code element.
              */
             "ki-code-block": LocalJSX.IntrinsicElements["ki-code-block"] & JSXBase.HTMLAttributes<HTMLKiCodeBlockElement>;
+            /**
+             * An accessible chat transcript with optional following as messages arrive.
+             * @whenToUse Display chronological user, assistant and event messages. Give
+             * the host a block-size constraint to keep scrolling within the transcript.
+             * @whenNotToUse Collect input, send messages or present a static sequence of
+             * cards. Place the composer outside the transcript.
+             */
+            "ki-conversation": LocalJSX.IntrinsicElements["ki-conversation"] & JSXBase.HTMLAttributes<HTMLKiConversationElement>;
             /**
              * Copies text to the clipboard and confirms the result in the same button.
              * @whenToUse let a person copy a link, identifier, token or code sample. Supply
@@ -7539,6 +7689,13 @@ declare module "@stencil/core" {
              * @whenNotToUse standalone controls, navigational links, or form options.
              */
             "ki-menu-item": LocalJSX.IntrinsicElements["ki-menu-item"] & JSXBase.HTMLAttributes<HTMLKiMenuItemElement>;
+            /**
+             * A named chat article styled as a person’s message, assistant reply or event.
+             * @whenToUse Display a transcript entry inside ki-conversation. Pass
+             * formatted content through the default slot and set streaming during a reply.
+             * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
+             */
+            "ki-message": LocalJSX.IntrinsicElements["ki-message"] & JSXBase.HTMLAttributes<HTMLKiMessageElement>;
             /**
              * A compact, static explanation beside a control or inside a card.
              * @whenToUse Add a short constraint, tip or consequence next to the content

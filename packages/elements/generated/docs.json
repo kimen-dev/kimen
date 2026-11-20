@@ -2041,9 +2041,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-conversation"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-conversation": [
+          "ki-button"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-button-group/ki-button-group.tsx",
@@ -4245,6 +4251,164 @@
         ],
         "ki-copy-button": [
           "ki-icon"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-conversation/ki-conversation.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-conversation",
+      "docs": "An accessible chat transcript with optional following as messages arrive.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Display chronological user, assistant and event messages. Give\nthe host a block-size constraint to keep scrolling within the transcript."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Collect input, send messages or present a static sequence of\ncards. Place the composer outside the transcript."
+        },
+        {
+          "name": "slot",
+          "text": "- The chronological transcript, normally ki-message elements."
+        },
+        {
+          "name": "part",
+          "text": "log - The named polite live region and keyboard-focusable scrollport."
+        },
+        {
+          "name": "part",
+          "text": "messages - The stack of slotted messages inside the scrollport."
+        },
+        {
+          "name": "part",
+          "text": "jump - The Jump to latest button shown while following is paused."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-conversation examples\n\n## Bounded transcript\n\nSet a block size to make the transcript scroll. Enable `stick-to-bottom` to\nfollow new messages and keep incoming replies in view.\n\n```html\n<ki-conversation id=\"help-chat\" label=\"Component help\" stick-to-bottom style=\"block-size: 20rem\">\n  <ki-message message-role=\"user\">Which inputs handle form errors?</ki-message>\n  <ki-message message-role=\"event\" icon-name=\"search\">Searched the component docs</ki-message>\n  <ki-message message-role=\"assistant\">Input, textarea and select show field errors.</ki-message>\n</ki-conversation>\n<label for=\"prompt\">Message</label>\n<textarea id=\"prompt\"></textarea>\n```\n\n## Pass application chunks to a message\n\nCall this function with the async iterable supplied by your application.\nKeep the composer and any waiting indicator outside the live log.\n\n```js\nasync function appendReply(conversation, chunks) {\n  const reply = document.createElement('ki-message');\n  reply.setAttribute('streaming', '');\n  conversation.append(reply);\n  try {\n    for await (const chunk of chunks) {\n      reply.append(chunk);\n    }\n  } finally {\n    reply.removeAttribute('streaming');\n  }\n}\n```\n\n## Custom-elements entry points\n\n```ts\nimport { defineCustomElement as defineConversation } from '@kimen/elements/ki-conversation';\nimport { defineCustomElement as defineMessage } from '@kimen/elements/ki-message';\n\ndefineConversation();\ndefineMessage();\n```\n"
+      },
+      "props": [
+        {
+          "name": "jumpLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "jump-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible label for the control that resumes following.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Jump to latest'"
+            }
+          ],
+          "default": "'Jump to latest'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Conversation'"
+            }
+          ],
+          "default": "'Conversation'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "stickToBottom",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "stick-to-bottom",
+          "reflectToAttr": true,
+          "docs": "Follow new or growing messages until the reader scrolls away from the end.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The chronological transcript, normally ki-message elements."
+        }
+      ],
+      "parts": [
+        {
+          "name": "jump",
+          "docs": "The Jump to latest button shown while following is paused."
+        },
+        {
+          "name": "log",
+          "docs": "The named polite live region and keyboard-focusable scrollport."
+        },
+        {
+          "name": "messages",
+          "docs": "The stack of slotted messages inside the scrollport."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-button"
+      ],
+      "dependencyGraph": {
+        "ki-conversation": [
+          "ki-button"
         ]
       }
     },
@@ -6864,6 +7028,7 @@
         "ki-copy-button",
         "ki-empty-state",
         "ki-fab",
+        "ki-message",
         "ki-stat",
         "ki-stepper",
         "ki-table"
@@ -6883,6 +7048,9 @@
           "ki-icon"
         ],
         "ki-fab": [
+          "ki-icon"
+        ],
+        "ki-message": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -9572,6 +9740,236 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-message/ki-message.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-message",
+      "docs": "A named chat article styled as a person’s message, assistant reply or event.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Collect a prompt, announce a page alert, or execute a tool."
+        },
+        {
+          "name": "slot",
+          "text": "- Message content, including text or formatted elements."
+        },
+        {
+          "name": "slot",
+          "text": "avatar - Optional avatar replacing the assistant’s decorative default."
+        },
+        {
+          "name": "slot",
+          "text": "actions - Follow-up controls supplied by the consumer after the content."
+        },
+        {
+          "name": "part",
+          "text": "message - The named article and role-specific layout."
+        },
+        {
+          "name": "part",
+          "text": "avatar - The leading assistant avatar container."
+        },
+        {
+          "name": "part",
+          "text": "content - The body of the article, including any event icon."
+        },
+        {
+          "name": "part",
+          "text": "actions - The group containing slotted follow-up controls."
+        },
+        {
+          "name": "part",
+          "text": "caret - The decorative marker displayed while a message is streaming."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-message examples\n\n## User and event messages\n\n```html\n<ki-message message-role=\"user\">Can I export my settings?</ki-message>\n<ki-message message-role=\"event\" icon-name=\"search\">Found the export guide</ki-message>\n```\n\n## Assistant reply with an avatar and action\n\nThe `author` prop names the article. Put formatted content in the default\nslot and application controls in `actions`.\n\n```html\n<ki-message message-role=\"assistant\" author=\"Ava said\">\n  <ki-avatar slot=\"avatar\" size=\"xs\" initials=\"AV\"></ki-avatar>\n  <strong>Yes.</strong> Choose <code>JSON</code> from the export menu.\n  <details slot=\"actions\">\n    <summary>View source</summary>\n    Settings export guide\n  </details>\n</ki-message>\n```\n\n## Streaming reply\n\nAdd `streaming` while the content is arriving, then remove it when the\ncomplete reply is available. Use a registered Markdown component in the\ndefault slot when your application displays formatted Markdown.\n\n```html\n<ki-message message-role=\"assistant\" streaming>Choose the export format</ki-message>\n```\n"
+      },
+      "props": [
+        {
+          "name": "author",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "author",
+          "reflectToAttr": false,
+          "docs": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "messageRole",
+          "type": "\"assistant\" | \"event\" | \"user\" | undefined",
+          "complexType": {
+            "original": "KiMessageRole",
+            "resolved": "\"assistant\" | \"event\" | \"user\" | undefined",
+            "references": {
+              "KiMessageRole": {
+                "location": "local",
+                "path": "src/components/ki-message/ki-message.tsx",
+                "id": "src/components/ki-message/ki-message.tsx::KiMessageRole"
+              }
+            }
+          },
+          "mutable": true,
+          "attr": "message-role",
+          "reflectToAttr": true,
+          "docs": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'assistant'"
+            }
+          ],
+          "values": [
+            {
+              "value": "assistant",
+              "type": "string"
+            },
+            {
+              "value": "event",
+              "type": "string"
+            },
+            {
+              "value": "user",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "streaming",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "streaming",
+          "reflectToAttr": true,
+          "docs": "Show the caret and mark the article busy until this message is complete.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Message content, including text or formatted elements."
+        },
+        {
+          "name": "actions",
+          "docs": "Follow-up controls supplied by the consumer after the content."
+        },
+        {
+          "name": "avatar",
+          "docs": "Optional avatar replacing the assistant’s decorative default."
+        }
+      ],
+      "parts": [
+        {
+          "name": "actions",
+          "docs": "The group containing slotted follow-up controls."
+        },
+        {
+          "name": "avatar",
+          "docs": "The leading assistant avatar container."
+        },
+        {
+          "name": "caret",
+          "docs": "The decorative marker displayed while a message is streaming."
+        },
+        {
+          "name": "content",
+          "docs": "The body of the article, including any event icon."
+        },
+        {
+          "name": "message",
+          "docs": "The named article and role-specific layout."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-message": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-note/ki-note.tsx",
@@ -16901,6 +17299,11 @@
       "declaration": "export interface KiMenuSelectDetail {\n  value: string;\n  checked?: boolean;\n}",
       "docstring": "",
       "path": "src/components/ki-menu/ki-menu.tsx"
+    },
+    "src/components/ki-message/ki-message.tsx::KiMessageRole": {
+      "declaration": "export type KiMessageRole = 'user' | 'assistant' | 'event';",
+      "docstring": "",
+      "path": "src/components/ki-message/ki-message.tsx"
     },
     "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
       "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",
