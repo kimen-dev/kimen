@@ -4971,6 +4971,354 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-empty-state.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiEmptyState",
+          "customElement": true,
+          "tagName": "ki-empty-state",
+          "description": "A short explanation and next step for an empty view.",
+          "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction.",
+          "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
+          "attributes": [
+            {
+              "name": "announce",
+              "fieldName": "announce",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results."
+            },
+            {
+              "name": "heading",
+              "fieldName": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
+              "required": true
+            },
+            {
+              "name": "heading-level",
+              "fieldName": "headingLevel",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
+              "minimum": 2,
+              "maximum": 6
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "FeatureIcon tone. Unrecognized tones use the neutral tile."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "announce",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
+              "attribute": "announce",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
+              "attribute": "heading",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "headingLevel",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
+              "attribute": "heading-level",
+              "reflects": false,
+              "minimum": 2,
+              "maximum": 6
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
+              "attribute": "tone",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Localized supporting text with a reason or recovery advice."
+            },
+            {
+              "name": "actions",
+              "description": "Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls."
+            },
+            {
+              "name": "media",
+              "description": "Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "actions",
+              "description": "Wrapping row of consumer-supplied controls."
+            },
+            {
+              "name": "container",
+              "description": "Centered layout for the illustration, message and actions."
+            },
+            {
+              "name": "description",
+              "description": "Wrapper for the default slot."
+            },
+            {
+              "name": "heading",
+              "description": "Native heading at the selected document level."
+            },
+            {
+              "name": "media",
+              "description": "Decorative illustration or FeatureIcon tile."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-empty-state-backdrop-filter",
+              "description": "Complete filter applied behind the empty view."
+            },
+            {
+              "name": "--ki-empty-state-bg",
+              "description": "Background behind the empty view."
+            },
+            {
+              "name": "--ki-empty-state-bg-image",
+              "description": "Optional image above the background color."
+            },
+            {
+              "name": "--ki-empty-state-description-bg",
+              "description": "Background layer behind the supporting copy."
+            },
+            {
+              "name": "--ki-empty-state-description-fg",
+              "description": "Supporting text ink, strengthened in contrast-more mode."
+            },
+            {
+              "name": "--ki-empty-state-description-line-height",
+              "description": "Line height of the supporting copy."
+            },
+            {
+              "name": "--ki-empty-state-description-size",
+              "description": "Font size of the supporting copy."
+            },
+            {
+              "name": "--ki-empty-state-fg",
+              "description": "Foreground ink for the heading."
+            },
+            {
+              "name": "--ki-empty-state-gap",
+              "description": "Gap between the decorative media, message and action row."
+            },
+            {
+              "name": "--ki-empty-state-gap-sm",
+              "description": "Gap between regions in a compact empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-font-family",
+              "description": "Typeface for the native heading."
+            },
+            {
+              "name": "--ki-empty-state-heading-line-height",
+              "description": "Heading line height in a regular empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-line-height-sm",
+              "description": "Heading line height in a compact empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-size",
+              "description": "Heading font size in a regular empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-size-sm",
+              "description": "Heading font size in a compact empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-weight",
+              "description": "Weight of the heading."
+            },
+            {
+              "name": "--ki-empty-state-max-width",
+              "description": "Maximum inline size of the centered content."
+            },
+            {
+              "name": "--ki-empty-state-tile-danger-bg",
+              "description": "Background of the danger decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-danger-fg",
+              "description": "Glyph ink on the danger decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-info-bg",
+              "description": "Background of the info decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-info-fg",
+              "description": "Glyph ink on the info decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-neutral-bg",
+              "description": "Background of the neutral decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-neutral-fg",
+              "description": "Glyph ink on the neutral decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-primary-bg",
+              "description": "Background of the primary decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-primary-fg",
+              "description": "Glyph ink on the primary decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-primary-light-bg",
+              "description": "Background of the primary-light decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-primary-light-fg",
+              "description": "Glyph ink on the primary-light decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-radius",
+              "description": "Corner radius of the regular fallback tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-radius-sm",
+              "description": "Corner radius of the compact fallback tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-size",
+              "description": "Regular FeatureIcon fallback tile size."
+            },
+            {
+              "name": "--ki-empty-state-tile-size-sm",
+              "description": "Compact FeatureIcon fallback tile size."
+            },
+            {
+              "name": "--ki-empty-state-tile-success-bg",
+              "description": "Background of the success decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-success-fg",
+              "description": "Glyph ink on the success decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-warning-bg",
+              "description": "Background of the warning decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-warning-fg",
+              "description": "Glyph ink on the warning decorative tile."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiEmptyState",
+          "declaration": {
+            "name": "KiEmptyState",
+            "module": "dist/components/ki-empty-state.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-empty-state",
+          "declaration": {
+            "name": "KiEmptyState",
+            "module": "dist/components/ki-empty-state.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-grid.js",
       "declarations": [
         {
