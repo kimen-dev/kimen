@@ -234,11 +234,28 @@ it('S8 stops on focus, keeps the manual announcement and restarts with Play', as
     await startClock();
     const host = await mount({ autoplay: '1000', loop: '' });
     const rotation = part(host, 'rotation');
+    const viewport = part(host, 'viewport');
+    const scrollSettled =
+      'onscrollend' in viewport
+        ? new Promise<void>((resolve) => {
+            viewport.addEventListener(
+              'scrollend',
+              () => {
+                resolve();
+              },
+              { once: true },
+            );
+          })
+        : undefined;
     expect(part(host, 'announcement').getAttribute('aria-live')).toBe('off');
     await browser.fastForwardClock(1100);
     expect(host.current).toBe(2);
 
     rotation.focus();
+    // Native smooth scrolling can still be in flight after current changes.
+    // Finish it while rotation is stopped so its scroll events cannot rearm Play's timer.
+    if (scrollSettled) await scrollSettled;
+    else await expect.poll(() => aligned(host, 2)).toBe(true);
     await frames();
     await browser.fastForwardClock(1200);
 
@@ -246,7 +263,10 @@ it('S8 stops on focus, keeps the manual announcement and restarts with Play', as
     expect(part(host, 'announcement').getAttribute('aria-live')).toBe('polite');
     expect(rotation.textContent).toBe('Play');
     await userEvent.keyboard(' ');
-    await browser.fastForwardClock(1100);
+    await frames();
+    expect(rotation.textContent).toBe('Pause');
+    expect(part(host, 'announcement').getAttribute('aria-live')).toBe('off');
+    await browser.fastForwardClock(1000);
     expect(host.current).toBe(3);
   } finally {
     await browser.emulateReducedMotion(null);
