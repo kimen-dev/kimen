@@ -597,7 +597,7 @@
   --ki-font-family-body:'Instrument Sans',system-ui,sans-serif;
   --ki-font-family-serif:'Newsreader',Georgia,serif;
   --ki-font-family-mono:'JetBrains Mono',ui-monospace,monospace;
-  --ki-font-size-caption-1:var(--ki-space-lg);
+  --ki-font-size-caption-1:0.6875rem;
   --ki-font-size-overline:0.6875rem;
   --ki-font-size-caption-2:var(--ki-space-xl);
   --ki-font-size-body-1:0.8125rem;
@@ -613,7 +613,7 @@
   --ki-font-size-display-1:4.75rem;
   --ki-font-size-display-2:var(--ki-space-21xl);
   --ki-font-size-display-3:var(--ki-space-23xl);
-  --ki-font-line-height-overline:var(--ki-space-xl);
+  --ki-font-line-height-overline:var(--ki-space-3xl);
   --ki-font-line-height-caption-1:var(--ki-space-3xl);
   --ki-font-line-height-caption-2:var(--ki-space-3xl);
   --ki-font-line-height-para:var(--ki-space-5xl);
@@ -628,8 +628,8 @@
   --ki-font-line-height-heading-5:var(--ki-space-16xl);
   --ki-font-line-height-heading-6:4.25rem;
   --ki-font-line-height-display-1:var(--ki-space-20xl);
-  --ki-font-line-height-display-2:var(--ki-space-20xl);
-  --ki-font-line-height-display-3:var(--ki-space-22xl);
+  --ki-font-line-height-display-2:var(--ki-space-22xl);
+  --ki-font-line-height-display-3:var(--ki-space-23xl);
   --ki-font-weight-display-normal:400;
   --ki-font-weight-display-medium:500;
   --ki-font-weight-display-semibold:600;

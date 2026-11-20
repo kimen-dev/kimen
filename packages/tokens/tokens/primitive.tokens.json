@@ -2750,6 +2750,13 @@
           },
           "$description": "The two schemes share layer geometry. Transparent layers mask the shapes used only by the other scheme."
         },
+        "type-scale": {
+          "$type": "dimension",
+          "$description": "Calma's type steps that fall between the space scale: caption-1 at 11px, legible for counters and dense meta in Instrument Sans.",
+          "caption-1-size": {
+            "$value": "0.6875rem"
+          }
+        },
         "tracking": {
           "$type": "dimension",
           "xs": {

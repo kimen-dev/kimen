@@ -433,6 +433,22 @@
         "display": {
           "$value": "{ki.foundation.migrated.themes-onmars.font.family.serif}"
         }
+      },
+      "size": {
+        "caption-1": {
+          "$value": "{ki.foundation.onmars-v2.type-scale.caption-1-size}"
+        }
+      },
+      "line-height": {
+        "overline": {
+          "$value": "{ki.space.3xl}"
+        },
+        "display-2": {
+          "$value": "{ki.space.22xl}"
+        },
+        "display-3": {
+          "$value": "{ki.space.23xl}"
+        }
       }
     },
     "duration": {
