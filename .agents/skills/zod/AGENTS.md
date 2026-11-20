@@ -529,8 +529,8 @@ function calculateDiscount(order: Order): number {
 | Env vars | At app startup (`parse()` — crash on invalid is intentional) |
 | External API | After `fetch()`, before using data |
 
-> **Kimen note:** for Kimen this "boundary" is where adapter payloads (A2UI, MCP
-> Apps, AG-UI, json-render) and external catalog input enter — parse there, hand
+> **Kimen note:** for Kimen this "boundary" is where adapter payloads (A2UI and MCP
+> Apps, including A2UI carried over AG-UI) and external catalog input enter — parse there, hand
 > typed catalog entries to the neutral catalog/domain (Art. VIII).
 
 ### Rule: Co-locate Schemas with Their Boundary Layer

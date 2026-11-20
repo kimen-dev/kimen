@@ -1,6 +1,6 @@
 # AGENTS.md
 
-<!-- Constitution stamp: v2.0.0. Bootstrap file, maintained by hand until the
+<!-- Constitution stamp: v2.0.1. Bootstrap file, maintained by hand until the
      Art. I generation pipeline exists (Fase 2); then it becomes a generated
      artifact like every other agent surface. -->
 
