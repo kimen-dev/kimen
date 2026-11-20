@@ -39,7 +39,7 @@ A guarded surface can pass the source as a string in the default slot.
   "version": 1,
   "root": {
     "component": "ki-markdown",
-    "props": { "headingOffset": 1 },
+    "props": { "heading-offset": 1 },
     "slots": { "": ["# Release notes\n\nRead the [upgrade guide](/guides/upgrade)."] }
   }
 }
