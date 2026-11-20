@@ -1744,6 +1744,68 @@ export const catalogData = {
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
       "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
+    "ki-popover": {
+      "description": "A non-modal popover anchored to a button.",
+      "events": {
+        "ki-close": "Emitted when the popover closes.",
+        "ki-open": "Emitted when the popover opens."
+      },
+      "props": {
+        "arrow": {
+          "type": "boolean",
+          "description": "Shows the arrow toward the trigger.",
+          "default": true
+        },
+        "for": {
+          "type": "string",
+          "description": "ID of the button in the same document or shadow tree."
+        },
+        "kind": {
+          "type": "enum",
+          "values": [
+            "dialog",
+            "toggletip"
+          ],
+          "description": "Use dialog for controls or toggletip for supplemental text.",
+          "default": "dialog"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of a dialog popover.",
+          "default": "Popover"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Visibility. Reflects activation and native dismissal.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom",
+            "bottom-end",
+            "bottom-start",
+            "end",
+            "end-end",
+            "end-start",
+            "start",
+            "start-end",
+            "start-start",
+            "top",
+            "top-end",
+            "top-start"
+          ],
+          "description": "Preferred side and logical alignment. Flips when room is limited.",
+          "default": "bottom-start"
+        }
+      },
+      "slots": {
+        "": "Dialog content or toggletip text."
+      },
+      "tag": "ki-popover",
+      "whenNotToUse": "Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.",
+      "whenToUse": "Show filters, details, a small form, or a text toggletip."
+    },
     "ki-progress": {
       "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",
       "events": {},
@@ -2429,94 +2491,6 @@ export const catalogData = {
       "tag": "ki-status",
       "whenNotToUse": "short labeled status text (that pill is ki-badge — this dot\nnever renders text), notification counters or the overlay attachment\nmechanism (a future, separate nav-badge concern), messages that need\nattention or announcement (ki-alert — the dot has no live region),\nprogress or loading (ki-progress). An unlabeled dot without adjacent\nvisible text is an authoring mistake (WCAG 1.4.1).",
       "whenToUse": "mark a state with minimal footprint adjacent to (or overlaid\non) the item it describes: presence on an avatar, health of a service\nlist entry, connection state in a toolbar. Label it (`label`) or pair it\nwith adjacent visible text — color is never the only carrier of the\nmeaning (WCAG 1.4.1)."
-    },
-    "ki-step": {
-      "description": "One authored step in a Stepper.",
-      "events": {},
-      "props": {
-        "description": {
-          "type": "string",
-          "description": "Optional supporting text displayed below the label."
-        },
-        "href": {
-          "type": "string",
-          "description": "Destination for a completed step. Omit for a passive step.",
-          "format": "url"
-        },
-        "state": {
-          "type": "enum",
-          "values": [
-            "current",
-            "done",
-            "error",
-            "upcoming"
-          ],
-          "description": "The step's progress state. Mark the active step as current.",
-          "default": "upcoming"
-        }
-      },
-      "slots": {
-        "": "The visible label. Use text or passive inline markup."
-      },
-      "tag": "ki-step",
-      "whenNotToUse": "Standalone or with interactive content in the label.\nA completed step can make the label itself a link.",
-      "whenToUse": "Place directly inside ki-stepper in task order. Its default slot\nis the step label and its properties describe the step to the owning list."
-    },
-    "ki-stepper": {
-      "description": "An ordered, responsive view of progress through named steps.",
-      "events": {},
-      "props": {
-        "count-label": {
-          "type": "string",
-          "description": "Compact disclosure text without a current step. Include {total}.",
-          "default": "Steps ({total})"
-        },
-        "current-label": {
-          "type": "string",
-          "description": "Localized text for the current step.",
-          "default": "Current"
-        },
-        "done-label": {
-          "type": "string",
-          "description": "Localized text for a completed step.",
-          "default": "Completed"
-        },
-        "error-label": {
-          "type": "string",
-          "description": "Localized text for a step that has an error.",
-          "default": "Error"
-        },
-        "label": {
-          "type": "string",
-          "description": "Accessible name of the list. Use a localized description of the task.",
-          "required": true
-        },
-        "orientation": {
-          "type": "enum",
-          "values": [
-            "horizontal",
-            "vertical"
-          ],
-          "description": "Use vertical for a stacked list. Horizontal layout compacts below 22rem.",
-          "default": "horizontal"
-        },
-        "summary-label": {
-          "type": "string",
-          "description": "Compact disclosure text. Place {current} and {total} in the local order.",
-          "default": "Step {current} of {total}"
-        },
-        "upcoming-label": {
-          "type": "string",
-          "description": "Localized text for an upcoming step.",
-          "default": "Not started"
-        }
-      },
-      "slots": {
-        "": "Direct ki-step children in task order. The stepper assigns each\nchild to its row automatically."
-      },
-      "tag": "ki-stepper",
-      "whenNotToUse": "A percentage or indeterminate task, a carousel position,\nor navigation among peer views. The task owner updates step states.",
-      "whenToUse": "Show the current place in onboarding, checkout or a wizard.\nProvide a label and direct ki-step children in task order."
     },
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",

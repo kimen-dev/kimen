@@ -40,6 +40,7 @@ import { defineCustomElement as defineKiMenuGroup } from '@kimen/elements/compon
 import { defineCustomElement as defineKiMenuItem } from '@kimen/elements/components/ki-menu-item.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
+import { defineCustomElement as defineKiPopover } from '@kimen/elements/components/ki-popover.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
@@ -55,8 +56,6 @@ import { defineCustomElement as defineKiSpinner } from '@kimen/elements/componen
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStat } from '@kimen/elements/components/ki-stat.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
-import { defineCustomElement as defineKiStep } from '@kimen/elements/components/ki-step.js';
-import { defineCustomElement as defineKiStepper } from '@kimen/elements/components/ki-stepper.js';
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
 import { defineCustomElement as defineKiTab } from '@kimen/elements/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
@@ -916,6 +915,37 @@ export declare interface KiOption extends Components.KiOption {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiPopover,
+  inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement']
+})
+@Component({
+  selector: 'ki-popover',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement'],
+})
+export class KiPopover {
+  protected el: HTMLKiPopoverElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiPopover extends Components.KiPopover {
+  /**
+   * Emitted when the popover opens.
+   */
+  /**
+   * Emitted when the popover closes.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiProgress,
   inputs: ['indeterminate', 'label', 'max', 'shape', 'value']
 })
@@ -1263,52 +1293,6 @@ export class KiStatus {
 
 
 export declare interface KiStatus extends Components.KiStatus {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiStep,
-  inputs: ['description', 'href', 'state']
-})
-@Component({
-  selector: 'ki-step',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['description', 'href', 'state'],
-})
-export class KiStep {
-  protected el: HTMLKiStepElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiStep extends Components.KiStep {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiStepper,
-  inputs: ['countLabel', 'currentLabel', 'doneLabel', 'errorLabel', 'label', 'orientation', 'summaryLabel', 'upcomingLabel']
-})
-@Component({
-  selector: 'ki-stepper',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['countLabel', 'currentLabel', 'doneLabel', 'errorLabel', { name: 'label', required: true }, 'orientation', 'summaryLabel', 'upcomingLabel'],
-})
-export class KiStepper {
-  protected el: HTMLKiStepperElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiStepper extends Components.KiStepper {}
 
 
 @ProxyCmp({

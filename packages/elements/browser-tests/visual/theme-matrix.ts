@@ -19,6 +19,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-menu-group',
   'ki-menu-item',
   'ki-note',
+  'ki-popover',
   'ki-relative-time',
   'ki-segment',
   'ki-segmented-control',

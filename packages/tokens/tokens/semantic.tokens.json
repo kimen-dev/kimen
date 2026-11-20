@@ -2329,6 +2329,38 @@
           "$description": "Extra-large feature tile edge, 64px at the default root size."
         }
       }
+    },
+    "anchored-surface": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.space.md}",
+        "$description": "Space between a floating surface and its trigger."
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{ki.space.xl}",
+        "$description": "Interior padding for a small anchored surface."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius for a small anchored surface."
+      },
+      "arrow-size": {
+        "$type": "dimension",
+        "$value": "{ki.space.lg}",
+        "$description": "Side length of an anchored surface pointer before rotation."
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Outline thickness for a small anchored surface."
+      },
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.surface.xs}",
+        "$description": "Maximum inline size of a small anchored surface."
+      }
     }
   }
 }

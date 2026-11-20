@@ -34,6 +34,7 @@ import { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-men
 import { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
+import { KiPopoverKind, KiPopoverPlacement } from "./components/ki-popover/ki-popover";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
@@ -42,8 +43,6 @@ import { KiSelectSize } from "./components/ki-select/ki-select";
 import { KiSliderFormat, KiSliderOrientation } from "./components/ki-slider/ki-slider";
 import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 import { KiStatusTone } from "./components/ki-status/ki-status";
-import { KiStepState } from "./components/ki-step/ki-step";
-import { KiStepperOrientation } from "./components/ki-stepper/ki-stepper";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
@@ -80,6 +79,7 @@ export { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-men
 export { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
+export { KiPopoverKind, KiPopoverPlacement } from "./components/ki-popover/ki-popover";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
@@ -88,8 +88,6 @@ export { KiSelectSize } from "./components/ki-select/ki-select";
 export { KiSliderFormat, KiSliderOrientation } from "./components/ki-slider/ki-slider";
 export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 export { KiStatusTone } from "./components/ki-status/ki-status";
-export { KiStepState } from "./components/ki-step/ki-step";
-export { KiStepperOrientation } from "./components/ki-stepper/ki-stepper";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
@@ -1331,6 +1329,42 @@ export namespace Components {
         "value"?: string;
     }
     /**
+     * A non-modal popover anchored to a button.
+     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
+     */
+    interface KiPopover {
+        /**
+          * Shows the arrow toward the trigger.
+          * @default true
+         */
+        "arrow": boolean;
+        /**
+          * ID of the button in the same document or shadow tree.
+         */
+        "for"?: string;
+        /**
+          * Use dialog for controls or toggletip for supplemental text.
+          * @default 'dialog'
+         */
+        "kind": KiPopoverKind;
+        /**
+          * Accessible name of a dialog popover.
+          * @default 'Popover'
+         */
+        "label": string | undefined;
+        /**
+          * Visibility. Reflects activation and native dismissal.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Preferred side and logical alignment. Flips when room is limited.
+          * @default 'bottom-start'
+         */
+        "placement": KiPopoverPlacement;
+    }
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
      * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -1924,99 +1958,6 @@ export namespace Components {
         "tone": KiStatusTone;
     }
     /**
-     * One authored step in a Stepper.
-     * @whenToUse Place directly inside ki-stepper in task order. Its default slot
-     * is the step label and its properties describe the step to the owning list.
-     * @whenNotToUse Standalone or with interactive content in the label.
-     * A completed step can make the label itself a link.
-     * @cssprop --ki-step-description-bg - Backing of the description text.
-     * @cssprop --ki-step-description-fg - Description ink against its backing surface.
-     */
-    interface KiStep {
-        /**
-          * Optional supporting text displayed below the label.
-         */
-        "description"?: string;
-        /**
-          * Destination for a completed step. Omit for a passive step.
-          * @format url
-         */
-        "href"?: string;
-        /**
-          * The step's progress state. Mark the active step as current.
-          * @default 'upcoming'
-         */
-        "state": KiStepState;
-    }
-    /**
-     * An ordered, responsive view of progress through named steps.
-     * @whenToUse Show the current place in onboarding, checkout or a wizard.
-     * Provide a label and direct ki-step children in task order.
-     * @whenNotToUse A percentage or indeterminate task, a carousel position,
-     * or navigation among peer views. The task owner updates step states.
-     * @cssprop --ki-stepper-dot-size - Diameter of a step marker.
-     * @cssprop --ki-stepper-done-bg - Fill of a completed marker.
-     * @cssprop --ki-stepper-done-fg - Glyph ink of a completed marker.
-     * @cssprop --ki-stepper-current-bg - Fill of the current marker.
-     * @cssprop --ki-stepper-current-border - Edge of the current marker.
-     * @cssprop --ki-stepper-current-fg - Number ink of the current marker.
-     * @cssprop --ki-stepper-upcoming-bg - Fill of an upcoming marker.
-     * @cssprop --ki-stepper-upcoming-border - Edge of an upcoming marker.
-     * @cssprop --ki-stepper-upcoming-fg - Number and label ink of an upcoming step.
-     * @cssprop --ki-stepper-error-bg - Fill of a marker for a step in error.
-     * @cssprop --ki-stepper-error-border - Edge of a marker for a step in error.
-     * @cssprop --ki-stepper-error-fg - Glyph ink of a marker for a step in error.
-     * @cssprop --ki-stepper-label-fg - Default step label ink.
-     * @cssprop --ki-stepper-label-bg - Backing of a step label.
-     * @cssprop --ki-stepper-summary-fg - Compact disclosure button ink.
-     * @cssprop --ki-stepper-summary-bg - Compact disclosure button backing.
-     * @cssprop --ki-stepper-connector - Connector before an incomplete step.
-     * @cssprop --ki-stepper-connector-done - Connector leaving a completed step.
-     * @cssprop --ki-stepper-stroke - Width of a marker outline and connector.
-     * @cssprop --ki-stepper-glyph-size - Size of the decorative marker and disclosure glyphs.
-     */
-    interface KiStepper {
-        /**
-          * Compact disclosure text without a current step. Include {total}.
-          * @default 'Steps ({total})'
-         */
-        "countLabel"?: string;
-        /**
-          * Localized text for the current step.
-          * @default 'Current'
-         */
-        "currentLabel"?: string;
-        /**
-          * Localized text for a completed step.
-          * @default 'Completed'
-         */
-        "doneLabel"?: string;
-        /**
-          * Localized text for a step that has an error.
-          * @default 'Error'
-         */
-        "errorLabel"?: string;
-        /**
-          * Accessible name of the list. Use a localized description of the task.
-         */
-        "label": string;
-        /**
-          * Use vertical for a stacked list. Horizontal layout compacts below 22rem.
-          * @default 'horizontal'
-         */
-        "orientation": KiStepperOrientation;
-        /**
-          * Compact disclosure text. Place {current} and {total} in the local order.
-          * @default 'Step {current} of {total}'
-         */
-        "summaryLabel"?: string;
-        /**
-          * Localized text for an upcoming step.
-          * @default 'Not started'
-         */
-        "upcomingLabel"?: string;
-    }
-    /**
      * A token-styled switch for immediate on/off settings.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
      * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -2385,6 +2326,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
 export interface KiMenuCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiMenuElement;
+}
+export interface KiPopoverCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiPopoverElement;
 }
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3026,6 +2971,29 @@ declare global {
         prototype: HTMLKiOptionElement;
         new (): HTMLKiOptionElement;
     };
+    interface HTMLKiPopoverElementEventMap {
+        "ki-open": void;
+        "ki-close": void;
+    }
+    /**
+     * A non-modal popover anchored to a button.
+     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
+     */
+    interface HTMLKiPopoverElement extends Components.KiPopover, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiPopoverElementEventMap>(type: K, listener: (this: HTMLKiPopoverElement, ev: KiPopoverCustomEvent<HTMLKiPopoverElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiPopoverElementEventMap>(type: K, listener: (this: HTMLKiPopoverElement, ev: KiPopoverCustomEvent<HTMLKiPopoverElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiPopoverElement: {
+        prototype: HTMLKiPopoverElement;
+        new (): HTMLKiPopoverElement;
+    };
     /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
@@ -3292,54 +3260,6 @@ declare global {
         new (): HTMLKiStatusElement;
     };
     /**
-     * One authored step in a Stepper.
-     * @whenToUse Place directly inside ki-stepper in task order. Its default slot
-     * is the step label and its properties describe the step to the owning list.
-     * @whenNotToUse Standalone or with interactive content in the label.
-     * A completed step can make the label itself a link.
-     * @cssprop --ki-step-description-bg - Backing of the description text.
-     * @cssprop --ki-step-description-fg - Description ink against its backing surface.
-     */
-    interface HTMLKiStepElement extends Components.KiStep, HTMLStencilElement {
-    }
-    var HTMLKiStepElement: {
-        prototype: HTMLKiStepElement;
-        new (): HTMLKiStepElement;
-    };
-    /**
-     * An ordered, responsive view of progress through named steps.
-     * @whenToUse Show the current place in onboarding, checkout or a wizard.
-     * Provide a label and direct ki-step children in task order.
-     * @whenNotToUse A percentage or indeterminate task, a carousel position,
-     * or navigation among peer views. The task owner updates step states.
-     * @cssprop --ki-stepper-dot-size - Diameter of a step marker.
-     * @cssprop --ki-stepper-done-bg - Fill of a completed marker.
-     * @cssprop --ki-stepper-done-fg - Glyph ink of a completed marker.
-     * @cssprop --ki-stepper-current-bg - Fill of the current marker.
-     * @cssprop --ki-stepper-current-border - Edge of the current marker.
-     * @cssprop --ki-stepper-current-fg - Number ink of the current marker.
-     * @cssprop --ki-stepper-upcoming-bg - Fill of an upcoming marker.
-     * @cssprop --ki-stepper-upcoming-border - Edge of an upcoming marker.
-     * @cssprop --ki-stepper-upcoming-fg - Number and label ink of an upcoming step.
-     * @cssprop --ki-stepper-error-bg - Fill of a marker for a step in error.
-     * @cssprop --ki-stepper-error-border - Edge of a marker for a step in error.
-     * @cssprop --ki-stepper-error-fg - Glyph ink of a marker for a step in error.
-     * @cssprop --ki-stepper-label-fg - Default step label ink.
-     * @cssprop --ki-stepper-label-bg - Backing of a step label.
-     * @cssprop --ki-stepper-summary-fg - Compact disclosure button ink.
-     * @cssprop --ki-stepper-summary-bg - Compact disclosure button backing.
-     * @cssprop --ki-stepper-connector - Connector before an incomplete step.
-     * @cssprop --ki-stepper-connector-done - Connector leaving a completed step.
-     * @cssprop --ki-stepper-stroke - Width of a marker outline and connector.
-     * @cssprop --ki-stepper-glyph-size - Size of the decorative marker and disclosure glyphs.
-     */
-    interface HTMLKiStepperElement extends Components.KiStepper, HTMLStencilElement {
-    }
-    var HTMLKiStepperElement: {
-        prototype: HTMLKiStepperElement;
-        new (): HTMLKiStepperElement;
-    };
-    /**
      * A token-styled switch for immediate on/off settings.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
      * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -3575,6 +3495,7 @@ declare global {
         "ki-menu-item": HTMLKiMenuItemElement;
         "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
+        "ki-popover": HTMLKiPopoverElement;
         "ki-progress": HTMLKiProgressElement;
         "ki-qr": HTMLKiQrElement;
         "ki-radio": HTMLKiRadioElement;
@@ -3590,8 +3511,6 @@ declare global {
         "ki-stack": HTMLKiStackElement;
         "ki-stat": HTMLKiStatElement;
         "ki-status": HTMLKiStatusElement;
-        "ki-step": HTMLKiStepElement;
-        "ki-stepper": HTMLKiStepperElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
         "ki-tab-panel": HTMLKiTabPanelElement;
@@ -4899,6 +4818,50 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A non-modal popover anchored to a button.
+     * @whenToUse Show filters, details, a small form, or a text toggletip.
+     * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
+     */
+    interface KiPopover {
+        /**
+          * Shows the arrow toward the trigger.
+          * @default true
+         */
+        "arrow"?: boolean;
+        /**
+          * ID of the button in the same document or shadow tree.
+         */
+        "for"?: string;
+        /**
+          * Use dialog for controls or toggletip for supplemental text.
+          * @default 'dialog'
+         */
+        "kind"?: KiPopoverKind;
+        /**
+          * Accessible name of a dialog popover.
+          * @default 'Popover'
+         */
+        "label"?: string | undefined;
+        /**
+          * Emitted when the popover closes.
+         */
+        "onKi-close"?: (event: KiPopoverCustomEvent<void>) => void;
+        /**
+          * Emitted when the popover opens.
+         */
+        "onKi-open"?: (event: KiPopoverCustomEvent<void>) => void;
+        /**
+          * Visibility. Reflects activation and native dismissal.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Preferred side and logical alignment. Flips when room is limited.
+          * @default 'bottom-start'
+         */
+        "placement"?: KiPopoverPlacement;
+    }
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
      * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -5508,99 +5471,6 @@ declare namespace LocalJSX {
         "tone"?: KiStatusTone;
     }
     /**
-     * One authored step in a Stepper.
-     * @whenToUse Place directly inside ki-stepper in task order. Its default slot
-     * is the step label and its properties describe the step to the owning list.
-     * @whenNotToUse Standalone or with interactive content in the label.
-     * A completed step can make the label itself a link.
-     * @cssprop --ki-step-description-bg - Backing of the description text.
-     * @cssprop --ki-step-description-fg - Description ink against its backing surface.
-     */
-    interface KiStep {
-        /**
-          * Optional supporting text displayed below the label.
-         */
-        "description"?: string;
-        /**
-          * Destination for a completed step. Omit for a passive step.
-          * @format url
-         */
-        "href"?: string;
-        /**
-          * The step's progress state. Mark the active step as current.
-          * @default 'upcoming'
-         */
-        "state"?: KiStepState;
-    }
-    /**
-     * An ordered, responsive view of progress through named steps.
-     * @whenToUse Show the current place in onboarding, checkout or a wizard.
-     * Provide a label and direct ki-step children in task order.
-     * @whenNotToUse A percentage or indeterminate task, a carousel position,
-     * or navigation among peer views. The task owner updates step states.
-     * @cssprop --ki-stepper-dot-size - Diameter of a step marker.
-     * @cssprop --ki-stepper-done-bg - Fill of a completed marker.
-     * @cssprop --ki-stepper-done-fg - Glyph ink of a completed marker.
-     * @cssprop --ki-stepper-current-bg - Fill of the current marker.
-     * @cssprop --ki-stepper-current-border - Edge of the current marker.
-     * @cssprop --ki-stepper-current-fg - Number ink of the current marker.
-     * @cssprop --ki-stepper-upcoming-bg - Fill of an upcoming marker.
-     * @cssprop --ki-stepper-upcoming-border - Edge of an upcoming marker.
-     * @cssprop --ki-stepper-upcoming-fg - Number and label ink of an upcoming step.
-     * @cssprop --ki-stepper-error-bg - Fill of a marker for a step in error.
-     * @cssprop --ki-stepper-error-border - Edge of a marker for a step in error.
-     * @cssprop --ki-stepper-error-fg - Glyph ink of a marker for a step in error.
-     * @cssprop --ki-stepper-label-fg - Default step label ink.
-     * @cssprop --ki-stepper-label-bg - Backing of a step label.
-     * @cssprop --ki-stepper-summary-fg - Compact disclosure button ink.
-     * @cssprop --ki-stepper-summary-bg - Compact disclosure button backing.
-     * @cssprop --ki-stepper-connector - Connector before an incomplete step.
-     * @cssprop --ki-stepper-connector-done - Connector leaving a completed step.
-     * @cssprop --ki-stepper-stroke - Width of a marker outline and connector.
-     * @cssprop --ki-stepper-glyph-size - Size of the decorative marker and disclosure glyphs.
-     */
-    interface KiStepper {
-        /**
-          * Compact disclosure text without a current step. Include {total}.
-          * @default 'Steps ({total})'
-         */
-        "countLabel"?: string;
-        /**
-          * Localized text for the current step.
-          * @default 'Current'
-         */
-        "currentLabel"?: string;
-        /**
-          * Localized text for a completed step.
-          * @default 'Completed'
-         */
-        "doneLabel"?: string;
-        /**
-          * Localized text for a step that has an error.
-          * @default 'Error'
-         */
-        "errorLabel"?: string;
-        /**
-          * Accessible name of the list. Use a localized description of the task.
-         */
-        "label": string;
-        /**
-          * Use vertical for a stacked list. Horizontal layout compacts below 22rem.
-          * @default 'horizontal'
-         */
-        "orientation"?: KiStepperOrientation;
-        /**
-          * Compact disclosure text. Place {current} and {total} in the local order.
-          * @default 'Step {current} of {total}'
-         */
-        "summaryLabel"?: string;
-        /**
-          * Localized text for an upcoming step.
-          * @default 'Not started'
-         */
-        "upcomingLabel"?: string;
-    }
-    /**
      * A token-styled switch for immediate on/off settings.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
      * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -6192,6 +6062,14 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface KiPopoverAttributes {
+        "for": string;
+        "placement": KiPopoverPlacement;
+        "open": boolean;
+        "label": string | undefined;
+        "arrow": boolean;
+        "kind": KiPopoverKind;
+    }
     interface KiProgressAttributes {
         "value": number;
         "max": number;
@@ -6305,21 +6183,6 @@ declare namespace LocalJSX {
         "ring": boolean;
         "label": string;
     }
-    interface KiStepAttributes {
-        "state": KiStepState;
-        "href": string;
-        "description": string;
-    }
-    interface KiStepperAttributes {
-        "label": string;
-        "orientation": KiStepperOrientation;
-        "doneLabel": string;
-        "currentLabel": string;
-        "upcomingLabel": string;
-        "errorLabel": string;
-        "summaryLabel": string;
-        "countLabel": string;
-    }
     interface KiSwitchAttributes {
         "checked": boolean;
         "size": KiSwitchSize;
@@ -6413,6 +6276,7 @@ declare namespace LocalJSX {
         "ki-menu-item": Omit<KiMenuItem, keyof KiMenuItemAttributes> & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes]?: KiMenuItem[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `attr:${K}`]?: KiMenuItemAttributes[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `prop:${K}`]?: KiMenuItem[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
+        "ki-popover": Omit<KiPopover, keyof KiPopoverAttributes> & { [K in keyof KiPopover & keyof KiPopoverAttributes]?: KiPopover[K] } & { [K in keyof KiPopover & keyof KiPopoverAttributes as `attr:${K}`]?: KiPopoverAttributes[K] } & { [K in keyof KiPopover & keyof KiPopoverAttributes as `prop:${K}`]?: KiPopover[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
@@ -6428,8 +6292,6 @@ declare namespace LocalJSX {
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-stat": Omit<KiStat, keyof KiStatAttributes> & { [K in keyof KiStat & keyof KiStatAttributes]?: KiStat[K] } & { [K in keyof KiStat & keyof KiStatAttributes as `attr:${K}`]?: KiStatAttributes[K] } & { [K in keyof KiStat & keyof KiStatAttributes as `prop:${K}`]?: KiStat[K] } & OneOf<"label", KiStat["label"], KiStatAttributes["label"]> & OneOf<"value", KiStat["value"], KiStatAttributes["value"]>;
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
-        "ki-step": Omit<KiStep, keyof KiStepAttributes> & { [K in keyof KiStep & keyof KiStepAttributes]?: KiStep[K] } & { [K in keyof KiStep & keyof KiStepAttributes as `attr:${K}`]?: KiStepAttributes[K] } & { [K in keyof KiStep & keyof KiStepAttributes as `prop:${K}`]?: KiStep[K] };
-        "ki-stepper": Omit<KiStepper, keyof KiStepperAttributes> & { [K in keyof KiStepper & keyof KiStepperAttributes]?: KiStepper[K] } & { [K in keyof KiStepper & keyof KiStepperAttributes as `attr:${K}`]?: KiStepperAttributes[K] } & { [K in keyof KiStepper & keyof KiStepperAttributes as `prop:${K}`]?: KiStepper[K] } & OneOf<"label", KiStepper["label"], KiStepperAttributes["label"]>;
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
@@ -6797,6 +6659,12 @@ declare module "@stencil/core" {
              */
             "ki-option": LocalJSX.IntrinsicElements["ki-option"] & JSXBase.HTMLAttributes<HTMLKiOptionElement>;
             /**
+             * A non-modal popover anchored to a button.
+             * @whenToUse Show filters, details, a small form, or a text toggletip.
+             * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
+             */
+            "ki-popover": LocalJSX.IntrinsicElements["ki-popover"] & JSXBase.HTMLAttributes<HTMLKiPopoverElement>;
+            /**
              * A token-styled, non-interactive progress indicator for known or unknown
              * duration work.
              * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -6975,44 +6843,6 @@ declare module "@stencil/core" {
              * visible text is an authoring mistake (WCAG 1.4.1).
              */
             "ki-status": LocalJSX.IntrinsicElements["ki-status"] & JSXBase.HTMLAttributes<HTMLKiStatusElement>;
-            /**
-             * One authored step in a Stepper.
-             * @whenToUse Place directly inside ki-stepper in task order. Its default slot
-             * is the step label and its properties describe the step to the owning list.
-             * @whenNotToUse Standalone or with interactive content in the label.
-             * A completed step can make the label itself a link.
-             * @cssprop --ki-step-description-bg - Backing of the description text.
-             * @cssprop --ki-step-description-fg - Description ink against its backing surface.
-             */
-            "ki-step": LocalJSX.IntrinsicElements["ki-step"] & JSXBase.HTMLAttributes<HTMLKiStepElement>;
-            /**
-             * An ordered, responsive view of progress through named steps.
-             * @whenToUse Show the current place in onboarding, checkout or a wizard.
-             * Provide a label and direct ki-step children in task order.
-             * @whenNotToUse A percentage or indeterminate task, a carousel position,
-             * or navigation among peer views. The task owner updates step states.
-             * @cssprop --ki-stepper-dot-size - Diameter of a step marker.
-             * @cssprop --ki-stepper-done-bg - Fill of a completed marker.
-             * @cssprop --ki-stepper-done-fg - Glyph ink of a completed marker.
-             * @cssprop --ki-stepper-current-bg - Fill of the current marker.
-             * @cssprop --ki-stepper-current-border - Edge of the current marker.
-             * @cssprop --ki-stepper-current-fg - Number ink of the current marker.
-             * @cssprop --ki-stepper-upcoming-bg - Fill of an upcoming marker.
-             * @cssprop --ki-stepper-upcoming-border - Edge of an upcoming marker.
-             * @cssprop --ki-stepper-upcoming-fg - Number and label ink of an upcoming step.
-             * @cssprop --ki-stepper-error-bg - Fill of a marker for a step in error.
-             * @cssprop --ki-stepper-error-border - Edge of a marker for a step in error.
-             * @cssprop --ki-stepper-error-fg - Glyph ink of a marker for a step in error.
-             * @cssprop --ki-stepper-label-fg - Default step label ink.
-             * @cssprop --ki-stepper-label-bg - Backing of a step label.
-             * @cssprop --ki-stepper-summary-fg - Compact disclosure button ink.
-             * @cssprop --ki-stepper-summary-bg - Compact disclosure button backing.
-             * @cssprop --ki-stepper-connector - Connector before an incomplete step.
-             * @cssprop --ki-stepper-connector-done - Connector leaving a completed step.
-             * @cssprop --ki-stepper-stroke - Width of a marker outline and connector.
-             * @cssprop --ki-stepper-glyph-size - Size of the decorative marker and disclosure glyphs.
-             */
-            "ki-stepper": LocalJSX.IntrinsicElements["ki-stepper"] & JSXBase.HTMLAttributes<HTMLKiStepperElement>;
             /**
              * A token-styled switch for immediate on/off settings.
              * Like a native field, it answers `checkValidity()`, `reportValidity()`,
