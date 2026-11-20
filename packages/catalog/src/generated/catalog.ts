@@ -612,128 +612,6 @@ export const catalogData = {
       "whenNotToUse": "as a form field, fieldset, page landmark, section replacement\nor nested card. Use a standalone button or link for a control without\nsupporting content.",
       "whenToUse": "group related media, a title, supporting text and actions into\none scannable surface. Set `href` for navigation or `interactive` for a\ndeclared action. Give a clickable card one text heading in the header\nslot and place secondary controls in the body or footer."
     },
-    "ki-carousel": {
-      "description": "An ordered, swipeable sequence with previous and next controls and position feedback.",
-      "events": {
-        "ki-slide-change": "Reports the one-based index when the leading slide changes."
-      },
-      "props": {
-        "autoplay": {
-          "type": "number",
-          "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
-          "minimum": 1,
-          "maximum": 2147483647
-        },
-        "carousel-role-description": {
-          "type": "string",
-          "description": "Accessible role description of the region.",
-          "default": "carousel"
-        },
-        "current": {
-          "type": "number",
-          "description": "One-based leading slide. Setting it moves the carousel and clamps the index to\nthe available leading positions.",
-          "default": 1,
-          "minimum": 1
-        },
-        "label": {
-          "type": "string",
-          "description": "Required accessible name of the carousel region.",
-          "required": true
-        },
-        "layout": {
-          "type": "enum",
-          "values": [
-            "full-screen",
-            "hero",
-            "multi-browse",
-            "single",
-            "uncontained"
-          ],
-          "description": "Item arrangement. Full-screen uses a vertical, full-viewport slide.",
-          "default": "single"
-        },
-        "loop": {
-          "type": "boolean",
-          "description": "Whether navigating past one endpoint wraps to the other.",
-          "default": false
-        },
-        "navigation": {
-          "type": "boolean",
-          "description": "Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.",
-          "default": true
-        },
-        "next-label": {
-          "type": "string",
-          "description": "Accessible label of the Next button.",
-          "default": "Next slide"
-        },
-        "pagination": {
-          "type": "boolean",
-          "description": "Whether to show the noninteractive slide position indicator.",
-          "default": true
-        },
-        "pause-label": {
-          "type": "string",
-          "description": "Visible and accessible label of the Pause button.",
-          "default": "Pause"
-        },
-        "play-label": {
-          "type": "string",
-          "description": "Visible and accessible label of the Play button.",
-          "default": "Play"
-        },
-        "position-label": {
-          "type": "string",
-          "description": "Accessible label of the position indicator.",
-          "default": "Slide position"
-        },
-        "previous-label": {
-          "type": "string",
-          "description": "Accessible label of the Previous button.",
-          "default": "Previous slide"
-        },
-        "slide-label": {
-          "type": "string",
-          "description": "Spoken slide name and announcement. Use {index} and {count} as placeholders.",
-          "default": "{index} of {count}"
-        },
-        "slide-role-description": {
-          "type": "string",
-          "description": "Accessible role description of each slide group.",
-          "default": "slide"
-        },
-        "slides-per-move": {
-          "type": "number",
-          "description": "Number of positions advanced by Previous, Next and automatic rotation.",
-          "default": 1,
-          "minimum": 1
-        },
-        "slides-per-view": {
-          "type": "number",
-          "description": "Number of slides visible together in the single layout. Material 3 layouts\ndetermine their own item widths.",
-          "default": 1,
-          "minimum": 1
-        }
-      },
-      "slots": {
-        "": "Direct ki-carousel-item children in reading order."
-      },
-      "tag": "ki-carousel",
-      "whenNotToUse": "hide essential content behind rotation, replace ordinary page navigation,\nor present slides that readers need to compare side by side at the same time.",
-      "whenToUse": "show a short set of related highlights, onboarding steps or media panels.\nGive the carousel a meaningful label and supply one ki-carousel-item per slide."
-    },
-    "ki-carousel-item": {
-      "description": "A slide in an ordered ki-carousel sequence.",
-      "events": {},
-      "props": {},
-      "slots": {
-        "": "The full slide content, including any links and controls.",
-        "preview": "Decorative, noninteractive media shown when the item is a reduced preview."
-      },
-      "tag": "ki-carousel-item",
-      "whenNotToUse": "present a standalone card or a layout container outside a carousel.",
-      "whenToUse": "supply a single slide to a ki-carousel. Put the full slide in the\ndefault slot and optional decorative preview media in the preview slot."
-    },
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
@@ -1435,56 +1313,6 @@ export const catalogData = {
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
     },
-    "ki-drawer": {
-      "description": "An edge-aligned sheet for a focused task that keeps the current page in context.",
-      "events": {
-        "ki-close": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason."
-      },
-      "props": {
-        "close-label": {
-          "type": "string",
-          "description": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
-          "default": "Close"
-        },
-        "heading": {
-          "type": "string",
-          "description": "Title and accessible name. Provide a heading whenever the drawer opens.",
-          "required": true
-        },
-        "modal": {
-          "type": "boolean",
-          "description": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
-          "default": true
-        },
-        "open": {
-          "type": "boolean",
-          "description": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
-          "default": false
-        },
-        "placement": {
-          "type": "enum",
-          "values": [
-            "bottom",
-            "end",
-            "start"
-          ],
-          "description": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
-          "default": "end"
-        },
-        "size": {
-          "type": "string",
-          "description": "Optional CSS length. Overrides the 18rem themed width or bottom height cap."
-        }
-      },
-      "slots": {
-        "": "The drawer's content, such as fields or a short list of actions.",
-        "footer": "Optional actions such as Save. Wire these in the application.",
-        "header-actions": "Optional actions between the heading and Close button."
-      },
-      "tag": "ki-drawer",
-      "whenNotToUse": "Menus, hover hints, permanent navigation, or work that needs a\nfull page. For a short interrupting decision in the center, use ki-dialog.",
-      "whenToUse": "Edit an item beside its list or offer a short set of actions in a\nbottom sheet. Supply a heading and wire slotted actions in the application.\nUse non-modal mode if people need to interact with the page while editing."
-    },
     "ki-empty-state": {
       "description": "A short explanation and next step for an empty view.",
       "events": {},
@@ -1656,136 +1484,6 @@ export const catalogData = {
       "tag": "ki-feature-icon",
       "whenNotToUse": "For an action (use ki-icon-button), a status (use ki-badge),\nor the sole label of a section.",
       "whenToUse": "Place a decorative icon beside the visible heading of a feature,\nempty state or settings section. The heading carries the meaning."
-    },
-    "ki-file-upload": {
-      "description": "A form-associated picker and drop zone with local selection validation and a\nlist of file upload outcomes.",
-      "events": {
-        "ki-file-cancel": "Requests that the application cancel the identified upload.",
-        "ki-file-remove": "Reports a row removed by the user, after updating the file list.",
-        "ki-files-add": "Reports the accepted rows in one picker or drop batch, each with its original File."
-      },
-      "props": {
-        "accept": {
-          "type": "string",
-          "description": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections."
-        },
-        "browse-label": {
-          "type": "string",
-          "description": "Visible text of the native file picker button.",
-          "default": "Browse files"
-        },
-        "cancel-label": {
-          "type": "string",
-          "description": "Accessible name template for cancellation. Use {file} for the displayed filename.",
-          "default": "Cancel upload of {file}"
-        },
-        "count-error": {
-          "type": "string",
-          "description": "Rejection text for a file beyond selection capacity.",
-          "default": "Too many files."
-        },
-        "disabled": {
-          "type": "boolean",
-          "description": "Disables the picker and file actions and excludes the field from submission.",
-          "default": false
-        },
-        "done-label": {
-          "type": "string",
-          "description": "Status text for a completed upload.",
-          "default": "Uploaded"
-        },
-        "drop-label": {
-          "type": "string",
-          "description": "Drop instruction shown just before the Browse button.",
-          "default": "Drop files here or"
-        },
-        "error-text": {
-          "type": "string",
-          "description": "Application validation error. Clear it to allow form submission again."
-        },
-        "failed-label": {
-          "type": "string",
-          "description": "Fallback status text for a failed upload without a supplied error.",
-          "default": "Upload failed."
-        },
-        "help-text": {
-          "type": "string",
-          "description": "Guidance for file formats, limits or the purpose of this field."
-        },
-        "label": {
-          "type": "string",
-          "description": "Visible label and accessible name of the upload group.",
-          "default": "Upload files"
-        },
-        "list-label": {
-          "type": "string",
-          "description": "Accessible name of the list of files.",
-          "default": "Files"
-        },
-        "max-files": {
-          "type": "number",
-          "description": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one."
-        },
-        "max-size": {
-          "type": "string",
-          "description": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\"."
-        },
-        "multiple": {
-          "type": "boolean",
-          "description": "Allows a selection of more than one file.",
-          "default": false
-        },
-        "name": {
-          "type": "string",
-          "description": "Form-data key repeated for each accepted original file."
-        },
-        "queued-label": {
-          "type": "string",
-          "description": "Status text for an accepted file waiting to upload.",
-          "default": "Queued"
-        },
-        "remove-label": {
-          "type": "string",
-          "description": "Accessible name template for removal. Use {file} for the displayed filename.",
-          "default": "Remove {file}"
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Requires at least one original accepted file to submit the form.",
-          "default": false
-        },
-        "required-label": {
-          "type": "string",
-          "description": "Visible annotation for a required file field.",
-          "default": "Required"
-        },
-        "required-message": {
-          "type": "string",
-          "description": "Validation message when the form requires a file and none is selected.",
-          "default": "Select a file."
-        },
-        "size-error": {
-          "type": "string",
-          "description": "Rejection text for a file larger than max-size.",
-          "default": "This file is too large."
-        },
-        "type-error": {
-          "type": "string",
-          "description": "Rejection text for a file that does not match accept.",
-          "default": "This file type is not allowed."
-        },
-        "uploading-label": {
-          "type": "string",
-          "description": "Progress indicator name template. Use {file} for the displayed filename.",
-          "default": "Uploading {file}"
-        }
-      },
-      "slots": {
-        "help": "Plain-language guidance for the picker, in place of help-text."
-      },
-      "tag": "ki-file-upload",
-      "whenNotToUse": "transfer files without an application handler, collect a URL,\nor use client-side type and size checks as upload authorization.",
-      "whenToUse": "collect local attachments, media or imports, and optionally show\napplication-managed upload progress and results."
     },
     "ki-format-date": {
       "description": "Displays an ISO date or timestamp in the reader's language.",
@@ -2554,100 +2252,6 @@ export const catalogData = {
       "whenNotToUse": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance.",
       "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
     },
-    "ki-number-input": {
-      "description": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-      "events": {
-        "change": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-      },
-      "props": {
-        "decrease-label": {
-          "type": "string",
-          "description": "Stepper's accessible name. The field label replaces {label}.",
-          "default": "Decrease {label}"
-        },
-        "disabled": {
-          "type": "boolean",
-          "description": "Prevents editing and excludes the control from form submission.",
-          "default": false
-        },
-        "error-text": {
-          "type": "string",
-          "description": "Validation hint to show when the entry fails a constraint."
-        },
-        "format": {
-          "type": "string",
-          "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision."
-        },
-        "help-text": {
-          "type": "string",
-          "description": "Context or instructions displayed beneath the field when it has no visible error."
-        },
-        "increase-label": {
-          "type": "string",
-          "description": "Stepper's accessible name. The field label replaces {label}.",
-          "default": "Increase {label}"
-        },
-        "invalid-number-message": {
-          "type": "string",
-          "description": "Default validation message for text that cannot be read as a number.",
-          "default": "Enter a number."
-        },
-        "label": {
-          "type": "string",
-          "description": "Visible accessible name. Supply a meaningful label in the page language.",
-          "required": true
-        },
-        "max": {
-          "type": "number",
-          "description": "Maximum permitted numeric value. Omit for an unbounded maximum."
-        },
-        "maximum-message": {
-          "type": "string",
-          "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-          "default": "Value adjusted to the maximum of {value}."
-        },
-        "min": {
-          "type": "number",
-          "description": "Minimum permitted numeric value. Omit for an unbounded minimum."
-        },
-        "minimum-message": {
-          "type": "string",
-          "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-          "default": "Value adjusted to the minimum of {value}."
-        },
-        "name": {
-          "type": "string",
-          "description": "Form-data key for the plain numeric value."
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Whether the user must enter a number before submitting the form.",
-          "default": false
-        },
-        "step": {
-          "type": "number",
-          "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-          "default": 1
-        },
-        "steppers": {
-          "type": "boolean",
-          "description": "Shows named decrease and increase buttons inside the field.",
-          "default": false
-        },
-        "unit": {
-          "type": "string",
-          "description": "Visible suffix such as seconds or seats, included in the accessible description."
-        },
-        "value": {
-          "type": "number",
-          "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent."
-        }
-      },
-      "slots": {},
-      "tag": "ki-number-input",
-      "whenNotToUse": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue.",
-      "whenToUse": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning."
-    },
     "ki-option": {
       "description": "A declarative data option rendered by its owning `ki-select` or `ki-combobox`.",
       "events": {},
@@ -2932,6 +2536,135 @@ export const catalogData = {
       "tag": "ki-scroller",
       "whenNotToUse": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis.",
       "whenToUse": "a bounded region inside a view whose content can outgrow it:\nchat or message panes, code and log blocks, tag rows, sidebar navigation,\ntall menus inside cards. Give it bounds (its size comes entirely from your\nlayout) and a `label` (required: the accessible name of the scroll\nregion). Scrolling stays native — wheel, touch, keyboard and indicator\ndrag operate the viewport directly."
+    },
+    "ki-search": {
+      "description": "A query field with a responsive view for suggestions, recent searches and results.",
+      "events": {
+        "ki-clear": "The user cleared the query with the clear control or with Escape.",
+        "ki-input": "The current query after 200 ms of inactivity following an edit.",
+        "ki-remove-recent": "The removed recent query. Hosts can use this to persist the updated history.",
+        "ki-search": "The query to run, emitted on Enter or activation of a suggestion or recent search."
+      },
+      "props": {
+        "back-label": {
+          "type": "string",
+          "description": "Accessible name of the full-screen Back button.",
+          "default": "Back"
+        },
+        "clear-label": {
+          "type": "string",
+          "description": "Accessible name of the query clear button.",
+          "default": "Clear search"
+        },
+        "highlight": {
+          "type": "boolean",
+          "description": "Emphasize literal, case-insensitive matches in suggestion titles.",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the search landmark, input and full-screen dialog.",
+          "default": "Search"
+        },
+        "loading": {
+          "type": "boolean",
+          "description": "Show a loading indicator while the host fetches suggestions.",
+          "default": false
+        },
+        "loading-label": {
+          "type": "string",
+          "description": "Accessible name of the loading indicator.",
+          "default": "Loading suggestions"
+        },
+        "mode": {
+          "type": "enum",
+          "values": [
+            "auto",
+            "docked",
+            "fullscreen"
+          ],
+          "description": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels.",
+          "default": "auto"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name under which the current query is included in form data."
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the search view is open. The field opens it on focus, click or input.",
+          "default": false
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Optional hint displayed inside the empty search field.",
+          "default": ""
+        },
+        "recent-label": {
+          "type": "string",
+          "description": "Visible and accessible name of the recent-search group.",
+          "default": "Recent searches"
+        },
+        "remove-recent-label": {
+          "type": "string",
+          "description": "Accessible name template for recent-query removal. Use {value} for the query title.",
+          "default": "Remove {value}"
+        },
+        "suggestion-count-plural": {
+          "type": "string",
+          "description": "Polite announcement for zero or multiple suggestions. Use {count} for the number.",
+          "default": "{count} suggestions"
+        },
+        "suggestion-count-singular": {
+          "type": "string",
+          "description": "Polite announcement when the list contains one suggestion.",
+          "default": "1 suggestion"
+        },
+        "suggestions-label": {
+          "type": "string",
+          "description": "Accessible name of the suggestion listbox.",
+          "default": "Suggestions"
+        },
+        "value": {
+          "type": "string",
+          "description": "Current query. Edits and selected suggestions update this property.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "Direct ki-search-suggestion children supply suggestion and recent-query data.",
+        "leading": "A control or decorative icon at the start of the collapsed or docked bar.",
+        "results": "Host-rendered results beneath suggestions and recent searches.",
+        "trailing": "A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search."
+      },
+      "tag": "ki-search",
+      "whenNotToUse": "selecting one value from a fixed set belongs in ki-select.\nUse ki-input when a plain search field is enough.",
+      "whenToUse": "accept free-text searches and let the user run a typed or suggested\nquery. Listen for ki-input to update suggestions, and ki-search to render results."
+    },
+    "ki-search-suggestion": {
+      "description": "Declarative search suggestion or recent query rendered by its owning ki-search.",
+      "events": {},
+      "props": {
+        "description": {
+          "type": "string",
+          "description": "Optional supporting text displayed below the title."
+        },
+        "recent": {
+          "type": "boolean",
+          "description": "Display in the removable recent-search group.",
+          "default": false
+        },
+        "value": {
+          "type": "string",
+          "description": "Query to run. When omitted, the trimmed title is used."
+        }
+      },
+      "slots": {
+        "": "Plain text title displayed in the owning search view."
+      },
+      "tag": "ki-search-suggestion",
+      "whenNotToUse": "standalone display, form options or arbitrary results content.\nUse the results slot of ki-search for independently rendered results.",
+      "whenToUse": "supply one suggested or recent query as a direct ki-search child."
     },
     "ki-segment": {
       "description": "A single choice in a ki-segmented-control.",
@@ -3765,70 +3498,6 @@ export const catalogData = {
       "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
       "whenToUse": "free-form text longer than one line, such as comments,\ndescriptions, messages, delivery notes, or addresses when paired with a\nmatching `autocomplete` purpose."
     },
-    "ki-timeline": {
-      "description": "A chronological list of activity, audit records, or steps from a run.",
-      "events": {},
-      "props": {
-        "label": {
-          "type": "string",
-          "description": "Accessible name of the ordered list."
-        },
-        "order": {
-          "type": "enum",
-          "values": [
-            "newest-first",
-            "oldest-first"
-          ],
-          "description": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
-          "default": "newest-first"
-        }
-      },
-      "slots": {
-        "": "Direct ki-timeline-item children."
-      },
-      "tag": "ki-timeline",
-      "whenNotToUse": "offer a selectable command list, control the current step of a\ntask, or represent progress toward completion.",
-      "whenToUse": "present chronological events with independently readable summaries,\noptional times and details, including new entries in a live feed."
-    },
-    "ki-timeline-item": {
-      "description": "One event in a timeline, with an optional time and details disclosure.",
-      "events": {},
-      "props": {
-        "datetime": {
-          "type": "string",
-          "description": "ISO date or date-time. Invalid or missing dates have no time label."
-        },
-        "details-label": {
-          "type": "string",
-          "description": "Label of the details control when the details slot is populated.",
-          "default": "Details"
-        },
-        "icon-name": {
-          "type": "string",
-          "description": "Decorative Lucide icon name, registered by the caller's per-icon import."
-        },
-        "tone": {
-          "type": "enum",
-          "values": [
-            "danger",
-            "neutral",
-            "primary",
-            "success",
-            "warning"
-          ],
-          "description": "Marker tone. The event text carries the meaning.",
-          "default": "neutral"
-        }
-      },
-      "slots": {
-        "": "Event summary. Include important status information in the text.",
-        "details": "Additional event information in a native details disclosure.",
-        "start": "Decorative avatar or other noninteractive marker in place of the icon."
-      },
-      "tag": "ki-timeline-item",
-      "whenNotToUse": "convey the outcome only through marker colour, or use the marker\nas a control. Put actions in the event content or details.",
-      "whenToUse": "describe an activity, audit, or run event inside a ki-timeline."
-    },
     "ki-toast": {
       "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
       "events": {
@@ -3918,107 +3587,6 @@ export const catalogData = {
       "tag": "ki-toaster",
       "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
       "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
-    },
-    "ki-tool-call": {
-      "description": "A disclosure for one assistant tool call, with a status and optional payloads.",
-      "events": {
-        "ki-tool-retry": "A request to retry this tool call. Bind a declared surface action to handle it."
-      },
-      "props": {
-        "approval-label": {
-          "type": "string",
-          "description": "Status text for a call waiting on an approval decision.",
-          "default": "Needs approval"
-        },
-        "done-label": {
-          "type": "string",
-          "description": "Status text for a successful call.",
-          "default": "Done"
-        },
-        "duration": {
-          "type": "number",
-          "description": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
-          "minimum": 0
-        },
-        "error-label": {
-          "type": "string",
-          "description": "Caption for the error slot.",
-          "default": "Error"
-        },
-        "failed-label": {
-          "type": "string",
-          "description": "Status text for a failed call.",
-          "default": "Failed"
-        },
-        "input-label": {
-          "type": "string",
-          "description": "Caption for the input slot.",
-          "default": "Input"
-        },
-        "locale": {
-          "type": "string",
-          "description": "Language tag used to format the completed duration. Defaults to English.",
-          "default": "en"
-        },
-        "name": {
-          "type": "string",
-          "description": "Tool identifier, such as search_docs, displayed in monospace.",
-          "required": true
-        },
-        "open": {
-          "type": "boolean",
-          "description": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice."
-        },
-        "output-label": {
-          "type": "string",
-          "description": "Caption for the output slot.",
-          "default": "Output"
-        },
-        "pending-label": {
-          "type": "string",
-          "description": "Status text for a call waiting to run.",
-          "default": "Pending"
-        },
-        "retry-label": {
-          "type": "string",
-          "description": "Visible and accessible label for the built-in retry control.",
-          "default": "Retry"
-        },
-        "retryable": {
-          "type": "boolean",
-          "description": "Offer the built-in Retry button when the call fails.",
-          "default": false
-        },
-        "running-label": {
-          "type": "string",
-          "description": "Status text for a call in progress.",
-          "default": "Running"
-        },
-        "status": {
-          "type": "enum",
-          "values": [
-            "approval",
-            "done",
-            "failed",
-            "pending",
-            "running"
-          ],
-          "description": "Lifecycle status. Unknown values display Pending.",
-          "default": "pending"
-        },
-        "title": {
-          "type": "string",
-          "description": "Optional human-readable label displayed beside the identifier."
-        }
-      },
-      "slots": {
-        "error": "A failure message or a consumer-owned retry control, visible on failed calls.",
-        "input": "Arguments supplied to the tool. Use ki-code-block for structured text.",
-        "output": "Result returned by the tool. Use ki-code-block for structured text."
-      },
-      "tag": "ki-tool-call",
-      "whenNotToUse": "collecting approval, running or configuring tools. Pair with a\nseparate confirmation control for an approval decision.",
-      "whenToUse": "show which tool ran, its state and duration, and let the reader\ninspect the supplied input, output or error. Use a conversation log for status updates."
     },
     "ki-tooltip": {
       "description": "A transient, text-only description bubble for one slotted trigger.",

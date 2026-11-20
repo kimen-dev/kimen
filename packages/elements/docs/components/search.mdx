@@ -1,0 +1,18 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Navigation/Search" />
+
+# Search
+
+`<ki-search>` exposes a query field, accessible suggestions and recent searches.
+The host loads suggestions and supplies results. Auto mode docks the view at
+600 CSS pixels and uses a full-screen dialog below that threshold.
+
+```html
+<ki-search label="Search components" placeholder="Search Kimen">
+  <ki-search-suggestion value="ki-dialog" description="Component">Dialog</ki-search-suggestion>
+  <ki-search-suggestion recent>button tokens</ki-search-suggestion>
+</ki-search>
+```
+
+[Search playground and controls](?path=/docs/elements-ki-search--docs)

@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 499 semantic
-and 1932 component tokens. Values are the resolved **onmars light**
+and 1830 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -96,7 +96,8 @@ every component at once.
 | `--ki-corner-field-surface` | `10px` | Corner radius for an editable field and its floating choice surface. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
 | `--ki-corner-panel` | `12px` | Corner radius for an outlined content panel. |
-| `--ki-corner-sheet` | `16px` | Inner corner radius of an edge-aligned sheet. |
+| `--ki-corner-search-bar` | `1000px` | Pill corner for a search bar. |
+| `--ki-corner-search-view` | `20px` | Corner for a docked search view. |
 
 ### `ki.density`
 
@@ -226,7 +227,6 @@ every component at once.
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
 | `--ki-layout-rule-width` | `1px` | The width of a hairline rule separating adjacent content. |
-| `--ki-layout-sheet-size` | `18rem` | Default inline size or block-size cap of a compact sheet. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
@@ -1247,36 +1247,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-card-radius` | `14px` | dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px). |
 | `--ki-card-title-family` | `'Instrument Sans', system-ui, sans-serif` | Family used for a clickable card title. |
 
-### `ki-carousel`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-carousel-control-backdrop-filter` | `none` | Complete optional backdrop filter for the carousel controls. |
-| `--ki-carousel-control-bg` | `#f9f7f4` | Surface of the carousel navigation and rotation controls. |
-| `--ki-carousel-control-bg-image` | `none` | Optional image layered over the carousel control background color. |
-| `--ki-carousel-control-border` | `#86827b` | Visible control boundary against the surrounding surface. |
-| `--ki-carousel-control-fg` | `#181613` | Text and glyph ink against the carousel control surface. |
-| `--ki-carousel-control-gap` | `0.25rem` | Spacing between carousel controls. |
-| `--ki-carousel-control-icon-size` | `1.25rem` | Glyph size in the carousel navigation controls. |
-| `--ki-carousel-control-radius` | `1000px` | Corner radius of the carousel controls. |
-| `--ki-carousel-control-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Resting elevation of the carousel controls. |
-| `--ki-carousel-control-size` | `2rem` | Resting carousel control size before applying the density target floor. |
-| `--ki-carousel-full-screen-block-size` | `20rem` | Block size of the vertical carousel viewport. |
-| `--ki-carousel-gap` | `0.75rem` | Gap between carousel slides and between the viewport and the controls. |
-| `--ki-carousel-preview-min-inline-size` | `2rem` | Minimum inline size of a decorative carousel preview when space permits. |
-| `--ki-carousel-radius` | `16px` | Corner radius shared by the carousel viewport and slide surfaces. |
-
-### `ki-carousel-item`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-carousel-item-backdrop-filter` | `none` | Complete optional backdrop filter for the slide surface. |
-| `--ki-carousel-item-bg` | `#f3f0eb` | Surface for carousel slide content and its decorative preview. |
-| `--ki-carousel-item-bg-image` | `none` | Optional image layered over the slide background color. |
-| `--ki-carousel-item-fg` | `#181613` | Text on the carousel slide surface. |
-| `--ki-carousel-item-min-block-size` | `6rem` | Minimum block size of a full slide. |
-| `--ki-carousel-item-padding` | `1rem` | Inset of full slide content. |
-
 ### `ki-checkbox`
 
 | Token | Value (onmars light) | Description |
@@ -1588,23 +1558,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
 | `--ki-divider-thickness` | `1px` | dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). |
 
-### `ki-drawer`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-drawer-backdrop-filter` | `none` | Complete backdrop filter applied behind the drawer surface. |
-| `--ki-drawer-bg` | `#f9f7f4` | Raised surface color of the drawer. |
-| `--ki-drawer-bg-image` | `none` | Optional image layered over the drawer surface. |
-| `--ki-drawer-close-size` | `2rem` | Preferred size of the Close button before the density minimum. |
-| `--ki-drawer-fg` | `#181613` | Foreground color on the drawer surface. |
-| `--ki-drawer-handle-color` | `#86827b` | Color of the bottom-sheet handle. |
-| `--ki-drawer-handle-size` | `2rem` | Inline extent of the bottom-sheet handle. |
-| `--ki-drawer-handle-thickness` | `0.25rem` | Thickness of the bottom-sheet handle. |
-| `--ki-drawer-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the drawer title. |
-| `--ki-drawer-radius` | `16px` | Radius of the corners on the inner edge of the drawer. |
-| `--ki-drawer-shadow` | `0 4px 12px 0 rgba(24, 22, 19, 0.07), 0 20px 44px 0 rgba(24, 22, 19, 0.12), 0 18px 40px 0 transparent` | Resting elevation of the drawer. |
-| `--ki-drawer-size` | `18rem` | Default inline size of a side sheet and block-size cap of a bottom sheet. |
-
 ### `ki-empty-state`
 
 | Token | Value (onmars light) | Description |
@@ -1712,30 +1665,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-feature-icon-xl-size` | `4rem` | Edge length of an extra-large feature icon tile. |
 | `--ki-feature-icon-xs-radius` | `6px` | Corner radius of an extra-small square feature icon tile. |
 | `--ki-feature-icon-xs-size` | `1.5rem` | Edge length of an extra-small feature icon tile. |
-
-### `ki-file-upload`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-file-upload-active-bg` | `#ffebe5` | Drop zone background while files are dragged over it. |
-| `--ki-file-upload-active-border` | `#bb4e2a` | Drop zone boundary while files are dragged over it. |
-| `--ki-file-upload-active-fg` | `#181613` | Main drop zone text while files are dragged over it. |
-| `--ki-file-upload-backdrop-filter` | `none` | Complete backdrop filter applied behind the drop zone. |
-| `--ki-file-upload-bg` | `#f9f7f4` | Drop zone background at rest. |
-| `--ki-file-upload-bg-image` | `none` | Optional image over the drop zone background. |
-| `--ki-file-upload-border` | `#86827b` | Dashed boundary of the drop zone. |
-| `--ki-file-upload-border-width` | `1px` | Outline stroke width for the drop zone and file rows. |
-| `--ki-file-upload-error-bg` | `#ffffff` | Background of a file row with an error. |
-| `--ki-file-upload-error-border` | `#f1989f` | Boundary of a file row with an error. |
-| `--ki-file-upload-error-fg` | `#c21a45` | Text of a file error or field error. |
-| `--ki-file-upload-fg` | `#181613` | Main drop zone text at rest. |
-| `--ki-file-upload-radius` | `12px` | Drop zone corner radius. |
-| `--ki-file-upload-row-backdrop-filter` | `none` | Complete backdrop filter applied behind a file row. |
-| `--ki-file-upload-row-bg` | `#ffffff` | Background of a file row and the field label. |
-| `--ki-file-upload-row-bg-image` | `none` | Optional image over the file row background. |
-| `--ki-file-upload-row-border` | `rgba(24, 22, 19, 0.1)` | Boundary of a file row without an error. |
-| `--ki-file-upload-row-fg` | `#181613` | File names, row action icons and the field label. |
-| `--ki-file-upload-row-radius` | `10px` | File row corner radius. |
 
 ### `ki-format`
 
@@ -2088,43 +2017,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-note-warning-fg` | `#181613` | Text ink of a warning note. |
 | `--ki-note-warning-icon` | `#945b05` | Decorative icon ink of a warning note. |
 
-### `ki-number-input`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-number-input-border-block-end-width` | `1px` | Field border width at block end. |
-| `--ki-number-input-border-block-start-width` | `1px` | Field border width at block start. |
-| `--ki-number-input-border-inline-width` | `1px` | Field border width at either inline edge. |
-| `--ki-number-input-field-backdrop-filter` | `none` | Complete backdrop filter behind the field. |
-| `--ki-number-input-field-bg` | `#ffffff` | Resting NumberInput field fill. |
-| `--ki-number-input-field-bg-image` | `none` | Optional theme image layered over the field fill. |
-| `--ki-number-input-field-border` | `#86827b` | Resting NumberInput field boundary. |
-| `--ki-number-input-field-disabled-bg` | `#f3f0eb` | Field fill when disabled. |
-| `--ki-number-input-field-disabled-border` | `rgba(24, 22, 19, 0.1)` | Boundary when the entire field is disabled. |
-| `--ki-number-input-field-disabled-fg` | `#cbc7bf` | Numeric entry ink when disabled. |
-| `--ki-number-input-field-fg` | `#181613` | Foreground of the numeric entry. |
-| `--ki-number-input-field-focus-bg` | `#ffffff` | Field fill while focused. |
-| `--ki-number-input-field-focus-fg` | `#181613` | Numeric entry ink while focused. |
-| `--ki-number-input-field-invalid-border` | `#ef4e69` | Field boundary when a validation message is visible. |
-| `--ki-number-input-font-size` | `0.8125rem` | Font size of the numeric entry and its suffix. |
-| `--ki-number-input-font-size-touch` | `1rem` | Minimum input font size under a coarse pointer. |
-| `--ki-number-input-height` | `2.5rem` | Medium field height before applying regional density. |
-| `--ki-number-input-label-font-size` | `0.8125rem` | Field label font size. |
-| `--ki-number-input-label-font-weight` | `600` | Field label font weight. |
-| `--ki-number-input-label-gap` | `0.25rem` | Gap between the label, field and supporting messages. |
-| `--ki-number-input-label-line-height` | `1.25rem` | Line height of the field label. |
-| `--ki-number-input-line-height` | `1.5rem` | Line height of the numeric entry and its suffix. |
-| `--ki-number-input-padding-inline` | `0.625rem` | Inline padding for the plain field and unit suffix. |
-| `--ki-number-input-radius` | `10px` | Field corners. |
-| `--ki-number-input-stepper-bg` | `rgba(0, 0, 0, 0)` | Resting stepper button fill. |
-| `--ki-number-input-stepper-disabled-fg` | `#6b665f` | Stepper icon ink when disabled. |
-| `--ki-number-input-stepper-fg` | `#181613` | Resting stepper icon ink. |
-| `--ki-number-input-stepper-hover-bg` | `#f3f0eb` | Stepper fill when hovered. |
-| `--ki-number-input-stepper-hover-fg` | `#181613` | Stepper icon ink when hovered. |
-| `--ki-number-input-stepper-padding-inline` | `0.125rem` | Editor inline padding between the steppers. |
-| `--ki-number-input-unit-bg` | `rgba(0, 0, 0, 0)` | Backing of the unit suffix within the field. |
-| `--ki-number-input-unit-fg` | `#5e5953` | Unit suffix ink. Medium emphasis in the standard contrast setting. |
-
 ### `ki-option`
 
 | Token | Value (onmars light) | Description |
@@ -2262,6 +2154,39 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-scroller-thumb-thickness` | `0.25rem` | dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17). |
 | `--ki-scroller-track-color` | `rgba(255, 255, 255, 0)` | color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute. |
 | `--ki-scroller-track-inset` | `0.25rem` | dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5). |
+
+### `ki-search`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-search-bar-backdrop-filter` | `none` | Complete backdrop filter for the bar. |
+| `--ki-search-bar-bg` | `#f3f0eb` | Fill of the collapsed and docked bar. |
+| `--ki-search-bar-bg-image` | `none` | Optional image painted over the bar fill. |
+| `--ki-search-bar-fg` | `#181613` | Query ink over the search bar. |
+| `--ki-search-bar-height` | `3.5rem` | Minimum height of the search bar, 56px at the default root size. |
+| `--ki-search-bar-placeholder` | `#5e5953` | Placeholder ink exposed by the Search API. |
+| `--ki-search-bar-placeholder-fg` | `#5e5953` | Default contrast pair for placeholder text over the search bar. |
+| `--ki-search-bar-radius` | `1000px` | Pill corner of the collapsed and docked bar. |
+| `--ki-search-control-size` | `2.75rem` | Base size of actions and minimum height of search rows. |
+| `--ki-search-group-heading-family` | `'Instrument Sans', system-ui, sans-serif` | Font family for the recent-query group heading. |
+| `--ki-search-input-touch-size` | `1rem` | Minimum input font size on coarse pointers to avoid focus zoom. |
+| `--ki-search-option-active-bg` | `#f3f0eb` | Fill of the focused or hovered suggestion. |
+| `--ki-search-option-active-fg` | `#181613` | Ink of the focused or hovered suggestion. |
+| `--ki-search-option-active-supporting-fg` | `#5e5953` | Description ink on the focused or hovered suggestion. |
+| `--ki-search-view-backdrop-filter` | `none` | Complete backdrop filter for the search view. |
+| `--ki-search-view-bg` | `#f9f7f4` | Raised fill of the docked and full-screen view. |
+| `--ki-search-view-bg-image` | `none` | Optional image painted over the view fill. |
+| `--ki-search-view-divider` | `rgba(24, 22, 19, 0.1)` | Divider separating the active field and full-screen results. |
+| `--ki-search-view-fg` | `#181613` | Ink over the search view. |
+| `--ki-search-view-radius` | `20px` | Corner for the docked view. |
+| `--ki-search-view-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Resting elevation of the docked view. |
+| `--ki-search-view-supporting-fg` | `#5e5953` | Ink for descriptions and the recent-search group label. |
+
+### `ki-search-suggestion`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-search-suggestion-font-family` | `'Instrument Sans', system-ui, sans-serif` | Inherited body typeface on the declarative suggestion host. |
 
 ### `ki-segmented-control`
 
@@ -2821,32 +2746,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-xs-padding-inline` | `0.375rem` | dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px). |
 | `--ki-textarea-xs-radius` | `6px` | dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs). |
 
-### `ki-timeline`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-timeline-dot-backdrop-filter` | `none` | Complete backdrop filter behind a timeline marker, off by default. |
-| `--ki-timeline-dot-bg` | `#f3f0eb` | Fill of the neutral timeline marker. |
-| `--ki-timeline-dot-bg-image` | `none` | Optional decorative image over the timeline marker fill. |
-| `--ki-timeline-dot-danger-bg` | `#ffebeb` | Fill of the danger timeline marker. |
-| `--ki-timeline-dot-danger-fg` | `#c21a45` | Glyph color on the danger timeline marker. |
-| `--ki-timeline-dot-fg` | `#5e5953` | Glyph color on the neutral timeline marker. |
-| `--ki-timeline-dot-icon-size` | `0.875rem` | Size of the decorative glyph inside the timeline marker. |
-| `--ki-timeline-dot-primary-bg` | `#ffebe5` | Fill of the primary timeline marker. |
-| `--ki-timeline-dot-primary-fg` | `#9a3715` | Glyph color on the primary timeline marker. |
-| `--ki-timeline-dot-radius` | `1000px` | Round corners of the timeline marker. |
-| `--ki-timeline-dot-size` | `1.75rem` | Diameter of the timeline marker. |
-| `--ki-timeline-dot-success-bg` | `#e4f4ea` | Fill of the success timeline marker. |
-| `--ki-timeline-dot-success-fg` | `#2c6a2b` | Glyph color on the success timeline marker. |
-| `--ki-timeline-dot-warning-bg` | `#fcf0dc` | Fill of the warning timeline marker. |
-| `--ki-timeline-dot-warning-fg` | `#945b05` | Glyph color on the warning timeline marker. |
-| `--ki-timeline-gap` | `0.75rem` | Space between marker and text and between timeline entries. |
-| `--ki-timeline-item-fg` | `#181613` | Text color of the event summary and details. |
-| `--ki-timeline-line` | `rgba(24, 22, 19, 0.1)` | Color of the decorative line connecting timeline markers. |
-| `--ki-timeline-line-width` | `1px` | Hairline width of the timeline connector. |
-| `--ki-timeline-time-bg` | `rgba(0, 0, 0, 0)` | The timestamp shows the surrounding surface through its transparent background. |
-| `--ki-timeline-time-fg` | `#5e5953` | Text color of the timeline timestamp. |
-
 ### `ki-toast`
 
 | Token | Value (onmars light) | Description |
@@ -2878,32 +2777,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-toaster-gap` | `0.75rem` | dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014). |
 | `--ki-toaster-inset-block` | `1rem` | dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014). |
 | `--ki-toaster-inset-inline` | `1rem` | dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014). |
-
-### `ki-tool-call`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-tool-call-backdrop-filter` | `none` | Whole filter behind the call. |
-| `--ki-tool-call-bg` | `#f9f7f4` | Solid background of the call disclosure. |
-| `--ki-tool-call-bg-image` | `none` | Optional image over the solid background. |
-| `--ki-tool-call-border` | `rgba(24, 22, 19, 0.1)` | Border ink around the call. |
-| `--ki-tool-call-border-width` | `1px` | Width of the disclosure frame. |
-| `--ki-tool-call-caption-size` | `0.75rem` | Size of captions and the tool identifier. |
-| `--ki-tool-call-code-bg` | `#f3f0eb` | Background for input and output payloads. |
-| `--ki-tool-call-code-fg` | `#181613` | Plain text ink on the payload surface. |
-| `--ki-tool-call-code-radius` | `8px` | Corners of the plain payload surface. |
-| `--ki-tool-call-fg` | `#181613` | Text ink on the call surface. |
-| `--ki-tool-call-font-size` | `0.8125rem` | Body text size. |
-| `--ki-tool-call-gap` | `0.5rem` | Gap between summary items and body sections. |
-| `--ki-tool-call-icon` | `#5e5953` | Ink of the decorative icons. |
-| `--ki-tool-call-icon-size` | `0.625rem` | Size of the wrench and chevron. |
-| `--ki-tool-call-inline-gap` | `0.25rem` | Gap between status items and after each caption. |
-| `--ki-tool-call-line-height` | `1.5rem` | Body text line height. |
-| `--ki-tool-call-mono-family` | `'JetBrains Mono', ui-monospace, monospace` | Typeface of the tool identifier. |
-| `--ki-tool-call-padding` | `0.75rem` | Horizontal inset and space after the body. |
-| `--ki-tool-call-radius` | `12px` | Corners of the disclosure surface. |
-| `--ki-tool-call-transition-duration` | `150ms` | Duration of the disclosure chevron rotation. |
-| `--ki-tool-call-transition-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the disclosure chevron rotation. |
 
 ### `ki-tooltip`
 

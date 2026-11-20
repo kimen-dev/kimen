@@ -3900,686 +3900,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-carousel.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiCarousel",
-          "customElement": true,
-          "tagName": "ki-carousel",
-          "description": "An ordered, swipeable sequence with previous and next controls and position feedback.",
-          "whenToUse": "show a short set of related highlights, onboarding steps or media panels.\nGive the carousel a meaningful label and supply one ki-carousel-item per slide.",
-          "whenNotToUse": "hide essential content behind rotation, replace ordinary page navigation,\nor present slides that readers need to compare side by side at the same time.",
-          "attributes": [
-            {
-              "name": "autoplay",
-              "fieldName": "autoplay",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
-              "minimum": 1,
-              "maximum": 2147483647
-            },
-            {
-              "name": "carousel-role-description",
-              "fieldName": "carouselRoleDescription",
-              "type": {
-                "text": "string"
-              },
-              "default": "'carousel'",
-              "description": "Accessible role description of the region."
-            },
-            {
-              "name": "current",
-              "fieldName": "current",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "One-based leading slide. Setting it moves the carousel and clamps the index to\nthe available leading positions.",
-              "minimum": 1
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Required accessible name of the carousel region.",
-              "required": true
-            },
-            {
-              "name": "layout",
-              "fieldName": "layout",
-              "type": {
-                "text": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\""
-              },
-              "default": "'single'",
-              "description": "Item arrangement. Full-screen uses a vertical, full-viewport slide."
-            },
-            {
-              "name": "loop",
-              "fieldName": "loop",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether navigating past one endpoint wraps to the other."
-            },
-            {
-              "name": "navigation",
-              "fieldName": "navigation",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Whether to show the Previous and Next buttons. The viewport stays keyboard-operable."
-            },
-            {
-              "name": "next-label",
-              "fieldName": "nextLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Next slide'",
-              "description": "Accessible label of the Next button."
-            },
-            {
-              "name": "pagination",
-              "fieldName": "pagination",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Whether to show the noninteractive slide position indicator."
-            },
-            {
-              "name": "pause-label",
-              "fieldName": "pauseLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Pause'",
-              "description": "Visible and accessible label of the Pause button."
-            },
-            {
-              "name": "play-label",
-              "fieldName": "playLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Play'",
-              "description": "Visible and accessible label of the Play button."
-            },
-            {
-              "name": "position-label",
-              "fieldName": "positionLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Slide position'",
-              "description": "Accessible label of the position indicator."
-            },
-            {
-              "name": "previous-label",
-              "fieldName": "previousLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Previous slide'",
-              "description": "Accessible label of the Previous button."
-            },
-            {
-              "name": "slide-label",
-              "fieldName": "slideLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{index} of {count}'",
-              "description": "Spoken slide name and announcement. Use {index} and {count} as placeholders."
-            },
-            {
-              "name": "slide-role-description",
-              "fieldName": "slideRoleDescription",
-              "type": {
-                "text": "string"
-              },
-              "default": "'slide'",
-              "description": "Accessible role description of each slide group."
-            },
-            {
-              "name": "slides-per-move",
-              "fieldName": "slidesPerMove",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of positions advanced by Previous, Next and automatic rotation.",
-              "minimum": 1
-            },
-            {
-              "name": "slides-per-view",
-              "fieldName": "slidesPerView",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of slides visible together in the single layout. Material 3 layouts\ndetermine their own item widths.",
-              "minimum": 1
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "autoplay",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
-              "attribute": "autoplay",
-              "reflects": false,
-              "minimum": 1,
-              "maximum": 2147483647
-            },
-            {
-              "kind": "field",
-              "name": "carouselRoleDescription",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'carousel'",
-              "description": "Accessible role description of the region.",
-              "attribute": "carousel-role-description",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "current",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "One-based leading slide. Setting it moves the carousel and clamps the index to\nthe available leading positions.",
-              "attribute": "current",
-              "reflects": true,
-              "minimum": 1
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Required accessible name of the carousel region.",
-              "attribute": "label",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "layout",
-              "privacy": "public",
-              "type": {
-                "text": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\""
-              },
-              "default": "'single'",
-              "description": "Item arrangement. Full-screen uses a vertical, full-viewport slide.",
-              "attribute": "layout",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "loop",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether navigating past one endpoint wraps to the other.",
-              "attribute": "loop",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "navigation",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.",
-              "attribute": "navigation",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "nextLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Next slide'",
-              "description": "Accessible label of the Next button.",
-              "attribute": "next-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "pagination",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Whether to show the noninteractive slide position indicator.",
-              "attribute": "pagination",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "pauseLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Pause'",
-              "description": "Visible and accessible label of the Pause button.",
-              "attribute": "pause-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "playLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Play'",
-              "description": "Visible and accessible label of the Play button.",
-              "attribute": "play-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "positionLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Slide position'",
-              "description": "Accessible label of the position indicator.",
-              "attribute": "position-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "previousLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Previous slide'",
-              "description": "Accessible label of the Previous button.",
-              "attribute": "previous-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "slideLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{index} of {count}'",
-              "description": "Spoken slide name and announcement. Use {index} and {count} as placeholders.",
-              "attribute": "slide-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "slideRoleDescription",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'slide'",
-              "description": "Accessible role description of each slide group.",
-              "attribute": "slide-role-description",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "slidesPerMove",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of positions advanced by Previous, Next and automatic rotation.",
-              "attribute": "slides-per-move",
-              "reflects": false,
-              "minimum": 1
-            },
-            {
-              "kind": "field",
-              "name": "slidesPerView",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of slides visible together in the single layout. Material 3 layouts\ndetermine their own item widths.",
-              "attribute": "slides-per-view",
-              "reflects": false,
-              "minimum": 1
-            },
-            {
-              "kind": "method",
-              "name": "goTo",
-              "privacy": "public",
-              "description": "Moves to the requested one-based leading position within the available range.",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "index",
-                  "type": {
-                    "text": "number"
-                  },
-                  "description": "",
-                  "optional": false,
-                  "rest": false
-                }
-              ],
-              "signature": "goTo(index: number) => Promise<void>"
-            },
-            {
-              "kind": "method",
-              "name": "next",
-              "privacy": "public",
-              "description": "Advances by slidesPerMove.",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "parameters": [],
-              "signature": "next() => Promise<void>"
-            },
-            {
-              "kind": "method",
-              "name": "previous",
-              "privacy": "public",
-              "description": "Moves back by slidesPerMove.",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "parameters": [],
-              "signature": "previous() => Promise<void>"
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-slide-change",
-              "type": {
-                "text": "CustomEvent<CarouselSlideChangeDetail>"
-              },
-              "description": "Reports the one-based index when the leading slide changes."
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Direct ki-carousel-item children in reading order."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "announcement",
-              "description": "Visually hidden live region for manual changes."
-            },
-            {
-              "name": "controls",
-              "description": "Row containing slide position and navigation."
-            },
-            {
-              "name": "next",
-              "description": "Next slide button."
-            },
-            {
-              "name": "position",
-              "description": "Position indicator and optional numeric position."
-            },
-            {
-              "name": "previous",
-              "description": "Previous slide button."
-            },
-            {
-              "name": "rotation",
-              "description": "Play or Pause button when automatic rotation is configured."
-            },
-            {
-              "name": "viewport",
-              "description": "Scroll-snap viewport and its keyboard focus outline."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-carousel-control-backdrop-filter",
-              "description": "Complete optional backdrop filter for the carousel controls."
-            },
-            {
-              "name": "--ki-carousel-control-bg",
-              "description": "Surface of the carousel navigation and rotation controls."
-            },
-            {
-              "name": "--ki-carousel-control-bg-image",
-              "description": "Optional image layered over the carousel control background color."
-            },
-            {
-              "name": "--ki-carousel-control-border",
-              "description": "Visible control boundary against the surrounding surface."
-            },
-            {
-              "name": "--ki-carousel-control-fg",
-              "description": "Text and glyph ink against the carousel control surface."
-            },
-            {
-              "name": "--ki-carousel-control-gap",
-              "description": "Spacing between carousel controls."
-            },
-            {
-              "name": "--ki-carousel-control-icon-size",
-              "description": "Glyph size in the carousel navigation controls."
-            },
-            {
-              "name": "--ki-carousel-control-radius",
-              "description": "Corner radius of the carousel controls."
-            },
-            {
-              "name": "--ki-carousel-control-shadow",
-              "description": "Resting elevation of the carousel controls."
-            },
-            {
-              "name": "--ki-carousel-control-size",
-              "description": "Resting carousel control size before applying the density target floor."
-            },
-            {
-              "name": "--ki-carousel-full-screen-block-size",
-              "description": "Block size of the vertical carousel viewport."
-            },
-            {
-              "name": "--ki-carousel-gap",
-              "description": "Gap between carousel slides and between the viewport and the controls."
-            },
-            {
-              "name": "--ki-carousel-preview-min-inline-size",
-              "description": "Minimum inline size of a decorative carousel preview when space permits."
-            },
-            {
-              "name": "--ki-carousel-radius",
-              "description": "Corner radius shared by the carousel viewport and slide surfaces."
-            },
-            {
-              "name": "--ki-control-border-width",
-              "description": "Stroke width of the boundary of a compact control."
-            },
-            {
-              "name": "--ki-density-space-scale",
-              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiCarousel",
-          "declaration": {
-            "name": "KiCarousel",
-            "module": "dist/components/ki-carousel.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-carousel",
-          "declaration": {
-            "name": "KiCarousel",
-            "module": "dist/components/ki-carousel.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-carousel-item.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiCarouselItem",
-          "customElement": true,
-          "tagName": "ki-carousel-item",
-          "description": "A slide in an ordered ki-carousel sequence.",
-          "whenToUse": "supply a single slide to a ki-carousel. Put the full slide in the\ndefault slot and optional decorative preview media in the preview slot.",
-          "whenNotToUse": "present a standalone card or a layout container outside a carousel.",
-          "attributes": [],
-          "members": [],
-          "events": [],
-          "slots": [
-            {
-              "name": "",
-              "description": "The full slide content, including any links and controls."
-            },
-            {
-              "name": "preview",
-              "description": "Decorative, noninteractive media shown when the item is a reduced preview."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "content",
-              "description": "Surface that holds the full slide."
-            },
-            {
-              "name": "preview",
-              "description": "Decorative surface used in small or partly shown previews."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-carousel-item-backdrop-filter",
-              "description": "Complete optional backdrop filter for the slide surface."
-            },
-            {
-              "name": "--ki-carousel-item-bg",
-              "description": "Surface for carousel slide content and its decorative preview."
-            },
-            {
-              "name": "--ki-carousel-item-bg-image",
-              "description": "Optional image layered over the slide background color."
-            },
-            {
-              "name": "--ki-carousel-item-fg",
-              "description": "Text on the carousel slide surface."
-            },
-            {
-              "name": "--ki-carousel-item-min-block-size",
-              "description": "Minimum block size of a full slide."
-            },
-            {
-              "name": "--ki-carousel-item-padding",
-              "description": "Inset of full slide content."
-            },
-            {
-              "name": "--ki-carousel-radius",
-              "description": "Corner radius shared by the carousel viewport and slide surfaces."
-            },
-            {
-              "name": "--ki-control-border-width",
-              "description": "Stroke width of the boundary of a compact control."
-            },
-            {
-              "name": "--ki-density-space-scale",
-              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiCarouselItem",
-          "declaration": {
-            "name": "KiCarouselItem",
-            "module": "dist/components/ki-carousel-item.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-carousel-item",
-          "declaration": {
-            "name": "KiCarouselItem",
-            "module": "dist/components/ki-carousel-item.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-checkbox.js",
       "declarations": [
         {
@@ -9683,376 +9003,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-drawer.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiDrawer",
-          "customElement": true,
-          "tagName": "ki-drawer",
-          "description": "An edge-aligned sheet for a focused task that keeps the current page in context.",
-          "whenToUse": "Edit an item beside its list or offer a short set of actions in a\nbottom sheet. Supply a heading and wire slotted actions in the application.\nUse non-modal mode if people need to interact with the page while editing.",
-          "whenNotToUse": "Menus, hover hints, permanent navigation, or work that needs a\nfull page. For a short interrupting decision in the center, use ki-dialog.",
-          "attributes": [
-            {
-              "name": "close-label",
-              "fieldName": "closeLabel",
-              "type": {
-                "text": "string | undefined"
-              },
-              "default": "'Close'",
-              "description": "Accessible name for the built-in Close button. Translate this for localized interfaces."
-            },
-            {
-              "name": "heading",
-              "fieldName": "heading",
-              "type": {
-                "text": "string"
-              },
-              "description": "Title and accessible name. Provide a heading whenever the drawer opens.",
-              "required": true
-            },
-            {
-              "name": "modal",
-              "fieldName": "modal",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction."
-            },
-            {
-              "name": "open",
-              "fieldName": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Reflected live state. Setting it to false requests dismissal and may be vetoed."
-            },
-            {
-              "name": "placement",
-              "fieldName": "placement",
-              "type": {
-                "text": "\"bottom\" | \"end\" | \"start\""
-              },
-              "default": "'end'",
-              "description": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end."
-            },
-            {
-              "name": "size",
-              "fieldName": "size",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional CSS length. Overrides the 18rem themed width or bottom height cap."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "closeLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "default": "'Close'",
-              "description": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
-              "attribute": "close-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "heading",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Title and accessible name. Provide a heading whenever the drawer opens.",
-              "attribute": "heading",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "modal",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
-              "attribute": "modal",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "placement",
-              "privacy": "public",
-              "type": {
-                "text": "\"bottom\" | \"end\" | \"start\""
-              },
-              "default": "'end'",
-              "description": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
-              "attribute": "placement",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional CSS length. Overrides the 18rem themed width or bottom height cap.",
-              "attribute": "size",
-              "reflects": false
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "description": "Requests dismissal. An application can veto it by canceling ki-close.",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "parameters": [],
-              "signature": "close() => Promise<void>"
-            },
-            {
-              "kind": "method",
-              "name": "show",
-              "privacy": "public",
-              "description": "Opens the sheet. A focused invoker receives focus again after modal dismissal.",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "parameters": [],
-              "signature": "show() => Promise<void>"
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-close",
-              "type": {
-                "text": "CustomEvent<KiDrawerCloseDetail>"
-              },
-              "description": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason."
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "The drawer's content, such as fields or a short list of actions."
-            },
-            {
-              "name": "footer",
-              "description": "Optional actions such as Save. Wire these in the application."
-            },
-            {
-              "name": "header-actions",
-              "description": "Optional actions between the heading and Close button."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "body",
-              "description": "The scrollable content region."
-            },
-            {
-              "name": "close",
-              "description": "The built-in Close button."
-            },
-            {
-              "name": "dialog",
-              "description": "The native sheet surface."
-            },
-            {
-              "name": "footer",
-              "description": "The action row, collapsed when empty."
-            },
-            {
-              "name": "handle",
-              "description": "The decorative bottom-sheet swipe handle."
-            },
-            {
-              "name": "header",
-              "description": "The heading and action layout."
-            },
-            {
-              "name": "heading",
-              "description": "The visible title that names the sheet."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-corner-control",
-              "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
-            },
-            {
-              "name": "--ki-density-space-scale",
-              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-dialog-backdrop-bg",
-              "description": "color used by the dialog component for backdrop background."
-            },
-            {
-              "name": "--ki-dialog-divider-width",
-              "description": "dimension used by the dialog component for the dividers under the heading and above the footer (Modal-header and Modal-actions 1px strokes). Zero removes them."
-            },
-            {
-              "name": "--ki-drawer-backdrop-filter",
-              "description": "Complete backdrop filter applied behind the drawer surface."
-            },
-            {
-              "name": "--ki-drawer-bg",
-              "description": "Raised surface color of the drawer."
-            },
-            {
-              "name": "--ki-drawer-bg-image",
-              "description": "Optional image layered over the drawer surface."
-            },
-            {
-              "name": "--ki-drawer-close-size",
-              "description": "Preferred size of the Close button before the density minimum."
-            },
-            {
-              "name": "--ki-drawer-fg",
-              "description": "Foreground color on the drawer surface."
-            },
-            {
-              "name": "--ki-drawer-handle-color",
-              "description": "Color of the bottom-sheet handle."
-            },
-            {
-              "name": "--ki-drawer-handle-size",
-              "description": "Inline extent of the bottom-sheet handle."
-            },
-            {
-              "name": "--ki-drawer-handle-thickness",
-              "description": "Thickness of the bottom-sheet handle."
-            },
-            {
-              "name": "--ki-drawer-heading-font-family",
-              "description": "Typeface of the drawer title."
-            },
-            {
-              "name": "--ki-drawer-radius",
-              "description": "Radius of the corners on the inner edge of the drawer."
-            },
-            {
-              "name": "--ki-drawer-shadow",
-              "description": "Resting elevation of the drawer."
-            },
-            {
-              "name": "--ki-drawer-size",
-              "description": "Default inline size of a side sheet and block-size cap of a bottom sheet."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-layout-spacing-2xl",
-              "description": "The 2xl spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-layout-spacing-md",
-              "description": "The md spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-layout-spacing-xl",
-              "description": "The xl spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-motion-duration-fast",
-              "description": "Fast interaction transition duration."
-            },
-            {
-              "name": "--ki-motion-duration-medium-1",
-              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
-            },
-            {
-              "name": "--ki-motion-easing-out",
-              "description": "Decelerating interaction transition easing curve."
-            },
-            {
-              "name": "--ki-outline-low-em",
-              "description": "semantic color for outline low em."
-            },
-            {
-              "name": "--ki-surface-hover-overlay-inverse",
-              "description": "semantic color for surface hover overlay inverse."
-            },
-            {
-              "name": "--ki-surface-transparent",
-              "description": "Transparent surface backing for a background image that carries its own opacity."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-title-2",
-              "description": "semantic dimension for typography line height title 2."
-            },
-            {
-              "name": "--ki-typography-size-title-2",
-              "description": "semantic dimension for typography size title 2."
-            },
-            {
-              "name": "--ki-typography-weight-body-semibold",
-              "description": "semantic font weight for typography weight body semibold."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiDrawer",
-          "declaration": {
-            "name": "KiDrawer",
-            "module": "dist/components/ki-drawer.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-drawer",
-          "declaration": {
-            "name": "KiDrawer",
-            "module": "dist/components/ki-drawer.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-empty-state.js",
       "declarations": [
         {
@@ -10996,787 +9946,6 @@
           "declaration": {
             "name": "KiFeatureIcon",
             "module": "dist/components/ki-feature-icon.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-file-upload.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiFileUpload",
-          "customElement": true,
-          "tagName": "ki-file-upload",
-          "description": "A form-associated picker and drop zone with local selection validation and a\nlist of file upload outcomes.",
-          "whenToUse": "collect local attachments, media or imports, and optionally show\napplication-managed upload progress and results.",
-          "whenNotToUse": "transfer files without an application handler, collect a URL,\nor use client-side type and size checks as upload authorization.",
-          "attributes": [
-            {
-              "name": "accept",
-              "fieldName": "accept",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections."
-            },
-            {
-              "name": "browse-label",
-              "fieldName": "browseLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Browse files'",
-              "description": "Visible text of the native file picker button."
-            },
-            {
-              "name": "cancel-label",
-              "fieldName": "cancelLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Cancel upload of {file}'",
-              "description": "Accessible name template for cancellation. Use {file} for the displayed filename."
-            },
-            {
-              "name": "count-error",
-              "fieldName": "countError",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Too many files.'",
-              "description": "Rejection text for a file beyond selection capacity."
-            },
-            {
-              "name": "disabled",
-              "fieldName": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the picker and file actions and excludes the field from submission."
-            },
-            {
-              "name": "done-label",
-              "fieldName": "doneLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Uploaded'",
-              "description": "Status text for a completed upload."
-            },
-            {
-              "name": "drop-label",
-              "fieldName": "dropLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Drop files here or'",
-              "description": "Drop instruction shown just before the Browse button."
-            },
-            {
-              "name": "error-text",
-              "fieldName": "errorText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Application validation error. Clear it to allow form submission again."
-            },
-            {
-              "name": "failed-label",
-              "fieldName": "failedLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Upload failed.'",
-              "description": "Fallback status text for a failed upload without a supplied error."
-            },
-            {
-              "name": "help-text",
-              "fieldName": "helpText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Guidance for file formats, limits or the purpose of this field."
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Upload files'",
-              "description": "Visible label and accessible name of the upload group."
-            },
-            {
-              "name": "list-label",
-              "fieldName": "listLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Files'",
-              "description": "Accessible name of the list of files."
-            },
-            {
-              "name": "max-files",
-              "fieldName": "maxFiles",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one."
-            },
-            {
-              "name": "max-size",
-              "fieldName": "maxSize",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\"."
-            },
-            {
-              "name": "multiple",
-              "fieldName": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Allows a selection of more than one file."
-            },
-            {
-              "name": "name",
-              "fieldName": "name",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form-data key repeated for each accepted original file."
-            },
-            {
-              "name": "queued-label",
-              "fieldName": "queuedLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Queued'",
-              "description": "Status text for an accepted file waiting to upload."
-            },
-            {
-              "name": "remove-label",
-              "fieldName": "removeLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Remove {file}'",
-              "description": "Accessible name template for removal. Use {file} for the displayed filename."
-            },
-            {
-              "name": "required",
-              "fieldName": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Requires at least one original accepted file to submit the form."
-            },
-            {
-              "name": "required-label",
-              "fieldName": "requiredLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Required'",
-              "description": "Visible annotation for a required file field."
-            },
-            {
-              "name": "required-message",
-              "fieldName": "requiredMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Select a file.'",
-              "description": "Validation message when the form requires a file and none is selected."
-            },
-            {
-              "name": "size-error",
-              "fieldName": "sizeError",
-              "type": {
-                "text": "string"
-              },
-              "default": "'This file is too large.'",
-              "description": "Rejection text for a file larger than max-size."
-            },
-            {
-              "name": "type-error",
-              "fieldName": "typeError",
-              "type": {
-                "text": "string"
-              },
-              "default": "'This file type is not allowed.'",
-              "description": "Rejection text for a file that does not match accept."
-            },
-            {
-              "name": "uploading-label",
-              "fieldName": "uploadingLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Uploading {file}'",
-              "description": "Progress indicator name template. Use {file} for the displayed filename."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "accept",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.",
-              "attribute": "accept",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "browseLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Browse files'",
-              "description": "Visible text of the native file picker button.",
-              "attribute": "browse-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "cancelLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Cancel upload of {file}'",
-              "description": "Accessible name template for cancellation. Use {file} for the displayed filename.",
-              "attribute": "cancel-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "countError",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Too many files.'",
-              "description": "Rejection text for a file beyond selection capacity.",
-              "attribute": "count-error",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the picker and file actions and excludes the field from submission.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "doneLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Uploaded'",
-              "description": "Status text for a completed upload.",
-              "attribute": "done-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "dropLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Drop files here or'",
-              "description": "Drop instruction shown just before the Browse button.",
-              "attribute": "drop-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "errorText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Application validation error. Clear it to allow form submission again.",
-              "attribute": "error-text",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "failedLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Upload failed.'",
-              "description": "Fallback status text for a failed upload without a supplied error.",
-              "attribute": "failed-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "files",
-              "privacy": "public",
-              "type": {
-                "text": "KiFile[]"
-              },
-              "default": "[]",
-              "description": "Displayed file records, including rejections. Assign a new array to update\nprogress or outcomes. Keep each original File on its record for form\nsubmission. Set this as a JavaScript property when supplying file records.",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Guidance for file formats, limits or the purpose of this field.",
-              "attribute": "help-text",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Upload files'",
-              "description": "Visible label and accessible name of the upload group.",
-              "attribute": "label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "listLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Files'",
-              "description": "Accessible name of the list of files.",
-              "attribute": "list-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "maxFiles",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.",
-              "attribute": "max-files",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "maxSize",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\".",
-              "attribute": "max-size",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "multiple",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Allows a selection of more than one file.",
-              "attribute": "multiple",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form-data key repeated for each accepted original file.",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "queuedLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Queued'",
-              "description": "Status text for an accepted file waiting to upload.",
-              "attribute": "queued-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "removeLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Remove {file}'",
-              "description": "Accessible name template for removal. Use {file} for the displayed filename.",
-              "attribute": "remove-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Requires at least one original accepted file to submit the form.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "requiredLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Required'",
-              "description": "Visible annotation for a required file field.",
-              "attribute": "required-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "requiredMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Select a file.'",
-              "description": "Validation message when the form requires a file and none is selected.",
-              "attribute": "required-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "sizeError",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'This file is too large.'",
-              "description": "Rejection text for a file larger than max-size.",
-              "attribute": "size-error",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "typeError",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'This file type is not allowed.'",
-              "description": "Rejection text for a file that does not match accept.",
-              "attribute": "type-error",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "uploadingLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Uploading {file}'",
-              "description": "Progress indicator name template. Use {file} for the displayed filename.",
-              "attribute": "uploading-label",
-              "reflects": false
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-file-cancel",
-              "type": {
-                "text": "CustomEvent<KiFileActionDetail>"
-              },
-              "description": "Requests that the application cancel the identified upload."
-            },
-            {
-              "name": "ki-file-remove",
-              "type": {
-                "text": "CustomEvent<KiFileActionDetail>"
-              },
-              "description": "Reports a row removed by the user, after updating the file list."
-            },
-            {
-              "name": "ki-files-add",
-              "type": {
-                "text": "CustomEvent<KiFilesAddDetail>"
-              },
-              "description": "Reports the accepted rows in one picker or drop batch, each with its original File."
-            }
-          ],
-          "slots": [
-            {
-              "name": "help",
-              "description": "Plain-language guidance for the picker, in place of help-text."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "action",
-              "description": "Native button for removal or cancellation."
-            },
-            {
-              "name": "browse",
-              "description": "Native button that opens the file picker."
-            },
-            {
-              "name": "drop-zone",
-              "description": "Surface that receives files dragged from the operating system."
-            },
-            {
-              "name": "error",
-              "description": "Field-level form validation error."
-            },
-            {
-              "name": "file-meta",
-              "description": "Size, outcome or error text for the file."
-            },
-            {
-              "name": "file-name",
-              "description": "Name displayed for the file."
-            },
-            {
-              "name": "help",
-              "description": "Guidance associated with the field."
-            },
-            {
-              "name": "input",
-              "description": "Hidden native file picker."
-            },
-            {
-              "name": "label",
-              "description": "Field label and optional required annotation."
-            },
-            {
-              "name": "list",
-              "description": "List of selected files and rejections."
-            },
-            {
-              "name": "progress",
-              "description": "Progress indicator for an uploading file."
-            },
-            {
-              "name": "row",
-              "description": "A file row, with data-status matching its lifecycle state."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-corner-inline",
-              "description": "Small radius for an outline around inline content."
-            },
-            {
-              "name": "--ki-density-space-scale",
-              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-file-upload-active-bg",
-              "description": "Drop zone background while files are dragged over it."
-            },
-            {
-              "name": "--ki-file-upload-active-border",
-              "description": "Drop zone boundary while files are dragged over it."
-            },
-            {
-              "name": "--ki-file-upload-active-fg",
-              "description": "Main drop zone text while files are dragged over it."
-            },
-            {
-              "name": "--ki-file-upload-backdrop-filter",
-              "description": "Complete backdrop filter applied behind the drop zone."
-            },
-            {
-              "name": "--ki-file-upload-bg",
-              "description": "Drop zone background at rest."
-            },
-            {
-              "name": "--ki-file-upload-bg-image",
-              "description": "Optional image over the drop zone background."
-            },
-            {
-              "name": "--ki-file-upload-border",
-              "description": "Dashed boundary of the drop zone."
-            },
-            {
-              "name": "--ki-file-upload-border-width",
-              "description": "Outline stroke width for the drop zone and file rows."
-            },
-            {
-              "name": "--ki-file-upload-error-bg",
-              "description": "Background of a file row with an error."
-            },
-            {
-              "name": "--ki-file-upload-error-border",
-              "description": "Boundary of a file row with an error."
-            },
-            {
-              "name": "--ki-file-upload-error-fg",
-              "description": "Text of a file error or field error."
-            },
-            {
-              "name": "--ki-file-upload-fg",
-              "description": "Main drop zone text at rest."
-            },
-            {
-              "name": "--ki-file-upload-radius",
-              "description": "Drop zone corner radius."
-            },
-            {
-              "name": "--ki-file-upload-row-backdrop-filter",
-              "description": "Complete backdrop filter applied behind a file row."
-            },
-            {
-              "name": "--ki-file-upload-row-bg",
-              "description": "Background of a file row and the field label."
-            },
-            {
-              "name": "--ki-file-upload-row-bg-image",
-              "description": "Optional image over the file row background."
-            },
-            {
-              "name": "--ki-file-upload-row-border",
-              "description": "Boundary of a file row without an error."
-            },
-            {
-              "name": "--ki-file-upload-row-fg",
-              "description": "File names, row action icons and the field label."
-            },
-            {
-              "name": "--ki-file-upload-row-radius",
-              "description": "File row corner radius."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-layout-spacing-3xl",
-              "description": "The 3xl spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-layout-spacing-md",
-              "description": "The md spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-layout-spacing-xs",
-              "description": "The xs spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-text-primary-high-em",
-              "description": "semantic color for text primary high em."
-            },
-            {
-              "name": "--ki-text-supporting",
-              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-body-1",
-              "description": "semantic dimension for typography line height body 1."
-            },
-            {
-              "name": "--ki-typography-line-height-caption-2",
-              "description": "semantic dimension for typography line height caption 2."
-            },
-            {
-              "name": "--ki-typography-size-caption-2",
-              "description": "semantic dimension for typography size caption 2."
-            },
-            {
-              "name": "--ki-typography-underline-offset",
-              "description": "Gap between text and its underline."
-            },
-            {
-              "name": "--ki-typography-underline-thickness",
-              "description": "Stroke width of a resting text underline."
-            },
-            {
-              "name": "--ki-typography-underline-thickness-hover",
-              "description": "Stroke width of an emphasized underline on hover."
-            },
-            {
-              "name": "--ki-typography-visually-hidden-size",
-              "description": "Nonzero edge for clipped text available to assistive technology."
-            },
-            {
-              "name": "--ki-typography-weight-body-medium",
-              "description": "semantic font weight for typography weight body medium."
-            },
-            {
-              "name": "--ki-typography-weight-body-normal",
-              "description": "semantic font weight for typography weight body normal."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiFileUpload",
-          "declaration": {
-            "name": "KiFileUpload",
-            "module": "dist/components/ki-file-upload.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-file-upload",
-          "declaration": {
-            "name": "KiFileUpload",
-            "module": "dist/components/ki-file-upload.js"
           }
         }
       ]
@@ -16612,631 +14781,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-number-input.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiNumberInput",
-          "customElement": true,
-          "tagName": "ki-number-input",
-          "description": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-          "whenToUse": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning.",
-          "whenNotToUse": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue.",
-          "attributes": [
-            {
-              "name": "decrease-label",
-              "fieldName": "decreaseLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Decrease {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}."
-            },
-            {
-              "name": "disabled",
-              "fieldName": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Prevents editing and excludes the control from form submission."
-            },
-            {
-              "name": "error-text",
-              "fieldName": "errorText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Validation hint to show when the entry fails a constraint."
-            },
-            {
-              "name": "format",
-              "fieldName": "format",
-              "type": {
-                "text": "string"
-              },
-              "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision."
-            },
-            {
-              "name": "help-text",
-              "fieldName": "helpText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Context or instructions displayed beneath the field when it has no visible error."
-            },
-            {
-              "name": "increase-label",
-              "fieldName": "increaseLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Increase {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}."
-            },
-            {
-              "name": "invalid-number-message",
-              "fieldName": "invalidNumberMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Enter a number.'",
-              "description": "Default validation message for text that cannot be read as a number."
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Visible accessible name. Supply a meaningful label in the page language.",
-              "required": true
-            },
-            {
-              "name": "max",
-              "fieldName": "max",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum permitted numeric value. Omit for an unbounded maximum."
-            },
-            {
-              "name": "maximum-message",
-              "fieldName": "maximumMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the maximum of {value}.'",
-              "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}."
-            },
-            {
-              "name": "min",
-              "fieldName": "min",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Minimum permitted numeric value. Omit for an unbounded minimum."
-            },
-            {
-              "name": "minimum-message",
-              "fieldName": "minimumMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the minimum of {value}.'",
-              "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}."
-            },
-            {
-              "name": "name",
-              "fieldName": "name",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form-data key for the plain numeric value."
-            },
-            {
-              "name": "required",
-              "fieldName": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the user must enter a number before submitting the form."
-            },
-            {
-              "name": "step",
-              "fieldName": "step",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments."
-            },
-            {
-              "name": "steppers",
-              "fieldName": "steppers",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows named decrease and increase buttons inside the field."
-            },
-            {
-              "name": "unit",
-              "fieldName": "unit",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Visible suffix such as seconds or seats, included in the accessible description."
-            },
-            {
-              "name": "value",
-              "fieldName": "value",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "decreaseLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Decrease {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}.",
-              "attribute": "decrease-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Prevents editing and excludes the control from form submission.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "errorText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Validation hint to show when the entry fails a constraint.",
-              "attribute": "error-text",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "format",
-              "privacy": "public",
-              "type": {
-                "text": "NumberFormatOptions | undefined"
-              },
-              "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
-              "attribute": "format",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Context or instructions displayed beneath the field when it has no visible error.",
-              "attribute": "help-text",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "increaseLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Increase {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}.",
-              "attribute": "increase-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "invalidNumberMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Enter a number.'",
-              "description": "Default validation message for text that cannot be read as a number.",
-              "attribute": "invalid-number-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Visible accessible name. Supply a meaningful label in the page language.",
-              "attribute": "label",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum permitted numeric value. Omit for an unbounded maximum.",
-              "attribute": "max",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "maximumMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the maximum of {value}.'",
-              "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-              "attribute": "maximum-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "min",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Minimum permitted numeric value. Omit for an unbounded minimum.",
-              "attribute": "min",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "minimumMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the minimum of {value}.'",
-              "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-              "attribute": "minimum-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form-data key for the plain numeric value.",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the user must enter a number before submitting the form.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "step",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-              "attribute": "step",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "steppers",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows named decrease and increase buttons inside the field.",
-              "attribute": "steppers",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "unit",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Visible suffix such as seconds or seats, included in the accessible description.",
-              "attribute": "unit",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
-              "attribute": "value",
-              "reflects": false
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "type": {
-                "text": "Event"
-              },
-              "description": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-            }
-          ],
-          "slots": [],
-          "cssParts": [
-            {
-              "name": "decrease",
-              "description": "Button that subtracts one step."
-            },
-            {
-              "name": "error",
-              "description": "Polite validation feedback associated with the spinbutton."
-            },
-            {
-              "name": "field",
-              "description": "Enclosure around the editor, unit and stepper buttons."
-            },
-            {
-              "name": "help",
-              "description": "Help message associated with the spinbutton."
-            },
-            {
-              "name": "increase",
-              "description": "Button that adds one step."
-            },
-            {
-              "name": "input",
-              "description": "Native text editor carrying the spinbutton role."
-            },
-            {
-              "name": "label",
-              "description": "Visible name of the spinbutton."
-            },
-            {
-              "name": "status",
-              "description": "Polite feedback explaining a value adjustment."
-            },
-            {
-              "name": "unit",
-              "description": "Visible unit referenced by the spinbutton's description."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-control-offset",
-              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-number-input-border-block-end-width",
-              "description": "Field border width at block end."
-            },
-            {
-              "name": "--ki-number-input-border-block-start-width",
-              "description": "Field border width at block start."
-            },
-            {
-              "name": "--ki-number-input-border-inline-width",
-              "description": "Field border width at either inline edge."
-            },
-            {
-              "name": "--ki-number-input-field-backdrop-filter",
-              "description": "Complete backdrop filter behind the field."
-            },
-            {
-              "name": "--ki-number-input-field-bg",
-              "description": "Resting NumberInput field fill."
-            },
-            {
-              "name": "--ki-number-input-field-bg-image",
-              "description": "Optional theme image layered over the field fill."
-            },
-            {
-              "name": "--ki-number-input-field-border",
-              "description": "Resting NumberInput field boundary."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-bg",
-              "description": "Field fill when disabled."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-border",
-              "description": "Boundary when the entire field is disabled."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-fg",
-              "description": "Numeric entry ink when disabled."
-            },
-            {
-              "name": "--ki-number-input-field-fg",
-              "description": "Foreground of the numeric entry."
-            },
-            {
-              "name": "--ki-number-input-field-focus-bg",
-              "description": "Field fill while focused."
-            },
-            {
-              "name": "--ki-number-input-field-focus-fg",
-              "description": "Numeric entry ink while focused."
-            },
-            {
-              "name": "--ki-number-input-field-invalid-border",
-              "description": "Field boundary when a validation message is visible."
-            },
-            {
-              "name": "--ki-number-input-font-size",
-              "description": "Font size of the numeric entry and its suffix."
-            },
-            {
-              "name": "--ki-number-input-font-size-touch",
-              "description": "Minimum input font size under a coarse pointer."
-            },
-            {
-              "name": "--ki-number-input-height",
-              "description": "Medium field height before applying regional density."
-            },
-            {
-              "name": "--ki-number-input-label-font-size",
-              "description": "Field label font size."
-            },
-            {
-              "name": "--ki-number-input-label-font-weight",
-              "description": "Field label font weight."
-            },
-            {
-              "name": "--ki-number-input-label-gap",
-              "description": "Gap between the label, field and supporting messages."
-            },
-            {
-              "name": "--ki-number-input-label-line-height",
-              "description": "Line height of the field label."
-            },
-            {
-              "name": "--ki-number-input-line-height",
-              "description": "Line height of the numeric entry and its suffix."
-            },
-            {
-              "name": "--ki-number-input-padding-inline",
-              "description": "Inline padding for the plain field and unit suffix."
-            },
-            {
-              "name": "--ki-number-input-radius",
-              "description": "Field corners."
-            },
-            {
-              "name": "--ki-number-input-stepper-bg",
-              "description": "Resting stepper button fill."
-            },
-            {
-              "name": "--ki-number-input-stepper-disabled-fg",
-              "description": "Stepper icon ink when disabled."
-            },
-            {
-              "name": "--ki-number-input-stepper-fg",
-              "description": "Resting stepper icon ink."
-            },
-            {
-              "name": "--ki-number-input-stepper-hover-bg",
-              "description": "Stepper fill when hovered."
-            },
-            {
-              "name": "--ki-number-input-stepper-hover-fg",
-              "description": "Stepper icon ink when hovered."
-            },
-            {
-              "name": "--ki-number-input-stepper-padding-inline",
-              "description": "Editor inline padding between the steppers."
-            },
-            {
-              "name": "--ki-number-input-unit-bg",
-              "description": "Backing of the unit suffix within the field."
-            },
-            {
-              "name": "--ki-number-input-unit-fg",
-              "description": "Unit suffix ink. Medium emphasis in the standard contrast setting."
-            },
-            {
-              "name": "--ki-text-danger-high-em",
-              "description": "semantic color for text danger high em."
-            },
-            {
-              "name": "--ki-text-high-em",
-              "description": "semantic color for text high em."
-            },
-            {
-              "name": "--ki-text-supporting",
-              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-caption-2",
-              "description": "semantic dimension for typography line height caption 2."
-            },
-            {
-              "name": "--ki-typography-size-caption-2",
-              "description": "semantic dimension for typography size caption 2."
-            },
-            {
-              "name": "--ki-typography-weight-body-normal",
-              "description": "semantic font weight for typography weight body normal."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiNumberInput",
-          "declaration": {
-            "name": "KiNumberInput",
-            "module": "dist/components/ki-number-input.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-number-input",
-          "declaration": {
-            "name": "KiNumberInput",
-            "module": "dist/components/ki-number-input.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-option.js",
       "declarations": [
         {
@@ -18845,6 +16389,723 @@
           "declaration": {
             "name": "KiScroller",
             "module": "dist/components/ki-scroller.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-search.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSearch",
+          "customElement": true,
+          "tagName": "ki-search",
+          "description": "A query field with a responsive view for suggestions, recent searches and results.",
+          "whenToUse": "accept free-text searches and let the user run a typed or suggested\nquery. Listen for ki-input to update suggestions, and ki-search to render results.",
+          "whenNotToUse": "selecting one value from a fixed set belongs in ki-select.\nUse ki-input when a plain search field is enough.",
+          "attributes": [
+            {
+              "name": "back-label",
+              "fieldName": "backLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Back'",
+              "description": "Accessible name of the full-screen Back button."
+            },
+            {
+              "name": "clear-label",
+              "fieldName": "clearLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Clear search'",
+              "description": "Accessible name of the query clear button."
+            },
+            {
+              "name": "highlight",
+              "fieldName": "highlight",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Emphasize literal, case-insensitive matches in suggestion titles."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Accessible name of the search landmark, input and full-screen dialog."
+            },
+            {
+              "name": "loading",
+              "fieldName": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a loading indicator while the host fetches suggestions."
+            },
+            {
+              "name": "loading-label",
+              "fieldName": "loadingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading suggestions'",
+              "description": "Accessible name of the loading indicator."
+            },
+            {
+              "name": "mode",
+              "fieldName": "mode",
+              "type": {
+                "text": "\"auto\" | \"docked\" | \"fullscreen\""
+              },
+              "default": "'auto'",
+              "description": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Name under which the current query is included in form data."
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the search view is open. The field opens it on focus, click or input."
+            },
+            {
+              "name": "placeholder",
+              "fieldName": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional hint displayed inside the empty search field."
+            },
+            {
+              "name": "recent-label",
+              "fieldName": "recentLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Recent searches'",
+              "description": "Visible and accessible name of the recent-search group."
+            },
+            {
+              "name": "remove-recent-label",
+              "fieldName": "removeRecentLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Remove {value}'",
+              "description": "Accessible name template for recent-query removal. Use {value} for the query title."
+            },
+            {
+              "name": "suggestion-count-plural",
+              "fieldName": "suggestionCountPlural",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{count} suggestions'",
+              "description": "Polite announcement for zero or multiple suggestions. Use {count} for the number."
+            },
+            {
+              "name": "suggestion-count-singular",
+              "fieldName": "suggestionCountSingular",
+              "type": {
+                "text": "string"
+              },
+              "default": "'1 suggestion'",
+              "description": "Polite announcement when the list contains one suggestion."
+            },
+            {
+              "name": "suggestions-label",
+              "fieldName": "suggestionsLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Suggestions'",
+              "description": "Accessible name of the suggestion listbox."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Current query. Edits and selected suggestions update this property."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "backLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Back'",
+              "description": "Accessible name of the full-screen Back button.",
+              "attribute": "back-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "clearLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Clear search'",
+              "description": "Accessible name of the query clear button.",
+              "attribute": "clear-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "highlight",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Emphasize literal, case-insensitive matches in suggestion titles.",
+              "attribute": "highlight",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Accessible name of the search landmark, input and full-screen dialog.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a loading indicator while the host fetches suggestions.",
+              "attribute": "loading",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "loadingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading suggestions'",
+              "description": "Accessible name of the loading indicator.",
+              "attribute": "loading-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "privacy": "public",
+              "type": {
+                "text": "\"auto\" | \"docked\" | \"fullscreen\""
+              },
+              "default": "'auto'",
+              "description": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels.",
+              "attribute": "mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Name under which the current query is included in form data.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the search view is open. The field opens it on focus, click or input.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional hint displayed inside the empty search field.",
+              "attribute": "placeholder",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "recentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Recent searches'",
+              "description": "Visible and accessible name of the recent-search group.",
+              "attribute": "recent-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "removeRecentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Remove {value}'",
+              "description": "Accessible name template for recent-query removal. Use {value} for the query title.",
+              "attribute": "remove-recent-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "suggestionCountPlural",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{count} suggestions'",
+              "description": "Polite announcement for zero or multiple suggestions. Use {count} for the number.",
+              "attribute": "suggestion-count-plural",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "suggestionCountSingular",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'1 suggestion'",
+              "description": "Polite announcement when the list contains one suggestion.",
+              "attribute": "suggestion-count-singular",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "suggestionsLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Suggestions'",
+              "description": "Accessible name of the suggestion listbox.",
+              "attribute": "suggestions-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Current query. Edits and selected suggestions update this property.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-clear",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "The user cleared the query with the clear control or with Escape."
+            },
+            {
+              "name": "ki-input",
+              "type": {
+                "text": "CustomEvent<KiSearchValueDetail>"
+              },
+              "description": "The current query after 200 ms of inactivity following an edit."
+            },
+            {
+              "name": "ki-remove-recent",
+              "type": {
+                "text": "CustomEvent<KiSearchValueDetail>"
+              },
+              "description": "The removed recent query. Hosts can use this to persist the updated history."
+            },
+            {
+              "name": "ki-search",
+              "type": {
+                "text": "CustomEvent<KiSearchValueDetail>"
+              },
+              "description": "The query to run, emitted on Enter or activation of a suggestion or recent search."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Direct ki-search-suggestion children supply suggestion and recent-query data."
+            },
+            {
+              "name": "leading",
+              "description": "A control or decorative icon at the start of the collapsed or docked bar."
+            },
+            {
+              "name": "results",
+              "description": "Host-rendered results beneath suggestions and recent searches."
+            },
+            {
+              "name": "trailing",
+              "description": "A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "bar",
+              "description": "Collapsed and docked search bar."
+            },
+            {
+              "name": "dialog-bar",
+              "description": "Search bar inside the full-screen view."
+            },
+            {
+              "name": "input",
+              "description": "Native query input in each presentation."
+            },
+            {
+              "name": "option",
+              "description": "A selectable suggestion in the listbox."
+            },
+            {
+              "name": "recent",
+              "description": "Labelled group of recent searches."
+            },
+            {
+              "name": "results",
+              "description": "Container around host-rendered results."
+            },
+            {
+              "name": "view",
+              "description": "Docked popover or full-screen dialog surface."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-glyph-size-md",
+              "description": "Medium glyph for body content (20px at the default root size)."
+            },
+            {
+              "name": "--ki-layout-spacing-3xl",
+              "description": "The 3xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-sm",
+              "description": "The sm spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-search-bar-backdrop-filter",
+              "description": "Complete backdrop filter for the bar."
+            },
+            {
+              "name": "--ki-search-bar-bg",
+              "description": "Fill of the collapsed and docked bar."
+            },
+            {
+              "name": "--ki-search-bar-bg-image",
+              "description": "Optional image painted over the bar fill."
+            },
+            {
+              "name": "--ki-search-bar-fg",
+              "description": "Query ink over the search bar."
+            },
+            {
+              "name": "--ki-search-bar-height",
+              "description": "Minimum height of the search bar, 56px at the default root size."
+            },
+            {
+              "name": "--ki-search-bar-placeholder",
+              "description": "Placeholder ink exposed by the Search API."
+            },
+            {
+              "name": "--ki-search-bar-placeholder-fg",
+              "description": "Default contrast pair for placeholder text over the search bar."
+            },
+            {
+              "name": "--ki-search-bar-radius",
+              "description": "Pill corner of the collapsed and docked bar."
+            },
+            {
+              "name": "--ki-search-control-size",
+              "description": "Base size of actions and minimum height of search rows."
+            },
+            {
+              "name": "--ki-search-group-heading-family",
+              "description": "Font family for the recent-query group heading."
+            },
+            {
+              "name": "--ki-search-input-touch-size",
+              "description": "Minimum input font size on coarse pointers to avoid focus zoom."
+            },
+            {
+              "name": "--ki-search-option-active-bg",
+              "description": "Fill of the focused or hovered suggestion."
+            },
+            {
+              "name": "--ki-search-option-active-fg",
+              "description": "Ink of the focused or hovered suggestion."
+            },
+            {
+              "name": "--ki-search-option-active-supporting-fg",
+              "description": "Description ink on the focused or hovered suggestion."
+            },
+            {
+              "name": "--ki-search-view-backdrop-filter",
+              "description": "Complete backdrop filter for the search view."
+            },
+            {
+              "name": "--ki-search-view-bg",
+              "description": "Raised fill of the docked and full-screen view."
+            },
+            {
+              "name": "--ki-search-view-bg-image",
+              "description": "Optional image painted over the view fill."
+            },
+            {
+              "name": "--ki-search-view-divider",
+              "description": "Divider separating the active field and full-screen results."
+            },
+            {
+              "name": "--ki-search-view-fg",
+              "description": "Ink over the search view."
+            },
+            {
+              "name": "--ki-search-view-radius",
+              "description": "Corner for the docked view."
+            },
+            {
+              "name": "--ki-search-view-shadow",
+              "description": "Resting elevation of the docked view."
+            },
+            {
+              "name": "--ki-search-view-supporting-fg",
+              "description": "Ink for descriptions and the recent-search group label."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-body-2",
+              "description": "semantic dimension for typography size body 2."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
+              "name": "--ki-typography-weight-body-bold",
+              "description": "semantic font weight for typography weight body bold."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSearch",
+          "declaration": {
+            "name": "KiSearch",
+            "module": "dist/components/ki-search.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-search",
+          "declaration": {
+            "name": "KiSearch",
+            "module": "dist/components/ki-search.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-search-suggestion.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSearchSuggestion",
+          "customElement": true,
+          "tagName": "ki-search-suggestion",
+          "description": "Declarative search suggestion or recent query rendered by its owning ki-search.",
+          "whenToUse": "supply one suggested or recent query as a direct ki-search child.",
+          "whenNotToUse": "standalone display, form options or arbitrary results content.\nUse the results slot of ki-search for independently rendered results.",
+          "attributes": [
+            {
+              "name": "description",
+              "fieldName": "description",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional supporting text displayed below the title."
+            },
+            {
+              "name": "recent",
+              "fieldName": "recent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Display in the removable recent-search group."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Query to run. When omitted, the trimmed title is used."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "description",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional supporting text displayed below the title.",
+              "attribute": "description",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "recent",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Display in the removable recent-search group.",
+              "attribute": "recent",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Query to run. When omitted, the trimmed title is used.",
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Plain text title displayed in the owning search view."
+            }
+          ],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-search-suggestion-font-family",
+              "description": "Inherited body typeface on the declarative suggestion host."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSearchSuggestion",
+          "declaration": {
+            "name": "KiSearchSuggestion",
+            "module": "dist/components/ki-search-suggestion.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-search-suggestion",
+          "declaration": {
+            "name": "KiSearchSuggestion",
+            "module": "dist/components/ki-search-suggestion.js"
           }
         }
       ]
@@ -24517,414 +22778,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-timeline.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiTimeline",
-          "customElement": true,
-          "tagName": "ki-timeline",
-          "description": "A chronological list of activity, audit records, or steps from a run.",
-          "whenToUse": "present chronological events with independently readable summaries,\noptional times and details, including new entries in a live feed.",
-          "whenNotToUse": "offer a selectable command list, control the current step of a\ntask, or represent progress toward completion.",
-          "attributes": [
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Accessible name of the ordered list."
-            },
-            {
-              "name": "order",
-              "fieldName": "order",
-              "type": {
-                "text": "\"newest-first\" | \"oldest-first\""
-              },
-              "default": "'newest-first'",
-              "description": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Accessible name of the ordered list.",
-              "attribute": "label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "order",
-              "privacy": "public",
-              "type": {
-                "text": "\"newest-first\" | \"oldest-first\""
-              },
-              "default": "'newest-first'",
-              "description": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
-              "attribute": "order",
-              "reflects": false
-            }
-          ],
-          "events": [],
-          "slots": [
-            {
-              "name": "",
-              "description": "Direct ki-timeline-item children."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "announcements",
-              "description": "Polite region for batches of new event summaries."
-            },
-            {
-              "name": "item",
-              "description": "Native list entry including the connector to the next event."
-            },
-            {
-              "name": "list",
-              "description": "Named native ordered list."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-timeline-dot-size",
-              "description": "Diameter of the timeline marker."
-            },
-            {
-              "name": "--ki-timeline-gap",
-              "description": "Space between marker and text and between timeline entries."
-            },
-            {
-              "name": "--ki-timeline-item-fg",
-              "description": "Text color of the event summary and details."
-            },
-            {
-              "name": "--ki-timeline-line",
-              "description": "Color of the decorative line connecting timeline markers."
-            },
-            {
-              "name": "--ki-timeline-line-width",
-              "description": "Hairline width of the timeline connector."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-visually-hidden-size",
-              "description": "Nonzero edge for clipped text available to assistive technology."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiTimeline",
-          "declaration": {
-            "name": "KiTimeline",
-            "module": "dist/components/ki-timeline.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-timeline",
-          "declaration": {
-            "name": "KiTimeline",
-            "module": "dist/components/ki-timeline.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-timeline-item.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiTimelineItem",
-          "customElement": true,
-          "tagName": "ki-timeline-item",
-          "description": "One event in a timeline, with an optional time and details disclosure.",
-          "whenToUse": "describe an activity, audit, or run event inside a ki-timeline.",
-          "whenNotToUse": "convey the outcome only through marker colour, or use the marker\nas a control. Put actions in the event content or details.",
-          "attributes": [
-            {
-              "name": "datetime",
-              "fieldName": "datetime",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ISO date or date-time. Invalid or missing dates have no time label."
-            },
-            {
-              "name": "details-label",
-              "fieldName": "detailsLabel",
-              "type": {
-                "text": "string | undefined"
-              },
-              "default": "'Details'",
-              "description": "Label of the details control when the details slot is populated."
-            },
-            {
-              "name": "icon-name",
-              "fieldName": "iconName",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Decorative Lucide icon name, registered by the caller's per-icon import."
-            },
-            {
-              "name": "tone",
-              "fieldName": "tone",
-              "type": {
-                "text": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
-              },
-              "default": "'neutral'",
-              "description": "Marker tone. The event text carries the meaning."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "datetime",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ISO date or date-time. Invalid or missing dates have no time label.",
-              "attribute": "datetime",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "detailsLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "default": "'Details'",
-              "description": "Label of the details control when the details slot is populated.",
-              "attribute": "details-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "iconName",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Decorative Lucide icon name, registered by the caller's per-icon import.",
-              "attribute": "icon-name",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "tone",
-              "privacy": "public",
-              "type": {
-                "text": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
-              },
-              "default": "'neutral'",
-              "description": "Marker tone. The event text carries the meaning.",
-              "attribute": "tone",
-              "reflects": false
-            }
-          ],
-          "events": [],
-          "slots": [
-            {
-              "name": "",
-              "description": "Event summary. Include important status information in the text."
-            },
-            {
-              "name": "details",
-              "description": "Additional event information in a native details disclosure."
-            },
-            {
-              "name": "start",
-              "description": "Decorative avatar or other noninteractive marker in place of the icon."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "content",
-              "description": "Event summary, time and disclosure container."
-            },
-            {
-              "name": "details",
-              "description": "Native details disclosure."
-            },
-            {
-              "name": "dot",
-              "description": "Decorative event marker."
-            },
-            {
-              "name": "summary",
-              "description": "Keyboard-accessible details control."
-            },
-            {
-              "name": "time",
-              "description": "Native time element for a valid ISO date."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-layout-spacing-xs",
-              "description": "The xs spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-layout-spacing-xxs",
-              "description": "The xxs spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-timeline-dot-backdrop-filter",
-              "description": "Complete backdrop filter behind a timeline marker, off by default."
-            },
-            {
-              "name": "--ki-timeline-dot-bg",
-              "description": "Fill of the neutral timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-bg-image",
-              "description": "Optional decorative image over the timeline marker fill."
-            },
-            {
-              "name": "--ki-timeline-dot-danger-bg",
-              "description": "Fill of the danger timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-danger-fg",
-              "description": "Glyph color on the danger timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-fg",
-              "description": "Glyph color on the neutral timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-icon-size",
-              "description": "Size of the decorative glyph inside the timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-primary-bg",
-              "description": "Fill of the primary timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-primary-fg",
-              "description": "Glyph color on the primary timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-radius",
-              "description": "Round corners of the timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-size",
-              "description": "Diameter of the timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-success-bg",
-              "description": "Fill of the success timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-success-fg",
-              "description": "Glyph color on the success timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-warning-bg",
-              "description": "Fill of the warning timeline marker."
-            },
-            {
-              "name": "--ki-timeline-dot-warning-fg",
-              "description": "Glyph color on the warning timeline marker."
-            },
-            {
-              "name": "--ki-timeline-gap",
-              "description": "Space between marker and text and between timeline entries."
-            },
-            {
-              "name": "--ki-timeline-item-fg",
-              "description": "Text color of the event summary and details."
-            },
-            {
-              "name": "--ki-timeline-line-width",
-              "description": "Hairline width of the timeline connector."
-            },
-            {
-              "name": "--ki-timeline-time-bg",
-              "description": "The timestamp shows the surrounding surface through its transparent background."
-            },
-            {
-              "name": "--ki-timeline-time-fg",
-              "description": "Text color of the timeline timestamp."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-caption-2",
-              "description": "semantic dimension for typography line height caption 2."
-            },
-            {
-              "name": "--ki-typography-line-height-para",
-              "description": "semantic dimension for typography line height para."
-            },
-            {
-              "name": "--ki-typography-size-body-1",
-              "description": "semantic dimension for typography size body 1."
-            },
-            {
-              "name": "--ki-typography-size-caption-2",
-              "description": "semantic dimension for typography size caption 2."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiTimelineItem",
-          "declaration": {
-            "name": "KiTimelineItem",
-            "module": "dist/components/ki-timeline-item.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-timeline-item",
-          "declaration": {
-            "name": "KiTimelineItem",
-            "module": "dist/components/ki-timeline-item.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-toast.js",
       "declarations": [
         {
@@ -25424,553 +23277,6 @@
           "declaration": {
             "name": "KiToaster",
             "module": "dist/components/ki-toaster.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-tool-call.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiToolCall",
-          "customElement": true,
-          "tagName": "ki-tool-call",
-          "description": "A disclosure for one assistant tool call, with a status and optional payloads.",
-          "whenToUse": "show which tool ran, its state and duration, and let the reader\ninspect the supplied input, output or error. Use a conversation log for status updates.",
-          "whenNotToUse": "collecting approval, running or configuring tools. Pair with a\nseparate confirmation control for an approval decision.",
-          "attributes": [
-            {
-              "name": "approval-label",
-              "fieldName": "approvalLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Needs approval'",
-              "description": "Status text for a call waiting on an approval decision."
-            },
-            {
-              "name": "done-label",
-              "fieldName": "doneLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Done'",
-              "description": "Status text for a successful call."
-            },
-            {
-              "name": "duration",
-              "fieldName": "duration",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
-              "minimum": 0
-            },
-            {
-              "name": "error-label",
-              "fieldName": "errorLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Error'",
-              "description": "Caption for the error slot."
-            },
-            {
-              "name": "failed-label",
-              "fieldName": "failedLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Failed'",
-              "description": "Status text for a failed call."
-            },
-            {
-              "name": "input-label",
-              "fieldName": "inputLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Input'",
-              "description": "Caption for the input slot."
-            },
-            {
-              "name": "locale",
-              "fieldName": "locale",
-              "type": {
-                "text": "string"
-              },
-              "default": "'en'",
-              "description": "Language tag used to format the completed duration. Defaults to English."
-            },
-            {
-              "name": "name",
-              "fieldName": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "Tool identifier, such as search_docs, displayed in monospace.",
-              "required": true
-            },
-            {
-              "name": "open",
-              "fieldName": "open",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "description": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice."
-            },
-            {
-              "name": "output-label",
-              "fieldName": "outputLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Output'",
-              "description": "Caption for the output slot."
-            },
-            {
-              "name": "pending-label",
-              "fieldName": "pendingLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Pending'",
-              "description": "Status text for a call waiting to run."
-            },
-            {
-              "name": "retry-label",
-              "fieldName": "retryLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Retry'",
-              "description": "Visible and accessible label for the built-in retry control."
-            },
-            {
-              "name": "retryable",
-              "fieldName": "retryable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Offer the built-in Retry button when the call fails."
-            },
-            {
-              "name": "running-label",
-              "fieldName": "runningLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Running'",
-              "description": "Status text for a call in progress."
-            },
-            {
-              "name": "status",
-              "fieldName": "status",
-              "type": {
-                "text": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\""
-              },
-              "default": "'pending'",
-              "description": "Lifecycle status. Unknown values display Pending."
-            },
-            {
-              "name": "title",
-              "fieldName": "toolTitle",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional human-readable label displayed beside the identifier."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "approvalLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Needs approval'",
-              "description": "Status text for a call waiting on an approval decision.",
-              "attribute": "approval-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "doneLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Done'",
-              "description": "Status text for a successful call.",
-              "attribute": "done-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "duration",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
-              "attribute": "duration",
-              "reflects": false,
-              "minimum": 0
-            },
-            {
-              "kind": "field",
-              "name": "errorLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Error'",
-              "description": "Caption for the error slot.",
-              "attribute": "error-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "failedLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Failed'",
-              "description": "Status text for a failed call.",
-              "attribute": "failed-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "inputLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Input'",
-              "description": "Caption for the input slot.",
-              "attribute": "input-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "locale",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'en'",
-              "description": "Language tag used to format the completed duration. Defaults to English.",
-              "attribute": "locale",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Tool identifier, such as search_docs, displayed in monospace.",
-              "attribute": "name",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "privacy": "public",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "description": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice.",
-              "attribute": "open",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "outputLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Output'",
-              "description": "Caption for the output slot.",
-              "attribute": "output-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "pendingLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Pending'",
-              "description": "Status text for a call waiting to run.",
-              "attribute": "pending-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "retryLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Retry'",
-              "description": "Visible and accessible label for the built-in retry control.",
-              "attribute": "retry-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "retryable",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Offer the built-in Retry button when the call fails.",
-              "attribute": "retryable",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "runningLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Running'",
-              "description": "Status text for a call in progress.",
-              "attribute": "running-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "status",
-              "privacy": "public",
-              "type": {
-                "text": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\""
-              },
-              "default": "'pending'",
-              "description": "Lifecycle status. Unknown values display Pending.",
-              "attribute": "status",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "toolTitle",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional human-readable label displayed beside the identifier.",
-              "attribute": "title",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-tool-retry",
-              "type": {
-                "text": "CustomEvent<{ name: string }>"
-              },
-              "description": "A request to retry this tool call. Bind a declared surface action to handle it."
-            },
-            {
-              "name": "ki-tool-status-change",
-              "type": {
-                "text": "CustomEvent<{ name: string; status: string; label: string }>"
-              },
-              "description": "Once per status transition after initialization. Append one entry to the conversation log."
-            }
-          ],
-          "slots": [
-            {
-              "name": "error",
-              "description": "A failure message or a consumer-owned retry control, visible on failed calls."
-            },
-            {
-              "name": "input",
-              "description": "Arguments supplied to the tool. Use ki-code-block for structured text."
-            },
-            {
-              "name": "output",
-              "description": "Result returned by the tool. Use ki-code-block for structured text."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "body",
-              "description": "Content disclosed by opening the call."
-            },
-            {
-              "name": "disclosure",
-              "description": "Native details surface."
-            },
-            {
-              "name": "error",
-              "description": "Error section for failed calls."
-            },
-            {
-              "name": "input",
-              "description": "Input section with its caption and payload."
-            },
-            {
-              "name": "name",
-              "description": "Monospaced tool identifier."
-            },
-            {
-              "name": "output",
-              "description": "Output section with its caption and payload."
-            },
-            {
-              "name": "payload",
-              "description": "Surface for the input and output content."
-            },
-            {
-              "name": "retry",
-              "description": "Opt-in action button for failed calls."
-            },
-            {
-              "name": "status",
-              "description": "Badge that contains the status text and completed duration."
-            },
-            {
-              "name": "summary",
-              "description": "Native disclosure control and its status row."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-badge-sm-height",
-              "description": "dimension used by the badge component for sm height."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-tool-call-backdrop-filter",
-              "description": "Whole filter behind the call."
-            },
-            {
-              "name": "--ki-tool-call-bg",
-              "description": "Solid background of the call disclosure."
-            },
-            {
-              "name": "--ki-tool-call-bg-image",
-              "description": "Optional image over the solid background."
-            },
-            {
-              "name": "--ki-tool-call-border",
-              "description": "Border ink around the call."
-            },
-            {
-              "name": "--ki-tool-call-border-width",
-              "description": "Width of the disclosure frame."
-            },
-            {
-              "name": "--ki-tool-call-caption-size",
-              "description": "Size of captions and the tool identifier."
-            },
-            {
-              "name": "--ki-tool-call-code-bg",
-              "description": "Background for input and output payloads."
-            },
-            {
-              "name": "--ki-tool-call-code-fg",
-              "description": "Plain text ink on the payload surface."
-            },
-            {
-              "name": "--ki-tool-call-code-radius",
-              "description": "Corners of the plain payload surface."
-            },
-            {
-              "name": "--ki-tool-call-fg",
-              "description": "Text ink on the call surface."
-            },
-            {
-              "name": "--ki-tool-call-font-size",
-              "description": "Body text size."
-            },
-            {
-              "name": "--ki-tool-call-gap",
-              "description": "Gap between summary items and body sections."
-            },
-            {
-              "name": "--ki-tool-call-icon",
-              "description": "Ink of the decorative icons."
-            },
-            {
-              "name": "--ki-tool-call-icon-size",
-              "description": "Size of the wrench and chevron."
-            },
-            {
-              "name": "--ki-tool-call-inline-gap",
-              "description": "Gap between status items and after each caption."
-            },
-            {
-              "name": "--ki-tool-call-line-height",
-              "description": "Body text line height."
-            },
-            {
-              "name": "--ki-tool-call-mono-family",
-              "description": "Typeface of the tool identifier."
-            },
-            {
-              "name": "--ki-tool-call-padding",
-              "description": "Horizontal inset and space after the body."
-            },
-            {
-              "name": "--ki-tool-call-radius",
-              "description": "Corners of the disclosure surface."
-            },
-            {
-              "name": "--ki-tool-call-transition-duration",
-              "description": "Duration of the disclosure chevron rotation."
-            },
-            {
-              "name": "--ki-tool-call-transition-easing",
-              "description": "Easing of the disclosure chevron rotation."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiToolCall",
-          "declaration": {
-            "name": "KiToolCall",
-            "module": "dist/components/ki-tool-call.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-tool-call",
-          "declaration": {
-            "name": "KiToolCall",
-            "module": "dist/components/ki-tool-call.js"
           }
         }
       ]

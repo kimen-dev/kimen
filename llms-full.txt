@@ -1417,148 +1417,6 @@ CSS custom properties:
 - `--ki-typography-line-height-title-1`: semantic dimension for typography line height title 1.
 - `--ki-typography-size-title-1`: semantic dimension for typography size title 1.
 
-### ki-carousel
-
-An ordered, swipeable sequence with previous and next controls and position feedback.
-
-When to use: show a short set of related highlights, onboarding steps or media panels.
-Give the carousel a meaningful label and supply one ki-carousel-item per slide.
-When NOT to use: hide essential content behind rotation, replace ordinary page navigation,
-or present slides that readers need to compare side by side at the same time.
-
-Examples:
-
-# Carousel examples
-
-```html
-<ki-carousel label="Product tour" slides-per-view="2" slides-per-move="2">
-  <ki-carousel-item>Discover the tools</ki-carousel-item>
-  <ki-carousel-item>Pick a theme</ki-carousel-item>
-  <ki-carousel-item>Set up your workspace</ki-carousel-item>
-  <ki-carousel-item>Share your first surface</ki-carousel-item>
-</ki-carousel>
-```
-
-```js
-const carousel = document.querySelector('ki-carousel');
-carousel.addEventListener('ki-slide-change', ({ detail }) => {
-  console.log(detail.index);
-});
-await carousel.goTo(3);
-```
-
-With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
-
-Attributes:
-- `autoplay` (number | undefined, minimum 1, maximum 2147483647): Rotation interval in milliseconds. Omitting it leaves rotation off.
-- `carousel-role-description` (string, default 'carousel'): Accessible role description of the region.
-- `current` (number, default 1, minimum 1): One-based leading slide. Setting it moves the carousel and clamps the index to the available leading positions.
-- `label` (string, required): Required accessible name of the carousel region.
-- `layout` ("full-screen" | "hero" | "multi-browse" | "single" | "uncontained", default 'single'): Item arrangement. Full-screen uses a vertical, full-viewport slide.
-- `loop` (boolean, default false): Whether navigating past one endpoint wraps to the other.
-- `navigation` (boolean, default true): Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.
-- `next-label` (string, default 'Next slide'): Accessible label of the Next button.
-- `pagination` (boolean, default true): Whether to show the noninteractive slide position indicator.
-- `pause-label` (string, default 'Pause'): Visible and accessible label of the Pause button.
-- `play-label` (string, default 'Play'): Visible and accessible label of the Play button.
-- `position-label` (string, default 'Slide position'): Accessible label of the position indicator.
-- `previous-label` (string, default 'Previous slide'): Accessible label of the Previous button.
-- `slide-label` (string, default '{index} of {count}'): Spoken slide name and announcement. Use {index} and {count} as placeholders.
-- `slide-role-description` (string, default 'slide'): Accessible role description of each slide group.
-- `slides-per-move` (number, default 1, minimum 1): Number of positions advanced by Previous, Next and automatic rotation.
-- `slides-per-view` (number, default 1, minimum 1): Number of slides visible together in the single layout. Material 3 layouts determine their own item widths.
-
-Slots:
-- (default): Direct ki-carousel-item children in reading order.
-
-Parts:
-- `announcement`: Visually hidden live region for manual changes.
-- `controls`: Row containing slide position and navigation.
-- `next`: Next slide button.
-- `position`: Position indicator and optional numeric position.
-- `previous`: Previous slide button.
-- `rotation`: Play or Pause button when automatic rotation is configured.
-- `viewport`: Scroll-snap viewport and its keyboard focus outline.
-
-Events:
-- `ki-slide-change` (CustomEvent<CarouselSlideChangeDetail>): Reports the one-based index when the leading slide changes.
-
-Methods:
-- `goTo(index)` (Promise<void>): Moves to the requested one-based leading position within the available range.
-- `next()` (Promise<void>): Advances by slidesPerMove.
-- `previous()` (Promise<void>): Moves back by slidesPerMove.
-
-CSS custom properties:
-- `--ki-carousel-control-backdrop-filter`: Complete optional backdrop filter for the carousel controls.
-- `--ki-carousel-control-bg`: Surface of the carousel navigation and rotation controls.
-- `--ki-carousel-control-bg-image`: Optional image layered over the carousel control background color.
-- `--ki-carousel-control-border`: Visible control boundary against the surrounding surface.
-- `--ki-carousel-control-fg`: Text and glyph ink against the carousel control surface.
-- `--ki-carousel-control-gap`: Spacing between carousel controls.
-- `--ki-carousel-control-icon-size`: Glyph size in the carousel navigation controls.
-- `--ki-carousel-control-radius`: Corner radius of the carousel controls.
-- `--ki-carousel-control-shadow`: Resting elevation of the carousel controls.
-- `--ki-carousel-control-size`: Resting carousel control size before applying the density target floor.
-- `--ki-carousel-full-screen-block-size`: Block size of the vertical carousel viewport.
-- `--ki-carousel-gap`: Gap between carousel slides and between the viewport and the controls.
-- `--ki-carousel-preview-min-inline-size`: Minimum inline size of a decorative carousel preview when space permits.
-- `--ki-carousel-radius`: Corner radius shared by the carousel viewport and slide surfaces.
-- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-
-### ki-carousel-item
-
-A slide in an ordered ki-carousel sequence.
-
-When to use: supply a single slide to a ki-carousel. Put the full slide in the
-default slot and optional decorative preview media in the preview slot.
-When NOT to use: present a standalone card or a layout container outside a carousel.
-
-Examples:
-
-# Carousel item example
-
-```html
-<ki-carousel label="Getting started" layout="hero">
-  <ki-carousel-item><a href="/guide">Read the guide</a></ki-carousel-item>
-  <ki-carousel-item>
-    <img slot="preview" src="/cover.jpg" alt="">
-    <a href="/themes">Explore themes</a>
-  </ki-carousel-item>
-</ki-carousel>
-```
-
-Attributes: none
-
-Slots:
-- (default): The full slide content, including any links and controls.
-- `preview`: Decorative, noninteractive media shown when the item is a reduced preview.
-
-Parts:
-- `content`: Surface that holds the full slide.
-- `preview`: Decorative surface used in small or partly shown previews.
-
-Events: none
-
-Methods: none
-
-CSS custom properties:
-- `--ki-carousel-item-backdrop-filter`: Complete optional backdrop filter for the slide surface.
-- `--ki-carousel-item-bg`: Surface for carousel slide content and its decorative preview.
-- `--ki-carousel-item-bg-image`: Optional image layered over the slide background color.
-- `--ki-carousel-item-fg`: Text on the carousel slide surface.
-- `--ki-carousel-item-min-block-size`: Minimum block size of a full slide.
-- `--ki-carousel-item-padding`: Inset of full slide content.
-- `--ki-carousel-radius`: Corner radius shared by the carousel viewport and slide surfaces.
-- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-
 ### ki-checkbox
 
 A form-associated checkbox for selecting independent options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
@@ -3007,124 +2865,6 @@ CSS custom properties:
 - `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
-### ki-drawer
-
-An edge-aligned sheet for a focused task that keeps the current page in context.
-
-When to use: Edit an item beside its list or offer a short set of actions in a
-bottom sheet. Supply a heading and wire slotted actions in the application.
-Use non-modal mode if people need to interact with the page while editing.
-When NOT to use: Menus, hover hints, permanent navigation, or work that needs a
-full page. For a short interrupting decision in the center, use ki-dialog.
-
-Examples:
-
-## Edit details beside a list
-
-Use `heading` to name the sheet. Open it from a focused trigger so focus can
-return there. The app wires its own footer actions.
-
-```html
-<ki-button id="edit-incident" type="button">Edit incident</ki-button>
-<ki-drawer id="incident-editor" heading="Edit incident" placement="end">
-  <ki-input label="Title" value="Search index rebuild"></ki-input>
-  <ki-button slot="footer" id="save-incident" type="button" variant="primary">
-    Save
-  </ki-button>
-</ki-drawer>
-
-<script type="module">
-  const editor = document.querySelector('#incident-editor');
-  document.querySelector('#edit-incident').addEventListener('click', () => editor.show());
-  document.querySelector('#save-incident').addEventListener('click', () => {
-    // Save the app's changes first.
-    editor.close();
-  });
-  editor.addEventListener('ki-close', (event) => {
-    if (editor.hasAttribute('data-unsaved')) event.preventDefault();
-  });
-</script>
-```
-
-## Offer a short list of actions
-
-A bottom sheet has a swipe handle and a keyboard-accessible Close button.
-Use `close-label` to translate the button for your audience.
-
-```html
-<ki-drawer heading="Share incident" placement="bottom" size="20rem" open>
-  <p>Choose how to share the incident.</p>
-  <ki-button slot="footer" variant="secondary">Email</ki-button>
-  <ki-button slot="footer" variant="primary">Copy link</ki-button>
-</ki-drawer>
-```
-
-Use `modal="false"` when the page behind the drawer should stay interactive.
-`placement="start"` and `placement="end"` follow the inherited direction.
-
-Attributes:
-- `close-label` (string | undefined, default 'Close'): Accessible name for the built-in Close button. Translate this for localized interfaces.
-- `heading` (string, required): Title and accessible name. Provide a heading whenever the drawer opens.
-- `modal` (boolean, default true): Makes the page behind the sheet inert. Set modal="false" for continued page interaction.
-- `open` (boolean, default false): Reflected live state. Setting it to false requests dismissal and may be vetoed.
-- `placement` ("bottom" | "end" | "start", default 'end'): Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.
-- `size` (string | undefined): Optional CSS length. Overrides the 18rem themed width or bottom height cap.
-
-Slots:
-- (default): The drawer's content, such as fields or a short list of actions.
-- `footer`: Optional actions such as Save. Wire these in the application.
-- `header-actions`: Optional actions between the heading and Close button.
-
-Parts:
-- `body`: The scrollable content region.
-- `close`: The built-in Close button.
-- `dialog`: The native sheet surface.
-- `footer`: The action row, collapsed when empty.
-- `handle`: The decorative bottom-sheet swipe handle.
-- `header`: The heading and action layout.
-- `heading`: The visible title that names the sheet.
-
-Events:
-- `ki-close` (CustomEvent<KiDrawerCloseDetail>): Requests dismissal before the drawer closes. Call preventDefault() to keep it open, for example when edits are unsaved. The event carries the reason in detail.reason.
-
-Methods:
-- `close()` (Promise<void>): Requests dismissal. An application can veto it by canceling ki-close.
-- `show()` (Promise<void>): Opens the sheet. A focused invoker receives focus again after modal dismissal.
-
-CSS custom properties:
-- `--ki-corner-control`: Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background.
-- `--ki-dialog-divider-width`: dimension used by the dialog component for the dividers under the heading and above the footer (Modal-header and Modal-actions 1px strokes). Zero removes them.
-- `--ki-drawer-backdrop-filter`: Complete backdrop filter applied behind the drawer surface.
-- `--ki-drawer-bg`: Raised surface color of the drawer.
-- `--ki-drawer-bg-image`: Optional image layered over the drawer surface.
-- `--ki-drawer-close-size`: Preferred size of the Close button before the density minimum.
-- `--ki-drawer-fg`: Foreground color on the drawer surface.
-- `--ki-drawer-handle-color`: Color of the bottom-sheet handle.
-- `--ki-drawer-handle-size`: Inline extent of the bottom-sheet handle.
-- `--ki-drawer-handle-thickness`: Thickness of the bottom-sheet handle.
-- `--ki-drawer-heading-font-family`: Typeface of the drawer title.
-- `--ki-drawer-radius`: Radius of the corners on the inner edge of the drawer.
-- `--ki-drawer-shadow`: Resting elevation of the drawer.
-- `--ki-drawer-size`: Default inline size of a side sheet and block-size cap of a bottom sheet.
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-2xl`: The 2xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-outline-low-em`: semantic color for outline low em.
-- `--ki-surface-hover-overlay-inverse`: semantic color for surface hover overlay inverse.
-- `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-title-2`: semantic dimension for typography line height title 2.
-- `--ki-typography-size-title-2`: semantic dimension for typography size title 2.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
-
 ### ki-empty-state
 
 A short explanation and next step for an empty view.
@@ -3473,201 +3213,6 @@ CSS custom properties:
 - `--ki-feature-icon-xs-radius`: Corner radius of an extra-small square feature icon tile.
 - `--ki-feature-icon-xs-size`: Edge length of an extra-small feature icon tile.
 - `--ki-typography-family-body`: semantic font family for typography family body.
-
-### ki-file-upload
-
-A form-associated picker and drop zone with local selection validation and a list of file upload outcomes.
-
-When to use: collect local attachments, media or imports, and optionally show
-application-managed upload progress and results.
-When NOT to use: transfer files without an application handler, collect a URL,
-or use client-side type and size checks as upload authorization.
-
-Examples:
-
-# File upload examples
-
-## Submit attachments with a form
-
-```html
-<form action="/attachments" method="post" enctype="multipart/form-data">
-  <ki-file-upload
-    label="Incident attachments"
-    name="attachments"
-    accept=".csv,.pdf"
-    max-size="10MB"
-    max-files="3"
-    multiple
-    required
-  >
-    <span slot="help">Choose up to three CSV or PDF files, up to 10 MB each.</span>
-  </ki-file-upload>
-  <button type="submit">Send attachments</button>
-  <button type="reset">Clear attachments</button>
-</form>
-```
-
-Register the element once with the direct package entry point.
-
-```js
-import { defineCustomElement } from '@kimen/elements/ki-file-upload';
-
-defineCustomElement();
-```
-
-The form submits each accepted original `File` under `attachments`. A reset
-clears the list. Use `error-text` for a form error, such as one returned by
-your application, and clear it when the error is resolved.
-
-## Report progress from an application-managed transfer
-
-Use a standalone picker when your application sends files as soon as people
-choose them.
-
-```html
-<ki-file-upload id="transfer-picker" label="Import CSV files" accept=".csv" multiple>
-</ki-file-upload>
-```
-
-Here `sendFile` is your application's transfer function. It accepts a
-`File`, an abort signal and a progress callback receiving a percentage.
-
-```js
-const upload = document.querySelector('#transfer-picker');
-const transfers = new Map();
-
-function update(file, changes) {
-  upload.files = upload.files.map((entry) =>
-    entry.file === file ? { ...entry, ...changes } : entry,
-  );
-}
-
-async function startUpload(file) {
-  const controller = new AbortController();
-  transfers.set(file, controller);
-  update(file, { status: 'uploading', progress: 0 });
-
-  try {
-    await sendFile(file, {
-      signal: controller.signal,
-      onProgress: (progress) => update(file, { progress }),
-    });
-    update(file, { status: 'done' });
-  } catch {
-    const error = controller.signal.aborted ? 'Upload canceled.' : 'Upload failed.';
-    update(file, { status: 'error', error });
-  } finally {
-    transfers.delete(file);
-  }
-}
-
-upload.addEventListener('ki-files-add', ({ detail }) => {
-  for (const { file } of detail.files) {
-    void startUpload(file);
-  }
-});
-
-upload.addEventListener('ki-file-cancel', ({ detail }) => {
-  transfers.get(detail.file.file)?.abort();
-});
-```
-
-Use `ki-file-remove` to update application state when a row is removed.
-For previously uploaded attachments, set `files` to rows with metadata and
-`status: 'done'`. Only rows carrying an original `File` contribute form
-entries.
-
-Attributes:
-- `accept` (string | undefined): Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.
-- `browse-label` (string, default 'Browse files'): Visible text of the native file picker button.
-- `cancel-label` (string, default 'Cancel upload of {file}'): Accessible name template for cancellation. Use {file} for the displayed filename.
-- `count-error` (string, default 'Too many files.'): Rejection text for a file beyond selection capacity.
-- `disabled` (boolean, default false): Disables the picker and file actions and excludes the field from submission.
-- `done-label` (string, default 'Uploaded'): Status text for a completed upload.
-- `drop-label` (string, default 'Drop files here or'): Drop instruction shown just before the Browse button.
-- `error-text` (string | undefined): Application validation error. Clear it to allow form submission again.
-- `failed-label` (string, default 'Upload failed.'): Fallback status text for a failed upload without a supplied error.
-- `help-text` (string | undefined): Guidance for file formats, limits or the purpose of this field.
-- `label` (string, default 'Upload files'): Visible label and accessible name of the upload group.
-- `list-label` (string, default 'Files'): Accessible name of the list of files.
-- `max-files` (number | undefined): Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.
-- `max-size` (string | undefined): Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as "10MB".
-- `multiple` (boolean, default false): Allows a selection of more than one file.
-- `name` (string | undefined): Form-data key repeated for each accepted original file.
-- `queued-label` (string, default 'Queued'): Status text for an accepted file waiting to upload.
-- `remove-label` (string, default 'Remove {file}'): Accessible name template for removal. Use {file} for the displayed filename.
-- `required` (boolean, default false): Requires at least one original accepted file to submit the form.
-- `required-label` (string, default 'Required'): Visible annotation for a required file field.
-- `required-message` (string, default 'Select a file.'): Validation message when the form requires a file and none is selected.
-- `size-error` (string, default 'This file is too large.'): Rejection text for a file larger than max-size.
-- `type-error` (string, default 'This file type is not allowed.'): Rejection text for a file that does not match accept.
-- `uploading-label` (string, default 'Uploading {file}'): Progress indicator name template. Use {file} for the displayed filename.
-
-Slots:
-- `help`: Plain-language guidance for the picker, in place of help-text.
-
-Parts:
-- `action`: Native button for removal or cancellation.
-- `browse`: Native button that opens the file picker.
-- `drop-zone`: Surface that receives files dragged from the operating system.
-- `error`: Field-level form validation error.
-- `file-meta`: Size, outcome or error text for the file.
-- `file-name`: Name displayed for the file.
-- `help`: Guidance associated with the field.
-- `input`: Hidden native file picker.
-- `label`: Field label and optional required annotation.
-- `list`: List of selected files and rejections.
-- `progress`: Progress indicator for an uploading file.
-- `row`: A file row, with data-status matching its lifecycle state.
-
-Events:
-- `ki-file-cancel` (CustomEvent<KiFileActionDetail>): Requests that the application cancel the identified upload.
-- `ki-file-remove` (CustomEvent<KiFileActionDetail>): Reports a row removed by the user, after updating the file list.
-- `ki-files-add` (CustomEvent<KiFilesAddDetail>): Reports the accepted rows in one picker or drop batch, each with its original File.
-
-Methods: none
-
-CSS custom properties:
-- `--ki-corner-inline`: Small radius for an outline around inline content.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-file-upload-active-bg`: Drop zone background while files are dragged over it.
-- `--ki-file-upload-active-border`: Drop zone boundary while files are dragged over it.
-- `--ki-file-upload-active-fg`: Main drop zone text while files are dragged over it.
-- `--ki-file-upload-backdrop-filter`: Complete backdrop filter applied behind the drop zone.
-- `--ki-file-upload-bg`: Drop zone background at rest.
-- `--ki-file-upload-bg-image`: Optional image over the drop zone background.
-- `--ki-file-upload-border`: Dashed boundary of the drop zone.
-- `--ki-file-upload-border-width`: Outline stroke width for the drop zone and file rows.
-- `--ki-file-upload-error-bg`: Background of a file row with an error.
-- `--ki-file-upload-error-border`: Boundary of a file row with an error.
-- `--ki-file-upload-error-fg`: Text of a file error or field error.
-- `--ki-file-upload-fg`: Main drop zone text at rest.
-- `--ki-file-upload-radius`: Drop zone corner radius.
-- `--ki-file-upload-row-backdrop-filter`: Complete backdrop filter applied behind a file row.
-- `--ki-file-upload-row-bg`: Background of a file row and the field label.
-- `--ki-file-upload-row-bg-image`: Optional image over the file row background.
-- `--ki-file-upload-row-border`: Boundary of a file row without an error.
-- `--ki-file-upload-row-fg`: File names, row action icons and the field label.
-- `--ki-file-upload-row-radius`: File row corner radius.
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-3xl`: The 3xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-text-primary-high-em`: semantic color for text primary high em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-underline-offset`: Gap between text and its underline.
-- `--ki-typography-underline-thickness`: Stroke width of a resting text underline.
-- `--ki-typography-underline-thickness-hover`: Stroke width of an emphasized underline on hover.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
 ### ki-format-date
 
@@ -5228,147 +4773,6 @@ CSS custom properties:
 - `--ki-note-warning-fg`: Text ink of a warning note.
 - `--ki-note-warning-icon`: Decorative icon ink of a warning note.
 
-### ki-number-input
-
-A form field for a numeric quantity with optional stepper buttons, bounds, locale-aware formatting, and a visible unit.
-
-When to use: Collect a number like a quantity, amount, or limit. Provide a
-visible label and choose bounds and an increment when they have meaning.
-When NOT to use: Use ki-input for identifiers, codes, or other text that only
-looks numeric. Use a range control when relative position is the main cue.
-
-Examples:
-
-# ki-number-input examples
-
-## Quantity with bounds
-
-```html
-<ki-number-input label="Seats" name="seats" value="3" min="1" max="50" steppers required></ki-number-input>
-```
-
-## Plain field with a unit
-
-```html
-<ki-number-input label="Timeout" name="timeout" value="30" unit="seconds" min="0"></ki-number-input>
-```
-
-The form submits `timeout=30`.
-
-## Percentage with localized editing
-
-```html
-<ki-number-input
-  lang="de-DE"
-  label="Discount"
-  name="discount"
-  min="0"
-  max="1"
-  step="0.005"
-  value="0.125"
-  format='{"style":"percent","maximumFractionDigits":1}'
-></ki-number-input>
-```
-
-The editor displays `12,5` while focused and formats it as a percentage on
-blur. The form submits `discount=0.125`.
-
-## Custom-elements entry point
-
-```ts
-import { defineCustomElement } from '@kimen/elements/ki-number-input';
-
-defineCustomElement();
-const discount = document.querySelector('ki-number-input[name="discount"]');
-if (discount) {
-  discount.format = { style: 'percent', maximumFractionDigits: 1 };
-}
-```
-
-Attributes:
-- `decrease-label` (string, default 'Decrease {label}'): Stepper's accessible name. The field label replaces {label}.
-- `disabled` (boolean, default false): Prevents editing and excludes the control from form submission.
-- `error-text` (string | undefined): Validation hint to show when the entry fails a constraint.
-- `format` (string): Intl.NumberFormat options for display. In HTML or a catalog spec, supply these options as JSON text. The form value retains its original precision.
-- `help-text` (string | undefined): Context or instructions displayed beneath the field when it has no visible error.
-- `increase-label` (string, default 'Increase {label}'): Stepper's accessible name. The field label replaces {label}.
-- `invalid-number-message` (string, default 'Enter a number.'): Default validation message for text that cannot be read as a number.
-- `label` (string, required): Visible accessible name. Supply a meaningful label in the page language.
-- `max` (number | undefined): Maximum permitted numeric value. Omit for an unbounded maximum.
-- `maximum-message` (string, default 'Value adjusted to the maximum of {value}.'): Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.
-- `min` (number | undefined): Minimum permitted numeric value. Omit for an unbounded minimum.
-- `minimum-message` (string, default 'Value adjusted to the minimum of {value}.'): Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.
-- `name` (string | undefined): Form-data key for the plain numeric value.
-- `required` (boolean, default false): Whether the user must enter a number before submitting the form.
-- `step` (number, default 1): Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.
-- `steppers` (boolean, default false): Shows named decrease and increase buttons inside the field.
-- `unit` (string | undefined): Visible suffix such as seconds or seats, included in the accessible description.
-- `value` (number | undefined): Current numeric value, or undefined when empty or unparseable. Use the attribute for the form reset value. Property assignments are silent.
-
-Slots: none
-
-Parts:
-- `decrease`: Button that subtracts one step.
-- `error`: Polite validation feedback associated with the spinbutton.
-- `field`: Enclosure around the editor, unit and stepper buttons.
-- `help`: Help message associated with the spinbutton.
-- `increase`: Button that adds one step.
-- `input`: Native text editor carrying the spinbutton role.
-- `label`: Visible name of the spinbutton.
-- `status`: Polite feedback explaining a value adjustment.
-- `unit`: Visible unit referenced by the spinbutton's description.
-
-Events:
-- `change` (Event): Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits.
-
-Methods: none
-
-CSS custom properties:
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-number-input-border-block-end-width`: Field border width at block end.
-- `--ki-number-input-border-block-start-width`: Field border width at block start.
-- `--ki-number-input-border-inline-width`: Field border width at either inline edge.
-- `--ki-number-input-field-backdrop-filter`: Complete backdrop filter behind the field.
-- `--ki-number-input-field-bg`: Resting NumberInput field fill.
-- `--ki-number-input-field-bg-image`: Optional theme image layered over the field fill.
-- `--ki-number-input-field-border`: Resting NumberInput field boundary.
-- `--ki-number-input-field-disabled-bg`: Field fill when disabled.
-- `--ki-number-input-field-disabled-border`: Boundary when the entire field is disabled.
-- `--ki-number-input-field-disabled-fg`: Numeric entry ink when disabled.
-- `--ki-number-input-field-fg`: Foreground of the numeric entry.
-- `--ki-number-input-field-focus-bg`: Field fill while focused.
-- `--ki-number-input-field-focus-fg`: Numeric entry ink while focused.
-- `--ki-number-input-field-invalid-border`: Field boundary when a validation message is visible.
-- `--ki-number-input-font-size`: Font size of the numeric entry and its suffix.
-- `--ki-number-input-font-size-touch`: Minimum input font size under a coarse pointer.
-- `--ki-number-input-height`: Medium field height before applying regional density.
-- `--ki-number-input-label-font-size`: Field label font size.
-- `--ki-number-input-label-font-weight`: Field label font weight.
-- `--ki-number-input-label-gap`: Gap between the label, field and supporting messages.
-- `--ki-number-input-label-line-height`: Line height of the field label.
-- `--ki-number-input-line-height`: Line height of the numeric entry and its suffix.
-- `--ki-number-input-padding-inline`: Inline padding for the plain field and unit suffix.
-- `--ki-number-input-radius`: Field corners.
-- `--ki-number-input-stepper-bg`: Resting stepper button fill.
-- `--ki-number-input-stepper-disabled-fg`: Stepper icon ink when disabled.
-- `--ki-number-input-stepper-fg`: Resting stepper icon ink.
-- `--ki-number-input-stepper-hover-bg`: Stepper fill when hovered.
-- `--ki-number-input-stepper-hover-fg`: Stepper icon ink when hovered.
-- `--ki-number-input-stepper-padding-inline`: Editor inline padding between the steppers.
-- `--ki-number-input-unit-bg`: Backing of the unit suffix within the field.
-- `--ki-number-input-unit-fg`: Unit suffix ink. Medium emphasis in the standard contrast setting.
-- `--ki-text-danger-high-em`: semantic color for text danger high em.
-- `--ki-text-high-em`: semantic color for text high em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
-
 ### ki-option
 
 A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
@@ -5950,6 +5354,167 @@ CSS custom properties:
 - `--ki-scroller-track-color`: color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute.
 - `--ki-scroller-track-inset`: dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-search
+
+A query field with a responsive view for suggestions, recent searches and results.
+
+When to use: accept free-text searches and let the user run a typed or suggested
+query. Listen for ki-input to update suggestions, and ki-search to render results.
+When NOT to use: selecting one value from a fixed set belongs in ki-select.
+Use ki-input when a plain search field is enough.
+
+Examples:
+
+# Search examples
+
+```html
+<ki-search label="Search Kimen" placeholder="Search Kimen" name="q">
+  <ki-search-suggestion value="ki-dialog" description="Component">
+    Dialog
+  </ki-search-suggestion>
+  <ki-search-suggestion recent>button tokens</ki-search-suggestion>
+  <section slot="results" aria-label="Results"></section>
+</ki-search>
+```
+
+```js
+const search = document.querySelector('ki-search');
+
+search.addEventListener('ki-input', ({ detail }) => {
+  // Load suggestions for detail.value and update the direct children.
+});
+
+search.addEventListener('ki-search', ({ detail }) => {
+  search.querySelector('[slot="results"]').textContent = `Query: ${detail.value}`;
+});
+```
+
+Use `ki-clear` to clear host-rendered content and `ki-remove-recent` to
+update saved history. Set `loading` during a request. The results slot stays
+visible while suggestions load. To offer voice search, supply a button
+with an accessible name in the trailing slot and handle its activation.
+
+Attributes:
+- `back-label` (string, default 'Back'): Accessible name of the full-screen Back button.
+- `clear-label` (string, default 'Clear search'): Accessible name of the query clear button.
+- `highlight` (boolean, default true): Emphasize literal, case-insensitive matches in suggestion titles.
+- `label` (string, default 'Search'): Accessible name of the search landmark, input and full-screen dialog.
+- `loading` (boolean, default false): Show a loading indicator while the host fetches suggestions.
+- `loading-label` (string, default 'Loading suggestions'): Accessible name of the loading indicator.
+- `mode` ("auto" | "docked" | "fullscreen", default 'auto'): View presentation. Auto uses a full-screen dialog below 600 CSS pixels.
+- `name` (string | undefined): Name under which the current query is included in form data.
+- `open` (boolean, default false): Whether the search view is open. The field opens it on focus, click or input.
+- `placeholder` (string, default ''): Optional hint displayed inside the empty search field.
+- `recent-label` (string, default 'Recent searches'): Visible and accessible name of the recent-search group.
+- `remove-recent-label` (string, default 'Remove {value}'): Accessible name template for recent-query removal. Use {value} for the query title.
+- `suggestion-count-plural` (string, default '{count} suggestions'): Polite announcement for zero or multiple suggestions. Use {count} for the number.
+- `suggestion-count-singular` (string, default '1 suggestion'): Polite announcement when the list contains one suggestion.
+- `suggestions-label` (string, default 'Suggestions'): Accessible name of the suggestion listbox.
+- `value` (string, default ''): Current query. Edits and selected suggestions update this property.
+
+Slots:
+- (default): Direct ki-search-suggestion children supply suggestion and recent-query data.
+- `leading`: A control or decorative icon at the start of the collapsed or docked bar.
+- `results`: Host-rendered results beneath suggestions and recent searches.
+- `trailing`: A control or avatar at the end of the collapsed or docked bar. Supply a labelled button here to surface voice search.
+
+Parts:
+- `bar`: Collapsed and docked search bar.
+- `dialog-bar`: Search bar inside the full-screen view.
+- `input`: Native query input in each presentation.
+- `option`: A selectable suggestion in the listbox.
+- `recent`: Labelled group of recent searches.
+- `results`: Container around host-rendered results.
+- `view`: Docked popover or full-screen dialog surface.
+
+Events:
+- `ki-clear` (CustomEvent<void>): The user cleared the query with the clear control or with Escape.
+- `ki-input` (CustomEvent<KiSearchValueDetail>): The current query after 200 ms of inactivity following an edit.
+- `ki-remove-recent` (CustomEvent<KiSearchValueDetail>): The removed recent query. Hosts can use this to persist the updated history.
+- `ki-search` (CustomEvent<KiSearchValueDetail>): The query to run, emitted on Enter or activation of a suggestion or recent search.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-glyph-size-md`: Medium glyph for body content (20px at the default root size).
+- `--ki-layout-spacing-3xl`: The 3xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
+- `--ki-layout-spacing-sm`: The sm spacing step for a stack or grid gap.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
+- `--ki-search-bar-backdrop-filter`: Complete backdrop filter for the bar.
+- `--ki-search-bar-bg`: Fill of the collapsed and docked bar.
+- `--ki-search-bar-bg-image`: Optional image painted over the bar fill.
+- `--ki-search-bar-fg`: Query ink over the search bar.
+- `--ki-search-bar-height`: Minimum height of the search bar, 56px at the default root size.
+- `--ki-search-bar-placeholder`: Placeholder ink exposed by the Search API.
+- `--ki-search-bar-placeholder-fg`: Default contrast pair for placeholder text over the search bar.
+- `--ki-search-bar-radius`: Pill corner of the collapsed and docked bar.
+- `--ki-search-control-size`: Base size of actions and minimum height of search rows.
+- `--ki-search-group-heading-family`: Font family for the recent-query group heading.
+- `--ki-search-input-touch-size`: Minimum input font size on coarse pointers to avoid focus zoom.
+- `--ki-search-option-active-bg`: Fill of the focused or hovered suggestion.
+- `--ki-search-option-active-fg`: Ink of the focused or hovered suggestion.
+- `--ki-search-option-active-supporting-fg`: Description ink on the focused or hovered suggestion.
+- `--ki-search-view-backdrop-filter`: Complete backdrop filter for the search view.
+- `--ki-search-view-bg`: Raised fill of the docked and full-screen view.
+- `--ki-search-view-bg-image`: Optional image painted over the view fill.
+- `--ki-search-view-divider`: Divider separating the active field and full-screen results.
+- `--ki-search-view-fg`: Ink over the search view.
+- `--ki-search-view-radius`: Corner for the docked view.
+- `--ki-search-view-shadow`: Resting elevation of the docked view.
+- `--ki-search-view-supporting-fg`: Ink for descriptions and the recent-search group label.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+- `--ki-typography-weight-body-bold`: semantic font weight for typography weight body bold.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+
+### ki-search-suggestion
+
+Declarative search suggestion or recent query rendered by its owning ki-search.
+
+When to use: supply one suggested or recent query as a direct ki-search child.
+When NOT to use: standalone display, form options or arbitrary results content.
+Use the results slot of ki-search for independently rendered results.
+
+Examples:
+
+# Search suggestion examples
+
+```html
+<ki-search label="Search components">
+  <ki-search-suggestion value="ki-dialog" description="Component">Dialog</ki-search-suggestion>
+  <ki-search-suggestion recent>button tokens</ki-search-suggestion>
+</ki-search>
+```
+
+The child text is the title. When `value` is omitted, that title supplies the
+query. Use `recent` for a removable history item.
+
+Attributes:
+- `description` (string | undefined): Optional supporting text displayed below the title.
+- `recent` (boolean, default false): Display in the removable recent-search group.
+- `value` (string | undefined): Query to run. When omitted, the trimmed title is used.
+
+Slots:
+- (default): Plain text title displayed in the owning search view.
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-search-suggestion-font-family`: Inherited body typeface on the declarative suggestion host.
 
 ### ki-segment
 
@@ -7761,174 +7326,6 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
-### ki-timeline
-
-A chronological list of activity, audit records, or steps from a run.
-
-When to use: present chronological events with independently readable summaries,
-optional times and details, including new entries in a live feed.
-When NOT to use: offer a selectable command list, control the current step of a
-task, or represent progress toward completion.
-
-Examples:
-
-# ki-timeline examples
-
-## Show deployment activity
-
-```html
-<ki-timeline id="activity" label="Deployment activity">
-  <ki-timeline-item icon-name="git-merge" tone="primary" datetime="2024-11-19T10:41:00Z">
-    Luis Perez merged fix/search-index
-  </ki-timeline-item>
-  <ki-timeline-item icon-name="circle-alert" tone="danger" datetime="2024-11-19T10:20:00Z">
-    Preview deploy failed
-  </ki-timeline-item>
-</ki-timeline>
-```
-
-```js
-import '@kimen/elements/icons/circle-alert';
-import '@kimen/elements/icons/git-merge';
-import { defineCustomElement as defineTimeline } from '@kimen/elements/ki-timeline';
-import { defineCustomElement as defineTimelineItem } from '@kimen/elements/ki-timeline-item';
-
-defineTimeline();
-defineTimelineItem();
-```
-
-Give the list a short name, and describe each event in words. The timeline
-sorts its direct items by `datetime`. The default is newest first. Set
-`order="oldest-first"` for a history that starts at the beginning.
-
-## Add an event to a live feed
-
-```js
-const activity = document.querySelector('#activity');
-const item = document.createElement('ki-timeline-item');
-item.setAttribute('datetime', new Date().toISOString());
-item.textContent = 'Preview deployment completed';
-activity.append(item);
-```
-
-The list updates its order and announces nearby additions together. The
-message comes from the event's default slot.
-
-Attributes:
-- `label` (string | undefined): Accessible name of the ordered list.
-- `order` ("newest-first" | "oldest-first", default 'newest-first'): Chronological order of valid dates. Ties and undated entries retain source order. Undated entries follow valid dates in either direction.
-
-Slots:
-- (default): Direct ki-timeline-item children.
-
-Parts:
-- `announcements`: Polite region for batches of new event summaries.
-- `item`: Native list entry including the connector to the next event.
-- `list`: Named native ordered list.
-
-Events: none
-
-Methods: none
-
-CSS custom properties:
-- `--ki-timeline-dot-size`: Diameter of the timeline marker.
-- `--ki-timeline-gap`: Space between marker and text and between timeline entries.
-- `--ki-timeline-item-fg`: Text color of the event summary and details.
-- `--ki-timeline-line`: Color of the decorative line connecting timeline markers.
-- `--ki-timeline-line-width`: Hairline width of the timeline connector.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
-
-### ki-timeline-item
-
-One event in a timeline, with an optional time and details disclosure.
-
-When to use: describe an activity, audit, or run event inside a ki-timeline.
-When NOT to use: convey the outcome only through marker colour, or use the marker
-as a control. Put actions in the event content or details.
-
-Examples:
-
-# ki-timeline-item examples
-
-## Add an avatar and expandable details
-
-```html
-<ki-timeline label="Order updates" order="oldest-first">
-  <ki-timeline-item datetime="2024-11-19">
-    <ki-avatar slot="start" initials="ML" size="xs"></ki-avatar>
-    Mina Lee packed the order
-  </ki-timeline-item>
-  <ki-timeline-item datetime="2024-11-20T11:45:00Z" details-label="Carrier details">
-    Dispatch confirmed
-    <div slot="details">The parcel is with the carrier.</div>
-  </ki-timeline-item>
-</ki-timeline>
-```
-
-Keep identity and status in the event text. Use the decorative `start`
-slot for an avatar or use `icon-name` with an imported Lucide glyph. If you
-use direct imports, register `ki-avatar` when you use it in the slot.
-
-Use `details-label` to localize or describe the disclosure. The control
-appears only when the event supplies details. The main event text stays
-visible while details are collapsed.
-
-Attributes:
-- `datetime` (string | undefined): ISO date or date-time. Invalid or missing dates have no time label.
-- `details-label` (string | undefined, default 'Details'): Label of the details control when the details slot is populated.
-- `icon-name` (string | undefined): Decorative Lucide icon name, registered by the caller's per-icon import.
-- `tone` ("danger" | "neutral" | "primary" | "success" | "warning", default 'neutral'): Marker tone. The event text carries the meaning.
-
-Slots:
-- (default): Event summary. Include important status information in the text.
-- `details`: Additional event information in a native details disclosure.
-- `start`: Decorative avatar or other noninteractive marker in place of the icon.
-
-Parts:
-- `content`: Event summary, time and disclosure container.
-- `details`: Native details disclosure.
-- `dot`: Decorative event marker.
-- `summary`: Keyboard-accessible details control.
-- `time`: Native time element for a valid ISO date.
-
-Events: none
-
-Methods: none
-
-CSS custom properties:
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap.
-- `--ki-timeline-dot-backdrop-filter`: Complete backdrop filter behind a timeline marker, off by default.
-- `--ki-timeline-dot-bg`: Fill of the neutral timeline marker.
-- `--ki-timeline-dot-bg-image`: Optional decorative image over the timeline marker fill.
-- `--ki-timeline-dot-danger-bg`: Fill of the danger timeline marker.
-- `--ki-timeline-dot-danger-fg`: Glyph color on the danger timeline marker.
-- `--ki-timeline-dot-fg`: Glyph color on the neutral timeline marker.
-- `--ki-timeline-dot-icon-size`: Size of the decorative glyph inside the timeline marker.
-- `--ki-timeline-dot-primary-bg`: Fill of the primary timeline marker.
-- `--ki-timeline-dot-primary-fg`: Glyph color on the primary timeline marker.
-- `--ki-timeline-dot-radius`: Round corners of the timeline marker.
-- `--ki-timeline-dot-size`: Diameter of the timeline marker.
-- `--ki-timeline-dot-success-bg`: Fill of the success timeline marker.
-- `--ki-timeline-dot-success-fg`: Glyph color on the success timeline marker.
-- `--ki-timeline-dot-warning-bg`: Fill of the warning timeline marker.
-- `--ki-timeline-dot-warning-fg`: Glyph color on the warning timeline marker.
-- `--ki-timeline-gap`: Space between marker and text and between timeline entries.
-- `--ki-timeline-item-fg`: Text color of the event summary and details.
-- `--ki-timeline-line-width`: Hairline width of the timeline connector.
-- `--ki-timeline-time-bg`: The timestamp shows the surrounding surface through its transparent background.
-- `--ki-timeline-time-fg`: Text color of the timeline timestamp.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-
 ### ki-toast
 
 A short, transient message about something the person just did, shown without blocking the page. It leaves on its own after its time, which stops while the person points at the toaster, works inside it or is away from the page; a toast with an action, or reporting an error, waits for the person.
@@ -8111,125 +7508,6 @@ CSS custom properties:
 - `--ki-toaster-gap`: dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014).
 - `--ki-toaster-inset-block`: dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014).
 - `--ki-toaster-inset-inline`: dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-
-### ki-tool-call
-
-A disclosure for one assistant tool call, with a status and optional payloads.
-
-When to use: show which tool ran, its state and duration, and let the reader
-inspect the supplied input, output or error. Use a conversation log for status updates.
-When NOT to use: collecting approval, running or configuring tools. Pair with a
-separate confirmation control for an approval decision.
-
-Examples:
-
-# ToolCall examples
-
-## Inspect a completed tool call
-
-```html
-<ki-tool-call name="search_docs" title="Search docs" status="done" duration="1200">
-  <ki-code-block slot="input" language="json" filename="search-input.json" wrap>{"query": "Forms"}</ki-code-block>
-  <ki-code-block slot="output" language="json" filename="search-output.json" wrap>["Field help"]</ki-code-block>
-</ki-tool-call>
-```
-
-## Handle a failed call
-
-```html
-<ki-tool-call name="build_preview" status="failed" retryable>
-  <p slot="error">The build was interrupted.</p>
-</ki-tool-call>
-```
-
-Listen for `ki-tool-retry` to let the application handle the request. In
-a guarded surface, set the node's `action` to a declared retry action.
-A consumer-owned control in the error slot can declare its own action.
-
-## Record a transition in the conversation
-
-```html
-<div id="tool-updates" role="log" aria-label="Tool updates"></div>
-<ki-tool-call id="call" name="run_tests" status="running"></ki-tool-call>
-<script type="module">
-  const log = document.querySelector('#tool-updates');
-  const call = document.querySelector('#call');
-  call.addEventListener('ki-tool-status-change', ({ detail: { name, label } }) => {
-    const entry = document.createElement('p');
-    entry.textContent = [name, label].join(': ');
-    log.append(entry);
-  });
-</script>
-```
-
-Attributes:
-- `approval-label` (string, default 'Needs approval'): Status text for a call waiting on an approval decision.
-- `done-label` (string, default 'Done'): Status text for a successful call.
-- `duration` (number | undefined, minimum 0): Non-negative elapsed time in milliseconds. Displayed only for Done.
-- `error-label` (string, default 'Error'): Caption for the error slot.
-- `failed-label` (string, default 'Failed'): Status text for a failed call.
-- `input-label` (string, default 'Input'): Caption for the input slot.
-- `locale` (string, default 'en'): Language tag used to format the completed duration. Defaults to English.
-- `name` (string, required): Tool identifier, such as search_docs, displayed in monospace.
-- `open` (boolean | undefined): Override the disclosure state. Without an override, failed calls are open and other calls are closed. Set open="false" for an explicit collapse. Using the summary sets the property to the reader's choice.
-- `output-label` (string, default 'Output'): Caption for the output slot.
-- `pending-label` (string, default 'Pending'): Status text for a call waiting to run.
-- `retry-label` (string, default 'Retry'): Visible and accessible label for the built-in retry control.
-- `retryable` (boolean, default false): Offer the built-in Retry button when the call fails.
-- `running-label` (string, default 'Running'): Status text for a call in progress.
-- `status` ("approval" | "done" | "failed" | "pending" | "running", default 'pending'): Lifecycle status. Unknown values display Pending.
-- `title` (string | undefined): Optional human-readable label displayed beside the identifier.
-
-Slots:
-- `error`: A failure message or a consumer-owned retry control, visible on failed calls.
-- `input`: Arguments supplied to the tool. Use ki-code-block for structured text.
-- `output`: Result returned by the tool. Use ki-code-block for structured text.
-
-Parts:
-- `body`: Content disclosed by opening the call.
-- `disclosure`: Native details surface.
-- `error`: Error section for failed calls.
-- `input`: Input section with its caption and payload.
-- `name`: Monospaced tool identifier.
-- `output`: Output section with its caption and payload.
-- `payload`: Surface for the input and output content.
-- `retry`: Opt-in action button for failed calls.
-- `status`: Badge that contains the status text and completed duration.
-- `summary`: Native disclosure control and its status row.
-
-Events:
-- `ki-tool-retry` (CustomEvent<{ name: string }>): A request to retry this tool call. Bind a declared surface action to handle it.
-- `ki-tool-status-change` (CustomEvent<{ name: string; status: string; label: string }>): Once per status transition after initialization. Append one entry to the conversation log.
-
-Methods: none
-
-CSS custom properties:
-- `--ki-badge-sm-height`: dimension used by the badge component for sm height.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-tool-call-backdrop-filter`: Whole filter behind the call.
-- `--ki-tool-call-bg`: Solid background of the call disclosure.
-- `--ki-tool-call-bg-image`: Optional image over the solid background.
-- `--ki-tool-call-border`: Border ink around the call.
-- `--ki-tool-call-border-width`: Width of the disclosure frame.
-- `--ki-tool-call-caption-size`: Size of captions and the tool identifier.
-- `--ki-tool-call-code-bg`: Background for input and output payloads.
-- `--ki-tool-call-code-fg`: Plain text ink on the payload surface.
-- `--ki-tool-call-code-radius`: Corners of the plain payload surface.
-- `--ki-tool-call-fg`: Text ink on the call surface.
-- `--ki-tool-call-font-size`: Body text size.
-- `--ki-tool-call-gap`: Gap between summary items and body sections.
-- `--ki-tool-call-icon`: Ink of the decorative icons.
-- `--ki-tool-call-icon-size`: Size of the wrench and chevron.
-- `--ki-tool-call-inline-gap`: Gap between status items and after each caption.
-- `--ki-tool-call-line-height`: Body text line height.
-- `--ki-tool-call-mono-family`: Typeface of the tool identifier.
-- `--ki-tool-call-padding`: Horizontal inset and space after the body.
-- `--ki-tool-call-radius`: Corners of the disclosure surface.
-- `--ki-tool-call-transition-duration`: Duration of the disclosure chevron rotation.
-- `--ki-tool-call-transition-easing`: Easing of the disclosure chevron rotation.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-tooltip

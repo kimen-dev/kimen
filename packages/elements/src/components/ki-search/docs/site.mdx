@@ -1,0 +1,41 @@
+---
+title: ki-search
+description: A search field with suggestions, recent searches and host-rendered results.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use Search to accept a query and surface related suggestions, recent searches
+and results. In auto mode the view docks to the bar at 600 CSS pixels and
+above. At smaller widths it opens in a full-screen modal.
+
+<Demo code={`<ki-search label="Search Kimen" placeholder="Search Kimen" name="q">
+  <ki-search-suggestion value="ki-dialog" description="Component">Dialog</ki-search-suggestion>
+  <ki-search-suggestion recent>button tokens</ki-search-suggestion>
+  <p slot="results">Start with the component accessibility guide.</p>
+</ki-search>`} />
+
+## Queries and results
+
+Listen for `ki-input` to update suggestions after typing pauses. Set `loading`
+while the request runs. Listen for `ki-search` to run the query and render
+content in the `results` slot. Both events expose `detail.value`. Search stays
+open after selection. The named field contributes its current query to native
+forms.
+
+Use `ki-clear` to clear host results and `ki-remove-recent` to persist history
+removals. Supply a labelled button in the trailing slot for voice search.
+
+## Keyboard
+
+Focus the field to open Search. Use the arrows to move through suggestions and
+Enter to run the active suggestion or the typed query. Tab reaches recent
+queries, their Remove buttons and any interactive results. Escape clears a
+nonempty query. Escape on an empty query closes the view and restores focus
+to the bar. The full-screen view also offers a Back button.
+
+## API reference
+
+<CemApi tag="ki-search" />
+<CemApi tag="ki-search-suggestion" />

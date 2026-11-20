@@ -1322,15 +1322,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-tool-call"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-tool-call": [
-          "ki-badge"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-breadcrumb/ki-breadcrumb.tsx",
@@ -2625,803 +2619,6 @@
         {
           "name": "trigger",
           "docs": "Native link or action button in a clickable card’s heading."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-carousel/ki-carousel.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-carousel",
-      "docs": "An ordered, swipeable sequence with previous and next controls and position feedback.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "show a short set of related highlights, onboarding steps or media panels.\nGive the carousel a meaningful label and supply one ki-carousel-item per slide."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "hide essential content behind rotation, replace ordinary page navigation,\nor present slides that readers need to compare side by side at the same time."
-        },
-        {
-          "name": "slot",
-          "text": "- Direct ki-carousel-item children in reading order."
-        },
-        {
-          "name": "part",
-          "text": "viewport - Scroll-snap viewport and its keyboard focus outline."
-        },
-        {
-          "name": "part",
-          "text": "controls - Row containing slide position and navigation."
-        },
-        {
-          "name": "part",
-          "text": "previous - Previous slide button."
-        },
-        {
-          "name": "part",
-          "text": "next - Next slide button."
-        },
-        {
-          "name": "part",
-          "text": "rotation - Play or Pause button when automatic rotation is configured."
-        },
-        {
-          "name": "part",
-          "text": "position - Position indicator and optional numeric position."
-        },
-        {
-          "name": "part",
-          "text": "announcement - Visually hidden live region for manual changes."
-        }
-      ],
-      "usage": {
-        "examples": "# Carousel examples\n\n```html\n<ki-carousel label=\"Product tour\" slides-per-view=\"2\" slides-per-move=\"2\">\n  <ki-carousel-item>Discover the tools</ki-carousel-item>\n  <ki-carousel-item>Pick a theme</ki-carousel-item>\n  <ki-carousel-item>Set up your workspace</ki-carousel-item>\n  <ki-carousel-item>Share your first surface</ki-carousel-item>\n</ki-carousel>\n```\n\n```js\nconst carousel = document.querySelector('ki-carousel');\ncarousel.addEventListener('ki-slide-change', ({ detail }) => {\n  console.log(detail.index);\n});\nawait carousel.goTo(3);\n```\n\nWith per-tag imports, define both `ki-carousel` and `ki-carousel-item`.\n"
-      },
-      "props": [
-        {
-          "name": "autoplay",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "autoplay",
-          "reflectToAttr": false,
-          "docs": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "maximum",
-              "text": "2147483647"
-            }
-          ],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "carouselRoleDescription",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "carousel-role-description",
-          "reflectToAttr": false,
-          "docs": "Accessible role description of the region.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'carousel'"
-            }
-          ],
-          "default": "'carousel'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "current",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "current",
-          "reflectToAttr": true,
-          "docs": "One-based leading slide. Setting it moves the carousel and clamps the index to\nthe available leading positions.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Required accessible name of the carousel region.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "layout",
-          "type": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\"",
-          "complexType": {
-            "original": "CarouselLayout",
-            "resolved": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\"",
-            "references": {
-              "CarouselLayout": {
-                "location": "local",
-                "path": "src/components/ki-carousel/ki-carousel.tsx",
-                "id": "src/components/ki-carousel/ki-carousel.tsx::CarouselLayout"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "layout",
-          "reflectToAttr": false,
-          "docs": "Item arrangement. Full-screen uses a vertical, full-viewport slide.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'single'"
-            }
-          ],
-          "default": "'single'",
-          "values": [
-            {
-              "value": "full-screen",
-              "type": "string"
-            },
-            {
-              "value": "hero",
-              "type": "string"
-            },
-            {
-              "value": "multi-browse",
-              "type": "string"
-            },
-            {
-              "value": "single",
-              "type": "string"
-            },
-            {
-              "value": "uncontained",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "loop",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "loop",
-          "reflectToAttr": false,
-          "docs": "Whether navigating past one endpoint wraps to the other.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "navigation",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "navigation",
-          "reflectToAttr": false,
-          "docs": "Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "true"
-            }
-          ],
-          "default": "true",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "nextLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "next-label",
-          "reflectToAttr": false,
-          "docs": "Accessible label of the Next button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Next slide'"
-            }
-          ],
-          "default": "'Next slide'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "pagination",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "pagination",
-          "reflectToAttr": false,
-          "docs": "Whether to show the noninteractive slide position indicator.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "true"
-            }
-          ],
-          "default": "true",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "pauseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "pause-label",
-          "reflectToAttr": false,
-          "docs": "Visible and accessible label of the Pause button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Pause'"
-            }
-          ],
-          "default": "'Pause'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "playLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "play-label",
-          "reflectToAttr": false,
-          "docs": "Visible and accessible label of the Play button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Play'"
-            }
-          ],
-          "default": "'Play'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "positionLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "position-label",
-          "reflectToAttr": false,
-          "docs": "Accessible label of the position indicator.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Slide position'"
-            }
-          ],
-          "default": "'Slide position'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "previousLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "previous-label",
-          "reflectToAttr": false,
-          "docs": "Accessible label of the Previous button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Previous slide'"
-            }
-          ],
-          "default": "'Previous slide'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "slideLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "slide-label",
-          "reflectToAttr": false,
-          "docs": "Spoken slide name and announcement. Use {index} and {count} as placeholders.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{index} of {count}'"
-            }
-          ],
-          "default": "'{index} of {count}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "slideRoleDescription",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "slide-role-description",
-          "reflectToAttr": false,
-          "docs": "Accessible role description of each slide group.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'slide'"
-            }
-          ],
-          "default": "'slide'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "slidesPerMove",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "slides-per-move",
-          "reflectToAttr": false,
-          "docs": "Number of positions advanced by Previous, Next and automatic rotation.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "slidesPerView",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "slides-per-view",
-          "reflectToAttr": false,
-          "docs": "Number of slides visible together in the single layout. Material 3 layouts\ndetermine their own item widths.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [
-        {
-          "name": "goTo",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "(index: number) => Promise<void>",
-            "parameters": [
-              {
-                "name": "index",
-                "type": "number",
-                "docs": ""
-              }
-            ],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "goTo(index: number) => Promise<void>",
-          "parameters": [
-            {
-              "name": "index",
-              "type": "number",
-              "docs": ""
-            }
-          ],
-          "docs": "Moves to the requested one-based leading position within the available range.",
-          "docsTags": []
-        },
-        {
-          "name": "next",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "() => Promise<void>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "next() => Promise<void>",
-          "parameters": [],
-          "docs": "Advances by slidesPerMove.",
-          "docsTags": []
-        },
-        {
-          "name": "previous",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "() => Promise<void>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "previous() => Promise<void>",
-          "parameters": [],
-          "docs": "Moves back by slidesPerMove.",
-          "docsTags": []
-        }
-      ],
-      "events": [
-        {
-          "event": "ki-slide-change",
-          "detail": "CarouselSlideChangeDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "CarouselSlideChangeDetail",
-            "resolved": "CarouselSlideChangeDetail",
-            "references": {
-              "CarouselSlideChangeDetail": {
-                "location": "local",
-                "path": "src/components/ki-carousel/ki-carousel.tsx",
-                "id": "src/components/ki-carousel/ki-carousel.tsx::CarouselSlideChangeDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Reports the one-based index when the leading slide changes.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Direct ki-carousel-item children in reading order."
-        }
-      ],
-      "parts": [
-        {
-          "name": "announcement",
-          "docs": "Visually hidden live region for manual changes."
-        },
-        {
-          "name": "controls",
-          "docs": "Row containing slide position and navigation."
-        },
-        {
-          "name": "next",
-          "docs": "Next slide button."
-        },
-        {
-          "name": "position",
-          "docs": "Position indicator and optional numeric position."
-        },
-        {
-          "name": "previous",
-          "docs": "Previous slide button."
-        },
-        {
-          "name": "rotation",
-          "docs": "Play or Pause button when automatic rotation is configured."
-        },
-        {
-          "name": "viewport",
-          "docs": "Scroll-snap viewport and its keyboard focus outline."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-indicator",
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-carousel": [
-          "ki-indicator",
-          "ki-icon"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-carousel-item/ki-carousel-item.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-carousel-item",
-      "docs": "A slide in an ordered ki-carousel sequence.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "supply a single slide to a ki-carousel. Put the full slide in the\ndefault slot and optional decorative preview media in the preview slot."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "present a standalone card or a layout container outside a carousel."
-        },
-        {
-          "name": "slot",
-          "text": "- The full slide content, including any links and controls."
-        },
-        {
-          "name": "slot",
-          "text": "preview - Decorative, noninteractive media shown when the item is a reduced preview."
-        },
-        {
-          "name": "part",
-          "text": "content - Surface that holds the full slide."
-        },
-        {
-          "name": "part",
-          "text": "preview - Decorative surface used in small or partly shown previews."
-        }
-      ],
-      "usage": {
-        "examples": "# Carousel item example\n\n```html\n<ki-carousel label=\"Getting started\" layout=\"hero\">\n  <ki-carousel-item><a href=\"/guide\">Read the guide</a></ki-carousel-item>\n  <ki-carousel-item>\n    <img slot=\"preview\" src=\"/cover.jpg\" alt=\"\">\n    <a href=\"/themes\">Explore themes</a>\n  </ki-carousel-item>\n</ki-carousel>\n```\n"
-      },
-      "props": [],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "The full slide content, including any links and controls."
-        },
-        {
-          "name": "preview",
-          "docs": "Decorative, noninteractive media shown when the item is a reduced preview."
-        }
-      ],
-      "parts": [
-        {
-          "name": "content",
-          "docs": "Surface that holds the full slide."
-        },
-        {
-          "name": "preview",
-          "docs": "Decorative surface used in small or partly shown previews."
         }
       ],
       "states": [],
@@ -7692,374 +6889,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-drawer/ki-drawer.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-drawer",
-      "docs": "An edge-aligned sheet for a focused task that keeps the current page in context.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Edit an item beside its list or offer a short set of actions in a\nbottom sheet. Supply a heading and wire slotted actions in the application.\nUse non-modal mode if people need to interact with the page while editing."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Menus, hover hints, permanent navigation, or work that needs a\nfull page. For a short interrupting decision in the center, use ki-dialog."
-        },
-        {
-          "name": "slot",
-          "text": "- The drawer's content, such as fields or a short list of actions."
-        },
-        {
-          "name": "slot",
-          "text": "header-actions - Optional actions between the heading and Close button."
-        },
-        {
-          "name": "slot",
-          "text": "footer - Optional actions such as Save. Wire these in the application."
-        },
-        {
-          "name": "part",
-          "text": "dialog - The native sheet surface."
-        },
-        {
-          "name": "part",
-          "text": "handle - The decorative bottom-sheet swipe handle."
-        },
-        {
-          "name": "part",
-          "text": "header - The heading and action layout."
-        },
-        {
-          "name": "part",
-          "text": "heading - The visible title that names the sheet."
-        },
-        {
-          "name": "part",
-          "text": "close - The built-in Close button."
-        },
-        {
-          "name": "part",
-          "text": "body - The scrollable content region."
-        },
-        {
-          "name": "part",
-          "text": "footer - The action row, collapsed when empty."
-        }
-      ],
-      "usage": {
-        "examples": "## Edit details beside a list\n\nUse `heading` to name the sheet. Open it from a focused trigger so focus can\nreturn there. The app wires its own footer actions.\n\n```html\n<ki-button id=\"edit-incident\" type=\"button\">Edit incident</ki-button>\n<ki-drawer id=\"incident-editor\" heading=\"Edit incident\" placement=\"end\">\n  <ki-input label=\"Title\" value=\"Search index rebuild\"></ki-input>\n  <ki-button slot=\"footer\" id=\"save-incident\" type=\"button\" variant=\"primary\">\n    Save\n  </ki-button>\n</ki-drawer>\n\n<script type=\"module\">\n  const editor = document.querySelector('#incident-editor');\n  document.querySelector('#edit-incident').addEventListener('click', () => editor.show());\n  document.querySelector('#save-incident').addEventListener('click', () => {\n    // Save the app's changes first.\n    editor.close();\n  });\n  editor.addEventListener('ki-close', (event) => {\n    if (editor.hasAttribute('data-unsaved')) event.preventDefault();\n  });\n</script>\n```\n\n## Offer a short list of actions\n\nA bottom sheet has a swipe handle and a keyboard-accessible Close button.\nUse `close-label` to translate the button for your audience.\n\n```html\n<ki-drawer heading=\"Share incident\" placement=\"bottom\" size=\"20rem\" open>\n  <p>Choose how to share the incident.</p>\n  <ki-button slot=\"footer\" variant=\"secondary\">Email</ki-button>\n  <ki-button slot=\"footer\" variant=\"primary\">Copy link</ki-button>\n</ki-drawer>\n```\n\nUse `modal=\"false\"` when the page behind the drawer should stay interactive.\n`placement=\"start\"` and `placement=\"end\"` follow the inherited direction.\n"
-      },
-      "props": [
-        {
-          "name": "closeLabel",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "close-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Close'"
-            }
-          ],
-          "default": "'Close'",
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "heading",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "heading",
-          "reflectToAttr": false,
-          "docs": "Title and accessible name. Provide a heading whenever the drawer opens.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "modal",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "modal",
-          "reflectToAttr": false,
-          "docs": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "true"
-            }
-          ],
-          "default": "true",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "open",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "open",
-          "reflectToAttr": true,
-          "docs": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "placement",
-          "type": "\"bottom\" | \"end\" | \"start\"",
-          "complexType": {
-            "original": "KiDrawerPlacement",
-            "resolved": "\"bottom\" | \"end\" | \"start\"",
-            "references": {
-              "KiDrawerPlacement": {
-                "location": "local",
-                "path": "src/components/ki-drawer/ki-drawer.tsx",
-                "id": "src/components/ki-drawer/ki-drawer.tsx::KiDrawerPlacement"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "placement",
-          "reflectToAttr": true,
-          "docs": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'end'"
-            }
-          ],
-          "default": "'end'",
-          "values": [
-            {
-              "value": "bottom",
-              "type": "string"
-            },
-            {
-              "value": "end",
-              "type": "string"
-            },
-            {
-              "value": "start",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "size",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "size",
-          "reflectToAttr": false,
-          "docs": "Optional CSS length. Overrides the 18rem themed width or bottom height cap.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [
-        {
-          "name": "close",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "() => Promise<void>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "close() => Promise<void>",
-          "parameters": [],
-          "docs": "Requests dismissal. An application can veto it by canceling ki-close.",
-          "docsTags": []
-        },
-        {
-          "name": "show",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "() => Promise<void>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "show() => Promise<void>",
-          "parameters": [],
-          "docs": "Opens the sheet. A focused invoker receives focus again after modal dismissal.",
-          "docsTags": []
-        }
-      ],
-      "events": [
-        {
-          "event": "ki-close",
-          "detail": "KiDrawerCloseDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiDrawerCloseDetail",
-            "resolved": "KiDrawerCloseDetail",
-            "references": {
-              "KiDrawerCloseDetail": {
-                "location": "local",
-                "path": "src/components/ki-drawer/ki-drawer.tsx",
-                "id": "src/components/ki-drawer/ki-drawer.tsx::KiDrawerCloseDetail"
-              }
-            }
-          },
-          "cancelable": true,
-          "composed": true,
-          "docs": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "The drawer's content, such as fields or a short list of actions."
-        },
-        {
-          "name": "footer",
-          "docs": "Optional actions such as Save. Wire these in the application."
-        },
-        {
-          "name": "header-actions",
-          "docs": "Optional actions between the heading and Close button."
-        }
-      ],
-      "parts": [
-        {
-          "name": "body",
-          "docs": "The scrollable content region."
-        },
-        {
-          "name": "close",
-          "docs": "The built-in Close button."
-        },
-        {
-          "name": "dialog",
-          "docs": "The native sheet surface."
-        },
-        {
-          "name": "footer",
-          "docs": "The action row, collapsed when empty."
-        },
-        {
-          "name": "handle",
-          "docs": "The decorative bottom-sheet swipe handle."
-        },
-        {
-          "name": "header",
-          "docs": "The heading and action layout."
-        },
-        {
-          "name": "heading",
-          "docs": "The visible title that names the sheet."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-drawer": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-empty-state/ki-empty-state.tsx",
       "encapsulation": "shadow",
       "tag": "ki-empty-state",
@@ -8940,930 +7769,6 @@
       }
     },
     {
-      "filePath": "src/components/ki-file-upload/ki-file-upload.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-file-upload",
-      "docs": "A form-associated picker and drop zone with local selection validation and a\nlist of file upload outcomes.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "collect local attachments, media or imports, and optionally show\napplication-managed upload progress and results."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "transfer files without an application handler, collect a URL,\nor use client-side type and size checks as upload authorization."
-        },
-        {
-          "name": "slot",
-          "text": "help - Plain-language guidance for the picker, in place of help-text."
-        },
-        {
-          "name": "part",
-          "text": "label - Field label and optional required annotation."
-        },
-        {
-          "name": "part",
-          "text": "drop-zone - Surface that receives files dragged from the operating system."
-        },
-        {
-          "name": "part",
-          "text": "browse - Native button that opens the file picker."
-        },
-        {
-          "name": "part",
-          "text": "input - Hidden native file picker."
-        },
-        {
-          "name": "part",
-          "text": "help - Guidance associated with the field."
-        },
-        {
-          "name": "part",
-          "text": "error - Field-level form validation error."
-        },
-        {
-          "name": "part",
-          "text": "list - List of selected files and rejections."
-        },
-        {
-          "name": "part",
-          "text": "row - A file row, with data-status matching its lifecycle state."
-        },
-        {
-          "name": "part",
-          "text": "file-name - Name displayed for the file."
-        },
-        {
-          "name": "part",
-          "text": "file-meta - Size, outcome or error text for the file."
-        },
-        {
-          "name": "part",
-          "text": "action - Native button for removal or cancellation."
-        },
-        {
-          "name": "part",
-          "text": "progress - Progress indicator for an uploading file."
-        }
-      ],
-      "usage": {
-        "examples": "# File upload examples\n\n## Submit attachments with a form\n\n```html\n<form action=\"/attachments\" method=\"post\" enctype=\"multipart/form-data\">\n  <ki-file-upload\n    label=\"Incident attachments\"\n    name=\"attachments\"\n    accept=\".csv,.pdf\"\n    max-size=\"10MB\"\n    max-files=\"3\"\n    multiple\n    required\n  >\n    <span slot=\"help\">Choose up to three CSV or PDF files, up to 10 MB each.</span>\n  </ki-file-upload>\n  <button type=\"submit\">Send attachments</button>\n  <button type=\"reset\">Clear attachments</button>\n</form>\n```\n\nRegister the element once with the direct package entry point.\n\n```js\nimport { defineCustomElement } from '@kimen/elements/ki-file-upload';\n\ndefineCustomElement();\n```\n\nThe form submits each accepted original `File` under `attachments`. A reset\nclears the list. Use `error-text` for a form error, such as one returned by\nyour application, and clear it when the error is resolved.\n\n## Report progress from an application-managed transfer\n\nUse a standalone picker when your application sends files as soon as people\nchoose them.\n\n```html\n<ki-file-upload id=\"transfer-picker\" label=\"Import CSV files\" accept=\".csv\" multiple>\n</ki-file-upload>\n```\n\nHere `sendFile` is your application's transfer function. It accepts a\n`File`, an abort signal and a progress callback receiving a percentage.\n\n```js\nconst upload = document.querySelector('#transfer-picker');\nconst transfers = new Map();\n\nfunction update(file, changes) {\n  upload.files = upload.files.map((entry) =>\n    entry.file === file ? { ...entry, ...changes } : entry,\n  );\n}\n\nasync function startUpload(file) {\n  const controller = new AbortController();\n  transfers.set(file, controller);\n  update(file, { status: 'uploading', progress: 0 });\n\n  try {\n    await sendFile(file, {\n      signal: controller.signal,\n      onProgress: (progress) => update(file, { progress }),\n    });\n    update(file, { status: 'done' });\n  } catch {\n    const error = controller.signal.aborted ? 'Upload canceled.' : 'Upload failed.';\n    update(file, { status: 'error', error });\n  } finally {\n    transfers.delete(file);\n  }\n}\n\nupload.addEventListener('ki-files-add', ({ detail }) => {\n  for (const { file } of detail.files) {\n    void startUpload(file);\n  }\n});\n\nupload.addEventListener('ki-file-cancel', ({ detail }) => {\n  transfers.get(detail.file.file)?.abort();\n});\n```\n\nUse `ki-file-remove` to update application state when a row is removed.\nFor previously uploaded attachments, set `files` to rows with metadata and\n`status: 'done'`. Only rows carrying an original `File` contribute form\nentries.\n"
-      },
-      "props": [
-        {
-          "name": "accept",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "accept",
-          "reflectToAttr": false,
-          "docs": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "browseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "browse-label",
-          "reflectToAttr": false,
-          "docs": "Visible text of the native file picker button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Browse files'"
-            }
-          ],
-          "default": "'Browse files'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "cancelLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "cancel-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name template for cancellation. Use {file} for the displayed filename.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Cancel upload of {file}'"
-            }
-          ],
-          "default": "'Cancel upload of {file}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "countError",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "count-error",
-          "reflectToAttr": false,
-          "docs": "Rejection text for a file beyond selection capacity.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Too many files.'"
-            }
-          ],
-          "default": "'Too many files.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Disables the picker and file actions and excludes the field from submission.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "doneLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "done-label",
-          "reflectToAttr": false,
-          "docs": "Status text for a completed upload.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Uploaded'"
-            }
-          ],
-          "default": "'Uploaded'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "dropLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "drop-label",
-          "reflectToAttr": false,
-          "docs": "Drop instruction shown just before the Browse button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Drop files here or'"
-            }
-          ],
-          "default": "'Drop files here or'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "errorText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "error-text",
-          "reflectToAttr": false,
-          "docs": "Application validation error. Clear it to allow form submission again.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "failedLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "failed-label",
-          "reflectToAttr": false,
-          "docs": "Fallback status text for a failed upload without a supplied error.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Upload failed.'"
-            }
-          ],
-          "default": "'Upload failed.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "files",
-          "type": "KiFile[]",
-          "complexType": {
-            "original": "KiFile[]",
-            "resolved": "KiFile[]",
-            "references": {
-              "KiFile": {
-                "location": "local",
-                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
-                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFile"
-              }
-            }
-          },
-          "mutable": true,
-          "reflectToAttr": false,
-          "docs": "Displayed file records, including rejections. Assign a new array to update\nprogress or outcomes. Keep each original File on its record for form\nsubmission. Set this as a JavaScript property when supplying file records.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "[]"
-            }
-          ],
-          "default": "[]",
-          "values": [
-            {
-              "type": "KiFile[]"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "helpText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "help-text",
-          "reflectToAttr": false,
-          "docs": "Guidance for file formats, limits or the purpose of this field.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Visible label and accessible name of the upload group.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Upload files'"
-            }
-          ],
-          "default": "'Upload files'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "listLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "list-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the list of files.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Files'"
-            }
-          ],
-          "default": "'Files'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "maxFiles",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max-files",
-          "reflectToAttr": false,
-          "docs": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "maxSize",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max-size",
-          "reflectToAttr": false,
-          "docs": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\".",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "multiple",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "multiple",
-          "reflectToAttr": true,
-          "docs": "Allows a selection of more than one file.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Form-data key repeated for each accepted original file.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "queuedLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "queued-label",
-          "reflectToAttr": false,
-          "docs": "Status text for an accepted file waiting to upload.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Queued'"
-            }
-          ],
-          "default": "'Queued'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "removeLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "remove-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name template for removal. Use {file} for the displayed filename.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Remove {file}'"
-            }
-          ],
-          "default": "'Remove {file}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "required",
-          "reflectToAttr": true,
-          "docs": "Requires at least one original accepted file to submit the form.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "requiredLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required-label",
-          "reflectToAttr": false,
-          "docs": "Visible annotation for a required file field.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Required'"
-            }
-          ],
-          "default": "'Required'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "requiredMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required-message",
-          "reflectToAttr": false,
-          "docs": "Validation message when the form requires a file and none is selected.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Select a file.'"
-            }
-          ],
-          "default": "'Select a file.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "sizeError",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "size-error",
-          "reflectToAttr": false,
-          "docs": "Rejection text for a file larger than max-size.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'This file is too large.'"
-            }
-          ],
-          "default": "'This file is too large.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "typeError",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "type-error",
-          "reflectToAttr": false,
-          "docs": "Rejection text for a file that does not match accept.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'This file type is not allowed.'"
-            }
-          ],
-          "default": "'This file type is not allowed.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "uploadingLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "uploading-label",
-          "reflectToAttr": false,
-          "docs": "Progress indicator name template. Use {file} for the displayed filename.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Uploading {file}'"
-            }
-          ],
-          "default": "'Uploading {file}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-file-cancel",
-          "detail": "KiFileActionDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiFileActionDetail",
-            "resolved": "KiFileActionDetail",
-            "references": {
-              "KiFileActionDetail": {
-                "location": "local",
-                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
-                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Requests that the application cancel the identified upload.",
-          "docsTags": []
-        },
-        {
-          "event": "ki-file-remove",
-          "detail": "KiFileActionDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiFileActionDetail",
-            "resolved": "KiFileActionDetail",
-            "references": {
-              "KiFileActionDetail": {
-                "location": "local",
-                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
-                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Reports a row removed by the user, after updating the file list.",
-          "docsTags": []
-        },
-        {
-          "event": "ki-files-add",
-          "detail": "KiFilesAddDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiFilesAddDetail",
-            "resolved": "KiFilesAddDetail",
-            "references": {
-              "KiFilesAddDetail": {
-                "location": "local",
-                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
-                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFilesAddDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Reports the accepted rows in one picker or drop batch, each with its original File.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [
-        {
-          "event": "invalid",
-          "capture": false,
-          "passive": false
-        }
-      ],
-      "styles": [],
-      "slots": [
-        {
-          "name": "help",
-          "docs": "Plain-language guidance for the picker, in place of help-text."
-        }
-      ],
-      "parts": [
-        {
-          "name": "action",
-          "docs": "Native button for removal or cancellation."
-        },
-        {
-          "name": "browse",
-          "docs": "Native button that opens the file picker."
-        },
-        {
-          "name": "drop-zone",
-          "docs": "Surface that receives files dragged from the operating system."
-        },
-        {
-          "name": "error",
-          "docs": "Field-level form validation error."
-        },
-        {
-          "name": "file-meta",
-          "docs": "Size, outcome or error text for the file."
-        },
-        {
-          "name": "file-name",
-          "docs": "Name displayed for the file."
-        },
-        {
-          "name": "help",
-          "docs": "Guidance associated with the field."
-        },
-        {
-          "name": "input",
-          "docs": "Hidden native file picker."
-        },
-        {
-          "name": "label",
-          "docs": "Field label and optional required annotation."
-        },
-        {
-          "name": "list",
-          "docs": "List of selected files and rejections."
-        },
-        {
-          "name": "progress",
-          "docs": "Progress indicator for an uploading file."
-        },
-        {
-          "name": "row",
-          "docs": "A file row, with data-status matching its lifecycle state."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon",
-        "ki-progress"
-      ],
-      "dependencyGraph": {
-        "ki-file-upload": [
-          "ki-icon",
-          "ki-progress"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-format-date/ki-format-date.tsx",
       "encapsulation": "shadow",
       "tag": "ki-format-date",
@@ -10696,21 +8601,16 @@
       "dependents": [
         "ki-ai-label",
         "ki-breadcrumb",
-        "ki-carousel",
         "ki-combobox",
         "ki-copy-button",
         "ki-details",
-        "ki-drawer",
         "ki-empty-state",
         "ki-fab",
-        "ki-file-upload",
         "ki-message",
-        "ki-number-input",
+        "ki-search",
         "ki-stat",
         "ki-stepper",
-        "ki-table",
-        "ki-timeline-item",
-        "ki-tool-call"
+        "ki-table"
       ],
       "dependencies": [],
       "dependencyGraph": {
@@ -10718,9 +8618,6 @@
           "ki-icon"
         ],
         "ki-breadcrumb": [
-          "ki-icon"
-        ],
-        "ki-carousel": [
           "ki-icon"
         ],
         "ki-combobox": [
@@ -10732,22 +8629,16 @@
         "ki-details": [
           "ki-icon"
         ],
-        "ki-drawer": [
-          "ki-icon"
-        ],
         "ki-empty-state": [
           "ki-icon"
         ],
         "ki-fab": [
           "ki-icon"
         ],
-        "ki-file-upload": [
-          "ki-icon"
-        ],
         "ki-message": [
           "ki-icon"
         ],
-        "ki-number-input": [
+        "ki-search": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -10757,12 +8648,6 @@
           "ki-icon"
         ],
         "ki-table": [
-          "ki-icon"
-        ],
-        "ki-timeline-item": [
-          "ki-icon"
-        ],
-        "ki-tool-call": [
           "ki-icon"
         ]
       }
@@ -11865,15 +9750,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-carousel"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-carousel": [
-          "ki-indicator"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-input/ki-input.tsx",
@@ -13979,628 +11858,6 @@
       }
     },
     {
-      "filePath": "src/components/ki-number-input/ki-number-input.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-number-input",
-      "docs": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue."
-        },
-        {
-          "name": "part",
-          "text": "label - Visible name of the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "field - Enclosure around the editor, unit and stepper buttons."
-        },
-        {
-          "name": "part",
-          "text": "input - Native text editor carrying the spinbutton role."
-        },
-        {
-          "name": "part",
-          "text": "unit - Visible unit referenced by the spinbutton's description."
-        },
-        {
-          "name": "part",
-          "text": "decrease - Button that subtracts one step."
-        },
-        {
-          "name": "part",
-          "text": "increase - Button that adds one step."
-        },
-        {
-          "name": "part",
-          "text": "help - Help message associated with the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "error - Polite validation feedback associated with the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "status - Polite feedback explaining a value adjustment."
-        },
-        {
-          "name": "event",
-          "text": "change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-number-input examples\n\n## Quantity with bounds\n\n```html\n<ki-number-input label=\"Seats\" name=\"seats\" value=\"3\" min=\"1\" max=\"50\" steppers required></ki-number-input>\n```\n\n## Plain field with a unit\n\n```html\n<ki-number-input label=\"Timeout\" name=\"timeout\" value=\"30\" unit=\"seconds\" min=\"0\"></ki-number-input>\n```\n\nThe form submits `timeout=30`.\n\n## Percentage with localized editing\n\n```html\n<ki-number-input\n  lang=\"de-DE\"\n  label=\"Discount\"\n  name=\"discount\"\n  min=\"0\"\n  max=\"1\"\n  step=\"0.005\"\n  value=\"0.125\"\n  format='{\"style\":\"percent\",\"maximumFractionDigits\":1}'\n></ki-number-input>\n```\n\nThe editor displays `12,5` while focused and formats it as a percentage on\nblur. The form submits `discount=0.125`.\n\n## Custom-elements entry point\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-number-input';\n\ndefineCustomElement();\nconst discount = document.querySelector('ki-number-input[name=\"discount\"]');\nif (discount) {\n  discount.format = { style: 'percent', maximumFractionDigits: 1 };\n}\n```\n"
-      },
-      "props": [
-        {
-          "name": "decreaseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "decrease-label",
-          "reflectToAttr": false,
-          "docs": "Stepper's accessible name. The field label replaces {label}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Decrease {label}'"
-            }
-          ],
-          "default": "'Decrease {label}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Prevents editing and excludes the control from form submission.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "errorText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "error-text",
-          "reflectToAttr": false,
-          "docs": "Validation hint to show when the entry fails a constraint.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "format",
-          "type": "NumberFormatOptions | undefined",
-          "complexType": {
-            "original": "Intl.NumberFormatOptions | undefined",
-            "resolved": "NumberFormatOptions | undefined",
-            "references": {
-              "Intl": {
-                "location": "global",
-                "id": "global::Intl"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "format",
-          "reflectToAttr": false,
-          "docs": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
-          "docsTags": [
-            {
-              "name": "attributeType",
-              "text": "string"
-            }
-          ],
-          "values": [
-            {
-              "type": "NumberFormatOptions"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": true,
-          "setter": true
-        },
-        {
-          "name": "helpText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "help-text",
-          "reflectToAttr": false,
-          "docs": "Context or instructions displayed beneath the field when it has no visible error.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "increaseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "increase-label",
-          "reflectToAttr": false,
-          "docs": "Stepper's accessible name. The field label replaces {label}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Increase {label}'"
-            }
-          ],
-          "default": "'Increase {label}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "invalidNumberMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "invalid-number-message",
-          "reflectToAttr": false,
-          "docs": "Default validation message for text that cannot be read as a number.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Enter a number.'"
-            }
-          ],
-          "default": "'Enter a number.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Visible accessible name. Supply a meaningful label in the page language.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "max",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max",
-          "reflectToAttr": false,
-          "docs": "Maximum permitted numeric value. Omit for an unbounded maximum.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "maximumMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "maximum-message",
-          "reflectToAttr": false,
-          "docs": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Value adjusted to the maximum of {value}.'"
-            }
-          ],
-          "default": "'Value adjusted to the maximum of {value}.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "min",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "min",
-          "reflectToAttr": false,
-          "docs": "Minimum permitted numeric value. Omit for an unbounded minimum.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "minimumMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "minimum-message",
-          "reflectToAttr": false,
-          "docs": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Value adjusted to the minimum of {value}.'"
-            }
-          ],
-          "default": "'Value adjusted to the minimum of {value}.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Form-data key for the plain numeric value.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required",
-          "reflectToAttr": true,
-          "docs": "Whether the user must enter a number before submitting the form.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "step",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "step",
-          "reflectToAttr": false,
-          "docs": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "steppers",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "steppers",
-          "reflectToAttr": false,
-          "docs": "Shows named decrease and increase buttons inside the field.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "unit",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "unit",
-          "reflectToAttr": false,
-          "docs": "Visible suffix such as seconds or seats, included in the accessible description.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number | undefined",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [
-        {
-          "event": "invalid",
-          "capture": false,
-          "passive": false
-        }
-      ],
-      "styles": [],
-      "slots": [],
-      "parts": [
-        {
-          "name": "decrease",
-          "docs": "Button that subtracts one step."
-        },
-        {
-          "name": "error",
-          "docs": "Polite validation feedback associated with the spinbutton."
-        },
-        {
-          "name": "field",
-          "docs": "Enclosure around the editor, unit and stepper buttons."
-        },
-        {
-          "name": "help",
-          "docs": "Help message associated with the spinbutton."
-        },
-        {
-          "name": "increase",
-          "docs": "Button that adds one step."
-        },
-        {
-          "name": "input",
-          "docs": "Native text editor carrying the spinbutton role."
-        },
-        {
-          "name": "label",
-          "docs": "Visible name of the spinbutton."
-        },
-        {
-          "name": "status",
-          "docs": "Polite feedback explaining a value adjustment."
-        },
-        {
-          "name": "unit",
-          "docs": "Visible unit referenced by the spinbutton's description."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-number-input": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-option/ki-option.tsx",
       "encapsulation": "shadow",
       "tag": "ki-option",
@@ -15245,15 +12502,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-file-upload"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-file-upload": [
-          "ki-progress"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-qr/ki-qr.tsx",
@@ -16065,6 +13316,823 @@
           "docs": "The scroll viewport: surface, focus ring and, as native\nscrollbar chrome styled from `--ki-scroller-*` tokens, the indicator."
         }
       ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-search/ki-search.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-search",
+      "docs": "A query field with a responsive view for suggestions, recent searches and results.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "accept free-text searches and let the user run a typed or suggested\nquery. Listen for ki-input to update suggestions, and ki-search to render results."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "selecting one value from a fixed set belongs in ki-select.\nUse ki-input when a plain search field is enough."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-search-suggestion children supply suggestion and recent-query data."
+        },
+        {
+          "name": "slot",
+          "text": "leading - A control or decorative icon at the start of the collapsed or docked bar."
+        },
+        {
+          "name": "slot",
+          "text": "trailing - A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search."
+        },
+        {
+          "name": "slot",
+          "text": "results - Host-rendered results beneath suggestions and recent searches."
+        },
+        {
+          "name": "part",
+          "text": "bar - Collapsed and docked search bar."
+        },
+        {
+          "name": "part",
+          "text": "dialog-bar - Search bar inside the full-screen view."
+        },
+        {
+          "name": "part",
+          "text": "input - Native query input in each presentation."
+        },
+        {
+          "name": "part",
+          "text": "view - Docked popover or full-screen dialog surface."
+        },
+        {
+          "name": "part",
+          "text": "option - A selectable suggestion in the listbox."
+        },
+        {
+          "name": "part",
+          "text": "recent - Labelled group of recent searches."
+        },
+        {
+          "name": "part",
+          "text": "results - Container around host-rendered results."
+        }
+      ],
+      "usage": {
+        "examples": "# Search examples\n\n```html\n<ki-search label=\"Search Kimen\" placeholder=\"Search Kimen\" name=\"q\">\n  <ki-search-suggestion value=\"ki-dialog\" description=\"Component\">\n    Dialog\n  </ki-search-suggestion>\n  <ki-search-suggestion recent>button tokens</ki-search-suggestion>\n  <section slot=\"results\" aria-label=\"Results\"></section>\n</ki-search>\n```\n\n```js\nconst search = document.querySelector('ki-search');\n\nsearch.addEventListener('ki-input', ({ detail }) => {\n  // Load suggestions for detail.value and update the direct children.\n});\n\nsearch.addEventListener('ki-search', ({ detail }) => {\n  search.querySelector('[slot=\"results\"]').textContent = `Query: ${detail.value}`;\n});\n```\n\nUse `ki-clear` to clear host-rendered content and `ki-remove-recent` to\nupdate saved history. Set `loading` during a request. The results slot stays\nvisible while suggestions load. To offer voice search, supply a button\nwith an accessible name in the trailing slot and handle its activation.\n"
+      },
+      "props": [
+        {
+          "name": "backLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "back-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the full-screen Back button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Back'"
+            }
+          ],
+          "default": "'Back'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "clearLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "clear-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the query clear button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Clear search'"
+            }
+          ],
+          "default": "'Clear search'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "highlight",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "highlight",
+          "reflectToAttr": false,
+          "docs": "Emphasize literal, case-insensitive matches in suggestion titles.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the search landmark, input and full-screen dialog.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Search'"
+            }
+          ],
+          "default": "'Search'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading",
+          "reflectToAttr": false,
+          "docs": "Show a loading indicator while the host fetches suggestions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loadingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loading-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the loading indicator.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Loading suggestions'"
+            }
+          ],
+          "default": "'Loading suggestions'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "mode",
+          "type": "\"auto\" | \"docked\" | \"fullscreen\"",
+          "complexType": {
+            "original": "KiSearchMode",
+            "resolved": "\"auto\" | \"docked\" | \"fullscreen\"",
+            "references": {
+              "KiSearchMode": {
+                "location": "local",
+                "path": "src/components/ki-search/ki-search.tsx",
+                "id": "src/components/ki-search/ki-search.tsx::KiSearchMode"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "mode",
+          "reflectToAttr": true,
+          "docs": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'auto'"
+            }
+          ],
+          "default": "'auto'",
+          "values": [
+            {
+              "value": "auto",
+              "type": "string"
+            },
+            {
+              "value": "docked",
+              "type": "string"
+            },
+            {
+              "value": "fullscreen",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Name under which the current query is included in form data.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the search view is open. The field opens it on focus, click or input.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "placeholder",
+          "reflectToAttr": false,
+          "docs": "Optional hint displayed inside the empty search field.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "recentLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "recent-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible name of the recent-search group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Recent searches'"
+            }
+          ],
+          "default": "'Recent searches'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removeRecentLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remove-recent-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name template for recent-query removal. Use {value} for the query title.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Remove {value}'"
+            }
+          ],
+          "default": "'Remove {value}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "suggestionCountPlural",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "suggestion-count-plural",
+          "reflectToAttr": false,
+          "docs": "Polite announcement for zero or multiple suggestions. Use {count} for the number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} suggestions'"
+            }
+          ],
+          "default": "'{count} suggestions'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "suggestionCountSingular",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "suggestion-count-singular",
+          "reflectToAttr": false,
+          "docs": "Polite announcement when the list contains one suggestion.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'1 suggestion'"
+            }
+          ],
+          "default": "'1 suggestion'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "suggestionsLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "suggestions-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the suggestion listbox.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Suggestions'"
+            }
+          ],
+          "default": "'Suggestions'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current query. Edits and selected suggestions update this property.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-clear",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "The user cleared the query with the clear control or with Escape.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-input",
+          "detail": "KiSearchValueDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiSearchValueDetail",
+            "resolved": "KiSearchValueDetail",
+            "references": {
+              "KiSearchValueDetail": {
+                "location": "local",
+                "path": "src/components/ki-search/ki-search.tsx",
+                "id": "src/components/ki-search/ki-search.tsx::KiSearchValueDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "The current query after 200 ms of inactivity following an edit.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-remove-recent",
+          "detail": "KiSearchValueDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiSearchValueDetail",
+            "resolved": "KiSearchValueDetail",
+            "references": {
+              "KiSearchValueDetail": {
+                "location": "local",
+                "path": "src/components/ki-search/ki-search.tsx",
+                "id": "src/components/ki-search/ki-search.tsx::KiSearchValueDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "The removed recent query. Hosts can use this to persist the updated history.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-search",
+          "detail": "KiSearchValueDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiSearchValueDetail",
+            "resolved": "KiSearchValueDetail",
+            "references": {
+              "KiSearchValueDetail": {
+                "location": "local",
+                "path": "src/components/ki-search/ki-search.tsx",
+                "id": "src/components/ki-search/ki-search.tsx::KiSearchValueDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "The query to run, emitted on Enter or activation of a suggestion or recent search.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "pointerdown",
+          "capture": false,
+          "passive": true
+        },
+        {
+          "event": "focusout",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-search-suggestion children supply suggestion and recent-query data."
+        },
+        {
+          "name": "leading",
+          "docs": "A control or decorative icon at the start of the collapsed or docked bar."
+        },
+        {
+          "name": "results",
+          "docs": "Host-rendered results beneath suggestions and recent searches."
+        },
+        {
+          "name": "trailing",
+          "docs": "A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search."
+        }
+      ],
+      "parts": [
+        {
+          "name": "bar",
+          "docs": "Collapsed and docked search bar."
+        },
+        {
+          "name": "dialog-bar",
+          "docs": "Search bar inside the full-screen view."
+        },
+        {
+          "name": "input",
+          "docs": "Native query input in each presentation."
+        },
+        {
+          "name": "option",
+          "docs": "A selectable suggestion in the listbox."
+        },
+        {
+          "name": "recent",
+          "docs": "Labelled group of recent searches."
+        },
+        {
+          "name": "results",
+          "docs": "Container around host-rendered results."
+        },
+        {
+          "name": "view",
+          "docs": "Docked popover or full-screen dialog surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-spinner"
+      ],
+      "dependencyGraph": {
+        "ki-search": [
+          "ki-icon",
+          "ki-spinner"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-search-suggestion/ki-search-suggestion.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-search-suggestion",
+      "docs": "Declarative search suggestion or recent query rendered by its owning ki-search.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "supply one suggested or recent query as a direct ki-search child."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "standalone display, form options or arbitrary results content.\nUse the results slot of ki-search for independently rendered results."
+        },
+        {
+          "name": "slot",
+          "text": "- Plain text title displayed in the owning search view."
+        }
+      ],
+      "usage": {
+        "examples": "# Search suggestion examples\n\n```html\n<ki-search label=\"Search components\">\n  <ki-search-suggestion value=\"ki-dialog\" description=\"Component\">Dialog</ki-search-suggestion>\n  <ki-search-suggestion recent>button tokens</ki-search-suggestion>\n</ki-search>\n```\n\nThe child text is the title. When `value` is omitted, that title supplies the\nquery. Use `recent` for a removable history item.\n"
+      },
+      "props": [
+        {
+          "name": "description",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "description",
+          "reflectToAttr": true,
+          "docs": "Optional supporting text displayed below the title.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "recent",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "recent",
+          "reflectToAttr": true,
+          "docs": "Display in the removable recent-search group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Query to run. When omitted, the trimmed title is used.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Plain text title displayed in the owning search view."
+        }
+      ],
+      "parts": [],
       "states": [],
       "dependents": [],
       "dependencies": [],
@@ -17821,14 +15889,14 @@
       "states": [],
       "dependents": [
         "ki-combobox",
-        "ki-tool-call"
+        "ki-search"
       ],
       "dependencies": [],
       "dependencyGraph": {
         "ki-combobox": [
           "ki-spinner"
         ],
-        "ki-tool-call": [
+        "ki-search": [
           "ki-spinner"
         ]
       }
@@ -20800,421 +18868,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-timeline/ki-timeline.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-timeline",
-      "docs": "A chronological list of activity, audit records, or steps from a run.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "present chronological events with independently readable summaries,\noptional times and details, including new entries in a live feed."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "offer a selectable command list, control the current step of a\ntask, or represent progress toward completion."
-        },
-        {
-          "name": "slot",
-          "text": "- Direct ki-timeline-item children."
-        },
-        {
-          "name": "part",
-          "text": "list - Named native ordered list."
-        },
-        {
-          "name": "part",
-          "text": "item - Native list entry including the connector to the next event."
-        },
-        {
-          "name": "part",
-          "text": "announcements - Polite region for batches of new event summaries."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-line - Connector colour."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-line-width - Connector width."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-size - Marker diameter, used to position the connector."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-gap - Gap between rows and between each marker and summary."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-timeline examples\n\n## Show deployment activity\n\n```html\n<ki-timeline id=\"activity\" label=\"Deployment activity\">\n  <ki-timeline-item icon-name=\"git-merge\" tone=\"primary\" datetime=\"2024-11-19T10:41:00Z\">\n    Luis Perez merged fix/search-index\n  </ki-timeline-item>\n  <ki-timeline-item icon-name=\"circle-alert\" tone=\"danger\" datetime=\"2024-11-19T10:20:00Z\">\n    Preview deploy failed\n  </ki-timeline-item>\n</ki-timeline>\n```\n\n```js\nimport '@kimen/elements/icons/circle-alert';\nimport '@kimen/elements/icons/git-merge';\nimport { defineCustomElement as defineTimeline } from '@kimen/elements/ki-timeline';\nimport { defineCustomElement as defineTimelineItem } from '@kimen/elements/ki-timeline-item';\n\ndefineTimeline();\ndefineTimelineItem();\n```\n\nGive the list a short name, and describe each event in words. The timeline\nsorts its direct items by `datetime`. The default is newest first. Set\n`order=\"oldest-first\"` for a history that starts at the beginning.\n\n## Add an event to a live feed\n\n```js\nconst activity = document.querySelector('#activity');\nconst item = document.createElement('ki-timeline-item');\nitem.setAttribute('datetime', new Date().toISOString());\nitem.textContent = 'Preview deployment completed';\nactivity.append(item);\n```\n\nThe list updates its order and announces nearby additions together. The\nmessage comes from the event's default slot.\n"
-      },
-      "props": [
-        {
-          "name": "label",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the ordered list.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "order",
-          "type": "\"newest-first\" | \"oldest-first\"",
-          "complexType": {
-            "original": "TimelineOrder",
-            "resolved": "\"newest-first\" | \"oldest-first\"",
-            "references": {
-              "TimelineOrder": {
-                "location": "import",
-                "path": "./ki-timeline.time",
-                "id": "src/components/ki-timeline/ki-timeline.time.ts::TimelineOrder",
-                "referenceLocation": "TimelineOrder"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "order",
-          "reflectToAttr": false,
-          "docs": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'newest-first'"
-            }
-          ],
-          "default": "'newest-first'",
-          "values": [
-            {
-              "value": "newest-first",
-              "type": "string"
-            },
-            {
-              "value": "oldest-first",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Direct ki-timeline-item children."
-        }
-      ],
-      "parts": [
-        {
-          "name": "announcements",
-          "docs": "Polite region for batches of new event summaries."
-        },
-        {
-          "name": "item",
-          "docs": "Native list entry including the connector to the next event."
-        },
-        {
-          "name": "list",
-          "docs": "Named native ordered list."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-timeline-item/ki-timeline-item.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-timeline-item",
-      "docs": "One event in a timeline, with an optional time and details disclosure.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "describe an activity, audit, or run event inside a ki-timeline."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "convey the outcome only through marker colour, or use the marker\nas a control. Put actions in the event content or details."
-        },
-        {
-          "name": "slot",
-          "text": "- Event summary. Include important status information in the text."
-        },
-        {
-          "name": "slot",
-          "text": "start - Decorative avatar or other noninteractive marker in place of the icon."
-        },
-        {
-          "name": "slot",
-          "text": "details - Additional event information in a native details disclosure."
-        },
-        {
-          "name": "part",
-          "text": "dot - Decorative event marker."
-        },
-        {
-          "name": "part",
-          "text": "content - Event summary, time and disclosure container."
-        },
-        {
-          "name": "part",
-          "text": "time - Native time element for a valid ISO date."
-        },
-        {
-          "name": "part",
-          "text": "summary - Keyboard-accessible details control."
-        },
-        {
-          "name": "part",
-          "text": "details - Native details disclosure."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-bg - Neutral marker fill."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-fg - Neutral marker ink."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-bg-image - Optional marker background image."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-backdrop-filter - Optional filter behind the marker."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-time-bg - Timestamp fill."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-time-fg - Timestamp ink."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-item-fg - Event summary and details ink."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-timeline-item examples\n\n## Add an avatar and expandable details\n\n```html\n<ki-timeline label=\"Order updates\" order=\"oldest-first\">\n  <ki-timeline-item datetime=\"2024-11-19\">\n    <ki-avatar slot=\"start\" initials=\"ML\" size=\"xs\"></ki-avatar>\n    Mina Lee packed the order\n  </ki-timeline-item>\n  <ki-timeline-item datetime=\"2024-11-20T11:45:00Z\" details-label=\"Carrier details\">\n    Dispatch confirmed\n    <div slot=\"details\">The parcel is with the carrier.</div>\n  </ki-timeline-item>\n</ki-timeline>\n```\n\nKeep identity and status in the event text. Use the decorative `start`\nslot for an avatar or use `icon-name` with an imported Lucide glyph. If you\nuse direct imports, register `ki-avatar` when you use it in the slot.\n\nUse `details-label` to localize or describe the disclosure. The control\nappears only when the event supplies details. The main event text stays\nvisible while details are collapsed.\n"
-      },
-      "props": [
-        {
-          "name": "datetime",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "datetime",
-          "reflectToAttr": true,
-          "docs": "ISO date or date-time. Invalid or missing dates have no time label.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "detailsLabel",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "details-label",
-          "reflectToAttr": false,
-          "docs": "Label of the details control when the details slot is populated.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Details'"
-            }
-          ],
-          "default": "'Details'",
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Decorative Lucide icon name, registered by the caller's per-icon import.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "tone",
-          "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
-          "complexType": {
-            "original": "TimelineTone",
-            "resolved": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
-            "references": {
-              "TimelineTone": {
-                "location": "local",
-                "path": "src/components/ki-timeline-item/ki-timeline-item.tsx",
-                "id": "src/components/ki-timeline-item/ki-timeline-item.tsx::TimelineTone"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "tone",
-          "reflectToAttr": false,
-          "docs": "Marker tone. The event text carries the meaning.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'neutral'"
-            }
-          ],
-          "default": "'neutral'",
-          "values": [
-            {
-              "value": "danger",
-              "type": "string"
-            },
-            {
-              "value": "neutral",
-              "type": "string"
-            },
-            {
-              "value": "primary",
-              "type": "string"
-            },
-            {
-              "value": "success",
-              "type": "string"
-            },
-            {
-              "value": "warning",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Event summary. Include important status information in the text."
-        },
-        {
-          "name": "details",
-          "docs": "Additional event information in a native details disclosure."
-        },
-        {
-          "name": "start",
-          "docs": "Decorative avatar or other noninteractive marker in place of the icon."
-        }
-      ],
-      "parts": [
-        {
-          "name": "content",
-          "docs": "Event summary, time and disclosure container."
-        },
-        {
-          "name": "details",
-          "docs": "Native details disclosure."
-        },
-        {
-          "name": "dot",
-          "docs": "Decorative event marker."
-        },
-        {
-          "name": "summary",
-          "docs": "Keyboard-accessible details control."
-        },
-        {
-          "name": "time",
-          "docs": "Native time element for a valid ISO date."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-timeline-item": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-toast/ki-toast.tsx",
       "encapsulation": "shadow",
       "tag": "ki-toast",
@@ -21777,653 +19430,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-tool-call/ki-tool-call.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-tool-call",
-      "docs": "A disclosure for one assistant tool call, with a status and optional payloads.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "show which tool ran, its state and duration, and let the reader\ninspect the supplied input, output or error. Use a conversation log for status updates."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "collecting approval, running or configuring tools. Pair with a\nseparate confirmation control for an approval decision."
-        },
-        {
-          "name": "slot",
-          "text": "input - Arguments supplied to the tool. Use ki-code-block for structured text."
-        },
-        {
-          "name": "slot",
-          "text": "output - Result returned by the tool. Use ki-code-block for structured text."
-        },
-        {
-          "name": "slot",
-          "text": "error - A failure message or a consumer-owned retry control, visible on failed calls."
-        },
-        {
-          "name": "part",
-          "text": "disclosure - Native details surface."
-        },
-        {
-          "name": "part",
-          "text": "summary - Native disclosure control and its status row."
-        },
-        {
-          "name": "part",
-          "text": "name - Monospaced tool identifier."
-        },
-        {
-          "name": "part",
-          "text": "status - Badge that contains the status text and completed duration."
-        },
-        {
-          "name": "part",
-          "text": "body - Content disclosed by opening the call."
-        },
-        {
-          "name": "part",
-          "text": "input - Input section with its caption and payload."
-        },
-        {
-          "name": "part",
-          "text": "output - Output section with its caption and payload."
-        },
-        {
-          "name": "part",
-          "text": "payload - Surface for the input and output content."
-        },
-        {
-          "name": "part",
-          "text": "error - Error section for failed calls."
-        },
-        {
-          "name": "part",
-          "text": "retry - Opt-in action button for failed calls."
-        }
-      ],
-      "usage": {
-        "examples": "# ToolCall examples\n\n## Inspect a completed tool call\n\n```html\n<ki-tool-call name=\"search_docs\" title=\"Search docs\" status=\"done\" duration=\"1200\">\n  <ki-code-block slot=\"input\" language=\"json\" filename=\"search-input.json\" wrap>{\"query\": \"Forms\"}</ki-code-block>\n  <ki-code-block slot=\"output\" language=\"json\" filename=\"search-output.json\" wrap>[\"Field help\"]</ki-code-block>\n</ki-tool-call>\n```\n\n## Handle a failed call\n\n```html\n<ki-tool-call name=\"build_preview\" status=\"failed\" retryable>\n  <p slot=\"error\">The build was interrupted.</p>\n</ki-tool-call>\n```\n\nListen for `ki-tool-retry` to let the application handle the request. In\na guarded surface, set the node's `action` to a declared retry action.\nA consumer-owned control in the error slot can declare its own action.\n\n## Record a transition in the conversation\n\n```html\n<div id=\"tool-updates\" role=\"log\" aria-label=\"Tool updates\"></div>\n<ki-tool-call id=\"call\" name=\"run_tests\" status=\"running\"></ki-tool-call>\n<script type=\"module\">\n  const log = document.querySelector('#tool-updates');\n  const call = document.querySelector('#call');\n  call.addEventListener('ki-tool-status-change', ({ detail: { name, label } }) => {\n    const entry = document.createElement('p');\n    entry.textContent = [name, label].join(': ');\n    log.append(entry);\n  });\n</script>\n```\n"
-      },
-      "props": [
-        {
-          "name": "approvalLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "approval-label",
-          "reflectToAttr": false,
-          "docs": "Status text for a call waiting on an approval decision.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Needs approval'"
-            }
-          ],
-          "default": "'Needs approval'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "doneLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "done-label",
-          "reflectToAttr": false,
-          "docs": "Status text for a successful call.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Done'"
-            }
-          ],
-          "default": "'Done'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "duration",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "duration",
-          "reflectToAttr": false,
-          "docs": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "0"
-            }
-          ],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "errorLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "error-label",
-          "reflectToAttr": false,
-          "docs": "Caption for the error slot.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Error'"
-            }
-          ],
-          "default": "'Error'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "failedLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "failed-label",
-          "reflectToAttr": false,
-          "docs": "Status text for a failed call.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Failed'"
-            }
-          ],
-          "default": "'Failed'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "inputLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "input-label",
-          "reflectToAttr": false,
-          "docs": "Caption for the input slot.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Input'"
-            }
-          ],
-          "default": "'Input'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "locale",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "locale",
-          "reflectToAttr": false,
-          "docs": "Language tag used to format the completed duration. Defaults to English.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'en'"
-            }
-          ],
-          "default": "'en'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": false,
-          "docs": "Tool identifier, such as search_docs, displayed in monospace.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "open",
-          "type": "boolean | undefined",
-          "complexType": {
-            "original": "boolean | undefined",
-            "resolved": "boolean | undefined",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "open",
-          "reflectToAttr": false,
-          "docs": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "outputLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "output-label",
-          "reflectToAttr": false,
-          "docs": "Caption for the output slot.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Output'"
-            }
-          ],
-          "default": "'Output'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "pendingLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "pending-label",
-          "reflectToAttr": false,
-          "docs": "Status text for a call waiting to run.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Pending'"
-            }
-          ],
-          "default": "'Pending'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "retryLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "retry-label",
-          "reflectToAttr": false,
-          "docs": "Visible and accessible label for the built-in retry control.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Retry'"
-            }
-          ],
-          "default": "'Retry'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "retryable",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "retryable",
-          "reflectToAttr": false,
-          "docs": "Offer the built-in Retry button when the call fails.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "runningLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "running-label",
-          "reflectToAttr": false,
-          "docs": "Status text for a call in progress.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Running'"
-            }
-          ],
-          "default": "'Running'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "status",
-          "type": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\"",
-          "complexType": {
-            "original": "'pending' | 'running' | 'done' | 'failed' | 'approval'",
-            "resolved": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\"",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "status",
-          "reflectToAttr": false,
-          "docs": "Lifecycle status. Unknown values display Pending.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'pending'"
-            }
-          ],
-          "default": "'pending'",
-          "values": [
-            {
-              "value": "approval",
-              "type": "string"
-            },
-            {
-              "value": "done",
-              "type": "string"
-            },
-            {
-              "value": "failed",
-              "type": "string"
-            },
-            {
-              "value": "pending",
-              "type": "string"
-            },
-            {
-              "value": "running",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "toolTitle",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "title",
-          "reflectToAttr": true,
-          "docs": "Optional human-readable label displayed beside the identifier.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-tool-retry",
-          "detail": "{ name: string; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ name: string }",
-            "resolved": "{ name: string; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "A request to retry this tool call. Bind a declared surface action to handle it.",
-          "docsTags": []
-        },
-        {
-          "event": "ki-tool-status-change",
-          "detail": "{ name: string; status: string; label: string; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ name: string; status: string; label: string }",
-            "resolved": "{ name: string; status: string; label: string; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Once per status transition after initialization. Append one entry to the conversation log.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "error",
-          "docs": "A failure message or a consumer-owned retry control, visible on failed calls."
-        },
-        {
-          "name": "input",
-          "docs": "Arguments supplied to the tool. Use ki-code-block for structured text."
-        },
-        {
-          "name": "output",
-          "docs": "Result returned by the tool. Use ki-code-block for structured text."
-        }
-      ],
-      "parts": [
-        {
-          "name": "body",
-          "docs": "Content disclosed by opening the call."
-        },
-        {
-          "name": "disclosure",
-          "docs": "Native details surface."
-        },
-        {
-          "name": "error",
-          "docs": "Error section for failed calls."
-        },
-        {
-          "name": "input",
-          "docs": "Input section with its caption and payload."
-        },
-        {
-          "name": "name",
-          "docs": "Monospaced tool identifier."
-        },
-        {
-          "name": "output",
-          "docs": "Output section with its caption and payload."
-        },
-        {
-          "name": "payload",
-          "docs": "Surface for the input and output content."
-        },
-        {
-          "name": "retry",
-          "docs": "Opt-in action button for failed calls."
-        },
-        {
-          "name": "status",
-          "docs": "Badge that contains the status text and completed duration."
-        },
-        {
-          "name": "summary",
-          "docs": "Native disclosure control and its status row."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon",
-        "ki-spinner",
-        "ki-badge"
-      ],
-      "dependencyGraph": {
-        "ki-tool-call": [
-          "ki-icon",
-          "ki-spinner",
-          "ki-badge"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-tooltip/ki-tooltip.tsx",
       "encapsulation": "shadow",
       "tag": "ki-tooltip",
@@ -22677,16 +19683,6 @@
       "docstring": "",
       "path": "src/utils/dialog-invoker.ts"
     },
-    "src/components/ki-carousel/ki-carousel.tsx::CarouselLayout": {
-      "declaration": "export type CarouselLayout = 'single' | 'multi-browse' | 'uncontained' | 'hero' | 'full-screen';",
-      "docstring": "",
-      "path": "src/components/ki-carousel/ki-carousel.tsx"
-    },
-    "src/components/ki-carousel/ki-carousel.tsx::CarouselSlideChangeDetail": {
-      "declaration": "export interface CarouselSlideChangeDetail {\n  index: number;\n}",
-      "docstring": "",
-      "path": "src/components/ki-carousel/ki-carousel.tsx"
-    },
     "src/components/ki-checkbox/ki-checkbox.tsx::KiCheckboxSize": {
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
       "docstring": "",
@@ -22752,16 +19748,6 @@
       "docstring": "",
       "path": "src/components/ki-divider/ki-divider.tsx"
     },
-    "src/components/ki-drawer/ki-drawer.tsx::KiDrawerPlacement": {
-      "declaration": "export type KiDrawerPlacement = 'start' | 'end' | 'bottom';",
-      "docstring": "",
-      "path": "src/components/ki-drawer/ki-drawer.tsx"
-    },
-    "src/components/ki-drawer/ki-drawer.tsx::KiDrawerCloseDetail": {
-      "declaration": "export interface KiDrawerCloseDetail {\n  /** The source of the dismissal request. Open-state changes report `method`. */\n  reason: KiDrawerCloseReason;\n}",
-      "docstring": "",
-      "path": "src/components/ki-drawer/ki-drawer.tsx"
-    },
     "src/components/ki-fab/ki-fab.tsx::KiFabSize": {
       "declaration": "export type KiFabSize = 'md' | 'lg' | 'xl';",
       "docstring": "",
@@ -22791,21 +19777,6 @@
       "declaration": "export type KiFeatureIconShape = 'square' | 'circle';",
       "docstring": "",
       "path": "src/components/ki-feature-icon/ki-feature-icon.tsx"
-    },
-    "src/components/ki-file-upload/ki-file-upload.tsx::KiFile": {
-      "declaration": "export interface KiFile {\n  name: string;\n  /** Size in bytes. */\n  size: number;\n  status: 'queued' | 'uploading' | 'done' | 'error';\n  /** Percentage for an upload with known progress. */\n  progress?: number;\n  /** Visible error reason for a row in the error state. */\n  error?: string;\n  /** Original accepted local file, retained for submission. */\n  file?: File;\n}",
-      "docstring": "",
-      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
-    },
-    "src/components/ki-file-upload/ki-file-upload.tsx::KiFilesAddDetail": {
-      "declaration": "export interface KiFilesAddDetail {\n  files: KiFile[];\n}",
-      "docstring": "",
-      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
-    },
-    "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail": {
-      "declaration": "export interface KiFileActionDetail {\n  file: KiFile;\n}",
-      "docstring": "",
-      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
     },
     "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
       "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",
@@ -22932,6 +19903,16 @@
       "docstring": "",
       "path": "src/components/ki-scroller/ki-scroller.tsx"
     },
+    "src/components/ki-search/ki-search.tsx::KiSearchMode": {
+      "declaration": "export type KiSearchMode = 'auto' | 'docked' | 'fullscreen';",
+      "docstring": "",
+      "path": "src/components/ki-search/ki-search.tsx"
+    },
+    "src/components/ki-search/ki-search.tsx::KiSearchValueDetail": {
+      "declaration": "export interface KiSearchValueDetail {\n  value: string;\n}",
+      "docstring": "",
+      "path": "src/components/ki-search/ki-search.tsx"
+    },
     "src/components/ki-segmented-control/ki-segmented-control.tsx::KiSegmentedControlSize": {
       "declaration": "export type KiSegmentedControlSize = 'xs' | 'sm' | 'md';",
       "docstring": "",
@@ -23017,11 +19998,6 @@
       "docstring": "",
       "path": "src/components/ki-textarea/ki-textarea.tsx"
     },
-    "src/components/ki-timeline-item/ki-timeline-item.tsx::TimelineTone": {
-      "declaration": "export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger';",
-      "docstring": "",
-      "path": "src/components/ki-timeline-item/ki-timeline-item.tsx"
-    },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
@@ -23036,11 +20012,6 @@
       "declaration": "export type ComboboxFilter = 'contains' | 'starts-with' | 'none';",
       "docstring": "",
       "path": "src/components/ki-combobox/ki-combobox.options.ts"
-    },
-    "src/components/ki-timeline/ki-timeline.time.ts::TimelineOrder": {
-      "declaration": "export type TimelineOrder = 'newest-first' | 'oldest-first';",
-      "docstring": "",
-      "path": "src/components/ki-timeline/ki-timeline.time.ts"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",

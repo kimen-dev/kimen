@@ -1,0 +1,267 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.bar {
+  border-radius: var(--ki-search-bar-radius);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ki-layout-spacing-xs);
+  box-sizing: border-box;
+  min-block-size: var(--ki-search-bar-height);
+  min-inline-size: 0;
+  padding-inline: var(--ki-layout-spacing-xs) var(--ki-layout-spacing-md);
+  color: var(--ki-search-bar-fg);
+  background-color: var(--ki-search-bar-bg);
+  background-image: var(--ki-search-bar-bg-image);
+  backdrop-filter: var(--ki-search-bar-backdrop-filter);
+}
+
+[part="bar"] {
+  anchor-name: --ki-search-anchor;
+}
+
+.bar-icon {
+  margin-inline: var(--ki-layout-spacing-md) var(--ki-layout-spacing-xs);
+}
+
+.bar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ki-layout-spacing-xs);
+}
+
+input {
+  appearance: none;
+  align-self: stretch;
+  min-inline-size: 0;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: var(--ki-typography-size-body-2);
+  color: inherit;
+  background-color: transparent;
+}
+
+input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+input::placeholder {
+  color: var(--ki-search-bar-placeholder, var(--ki-search-bar-placeholder-fg));
+  opacity: 1;
+}
+
+input:focus {
+  outline: none;
+}
+
+@media (pointer: coarse) {
+  input {
+    font-size: max(var(--ki-typography-size-body-2), var(--ki-search-input-touch-size));
+  }
+}
+
+button {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.icon-action {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-search-control-size) + var(--ki-density-control-offset))
+  );
+  min-inline-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-search-control-size) + var(--ki-density-control-offset))
+  );
+  border-radius: var(--ki-search-bar-radius);
+}
+
+ki-icon {
+  flex: none;
+  font-size: var(--ki-glyph-size-md);
+}
+
+[part="view"] {
+  box-sizing: border-box;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: var(--ki-search-view-bg);
+  background-image: var(--ki-search-view-bg-image);
+  backdrop-filter: var(--ki-search-view-backdrop-filter);
+  color: var(--ki-search-view-fg);
+}
+
+.dock {
+  position: fixed;
+  position-anchor: --ki-search-anchor;
+  position-area: block-end span-inline-end;
+  position-try-fallbacks: flip-block;
+  inset: auto;
+  inline-size: anchor-size(inline);
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  overflow: auto;
+  border-radius: var(--ki-search-view-radius);
+  box-shadow: var(--ki-search-view-shadow);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  max-block-size: none;
+}
+
+.modal[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.modal .bar {
+  border-radius: 0;
+  border-block-end: var(--ki-typography-visually-hidden-size) solid var(--ki-search-view-divider);
+  color: inherit;
+  background-color: transparent;
+  background-image: none;
+  backdrop-filter: none;
+}
+
+:host(:dir(rtl)) .back ki-icon {
+  transform: scaleX(-1);
+}
+
+.view-content {
+  padding-block: var(--ki-layout-spacing-xs);
+}
+
+.modal .view-content {
+  overflow: auto;
+}
+
+.bar:has(input:focus-visible),
+button:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  gap: var(--ki-layout-spacing-xl);
+  min-block-size: max(var(--ki-density-target-min), var(--ki-search-control-size));
+  padding-block: var(--ki-layout-spacing-sm);
+  padding-inline: var(--ki-layout-spacing-3xl);
+  text-align: start;
+  cursor: pointer;
+}
+
+.row-text {
+  display: grid;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--ki-typography-size-body-1);
+}
+
+.row small,
+#recent-label {
+  color: var(--ki-search-view-supporting-fg);
+  font-size: var(--ki-typography-size-caption-2);
+}
+
+.row[aria-selected="true"] {
+  color: var(--ki-search-option-active-fg);
+  background-color: var(--ki-search-option-active-bg);
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+.row[aria-selected="true"] small {
+  color: var(--ki-search-option-active-supporting-fg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover,
+  .icon-action:hover {
+    color: var(--ki-search-option-active-fg);
+    background-color: var(--ki-search-option-active-bg);
+  }
+
+  .row:hover small {
+    color: var(--ki-search-option-active-supporting-fg);
+  }
+}
+
+mark {
+  color: inherit;
+  background-color: transparent;
+  font-weight: var(--ki-typography-weight-body-bold);
+}
+
+#recent-label {
+  margin: 0;
+  padding-block-start: var(--ki-layout-spacing-md);
+  padding-inline: var(--ki-layout-spacing-3xl);
+  font-family: var(--ki-search-group-heading-family);
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+.recent-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  padding-inline-end: var(--ki-layout-spacing-xs);
+}
+
+.loading,
+[part="results"] {
+  padding-inline: var(--ki-layout-spacing-3xl);
+}
+
+.loading {
+  padding-block: var(--ki-layout-spacing-sm);
+}
+
+.sr-only {
+  position: absolute;
+  inline-size: var(--ki-typography-visually-hidden-size);
+  block-size: var(--ki-typography-visually-hidden-size);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .bar,
+  [part="view"] {
+    border: var(--ki-typography-visually-hidden-size) solid CanvasText;
+  }
+
+  .bar:has(input:focus-visible),
+  button:focus-visible,
+  .row[aria-selected="true"] {
+    outline-color: Highlight;
+  }
+}
