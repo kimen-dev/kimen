@@ -36,6 +36,28 @@ describe('validateUiSpec', () => {
     expect(report.ok).toBe(true);
   });
 
+  it('accepts a submit button in the ki-input action slot', () => {
+    const report = validateUiSpec({
+      version: 1,
+      root: {
+        component: 'ki-input',
+        props: { type: 'search', label: 'Search docs' },
+        slots: {
+          action: [
+            {
+              component: 'ki-button',
+              props: { size: 'sm', type: 'submit' },
+              slots: { '': ['Search'] },
+            },
+          ],
+        },
+      },
+    });
+
+    expect(report.issues).toEqual([]);
+    expect(report.ok).toBe(true);
+  });
+
   it('S5 rejects an unknown component naming it as outside the catalog', () => {
     const report = validateUiSpec({
       version: 1,

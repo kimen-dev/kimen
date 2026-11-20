@@ -1,11 +1,30 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
-  "visual": { "material3Dark": true },
-  "budgetGroup": { "members": ["ki-search", "ki-search-suggestion"] },
+  "visual": {
+    "material3Dark": true
+  },
+  "budgetGroup": {
+    "members": ["ki-search", "ki-search-suggestion"]
+  },
   "sizeBudget": {
-    "mcpApps": { "raw": 22481, "gzip": 6056, "brotli": 4481 },
-    "mcpServer": { "raw": 34829, "gzip": 8716, "brotli": 5481 }
+    "mcpApps": {
+      "raw": 22019,
+      "gzip": 5889,
+      "brotli": 4261
+    },
+    "mcpServer": {
+      "raw": 34359,
+      "gzip": 8100,
+      "brotli": 4969
+    },
+    "tokenStylesheets": {
+      "onmars": 153
+    }
   }
 }

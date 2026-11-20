@@ -1,0 +1,21 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as MessageStories from '../ki-message.stories';
+
+<Meta of={MessageStories} name="Examples" />
+
+# Message examples
+
+## Roles and streaming
+
+<Canvas of={MessageStories.Playground} />
+<Controls of={MessageStories.Playground} />
+
+## Custom avatar and actions
+
+<Canvas of={MessageStories.CustomAvatarAndActions} />
+
+## Right-to-left layout
+
+<Canvas of={MessageStories.RightToLeft} />
+
+[Read the Conversation guide](?path=/docs/docs-components-ki-conversation--docs)
