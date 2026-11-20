@@ -862,6 +862,20 @@
         "$value": "22.5rem",
         "$description": "Width of a toast (issue #353, spec 049): one size of its own, between the surface steps xs (20rem) and sm (24rem)."
       },
+      "sidebar": {
+        "width": {
+          "$value": "15rem",
+          "$description": "Expanded sidebar inline size."
+        },
+        "rail-width": {
+          "$value": "4rem",
+          "$description": "Collapsed sidebar inline size."
+        },
+        "row-height": {
+          "$value": "2.25rem",
+          "$description": "Default navigation row block size."
+        }
+      },
       "surface": {
         "xxs": {
           "$value": "18rem",

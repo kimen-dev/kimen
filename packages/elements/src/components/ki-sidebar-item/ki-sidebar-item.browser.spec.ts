@@ -120,9 +120,11 @@ it('S11 preserves a current marker and the unread dot in forced colors', async (
     await expect.element(page.getByRole('link', { name: 'Inbox, 12 new' })).toBeVisible();
     const link = part(item, 'item');
     const counter = part(item, 'count').querySelector('ki-counter');
-    await expect.poll(() => !!counter?.shadowRoot?.querySelector('[part="indicator"]')).toBe(true);
-    const dot = counter?.shadowRoot?.querySelector('[part="indicator"]');
+    const indicator = () => counter?.shadowRoot?.querySelector('[part="indicator"]');
+    await expect.poll(() => Boolean(indicator())).toBe(true);
+    const dot = indicator();
     if (!dot) throw new Error('Missing count marker');
+    expect(dot.getBoundingClientRect().width).toBeGreaterThan(0);
     expect(getComputedStyle(link).textDecorationLine).toBe('underline');
     expect(getComputedStyle(dot).backgroundColor).not.toBe(getComputedStyle(link).backgroundColor);
   } finally {
@@ -139,6 +141,8 @@ it('keeps the focused link when collapsed is assigned by the application', async
   const sidebar = fixture.querySelector<HTMLElement & { collapsed: boolean }>('ki-sidebar');
   if (!sidebar) throw new Error('Missing sidebar fixture');
   sidebar.collapsed = true;
-  await expect.poll(() => part(item, 'count').querySelector('ki-counter')?.dot).toBe(true);
+  await expect
+    .poll(() => part(item, 'count').querySelector('ki-counter')?.hasAttribute('dot'))
+    .toBe(true);
   expect(item.shadowRoot?.activeElement).toBe(link);
 });

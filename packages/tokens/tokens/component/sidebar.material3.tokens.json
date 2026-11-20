@@ -1,0 +1,22 @@
+{
+  "ki": {
+    "sidebar": {
+      "radius": {
+        "$value": "{ki.corner.navigation-panel}",
+        "$description": "Material 3 navigation panel corner."
+      },
+      "item": {
+        "radius": {
+          "$value": "{ki.corner.navigation-row}",
+          "$description": "Material 3 row corner."
+        }
+      },
+      "group": {
+        "font-family": {
+          "$value": "{ki.typography.family.heading}",
+          "$description": "Material 3 group heading typeface."
+        }
+      }
+    }
+  }
+}

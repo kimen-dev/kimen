@@ -20,5 +20,7 @@ describe('sidebar count and label', () => {
       '12 unread in {count} items',
     );
     expect(formatSidebarLabel('Inbox', undefined, '{label}, {count} new')).toBe('Inbox');
+    expect(formatSidebarLabel('Inbox', 2, '{count} pending')).toBe('Inbox, 2 new');
+    expect(formatSidebarLabel('Inbox', 2, '{label}')).toBe('Inbox, 2 new');
   });
 });

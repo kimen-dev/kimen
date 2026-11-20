@@ -5,9 +5,10 @@
   Both default to false. `collapse-label` and `expand-label` localize the
   toggle. The default slot accepts items and groups. `brand` and `footer`
   accept application-owned content.
-- `storage-key` enables browser-local persistence for an application-specific
-  profile key. `ki-sidebar-change` exposes `{ collapsed: boolean }` after
-  a user toggle. Assigning `collapsed` is silent.
+- Set the JavaScript `preference` property to `{ storageKey: string }` for
+  browser-local persistence scoped to a profile. Catalog documents carry the
+  transient mode and toggle event. `ki-sidebar-change` exposes
+  `{ collapsed: boolean }` after a user toggle. Assigning `collapsed` is silent.
 - `ki-sidebar-group` labels a list using its `label` heading. Supply one
   or more items in its default slot.
 - `ki-sidebar-item` takes the route name in its default slot. `href`

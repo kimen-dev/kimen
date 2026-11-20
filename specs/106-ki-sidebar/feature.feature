@@ -57,7 +57,7 @@ Feature: Sidebar navigation for grouped application sections
 
   # S9
   Scenario: Coarse pointers get larger sidebar targets
-    Given a sidebar on a coarse-pointer device
+    Given a sidebar in a touch-density region on a coarse-pointer device
     When the user opens its icon rail
     Then the collapse control and links each retain a 44 pixel target at the default text size
 

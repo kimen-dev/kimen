@@ -21,7 +21,10 @@ beforeAll(() => {
 
 afterEach(async () => {
   fixture.replaceChildren();
-  for (const key of preferences) localStorage.removeItem(key);
+  for (const key of preferences) {
+    localStorage.removeItem(key);
+    localStorage.removeItem(`kimen.sidebar:${key}`);
+  }
   await parkPointer();
 });
 afterAll(() => {
@@ -29,15 +32,16 @@ afterAll(() => {
   fixture.remove();
 });
 
-function mount(extra = ''): HTMLElement {
-  fixture.innerHTML = `<ki-sidebar collapsible ${extra}>
+function mount(storageKey?: string): HTMLElement {
+  const sidebar = document.createElement('ki-sidebar');
+  sidebar.setAttribute('collapsible', '');
+  if (storageKey) Object.assign(sidebar, { preference: { storageKey } });
+  sidebar.innerHTML = `
     <span slot="brand">Kimen</span>
     <ki-sidebar-item href="#home" current>Home</ki-sidebar-item>
     <ki-sidebar-item href="#inbox" count="12">Inbox</ki-sidebar-item>
-    <button slot="footer" type="button" tabindex="0">Ana Garcia</button>
-  </ki-sidebar>`;
-  const sidebar = fixture.querySelector('ki-sidebar');
-  if (!sidebar) throw new Error('Missing sidebar fixture');
+    <button slot="footer" type="button" tabindex="0">Ana Garcia</button>`;
+  fixture.replaceChildren(sidebar);
   return sidebar;
 }
 
@@ -58,18 +62,20 @@ it('S1 shows brand, expanded count and footer in layout order', async () => {
 });
 
 it('S2 restores the user toggle under its profile storage key only', async () => {
-  mount(`storage-key="${preferences[0]}"`);
+  localStorage.setItem(preferences[0], 'application data');
+  mount(preferences[0]);
   await userEvent.click(page.getByRole('button', { name: 'Collapse sidebar' }));
   await expect.element(page.getByRole('button', { name: 'Expand sidebar' })).toBeVisible();
-  mount(`storage-key="${preferences[0]}"`);
+  mount(preferences[0]);
   await expect.element(page.getByRole('button', { name: 'Expand sidebar' })).toBeVisible();
-  mount(`storage-key="${preferences[1]}"`);
+  mount(preferences[1]);
   await expect.element(page.getByRole('button', { name: 'Collapse sidebar' })).toBeVisible();
+  expect(localStorage.getItem(preferences[0])).toBe('application data');
 });
 
 it('S4 retains focus on the same toggle and reports a single user change', async () => {
   const sidebar = mount();
-  const change = vi.fn<(event: CustomEvent<{ collapsed: boolean }>) => void>();
+  const change = vi.fn<(event: Event) => void>();
   sidebar.addEventListener('ki-sidebar-change', change);
   const control = page.getByRole('button', { name: 'Collapse sidebar' });
   await expect.element(control).toHaveAttribute('aria-expanded', 'true');
@@ -81,7 +87,7 @@ it('S4 retains focus on the same toggle and reports a single user change', async
   expect(sidebar.shadowRoot?.activeElement).toBe(button);
   expect(expand.element()).toBe(button);
   expect(change).toHaveBeenCalledTimes(1);
-  expect(change.mock.calls[0]?.[0].detail).toEqual({ collapsed: true });
+  expect(change.mock.calls[0]?.[0]).toMatchObject({ detail: { collapsed: true } });
 });
 
 it('S12 changes to rail width without animations under reduced motion', async () => {

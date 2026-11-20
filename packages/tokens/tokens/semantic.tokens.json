@@ -1692,6 +1692,14 @@
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
       },
+      "navigation-panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner of a side navigation panel."
+      },
+      "navigation-row": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner of a side navigation row."
+      },
       "activity-mark": {
         "$value": "{ki.radius.round}",
         "$description": "Round corners for rings and typing dots."
@@ -1876,6 +1884,21 @@
       "dot": {
         "$value": "{ki.space.sm}",
         "$description": "Diameter of a typing dot at its full size."
+      }
+    },
+    "side-navigation": {
+      "$type": "dimension",
+      "width": {
+        "$value": "{ki.size.sidebar.width}",
+        "$description": "Inline size of the expanded side navigation."
+      },
+      "rail-width": {
+        "$value": "{ki.size.sidebar.rail-width}",
+        "$description": "Inline size of side navigation in its compact mode."
+      },
+      "row-height": {
+        "$value": "{ki.size.sidebar.row-height}",
+        "$description": "Base navigation target height before density adjustment."
       }
     },
     "layout": {

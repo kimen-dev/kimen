@@ -68,7 +68,7 @@ Feature: Sidebar navigation for grouped application sections
 
   # S9
   Scenario: Coarse pointers get larger sidebar targets
-    Given a sidebar on a coarse-pointer device
+    Given a sidebar in a touch-density region on a coarse-pointer device
     When the user opens its icon rail
     Then the collapse control and links each retain a 44 pixel target at the default text size
 
@@ -118,7 +118,7 @@ Feature: Sidebar navigation for grouped application sections
 
 ## Interpretations (agent's choice, pending founder confirmation)
 
-- The application supplies an optional `storage-key` scoped to its profile and
+- The application supplies an optional JavaScript `preference` property with a `storageKey` scoped to its profile and
   sidebar. The sidebar restores the saved value on initialization, persists
   user toggles and reports them through `ki-sidebar-change`. Without a key,
   the application can persist the event's state itself.
@@ -127,9 +127,15 @@ Feature: Sidebar navigation for grouped application sections
   item label. An item without a destination is static content.
 - Positive finite counts are rounded down, the complete count goes in the
   localized link name in both layouts, and nonpositive counts have no marker.
+  Counter caps the painted pill at 99+, while the link name retains the full count.
+- The rail uses the shipped tooltip. Direct imports register it alongside the
+  Sidebar tags to keep the standalone composite within its bundle budget.
 - The application supplies an accessible account trigger and owns the menu and
   the compact presentation of its footer content. The brand is shown in the
   expanded sidebar and hidden in the rail.
 - Groups use level-two headings. The heading stays available to assistive
   technology when the sidebar is collapsed. The layout changes without
   animation.
+- Resting items and group headings use semantic supporting ink. It matches
+  medium-emphasis text in standard mode and strengthens it in contrast-more.
+  Larger touch targets follow Kimen's opt-in region density.

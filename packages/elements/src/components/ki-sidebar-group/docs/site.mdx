@@ -1,0 +1,19 @@
+---
+title: ki-sidebar-group
+description: A labelled list of related sidebar destinations.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Place related destinations in a group inside a Sidebar. Its heading names the
+list in both expanded and collapsed modes.
+
+<Demo code={`<ki-sidebar label="Main">
+  <ki-sidebar-group label="Workspace">
+    <ki-sidebar-item href="#members" current>Members</ki-sidebar-item>
+    <ki-sidebar-item href="#billing">Billing</ki-sidebar-item>
+  </ki-sidebar-group>
+</ki-sidebar>`} />
+
+<CemApi tag="ki-sidebar-group" />
