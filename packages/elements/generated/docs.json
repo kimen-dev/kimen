@@ -3125,9 +3125,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-timeline-item"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-timeline-item": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -8791,6 +8797,421 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-timeline/ki-timeline.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-timeline",
+      "docs": "A chronological list of activity, audit records, or steps from a run.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "present chronological events with independently readable summaries,\noptional times and details, including new entries in a live feed."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "offer a selectable command list, control the current step of a\ntask, or represent progress toward completion."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-timeline-item children."
+        },
+        {
+          "name": "part",
+          "text": "list - Named native ordered list."
+        },
+        {
+          "name": "part",
+          "text": "item - Native list entry including the connector to the next event."
+        },
+        {
+          "name": "part",
+          "text": "announcements - Polite region for batches of new event summaries."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-line - Connector colour."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-line-width - Connector width."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-dot-size - Marker diameter, used to position the connector."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-gap - Gap between rows and between each marker and summary."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-timeline examples\n\n## Show deployment activity\n\n```html\n<ki-timeline id=\"activity\" label=\"Deployment activity\">\n  <ki-timeline-item icon-name=\"git-merge\" tone=\"primary\" datetime=\"2024-11-19T10:41:00Z\">\n    Luis Perez merged fix/search-index\n  </ki-timeline-item>\n  <ki-timeline-item icon-name=\"circle-alert\" tone=\"danger\" datetime=\"2024-11-19T10:20:00Z\">\n    Preview deploy failed\n  </ki-timeline-item>\n</ki-timeline>\n```\n\n```js\nimport '@kimen/elements/icons/circle-alert';\nimport '@kimen/elements/icons/git-merge';\nimport { defineCustomElement as defineTimeline } from '@kimen/elements/ki-timeline';\nimport { defineCustomElement as defineTimelineItem } from '@kimen/elements/ki-timeline-item';\n\ndefineTimeline();\ndefineTimelineItem();\n```\n\nGive the list a short name, and describe each event in words. The timeline\nsorts its direct items by `datetime`. The default is newest first. Set\n`order=\"oldest-first\"` for a history that starts at the beginning.\n\n## Add an event to a live feed\n\n```js\nconst activity = document.querySelector('#activity');\nconst item = document.createElement('ki-timeline-item');\nitem.setAttribute('datetime', new Date().toISOString());\nitem.textContent = 'Preview deployment completed';\nactivity.append(item);\n```\n\nThe list updates its order and announces nearby additions together. The\nmessage comes from the event's default slot.\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the ordered list.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "order",
+          "type": "\"newest-first\" | \"oldest-first\"",
+          "complexType": {
+            "original": "TimelineOrder",
+            "resolved": "\"newest-first\" | \"oldest-first\"",
+            "references": {
+              "TimelineOrder": {
+                "location": "import",
+                "path": "./ki-timeline.time",
+                "id": "src/components/ki-timeline/ki-timeline.time.ts::TimelineOrder",
+                "referenceLocation": "TimelineOrder"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "order",
+          "reflectToAttr": false,
+          "docs": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'newest-first'"
+            }
+          ],
+          "default": "'newest-first'",
+          "values": [
+            {
+              "value": "newest-first",
+              "type": "string"
+            },
+            {
+              "value": "oldest-first",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-timeline-item children."
+        }
+      ],
+      "parts": [
+        {
+          "name": "announcements",
+          "docs": "Polite region for batches of new event summaries."
+        },
+        {
+          "name": "item",
+          "docs": "Native list entry including the connector to the next event."
+        },
+        {
+          "name": "list",
+          "docs": "Named native ordered list."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-timeline-item/ki-timeline-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-timeline-item",
+      "docs": "One event in a timeline, with an optional time and details disclosure.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "describe an activity, audit, or run event inside a ki-timeline."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "convey the outcome only through marker colour, or use the marker\nas a control. Put actions in the event content or details."
+        },
+        {
+          "name": "slot",
+          "text": "- Event summary. Include important status information in the text."
+        },
+        {
+          "name": "slot",
+          "text": "start - Decorative avatar or other noninteractive marker in place of the icon."
+        },
+        {
+          "name": "slot",
+          "text": "details - Additional event information in a native details disclosure."
+        },
+        {
+          "name": "part",
+          "text": "dot - Decorative event marker."
+        },
+        {
+          "name": "part",
+          "text": "content - Event summary, time and disclosure container."
+        },
+        {
+          "name": "part",
+          "text": "time - Native time element for a valid ISO date."
+        },
+        {
+          "name": "part",
+          "text": "summary - Keyboard-accessible details control."
+        },
+        {
+          "name": "part",
+          "text": "details - Native details disclosure."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-dot-bg - Neutral marker fill."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-dot-fg - Neutral marker ink."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-dot-bg-image - Optional marker background image."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-dot-backdrop-filter - Optional filter behind the marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-time-bg - Timestamp fill."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-time-fg - Timestamp ink."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-timeline-item-fg - Event summary and details ink."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-timeline-item examples\n\n## Add an avatar and expandable details\n\n```html\n<ki-timeline label=\"Order updates\" order=\"oldest-first\">\n  <ki-timeline-item datetime=\"2024-11-19\">\n    <ki-avatar slot=\"start\" initials=\"ML\" size=\"xs\"></ki-avatar>\n    Mina Lee packed the order\n  </ki-timeline-item>\n  <ki-timeline-item datetime=\"2024-11-20T11:45:00Z\" details-label=\"Carrier details\">\n    Dispatch confirmed\n    <div slot=\"details\">The parcel is with the carrier.</div>\n  </ki-timeline-item>\n</ki-timeline>\n```\n\nKeep identity and status in the event text. Use the decorative `start`\nslot for an avatar or use `icon-name` with an imported Lucide glyph. If you\nuse direct imports, register `ki-avatar` when you use it in the slot.\n\nUse `details-label` to localize or describe the disclosure. The control\nappears only when the event supplies details. The main event text stays\nvisible while details are collapsed.\n"
+      },
+      "props": [
+        {
+          "name": "datetime",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "datetime",
+          "reflectToAttr": true,
+          "docs": "ISO date or date-time. Invalid or missing dates have no time label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "detailsLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "details-label",
+          "reflectToAttr": false,
+          "docs": "Label of the details control when the details slot is populated.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Details'"
+            }
+          ],
+          "default": "'Details'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Decorative Lucide icon name, registered by the caller's per-icon import.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
+          "complexType": {
+            "original": "TimelineTone",
+            "resolved": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
+            "references": {
+              "TimelineTone": {
+                "location": "local",
+                "path": "src/components/ki-timeline-item/ki-timeline-item.tsx",
+                "id": "src/components/ki-timeline-item/ki-timeline-item.tsx::TimelineTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": false,
+          "docs": "Marker tone. The event text carries the meaning.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "value": "warning",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Event summary. Include important status information in the text."
+        },
+        {
+          "name": "details",
+          "docs": "Additional event information in a native details disclosure."
+        },
+        {
+          "name": "start",
+          "docs": "Decorative avatar or other noninteractive marker in place of the icon."
+        }
+      ],
+      "parts": [
+        {
+          "name": "content",
+          "docs": "Event summary, time and disclosure container."
+        },
+        {
+          "name": "details",
+          "docs": "Native details disclosure."
+        },
+        {
+          "name": "dot",
+          "docs": "Decorative event marker."
+        },
+        {
+          "name": "summary",
+          "docs": "Keyboard-accessible details control."
+        },
+        {
+          "name": "time",
+          "docs": "Native time element for a valid ISO date."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-timeline-item": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-toast/ki-toast.tsx",
       "encapsulation": "shadow",
       "tag": "ki-toast",
@@ -9766,6 +10187,11 @@
       "docstring": "",
       "path": "src/components/ki-textarea/ki-textarea.tsx"
     },
+    "src/components/ki-timeline-item/ki-timeline-item.tsx::TimelineTone": {
+      "declaration": "export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-timeline-item/ki-timeline-item.tsx"
+    },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
@@ -9775,6 +10201,11 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
+    },
+    "src/components/ki-timeline/ki-timeline.time.ts::TimelineOrder": {
+      "declaration": "export type TimelineOrder = 'newest-first' | 'oldest-first';",
+      "docstring": "",
+      "path": "src/components/ki-timeline/ki-timeline.time.ts"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",

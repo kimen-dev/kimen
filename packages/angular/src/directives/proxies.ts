@@ -44,6 +44,8 @@ import { defineCustomElement as defineKiTab } from '@kimen/elements/components/k
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/ki-tabs.js';
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
+import { defineCustomElement as defineKiTimeline } from '@kimen/elements/components/ki-timeline.js';
+import { defineCustomElement as defineKiTimelineItem } from '@kimen/elements/components/ki-timeline-item.js';
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
@@ -971,6 +973,52 @@ export class KiTextarea {
 
 
 export declare interface KiTextarea extends Components.KiTextarea {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiTimeline,
+  inputs: ['label', 'order']
+})
+@Component({
+  selector: 'ki-timeline',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label', 'order'],
+})
+export class KiTimeline {
+  protected el: HTMLKiTimelineElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiTimeline extends Components.KiTimeline {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiTimelineItem,
+  inputs: ['datetime', 'detailsLabel', 'iconName', 'tone']
+})
+@Component({
+  selector: 'ki-timeline-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['datetime', 'detailsLabel', 'iconName', 'tone'],
+})
+export class KiTimelineItem {
+  protected el: HTMLKiTimelineItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiTimelineItem extends Components.KiTimelineItem {}
 
 
 @ProxyCmp({

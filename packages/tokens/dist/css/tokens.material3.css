@@ -694,6 +694,9 @@
   --ki-textarea-sm-radius:var(--ki-radius-component-xs);
   --ki-textarea-lg-radius:var(--ki-radius-component-xs);
   --ki-textarea-xl-radius:var(--ki-radius-component-xs);
+  --ki-timeline-dot-success-bg:var(--ki-surface-success-base-em);
+  --ki-timeline-dot-warning-bg:var(--ki-surface-warning-base-em);
+  --ki-timeline-dot-danger-bg:var(--ki-surface-danger-base-em);
   --ki-toast-bg:var(--ki-surface-s2);
   --ki-toast-border:var(--ki-outline-none);
   --ki-toast-shadow:var(--ki-elevation-e3);

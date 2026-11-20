@@ -42,6 +42,8 @@ export { KiTab } from './ki-tab.js';
 export { KiTabPanel } from './ki-tab-panel.js';
 export { KiTabs } from './ki-tabs.js';
 export { KiTextarea } from './ki-textarea.js';
+export { KiTimeline } from './ki-timeline.js';
+export { KiTimelineItem } from './ki-timeline-item.js';
 export { KiToast } from './ki-toast.js';
 export { KiToaster } from './ki-toaster.js';
 export { KiTooltip } from './ki-tooltip.js';

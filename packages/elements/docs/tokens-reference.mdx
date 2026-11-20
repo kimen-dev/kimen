@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 408 semantic
-and 1319 component tokens. Values are the resolved **onmars light**
+and 1340 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1983,6 +1983,32 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-xs-padding-block` | `0.5rem` | dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px). |
 | `--ki-textarea-xs-padding-inline` | `0.375rem` | dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px). |
 | `--ki-textarea-xs-radius` | `6px` | dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs). |
+
+### `ki-timeline`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-timeline-dot-backdrop-filter` | `none` | Complete backdrop filter behind a timeline marker, off by default. |
+| `--ki-timeline-dot-bg` | `#f3f0eb` | Fill of the neutral timeline marker. |
+| `--ki-timeline-dot-bg-image` | `none` | Optional decorative image over the timeline marker fill. |
+| `--ki-timeline-dot-danger-bg` | `#ffebeb` | Fill of the danger timeline marker. |
+| `--ki-timeline-dot-danger-fg` | `#c21a45` | Glyph color on the danger timeline marker. |
+| `--ki-timeline-dot-fg` | `#5e5953` | Glyph color on the neutral timeline marker. |
+| `--ki-timeline-dot-icon-size` | `0.875rem` | Size of the decorative glyph inside the timeline marker. |
+| `--ki-timeline-dot-primary-bg` | `#ffebe5` | Fill of the primary timeline marker. |
+| `--ki-timeline-dot-primary-fg` | `#9a3715` | Glyph color on the primary timeline marker. |
+| `--ki-timeline-dot-radius` | `1000px` | Round corners of the timeline marker. |
+| `--ki-timeline-dot-size` | `1.75rem` | Diameter of the timeline marker. |
+| `--ki-timeline-dot-success-bg` | `#e4f4ea` | Fill of the success timeline marker. |
+| `--ki-timeline-dot-success-fg` | `#2c6a2b` | Glyph color on the success timeline marker. |
+| `--ki-timeline-dot-warning-bg` | `#fcf0dc` | Fill of the warning timeline marker. |
+| `--ki-timeline-dot-warning-fg` | `#945b05` | Glyph color on the warning timeline marker. |
+| `--ki-timeline-gap` | `0.75rem` | Space between marker and text and between timeline entries. |
+| `--ki-timeline-item-fg` | `#181613` | Text color of the event summary and details. |
+| `--ki-timeline-line` | `rgba(24, 22, 19, 0.1)` | Color of the decorative line connecting timeline markers. |
+| `--ki-timeline-line-width` | `1px` | Hairline width of the timeline connector. |
+| `--ki-timeline-time-bg` | `rgba(0, 0, 0, 0)` | The timestamp shows the surrounding surface through its transparent background. |
+| `--ki-timeline-time-fg` | `#5e5953` | Text color of the timeline timestamp. |
 
 ### `ki-toast`
 

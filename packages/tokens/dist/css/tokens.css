@@ -2278,6 +2278,27 @@
   --ki-textarea-xl-line-height:var(--ki-typography-line-height-title-2);
   --ki-textarea-xl-label-font-size:var(--ki-typography-size-body-2);
   --ki-textarea-xl-label-line-height:var(--ki-typography-line-height-body-2);
+  --ki-timeline-dot-size:var(--ki-layout-spacing-9xl);
+  --ki-timeline-dot-radius:var(--ki-corner-activity-mark);
+  --ki-timeline-dot-icon-size:var(--ki-layout-spacing-2xl);
+  --ki-timeline-dot-bg:var(--ki-surface-s2);
+  --ki-timeline-dot-fg:var(--ki-text-med-em);
+  --ki-timeline-dot-bg-image:var(--ki-surface-image-none);
+  --ki-timeline-dot-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-timeline-dot-primary-bg:var(--ki-surface-primary-low-em);
+  --ki-timeline-dot-primary-fg:var(--ki-text-primary-on-primary-light);
+  --ki-timeline-dot-success-bg:var(--ki-surface-success-tint);
+  --ki-timeline-dot-success-fg:var(--ki-text-success-high-em);
+  --ki-timeline-dot-warning-bg:var(--ki-surface-warning-tint);
+  --ki-timeline-dot-warning-fg:var(--ki-text-warning-high-em);
+  --ki-timeline-dot-danger-bg:var(--ki-surface-danger-tint);
+  --ki-timeline-dot-danger-fg:var(--ki-text-danger-high-em);
+  --ki-timeline-line:var(--ki-outline-low-em);
+  --ki-timeline-line-width:var(--ki-control-border-width);
+  --ki-timeline-time-bg:var(--ki-surface-transparent);
+  --ki-timeline-time-fg:var(--ki-text-med-em);
+  --ki-timeline-gap:var(--ki-layout-spacing-xl);
+  --ki-timeline-item-fg:var(--ki-text-high-em);
   --ki-toast-bg:var(--ki-surface-s1);
   --ki-toast-bg-image:none;
   --ki-toast-backdrop-filter:none;
@@ -2423,6 +2444,9 @@
     --ki-list-item-divider-color:var(--ki-outline-strong);
     --ki-select-placeholder-fg:light-dark(var(--ki-text-supporting),var(--ki-inverse-white-alpha-80));
     --ki-tabs-divider-color:var(--ki-outline-strong);
+    --ki-timeline-dot-fg:var(--ki-text-supporting);
+    --ki-timeline-line:var(--ki-outline-strong);
+    --ki-timeline-time-fg:var(--ki-text-supporting);
     --ki-tooltip-border-color:var(--ki-outline-strong);
   }
 }
@@ -2449,5 +2473,8 @@
   --ki-list-item-divider-color:var(--ki-outline-strong);
   --ki-select-placeholder-fg:light-dark(var(--ki-text-supporting),var(--ki-inverse-white-alpha-80));
   --ki-tabs-divider-color:var(--ki-outline-strong);
+  --ki-timeline-dot-fg:var(--ki-text-supporting);
+  --ki-timeline-line:var(--ki-outline-strong);
+  --ki-timeline-time-fg:var(--ki-text-supporting);
   --ki-tooltip-border-color:var(--ki-outline-strong);
 }

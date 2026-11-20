@@ -34,6 +34,8 @@ import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
+import { TimelineOrder } from "./components/ki-timeline/ki-timeline.time";
+import { TimelineTone } from "./components/ki-timeline-item/ki-timeline-item";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
@@ -67,6 +69,8 @@ export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
+export { TimelineOrder } from "./components/ki-timeline/ki-timeline.time";
+export { TimelineTone } from "./components/ki-timeline-item/ki-timeline-item";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
@@ -1434,6 +1438,61 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A chronological list of activity, audit records, or steps from a run.
+     * @whenToUse present chronological events with independently readable summaries,
+     * optional times and details, including new entries in a live feed.
+     * @whenNotToUse offer a selectable command list, control the current step of a
+     * task, or represent progress toward completion.
+     * @cssprop --ki-timeline-line - Connector colour.
+     * @cssprop --ki-timeline-line-width - Connector width.
+     * @cssprop --ki-timeline-dot-size - Marker diameter, used to position the connector.
+     * @cssprop --ki-timeline-gap - Gap between rows and between each marker and summary.
+     */
+    interface KiTimeline {
+        /**
+          * Accessible name of the ordered list.
+         */
+        "label"?: string;
+        /**
+          * Chronological order of valid dates. Ties and undated entries retain source order. Undated entries follow valid dates in either direction.
+          * @default 'newest-first'
+         */
+        "order": TimelineOrder;
+    }
+    /**
+     * One event in a timeline, with an optional time and details disclosure.
+     * @whenToUse describe an activity, audit, or run event inside a ki-timeline.
+     * @whenNotToUse convey the outcome only through marker colour, or use the marker
+     * as a control. Put actions in the event content or details.
+     * @cssprop --ki-timeline-dot-bg - Neutral marker fill.
+     * @cssprop --ki-timeline-dot-fg - Neutral marker ink.
+     * @cssprop --ki-timeline-dot-bg-image - Optional marker background image.
+     * @cssprop --ki-timeline-dot-backdrop-filter - Optional filter behind the marker.
+     * @cssprop --ki-timeline-time-bg - Timestamp fill.
+     * @cssprop --ki-timeline-time-fg - Timestamp ink.
+     * @cssprop --ki-timeline-item-fg - Event summary and details ink.
+     */
+    interface KiTimelineItem {
+        /**
+          * ISO date or date-time. Invalid or missing dates have no time label.
+         */
+        "datetime"?: string;
+        /**
+          * Label of the details control when the details slot is populated.
+          * @default 'Details'
+         */
+        "detailsLabel"?: string;
+        /**
+          * Decorative Lucide icon name, registered by the caller's per-icon import.
+         */
+        "iconName"?: string;
+        /**
+          * Marker tone. The event text carries the meaning.
+          * @default 'neutral'
+         */
+        "tone": TimelineTone;
+    }
+    /**
      * A short, transient message about something the person just did, shown
      * without blocking the page. It leaves on its own after its time, which stops
      * while the person points at the toaster, works inside it or is away from the
@@ -2341,6 +2400,42 @@ declare global {
         prototype: HTMLKiTextareaElement;
         new (): HTMLKiTextareaElement;
     };
+    /**
+     * A chronological list of activity, audit records, or steps from a run.
+     * @whenToUse present chronological events with independently readable summaries,
+     * optional times and details, including new entries in a live feed.
+     * @whenNotToUse offer a selectable command list, control the current step of a
+     * task, or represent progress toward completion.
+     * @cssprop --ki-timeline-line - Connector colour.
+     * @cssprop --ki-timeline-line-width - Connector width.
+     * @cssprop --ki-timeline-dot-size - Marker diameter, used to position the connector.
+     * @cssprop --ki-timeline-gap - Gap between rows and between each marker and summary.
+     */
+    interface HTMLKiTimelineElement extends Components.KiTimeline, HTMLStencilElement {
+    }
+    var HTMLKiTimelineElement: {
+        prototype: HTMLKiTimelineElement;
+        new (): HTMLKiTimelineElement;
+    };
+    /**
+     * One event in a timeline, with an optional time and details disclosure.
+     * @whenToUse describe an activity, audit, or run event inside a ki-timeline.
+     * @whenNotToUse convey the outcome only through marker colour, or use the marker
+     * as a control. Put actions in the event content or details.
+     * @cssprop --ki-timeline-dot-bg - Neutral marker fill.
+     * @cssprop --ki-timeline-dot-fg - Neutral marker ink.
+     * @cssprop --ki-timeline-dot-bg-image - Optional marker background image.
+     * @cssprop --ki-timeline-dot-backdrop-filter - Optional filter behind the marker.
+     * @cssprop --ki-timeline-time-bg - Timestamp fill.
+     * @cssprop --ki-timeline-time-fg - Timestamp ink.
+     * @cssprop --ki-timeline-item-fg - Event summary and details ink.
+     */
+    interface HTMLKiTimelineItemElement extends Components.KiTimelineItem, HTMLStencilElement {
+    }
+    var HTMLKiTimelineItemElement: {
+        prototype: HTMLKiTimelineItemElement;
+        new (): HTMLKiTimelineItemElement;
+    };
     interface HTMLKiToastElementEventMap {
         "ki-dismiss": KiToastDismissDetail;
     }
@@ -2479,6 +2574,8 @@ declare global {
         "ki-tab-panel": HTMLKiTabPanelElement;
         "ki-tabs": HTMLKiTabsElement;
         "ki-textarea": HTMLKiTextareaElement;
+        "ki-timeline": HTMLKiTimelineElement;
+        "ki-timeline-item": HTMLKiTimelineItemElement;
         "ki-toast": HTMLKiToastElement;
         "ki-toaster": HTMLKiToasterElement;
         "ki-tooltip": HTMLKiTooltipElement;
@@ -3902,6 +3999,61 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A chronological list of activity, audit records, or steps from a run.
+     * @whenToUse present chronological events with independently readable summaries,
+     * optional times and details, including new entries in a live feed.
+     * @whenNotToUse offer a selectable command list, control the current step of a
+     * task, or represent progress toward completion.
+     * @cssprop --ki-timeline-line - Connector colour.
+     * @cssprop --ki-timeline-line-width - Connector width.
+     * @cssprop --ki-timeline-dot-size - Marker diameter, used to position the connector.
+     * @cssprop --ki-timeline-gap - Gap between rows and between each marker and summary.
+     */
+    interface KiTimeline {
+        /**
+          * Accessible name of the ordered list.
+         */
+        "label"?: string;
+        /**
+          * Chronological order of valid dates. Ties and undated entries retain source order. Undated entries follow valid dates in either direction.
+          * @default 'newest-first'
+         */
+        "order"?: TimelineOrder;
+    }
+    /**
+     * One event in a timeline, with an optional time and details disclosure.
+     * @whenToUse describe an activity, audit, or run event inside a ki-timeline.
+     * @whenNotToUse convey the outcome only through marker colour, or use the marker
+     * as a control. Put actions in the event content or details.
+     * @cssprop --ki-timeline-dot-bg - Neutral marker fill.
+     * @cssprop --ki-timeline-dot-fg - Neutral marker ink.
+     * @cssprop --ki-timeline-dot-bg-image - Optional marker background image.
+     * @cssprop --ki-timeline-dot-backdrop-filter - Optional filter behind the marker.
+     * @cssprop --ki-timeline-time-bg - Timestamp fill.
+     * @cssprop --ki-timeline-time-fg - Timestamp ink.
+     * @cssprop --ki-timeline-item-fg - Event summary and details ink.
+     */
+    interface KiTimelineItem {
+        /**
+          * ISO date or date-time. Invalid or missing dates have no time label.
+         */
+        "datetime"?: string;
+        /**
+          * Label of the details control when the details slot is populated.
+          * @default 'Details'
+         */
+        "detailsLabel"?: string;
+        /**
+          * Decorative Lucide icon name, registered by the caller's per-icon import.
+         */
+        "iconName"?: string;
+        /**
+          * Marker tone. The event text carries the meaning.
+          * @default 'neutral'
+         */
+        "tone"?: TimelineTone;
+    }
+    /**
      * A short, transient message about something the person just did, shown
      * without blocking the page. It leaves on its own after its time, which stops
      * while the person points at the toaster, works inside it or is away from the
@@ -4294,6 +4446,16 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiTimelineAttributes {
+        "label": string;
+        "order": TimelineOrder;
+    }
+    interface KiTimelineItemAttributes {
+        "datetime": string;
+        "iconName": string;
+        "tone": TimelineTone;
+        "detailsLabel": string;
+    }
     interface KiToastAttributes {
         "tone": KiToastTone | (string & {});
         "heading": string;
@@ -4355,6 +4517,8 @@ declare namespace LocalJSX {
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
         "ki-tabs": Omit<KiTabs, keyof KiTabsAttributes> & { [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
+        "ki-timeline": Omit<KiTimeline, keyof KiTimelineAttributes> & { [K in keyof KiTimeline & keyof KiTimelineAttributes]?: KiTimeline[K] } & { [K in keyof KiTimeline & keyof KiTimelineAttributes as `attr:${K}`]?: KiTimelineAttributes[K] } & { [K in keyof KiTimeline & keyof KiTimelineAttributes as `prop:${K}`]?: KiTimeline[K] };
+        "ki-timeline-item": Omit<KiTimelineItem, keyof KiTimelineItemAttributes> & { [K in keyof KiTimelineItem & keyof KiTimelineItemAttributes]?: KiTimelineItem[K] } & { [K in keyof KiTimelineItem & keyof KiTimelineItemAttributes as `attr:${K}`]?: KiTimelineItemAttributes[K] } & { [K in keyof KiTimelineItem & keyof KiTimelineItemAttributes as `prop:${K}`]?: KiTimelineItem[K] };
         "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
         "ki-toaster": Omit<KiToaster, keyof KiToasterAttributes> & { [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K] };
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
@@ -4832,6 +4996,32 @@ declare module "@stencil/core" {
              * event carries those.
              */
             "ki-textarea": LocalJSX.IntrinsicElements["ki-textarea"] & JSXBase.HTMLAttributes<HTMLKiTextareaElement>;
+            /**
+             * A chronological list of activity, audit records, or steps from a run.
+             * @whenToUse present chronological events with independently readable summaries,
+             * optional times and details, including new entries in a live feed.
+             * @whenNotToUse offer a selectable command list, control the current step of a
+             * task, or represent progress toward completion.
+             * @cssprop --ki-timeline-line - Connector colour.
+             * @cssprop --ki-timeline-line-width - Connector width.
+             * @cssprop --ki-timeline-dot-size - Marker diameter, used to position the connector.
+             * @cssprop --ki-timeline-gap - Gap between rows and between each marker and summary.
+             */
+            "ki-timeline": LocalJSX.IntrinsicElements["ki-timeline"] & JSXBase.HTMLAttributes<HTMLKiTimelineElement>;
+            /**
+             * One event in a timeline, with an optional time and details disclosure.
+             * @whenToUse describe an activity, audit, or run event inside a ki-timeline.
+             * @whenNotToUse convey the outcome only through marker colour, or use the marker
+             * as a control. Put actions in the event content or details.
+             * @cssprop --ki-timeline-dot-bg - Neutral marker fill.
+             * @cssprop --ki-timeline-dot-fg - Neutral marker ink.
+             * @cssprop --ki-timeline-dot-bg-image - Optional marker background image.
+             * @cssprop --ki-timeline-dot-backdrop-filter - Optional filter behind the marker.
+             * @cssprop --ki-timeline-time-bg - Timestamp fill.
+             * @cssprop --ki-timeline-time-fg - Timestamp ink.
+             * @cssprop --ki-timeline-item-fg - Event summary and details ink.
+             */
+            "ki-timeline-item": LocalJSX.IntrinsicElements["ki-timeline-item"] & JSXBase.HTMLAttributes<HTMLKiTimelineItemElement>;
             /**
              * A short, transient message about something the person just did, shown
              * without blocking the page. It leaves on its own after its time, which stops

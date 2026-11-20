@@ -12317,6 +12317,414 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-timeline.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTimeline",
+          "customElement": true,
+          "tagName": "ki-timeline",
+          "description": "A chronological list of activity, audit records, or steps from a run.",
+          "whenToUse": "present chronological events with independently readable summaries,\noptional times and details, including new entries in a live feed.",
+          "whenNotToUse": "offer a selectable command list, control the current step of a\ntask, or represent progress toward completion.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the ordered list."
+            },
+            {
+              "name": "order",
+              "fieldName": "order",
+              "type": {
+                "text": "\"newest-first\" | \"oldest-first\""
+              },
+              "default": "'newest-first'",
+              "description": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the ordered list.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "order",
+              "privacy": "public",
+              "type": {
+                "text": "\"newest-first\" | \"oldest-first\""
+              },
+              "default": "'newest-first'",
+              "description": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
+              "attribute": "order",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Direct ki-timeline-item children."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "announcements",
+              "description": "Polite region for batches of new event summaries."
+            },
+            {
+              "name": "item",
+              "description": "Native list entry including the connector to the next event."
+            },
+            {
+              "name": "list",
+              "description": "Named native ordered list."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-timeline-dot-size",
+              "description": "Diameter of the timeline marker."
+            },
+            {
+              "name": "--ki-timeline-gap",
+              "description": "Space between marker and text and between timeline entries."
+            },
+            {
+              "name": "--ki-timeline-item-fg",
+              "description": "Text color of the event summary and details."
+            },
+            {
+              "name": "--ki-timeline-line",
+              "description": "Color of the decorative line connecting timeline markers."
+            },
+            {
+              "name": "--ki-timeline-line-width",
+              "description": "Hairline width of the timeline connector."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTimeline",
+          "declaration": {
+            "name": "KiTimeline",
+            "module": "dist/components/ki-timeline.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-timeline",
+          "declaration": {
+            "name": "KiTimeline",
+            "module": "dist/components/ki-timeline.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-timeline-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTimelineItem",
+          "customElement": true,
+          "tagName": "ki-timeline-item",
+          "description": "One event in a timeline, with an optional time and details disclosure.",
+          "whenToUse": "describe an activity, audit, or run event inside a ki-timeline.",
+          "whenNotToUse": "convey the outcome only through marker colour, or use the marker\nas a control. Put actions in the event content or details.",
+          "attributes": [
+            {
+              "name": "datetime",
+              "fieldName": "datetime",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO date or date-time. Invalid or missing dates have no time label."
+            },
+            {
+              "name": "details-label",
+              "fieldName": "detailsLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Details'",
+              "description": "Label of the details control when the details slot is populated."
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Decorative Lucide icon name, registered by the caller's per-icon import."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Marker tone. The event text carries the meaning."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "datetime",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO date or date-time. Invalid or missing dates have no time label.",
+              "attribute": "datetime",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "detailsLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Details'",
+              "description": "Label of the details control when the details slot is populated.",
+              "attribute": "details-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Decorative Lucide icon name, registered by the caller's per-icon import.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Marker tone. The event text carries the meaning.",
+              "attribute": "tone",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Event summary. Include important status information in the text."
+            },
+            {
+              "name": "details",
+              "description": "Additional event information in a native details disclosure."
+            },
+            {
+              "name": "start",
+              "description": "Decorative avatar or other noninteractive marker in place of the icon."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "content",
+              "description": "Event summary, time and disclosure container."
+            },
+            {
+              "name": "details",
+              "description": "Native details disclosure."
+            },
+            {
+              "name": "dot",
+              "description": "Decorative event marker."
+            },
+            {
+              "name": "summary",
+              "description": "Keyboard-accessible details control."
+            },
+            {
+              "name": "time",
+              "description": "Native time element for a valid ISO date."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xxs",
+              "description": "The xxs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-timeline-dot-backdrop-filter",
+              "description": "Complete backdrop filter behind a timeline marker, off by default."
+            },
+            {
+              "name": "--ki-timeline-dot-bg",
+              "description": "Fill of the neutral timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-bg-image",
+              "description": "Optional decorative image over the timeline marker fill."
+            },
+            {
+              "name": "--ki-timeline-dot-danger-bg",
+              "description": "Fill of the danger timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-danger-fg",
+              "description": "Glyph color on the danger timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-fg",
+              "description": "Glyph color on the neutral timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-icon-size",
+              "description": "Size of the decorative glyph inside the timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-primary-bg",
+              "description": "Fill of the primary timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-primary-fg",
+              "description": "Glyph color on the primary timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-radius",
+              "description": "Round corners of the timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-size",
+              "description": "Diameter of the timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-success-bg",
+              "description": "Fill of the success timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-success-fg",
+              "description": "Glyph color on the success timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-warning-bg",
+              "description": "Fill of the warning timeline marker."
+            },
+            {
+              "name": "--ki-timeline-dot-warning-fg",
+              "description": "Glyph color on the warning timeline marker."
+            },
+            {
+              "name": "--ki-timeline-gap",
+              "description": "Space between marker and text and between timeline entries."
+            },
+            {
+              "name": "--ki-timeline-item-fg",
+              "description": "Text color of the event summary and details."
+            },
+            {
+              "name": "--ki-timeline-line-width",
+              "description": "Hairline width of the timeline connector."
+            },
+            {
+              "name": "--ki-timeline-time-bg",
+              "description": "The timestamp shows the surrounding surface through its transparent background."
+            },
+            {
+              "name": "--ki-timeline-time-fg",
+              "description": "Text color of the timeline timestamp."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-line-height-para",
+              "description": "semantic dimension for typography line height para."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTimelineItem",
+          "declaration": {
+            "name": "KiTimelineItem",
+            "module": "dist/components/ki-timeline-item.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-timeline-item",
+          "declaration": {
+            "name": "KiTimelineItem",
+            "module": "dist/components/ki-timeline-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-toast.js",
       "declarations": [
         {

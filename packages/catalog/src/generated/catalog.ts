@@ -1787,6 +1787,70 @@ export const catalogData = {
       "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
       "whenToUse": "free-form text longer than one line, such as comments,\ndescriptions, messages, delivery notes, or addresses when paired with a\nmatching `autocomplete` purpose."
     },
+    "ki-timeline": {
+      "description": "A chronological list of activity, audit records, or steps from a run.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the ordered list."
+        },
+        "order": {
+          "type": "enum",
+          "values": [
+            "newest-first",
+            "oldest-first"
+          ],
+          "description": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
+          "default": "newest-first"
+        }
+      },
+      "slots": {
+        "": "Direct ki-timeline-item children."
+      },
+      "tag": "ki-timeline",
+      "whenNotToUse": "offer a selectable command list, control the current step of a\ntask, or represent progress toward completion.",
+      "whenToUse": "present chronological events with independently readable summaries,\noptional times and details, including new entries in a live feed."
+    },
+    "ki-timeline-item": {
+      "description": "One event in a timeline, with an optional time and details disclosure.",
+      "events": {},
+      "props": {
+        "datetime": {
+          "type": "string",
+          "description": "ISO date or date-time. Invalid or missing dates have no time label."
+        },
+        "details-label": {
+          "type": "string",
+          "description": "Label of the details control when the details slot is populated.",
+          "default": "Details"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Decorative Lucide icon name, registered by the caller's per-icon import."
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral",
+            "primary",
+            "success",
+            "warning"
+          ],
+          "description": "Marker tone. The event text carries the meaning.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Event summary. Include important status information in the text.",
+        "details": "Additional event information in a native details disclosure.",
+        "start": "Decorative avatar or other noninteractive marker in place of the icon."
+      },
+      "tag": "ki-timeline-item",
+      "whenNotToUse": "convey the outcome only through marker colour, or use the marker\nas a control. Put actions in the event content or details.",
+      "whenToUse": "describe an activity, audit, or run event inside a ki-timeline."
+    },
     "ki-toast": {
       "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
       "events": {
