@@ -1844,6 +1844,14 @@
       "popup-option": {
         "$value": "{ki.radius.component.sm}",
         "$description": "Corner radius of an option inside a floating panel."
+      },
+      "navigation-panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner of a side navigation panel."
+      },
+      "navigation-row": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner of a side navigation row."
       }
     },
     "motion": {
@@ -2556,6 +2564,21 @@
       "option-min-block-size": {
         "$value": "{ki.space.10xl}",
         "$description": "Minimum block size for a row in a floating list, before density adjustments."
+      }
+    },
+    "side-navigation": {
+      "$type": "dimension",
+      "width": {
+        "$value": "{ki.size.sidebar.width}",
+        "$description": "Inline size of the expanded side navigation."
+      },
+      "rail-width": {
+        "$value": "{ki.size.sidebar.rail-width}",
+        "$description": "Inline size of side navigation in its compact mode."
+      },
+      "row-height": {
+        "$value": "{ki.size.sidebar.row-height}",
+        "$description": "Base navigation target height before density adjustment."
       }
     }
   }

@@ -1,0 +1,58 @@
+---
+title: ki-sidebar
+description: Grouped navigation for applications with an optional icon rail.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use Sidebar when an application has more than five destinations or groups its
+destinations. Use top navigation for a few sections, and a drawer or mobile
+navigation at narrow widths.
+
+<Demo code={`<ki-sidebar label="Main" collapsible>
+  <span slot="brand">Kimen</span>
+  <ki-sidebar-item href="#home" current>
+    <svg slot="start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M3 10 12 3l9 7v11H3z" />
+    </svg>
+    Home
+  </ki-sidebar-item>
+  <ki-sidebar-item href="#inbox" count="12">
+    <svg slot="start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M4 5h16v14H4zM4 12h4l2 3h4l2-3h4" />
+    </svg>
+    Inbox
+  </ki-sidebar-item>
+  <ki-sidebar-group label="Workspace">
+    <ki-sidebar-item href="#members">Members</ki-sidebar-item>
+  </ki-sidebar-group>
+  <ki-button slot="footer" variant="ghost" type="button" aria-label="Account: Ana Garcia">AG</ki-button>
+</ki-sidebar>`} />
+
+## Use the rail
+
+The toggle keeps focus when the layout changes. Links keep their accessible
+names and navigation behavior in the rail, and show their names in tooltips
+on hover and keyboard focus. A counted item shows a pill in the panel and a
+dot in the rail. Localize its accessible name using `count-label`.
+
+Set `preference.storageKey` to a stable key per profile to remember a visitor's
+mode in this browser. The `ki-sidebar-change` event also reports
+`detail.collapsed` for application-owned persistence. Give each sidebar a
+distinct landmark label when several share a page.
+
+## Compose account access
+
+The `footer` slot accepts your account trigger. Connect it to the
+application's menu and give it a name that works at rail width. Keep the
+trigger available in both modes. The `brand` slot is for expanded
+presentational branding.
+
+## API reference
+
+<CemApi tag="ki-sidebar" />
+<CemApi tag="ki-sidebar-group" />
+<CemApi tag="ki-sidebar-item" />
+
+[Open Sidebar in Storybook](/storybook/?path=/docs/docs-components-ki-sidebar--docs)
