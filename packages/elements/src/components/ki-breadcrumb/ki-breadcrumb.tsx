@@ -9,7 +9,6 @@ import { typeaheadIndex } from '../../utils/typeahead';
 import { formatMoreLabel, getCollapsedRange } from './ki-breadcrumb.layout';
 
 const ITEM_TAG = 'ki-breadcrumb-item';
-const OVERFLOW_ID = 'breadcrumb-overflow';
 const DEFAULT_LABEL = 'Breadcrumb';
 const DEFAULT_MORE_LABEL = 'Show {n} more levels';
 const positionMenu = anchoredOverlayPosition({ placement: 'bottom-start' });
@@ -236,7 +235,6 @@ export class KiBreadcrumb {
           aria-label={name}
           aria-haspopup="menu"
           aria-expanded={this.open ? 'true' : 'false'}
-          aria-controls={OVERFLOW_ID}
           onClick={this.handleTriggerClick}
           onKeyDown={this.handleTriggerKeyDown}
         >
@@ -247,7 +245,6 @@ export class KiBreadcrumb {
           ref={(menu) => {
             this.menu = menu;
           }}
-          id={OVERFLOW_ID}
           role="menu"
           tabIndex={-1}
           aria-label={name}

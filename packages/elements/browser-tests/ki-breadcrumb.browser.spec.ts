@@ -271,6 +271,7 @@ it('S6 exposes ordered navigation, announces the count and expanded state, and p
   await trigger.click();
 
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');
+  await expect.element(page.getByRole('menu', { name: 'Show 3 more levels' })).toBeVisible();
   await expect.element(menuItem('Projects')).toBeVisible();
   await expectAccessible();
 });
