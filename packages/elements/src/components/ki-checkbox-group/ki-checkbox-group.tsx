@@ -256,10 +256,17 @@ export class KiCheckboxGroup {
     };
     const authoredMessage = fieldValidationMessage(this.customValidity, this.errorText, '');
     const message = authoredMessage || this.nativeValidationMessage(count, limit);
-    const anchor = this.options.find(
-      (option) => !option.disabled && !option.hidden && checkboxGroupFor(option) === this.group,
-    );
-    this.internals.setValidity(flags, message, anchor);
+    // The browser reports the error at the first option's own native
+    // checkbox, as ki-radio-group does at a radio's. Never at the option
+    // element: WebKit on Linux draws its validation bubble inside the
+    // anchor's shadow root, and on a ki-checkbox that replaced the option's
+    // own shadow root, checkbox and all.
+    const anchor = this.options
+      .find(
+        (option) => !option.disabled && !option.hidden && checkboxGroupFor(option) === this.group,
+      )
+      ?.shadowRoot?.querySelector('input');
+    this.internals.setValidity(flags, message, anchor ?? undefined);
     this.message = this.internals.validationMessage;
   }
 
