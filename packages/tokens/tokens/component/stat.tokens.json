@@ -10,7 +10,7 @@
         "$description": "Optional image layered over the metric surface."
       },
       "backdrop-filter": {
-        "$value": "{ki.effect.component.backdrop-filter-none}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete optional filter behind the metric surface."
       },
       "border": {

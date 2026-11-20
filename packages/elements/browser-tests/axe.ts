@@ -149,6 +149,36 @@ interface IncompleteDetail {
   allowed: boolean;
 }
 
+function hasVerifiedMenuPopup(control: HTMLElement | undefined): boolean {
+  if (
+    !control?.matches('button, [role="button"]') ||
+    control.getAttribute('aria-haspopup') !== 'menu'
+  ) {
+    return false;
+  }
+  const directId = control.getAttribute('aria-controls');
+  const root = control.getRootNode();
+  const trigger = directId ? control : root instanceof ShadowRoot ? root.host : null;
+  const tree = trigger?.getRootNode();
+  const id = trigger?.getAttribute('aria-controls');
+  if (!trigger?.id || !id || !(tree instanceof Document || tree instanceof ShadowRoot)) {
+    return false;
+  }
+  const menu = tree.getElementById(id);
+  if (menu?.localName !== 'ki-menu' || menu.getAttribute('anchor') !== trigger.id) {
+    return false;
+  }
+  const targets = control.ariaControlsElements;
+  if (!directId && (targets?.length !== 1 || targets[0] !== menu)) {
+    return false;
+  }
+  const popup = menu.shadowRoot?.querySelector('[part="popup"][popover]');
+  return Boolean(
+    popup?.querySelector('[role="menu"]') &&
+      control.getAttribute('aria-expanded') === String(popup.matches(':popover-open')),
+  );
+}
+
 function detailsOf(results: axe.AxeResults): IncompleteDetail[] {
   return results.incomplete.flatMap((finding) =>
     finding.nodes.flatMap((node) =>
@@ -158,7 +188,12 @@ function detailsOf(results: axe.AxeResults): IncompleteDetail[] {
             ? String((check.data as { messageKey?: unknown }).messageKey)
             : 'unspecified';
         const key = `${finding.id}/${messageKey}`;
-        return { key, target: String(node.target), allowed: key in UNDECIDABLE };
+        // Axe asks for manual review whenever an invoker has both popup and
+        // controls semantics, even when the reference is valid. Verify the
+        // actual menu reference and expanded state on the reported control.
+        const verified =
+          key === 'aria-valid-attr-value/controlsWithinPopup' && hasVerifiedMenuPopup(node.element);
+        return { key, target: String(node.target), allowed: verified || key in UNDECIDABLE };
       }),
     ),
   );
@@ -230,13 +265,13 @@ export async function expectAccessible(
     await parkPointer();
   }
   await settleEntryMotion();
-  const results = await axe.run(context);
+  const results = await axe.run(context, { elementRef: true });
   expect(results.violations).toEqual([]);
 
   const untriaged = detailsOf(results).filter((detail) => !detail.allowed);
   expect(
     untriaged,
-    `axe could not decide, and nothing in UNDECIDABLE covers it: ${untriaged
+    `Unverified axe findings: ${untriaged
       .map((detail) => `${detail.key} on ${detail.target}`)
       .join('; ')}`,
   ).toEqual([]);

@@ -1,0 +1,326 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the group unavailable and excludes it from form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "error-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized message displayed for a failing selection limit.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "help-text": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of guidance displayed under the choices.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible legend and accessible name for these choices.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum number of checked options, as a nonnegative integer.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum number of checked options, as a nonnegative integer.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key repeated for each selected option.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "orientation": {
+        "default": "'vertical'",
+        "deprecatedSince": null,
+        "description": "Lays choices out vertically or in a wrapping horizontal row.",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      }
+    },
+    "cssProperties": {
+      "--ki-checkbox-group-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between checkbox options and the group label and messages.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-group-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio group component for label font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-group-label-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "font weight used by the radio group component for label font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-radio-group-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-danger-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text danger high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-high-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text high em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-med-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text med em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-supporting": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-normal": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A form-associated group of independently selectable checkboxes.",
+    "events": {
+      "ki-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fires once for a committed user toggle with a copy of the current selection.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiCheckboxGroupChangeDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Polite error message shown in place of the help.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "help": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Guidance below the options and the group's accessible description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Legend that names the group.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the group unavailable and excludes it from form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "errorText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Localized message displayed for a failing selection limit.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "helpText": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One line of guidance displayed under the choices.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible legend and accessible name for these choices.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum number of checked options, as a nonnegative integer.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum number of checked options, as a nonnegative integer.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form-data key repeated for each selected option.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "orientation": {
+        "default": "'vertical'",
+        "deprecatedSince": null,
+        "description": "Lays choices out vertically or in a wrapping horizontal row.",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      "value": {
+        "default": "this.defaultValue",
+        "deprecatedSince": null,
+        "description": "Selected values in option order. Assign a fresh array to update selection\nsilently. Initial checked options seed the group when this property is\nomitted. In HTML and catalog specs use `checked` on each selected option.",
+        "replacement": null,
+        "required": false,
+        "type": "string[]"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-checkbox-group.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-checkbox-group.d.ts",
+    "symbols": {
+      "KiCheckboxGroup": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiCheckboxGroup extends Components.KiCheckboxGroup, HTMLElement {\n}\nexport const KiCheckboxGroup: {\n    prototype: KiCheckboxGroup;\n    new (): KiCheckboxGroup;\n};"
+      },
+      "KiCheckboxGroupChangeDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiCheckboxGroupChangeDetail {\n    value: string[];\n}"
+      },
+      "KiCheckboxGroupOrientation": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiCheckboxGroupOrientation = 'vertical' | 'horizontal';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-checkbox-group.js"
+  }
+}

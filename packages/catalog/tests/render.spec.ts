@@ -592,3 +592,86 @@ describe('renderUiSpec — the host may restrict URL props to declared origins',
     );
   });
 });
+
+describe('renderUiSpec — clickable ki-card', () => {
+  const title = { component: 'h3', slots: { '': ['Search index rebuild'] } };
+
+  it('renders the card variant and accepts a safe relative href', () => {
+    const result = renderUiSpec(
+      {
+        version: 1,
+        root: {
+          component: 'ki-card',
+          props: { variant: 'outlined', href: '/incidents/42' },
+          slots: { header: [title] },
+        },
+      },
+      { surface },
+    );
+    expect(result.ok).toBe(true);
+    expect(surface.querySelector('ki-card')?.getAttribute('href')).toBe('/incidents/42');
+    expect(surface.querySelector('ki-card')?.getAttribute('variant')).toBe('outlined');
+    expect(surface.querySelector('h3')?.getAttribute('slot')).toBe('header');
+  });
+
+  it('applies the existing URL policy to card destinations', () => {
+    const result = renderUiSpec(
+      {
+        version: 1,
+        root: {
+          component: 'ki-card',
+          props: { href: 'data:text/plain,invalid' },
+          slots: { header: [title] },
+        },
+      },
+      { surface },
+    );
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics[0]?.rule).toBe('url-scheme');
+    expect(surface.childNodes).toHaveLength(0);
+  });
+
+  it('dispatches the card action only when declared', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    const root = {
+      component: 'ki-card',
+      props: { interactive: true },
+      slots: { header: [title] },
+      action: 'rebuild',
+    };
+    expect(renderUiSpec({ version: 1, root }, { surface, onAction }).ok).toBe(false);
+    expect(surface.childNodes).toHaveLength(0);
+    expect(renderUiSpec({ version: 1, root, actions: ['rebuild'] }, { surface, onAction }).ok).toBe(
+      true,
+    );
+    const card = surface.querySelector('ki-card');
+    if (!card) throw new Error('Card fixture did not render');
+    expect(card.hasAttribute('interactive')).toBe(true);
+    card.dispatchEvent(new CustomEvent('ki-activate', { bubbles: true }));
+    expect(onAction).toHaveBeenCalledTimes(1);
+  });
+  it('lets a card destination take precedence over a declared action', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    const result = renderUiSpec(
+      {
+        version: 1,
+        actions: ['rebuild'],
+        root: {
+          component: 'ki-card',
+          action: 'rebuild',
+          props: { href: '/incidents/42', interactive: true },
+          slots: { header: [title] },
+        },
+      },
+      { surface, onAction },
+    );
+    expect(result.ok).toBe(true);
+    const card = surface.querySelector('ki-card');
+    if (!card) throw new Error('Card fixture did not render');
+    expect(card.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))).toBe(
+      true,
+    );
+    card.dispatchEvent(new CustomEvent('ki-activate', { bubbles: true }));
+    expect(onAction).not.toHaveBeenCalled();
+  });
+});

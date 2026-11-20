@@ -723,3 +723,28 @@ test("more contrast thickens every component's focus ring, whichever theme overr
     failures.join('\n'),
   );
 });
+
+test('transparent link ink is checked on raised page surfaces', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root { --ki-link-bg: transparent; --ki-link-fg: #707070; }`,
+  );
+  assert.ok(failures.some((failure) => failure.includes('--ki-link-bg over --ki-surface-s2')));
+});
+
+test('component icon ink is checked against its adjacent component background at 3:1', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root {
+      --ki-note-warning-bg: #ffffff;
+      --ki-note-warning-fg: #111111;
+      --ki-note-warning-icon: #dddddd;
+      --ki-note-info-bg: #ffffff;
+      --ki-note-info-fg: #111111;
+      --ki-note-info-icon: #888888;
+    }`,
+  ).filter((failure) => failure.includes('--ki-note-') && failure.includes('-icon on'));
+
+  assert.equal(failures.length, 6);
+  assert.ok(failures.every((failure) => /--ki-note-warning-icon on .* \(min 3\)/u.test(failure)));
+});

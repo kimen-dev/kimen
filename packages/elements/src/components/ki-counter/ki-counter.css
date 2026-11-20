@@ -1,0 +1,90 @@
+:host {
+  display: inline-grid;
+  font-family: var(--ki-counter-font-family);
+  pointer-events: none;
+}
+
+:host([hidden]),
+:host([data-empty]) {
+  display: none;
+}
+
+:host([for]) {
+  --_counter-outset: var(--ki-counter-ring-width);
+
+  position: fixed;
+  inset-block-start: calc(var(--_counter-anchor-block) - var(--_counter-outset));
+  inset-inline-end: calc(var(--_counter-anchor-inline) - var(--_counter-outset));
+}
+
+:host([for][dot]) {
+  --_counter-outset: 0;
+}
+
+:host([for]:not([data-anchor-positioned])) {
+  visibility: hidden;
+}
+
+:host([data-anchor-rtl]) {
+  direction: rtl;
+}
+
+:host([data-anchor-positioned]:not([data-anchor-rtl])) {
+  direction: ltr;
+}
+
+[part="indicator"] {
+  --_counter-bg: var(--ki-counter-bg);
+  --_counter-fg: var(--ki-counter-fg);
+
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-inline-size: var(--ki-counter-size);
+  min-block-size: var(--ki-counter-size);
+  padding-inline: var(--ki-counter-padding-inline);
+  border: var(--ki-counter-ring-width) solid var(--ki-counter-ring);
+  border-radius: var(--ki-counter-radius);
+  background-color: var(--_counter-bg);
+  background-image: var(--ki-counter-bg-image);
+  backdrop-filter: var(--ki-counter-backdrop-filter);
+  color: var(--_counter-fg);
+  font-size: var(--ki-counter-font-size);
+  font-weight: var(--ki-counter-font-weight);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+:host([tone="primary"]) [part="indicator"] {
+  --_counter-bg: var(--ki-counter-primary-bg);
+  --_counter-fg: var(--ki-counter-primary-fg);
+}
+
+:host([tone="success"]) [part="indicator"] {
+  --_counter-bg: var(--ki-counter-success-bg);
+  --_counter-fg: var(--ki-counter-success-fg);
+}
+
+:host([tone="neutral"]) [part="indicator"] {
+  --_counter-bg: var(--ki-counter-neutral-bg);
+  --_counter-fg: var(--ki-counter-neutral-fg);
+}
+
+:host([dot]) [part="indicator"] {
+  min-inline-size: var(--ki-counter-dot-size);
+  min-block-size: var(--ki-counter-dot-size);
+  padding-inline: 0;
+}
+
+@media (forced-colors: active) {
+  [part="indicator"] {
+    /* The fill is the only shape cue in dot mode. Use the user's colors. */
+    forced-color-adjust: none;
+    background-color: CanvasText;
+    background-image: none;
+    backdrop-filter: none;
+    border-color: Canvas;
+    color: Canvas;
+  }
+}
