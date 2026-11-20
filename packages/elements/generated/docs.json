@@ -303,6 +303,573 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-audio/ki-audio.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-audio",
+      "docs": "A recording player with play, pause, a seek timeline, elapsed and total time,\nplayback speed, mute, and an optional transcript link.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "play a voice note, interview, or other prerecorded audio that a person deliberately starts. Provide a title and the equivalent text transcript URL when available."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "show video (use ki-video), play an ambient loop or start playback automatically, or record audio."
+        },
+        {
+          "name": "part",
+          "text": "player - The named group and themed surface."
+        },
+        {
+          "name": "part",
+          "text": "title - Visible recording title."
+        },
+        {
+          "name": "part",
+          "text": "play - Play and pause control."
+        },
+        {
+          "name": "part",
+          "text": "seek - Native seek slider."
+        },
+        {
+          "name": "part",
+          "text": "track - Timeline rail."
+        },
+        {
+          "name": "part",
+          "text": "progress - Played portion of the timeline rail."
+        },
+        {
+          "name": "part",
+          "text": "time - Elapsed and total time readouts."
+        },
+        {
+          "name": "part",
+          "text": "speed - Native playback-rate picker."
+        },
+        {
+          "name": "part",
+          "text": "mute - Mute and unmute control."
+        },
+        {
+          "name": "part",
+          "text": "transcript - Transcript link."
+        },
+        {
+          "name": "part",
+          "text": "status - Playback failure message."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-audio\n\nOffer a voice note or recording with a clear title and an adjacent transcript.\n\n```html\n<ki-audio\n  src=\"/ep4.mp3\"\n  title=\"Interview, episode 4\"\n  transcript-href=\"/ep4/transcript\"\n></ki-audio>\n```\n\nSet the speeds and translate the control labels in the language of the page.\nThe seek announcement substitutes the formatted elapsed and total times into\nthe `time-label` template.\n\n```html\n<ki-audio\n  lang=\"es\"\n  src=\"/notas/7.mp3\"\n  title=\"Nota de voz\"\n  rates=\"0.75,1,1.5\"\n  play-label=\"Reproducir\"\n  pause-label=\"Pausar\"\n  seek-label=\"Posición\"\n  time-label=\"{elapsed} de {duration}\"\n  speed-label=\"Velocidad\"\n  mute-label=\"Silenciar\"\n  unmute-label=\"Activar sonido\"\n  transcript-href=\"/notas/7/transcripcion\"\n  transcript-label=\"Leer la transcripción\"\n  error-label=\"No se pudo reproducir el audio\"\n></ki-audio>\n```\n\nListen on the player for `play`, `pause`, `timeupdate` and `ended`. For\nexample, an experiment can observe completion after the listener reaches the\nend of a recording.\n\n```js\nconst player = document.querySelector('ki-audio');\nplayer?.addEventListener('ended', () => {\n  document.querySelector('#next-recording')?.removeAttribute('hidden');\n});\n```\n"
+      },
+      "props": [
+        {
+          "name": "audioTitle",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "title",
+          "reflectToAttr": false,
+          "docs": "Visible title and accessible name of the player.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Audio player'"
+            }
+          ],
+          "default": "'Audio player'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-label",
+          "reflectToAttr": false,
+          "docs": "Message shown if playback cannot start or the recording fails to load.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Audio could not be played'"
+            }
+          ],
+          "default": "'Audio could not be played'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "muteLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "mute-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the mute button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Mute'"
+            }
+          ],
+          "default": "'Mute'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pauseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pause-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the pause button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Pause'"
+            }
+          ],
+          "default": "'Pause'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "playLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "play-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the play button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Play'"
+            }
+          ],
+          "default": "'Play'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "rates",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "rates",
+          "reflectToAttr": false,
+          "docs": "Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'0.75,1,1.25,1.5,2'"
+            }
+          ],
+          "default": "'0.75,1,1.25,1.5,2'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "seekLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "seek-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the timeline slider.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Seek'"
+            }
+          ],
+          "default": "'Seek'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "speedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "speed-label",
+          "reflectToAttr": false,
+          "docs": "Accessible label for the playback-rate picker.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Playback speed'"
+            }
+          ],
+          "default": "'Playback speed'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "src",
+          "reflectToAttr": false,
+          "docs": "Source URL for the recording. Use an HTTP(S) URL or a relative URL.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "timeLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "time-label",
+          "reflectToAttr": false,
+          "docs": "Accessible time template. Keep the {elapsed} and {duration} placeholders.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{elapsed} of {duration}'"
+            }
+          ],
+          "default": "'{elapsed} of {duration}'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "transcriptHref",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "transcript-href",
+          "reflectToAttr": false,
+          "docs": "URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "transcriptLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "transcript-label",
+          "reflectToAttr": false,
+          "docs": "Text of the transcript link.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Read the transcript'"
+            }
+          ],
+          "default": "'Read the transcript'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "unmuteLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "unmute-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the unmute button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Unmute'"
+            }
+          ],
+          "default": "'Unmute'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ended",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Forwarded when the recording ends. The catalog can bind a declared action here.",
+          "docsTags": []
+        },
+        {
+          "event": "pause",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Forwarded when native playback pauses.",
+          "docsTags": []
+        },
+        {
+          "event": "play",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Forwarded when the native playback state switches to playing.",
+          "docsTags": []
+        },
+        {
+          "event": "timeupdate",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Forwarded when the native playback position is updated.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "mute",
+          "docs": "Mute and unmute control."
+        },
+        {
+          "name": "play",
+          "docs": "Play and pause control."
+        },
+        {
+          "name": "player",
+          "docs": "The named group and themed surface."
+        },
+        {
+          "name": "progress",
+          "docs": "Played portion of the timeline rail."
+        },
+        {
+          "name": "seek",
+          "docs": "Native seek slider."
+        },
+        {
+          "name": "speed",
+          "docs": "Native playback-rate picker."
+        },
+        {
+          "name": "status",
+          "docs": "Playback failure message."
+        },
+        {
+          "name": "time",
+          "docs": "Elapsed and total time readouts."
+        },
+        {
+          "name": "title",
+          "docs": "Visible recording title."
+        },
+        {
+          "name": "track",
+          "docs": "Timeline rail."
+        },
+        {
+          "name": "transcript",
+          "docs": "Transcript link."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-audio": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-avatar/ki-avatar.tsx",
       "encapsulation": "shadow",
       "tag": "ki-avatar",
@@ -5464,6 +6031,7 @@
       "parts": [],
       "states": [],
       "dependents": [
+        "ki-audio",
         "ki-copy-button",
         "ki-empty-state",
         "ki-fab",
@@ -5471,6 +6039,9 @@
       ],
       "dependencies": [],
       "dependencyGraph": {
+        "ki-audio": [
+          "ki-icon"
+        ],
         "ki-copy-button": [
           "ki-icon"
         ],
@@ -13981,7 +14552,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only content (a future audio component),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility — so preexisting `autoplay` and `controls` on the\nslotted media are cleared when it arrives, and any playback already\nrunning is paused (FR-003; the native chrome returns at activation)."
+          "text": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only recordings (use ki-audio),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility — so preexisting `autoplay` and `controls` on the\nslotted media are cleared when it arrives, and any playback already\nrunning is paused (FR-003; the native chrome returns at activation)."
         },
         {
           "name": "slot",

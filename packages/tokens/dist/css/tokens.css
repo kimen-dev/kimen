@@ -958,6 +958,7 @@
   --ki-corner-activity-mark:var(--ki-radius-round);
   --ki-corner-action-frame:var(--ki-radius-component-md);
   --ki-corner-action-seam:var(--ki-radius-0);
+  --ki-corner-media-panel:var(--ki-radius-big-component-xs);
   --ki-motion-duration-fast:var(--ki-duration-fast);
   --ki-motion-duration-short-1:var(--ki-duration-fast);
   --ki-motion-duration-short-2:var(--ki-duration-fast);
@@ -1078,6 +1079,7 @@
   --ki-empty-layout-max-width:var(--ki-size-surface-sm);
   --ki-empty-layout-tile-regular:var(--ki-space-14xl);
   --ki-empty-layout-tile-compact:var(--ki-space-12xl);
+  --ki-media-layout-inline-max:var(--ki-size-surface-md);
   --ki-scale-control-track-height:var(--ki-space-xs);
   --ki-scale-control-thumb-border-width:var(--ki-space-xxs);
   --ki-scale-control-mark-width:var(--ki-size-border-hairline);
@@ -1143,6 +1145,16 @@
   --ki-alert-icon-radius:var(--ki-radius-round);
   --ki-alert-icon-glyph-size:var(--ki-space-5xl);
   --ki-alert-actions-gap:var(--ki-space-xl);
+  --ki-audio-bg:var(--ki-surface-raised);
+  --ki-audio-fg:var(--ki-text-high-em);
+  --ki-audio-bg-image:var(--ki-surface-image-none);
+  --ki-audio-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-audio-border:var(--ki-outline-low-em);
+  --ki-audio-radius:var(--ki-corner-media-panel);
+  --ki-audio-track-bg:var(--ki-outline-control);
+  --ki-audio-progress-bg:var(--ki-surface-primary-med-em);
+  --ki-audio-title-family:var(--ki-typography-family-heading);
+  --ki-audio-speed-radius:var(--ki-control-radius-item);
   --ki-avatar-group-xxs-overlap:var(--ki-space-md);
   --ki-avatar-group-xxs-counter-padding-inline:var(--ki-space-md);
   --ki-avatar-group-xxs-counter-font-size:var(--ki-typography-size-caption-1);

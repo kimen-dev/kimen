@@ -3,6 +3,7 @@ import * as d from './proxies';
 
 export const DIRECTIVES = [
   d.KiAlert,
+  d.KiAudio,
   d.KiAvatar,
   d.KiAvatarGroup,
   d.KiBadge,

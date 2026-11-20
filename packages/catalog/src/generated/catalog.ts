@@ -193,6 +193,84 @@ export const catalogData = {
       "whenNotToUse": "transient confirmations that expire on their own belong to\n`ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to\nanother element belong to `ki-badge`; blocking decisions belong to\n`ki-dialog`; inline field-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
       "whenToUse": "show a persistent inline message about the state of a page or\nsection, such as a failed save, completed operation, or service notice, that\nremains until the condition is resolved or the person dismisses it. Express\nseverity with `tone`, never custom styling."
     },
+    "ki-audio": {
+      "description": "A recording player with play, pause, a seek timeline, elapsed and total time,\nplayback speed, mute, and an optional transcript link.",
+      "events": {
+        "ended": "Forwarded when the recording ends. The catalog can bind a declared action here."
+      },
+      "props": {
+        "error-label": {
+          "type": "string",
+          "description": "Message shown if playback cannot start or the recording fails to load.",
+          "default": "Audio could not be played"
+        },
+        "mute-label": {
+          "type": "string",
+          "description": "Accessible name of the mute button.",
+          "default": "Mute"
+        },
+        "pause-label": {
+          "type": "string",
+          "description": "Accessible name of the pause button.",
+          "default": "Pause"
+        },
+        "play-label": {
+          "type": "string",
+          "description": "Accessible name of the play button.",
+          "default": "Play"
+        },
+        "rates": {
+          "type": "string",
+          "description": "Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available.",
+          "default": "0.75,1,1.25,1.5,2"
+        },
+        "seek-label": {
+          "type": "string",
+          "description": "Accessible name of the timeline slider.",
+          "default": "Seek"
+        },
+        "speed-label": {
+          "type": "string",
+          "description": "Accessible label for the playback-rate picker.",
+          "default": "Playback speed"
+        },
+        "src": {
+          "type": "string",
+          "description": "Source URL for the recording. Use an HTTP(S) URL or a relative URL.",
+          "required": true,
+          "format": "url"
+        },
+        "time-label": {
+          "type": "string",
+          "description": "Accessible time template. Keep the {elapsed} and {duration} placeholders.",
+          "default": "{elapsed} of {duration}"
+        },
+        "title": {
+          "type": "string",
+          "description": "Visible title and accessible name of the player.",
+          "default": "Audio player"
+        },
+        "transcript-href": {
+          "type": "string",
+          "description": "URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.",
+          "format": "url"
+        },
+        "transcript-label": {
+          "type": "string",
+          "description": "Text of the transcript link.",
+          "default": "Read the transcript"
+        },
+        "unmute-label": {
+          "type": "string",
+          "description": "Accessible name of the unmute button.",
+          "default": "Unmute"
+        }
+      },
+      "slots": {},
+      "tag": "ki-audio",
+      "whenNotToUse": "show video (use ki-video), play an ambient loop or start playback automatically, or record audio.",
+      "whenToUse": "play a voice note, interview, or other prerecorded audio that a person deliberately starts. Provide a title and the equivalent text transcript URL when available."
+    },
     "ki-avatar": {
       "description": "A static identity visual that shows a person or entity at a glance through\na fallback chain: portrait, then initials, then a built-in generic figure.",
       "events": {},
@@ -2721,7 +2799,7 @@ export const catalogData = {
         "": "Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions."
       },
       "tag": "ki-video",
-      "whenNotToUse": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only content (a future audio component),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility — so preexisting `autoplay` and `controls` on the\nslotted media are cleared when it arrives, and any playback already\nrunning is paused (FR-003; the native chrome returns at activation).",
+      "whenNotToUse": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only recordings (use ki-audio),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility — so preexisting `autoplay` and `controls` on the\nslotted media are cleared when it arrives, and any playback already\nrunning is paused (FR-003; the native chrome returns at activation).",
       "whenToUse": "playable content the person deliberately chooses to watch —\nproduct tours, talks, tutorials, announcements — presented as a poster\nwith one play control. Slot exactly one native `<video>` carrying its own\n`poster`, sources and `<track>` captions, omit `controls` (the component\nenables the native chrome the moment the facade yields, FR-002), and give\nthe control a `label` (required: the accessible name of the play button)."
     },
     "p": {

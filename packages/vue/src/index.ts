@@ -6,6 +6,7 @@
  */
 
 export { KiAlert } from './ki-alert.js';
+export { KiAudio } from './ki-audio.js';
 export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';
 export { KiBadge } from './ki-badge.js';

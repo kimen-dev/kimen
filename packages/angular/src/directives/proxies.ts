@@ -7,6 +7,7 @@ import { ProxyCmp } from './angular-component-lib/utils';
 import type { Components } from '@kimen/elements/components';
 
 import { defineCustomElement as defineKiAlert } from '@kimen/elements/components/ki-alert.js';
+import { defineCustomElement as defineKiAudio } from '@kimen/elements/components/ki-audio.js';
 import { defineCustomElement as defineKiAvatar } from '@kimen/elements/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '@kimen/elements/components/ki-avatar-group.js';
 import { defineCustomElement as defineKiBadge } from '@kimen/elements/components/ki-badge.js';
@@ -94,6 +95,31 @@ user closes the alert.
 When NOT to use: do not treat it as a veto point, and do not expect it for
 programmatic `dismissed` changes — it fires only for user activation.
    */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiAudio,
+  inputs: ['audioTitle', 'errorLabel', 'muteLabel', 'pauseLabel', 'playLabel', 'rates', 'seekLabel', 'speedLabel', 'src', 'timeLabel', 'transcriptHref', 'transcriptLabel', 'unmuteLabel']
+})
+@Component({
+  selector: 'ki-audio',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['audioTitle', 'errorLabel', 'muteLabel', 'pauseLabel', 'playLabel', 'rates', 'seekLabel', 'speedLabel', { name: 'src', required: true }, 'timeLabel', 'transcriptHref', 'transcriptLabel', 'unmuteLabel'],
+})
+export class KiAudio {
+  protected el: HTMLKiAudioElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiAudio extends Components.KiAudio {
 }
 
 

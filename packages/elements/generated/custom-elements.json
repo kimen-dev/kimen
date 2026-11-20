@@ -479,6 +479,613 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-audio.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiAudio",
+          "customElement": true,
+          "tagName": "ki-audio",
+          "description": "A recording player with play, pause, a seek timeline, elapsed and total time,\nplayback speed, mute, and an optional transcript link.",
+          "whenToUse": "play a voice note, interview, or other prerecorded audio that a person deliberately starts. Provide a title and the equivalent text transcript URL when available.",
+          "whenNotToUse": "show video (use ki-video), play an ambient loop or start playback automatically, or record audio.",
+          "attributes": [
+            {
+              "name": "title",
+              "fieldName": "audioTitle",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Audio player'",
+              "description": "Visible title and accessible name of the player."
+            },
+            {
+              "name": "error-label",
+              "fieldName": "errorLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Audio could not be played'",
+              "description": "Message shown if playback cannot start or the recording fails to load."
+            },
+            {
+              "name": "mute-label",
+              "fieldName": "muteLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Mute'",
+              "description": "Accessible name of the mute button."
+            },
+            {
+              "name": "pause-label",
+              "fieldName": "pauseLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Pause'",
+              "description": "Accessible name of the pause button."
+            },
+            {
+              "name": "play-label",
+              "fieldName": "playLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Play'",
+              "description": "Accessible name of the play button."
+            },
+            {
+              "name": "rates",
+              "fieldName": "rates",
+              "type": {
+                "text": "string"
+              },
+              "default": "'0.75,1,1.25,1.5,2'",
+              "description": "Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available."
+            },
+            {
+              "name": "seek-label",
+              "fieldName": "seekLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Seek'",
+              "description": "Accessible name of the timeline slider."
+            },
+            {
+              "name": "speed-label",
+              "fieldName": "speedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Playback speed'",
+              "description": "Accessible label for the playback-rate picker."
+            },
+            {
+              "name": "src",
+              "fieldName": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Source URL for the recording. Use an HTTP(S) URL or a relative URL.",
+              "required": true,
+              "format": "url"
+            },
+            {
+              "name": "time-label",
+              "fieldName": "timeLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'{elapsed} of {duration}'",
+              "description": "Accessible time template. Keep the {elapsed} and {duration} placeholders."
+            },
+            {
+              "name": "transcript-href",
+              "fieldName": "transcriptHref",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.",
+              "format": "url"
+            },
+            {
+              "name": "transcript-label",
+              "fieldName": "transcriptLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Read the transcript'",
+              "description": "Text of the transcript link."
+            },
+            {
+              "name": "unmute-label",
+              "fieldName": "unmuteLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Unmute'",
+              "description": "Accessible name of the unmute button."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "audioTitle",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Audio player'",
+              "description": "Visible title and accessible name of the player.",
+              "attribute": "title",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "errorLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Audio could not be played'",
+              "description": "Message shown if playback cannot start or the recording fails to load.",
+              "attribute": "error-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "muteLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Mute'",
+              "description": "Accessible name of the mute button.",
+              "attribute": "mute-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "pauseLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Pause'",
+              "description": "Accessible name of the pause button.",
+              "attribute": "pause-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "playLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Play'",
+              "description": "Accessible name of the play button.",
+              "attribute": "play-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "rates",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'0.75,1,1.25,1.5,2'",
+              "description": "Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available.",
+              "attribute": "rates",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "seekLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Seek'",
+              "description": "Accessible name of the timeline slider.",
+              "attribute": "seek-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "speedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Playback speed'",
+              "description": "Accessible label for the playback-rate picker.",
+              "attribute": "speed-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Source URL for the recording. Use an HTTP(S) URL or a relative URL.",
+              "attribute": "src",
+              "reflects": false,
+              "required": true,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "timeLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'{elapsed} of {duration}'",
+              "description": "Accessible time template. Keep the {elapsed} and {duration} placeholders.",
+              "attribute": "time-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "transcriptHref",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.",
+              "attribute": "transcript-href",
+              "reflects": false,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "transcriptLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Read the transcript'",
+              "description": "Text of the transcript link.",
+              "attribute": "transcript-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "unmuteLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Unmute'",
+              "description": "Accessible name of the unmute button.",
+              "attribute": "unmute-label",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ended",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Forwarded when the recording ends. The catalog can bind a declared action here."
+            },
+            {
+              "name": "pause",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Forwarded when native playback pauses."
+            },
+            {
+              "name": "play",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Forwarded when the native playback state switches to playing."
+            },
+            {
+              "name": "timeupdate",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Forwarded when the native playback position is updated."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "mute",
+              "description": "Mute and unmute control."
+            },
+            {
+              "name": "play",
+              "description": "Play and pause control."
+            },
+            {
+              "name": "player",
+              "description": "The named group and themed surface."
+            },
+            {
+              "name": "progress",
+              "description": "Played portion of the timeline rail."
+            },
+            {
+              "name": "seek",
+              "description": "Native seek slider."
+            },
+            {
+              "name": "speed",
+              "description": "Native playback-rate picker."
+            },
+            {
+              "name": "status",
+              "description": "Playback failure message."
+            },
+            {
+              "name": "time",
+              "description": "Elapsed and total time readouts."
+            },
+            {
+              "name": "title",
+              "description": "Visible recording title."
+            },
+            {
+              "name": "track",
+              "description": "Timeline rail."
+            },
+            {
+              "name": "transcript",
+              "description": "Transcript link."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-audio-backdrop-filter",
+              "description": "Complete backdrop filter applied to the player, off by default."
+            },
+            {
+              "name": "--ki-audio-bg",
+              "description": "Background behind the player and transcript link."
+            },
+            {
+              "name": "--ki-audio-bg-image",
+              "description": "Optional image painted over the player background."
+            },
+            {
+              "name": "--ki-audio-border",
+              "description": "Boundary of the player panel."
+            },
+            {
+              "name": "--ki-audio-fg",
+              "description": "Text on the player background."
+            },
+            {
+              "name": "--ki-audio-progress-bg",
+              "description": "Colour of the elapsed timeline and seek thumb."
+            },
+            {
+              "name": "--ki-audio-radius",
+              "description": "Corner radius of the player panel."
+            },
+            {
+              "name": "--ki-audio-speed-radius",
+              "description": "Corner radius of the playback speed button."
+            },
+            {
+              "name": "--ki-audio-title-family",
+              "description": "Font family of the recording title."
+            },
+            {
+              "name": "--ki-audio-track-bg",
+              "description": "Colour of the inactive timeline."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-bg",
+              "description": "color used by the button component for ghost neutral disabled background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-border",
+              "description": "color used by the button component for ghost neutral disabled border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-fg",
+              "description": "color used by the button component for ghost neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-bg",
+              "description": "color used by the button component for ghost neutral hover background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-border",
+              "description": "color used by the button component for ghost neutral hover border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-fg",
+              "description": "color used by the button component for ghost neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-bg",
+              "description": "color used by the button component for ghost neutral rest background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-border",
+              "description": "color used by the button component for ghost neutral rest border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-fg",
+              "description": "color used by the button component for ghost neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-bg",
+              "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-border",
+              "description": "color used by the button component for primary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-fg",
+              "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-bg",
+              "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-border",
+              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-fg",
+              "description": "color used by the button component for primary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-bg",
+              "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-border",
+              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-fg",
+              "description": "color used by the button component for primary neutral rest foreground."
+            },
+            {
+              "name": "--ki-control-border-width",
+              "description": "Stroke width of the boundary of a compact control."
+            },
+            {
+              "name": "--ki-control-radius-track",
+              "description": "Corner radius of a track containing adjacent controls."
+            },
+            {
+              "name": "--ki-control-size-md",
+              "description": "Medium control track height, 40 CSS px at the default root size."
+            },
+            {
+              "name": "--ki-control-size-sm",
+              "description": "Small control track height, 32 CSS px at the default root size."
+            },
+            {
+              "name": "--ki-corner-activity-mark",
+              "description": "Round corners for rings and typing dots."
+            },
+            {
+              "name": "--ki-corner-inline",
+              "description": "Small radius for an outline around inline content."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-glyph-size-md",
+              "description": "Medium glyph for body content (20px at the default root size)."
+            },
+            {
+              "name": "--ki-glyph-size-sm",
+              "description": "Small glyph for dense layouts (16px at the default root size)."
+            },
+            {
+              "name": "--ki-media-layout-inline-max",
+              "description": "Maximum inline size of a self-contained media control panel."
+            },
+            {
+              "name": "--ki-scale-control-coarse-target",
+              "description": "Minimum grip target when a value scale has a coarse primary pointer."
+            },
+            {
+              "name": "--ki-scale-control-track-height",
+              "description": "Thickness of the inactive rail of a value scale."
+            },
+            {
+              "name": "--ki-spacing-action-inset",
+              "description": "Interior space at the edge of an action surface or divider."
+            },
+            {
+              "name": "--ki-spacing-block",
+              "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
+            },
+            {
+              "name": "--ki-spacing-media-caption",
+              "description": "Block spacing between a media frame and its caption."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-underline-offset",
+              "description": "Gap between text and its underline."
+            },
+            {
+              "name": "--ki-typography-underline-thickness",
+              "description": "Stroke width of a resting text underline."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiAudio",
+          "declaration": {
+            "name": "KiAudio",
+            "module": "dist/components/ki-audio.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-audio",
+          "declaration": {
+            "name": "KiAudio",
+            "module": "dist/components/ki-audio.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-avatar.js",
       "declarations": [
         {
@@ -17932,7 +18539,7 @@
           "tagName": "ki-video",
           "description": "A themed video surface: a calm poster facade with exactly one accessible\nplay control over a slotted native `<video>` element. From the first\nactivation on, playback, scrubbing, volume, captions and fullscreen belong\nto the native player — Kimen ships no custom chrome.",
           "whenToUse": "playable content the person deliberately chooses to watch —\nproduct tours, talks, tutorials, announcements — presented as a poster\nwith one play control. Slot exactly one native `<video>` carrying its own\n`poster`, sources and `<track>` captions, omit `controls` (the component\nenables the native chrome the moment the facade yields, FR-002), and give\nthe control a `label` (required: the accessible name of the play button).",
-          "whenNotToUse": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only content (a future audio component),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility — so preexisting `autoplay` and `controls` on the\nslotted media are cleared when it arrives, and any playback already\nrunning is paused (FR-003; the native chrome returns at activation).",
+          "whenNotToUse": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only recordings (use ki-audio),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility — so preexisting `autoplay` and `controls` on the\nslotted media are cleared when it arrives, and any playback already\nrunning is paused (FR-003; the native chrome returns at activation).",
           "attributes": [
             {
               "name": "label",

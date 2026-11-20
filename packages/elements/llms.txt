@@ -35,6 +35,7 @@ methods, CSS custom properties and examples.
 ## Components
 
 - [ki-alert](llms/ki-alert.md): show a persistent inline message about the state of a page or section, such as a failed save, completed operation, or service notice, that remains until the condition is resolved or the person dismisses it.
+- [ki-audio](llms/ki-audio.md): play a voice note, interview, or other prerecorded audio that a person deliberately starts.
 - [ki-avatar](llms/ki-avatar.md): a compact identity visual for a person or entity — a comment author, a contact list item, a project member.
 - [ki-avatar-group](llms/ki-avatar-group.md): a compact "who is involved" stack — the members of a shared document, project card or event row — where space deserves only the first few identities and an exact "+N" counter accounts for the rest.
 - [ki-badge](llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.

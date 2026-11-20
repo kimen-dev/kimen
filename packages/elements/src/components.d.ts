@@ -136,6 +136,79 @@ export namespace Components {
         "tone": KiAlertTone | (string & {});
     }
     /**
+     * A recording player with play, pause, a seek timeline, elapsed and total time,
+     * playback speed, mute, and an optional transcript link.
+     * @whenToUse play a voice note, interview, or other prerecorded audio that a person deliberately starts. Provide a title and the equivalent text transcript URL when available.
+     * @whenNotToUse show video (use ki-video), play an ambient loop or start playback automatically, or record audio.
+     */
+    interface KiAudio {
+        /**
+          * Visible title and accessible name of the player.
+          * @default 'Audio player'
+         */
+        "audioTitle"?: string;
+        /**
+          * Message shown if playback cannot start or the recording fails to load.
+          * @default 'Audio could not be played'
+         */
+        "errorLabel": string;
+        /**
+          * Accessible name of the mute button.
+          * @default 'Mute'
+         */
+        "muteLabel": string;
+        /**
+          * Accessible name of the pause button.
+          * @default 'Pause'
+         */
+        "pauseLabel": string;
+        /**
+          * Accessible name of the play button.
+          * @default 'Play'
+         */
+        "playLabel": string;
+        /**
+          * Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available.
+          * @default '0.75,1,1.25,1.5,2'
+         */
+        "rates": string;
+        /**
+          * Accessible name of the timeline slider.
+          * @default 'Seek'
+         */
+        "seekLabel": string;
+        /**
+          * Accessible label for the playback-rate picker.
+          * @default 'Playback speed'
+         */
+        "speedLabel": string;
+        /**
+          * Source URL for the recording. Use an HTTP(S) URL or a relative URL.
+          * @format url
+         */
+        "src": string;
+        /**
+          * Accessible time template. Keep the {elapsed} and {duration} placeholders.
+          * @default '{elapsed} of {duration}'
+         */
+        "timeLabel"?: string;
+        /**
+          * URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.
+          * @format url
+         */
+        "transcriptHref"?: string;
+        /**
+          * Text of the transcript link.
+          * @default 'Read the transcript'
+         */
+        "transcriptLabel": string;
+        /**
+          * Accessible name of the unmute button.
+          * @default 'Unmute'
+         */
+        "unmuteLabel": string;
+    }
+    /**
      * A static identity visual that shows a person or entity at a glance through
      * a fallback chain: portrait, then initials, then a built-in generic figure.
      * @whenToUse a compact identity visual for a person or entity — a comment
@@ -2205,7 +2278,7 @@ export namespace Components {
      * enables the native chrome the moment the facade yields, FR-002), and give
      * the control a `label` (required: the accessible name of the play button).
      * @whenNotToUse decorative background or ambient loops (plain CSS and
-     * `<video>` are the tool), audio-only content (a future audio component),
+     * `<video>` are the tool), audio-only recordings (use ki-audio),
      * embeds from streaming platforms that ship their own player chrome (use
      * their embed), or static imagery (use an image, not a video). `autoplay`
      * on the slotted media is unsupported: the facade's contract is that
@@ -2224,6 +2297,10 @@ export namespace Components {
 export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
+}
+export interface KiAudioCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiAudioElement;
 }
 export interface KiCardCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2303,6 +2380,32 @@ declare global {
     var HTMLKiAlertElement: {
         prototype: HTMLKiAlertElement;
         new (): HTMLKiAlertElement;
+    };
+    interface HTMLKiAudioElementEventMap {
+        "play": void;
+        "pause": void;
+        "ended": void;
+        "timeupdate": void;
+    }
+    /**
+     * A recording player with play, pause, a seek timeline, elapsed and total time,
+     * playback speed, mute, and an optional transcript link.
+     * @whenToUse play a voice note, interview, or other prerecorded audio that a person deliberately starts. Provide a title and the equivalent text transcript URL when available.
+     * @whenNotToUse show video (use ki-video), play an ambient loop or start playback automatically, or record audio.
+     */
+    interface HTMLKiAudioElement extends Components.KiAudio, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiAudioElementEventMap>(type: K, listener: (this: HTMLKiAudioElement, ev: KiAudioCustomEvent<HTMLKiAudioElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiAudioElementEventMap>(type: K, listener: (this: HTMLKiAudioElement, ev: KiAudioCustomEvent<HTMLKiAudioElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiAudioElement: {
+        prototype: HTMLKiAudioElement;
+        new (): HTMLKiAudioElement;
     };
     /**
      * A static identity visual that shows a person or entity at a glance through
@@ -3329,7 +3432,7 @@ declare global {
      * enables the native chrome the moment the facade yields, FR-002), and give
      * the control a `label` (required: the accessible name of the play button).
      * @whenNotToUse decorative background or ambient loops (plain CSS and
-     * `<video>` are the tool), audio-only content (a future audio component),
+     * `<video>` are the tool), audio-only recordings (use ki-audio),
      * embeds from streaming platforms that ship their own player chrome (use
      * their embed), or static imagery (use an image, not a video). `autoplay`
      * on the slotted media is unsupported: the facade's contract is that
@@ -3346,6 +3449,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "ki-alert": HTMLKiAlertElement;
+        "ki-audio": HTMLKiAudioElement;
         "ki-avatar": HTMLKiAvatarElement;
         "ki-avatar-group": HTMLKiAvatarGroupElement;
         "ki-badge": HTMLKiBadgeElement;
@@ -3453,6 +3557,95 @@ declare namespace LocalJSX {
           * @default 'neutral'
          */
         "tone"?: KiAlertTone | (string & {});
+    }
+    /**
+     * A recording player with play, pause, a seek timeline, elapsed and total time,
+     * playback speed, mute, and an optional transcript link.
+     * @whenToUse play a voice note, interview, or other prerecorded audio that a person deliberately starts. Provide a title and the equivalent text transcript URL when available.
+     * @whenNotToUse show video (use ki-video), play an ambient loop or start playback automatically, or record audio.
+     */
+    interface KiAudio {
+        /**
+          * Visible title and accessible name of the player.
+          * @default 'Audio player'
+         */
+        "audioTitle"?: string;
+        /**
+          * Message shown if playback cannot start or the recording fails to load.
+          * @default 'Audio could not be played'
+         */
+        "errorLabel"?: string;
+        /**
+          * Accessible name of the mute button.
+          * @default 'Mute'
+         */
+        "muteLabel"?: string;
+        /**
+          * Forwarded when the recording ends. The catalog can bind a declared action here.
+         */
+        "onEnded"?: (event: KiAudioCustomEvent<void>) => void;
+        /**
+          * Forwarded when native playback pauses.
+         */
+        "onPause"?: (event: KiAudioCustomEvent<void>) => void;
+        /**
+          * Forwarded when the native playback state switches to playing.
+         */
+        "onPlay"?: (event: KiAudioCustomEvent<void>) => void;
+        /**
+          * Forwarded when the native playback position is updated.
+         */
+        "onTimeupdate"?: (event: KiAudioCustomEvent<void>) => void;
+        /**
+          * Accessible name of the pause button.
+          * @default 'Pause'
+         */
+        "pauseLabel"?: string;
+        /**
+          * Accessible name of the play button.
+          * @default 'Play'
+         */
+        "playLabel"?: string;
+        /**
+          * Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available.
+          * @default '0.75,1,1.25,1.5,2'
+         */
+        "rates"?: string;
+        /**
+          * Accessible name of the timeline slider.
+          * @default 'Seek'
+         */
+        "seekLabel"?: string;
+        /**
+          * Accessible label for the playback-rate picker.
+          * @default 'Playback speed'
+         */
+        "speedLabel"?: string;
+        /**
+          * Source URL for the recording. Use an HTTP(S) URL or a relative URL.
+          * @format url
+         */
+        "src": string;
+        /**
+          * Accessible time template. Keep the {elapsed} and {duration} placeholders.
+          * @default '{elapsed} of {duration}'
+         */
+        "timeLabel"?: string;
+        /**
+          * URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.
+          * @format url
+         */
+        "transcriptHref"?: string;
+        /**
+          * Text of the transcript link.
+          * @default 'Read the transcript'
+         */
+        "transcriptLabel"?: string;
+        /**
+          * Accessible name of the unmute button.
+          * @default 'Unmute'
+         */
+        "unmuteLabel"?: string;
     }
     /**
      * A static identity visual that shows a person or entity at a glance through
@@ -5608,7 +5801,7 @@ declare namespace LocalJSX {
      * enables the native chrome the moment the facade yields, FR-002), and give
      * the control a `label` (required: the accessible name of the play button).
      * @whenNotToUse decorative background or ambient loops (plain CSS and
-     * `<video>` are the tool), audio-only content (a future audio component),
+     * `<video>` are the tool), audio-only recordings (use ki-audio),
      * embeds from streaming platforms that ship their own player chrome (use
      * their embed), or static imagery (use an image, not a video). `autoplay`
      * on the slotted media is unsupported: the facade's contract is that
@@ -5630,6 +5823,21 @@ declare namespace LocalJSX {
         "dismissible": boolean;
         "dismissLabel": string;
         "dismissed": boolean;
+    }
+    interface KiAudioAttributes {
+        "src": string;
+        "audioTitle": string;
+        "transcriptHref": string;
+        "rates": string;
+        "playLabel": string;
+        "pauseLabel": string;
+        "muteLabel": string;
+        "unmuteLabel": string;
+        "seekLabel": string;
+        "timeLabel": string;
+        "speedLabel": string;
+        "transcriptLabel": string;
+        "errorLabel": string;
     }
     interface KiAvatarAttributes {
         "label": string;
@@ -6038,6 +6246,7 @@ declare namespace LocalJSX {
 
     interface IntrinsicElements {
         "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
+        "ki-audio": Omit<KiAudio, keyof KiAudioAttributes> & { [K in keyof KiAudio & keyof KiAudioAttributes]?: KiAudio[K] } & { [K in keyof KiAudio & keyof KiAudioAttributes as `attr:${K}`]?: KiAudioAttributes[K] } & { [K in keyof KiAudio & keyof KiAudioAttributes as `prop:${K}`]?: KiAudio[K] } & OneOf<"src", KiAudio["src"], KiAudioAttributes["src"]>;
         "ki-avatar": Omit<KiAvatar, keyof KiAvatarAttributes> & { [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K] };
         "ki-avatar-group": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K] };
         "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
@@ -6118,6 +6327,13 @@ declare module "@stencil/core" {
              * is drawn on the icon alone.
              */
             "ki-alert": LocalJSX.IntrinsicElements["ki-alert"] & JSXBase.HTMLAttributes<HTMLKiAlertElement>;
+            /**
+             * A recording player with play, pause, a seek timeline, elapsed and total time,
+             * playback speed, mute, and an optional transcript link.
+             * @whenToUse play a voice note, interview, or other prerecorded audio that a person deliberately starts. Provide a title and the equivalent text transcript URL when available.
+             * @whenNotToUse show video (use ki-video), play an ambient loop or start playback automatically, or record audio.
+             */
+            "ki-audio": LocalJSX.IntrinsicElements["ki-audio"] & JSXBase.HTMLAttributes<HTMLKiAudioElement>;
             /**
              * A static identity visual that shows a person or entity at a glance through
              * a fallback chain: portrait, then initials, then a built-in generic figure.
@@ -6740,7 +6956,7 @@ declare module "@stencil/core" {
              * enables the native chrome the moment the facade yields, FR-002), and give
              * the control a `label` (required: the accessible name of the play button).
              * @whenNotToUse decorative background or ambient loops (plain CSS and
-             * `<video>` are the tool), audio-only content (a future audio component),
+             * `<video>` are the tool), audio-only recordings (use ki-audio),
              * embeds from streaming platforms that ship their own player chrome (use
              * their embed), or static imagery (use an image, not a video). `autoplay`
              * on the slotted media is unsupported: the facade's contract is that
