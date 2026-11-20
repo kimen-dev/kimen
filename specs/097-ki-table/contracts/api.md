@@ -16,4 +16,4 @@ The default content is one native `<table>`. Supply `<caption>`, `<thead>` and `
 | `ki-sort` | `{ key: string, direction: "ascending" \| "descending" }` | Apply the sort and move `aria-sort` to the active header. |
 | `ki-selection-change` | `{ keys: string[] }` | Consume the current selection for any application actions. |
 
-Both events bubble and are composed. Table selection is independent of form submission. Native table markup belongs to the application. The catalog describes the slot and events without opening an HTML input surface.
+Both events bubble and are composed. Table selection is independent of form submission. Register `ki-checkbox` separately for selection when using individual imports or wrappers. Native table markup belongs to the application. The catalog describes the slot and events without opening an HTML input surface.

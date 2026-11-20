@@ -1,0 +1,59 @@
+---
+title: ki-table
+description: Native data tables with sortable headers, row selection and sticky scrolling.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-table` when people compare records across columns. Use CSS grid for layout,
+`ki-list` for single-line items, and a description list for key–value details.
+
+<Demo code={`<ki-table selectable sticky-header style="max-block-size: 12rem">
+  <table>
+    <caption>Services</caption>
+    <thead>
+      <tr><th scope="col">Name</th><th scope="col" data-numeric>Runs</th></tr>
+    </thead>
+    <tbody>
+      <tr data-key="billing"><th scope="row">Billing API</th><td data-numeric>64</td></tr>
+      <tr data-key="search"><th scope="row">Search index</th><td data-numeric>18</td></tr>
+    </tbody>
+  </table>
+</ki-table>`} />
+
+## Author the table
+
+Give the native table a caption, add `scope="col"` to the column headers,
+and make the first data cell in each row a `th scope="row"`. Put numeric
+headers and values at the inline end with `data-numeric`. Use `data-meta`
+for secondary cell text. Use `ki-badge size="sm"` for a status or
+`ki-avatar size="xs"` alongside the person's name.
+
+Add `data-sort` with a column key to a header to make a sort button. A header
+with rich content can supply its own direct `button type="button"`. Listen for
+`ki-sort`, sort the rows, and set `aria-sort` only on the active column.
+
+Set `selectable` and give each selectable row a stable, distinct `data-key`.
+With individual imports or a framework wrapper, register `ki-checkbox` from
+`@kimen/elements/ki-checkbox`. The full loader registers both elements.
+`ki-selection-change` reports the checked keys in displayed order. Translate
+`select-all-label` and `row-selection-label` for the page language. Include
+`{row}` in the row label where the row name should appear.
+
+To add row actions, put a labelled `ki-icon-button size="xs" variant="ghost"`
+in a trailing cell and wire it to the page's action menu. Give the column
+an accessible header such as "Actions". The table keeps every column
+available in its scroll frame. Set a maximum block size for a sticky header.
+
+The host application supplies native table markup. The catalog entry describes
+the content and events, and the guarded renderer currently accepts only its
+allowlisted elements.
+
+## API reference
+
+<CemApi tag="ki-table" />
+
+## Workshop
+
+[Open ki-table in Storybook](/storybook/?path=/docs/docs-components-ki-table--docs)

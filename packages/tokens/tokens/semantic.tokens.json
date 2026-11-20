@@ -1860,6 +1860,10 @@
     },
     "layout": {
       "$type": "dimension",
+      "rule-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "The width of a hairline rule separating adjacent content."
+      },
       "spacing": {
         "zero": {
           "$value": "{ki.space.zero}",

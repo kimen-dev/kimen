@@ -3,7 +3,8 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { commands, page } from 'vitest/browser';
 import { parkPointer } from '../../../browser-tests/axe';
-import { defineAllComponents } from '../../../browser-tests/all-components';
+import { defineCustomElement as defineCheckbox } from '../../../dist/components/ki-checkbox.js';
+import { defineCustomElement as defineTable } from '../../../dist/components/ki-table.js';
 
 const browser = commands as unknown as {
   emulateHoverCapability: (capability: 'none' | null) => Promise<boolean>;
@@ -13,7 +14,8 @@ const styles = document.createElement('style');
 const fixture = document.createElement('main');
 
 beforeAll(() => {
-  defineAllComponents();
+  defineTable();
+  defineCheckbox();
   styles.textContent = tokensCss;
   document.head.append(styles);
   document.body.append(fixture);

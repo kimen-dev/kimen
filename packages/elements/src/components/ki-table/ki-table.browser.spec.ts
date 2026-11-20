@@ -1,9 +1,10 @@
 // @spec:097-ki-table
 import tokensCss from '@kimen/tokens/css?raw';
-import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, expect, it, type Mock, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
-import { defineAllComponents } from '../../../browser-tests/all-components';
+import { defineCustomElement as defineCheckbox } from '../../../dist/components/ki-checkbox.js';
+import { defineCustomElement as defineTable } from '../../../dist/components/ki-table.js';
 
 const browser = commands as unknown as {
   ariaSnapshot: (selector: string) => Promise<string>;
@@ -42,16 +43,26 @@ function sortButton(name = 'Name') {
 }
 
 function spyOn(type: string) {
-  const listener = vi.fn<(event: CustomEvent) => void>();
-  fixture.addEventListener(type, listener as EventListener, { once: true });
+  const listener = vi.fn<(event: Event) => void>();
+  fixture.addEventListener(type, listener, { once: true });
   return listener;
 }
 
+function eventDetail(listener: Mock<(event: Event) => void>): unknown {
+  return (listener.mock.lastCall?.[0] as CustomEvent<unknown> | undefined)?.detail;
+}
+
 beforeAll(() => {
-  defineAllComponents();
   styles.textContent = tokensCss;
   document.head.append(styles);
+  fixture.innerHTML = services(
+    'selectable',
+    billing.replace('<tr ', '<tr aria-selected="true" ') + search,
+    'aria-sort="ascending"',
+  );
   document.body.append(fixture);
+  defineTable();
+  defineCheckbox();
 });
 
 afterEach(async () => {
@@ -62,6 +73,16 @@ afterEach(async () => {
 afterAll(() => {
   fixture.remove();
   styles.remove();
+});
+
+it('S3, S12: pre-existing table markup upgrades when the direct entries are registered', async () => {
+  await expect.element(checkbox('Select Billing API')).toBeChecked();
+  await expect
+    .poll(() => find('thead ki-checkbox').shadowRoot?.querySelector('input')?.indeterminate)
+    .toBe(true);
+  const glyph = find('[data-sort="name"] ki-icon');
+  expect(glyph.getAttribute('name')).toBe('arrow-up');
+  await expect.poll(() => !!glyph.shadowRoot?.querySelector('svg')).toBe(true);
 });
 
 it('S1: scrolls the narrow frame without dropping columns or widening the page', async () => {
@@ -81,24 +102,47 @@ it.each([
   ['Requests', 'requests', 'ascending'],
 ])('S2: asks the application to sort by %s', async (header, key, direction) => {
   fixture.innerHTML = services('', billing + search, 'aria-sort="ascending"');
-  const listener = vi.fn<(event: CustomEvent) => void>();
+  const listener = vi.fn<(event: Event) => void>();
   const frame = find('ki-table');
-  frame.addEventListener('ki-sort', listener as EventListener);
+  frame.addEventListener('ki-sort', listener);
+  await expect.element(sortButton()).toBeVisible();
   await sortButton(header).click();
   expect(listener).toHaveBeenCalledTimes(1);
-  expect(listener.mock.calls[0][0].detail).toEqual({ key, direction });
+  expect(eventDetail(listener)).toEqual({ key, direction });
   expect(find('[data-sort="name"]').getAttribute('aria-sort')).toBe('ascending');
-  expect((find('tbody') as HTMLTableSectionElement).rows[0].getAttribute('data-key')).toBe(
-    'billing',
-  );
+  expect(find('tbody tr').getAttribute('data-key')).toBe('billing');
   expect(find('[data-sort="requests"]').querySelectorAll('button')).toHaveLength(1);
+});
+
+it('S2: uses the application’s updated active column for the next request', async () => {
+  fixture.innerHTML = services('', billing + search, 'aria-sort="ascending"');
+  const frame = find('ki-table');
+  const name = find('[data-sort="name"]');
+  const requests = find('[data-sort="requests"]');
+  const received: string[] = [];
+  frame.addEventListener('ki-sort', (event) => {
+    const { key, direction } = (event as CustomEvent<{ key: string; direction: string }>).detail;
+    received.push(direction);
+    if (key === 'requests') {
+      name.removeAttribute('aria-sort');
+      requests.setAttribute('aria-sort', direction);
+    }
+  });
+
+  await expect.element(sortButton()).toBeVisible();
+  await sortButton('Requests').click();
+  expect(name.hasAttribute('aria-sort')).toBe(false);
+  expect(requests.getAttribute('aria-sort')).toBe('ascending');
+  await sortButton('Requests').click();
+  expect(received).toEqual(['ascending', 'descending']);
+  expect(requests.getAttribute('aria-sort')).toBe('descending');
 });
 
 it('S3: reports one selected row and exposes mixed bulk selection', async () => {
   fixture.innerHTML = services('selectable');
   const change = spyOn('ki-selection-change');
   await checkbox('Select Billing API').click();
-  expect(change.mock.calls[0][0].detail).toEqual({ keys: ['billing'] });
+  expect(eventDetail(change)).toEqual({ keys: ['billing'] });
   expect(find('[data-key="billing"]').getAttribute('aria-selected')).toBe('true');
   await expect
     .poll(() => find('thead ki-checkbox').shadowRoot?.querySelector('input')?.indeterminate)
@@ -115,13 +159,13 @@ it('S4: a mixed bulk checkbox selects keyed rows in order and a checked one clea
   const bulk = checkbox('Select all rows');
   const selected = spyOn('ki-selection-change');
   await bulk.click();
-  expect(selected.mock.calls[0][0].detail).toEqual({ keys: ['billing', 'search'] });
+  expect(eventDetail(selected)).toEqual({ keys: ['billing', 'search'] });
   await expect.element(checkbox('Select Search index')).toBeChecked();
   expect(find('tbody tr:last-child').querySelector('ki-checkbox')).toBeNull();
 
   const cleared = spyOn('ki-selection-change');
   await bulk.click();
-  expect(cleared.mock.calls[0][0].detail).toEqual({ keys: [] });
+  expect(eventDetail(cleared)).toEqual({ keys: [] });
   await expect.element(checkbox('Select Billing API')).not.toBeChecked();
   await expect.element(checkbox('Select Search index')).not.toBeChecked();
 });
@@ -141,14 +185,15 @@ it('S6: appends and removes a decorative loading row', async () => {
   fixture.innerHTML = services('selectable');
   const frame = find('ki-table');
   const table = find('table') as HTMLTableElement;
-  const originalRows = Array.from(table.tBodies[0].rows);
+  const body = find('tbody') as HTMLTableSectionElement;
+  const originalRows = Array.from(body.rows);
   frame.setAttribute('loading', '');
   await expect.poll(() => table.getAttribute('aria-busy')).toBe('true');
   await expect.poll(() => table.rows.length).toBe(4);
-  const placeholder = table.rows[3];
+  const placeholder = find('tbody > tr[aria-hidden="true"]');
   expect(placeholder.getAttribute('aria-hidden')).toBe('true');
   expect(placeholder.querySelector('span')?.getBoundingClientRect().height).toBeGreaterThan(0);
-  expect(Array.from(table.tBodies[0].rows)).toEqual(originalRows);
+  expect(Array.from(body.rows)).toEqual(originalRows);
   frame.removeAttribute('loading');
   await expect.poll(() => table.rows.length).toBe(3);
   expect(table.getAttribute('aria-busy')).toBeNull();
@@ -193,7 +238,8 @@ it('S9: Enter requests an ascending sort and leaves a visible focus ring', async
   await userEvent.keyboard('{Tab}');
   await expect.element(sortButton()).toHaveFocus();
   await userEvent.keyboard('{Enter}');
-  expect(sort.mock.calls[0][0].detail).toEqual({ key: 'name', direction: 'ascending' });
+  await expect.element(sortButton()).toHaveFocus();
+  expect(eventDetail(sort)).toEqual({ key: 'name', direction: 'ascending' });
   expect(getComputedStyle(find('[data-sort="name"] button')).outlineStyle).toBe('solid');
 });
 
@@ -211,7 +257,7 @@ it('S10: Space changes a row checkbox focused through the Tab sequence', async (
   expect(searchCheckbox.shadowRoot?.activeElement).toBe(control);
   const change = spyOn('ki-selection-change');
   await userEvent.keyboard(' ');
-  expect(change.mock.calls[0][0].detail).toEqual({ keys: ['search'] });
+  expect(eventDetail(change)).toEqual({ keys: ['search'] });
   expect(find('[data-key="search"]').getAttribute('aria-selected')).toBe('true');
 });
 
@@ -268,10 +314,11 @@ it('keeps selection and sort independent of the ancestor form', async () => {
 
 it('S14: uses default and compact row heights and logical numeric alignment in RTL', async () => {
   fixture.innerHTML = services('dir="rtl"') + services('dir="rtl" density="compact"');
-  const [regular, compact] = fixture.querySelectorAll('tbody');
-  await expect.poll(() => regular.rows[0].getBoundingClientRect().height).toBeCloseTo(48);
-  await expect.poll(() => compact.rows[0].getBoundingClientRect().height).toBeCloseTo(40);
-  const numeric = getComputedStyle(regular.rows[0].cells[1]);
+  const regular = find('ki-table:not([density="compact"]) tbody tr');
+  const compact = find('ki-table[density="compact"] tbody tr');
+  await expect.poll(() => regular.getBoundingClientRect().height).toBeCloseTo(48, 0);
+  await expect.poll(() => compact.getBoundingClientRect().height).toBeCloseTo(40, 0);
+  const numeric = getComputedStyle(find('tbody td[data-numeric]'));
   expect(numeric.direction).toBe('rtl');
   expect(['end', 'left']).toContain(numeric.textAlign);
   expect(numeric.fontVariantNumeric).toContain('tabular-nums');
@@ -308,8 +355,15 @@ it('S16: keeps a visible row selection and keyboard focus in forced colors', asy
     find('#before').focus();
     await userEvent.keyboard('{Tab}{Tab}');
     await expect.element(sortButton()).toHaveFocus();
-    expect(getComputedStyle(find('[data-sort="name"] button')).outlineStyle).toBe('solid');
-    expect(getComputedStyle(find('[data-key="billing"]')).outlineStyle).toBe('solid');
+    const systemInk = document.createElement('span');
+    systemInk.style.color = 'Highlight';
+    fixture.append(systemInk);
+    const focus = getComputedStyle(find('[data-sort="name"] button'));
+    const selected = getComputedStyle(find('[data-key="billing"]'));
+    expect(focus.outlineStyle).toBe('solid');
+    expect(focus.outlineColor).toBe(getComputedStyle(systemInk).color);
+    expect(selected.outlineStyle).toBe('solid');
+    expect(selected.outlineColor).toBe(focus.outlineColor);
     expect(getComputedStyle(find('[data-key="search"]')).outlineStyle).toBe('none');
   } finally {
     await browser.emulateForcedColors(null);
