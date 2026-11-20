@@ -6,5 +6,17 @@
     "hoverWitness": false
   },
   "catalog": true,
-  "catalogAction": "ki-tool-retry"
+  "catalogAction": "ki-tool-retry",
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 11659,
+      "gzip": 3273,
+      "brotli": 2356
+    },
+    "mcpServer": {
+      "raw": 20368,
+      "gzip": 4646,
+      "brotli": 3445
+    }
+  }
 }

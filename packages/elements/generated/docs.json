@@ -14451,11 +14451,6 @@
       "docstring": "",
       "path": "src/components/ki-textarea/ki-textarea.tsx"
     },
-    "src/components/ki-tool-call/ki-tool-call.tsx::KiToolCallStatus": {
-      "declaration": "export type KiToolCallStatus = 'pending' | 'running' | 'done' | 'failed' | 'approval';",
-      "docstring": "",
-      "path": "src/components/ki-tool-call/ki-tool-call.tsx"
-    },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
@@ -14485,6 +14480,11 @@
       "declaration": "export interface KiToastShowOptions {\n  /** One action, rendered as a ghost `ki-button size=\"sm\"`; its click calls `onClick`. */\n  action?: { label: string; onClick?: (event: MouseEvent) => void };\n  /** Shows the dismiss button; `true` by default. */\n  dismissible?: boolean;\n  /** Milliseconds before the toast leaves on its own; see `ki-toast`'s `duration`. */\n  duration?: number;\n  /** The message text. */\n  message: string;\n  /** The optional bold first line. */\n  title?: string;\n  /** `neutral` (default), `info`, `success`, `warning` or `danger`. */\n  tone?: string;\n}",
       "docstring": "What `show()` turns into a toast (spec 049 FR-018).",
       "path": "src/components/ki-toaster/ki-toaster.show.ts"
+    },
+    "src/components/ki-tool-call/ki-tool-call.tsx::KiToolCallStatus": {
+      "declaration": "export type KiToolCallStatus = 'pending' | 'running' | 'done' | 'failed' | 'approval';",
+      "docstring": "",
+      "path": "src/components/ki-tool-call/ki-tool-call.tsx"
     }
   }
 }
