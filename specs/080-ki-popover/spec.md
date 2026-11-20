@@ -104,6 +104,13 @@ Feature: ki-popover opens non-modal content beside a trigger
 | Form participation | S12 (slotted form; the overlay has no form value) |
 | Theming | S9, S10 |
 
+## Rich appearance extension
+
+The [rich tooltip contract](../132-rich-tooltip/spec.md) adds
+`appearance="rich"`. A rich toggletip opens as a non-modal dialog that can
+contain actions, with focus moving into the panel and returning on Escape.
+The text toggletip scenarios above describe the default appearance.
+
 ## Requirements
 
 - A button identified by `for` in the same tree toggles the native auto popover. Its expanded state tracks actual visibility. The `open` attribute and property reflect changes from the trigger, application, and native dismissal. Each visible transition emits `ki-open` or `ki-close`.
