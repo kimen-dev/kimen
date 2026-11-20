@@ -80,13 +80,14 @@ describe('uiSpecJsonSchema', () => {
     >;
     expect(defs[component]?.properties.props.properties.variant.enum).toEqual([
       'ghost',
+      'outline',
       'primary',
       'quaternary',
       'secondary',
     ]);
     const prompt = catalogPrompt(catalogData, { components: [component] });
     expect(prompt.ok && prompt.artifact).toContain(
-      '- `variant` (enum: "ghost" | "primary" | "quaternary" | "secondary")',
+      '- `variant` (enum: "ghost" | "outline" | "primary" | "quaternary" | "secondary")',
     );
   });
 

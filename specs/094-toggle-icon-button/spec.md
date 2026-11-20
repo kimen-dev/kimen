@@ -43,6 +43,11 @@ The public surface and ButtonGroup handoff are in the [button contract](contract
   `ki-change` with live selection for toggle specs. Momentary specs keep
   dispatching from click. The public API gate classifies the exported type
   changes as major.
+- Agent's choice, pending founder confirmation. Record the shared button
+  feature's 15,890 B marginal raw MCP server cost on the text button
+  inventory entry. The allowance comes from the same builds at base
+  `a362db8` (2,594,521 B) and feature tip `6bec6fe` (2,610,411 B).
+  Compressed server and MCP Apps outputs fit their existing limits.
 
 ## Gherkin
 
