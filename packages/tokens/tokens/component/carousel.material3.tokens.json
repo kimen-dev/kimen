@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "carousel": {
+      "radius": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Material 3 carousel viewport and slide shape."
+      }
+    }
+  }
+}
