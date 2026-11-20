@@ -150,9 +150,11 @@ jobs:
     name: browser (${{ matrix.engine }} ${{ matrix.shard }}/4)
     needs: validate-core
     runs-on: ubuntu-latest
-    # An unsharded engine took 14-18 min in dry run 44750568442; a PR CI
-    # Chromium shard takes 5-8 min with its setup.
-    timeout-minutes: 20
+    # An unsharded engine took 14-18 min in dry run 44750568442, yet the
+    # firefox 3/4 shard of dry run 44774973149 passed every file and was cut
+    # off at exactly 20 min. Shards split by file count, not duration, so one
+    # can carry most of an engine's slow files. Keep generous headroom.
+    timeout-minutes: 45
     permissions:
       contents: read
     strategy:
