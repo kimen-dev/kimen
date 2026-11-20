@@ -38,7 +38,7 @@ async function mount(markup: string) {
   fixture.innerHTML = markup;
   const host = fixture.querySelector('ki-details');
   if (!host) throw new Error('Missing ki-details fixture');
-  const native = () => host.querySelector('details');
+  const native = () => host.shadowRoot?.querySelector('details') ?? null;
   await expect.poll(native).not.toBeNull();
   const panel = native();
   const summary = panel?.querySelector('summary');
@@ -121,31 +121,33 @@ it('S3 keeps open content usable while the summary is disabled', async () => {
 });
 
 it.each(['Enter', 'Space'])('S7 opens with %s and keeps keyboard focus', async (key) => {
-  const { summary } = await mount(
+  const { host, summary } = await mount(
     '<button tabindex="0">Previous</button><ki-details summary="Exports">Export instructions.</ki-details>',
   );
   fixture.querySelector('button')?.focus();
   await userEvent.keyboard('{Tab}');
-  expect(document.activeElement).toBe(summary);
+  expect(host.shadowRoot?.activeElement).toBe(summary);
   await userEvent.keyboard(key === 'Space' ? ' ' : '{Enter}');
 
   await expect.element(page.getByText('Export instructions.')).toBeVisible();
-  expect(document.activeElement).toBe(summary);
+  expect(host.shadowRoot?.activeElement).toBe(summary);
 });
 
 it('S8 tabs past a disabled summary to visible focus', async () => {
   const { summary } = await mount(
     '<button tabindex="0">Previous</button><ki-details disabled summary="Unavailable"></ki-details>' +
-      '<ki-details summary="Available"></ki-details>',
+      '<ki-details id="enabled" summary="Available"></ki-details>',
   );
-  await expect.poll(() => fixture.querySelectorAll('summary').length).toBe(2);
+  const enabledHost = fixture.querySelector('#enabled');
+  const findSummary = () => enabledHost?.shadowRoot?.querySelector('summary') ?? null;
+  await expect.poll(findSummary).not.toBeNull();
+  const enabled = findSummary();
+  if (!enabled) throw new Error('Missing the enabled summary');
   fixture.querySelector('button')?.focus();
   await userEvent.keyboard('{Tab}');
 
-  const enabled = fixture.querySelectorAll('summary')[1];
   expect(summary.tabIndex).toBe(-1);
-  expect(document.activeElement).toBe(enabled);
-  if (!enabled) throw new Error('Missing the enabled summary');
+  expect(enabledHost?.shadowRoot?.activeElement).toBe(enabled);
   expect(getComputedStyle(enabled).outlineStyle).toBe('solid');
   expect(Number.parseFloat(getComputedStyle(enabled).outlineWidth)).toBeGreaterThan(0);
 });
@@ -155,7 +157,9 @@ it('S9 preserves the rich heading and exposes native expansion without a named i
     '<ki-details id="rich" summary="Fallback label"><h2 slot="summary">Workspace settings</h2>' +
       '<p>Change who can join the workspace.</p></ki-details>',
   );
-  expect(summary.querySelector('h2')?.textContent).toBe('Workspace settings');
+  const heading = summary.querySelector('slot')?.assignedElements()[0];
+  expect(heading?.localName).toBe('h2');
+  expect(heading?.textContent).toBe('Workspace settings');
   expect(summary.querySelector('ki-icon')?.getAttribute('aria-hidden')).toBe('true');
   expect(summary.hasAttribute('aria-expanded')).toBe(false);
   const expectExpanded = async (expanded: boolean): Promise<void> => {
@@ -195,7 +199,7 @@ it('S10 reflects a native reveal of the closed answer', async () => {
     '<ki-details summary="Permissions"><p>Guests inherit workspace permissions.</p></ki-details>',
   );
   const states = toggles(host);
-  const answer = panel.querySelector('p');
+  const answer = panel.querySelector<HTMLSlotElement>('slot:not([name])')?.assignedElements()[0];
   expect(answer?.textContent).toBe('Guests inherit workspace permissions.');
   expect(answer?.closest('[hidden], [inert], [aria-hidden="true"]')).toBeNull();
   expect(panel.firstElementChild).toBe(summary);
@@ -243,7 +247,7 @@ it('S11 reads the surface, backdrop and hover color from theme tokens', async ()
 it('S12 places the chevron at inline end in RTL', async () => {
   fixture.dir = 'rtl';
   const { summary } = await mount('<ki-details><span slot="summary">Workspace</span></ki-details>');
-  const label = summary.querySelector('[slot="summary"]');
+  const label = summary.querySelector('slot')?.assignedElements()[0];
   const chevron = summary.querySelector('ki-icon');
   if (!label || !chevron) throw new Error('Missing summary text or chevron');
   expect(chevron.getBoundingClientRect().right).toBeLessThan(label.getBoundingClientRect().left);

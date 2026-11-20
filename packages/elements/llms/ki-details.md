@@ -32,6 +32,7 @@ In a catalog surface, bind the action to the individual Details node.
 ## Attributes
 
 - `disabled` (boolean, default false): Disables summary activation. The page can still set open.
+- `name` (string | undefined): Nonempty name for exclusive disclosures in the same document or shadow root.
 - `open` (boolean, default false): Whether the panel is open. Native changes reflect back to this property.
 - `summary` (string | undefined): Plain label for the control. Supply the summary slot for a rich label.
 
@@ -46,7 +47,7 @@ None.
 
 ## Events
 
-- `ki-toggle` (CustomEvent<KiDetailsToggleDetail>): Emitted for a native state change, including an exclusive peer closing.
+- `ki-toggle` (CustomEvent<KiDetailsToggleDetail>): Emitted when the native disclosure toggles or an exclusive peer closes it.
 
 ## Methods
 

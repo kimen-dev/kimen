@@ -599,7 +599,8 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     const fixture = await mount(
       '<button tabindex="0">Before</button><ki-details summary="Permissions">Invite users.</ki-details>',
     );
-    const findPanel = () => fixture.querySelector('ki-details > details');
+    const details = fixture.querySelector('ki-details');
+    const findPanel = () => details?.shadowRoot?.querySelector('details') ?? null;
     await expect.poll(findPanel).not.toBeNull();
     const panel = findPanel();
     const summary = panel?.querySelector('summary');
@@ -607,7 +608,7 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
 
     fixture.querySelector('button')?.focus();
     await userEvent.keyboard('{Tab}');
-    expect(document.activeElement).toBe(summary);
+    expect(details?.shadowRoot?.activeElement).toBe(summary);
     expect(edgeOf(panel)).not.toBeNull();
     expect(edgeOf(summary)).not.toBeNull();
   });

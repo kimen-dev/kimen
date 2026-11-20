@@ -32,8 +32,10 @@ it('S15 provides a 44px summary without hover paint under coarse touch density',
     fixture.innerHTML = '<ki-details summary="Permissions">Invite users.</ki-details>';
     document.body.append(fixture);
 
-    await expect.poll(() => fixture.querySelector('summary')).not.toBeNull();
-    const summary = fixture.querySelector('summary');
+    const findSummary = () =>
+      fixture.querySelector('ki-details')?.shadowRoot?.querySelector('summary') ?? null;
+    await expect.poll(findSummary).not.toBeNull();
+    const summary = findSummary();
     if (!summary) throw new Error('Missing summary');
     expect(summary.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
     const background = getComputedStyle(summary).backgroundColor;

@@ -1,32 +1,69 @@
-type AssignGroup = (name: string | undefined, initializing: boolean) => void;
+interface DisclosureMember {
+  name: () => string | undefined;
+  isOpen: () => boolean;
+  close: (initializing: boolean) => void;
+}
 
-const names = new WeakMap<object, string>();
-const groups = new WeakMap<HTMLElement, string>();
-const members = new WeakMap<Element, AssignGroup>();
-let nextGroup = 0;
+const accordions = new WeakMap<Element, boolean>();
+const members = new WeakMap<Element, DisclosureMember>();
 
-export function accordionName(accordion: object): string {
-  let name = names.get(accordion);
-  if (name === undefined) {
-    name = `ki-accordion-${String(++nextGroup)}`;
-    names.set(accordion, name);
+function* peers(host: HTMLElement): Iterable<DisclosureMember> {
+  const parent = host.parentElement;
+  if (parent && accordions.get(parent)) {
+    for (const child of parent.children) {
+      const peer = members.get(child);
+      if (child !== host && peer) yield peer;
+    }
   }
-  return name;
+
+  const name = members.get(host)?.name();
+  const root = host.getRootNode();
+  const shadowRoot = root.nodeType === Node.DOCUMENT_FRAGMENT_NODE && 'host' in root;
+  if (!name || (root.nodeType !== Node.DOCUMENT_NODE && !shadowRoot)) return;
+  for (const element of (root as Document | ShadowRoot).querySelectorAll(host.localName)) {
+    const peer = members.get(element);
+    if (element !== host && peer?.name() === name) yield peer;
+  }
+}
+
+export function reconcileDisclosure(host: HTMLElement, initializing = false): void {
+  const member = members.get(host);
+  if (!member?.isOpen()) return;
+  for (const peer of peers(host)) {
+    if (peer.isOpen()) {
+      member.close(initializing);
+      return;
+    }
+  }
 }
 
 export function connectDisclosure(
   host: HTMLElement,
-  assignGroup: AssignGroup,
+  member: DisclosureMember,
   initializing: boolean,
 ): void {
-  members.set(host, assignGroup);
+  members.set(host, member);
   const parent = host.parentElement;
-  assignGroup(parent ? groups.get(parent) : undefined, initializing);
+  host.toggleAttribute('data-ki-accordion-member', parent !== null && accordions.has(parent));
+  reconcileDisclosure(host, initializing);
+}
+
+export function closeDisclosurePeers(host: HTMLElement): void {
+  for (const peer of peers(host)) {
+    if (peer.isOpen()) peer.close(false);
+  }
 }
 
 export function syncAccordion(host: HTMLElement, exclusive: boolean, initializing = false): void {
-  // Empty marks a member of a visual group without enabling native exclusion.
-  const name = exclusive ? accordionName(host) : '';
-  groups.set(host, name);
-  for (const child of host.children) members.get(child)?.(name, initializing);
+  accordions.set(host, exclusive);
+  let keptOpen = false;
+  for (const child of host.children) {
+    const member = members.get(child);
+    if (!member) continue;
+
+    child.setAttribute('data-ki-accordion-member', '');
+    if (!exclusive || !member.isOpen()) continue;
+    if (keptOpen) member.close(initializing);
+    keptOpen = true;
+  }
 }

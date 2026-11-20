@@ -12,6 +12,7 @@ import { defineCustomElement as defineKiDetails } from '@kimen/elements/componen
 export const KiDetails: StencilVueComponent<JSX.KiDetails> = /*@__PURE__*/ defineContainer<JSX.KiDetails>('ki-details', defineKiDetails, [
   'summary',
   'open',
+  'name',
   'disabled',
   'ki-toggle'
 ], [

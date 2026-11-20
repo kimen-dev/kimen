@@ -42,6 +42,14 @@ Feature: Details and accordion
     When the user activates a question in the native accordion
     Then the corresponding answer opens and the previously open answer closes
 
+  # S16
+  Scenario: Named disclosures share exclusivity within their DOM tree
+    Given the "Permissions" disclosure is open and "Exports" shares its name
+    And a separate shadow tree contains an open disclosure with that same name
+    When the user opens "Exports"
+    Then "Permissions" closes and "Exports" opens
+    And the disclosure in the separate tree remains open
+
   # Family: keyboard path
   # S7
   Scenario Outline: The summary opens from the keyboard

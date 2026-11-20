@@ -5669,6 +5669,14 @@
               "description": "Disables summary activation. The page can still set open."
             },
             {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Nonempty name for exclusive disclosures in the same document or shadow root."
+            },
+            {
               "name": "open",
               "fieldName": "open",
               "type": {
@@ -5701,6 +5709,17 @@
             },
             {
               "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Nonempty name for exclusive disclosures in the same document or shadow root.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "open",
               "privacy": "public",
               "type": {
@@ -5729,7 +5748,7 @@
               "type": {
                 "text": "CustomEvent<KiDetailsToggleDetail>"
               },
-              "description": "Emitted for a native state change, including an exclusive peer closing."
+              "description": "Emitted when the native disclosure toggles or an exclusive peer closes it."
             }
           ],
           "slots": [

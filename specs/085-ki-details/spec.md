@@ -7,11 +7,13 @@ reader needs it. An accordion presents related disclosures as one visual group.
 
 ## Requirements
 
-- `ki-details` uses a native disclosure, exposes `summary`, `open` and
-  `disabled`, and accepts a rich `summary` slot and a default content slot.
+- `ki-details` uses a native disclosure, exposes `summary`, `open`,
+  `disabled` and optional `name`, and accepts a rich `summary` slot and a default content slot.
 - `ki-accordion` groups direct `ki-details` members. Its `exclusive`
-  property enables the native details name group. Other groups and nested
-  disclosures keep independent state.
+  property coordinates exclusive opening among direct members. Disclosures
+  sharing a nonempty `name` also exclude one another within their DOM tree.
+  Native disclosure controls live in shadow roots and use constructable
+  stylesheets under the MCP Apps content policy.
 - Native activation and native reveal keep the reflected `open` state in sync
   and report `ki-toggle` with `{ open }`. A disabled summary is unavailable
   for interaction. Content in an open panel remains usable.
@@ -48,16 +50,14 @@ reader needs it. An accordion presents related disclosures as one visual group.
 
 - **Agent's choice, pending founder confirmation.** Charge the combined
   Details and Accordion MCP server bundle increase to the Details metadata.
-  The same pinned build from the branch base `1329347` grows by 15,603 raw
-  bytes. The gzip increase is 3,267 bytes on CI's Node 26 and 3,399 bytes on
-  supported Node 22, where the original gzip ceiling is exceeded. The Brotli
-  increase is 2,071 bytes and fits its original ceiling.
+  Relative to the pinned build at `3b58bbf`, the shadow DOM change adds
+  725 raw bytes. The gzip and Brotli results fit their existing limits.
 
 ## Scenario Family Coverage
 
 | Family | Scenarios | Justification |
 | --- | --- | --- |
-| Core behavior | S1, S2, S3, S4, S5, S6 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S16 | |
 | Keyboard path | S7, S8 | |
 | Assistive-tech outcome | S9, S10 | |
 | Form participation | N/A | Neither element owns a form value or validation state. |
@@ -109,6 +109,14 @@ Feature: Details and accordion
     Given a workspace FAQ served as native details and summary markup with scripts disabled
     When the user activates a question in the native accordion
     Then the corresponding answer opens and the previously open answer closes
+
+  # S16
+  Scenario: Named disclosures share exclusivity within their DOM tree
+    Given the "Permissions" disclosure is open and "Exports" shares its name
+    And a separate shadow tree contains an open disclosure with that same name
+    When the user opens "Exports"
+    Then "Permissions" closes and "Exports" opens
+    And the disclosure in the separate tree remains open
 
   # Family: keyboard path
   # S7

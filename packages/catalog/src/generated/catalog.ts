@@ -811,13 +811,17 @@ export const catalogData = {
     "ki-details": {
       "description": "A native disclosure for supporting information that can stay collapsed.",
       "events": {
-        "ki-toggle": "Emitted for a native state change, including an exclusive peer closing."
+        "ki-toggle": "Emitted when the native disclosure toggles or an exclusive peer closes it."
       },
       "props": {
         "disabled": {
           "type": "boolean",
           "description": "Disables summary activation. The page can still set open.",
           "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Nonempty name for exclusive disclosures in the same document or shadow root."
         },
         "open": {
           "type": "boolean",

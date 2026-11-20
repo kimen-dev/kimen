@@ -3752,7 +3752,7 @@
     },
     {
       "filePath": "src/components/ki-details/ki-details.tsx",
-      "encapsulation": "scoped",
+      "encapsulation": "shadow",
       "tag": "ki-details",
       "docs": "A native disclosure for supporting information that can stay collapsed.",
       "docsTags": [
@@ -3802,6 +3802,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Nonempty name for exclusive disclosures in the same document or shadow root.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -3881,7 +3907,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Emitted for a native state change, including an exclusive peer closing.",
+          "docs": "Emitted when the native disclosure toggles or an exclusive peer closes it.",
           "docsTags": []
         }
       ],

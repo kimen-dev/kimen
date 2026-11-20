@@ -22,7 +22,9 @@ is set, the summary skips the tab order and open body content stays usable.
 Listen to `ki-toggle` for browser-originated state changes and read
 `event.detail.open`. Direct writes to `open` are silent on that disclosure.
 
-Use [ki-accordion](../accordion/) for related disclosures. For HTML served
+Use [ki-accordion](../accordion/) for related disclosures. To share exclusivity
+without an accordion, give the disclosures the same nonempty `name` in one
+document or shadow root. For HTML served
 without JavaScript, use native `<details><summary>…</summary>…</details>`
 markup.
 

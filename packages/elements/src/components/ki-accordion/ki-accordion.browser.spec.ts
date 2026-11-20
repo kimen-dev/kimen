@@ -30,20 +30,21 @@ afterAll(() => {
 
 async function mount(html: string) {
   fixture.innerHTML = html;
+  const components = [...fixture.querySelectorAll('ki-details, ki-accordion')];
   await expect
-    .poll(() => fixture.querySelectorAll('ki-details > details').length)
-    .toBe(fixture.querySelectorAll('ki-details').length);
+    .poll(() => components.every((host) => host.classList.contains('hydrated')))
+    .toBe(true);
 }
 
-function member(id: string) {
-  const host = fixture.querySelector<HTMLKiDetailsElement>(`#${id}`);
-  const panel = host?.querySelector('details');
+function member(id: string, root: ParentNode = fixture) {
+  const host = root.querySelector<HTMLKiDetailsElement>(`#${id}`);
+  const panel = host?.shadowRoot?.querySelector('details');
   const summary = panel?.querySelector('summary');
   if (!host || !panel || !summary) throw new Error(`Missing disclosure ${id}`);
   return { host, panel, summary };
 }
 
-it('S4 uses the native name group and reports both changed members', async () => {
+it('S4 closes the open accordion member and reports both changed members', async () => {
   await mount(`
     <ki-accordion exclusive>
       <ki-details id="permissions" summary="Permissions" open>Invite users.</ki-details>
@@ -52,8 +53,7 @@ it('S4 uses the native name group and reports both changed members', async () =>
   `);
   const permissions = member('permissions');
   const exports = member('exports');
-  await expect.poll(() => exports.panel.name).not.toBe('');
-  expect(permissions.panel.name).toBe(exports.panel.name);
+  await expect.poll(() => permissions.panel.open).toBe(true);
   const states: Record<string, boolean> = {};
   for (const { host } of [permissions, exports]) {
     host.addEventListener('ki-toggle', (event) => {
@@ -88,10 +88,9 @@ it('S4 reconciles initial and live exclusivity and follows a moved member', asyn
 
   await expect.poll(() => second.host.open).toBe(false);
   expect(first.host.open).toBe(true);
-  expect(other.panel.name).not.toBe(first.panel.name);
+  expect(other.host.open).toBe(true);
 
   group.exclusive = false;
-  await expect.poll(() => second.panel.name).toBe('');
   await userEvent.click(second.summary);
   await expect.poll(() => second.host.open).toBe(true);
   expect(first.host.open).toBe(true);
@@ -101,7 +100,6 @@ it('S4 reconciles initial and live exclusivity and follows a moved member', asyn
   expect(first.host.open).toBe(true);
 
   fixture.append(second.host);
-  await expect.poll(() => second.panel.name).toBe('');
   await userEvent.click(second.summary);
   await expect.poll(() => second.host.open).toBe(true);
   expect(first.host.open).toBe(true);
@@ -125,7 +123,6 @@ it('S5 allows independent panels and keeps isolated groups open', async () => {
   expect(member('permissions').host.open).toBe(true);
   expect(member('billing').host.open).toBe(true);
   const nested = member('nested');
-  expect(nested.panel.name).toBe('');
   expect(nested.host.open).toBe(true);
   expect(Number.parseFloat(getComputedStyle(nested.panel).borderBlockStartWidth)).toBeGreaterThan(
     0,
@@ -158,4 +155,44 @@ it('S6 works as native HTML with scripting disabled', async () => {
   second.querySelector('summary')?.click();
   expect(first.open).toBe(false);
   expect(second.open).toBe(true);
+});
+
+it('S16 closes disclosures with the same name only within their DOM tree', async () => {
+  await mount(`
+    <ki-details id="first" name="workspace:settings" open summary="Permissions">Invite users.</ki-details>
+    <ki-details id="second" name="workspace:settings" summary="Exports">Make a backup.</ki-details>
+    <ki-details id="billing" name="billing" open summary="Billing">Update your card.</ki-details>
+    <div id="separate-tree"></div>
+  `);
+  const container = fixture.querySelector('#separate-tree');
+  if (!container) throw new Error('Missing separate tree container');
+  const root = container.attachShadow({ mode: 'open' });
+  root.innerHTML =
+    '<ki-details id="separate" name="workspace:settings" open summary="Other settings">Other workspace.</ki-details>';
+  const first = member('first');
+  const second = member('second');
+  await expect
+    .poll(() => root.querySelector('ki-details')?.shadowRoot?.querySelector('details')?.open)
+    .toBe(true);
+
+  await userEvent.click(second.summary);
+  await expect.poll(() => [first.host.open, second.host.open]).toEqual([false, true]);
+  expect(member('billing').host.open).toBe(true);
+  expect(member('separate', root).host.open).toBe(true);
+});
+
+it('S16 applies consecutive named open property writes in order', async () => {
+  await mount(`
+    <ki-details id="first" name="workspace" open summary="Permissions">Invite users.</ki-details>
+    <ki-details id="second" name="workspace" summary="Exports">Make a backup.</ki-details>
+  `);
+  const first = member('first');
+  const second = member('second');
+  await expect.poll(() => first.panel.open).toBe(true);
+
+  second.host.open = true;
+  expect(first.host.open).toBe(false);
+  first.host.open = true;
+  expect(second.host.open).toBe(false);
+  expect(first.panel.open).toBe(true);
 });

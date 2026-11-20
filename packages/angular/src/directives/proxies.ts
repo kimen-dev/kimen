@@ -432,14 +432,14 @@ export declare interface KiCounter extends Components.KiCounter {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiDetails,
-  inputs: ['disabled', 'open', 'summary']
+  inputs: ['disabled', 'name', 'open', 'summary']
 })
 @Component({
   selector: 'ki-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'open', 'summary'],
+  inputs: ['disabled', 'name', 'open', 'summary'],
 })
 export class KiDetails {
   protected el: HTMLKiDetailsElement;
@@ -453,7 +453,7 @@ export class KiDetails {
 
 export declare interface KiDetails extends Components.KiDetails {
   /**
-   * Emitted for a native state change, including an exclusive peer closing.
+   * Emitted when the native disclosure toggles or an exclusive peer closes it.
    */
 }
 

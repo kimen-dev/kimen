@@ -28,8 +28,8 @@ section or tool output. Use `ki-accordion` to frame related disclosures.
 ```
 
 - Provide a nonempty `summary` label or use the `summary` slot for a heading.
-- If the summary or body markup changes after mount, update the content in a
-  stable slotted element so the native disclosure can retain its state.
+- A shared nonempty `name` makes disclosures exclusive within one document
+  or shadow root, including when they sit outside an accordion.
 - Set `open` for the initial or page-controlled state. Set `disabled` to
   remove the summary from the tab order and prevent activation.
 - Set `exclusive` on the accordion to allow at most one direct member open.

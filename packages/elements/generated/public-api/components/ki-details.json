@@ -9,6 +9,14 @@
         "required": false,
         "type": "boolean"
       },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonempty name for exclusive disclosures in the same document or shadow root.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "open": {
         "default": "false",
         "deprecatedSince": null,
@@ -233,7 +241,7 @@
       "ki-toggle": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Emitted for a native state change, including an exclusive peer closing.",
+        "description": "Emitted when the native disclosure toggles or an exclusive peer closes it.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<KiDetailsToggleDetail>"
@@ -249,6 +257,14 @@
         "replacement": null,
         "required": false,
         "type": "boolean"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonempty name for exclusive disclosures in the same document or shadow root.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
       },
       "open": {
         "default": "false",

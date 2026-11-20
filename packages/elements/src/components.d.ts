@@ -632,6 +632,10 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
+          * Nonempty name for exclusive disclosures in the same document or shadow root.
+         */
+        "name"?: string;
+        /**
           * Whether the panel is open. Native changes reflect back to this property.
           * @default false
          */
@@ -3908,7 +3912,11 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Emitted for a native state change, including an exclusive peer closing.
+          * Nonempty name for exclusive disclosures in the same document or shadow root.
+         */
+        "name"?: string;
+        /**
+          * Emitted when the native disclosure toggles or an exclusive peer closes it.
          */
         "onKi-toggle"?: (event: KiDetailsCustomEvent<KiDetailsToggleDetail>) => void;
         /**
@@ -5535,6 +5543,7 @@ declare namespace LocalJSX {
     interface KiDetailsAttributes {
         "summary": string;
         "open": boolean;
+        "name": string;
         "disabled": boolean;
     }
     interface KiDialogAttributes {
