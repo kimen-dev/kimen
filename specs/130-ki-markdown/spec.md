@@ -33,7 +33,7 @@ Brotli-compressed component with Node 26 and pnpm 12.20.
 | Measurement | Marked implementation | Compact tokenizer | Target |
 | --- | ---: | ---: | ---: |
 | Marginal | 29.45 kB | 5.66 kB | Under 8 kB |
-| Standalone with Stencil runtime | 48.20 kB | 24.49 kB | Under 24.5 kB |
+| Standalone with Stencil runtime | 48.20 kB | 24.48 kB | Under 24.5 kB |
 
 ## Gherkin
 

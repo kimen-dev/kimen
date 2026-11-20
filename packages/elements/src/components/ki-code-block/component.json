@@ -9,10 +9,18 @@
   "catalog": true,
   "catalogAction": "ki-copy",
   "sizeBudget": {
+    "mcpApps": {
+      "raw": 9312,
+      "gzip": 2545,
+      "brotli": 1956
+    },
     "mcpServer": {
-      "raw": 15866,
-      "gzip": 4690,
-      "brotli": 2437
+      "raw": 15821,
+      "gzip": 3720,
+      "brotli": 2456
+    },
+    "tokenStylesheets": {
+      "onmars": 164
     }
   }
 }

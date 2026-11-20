@@ -1,0 +1,151 @@
+{
+  "ki": {
+    "feature-icon": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "Background color of a neutral feature icon tile."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Glyph color of a neutral feature icon tile."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional background image painted over the feature icon tile color."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete filter applied behind the feature icon tile."
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{ki.size.feature-tile.md}",
+        "$description": "Default edge length of a feature icon tile."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.corner.feature-tile.md}",
+        "$description": "Default corner radius of a square feature icon tile."
+      },
+      "circle-radius": {
+        "$type": "dimension",
+        "$value": "{ki.corner.feature-tile.circle}",
+        "$description": "Corner radius of a circular feature icon tile."
+      },
+      "xs": {
+        "$type": "dimension",
+        "size": {
+          "$value": "{ki.size.feature-tile.xs}",
+          "$description": "Edge length of an extra-small feature icon tile."
+        },
+        "radius": {
+          "$value": "{ki.corner.feature-tile.xs}",
+          "$description": "Corner radius of an extra-small square feature icon tile."
+        }
+      },
+      "sm": {
+        "$type": "dimension",
+        "size": {
+          "$value": "{ki.size.feature-tile.sm}",
+          "$description": "Edge length of a small feature icon tile."
+        },
+        "radius": {
+          "$value": "{ki.corner.feature-tile.sm}",
+          "$description": "Corner radius of a small square feature icon tile."
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "size": {
+          "$value": "{ki.size.feature-tile.lg}",
+          "$description": "Edge length of a large feature icon tile."
+        },
+        "radius": {
+          "$value": "{ki.corner.feature-tile.lg}",
+          "$description": "Corner radius of a large square feature icon tile."
+        }
+      },
+      "xl": {
+        "$type": "dimension",
+        "size": {
+          "$value": "{ki.size.feature-tile.xl}",
+          "$description": "Edge length of an extra-large feature icon tile."
+        },
+        "radius": {
+          "$value": "{ki.corner.feature-tile.xl}",
+          "$description": "Corner radius of an extra-large square feature icon tile."
+        }
+      },
+      "primary": {
+        "$type": "color",
+        "bg": {
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "Background color of a primary feature icon tile."
+        },
+        "fg": {
+          "$value": "{ki.text.primary-on-primary}",
+          "$description": "Glyph color of a primary feature icon tile."
+        }
+      },
+      "primary-light": {
+        "$type": "color",
+        "bg": {
+          "$value": "{ki.surface.primary-low-em}",
+          "$description": "Background color of a primary-light feature icon tile."
+        },
+        "fg": {
+          "$value": "{ki.text.primary-on-primary-light}",
+          "$description": "Glyph color of a primary-light feature icon tile."
+        }
+      },
+      "info": {
+        "$type": "color",
+        "bg": {
+          "$value": "{ki.surface.info-tint}",
+          "$description": "Background color of an info feature icon tile."
+        },
+        "fg": {
+          "$value": "{ki.text.info-high-em}",
+          "$description": "Glyph color of an info feature icon tile."
+        }
+      },
+      "success": {
+        "$type": "color",
+        "bg": {
+          "$value": "{ki.surface.success-tint}",
+          "$description": "Background color of a success feature icon tile."
+        },
+        "fg": {
+          "$value": "{ki.text.success-high-em}",
+          "$description": "Glyph color of a success feature icon tile."
+        }
+      },
+      "warning": {
+        "$type": "color",
+        "bg": {
+          "$value": "{ki.surface.warning-tint}",
+          "$description": "Background color of a warning feature icon tile."
+        },
+        "fg": {
+          "$value": "{ki.text.warning-high-em}",
+          "$description": "Glyph color of a warning feature icon tile."
+        }
+      },
+      "danger": {
+        "$type": "color",
+        "bg": {
+          "$value": "{ki.surface.danger-tint}",
+          "$description": "Background color of a danger feature icon tile."
+        },
+        "fg": {
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "Glyph color of a danger feature icon tile."
+        }
+      }
+    }
+  }
+}

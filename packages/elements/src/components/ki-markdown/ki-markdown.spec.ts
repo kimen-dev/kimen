@@ -33,14 +33,14 @@ describe('Markdown source', () => {
     'S4 waits for the trailing delimiter %j to be complete',
     (delimiter) => {
       expect(parseMarkdown(`| Name | Count |\n${delimiter}`, true)).toMatchObject([
-        { type: 'paragraph', text: '| Name | Count |' },
+        { type: 'paragraph', tokens: [{ type: 'text', text: '| Name | Count |' }] },
       ]);
     },
   );
 
   it('S4 retains the columns of a confirmed table as a row arrives', () => {
     expect(parseMarkdown('| Name | Count |\n| --- | --- |\n| Desk', true)).toMatchObject([
-      { type: 'table', rows: [[{ text: 'Desk' }, { text: '' }]] },
+      { type: 'table', rows: [[[{ type: 'text', text: 'Desk' }], []]] },
     ]);
   });
 
@@ -52,8 +52,11 @@ describe('Markdown source', () => {
 
   it('stops table rows at a following blockquote that contains a pipe', () => {
     expect(parseMarkdown('| A | B |\n| - | - |\n| 1 | 2 |\n> Next | Quote', false)).toMatchObject([
-      { type: 'table', rows: [[{ text: '1' }, { text: '2' }]] },
-      { type: 'blockquote', tokens: [{ type: 'paragraph', text: 'Next | Quote' }] },
+      { type: 'table', rows: [[[{ type: 'text', text: '1' }], [{ type: 'text', text: '2' }]]] },
+      {
+        type: 'blockquote',
+        tokens: [{ type: 'paragraph', tokens: [{ type: 'text', text: 'Next | Quote' }] }],
+      },
     ]);
   });
 

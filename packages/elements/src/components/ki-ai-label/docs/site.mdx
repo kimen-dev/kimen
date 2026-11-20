@@ -1,0 +1,37 @@
+---
+title: ki-ai-label
+description: Identify AI-generated content and let people inspect its provenance.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use an AI label beside a generated passage or suggested value. The small
+tinted mark can stand alone. A plain-text explanation enables the disclosure,
+where the model and generation time can also appear.
+
+<Demo code={`<ki-ai-label explanation="Written from the incident reports of the last 30 days." model="Standard" generated-at="2026-11-19T10:32"></ki-ai-label>`} />
+
+## Suggested field values
+
+Put the AI label directly in the `ki-input` end slot to add “Suggested by AI”
+to the field description. When the application has the person's original text,
+use `revertible` with an explanation and listen for `ki-revert` to restore it.
+
+<Demo code={`<ki-input label="Subject" value="Incident summary"><ki-ai-label slot="end" explanation="Suggested from the incident reports."></ki-ai-label></ki-input>`} />
+
+## Accessibility
+
+The disclosure button opens a named non-modal dialog. Focus moves inside.
+Escape returns it to the button, and Tab can continue through the page. The
+static mark adds no tab stop. Translate `label`, `trigger-label`,
+`popover-label`, `model-label`, `generated-at-label` and `revert-label`
+as applicable. On `ki-input`, translate `ai-suggestion-text`.
+
+## API reference
+
+<CemApi tag="ki-ai-label" />
+
+## Workshop
+
+[Open ki-ai-label in Storybook](/storybook/?path=/docs/docs-components-ki-ai-label--docs)

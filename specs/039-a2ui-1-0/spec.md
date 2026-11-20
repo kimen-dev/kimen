@@ -200,8 +200,8 @@ Feature: A2UI 1.0 alongside 0.9.1 in the A2UI adapter
 
     # S14
     Scenario: An unmapped 1.0 component type renders its declared fallback
-      Given the 1.0 compatibility matrix declares no catalog mapping for "Slider"
-      When the agent sends a 1.0 slider that snaps to steps of 5
+      Given the 1.0 compatibility matrix declares no catalog mapping for "Video"
+      When the agent sends a 1.0 video with a poster
       Then the declared fallback renders in its place and the gap is reported to the agent
       And the rest of the surface renders normally
 
@@ -363,7 +363,8 @@ component that carries its own five-family contract.
 | Basic catalog | `specification/v0_9_1/catalogs/basic/catalog.json` | `catalogs/basic/v1/catalog.json`, `protocolVersion: "1.0"` | Separate matrix per version (S16) |
 | Basic components | 18 types | same 18 types | Same mapping; property sets differ (below) |
 | `TextField` | `validationRegexp` | `placeholder`; `validationRegexp` removed (`@checks` + `regex`) | `placeholder` → `ki-input`/`ki-textarea` `placeholder` (S13) |
-| `Video`, `Slider` | — | `posterUrl`, `steps` | Accepted; both types stay unmapped (S14) |
+| `Video` | — | `posterUrl` | Accepted; the type stays unmapped (S14) |
+| `Slider` | `ki-slider` | `steps` | Divides the scale into the requested number of intervals (#387) |
 | `Text.variant` | `h1`–`h5`, `caption`, `body` | `caption`, `body` | Not rendered in either version (lossy, unchanged) |
 | Check functions | return `boolean` | return `ValidationResult` | `@checks` accepted and not evaluated, as `checks` in 0.9.1 |
 | `openUrl` | capability function | `requiresUserActivation: true` | Forbidden in both versions |
@@ -387,7 +388,7 @@ component that carries its own five-family contract.
 | TextField | mapped | ki-input, ki-textarea | `label`, `value`, `variant`, `placeholder`, `weight`, `@checks` |
 | CheckBox | mapped | ki-checkbox | `label`, `value`, `weight`, `@checks` |
 | ChoicePicker | mapped | ki-radio-group, ki-radio | `label`, `variant`, `options`, `value`, `displayStyle`, `filterable`, `weight`, `@checks` |
-| Image, Icon, Video, AudioPlayer, Modal, Slider, DateTimeInput | unmapped | — | — |
+| Image, Icon, Video, AudioPlayer, Modal, DateTimeInput | unmapped | — | — |
 | html, RawHtml, script, iframe | forbidden | — | — |
 
 Common 1.0 envelope keys on every component: `id`, `component`,

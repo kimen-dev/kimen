@@ -30,11 +30,6 @@ const QUOTE = /^ {0,3}>[\t ]?/u;
 const LIST = /^ {0,3}([-+*]|\d{1,9}[.)])(?:[\t ]+|$)/u;
 const HTML = /^ {0,3}<(?:\/?[a-zA-Z][\w-]*(?=[\s/>])|[!?])/u;
 
-interface TextBlock {
-  text: string;
-  tokens: MarkdownInline[];
-}
-
 type Alignment = 'left' | 'right' | 'center' | undefined;
 interface Item {
   checked: boolean | undefined;
@@ -42,13 +37,13 @@ interface Item {
 }
 
 export type MarkdownBlock =
-  | ({ type: 'paragraph' } & TextBlock)
-  | ({ type: 'heading'; depth: number } & TextBlock)
+  | { type: 'paragraph'; tokens: MarkdownInline[] }
+  | { type: 'heading'; depth: number; tokens: MarkdownInline[] }
   | { type: 'code'; lang: string; text: string }
   | { type: 'literal'; raw: string }
   | { type: 'blockquote' | 'note'; tokens: MarkdownBlock[] }
   | { type: 'list'; start: number | undefined; loose: boolean; items: Item[] }
-  | { type: 'table'; align: Alignment[]; header: TextBlock[]; rows: TextBlock[][] };
+  | { type: 'table'; align: Alignment[]; header: MarkdownInline[][]; rows: MarkdownInline[][][] };
 
 export function headingLevel(depth: number, offset: number = DEFAULT_HEADING_OFFSET): number {
   const safeOffset =
@@ -152,8 +147,8 @@ class Blocks {
     return this.lines[this.at] ?? '';
   }
 
-  private text(text: string): TextBlock {
-    return { text, tokens: parseInline(text, this.references) };
+  private inline(text: string): MarkdownInline[] {
+    return parseInline(text, this.references);
   }
 
   private startsBlock(line: string): boolean {
@@ -262,16 +257,16 @@ class Blocks {
 
   private table(head: string[], divider: string[]): MarkdownBlock {
     this.at += 1;
-    const rows: TextBlock[][] = [];
+    const rows: MarkdownInline[][][] = [];
     while (this.line().includes('|') && !this.startsBlock(this.line())) {
       const row = tableCells(this.line().trim());
-      rows.push(head.map((_, column) => this.text(row[column] ?? '')));
+      rows.push(head.map((_, column) => this.inline(row[column] ?? '')));
       this.at += 1;
     }
     return {
       type: 'table',
       align: divider.map(alignment),
-      header: head.map((cell) => this.text(cell)),
+      header: head.map((cell) => this.inline(cell)),
       rows,
     };
   }
@@ -297,7 +292,7 @@ class Blocks {
           this.references.set(definition.id, definition.reference);
       } else if (heading?.[1]) {
         const text = heading[2]?.replace(/(?:^|[\t ])#+[\t ]*$/u, '').trim() ?? '';
-        blocks.push({ type: 'heading', depth: heading[1].length, ...this.text(text) });
+        blocks.push({ type: 'heading', depth: heading[1].length, tokens: this.inline(text) });
       } else if (QUOTE.test(line)) {
         blocks.push(this.quote(line));
       } else if (marker) {
@@ -315,7 +310,7 @@ class Blocks {
       // Confirm a table only once its delimiter line has finished arriving.
       if (this.streaming && this.at === this.lines.length - 1) {
         this.at += 1;
-        return { type: 'paragraph', ...this.text(first.trim()) };
+        return { type: 'paragraph', tokens: this.inline(first.trim()) };
       }
       const head = tableCells(first.trim());
       const columns = tableCells(divider);
@@ -332,7 +327,7 @@ class Blocks {
       return {
         type: 'heading',
         depth: divider.startsWith('=') ? 1 : 2,
-        ...this.text(first.trim()),
+        tokens: this.inline(first.trim()),
       };
     }
     const lines = [first.trimStart()];
@@ -340,7 +335,7 @@ class Blocks {
       lines.push(this.line().trimStart());
       this.at += 1;
     }
-    return { type: 'paragraph', ...this.text(lines.join('\n').trimEnd()) };
+    return { type: 'paragraph', tokens: this.inline(lines.join('\n').trimEnd()) };
   }
 }
 

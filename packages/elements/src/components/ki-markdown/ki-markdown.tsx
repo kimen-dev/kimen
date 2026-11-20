@@ -186,7 +186,7 @@ export class KiMarkdown {
               scope: tag === 'th' ? 'col' : undefined,
               'data-align': token.align[column],
             },
-            ...this.inline(cell.tokens, destination),
+            ...this.inline(cell, destination),
           ),
         )}
       </tr>

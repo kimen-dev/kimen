@@ -271,10 +271,10 @@ the two ever drift. Five classes, five behaviors:
 
 | Class | Behavior |
 | --- | --- |
-| `mapped` (Text, Card, Button, TextField, Image, Icon, List, Tabs, Row, Column, Modal, …) | Renders as its neutral `ki-*` counterpart(s) |
+| `mapped` (Text, Card, Button, TextField, Image, Icon, Slider, List, Tabs, Row, Column, Modal, …) | Renders as its neutral `ki-*` counterpart(s) |
 | `inline` | Its resolved string becomes inert text in the parent slot |
 | `layout` | No element of its own; its children join the parent slot in order |
-| `unmapped` (Slider, DateTimeInput, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
+| `unmapped` (DateTimeInput, Video, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
 | `forbidden` (`html`, `RawHtml`, `script`, `iframe`) | The **whole message** is rejected (`forbidden-type`) — across every updated component, reachable from the root or not |
 
 A `Modal` with a supported `trigger` and `content` renders a `ki-button` and
