@@ -62,6 +62,14 @@ function part(host: Element, name: string): HTMLElement {
   return element;
 }
 
+async function renderedCheck(indicator: HTMLElement): Promise<SVGSVGElement> {
+  const svg = () => indicator.querySelector('ki-icon')?.shadowRoot?.querySelector('svg');
+  await expect.poll(() => svg()?.querySelector('path, polyline')).toBeTruthy();
+  const glyph = svg();
+  if (!glyph) throw new Error('Missing selected check glyph');
+  return glyph;
+}
+
 function mountedForm(main: HTMLElement): HTMLFormElement {
   const form = main.querySelector('form');
   if (!form) throw new Error('Missing form');
@@ -281,20 +289,43 @@ it('S12 restores initial selection and form data without a change event', async 
   expect(events).toEqual([]);
 });
 
-it('S13 applies selected foreground and background tokens and keeps the mark', async () => {
+it('S13 applies selected row and indicator tokens with a centered check', async () => {
   const main = await mount(list('multiple'));
   main.style.setProperty('--ki-list-item-selected-bg', 'rgb(220, 230, 240)');
   main.style.setProperty('--ki-list-item-selected-fg', 'rgb(10, 20, 30)');
+  main.style.setProperty('--ki-list-item-checkbox-selected-bg', 'rgb(30, 50, 70)');
+  main.style.setProperty('--ki-list-item-checkbox-selected-fg', 'rgb(250, 250, 250)');
   const row = await namedOption('Ana');
+  const indicator = part(row, 'indicator');
+  const glyph = await renderedCheck(indicator);
   expect(getComputedStyle(part(row, 'item')).backgroundColor).toBe('rgb(220, 230, 240)');
   expect(getComputedStyle(part(row, 'content')).color).toBe('rgb(10, 20, 30)');
-  expect(part(row, 'indicator').querySelector('ki-icon')).toBeTruthy();
+  expect(getComputedStyle(indicator).backgroundColor).toBe('rgb(30, 50, 70)');
+  expect(getComputedStyle(glyph).stroke).toBe('rgb(250, 250, 250)');
+
+  const box = indicator.getBoundingClientRect();
+  const mark = glyph.getBoundingClientRect();
+  expect(mark.width).toBeGreaterThan(0);
+  expect(mark.height).toBeGreaterThan(0);
+  expect(mark.width).toBeLessThanOrEqual(indicator.clientWidth + 0.5);
+  expect(mark.height).toBeLessThanOrEqual(indicator.clientHeight + 0.5);
+  expect(Math.abs(mark.left + mark.width / 2 - (box.left + box.width / 2))).toBeLessThanOrEqual(
+    0.5,
+  );
+  expect(Math.abs(mark.top + mark.height / 2 - (box.top + box.height / 2))).toBeLessThanOrEqual(
+    0.5,
+  );
+
+  const unselected = part(await namedOption('Sara'), 'indicator');
+  expect(getComputedStyle(unselected).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(unselected.querySelector('ki-icon')).toBeNull();
 });
 
 it('S14 retains the selection mark and focus ring in forced colors', async ({ skip }) => {
   const main = await mount(`<button tabindex="0">Before</button>${list('multiple')}`);
   const row = await namedOption('Ana');
   const indicator = part(row, 'indicator');
+  const glyph = await renderedCheck(indicator);
   const witness = document.createElement('div');
   const authorColor = 'rgb(1, 2, 3)';
   witness.style.backgroundColor = authorColor;
@@ -315,10 +346,13 @@ it('S14 retains the selection mark and focus ring in forced colors', async ({ sk
     await userEvent.tab();
     await expect.element(page.getByRole('option', { name: 'Ana' })).toHaveFocus();
     expect(getComputedStyle(part(row, 'item')).outlineStyle).toBe('solid');
-    const border = getComputedStyle(indicator);
-    expect(border.borderBlockStartStyle).toBe('solid');
-    expect(border.borderBlockStartColor).not.toBe(getComputedStyle(witness).backgroundColor);
-    expect(indicator.querySelector('ki-icon')).toBeTruthy();
+    const paint = getComputedStyle(indicator);
+    const canvas = getComputedStyle(witness).backgroundColor;
+    expect(paint.borderBlockStartStyle).toBe('solid');
+    expect(paint.borderBlockStartColor).not.toBe(canvas);
+    expect(paint.backgroundColor).not.toBe(canvas);
+    expect(getComputedStyle(glyph).stroke).toBe(paint.color);
+    expect(getComputedStyle(glyph).stroke).not.toBe(paint.backgroundColor);
   } finally {
     await browserCommands.emulateForcedColors(null);
   }

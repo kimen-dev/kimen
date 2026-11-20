@@ -2335,6 +2335,8 @@ CSS custom properties:
 - `--ki-inverse-white-alpha-3`: semantic color for inverse white alpha 3.
 - `--ki-inverse-white-alpha-6`: semantic color for inverse white alpha 6.
 - `--ki-list-item-checkbox-radius`: Corner radius of a multiple-selection indicator.
+- `--ki-list-item-checkbox-selected-bg`: Fill of the selected multiple-choice indicator.
+- `--ki-list-item-checkbox-selected-fg`: Check mark ink on the selected indicator.
 - `--ki-list-item-gap`: dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).
 - `--ki-list-item-hover-bg`: Background of an unselected hovered interactive list row.
 - `--ki-list-item-hover-fg`: Text and indicator on an unselected hovered interactive list row.

@@ -107,6 +107,22 @@
         "required": false,
         "type": null
       },
+      "--ki-list-item-checkbox-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the selected multiple-choice indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-checkbox-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Check mark ink on the selected indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-list-item-gap": {
         "default": null,
         "deprecatedSince": null,

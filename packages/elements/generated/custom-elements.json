@@ -7021,6 +7021,14 @@
               "description": "Corner radius of a multiple-selection indicator."
             },
             {
+              "name": "--ki-list-item-checkbox-selected-bg",
+              "description": "Fill of the selected multiple-choice indicator."
+            },
+            {
+              "name": "--ki-list-item-checkbox-selected-fg",
+              "description": "Check mark ink on the selected indicator."
+            },
+            {
               "name": "--ki-list-item-gap",
               "description": "dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions)."
             },

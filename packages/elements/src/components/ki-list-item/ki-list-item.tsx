@@ -43,6 +43,8 @@ function hasContent(nodes: readonly Node[], textSlot = false): boolean {
  * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
  * @cssprop --ki-list-item-selected-bg - Selected option fill.
  * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+ * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+ * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
  * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
  */
 @Component({

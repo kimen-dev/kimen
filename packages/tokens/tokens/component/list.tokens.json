@@ -242,6 +242,16 @@
           "$value": "{ki.layout.spacing.xxs}",
           "$description": "Stroke around a visual option indicator."
         },
+        "checkbox-selected-bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "Fill of the selected multiple-choice indicator."
+        },
+        "checkbox-selected-fg": {
+          "$type": "color",
+          "$value": "{ki.text.primary-on-primary}",
+          "$description": "Check mark ink on the selected indicator."
+        },
         "checkbox-radius": {
           "$type": "dimension",
           "$value": "{ki.corner.inline}",

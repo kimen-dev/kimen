@@ -5017,6 +5017,14 @@
         },
         {
           "name": "cssprop",
+          "text": "--ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator."
+        },
+        {
+          "name": "cssprop",
           "text": "--ki-list-item-interactive-radius - Corner radius of links and options."
         }
       ],

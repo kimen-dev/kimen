@@ -274,7 +274,20 @@
 
 .checkbox {
   border-radius: var(--ki-list-item-checkbox-radius);
-  font-size: calc(var(--ki-list-item-indicator-size) * 0.75);
+}
+
+.checkbox > ki-icon {
+  /* Size the glyph independently of the em-sized box and keep it inside both edges. */
+  font-size: min(
+    calc(var(--ki-list-item-indicator-size) * 0.75),
+    calc(var(--ki-list-item-indicator-size) - 2 * var(--ki-list-item-indicator-border-width))
+  );
+}
+
+:host([aria-selected="true"]) .checkbox {
+  background-color: var(--ki-list-item-checkbox-selected-bg);
+  border-color: var(--ki-list-item-checkbox-selected-bg);
+  color: var(--ki-list-item-checkbox-selected-fg);
 }
 
 .radio {
@@ -298,6 +311,13 @@
   .checkbox,
   .radio {
     border-color: CanvasText;
+  }
+
+  :host([aria-selected="true"]) .checkbox {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+    border-color: CanvasText;
+    color: Canvas;
   }
 
   :host([aria-selected="true"]) .radio::before {

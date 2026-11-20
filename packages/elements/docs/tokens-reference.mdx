@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 400 semantic
-and 1286 component tokens. Values are the resolved **onmars light**
+and 1288 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1333,6 +1333,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-list-bg` | `#ffffff` | color used by the list component for background. |
 | `--ki-list-gap` | `0rem` | dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook). |
 | `--ki-list-item-checkbox-radius` | `2px` | Corner radius of a multiple-selection indicator. |
+| `--ki-list-item-checkbox-selected-bg` | `#1d1a16` | Fill of the selected multiple-choice indicator. |
+| `--ki-list-item-checkbox-selected-fg` | `#ffffff` | Check mark ink on the selected indicator. |
 | `--ki-list-item-divider-color` | `rgba(24, 22, 19, 0.1)` | color used by the list component for item divider color. |
 | `--ki-list-item-divider-width` | `0rem` | dimension used by the list component for item divider width (no divider renders in any master variant; the color hook ki.list.item.divider-color stays so consumers can opt hairlines back in). |
 | `--ki-list-item-gap` | `0.75rem` | dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions). |
