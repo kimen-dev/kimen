@@ -45,11 +45,13 @@ Feature: ki-empty-state explains an empty view
     Examples:
       | level       | expected |
       | omitted     | 3        |
+      | 1           | 1        |
       | 2           | 2        |
       | 4           | 4        |
       | 5           | 5        |
       | 6           | 6        |
       | 3.5         | 3        |
+      | 02          | 3        |
       | 2junk       | 3        |
       | unsupported | 3        |
 

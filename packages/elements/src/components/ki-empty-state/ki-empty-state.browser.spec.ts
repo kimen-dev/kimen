@@ -187,11 +187,13 @@ it('S5 delivers the search message to an existing polite status and leaves focus
 
 it.each([
   ['', 3],
+  ['heading-level="1"', 1],
   ['heading-level="2"', 2],
   ['heading-level="4"', 4],
   ['heading-level="5"', 5],
   ['heading-level="6"', 6],
   ['heading-level="3.5"', 3],
+  ['heading-level="02"', 3],
   ['heading-level="2junk"', 3],
   ['heading-level="unsupported"', 3],
 ])('S6 resolves %s to a native level %s heading in a static message', async (attributes, level) => {
@@ -202,7 +204,7 @@ it.each([
   expect(page.getByRole('status').all()).toHaveLength(0);
 });
 
-it('S6 revalidates changed heading attributes and accepts subsequent numeric property writes', async () => {
+it('S6 revalidates the raw attribute and uses the numeric property when it is absent', async () => {
   fixture.innerHTML = markup('heading-level="2"');
   const host = fixture.querySelector('ki-empty-state');
   if (!host) throw new Error('Expected the EmptyState host');
@@ -213,8 +215,9 @@ it('S6 revalidates changed heading attributes and accepts subsequent numeric pro
 
   host.setAttribute('heading-level', '3');
   host.setAttribute('heading-level', '2junk');
-  expect(host.headingLevel).toBe(3);
+  await expect.element(page.getByRole('heading', { level: 3, name: heading })).toBeVisible();
 
+  host.removeAttribute('heading-level');
   host.headingLevel = 2;
   await expect.element(page.getByRole('heading', { level: 2, name: heading })).toBeVisible();
 });

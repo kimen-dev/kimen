@@ -1,4 +1,4 @@
-import { AttrDeserialize, Component, Element, h, Prop, State } from '@stencil/core';
+import { Component, Element, forceUpdate, h, Prop, State } from '@stencil/core';
 
 import { getIcon } from '../../utils/icon-registry.mjs';
 import { resolveHeadingLevel } from './ki-empty-state.heading.js';
@@ -30,8 +30,7 @@ import { resolveHeadingLevel } from './ki-empty-state.heading.js';
 })
 export class KiEmptyState {
   @Element() private readonly host!: HTMLElement;
-  private currentHeadingLevel = 3;
-  private lastHeadingLevelAttribute: string | null = null;
+  private headingAttributeObserver?: MutationObserver;
 
   /** Localized heading that identifies the empty view. Blank text omits the heading. */
   @Prop() heading!: string;
@@ -61,28 +60,7 @@ export class KiEmptyState {
    * @minimum 2
    * @maximum 6
    */
-  @Prop()
-  get headingLevel(): number {
-    const attribute = this.host.getAttribute('heading-level');
-    // Stencil reads the getter before skipping an attribute write that
-    // already equals the numeric property. Remember that spelling too.
-    if (Number(attribute) === this.currentHeadingLevel) {
-      this.lastHeadingLevelAttribute = attribute;
-    }
-    return this.currentHeadingLevel;
-  }
-
-  set headingLevel(value: number | null) {
-    const attribute = this.host.getAttribute('heading-level');
-    // The external Stencil runtime can call this setter with parseFloat's
-    // result. Validate the complete attribute before accepting that value.
-    const fromAttribute =
-      attribute !== null &&
-      attribute !== this.lastHeadingLevelAttribute &&
-      Object.is(value, Number.parseFloat(attribute));
-    this.lastHeadingLevelAttribute = attribute;
-    this.currentHeadingLevel = resolveHeadingLevel(fromAttribute ? attribute : value);
-  }
+  @Prop() headingLevel = 3;
 
   /**
    * Put the heading and description in a polite status, with actions outside
@@ -90,14 +68,25 @@ export class KiEmptyState {
    */
   @Prop() announce = false;
 
-  @AttrDeserialize('headingLevel')
-  private deserializeHeadingLevel(value: string | null): number {
-    return resolveHeadingLevel(value);
-  }
-
   @State() private hasMedia = false;
   @State() private hasActions = false;
   @State() private liveRegionReady = false;
+
+  connectedCallback(): void {
+    // Stencil can coalesce different attribute strings into the same number.
+    this.headingAttributeObserver = new MutationObserver(() => {
+      forceUpdate(this.host);
+    });
+    this.headingAttributeObserver.observe(this.host, {
+      attributes: true,
+      attributeFilter: ['heading-level'],
+    });
+    forceUpdate(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.headingAttributeObserver?.disconnect();
+  }
 
   componentDidLoad(): void {
     if (this.announce) {
@@ -123,7 +112,8 @@ export class KiEmptyState {
 
   render() {
     const heading = typeof this.heading === 'string' ? this.heading.trim() : '';
-    const headingTag = `h${String(this.headingLevel)}`;
+    const level = resolveHeadingLevel(this.host.getAttribute('heading-level'), this.headingLevel);
+    const headingTag = `h${String(level)}`;
     const iconName = this.iconName;
     const hasIcon = iconName !== undefined && getIcon(iconName) !== undefined;
     const small = this.size === 'sm';

@@ -6,7 +6,7 @@
 | `icon-name` | `iconName` | Registered Lucide name | None |
 | `tone` | `tone` | `neutral \| primary \| primary-light \| info \| success \| warning \| danger` | `neutral` |
 | `size` | `size` | `sm \| md` | `md` |
-| `heading-level` | `headingLevel` | Integer from 2 through 6 | 3 |
+| `heading-level` | `headingLevel` | Attribute digit 1–6 or numeric property 2–6 | 3 |
 | `announce` | `announce` | Boolean | `false` |
 
 The default slot holds the description. The `media` slot accepts a decorative
@@ -17,7 +17,9 @@ slotted control and declare the action ID at surface level.
 
 Use `announce` when an interaction can empty a list. The heading and recovery
 advice appear in a polite region established before the first update. A native
-heading exposes the level regardless of presentation size.
+heading exposes the level regardless of presentation size. If the attribute is
+present, an invalid spelling falls back to level three. The numeric property
+applies when the attribute is absent.
 
 The `container`, `media`, `heading`, `description` and `actions` parts
 allow scoped styling. The theme can override the spacing, maximum inline
