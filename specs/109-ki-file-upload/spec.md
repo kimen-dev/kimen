@@ -10,9 +10,9 @@ The application owns all file transfers and handles cancellation requests.
 
 | Family | Scenarios |
 | --- | --- |
-| Core | S1, S2, S3 |
-| Keyboard | S4, S5 |
-| Assistive technology | S6 |
+| Core behavior | S1, S2, S3 |
+| Keyboard path | S4, S5 |
+| Assistive-tech outcome | S6 |
 | Form participation | S7, S8, S9 |
 | Theming | S10, S11, S12 |
 
