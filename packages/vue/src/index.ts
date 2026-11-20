@@ -5,7 +5,6 @@
  * Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export { KiAccordion } from './ki-accordion.js';
 export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';
@@ -18,10 +17,11 @@ export { KiCheckboxGroup } from './ki-checkbox-group.js';
 export { KiChip } from './ki-chip.js';
 export { KiChipGroup } from './ki-chip-group.js';
 export { KiCounter } from './ki-counter.js';
-export { KiDetails } from './ki-details.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
 export { KiEmptyState } from './ki-empty-state.js';
+export { KiFormatDate } from './ki-format-date.js';
+export { KiFormatNumber } from './ki-format-number.js';
 export { KiGrid } from './ki-grid.js';
 export { KiIcon } from './ki-icon.js';
 export { KiIconButton } from './ki-icon-button.js';
@@ -40,6 +40,7 @@ export { KiProgress } from './ki-progress.js';
 export { KiQr } from './ki-qr.js';
 export { KiRadio } from './ki-radio.js';
 export { KiRadioGroup } from './ki-radio-group.js';
+export { KiRelativeTime } from './ki-relative-time.js';
 export { KiScroller } from './ki-scroller.js';
 export { KiSegment } from './ki-segment.js';
 export { KiSegmentedControl } from './ki-segmented-control.js';

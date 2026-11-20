@@ -49,52 +49,6 @@ stylesheet (exported as `@kimen/tokens/css/material3`) in addition to
 
 ## Components
 
-### ki-accordion
-
-A set of native disclosure panels with a shared frame.
-
-When to use: group related FAQ answers, settings or expandable sections.
-Enable exclusive when readers benefit from one open section at a time.
-When NOT to use: switch between views or make the panels advance a workflow.
-
-Examples:
-
-### Workspace FAQ
-
-Group direct disclosure children. Set `exclusive` when readers should see
-one answer at a time.
-
-```html
-<ki-accordion exclusive>
-  <ki-details open summary="Who can see my workspace?">
-    Only people you invite can see it.
-  </ki-details>
-  <ki-details summary="Can I export my data?">
-    Open Settings, then select Data and Export.
-  </ki-details>
-</ki-accordion>
-```
-
-Attributes:
-- `exclusive` (boolean, default false): Whether the accordion allows at most one direct member to be open.
-
-Slots:
-- (default): Direct ki-details members in reading order.
-
-Parts:
-- `group`: The frame around the disclosure rows.
-
-Events: none
-
-Methods: none
-
-CSS custom properties:
-- `--ki-accordion-divider-width`: Width of the separator between accordion rows.
-- `--ki-details-border`: Color of the disclosure frame and accordion separators.
-- `--ki-details-border-width`: Width of the disclosure or accordion frame.
-- `--ki-details-radius`: Corners of a standalone disclosure or the accordion frame.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-
 ### ki-alert
 
 A persistent inline status message with token-backed tone semantics.
@@ -1601,75 +1555,6 @@ CSS custom properties:
 - `--ki-counter-success-bg`: Success notification indicator fill.
 - `--ki-counter-success-fg`: Success notification count text.
 
-### ki-details
-
-A native disclosure for supporting information that can stay collapsed.
-
-When to use: reveal a short explanation, FAQ answer, settings section or tool
-output on demand. Use ki-accordion for related disclosures.
-When NOT to use: hide the primary action or information needed to complete a task.
-For script-free HTML, author native details and summary directly.
-
-Examples:
-
-### Workspace permissions
-
-Use one disclosure for an explanation the reader can reveal on demand.
-Use the plain `summary` prop for text or a heading in the `summary` slot.
-The default slot contains the answer.
-
-```html
-<ki-details summary="Who can see my workspace?">
-  <p>Only people you invite can see it.</p>
-</ki-details>
-```
-
-Listen for `ki-toggle` on the disclosure to read `event.detail.open`.
-In a catalog surface, bind the action to the individual Details node.
-
-Attributes:
-- `disabled` (boolean, default false): Disables summary activation. The page can still set open.
-- `open` (boolean, default false): Whether the panel is open. Native changes reflect back to this property.
-- `summary` (string | undefined): Plain label for the control. Supply the summary slot for a rich label.
-
-Slots:
-- (default): Content shown when the disclosure is open.
-- `summary`: Rich summary text or an authored heading, replacing the summary prop.
-
-Parts: none
-
-Events:
-- `ki-toggle` (CustomEvent<KiDetailsToggleDetail>): Emitted for a native state change, including an exclusive peer closing.
-
-Methods: none
-
-CSS custom properties:
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-details-backdrop-filter`: Complete filter for the backdrop behind the disclosure surface.
-- `--ki-details-bg`: Color of the disclosure surface.
-- `--ki-details-bg-image`: Optional image painted over the disclosure surface.
-- `--ki-details-body-bg`: Surface color of the disclosure body.
-- `--ki-details-body-fg`: Supporting text color of the disclosure body.
-- `--ki-details-border`: Color of the disclosure frame and accordion separators.
-- `--ki-details-border-width`: Width of the disclosure or accordion frame.
-- `--ki-details-disabled-fg`: Text and icon color of a disabled summary.
-- `--ki-details-fg`: Text color on the disclosure surface.
-- `--ki-details-motion-duration`: Duration of the chevron rotation.
-- `--ki-details-motion-easing`: Easing of the chevron rotation.
-- `--ki-details-padding`: Inline inset of the summary and inset of the panel body.
-- `--ki-details-radius`: Corners of a standalone disclosure or the accordion frame.
-- `--ki-details-summary-hover-bg`: Surface color of a hovered summary.
-- `--ki-details-summary-hover-fg`: Text and icon color of a hovered summary.
-- `--ki-details-summary-padding-block`: Block inset of the summary.
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-
 ### ki-dialog
 
 A modal dialog for one interrupting decision or short focused task.
@@ -1938,6 +1823,94 @@ CSS custom properties:
 - `--ki-empty-state-tile-warning-bg`: Background of the warning decorative tile.
 - `--ki-empty-state-tile-warning-fg`: Glyph ink on the warning decorative tile.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-format-date
+
+Displays an ISO date or timestamp in the reader's language.
+
+When to use: For raw date and timestamp values in tables, records and prose.
+When NOT to use: For an editable date or an elapsed time that should change as the clock advances.
+
+Examples:
+
+# Format a date
+
+Use a calendar date when the day is the value, and send an offset or `Z` when
+the value is a timestamp. Set `lang` on the surrounding document or section.
+
+```html
+<section lang="es-ES">
+  <ki-format-date date="2026-11-19" date-style="long"></ki-format-date>
+  <ki-format-date
+    date="2026-11-19T23:41:00Z"
+    date-style="long"
+    time-style="short"
+    time-zone="Europe/Madrid"
+  ></ki-format-date>
+</section>
+```
+
+Attributes:
+- `date` (string | undefined): ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.
+- `date-style` ("full" | "long" | "medium" | "short" | undefined): Date detail. Defaults to medium when neither date style nor time style is supplied.
+- `lang` (string | undefined): Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.
+- `time-style` ("full" | "long" | "medium" | "short" | undefined): Time detail. Omit to show the date alone.
+- `time-zone` (string | undefined): IANA time zone for a timestamp. A calendar date keeps its day in every zone.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-format-date-font-family`: Default body font family for ki-format-date on a bare page.
+
+### ki-format-number
+
+Displays a raw number using local number conventions and tabular figures.
+
+When to use: For numeric data, currency amounts, ratios and measurements in content.
+When NOT to use: For numeric input or values that already include localized formatting.
+
+Examples:
+
+# Format a number
+
+Pass raw numbers and let the nearest `lang` declaration select the separators,
+spacing and symbols. A percent takes a ratio.
+
+```html
+<section lang="es-ES">
+  <ki-format-number value="1284.5"></ki-format-number>
+  <ki-format-number value="49" currency="EUR"></ki-format-number>
+  <ki-format-number value="0.496" format-style="percent" maximum-fraction-digits="1"></ki-format-number>
+  <ki-format-number value="23" format-style="unit" unit="celsius"></ki-format-number>
+  <ki-format-number value="59320" notation="compact"></ki-format-number>
+</section>
+```
+
+Attributes:
+- `currency` (string | undefined): ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.
+- `format-style` ("decimal" | "percent" | "unit" | undefined): Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.
+- `maximum-fraction-digits` (number | undefined, minimum 0): Maximum number of fraction digits.
+- `minimum-fraction-digits` (number | undefined, minimum 0): Minimum number of fraction digits.
+- `notation` ("compact" | undefined): Use compact notation for abbreviated large numbers. Omit for standard notation.
+- `unit` (string | undefined): Intl unit identifier, such as celsius or kilometer. Use with format-style="unit".
+- `value` (number | undefined): Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-format-number-font-family`: Default body font family for ki-format-number on a bare page.
 
 ### ki-grid
 
@@ -3642,6 +3615,42 @@ CSS custom properties:
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+
+### ki-relative-time
+
+Displays the elapsed or remaining time for a timestamp in the reader's language.
+
+When to use: For timestamps whose distance from the present matters, such as timeline entries or recent changes.
+When NOT to use: For an interactive countdown or a date that should always show an absolute value.
+
+Examples:
+
+# Format a relative timestamp
+
+Use `sync` to update the visible wording as time passes. A threshold of
+86,400 seconds switches to the formatted timestamp at one day's distance.
+Assistive technology and the tooltip expose the absolute timestamp throughout.
+
+```html
+<ki-relative-time date="2026-11-19T08:41:00Z" sync threshold="86400"></ki-relative-time>
+```
+
+Attributes:
+- `date` (string | undefined): ISO calendar date or date-time. A timestamp without an offset uses local time.
+- `numeric` ("always" | "auto", default 'auto'): Auto can show words such as yesterday. Always uses a number.
+- `sync` (boolean, default false): Refresh the visible wording as the clock crosses a formatting boundary.
+- `threshold` (number | undefined, minimum 0): Display an absolute timestamp when the distance reaches this many seconds. Omit to keep relative wording at any distance.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-relative-time-font-family`: Default body font family for ki-relative-time on a bare page.
 
 ### ki-scroller
 

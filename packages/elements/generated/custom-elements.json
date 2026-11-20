@@ -4,99 +4,6 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-accordion.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiAccordion",
-          "customElement": true,
-          "tagName": "ki-accordion",
-          "description": "A set of native disclosure panels with a shared frame.",
-          "whenToUse": "group related FAQ answers, settings or expandable sections.\nEnable exclusive when readers benefit from one open section at a time.",
-          "whenNotToUse": "switch between views or make the panels advance a workflow.",
-          "attributes": [
-            {
-              "name": "exclusive",
-              "fieldName": "exclusive",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the accordion allows at most one direct member to be open."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "exclusive",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the accordion allows at most one direct member to be open.",
-              "attribute": "exclusive",
-              "reflects": true
-            }
-          ],
-          "events": [],
-          "slots": [
-            {
-              "name": "",
-              "description": "Direct ki-details members in reading order."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "group",
-              "description": "The frame around the disclosure rows."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-accordion-divider-width",
-              "description": "Width of the separator between accordion rows."
-            },
-            {
-              "name": "--ki-details-border",
-              "description": "Color of the disclosure frame and accordion separators."
-            },
-            {
-              "name": "--ki-details-border-width",
-              "description": "Width of the disclosure or accordion frame."
-            },
-            {
-              "name": "--ki-details-radius",
-              "description": "Corners of a standalone disclosure or the accordion frame."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiAccordion",
-          "declaration": {
-            "name": "KiAccordion",
-            "module": "dist/components/ki-accordion.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-accordion",
-          "declaration": {
-            "name": "KiAccordion",
-            "module": "dist/components/ki-accordion.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-alert.js",
       "declarations": [
         {
@@ -4631,226 +4538,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-details.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiDetails",
-          "customElement": true,
-          "tagName": "ki-details",
-          "description": "A native disclosure for supporting information that can stay collapsed.",
-          "whenToUse": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures.",
-          "whenNotToUse": "hide the primary action or information needed to complete a task.\nFor script-free HTML, author native details and summary directly.",
-          "attributes": [
-            {
-              "name": "disabled",
-              "fieldName": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables summary activation. The page can still set open."
-            },
-            {
-              "name": "open",
-              "fieldName": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the panel is open. Native changes reflect back to this property."
-            },
-            {
-              "name": "summary",
-              "fieldName": "summary",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Plain label for the control. Supply the summary slot for a rich label."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "disabled",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables summary activation. The page can still set open.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the panel is open. Native changes reflect back to this property.",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "summary",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Plain label for the control. Supply the summary slot for a rich label.",
-              "attribute": "summary",
-              "reflects": false
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-toggle",
-              "type": {
-                "text": "CustomEvent<KiDetailsToggleDetail>"
-              },
-              "description": "Emitted for a native state change, including an exclusive peer closing."
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Content shown when the disclosure is open."
-            },
-            {
-              "name": "summary",
-              "description": "Rich summary text or an authored heading, replacing the summary prop."
-            }
-          ],
-          "cssParts": [],
-          "cssProperties": [
-            {
-              "name": "--ki-density-space-scale",
-              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-details-backdrop-filter",
-              "description": "Complete filter for the backdrop behind the disclosure surface."
-            },
-            {
-              "name": "--ki-details-bg",
-              "description": "Color of the disclosure surface."
-            },
-            {
-              "name": "--ki-details-bg-image",
-              "description": "Optional image painted over the disclosure surface."
-            },
-            {
-              "name": "--ki-details-body-bg",
-              "description": "Surface color of the disclosure body."
-            },
-            {
-              "name": "--ki-details-body-fg",
-              "description": "Supporting text color of the disclosure body."
-            },
-            {
-              "name": "--ki-details-border",
-              "description": "Color of the disclosure frame and accordion separators."
-            },
-            {
-              "name": "--ki-details-border-width",
-              "description": "Width of the disclosure or accordion frame."
-            },
-            {
-              "name": "--ki-details-disabled-fg",
-              "description": "Text and icon color of a disabled summary."
-            },
-            {
-              "name": "--ki-details-fg",
-              "description": "Text color on the disclosure surface."
-            },
-            {
-              "name": "--ki-details-motion-duration",
-              "description": "Duration of the chevron rotation."
-            },
-            {
-              "name": "--ki-details-motion-easing",
-              "description": "Easing of the chevron rotation."
-            },
-            {
-              "name": "--ki-details-padding",
-              "description": "Inline inset of the summary and inset of the panel body."
-            },
-            {
-              "name": "--ki-details-radius",
-              "description": "Corners of a standalone disclosure or the accordion frame."
-            },
-            {
-              "name": "--ki-details-summary-hover-bg",
-              "description": "Surface color of a hovered summary."
-            },
-            {
-              "name": "--ki-details-summary-hover-fg",
-              "description": "Text and icon color of a hovered summary."
-            },
-            {
-              "name": "--ki-details-summary-padding-block",
-              "description": "Block inset of the summary."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-body-1",
-              "description": "semantic dimension for typography line height body 1."
-            },
-            {
-              "name": "--ki-typography-line-height-para",
-              "description": "semantic dimension for typography line height para."
-            },
-            {
-              "name": "--ki-typography-size-body-1",
-              "description": "semantic dimension for typography size body 1."
-            },
-            {
-              "name": "--ki-typography-weight-body-medium",
-              "description": "semantic font weight for typography weight body medium."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiDetails",
-          "declaration": {
-            "name": "KiDetails",
-            "module": "dist/components/ki-details.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-details",
-          "declaration": {
-            "name": "KiDetails",
-            "module": "dist/components/ki-details.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-dialog.js",
       "declarations": [
         {
@@ -5626,6 +5313,330 @@
           "declaration": {
             "name": "KiEmptyState",
             "module": "dist/components/ki-empty-state.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-format-date.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFormatDate",
+          "customElement": true,
+          "tagName": "ki-format-date",
+          "description": "Displays an ISO date or timestamp in the reader's language.",
+          "whenToUse": "For raw date and timestamp values in tables, records and prose.",
+          "whenNotToUse": "For an editable date or an elapsed time that should change as the clock advances.",
+          "attributes": [
+            {
+              "name": "date",
+              "fieldName": "date",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time."
+            },
+            {
+              "name": "date-style",
+              "fieldName": "dateStyle",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Date detail. Defaults to medium when neither date style nor time style is supplied."
+            },
+            {
+              "name": "lang",
+              "fieldName": "locale",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted."
+            },
+            {
+              "name": "time-style",
+              "fieldName": "timeStyle",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Time detail. Omit to show the date alone."
+            },
+            {
+              "name": "time-zone",
+              "fieldName": "timeZone",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "date",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.",
+              "attribute": "date",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "dateStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Date detail. Defaults to medium when neither date style nor time style is supplied.",
+              "attribute": "date-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.",
+              "attribute": "lang",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "timeStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Time detail. Omit to show the date alone.",
+              "attribute": "time-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "timeZone",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone.",
+              "attribute": "time-zone",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-format-date-font-family",
+              "description": "Default body font family for ki-format-date on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFormatDate",
+          "declaration": {
+            "name": "KiFormatDate",
+            "module": "dist/components/ki-format-date.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-format-date",
+          "declaration": {
+            "name": "KiFormatDate",
+            "module": "dist/components/ki-format-date.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-format-number.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFormatNumber",
+          "customElement": true,
+          "tagName": "ki-format-number",
+          "description": "Displays a raw number using local number conventions and tabular figures.",
+          "whenToUse": "For numeric data, currency amounts, ratios and measurements in content.",
+          "whenNotToUse": "For numeric input or values that already include localized formatting.",
+          "attributes": [
+            {
+              "name": "currency",
+              "fieldName": "currency",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted."
+            },
+            {
+              "name": "format-style",
+              "fieldName": "formatStyle",
+              "type": {
+                "text": "\"decimal\" | \"percent\" | \"unit\" | undefined"
+              },
+              "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal."
+            },
+            {
+              "name": "maximum-fraction-digits",
+              "fieldName": "maximumFractionDigits",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of fraction digits.",
+              "minimum": 0
+            },
+            {
+              "name": "minimum-fraction-digits",
+              "fieldName": "minimumFractionDigits",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Minimum number of fraction digits.",
+              "minimum": 0
+            },
+            {
+              "name": "notation",
+              "fieldName": "notation",
+              "type": {
+                "text": "\"compact\" | undefined"
+              },
+              "description": "Use compact notation for abbreviated large numbers. Omit for standard notation."
+            },
+            {
+              "name": "unit",
+              "fieldName": "unit",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\"."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "currency",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.",
+              "attribute": "currency",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "formatStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"decimal\" | \"percent\" | \"unit\" | undefined"
+              },
+              "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.",
+              "attribute": "format-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "maximumFractionDigits",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of fraction digits.",
+              "attribute": "maximum-fraction-digits",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "minimumFractionDigits",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Minimum number of fraction digits.",
+              "attribute": "minimum-fraction-digits",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "notation",
+              "privacy": "public",
+              "type": {
+                "text": "\"compact\" | undefined"
+              },
+              "description": "Use compact notation for abbreviated large numbers. Omit for standard notation.",
+              "attribute": "notation",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "unit",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\".",
+              "attribute": "unit",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-format-number-font-family",
+              "description": "Default body font family for ki-format-number on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFormatNumber",
+          "declaration": {
+            "name": "KiFormatNumber",
+            "module": "dist/components/ki-format-number.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-format-number",
+          "declaration": {
+            "name": "KiFormatNumber",
+            "module": "dist/components/ki-format-number.js"
           }
         }
       ]
@@ -10720,6 +10731,134 @@
           "declaration": {
             "name": "KiRadioGroup",
             "module": "dist/components/ki-radio-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-relative-time.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiRelativeTime",
+          "customElement": true,
+          "tagName": "ki-relative-time",
+          "description": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
+          "whenToUse": "For timestamps whose distance from the present matters, such as timeline entries or recent changes.",
+          "whenNotToUse": "For an interactive countdown or a date that should always show an absolute value.",
+          "attributes": [
+            {
+              "name": "date",
+              "fieldName": "date",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date or date-time. A timestamp without an offset uses local time."
+            },
+            {
+              "name": "numeric",
+              "fieldName": "numeric",
+              "type": {
+                "text": "\"always\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "Auto can show words such as yesterday. Always uses a number."
+            },
+            {
+              "name": "sync",
+              "fieldName": "sync",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Refresh the visible wording as the clock crosses a formatting boundary."
+            },
+            {
+              "name": "threshold",
+              "fieldName": "threshold",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+              "minimum": 0
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "date",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date or date-time. A timestamp without an offset uses local time.",
+              "attribute": "date",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "numeric",
+              "privacy": "public",
+              "type": {
+                "text": "\"always\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "Auto can show words such as yesterday. Always uses a number.",
+              "attribute": "numeric",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "sync",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Refresh the visible wording as the clock crosses a formatting boundary.",
+              "attribute": "sync",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "threshold",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+              "attribute": "threshold",
+              "reflects": false,
+              "minimum": 0
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-relative-time-font-family",
+              "description": "Default body font family for ki-relative-time on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiRelativeTime",
+          "declaration": {
+            "name": "KiRelativeTime",
+            "module": "dist/components/ki-relative-time.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-relative-time",
+          "declaration": {
+            "name": "KiRelativeTime",
+            "module": "dist/components/ki-relative-time.js"
           }
         }
       ]
