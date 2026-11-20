@@ -37,3 +37,21 @@ export const Toggletip: Story = {
     </div>
   ),
 };
+
+export const RichToggletip: Story = {
+  args: { appearance: 'rich', kind: 'toggletip', label: 'About contrast mode', arrow: false },
+  render: (args) => (
+    <div>
+      <ki-button id="story-contrast" type="button" variant="ghost">
+        Contrast mode
+      </ki-button>
+      <ki-popover {...args} for="story-contrast">
+        <strong>Contrast mode</strong>
+        <p>Kimen follows the system setting.</p>
+        <ki-button size="sm" type="button" variant="ghost">
+          Learn more
+        </ki-button>
+      </ki-popover>
+    </div>
+  ),
+};

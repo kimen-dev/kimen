@@ -132,6 +132,9 @@ Feature: Rich tooltip and toggletip
   non-modal dialog semantics and the popover's first-action focus policy. If
   it has no focusable action, the titled panel receives focus. The default
   toggletip keeps its text announcement behavior.
+- **Agent's choice, pending founder confirmation.** Dialog popovers can opt
+  into rich styling as well. A direct `<strong>` child picks up the rich heading
+  style. Coarse-pointer layouts use the inherited Kimen density controls.
 - **Agent's choice, pending founder confirmation.** Rich body ink uses semantic
   supporting text. It matches medium-emphasis text in standard modes and
   increases emphasis in contrast-more to meet the contrast gate.

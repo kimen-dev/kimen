@@ -1,4 +1,4 @@
-`label` is the entire tooltip content, reflected to the slotted trigger's accessible description; the trigger must already carry its own accessible name:
+`label` is the entire plain tooltip content, reflected to the slotted trigger's accessible description; the trigger must already carry its own accessible name:
 
 ```html
 <ki-tooltip label="Copies a shareable link to the clipboard">
@@ -21,3 +21,16 @@ An empty or whitespace-only `label` renders no tooltip and exposes no descriptio
   <ki-button type="button">No hint here</ki-button>
 </ki-tooltip>
 ```
+
+Use a heading and direct text when the explanation needs more structure.
+The external trigger must be in the same document or shadow tree.
+
+```html
+<button id="retention-info" type="button">Retention</button>
+<ki-tooltip for="retention-info" heading="Grace period">
+  Deleted projects stay restorable for 30 days.
+</ki-tooltip>
+```
+
+For an explanation with controls, use `ki-popover` with
+`kind="toggletip"` and `appearance="rich"`.

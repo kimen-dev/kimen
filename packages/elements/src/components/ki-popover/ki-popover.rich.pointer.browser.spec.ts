@@ -7,6 +7,7 @@ import { defineCustomElement } from '../../../dist/components/ki-popover.js';
 
 const pointer = commands as unknown as {
   emulateHoverCapability: (value: 'none' | null) => Promise<boolean>;
+  tapWithCoarsePointer: (selector: string) => Promise<void>;
 };
 
 beforeAll(() => {
@@ -40,7 +41,12 @@ it('S14 opens with a coarse pointer and follows the inherited compact density', 
     </ki-popover>`;
   document.body.append(fixture);
 
-  await page.getByRole('button', { name: 'Help', exact: true }).click();
+  await expect.element(page.getByRole('button', { name: 'Help', exact: true })).toBeVisible();
+  if (emulated) {
+    await pointer.tapWithCoarsePointer('#touch-help');
+  } else {
+    await page.getByRole('button', { name: 'Help', exact: true }).click();
+  }
 
   const surface = await page.getByRole('dialog', { name: 'About help' }).findElement();
   const heading = fixture.querySelector('#heading');

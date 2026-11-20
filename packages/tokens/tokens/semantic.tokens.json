@@ -2305,6 +2305,11 @@
         "$value": "{ki.size.border.hairline}",
         "$description": "Outline thickness for a small anchored surface."
       },
+      "rich-max-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.tooltip-rich}",
+        "$description": "Maximum inline size of an anchored help card."
+      },
       "max-width": {
         "$type": "dimension",
         "$value": "{ki.size.surface.xs}",

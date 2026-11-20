@@ -283,3 +283,97 @@
     --_ki-tooltip-backdrop-filter: blur(var(--ki-tooltip-backdrop-blur));
   }
 }
+
+.tooltip.rich {
+  position-anchor: auto;
+  scroll-margin-block: var(--ki-tooltip-offset);
+  max-inline-size: min(var(--ki-tooltip-rich-max-width), 100dvi);
+  padding-block: calc(var(--ki-tooltip-rich-padding-block) * var(--ki-density-space-scale));
+  padding-inline: calc(var(--ki-tooltip-rich-padding-inline) * var(--ki-density-space-scale));
+  border: var(--ki-tooltip-rich-border-width) solid var(--ki-tooltip-rich-border-color);
+  border-radius: var(--ki-tooltip-rich-radius);
+  background-color: var(--ki-tooltip-rich-bg);
+  background-image: var(--ki-tooltip-rich-bg-image);
+  backdrop-filter: var(--ki-tooltip-rich-backdrop-filter);
+  box-shadow: var(--ki-tooltip-rich-shadow);
+  color: var(--ki-tooltip-rich-fg);
+  font-size: var(--ki-tooltip-rich-font-size);
+  font-weight: var(--ki-tooltip-rich-font-weight);
+  line-height: var(--ki-tooltip-rich-line-height);
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
+.tooltip.rich:popover-open {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+.tooltip.rich::before {
+  content: none;
+}
+
+.rich-heading {
+  display: block;
+  color: var(--ki-tooltip-rich-heading-fg);
+  font-family: var(--ki-tooltip-rich-heading-family);
+  font-size: var(--ki-tooltip-rich-heading-size);
+  font-weight: var(--ki-tooltip-rich-heading-weight);
+}
+
+.rich-body {
+  margin: 0;
+}
+
+.rich-heading:not(:last-child) {
+  margin-block-end: var(--ki-tooltip-rich-heading-gap);
+}
+
+/* Bridge the pointer gap so slow travel toward the tooltip stays hoverable. */
+.tooltip.rich::after {
+  position: absolute;
+  content: "";
+}
+
+.rich[data-side="top"]::after,
+.rich[data-side="bottom"]::after {
+  inset-inline: 0;
+  block-size: calc(var(--ki-tooltip-offset) + var(--ki-tooltip-rich-border-width));
+}
+
+.rich[data-side="top"]::after {
+  inset-block-start: 100%;
+}
+
+.rich[data-side="bottom"]::after {
+  inset-block-end: 100%;
+}
+
+.rich[data-side="start"]::after,
+.rich[data-side="end"]::after {
+  inset-block: 0;
+  inline-size: calc(var(--ki-tooltip-offset) + var(--ki-tooltip-rich-border-width));
+}
+
+.rich[data-side="start"]::after {
+  inset-inline-start: 100%;
+}
+
+.rich[data-side="end"]::after {
+  inset-inline-end: 100%;
+}
+
+@media (forced-colors: active) {
+  .tooltip.rich {
+    border-color: CanvasText;
+    background-color: Canvas;
+    background-image: none;
+    backdrop-filter: none;
+    color: CanvasText;
+  }
+
+  .rich-heading {
+    color: CanvasText;
+  }
+}

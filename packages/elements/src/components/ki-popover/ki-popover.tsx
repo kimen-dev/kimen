@@ -18,6 +18,7 @@ import { normalizePopoverPlacement } from './ki-popover.placement';
 
 export type KiPopoverPlacement = OverlayPlacement;
 export type KiPopoverKind = 'dialog' | 'toggletip';
+export type KiPopoverAppearance = 'default' | 'rich';
 
 interface TriggerState {
   element: HTMLElement;
@@ -41,9 +42,9 @@ function restoreTrigger(state: TriggerState): void {
 /**
  * A non-modal popover anchored to a button.
  *
- * @whenToUse Show filters, details, a small form, or a text toggletip.
+ * @whenToUse Show filters, details, a small form, or an explanation opened by click. Use a rich toggletip for a short explanation with actions.
  * @whenNotToUse Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.
- * @slot - Dialog content or toggletip text.
+ * @slot - Dialog content or toggletip text. A rich toggletip also accepts actions.
  * @part surface - The popover panel.
  * @part arrow - The decorative arrow.
  */
@@ -75,8 +76,14 @@ export class KiPopover {
     return value !== 'false';
   }
 
-  /** Use dialog for controls or toggletip for supplemental text. */
+  /** Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions. */
   @Prop() kind: KiPopoverKind = 'dialog';
+
+  /**
+   * Rich shares the tooltip's raised surface, body and heading styles. With
+   * `kind="toggletip"` it enables actions and moves focus inside on open.
+   */
+  @Prop() appearance: KiPopoverAppearance = 'default';
 
   /** Emitted when the popover opens. */
   @Event({ eventName: 'ki-open', cancelable: false }) kiOpen!: EventEmitter<void>;
@@ -158,13 +165,18 @@ export class KiPopover {
   }
 
   @Watch('kind')
+  @Watch('appearance')
   updateKind(): void {
     this.updateTrigger();
     this.updateAnnouncement();
   }
 
-  private get isToggletip(): boolean {
-    return this.kind === 'toggletip';
+  private get isTextToggletip(): boolean {
+    return this.kind === 'toggletip' && this.appearance !== 'rich';
+  }
+
+  private get isRichToggletip(): boolean {
+    return this.kind === 'toggletip' && this.appearance === 'rich';
   }
 
   private connect(): void {
@@ -254,7 +266,7 @@ export class KiPopover {
     const state = this.control;
     if (state) {
       state.element.ariaExpanded = String(this.shown);
-      state.element.ariaHasPopup = this.isToggletip ? state.hasPopup : 'dialog';
+      state.element.ariaHasPopup = this.isTextToggletip ? state.hasPopup : 'dialog';
     }
   }
 
@@ -310,7 +322,8 @@ export class KiPopover {
 
   private updateAnnouncement(): void {
     const content: Node = this.host;
-    this.announcement = this.shown && this.isToggletip ? (content.textContent?.trim() ?? '') : '';
+    this.announcement =
+      this.shown && this.isTextToggletip ? (content.textContent?.trim() ?? '') : '';
   }
 
   private syncVisibility = (): void => {
@@ -328,8 +341,10 @@ export class KiPopover {
     this.updateAnnouncement();
     if (visible) {
       this.trackNativeDismiss();
-      if (!this.isToggletip) {
-        resolvePopoverFocus(this.host)?.focus();
+      if (!this.isTextToggletip) {
+        const focusTarget =
+          resolvePopoverFocus(this.host) ?? (this.isRichToggletip ? this.popup : undefined);
+        focusTarget?.focus();
       }
       this.kiOpen.emit();
     } else {
@@ -370,15 +385,16 @@ export class KiPopover {
   }
 
   render() {
-    const toggletip = this.isToggletip;
+    const toggletip = this.isTextToggletip;
     const label = this.label?.trim() ?? '';
     return [
       <div
-        class="popup"
+        class={{ popup: true, rich: this.appearance === 'rich' }}
         part="surface"
         popover="auto"
         role={toggletip ? 'presentation' : 'dialog'}
         aria-label={toggletip ? undefined : label || 'Popover'}
+        {...(this.isRichToggletip ? { tabIndex: -1 } : {})}
         ref={(element) => {
           this.popup = element;
         }}

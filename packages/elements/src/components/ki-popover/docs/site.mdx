@@ -29,6 +29,22 @@ Use `kind="toggletip"` for supplemental text. Screen readers receive the text as
   Logs are kept for 30 days.
 </ki-popover>`} />
 
+### Rich toggletip
+
+Set `appearance="rich"` for a short explanation with actions. Click or
+press Enter to open the named non-modal dialog and move focus inside it.
+Escape closes it and returns focus to the trigger.
+
+<Demo code={`<ki-button id="contrast-info" type="button" variant="ghost">Contrast mode</ki-button>
+<ki-popover for="contrast-info" kind="toggletip" appearance="rich" label="About contrast mode" arrow="false">
+  <strong>Contrast mode</strong>
+  <p>Kimen follows the system setting.</p>
+  <ki-button type="button" size="sm" variant="ghost">Learn more</ki-button>
+</ki-popover>`} />
+
+The rich appearance shares the `--ki-tooltip-rich-*` tokens with
+`ki-tooltip`. Use a direct `<strong>` child for the styled heading.
+
 ## Placement and styling
 
 The default placement is `bottom-start`. Use `top`, `bottom`, `start` or `end`, with optional `-start` or `-end` alignment. The popover flips when the opposite side has more room. Use `arrow="false"` to hide the arrow.

@@ -1,6 +1,9 @@
 import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
-import { AnchoredOverlay } from '../../utils/anchored-overlay.js';
-import { measureCssAnchor } from '../../utils/anchored-overlay-layout.js';
+import { AnchoredOverlay, resolveOverlayAnchor } from '../../utils/anchored-overlay.js';
+import { anchoredOverlayPosition, measureCssAnchor } from '../../utils/anchored-overlay-layout.js';
+import { shadowFocusTarget } from '../../utils/shadow-focus.js';
+import { attachTooltipDescription, createTooltipDescription } from './ki-tooltip.description.js';
+import { readRichTooltipText } from './ki-tooltip.rich-text.js';
 import { parseDelay } from './ki-tooltip.delay.js';
 import {
   normalizePlacement,
@@ -10,18 +13,18 @@ import {
 } from './ki-tooltip.position.js';
 
 /**
- * A transient, text-only description bubble for one slotted trigger.
+ * A transient, text-only hint with an optional heading.
  *
  * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
  * otherwise ambiguous control when the same information is discoverable
  * elsewhere in the interface.
  * @whenNotToUse essential or unique information in a tooltip; interactive
- * or rich content in a tooltip; form validation messages, disabled controls,
- * or touch-primary flows. Use visible layout text or a future `ki-popover`
- * pattern for those cases.
+ * content in a tooltip; form validation messages, disabled controls, or
+ * touch-primary flows. Use visible layout text or a rich `ki-popover` with
+ * `kind="toggletip"` when the content includes actions.
  *
- * @slot - Exactly one interactive trigger. The component reflects `label` to
- * the trigger's `aria-description`.
+ * @slot - One trigger for a plain tooltip, or direct explanatory text when
+ * `for` and `heading` are provided. Rich tooltips accept text only.
  * @part tooltip - The non-focusable tooltip bubble.
  */
 @Component({
@@ -33,17 +36,23 @@ export class KiTooltip {
   @Element() private readonly host!: HTMLElement;
 
   /**
-   * The entire tooltip content. The string is reflected to the slotted
+   * The entire plain tooltip content. The string is reflected to the slotted
    * trigger's accessible description without changing its name. Empty or
    * whitespace-only labels render no tooltip and expose no description.
    * When to use: a short hint that clarifies the slotted trigger.
    * When NOT to use: never use `label` for essential information, rich
    * content, interactive content, validation messages, or information attached
-   * to disabled controls; put that content in visible UI or a future popover.
+   * to disabled controls; put that content in visible UI or a popover.
    *
    * @default ''
    */
   @Prop() label = '';
+
+  /** ID of the rich tooltip's external trigger in the same document or shadow tree. */
+  @Prop() for?: string;
+
+  /** Rich tooltip heading. Pair it with `for` and optional direct text in the default slot. */
+  @Prop() heading?: string;
 
   /**
    * Preferred placement for the tooltip. The component may flip or clamp the
@@ -55,6 +64,7 @@ export class KiTooltip {
    */
   @Prop({ reflect: true }) placement: KiTooltipPlacement = 'top';
 
+  @State() private richText = '';
   @State() private visible = false;
   @State() private effectivePlacement: KiTooltipPlacement = 'top';
   @State() private crossAxisShift = 0;
@@ -73,6 +83,20 @@ export class KiTooltip {
   // is assigned so it can be restored on teardown/blank-label instead of being
   // destroyed. `null` = the author set none.
   private authoredDescription: string | null = null;
+  private richTrigger: Element | undefined;
+  private richDescription: HTMLSpanElement | undefined;
+  private descriptionTarget: Element | undefined;
+  private releaseDescription: (() => void) | undefined;
+  private interaction?: AbortController;
+  private readonly richTreeObserver = new MutationObserver(() => {
+    this.bindRichTrigger();
+  });
+  private readonly richControlObserver = new MutationObserver(() => {
+    this.syncRichDescription();
+  });
+  private readonly richTextObserver = new MutationObserver(() => {
+    this.syncRichContent();
+  });
   private tooltipEl: HTMLDivElement | undefined;
   private timer: ReturnType<typeof setTimeout> | undefined;
   private readonly overlay = new AnchoredOverlay();
@@ -94,15 +118,17 @@ export class KiTooltip {
     return this.normalizedLabel !== '';
   }
 
+  private get isRich(): boolean {
+    return Boolean(this.for?.trim());
+  }
+
+  private get richHeading(): string {
+    return this.heading?.trim() ?? '';
+  }
+
   connectedCallback(): void {
     this.effectivePlacement = normalizePlacement(this.placement);
-    this.host.addEventListener('pointerenter', this.handlePointerEnter);
-    this.host.addEventListener('pointerleave', this.handlePointerLeave);
-    // focusin/focusout bubble and compose across the shadow boundary, so they
-    // catch focus on the slotted trigger — no redundant capturing focus/blur
-    // pair (review 013 minor).
-    this.host.addEventListener('focusin', this.handleFocusIn);
-    this.host.addEventListener('focusout', this.handleFocusOut);
+    this.connectInteraction();
     // Back in the document after a move (a reordered row, a keyed list): the
     // trigger kept its place in the slot, so no slotchange describes it again.
     // disconnectedCallback handed the description back to the trigger, so what
@@ -115,23 +141,39 @@ export class KiTooltip {
   }
 
   disconnectedCallback(): void {
-    this.host.removeEventListener('pointerenter', this.handlePointerEnter);
-    this.host.removeEventListener('pointerleave', this.handlePointerLeave);
-    this.host.removeEventListener('focusin', this.handleFocusIn);
-    this.host.removeEventListener('focusout', this.handleFocusOut);
-    this.clearTimer();
-    this.overlay.hide();
+    this.disconnectInteraction();
+    this.hideNow();
     this.clearTriggerDescription();
     // Leaving the document takes the pointer and the focus away without a
     // pointerleave or a focusout, and closes the popover: what was true of
     // them is not true any more, and the tooltip has to come back hidden.
     this.pointerWithin = false;
     this.focusWithin = false;
-    this.visible = false;
+  }
+
+  @Watch('for')
+  protected handleAnchorChange(): void {
+    if (!this.host.isConnected) return;
+    this.hideNow();
+    this.pointerWithin = false;
+    this.focusWithin = false;
+    this.clearTriggerDescription();
+    this.trigger = undefined;
+    this.disconnectInteraction();
+    this.connectInteraction();
+  }
+
+  @Watch('heading')
+  protected syncRichContent(): void {
+    if (!this.isRich || !this.host.isConnected) return;
+    this.richText = readRichTooltipText(this.host.childNodes);
+    this.syncRichDescription();
+    if (!this.richHeading) this.hideNow();
   }
 
   @Watch('label')
   protected handleLabelChange(): void {
+    if (this.isRich) return;
     this.syncTriggerDescription();
     if (!this.hasLabel) {
       this.hideNow();
@@ -149,6 +191,10 @@ export class KiTooltip {
 
   @Watch('placement')
   protected handlePlacementChange(): void {
+    if (this.isRich) {
+      if (this.visible) this.showRichTooltip();
+      return;
+    }
     if (this.visible) {
       this.positionTooltip();
       return;
@@ -157,7 +203,107 @@ export class KiTooltip {
     this.effectivePlacement = normalizePlacement(this.placement);
   }
 
+  private connectInteraction(): void {
+    if (this.isRich) {
+      this.richTreeObserver.observe(this.host.getRootNode(), {
+        childList: true,
+        subtree: true,
+        attributeFilter: ['id'],
+      });
+      this.richTextObserver.observe(this.host, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
+      this.syncRichContent();
+      this.bindRichTrigger();
+    } else {
+      this.listenToTrigger(this.host);
+    }
+  }
+
+  private disconnectInteraction(): void {
+    this.interaction?.abort();
+    this.richTreeObserver.disconnect();
+    this.richTextObserver.disconnect();
+    this.richControlObserver.disconnect();
+    this.richTrigger = undefined;
+    this.clearRichDescription();
+  }
+
+  private listenToTrigger(trigger: Element): void {
+    this.interaction = new AbortController();
+    const options = { signal: this.interaction.signal };
+    trigger.addEventListener('pointerenter', this.handlePointerEnter, options);
+    trigger.addEventListener('pointerleave', this.handlePointerLeave, options);
+    // These events compose across a custom trigger's shadow boundary.
+    trigger.addEventListener('focusin', this.handleFocusIn, options);
+    trigger.addEventListener('focusout', this.handleFocusOut, options);
+  }
+
+  private bindRichTrigger(): void {
+    const id = this.for?.trim();
+    const anchor = id ? resolveOverlayAnchor(this.host, id) : null;
+    const trigger = anchor && !this.host.contains(anchor) ? anchor : undefined;
+    if (trigger === this.richTrigger) return;
+
+    this.interaction?.abort();
+    this.richControlObserver.disconnect();
+    this.hideNow();
+    this.pointerWithin = false;
+    this.focusWithin = false;
+    this.richTrigger = trigger;
+    this.syncRichDescription();
+    if (!trigger) return;
+
+    this.listenToTrigger(trigger);
+    const observeControl = () => {
+      if (this.richTrigger !== trigger) return;
+      if (trigger.shadowRoot) {
+        this.richControlObserver.observe(trigger.shadowRoot, {
+          childList: true,
+          subtree: true,
+          attributeFilter: ['tabindex'],
+        });
+      }
+      this.syncRichDescription();
+    };
+    observeControl();
+    if (trigger.localName.includes('-') && !customElements.get(trigger.localName)) {
+      void customElements.whenDefined(trigger.localName).then(observeControl);
+    }
+  }
+
+  private syncRichDescription(): void {
+    const trigger = this.richTrigger;
+    if (!trigger || !this.richHeading) {
+      this.clearRichDescription();
+      return;
+    }
+
+    const description = (this.richDescription ??= createTooltipDescription(this.host));
+    if (description.parentNode !== this.host) this.host.append(description);
+    const text = [this.richHeading, this.richText].filter(Boolean).join(' ');
+    if (description.textContent !== text) description.textContent = text;
+
+    const target = shadowFocusTarget(trigger) ?? trigger;
+    if (target !== this.descriptionTarget) {
+      this.releaseDescription?.();
+      this.descriptionTarget = target;
+      this.releaseDescription = attachTooltipDescription(target, description);
+    }
+  }
+
+  private clearRichDescription(): void {
+    this.releaseDescription?.();
+    this.releaseDescription = undefined;
+    this.descriptionTarget = undefined;
+    this.richDescription?.remove();
+    this.richDescription = undefined;
+  }
+
   private readonly handleSlotChange = (event: Event): void => {
+    if (this.isRich) return;
     const slot = event.currentTarget as HTMLSlotElement;
     const nextTrigger = slot.assignedElements()[0];
     if (nextTrigger !== this.trigger) {
@@ -173,15 +319,17 @@ export class KiTooltip {
     this.hideNow();
   };
 
-  private readonly handlePointerEnter = (event: PointerEvent): void => {
+  private readonly handlePointerEnter = (event: Event): void => {
     // v1 is a hover/focus affordance and excludes touch: a touch contact also
     // dispatches pointerenter, and left unfiltered it would arm the timer and
     // reveal the tooltip on a tap or long-press (codex review).
-    if (event.pointerType === 'touch') {
+    if (event instanceof PointerEvent && event.pointerType === 'touch') {
       return;
     }
     this.pointerWithin = true;
     this.clearTimer();
+
+    if (this.isRich && this.visible) return;
 
     if (this.focusWithin || this.visible) {
       this.showNow();
@@ -251,6 +399,11 @@ export class KiTooltip {
   private showNow(): void {
     this.clearTimer();
 
+    if (this.isRich) {
+      this.showRichTooltip();
+      return;
+    }
+
     if (!this.hasLabel) {
       this.hideNow();
       return;
@@ -259,6 +412,32 @@ export class KiTooltip {
     this.positionTooltip();
     this.visible = true;
     this.overlay.show(this.tooltipEl, this.host, this.overlayOptions);
+  }
+
+  private showRichTooltip(): void {
+    const trigger = this.richTrigger;
+    if (!trigger || !this.richHeading) return;
+
+    this.visible = this.overlay.show(this.tooltipEl, trigger, {
+      ...this.overlayOptions,
+      position: anchoredOverlayPosition({
+        placement: normalizePlacement(this.placement),
+        offset: (panel) => Number.parseFloat(getComputedStyle(panel).scrollMarginBlockStart) || 0,
+        onPosition: (placement) => {
+          const panel = this.tooltipEl;
+          if (!panel) return;
+          const oppositeDirection =
+            getComputedStyle(panel).direction !== getComputedStyle(trigger).direction;
+          const side =
+            oppositeDirection && (placement === 'start' || placement === 'end')
+              ? placement === 'start'
+                ? 'end'
+                : 'start'
+              : placement;
+          panel.setAttribute('data-side', side);
+        },
+      }),
+    });
   }
 
   private hideNow(): void {
@@ -372,11 +551,36 @@ export class KiTooltip {
       tooltipStyle.transform = `translate(${String(this.anchorShiftX)}px, ${String(this.anchorShiftY)}px)`;
     }
 
+    if (this.isRich) {
+      return (
+        <Host>
+          {this.richHeading ? (
+            <div
+              key="rich"
+              ref={(el) => {
+                this.tooltipEl = el;
+              }}
+              part="tooltip"
+              role="tooltip"
+              popover="manual"
+              class="tooltip rich"
+              onPointerEnter={this.handlePointerEnter}
+              onPointerLeave={this.handlePointerLeave}
+            >
+              <strong class="rich-heading">{this.richHeading}</strong>
+              {this.richText ? <p class="rich-body">{this.richText}</p> : null}
+            </div>
+          ) : null}
+        </Host>
+      );
+    }
+
     return (
       <Host>
         <slot onSlotchange={this.handleSlotChange} />
         {this.hasLabel ? (
           <div
+            key="plain"
             ref={(el) => {
               this.tooltipEl = el;
             }}
