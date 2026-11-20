@@ -20,17 +20,6 @@ const frameStyle = {
 
 // The row's visible primary text already names the identity, so the leading
 // avatar is decorative (no label) per ki-avatar's own labeling contract.
-// The end-slot switch keeps its accessible name through visually hidden
-// slotted label text instead of duplicating the row's visible primary text.
-const visuallyHidden = {
-  position: 'absolute',
-  inlineSize: '1px',
-  blockSize: '1px',
-  overflow: 'hidden',
-  clipPath: 'inset(50%)',
-  whiteSpace: 'nowrap',
-};
-
 export const Playground: Story = {
   render: () => (
     <ki-list style={frameStyle}>
@@ -74,20 +63,16 @@ export const Contacts: Story = {
 
 export const Settings: Story = {
   render: () => (
-    <ki-list style={frameStyle}>
+    <ki-list style={frameStyle} label="Notifications">
       <ki-list-item>
         Email alerts
         <span slot="secondary">Product updates and account activity</span>
-        <ki-switch slot="end" name="alerts" checked>
-          <span style={visuallyHidden}>Email alerts</span>
-        </ki-switch>
+        <ki-switch slot="end" name="alerts" checked />
       </ki-list-item>
       <ki-list-item>
         Weekly summary
         <span slot="secondary">A digest every Friday morning</span>
-        <ki-switch slot="end" name="summary">
-          <span style={visuallyHidden}>Weekly summary</span>
-        </ki-switch>
+        <ki-switch slot="end" name="summary" />
       </ki-list-item>
     </ki-list>
   ),
@@ -112,6 +97,43 @@ export const LongSecondary: Story = {
           This supporting line is intentionally long so it wraps across multiple lines and grows the
           item vertically without truncation.
         </span>
+      </ki-list-item>
+    </ki-list>
+  ),
+};
+
+export const Navigation: Story = {
+  render: () => (
+    <ki-list style={frameStyle} label="Settings">
+      <ki-list-item href="#account">
+        Account
+        <span slot="secondary">Name, email, password</span>
+      </ki-list-item>
+      <ki-list-item href="#appearance">Appearance</ki-list-item>
+    </ki-list>
+  ),
+};
+
+export const SingleSelection: Story = {
+  render: () => (
+    <ki-list style={frameStyle} label="Delivery method" selection="single" name="delivery">
+      <ki-list-item value="email" selected>
+        Email
+      </ki-list-item>
+      <ki-list-item value="push">Push notification</ki-list-item>
+    </ki-list>
+  ),
+};
+
+export const MultipleSelection: Story = {
+  render: () => (
+    <ki-list style={frameStyle} label="Reviewers" selection="multiple" name="reviewers">
+      <ki-list-item value="ana" selected>
+        Ana Garcia
+      </ki-list-item>
+      <ki-list-item value="luis">Luis Perez</ki-list-item>
+      <ki-list-item value="sara" disabled>
+        Sara Martin
       </ki-list-item>
     </ki-list>
   ),

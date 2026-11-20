@@ -22,7 +22,7 @@ The guarded catalog accepts source strings in the default slot.
   "actions": ["sampleCopied"],
   "root": {
     "component": "ki-code-block",
-    "props": { "language": "js", "filename": "index.js", "lineNumbers": true },
+    "props": { "language": "js", "filename": "index.js", "line-numbers": true },
     "slots": { "": ["const sample = load(3);"] },
     "action": "sampleCopied"
   }

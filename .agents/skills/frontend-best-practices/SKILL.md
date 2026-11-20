@@ -28,6 +28,14 @@ developer convenience. Testing discipline lives in the `frontend-qa` skill;
 behavior specs in `gherkin-use-cases`. Deep recipes:
 `references/stencil-kimen.md`. Rationale and evidence: `references/sources.md`.
 
+Scope: this skill is for authoring Kimen itself. Guidance for applications
+that *use* Kimen lives in the distributable `kimen` plugin
+(`plugins/kimen/`): `kimen-components` for pages built with `ki-*` elements
+and `kimen-genui` for the generative UI layer. When a component change alters
+how consumers must use it (a new required prop, a renamed event, a new
+pattern), update those skills in the same change; they point at the generated
+contracts rather than restating them, so most changes need nothing there.
+
 ## 1. Component anatomy
 
 - **[Always]** Components are scaffolded via the Nx generator, never by hand

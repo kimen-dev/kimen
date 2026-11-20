@@ -46,8 +46,11 @@ by name. The icon has no slots or actions.
 
 ```json
 {
-  "type": "ki-icon",
-  "props": { "name": "triangle-alert", "size": "lg", "label": "Warning" }
+  "version": 1,
+  "root": {
+    "component": "ki-icon",
+    "props": { "name": "triangle-alert", "size": "lg", "label": "Warning" }
+  }
 }
 ```
 

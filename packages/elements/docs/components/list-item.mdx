@@ -4,21 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # ki-list-item
 
-A non-interactive item inside `ki-list`, composed from leading media,
-primary text, optional secondary text and trailing media or meta.
-
-The container contract — what the list accepts and how rows compose — lives
-on the *ki-list* page (Docs → Components → ki-list). Live stories:
-*Elements → ki-list-item* in this Storybook.
-
-**When to use** — one entry of a read-only collection inside `ki-list`:
-primary text in the default slot, `start` for leading media, `secondary`
-for supporting text and `end` for trailing meta or a slotted control.
-
-**When NOT to use** — outside a `ki-list` (it is valid only as a child of
-one), as a menu item, option, table row or navigation link, or as a
-whole-row click target (slot the interactive control into a region
-instead).
+A row in `ki-list` with primary text and optional leading media, supporting text, and trailing content. See the *ki-list* page for the container API and form examples.
 
 ## Examples
 
@@ -36,15 +22,21 @@ the multi-line min-height token:
 </ki-list>
 ```
 
-A control slotted in the `end` region stays interactive while the row does
-not:
+```html
+<ki-list label="Settings">
+  <ki-list-item href="/settings/account">
+    Account
+    <span slot="secondary">Name, email, password</span>
+  </ki-list-item>
+</ki-list>
+```
 
 ```html
-<ki-list>
+<ki-list label="Notifications">
   <ki-list-item>
-    Two-factor authentication
-    <span slot="secondary">Enabled via authenticator app</span>
-    <ki-button slot="end" size="sm" variant="secondary">Manage</ki-button>
+    Email digest
+    <span slot="secondary">Every Monday</span>
+    <ki-switch slot="end" checked></ki-switch>
   </ki-list-item>
 </ki-list>
 ```
@@ -57,11 +49,15 @@ Row metrics and text colors are token decisions:
 parts: `::part(item)` (row surface), `::part(start)`, `::part(content)`
 (text column) and `::part(end)`.
 
+Use `--ki-list-item-hover-bg` and `--ki-list-item-hover-fg` for hover,
+`--ki-list-item-selected-bg` and `--ki-list-item-selected-fg` for selection,
+and `--ki-list-item-interactive-radius` for interactive corners.
+`::part(indicator)` exposes the decorative chevron, checkbox or radio.
+
 ## Accessibility
 
-- The row is non-interactive and read-only — it exposes no click target,
-  no role beyond list semantics and no tab stop of its own.
-- Interactivity lives in controls slotted into a region; they keep their
-  own semantics and focus behavior.
-- Give leading media a meaningful `alt`, or `alt=""` when decorative next
-  to the primary text.
+Keep the primary text in the default slot. Mark decorative media as hidden
+from assistive technology or give decorative images empty alternative text.
+Use `href` for a native link or place the row in a selection list to create an
+option. To show a control, put one control in `end` on a default-mode row.
+The primary text names the control when it has no authored name.

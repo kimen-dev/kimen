@@ -153,6 +153,21 @@ token sources, never hand-edited, and the code examples of the packaged
 Human-readable docs live at the
 [documentation site](https://kimen.dev/docs/).
 
+Coding agents can also connect to Kimen directly: the
+[`kimen`](./plugins/kimen) plugin carries two agent skills
+(`kimen-components` for ordinary pages, `kimen-genui` for the generative UI
+layer), and the [`kimen-mcp`](./packages/mcp-server) server lets an agent
+list the catalog, validate UI specs and render them. In Claude Code:
+
+```sh
+claude plugin marketplace add kimen-dev/kimen
+claude plugin install kimen@kimen
+```
+
+Setup for Claude Code, Claude Desktop, Codex, Antigravity, OpenCode and
+other clients is in
+[Connect your agent](https://kimen.dev/docs/guides/connect-agents/).
+
 ## Quality bar
 
 Every component ships with real-browser tests (three engines at release),

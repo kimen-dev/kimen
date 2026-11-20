@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "citation": {
+      "preview-shadow": {
+        "$value": "{ki.elevation.e1}",
+        "$description": "Subtle elevation of the citation preview in Material 3."
+      }
+    }
+  }
+}

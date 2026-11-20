@@ -33,8 +33,9 @@ rejected message (known surface) ──▶ onError(error) ──▶ your transpo
 ```
 
 Transport is deliberately caller-owned: the adapter consumes already-delivered
-A2UI messages (payload MIME type `application/a2ui+json` in 1.0,
-`application/json+a2ui` in v0.9.1) and emits client messages to the callbacks
+A2UI messages (payload MIME type `application/a2ui+json` in 1.0 and
+v0.9.1; older agents may still send the legacy `application/json+a2ui`) and
+emits client messages to the callbacks
 you supply. It works identically over
 WebSocket, SSE, A2A, or an in-process agent loop.
 

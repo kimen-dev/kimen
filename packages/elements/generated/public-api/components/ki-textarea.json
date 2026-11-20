@@ -1,6 +1,14 @@
 {
   "component": {
     "attributes": {
+      "appearance": {
+        "default": "'default'",
+        "deprecatedSince": null,
+        "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+        "replacement": null,
+        "required": false,
+        "type": "\"default\" | \"filled\" | \"outlined\" | undefined"
+      },
       "autocomplete": {
         "default": null,
         "deprecatedSince": null,
@@ -20,7 +28,7 @@
       "error-text": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -48,6 +56,30 @@
         "replacement": null,
         "required": false,
         "type": "string | undefined"
+      },
+      "maxlength": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "maxlength-error-text": {
+        "default": "'Shorten the text to fit the character limit.'",
+        "deprecatedSince": null,
+        "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "minlength": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
       },
       "name": {
         "default": null,
@@ -89,6 +121,14 @@
         "required": false,
         "type": "number"
       },
+      "show-count": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
+      },
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
@@ -119,6 +159,158 @@
         "default": null,
         "deprecatedSince": null,
         "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-appearance-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting stroke width of both explicit text field appearances.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-count-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting character count surface over the surrounding page.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-count-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Character count when the value fits the maximum.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-count-over-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Over-limit character count surface over the surrounding page.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-count-over-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Character count when the value exceeds the maximum.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-filled-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional backdrop filter of a filled field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-filled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface of a filled text field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-filled-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional background image of a filled field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-filled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Entered text on a filled field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-filled-focus-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the block-end indicator while focused.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-filled-indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Continuous block-end edge of an enabled filled text field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-filled-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Placeholder on a filled field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-filled-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block-start corner radius of a filled text field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-label-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for label gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-outlined-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface of an outlined text field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-outlined-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Full outline of an enabled outlined text field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-outlined-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Entered text on an outlined field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-outlined-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Placeholder on an outlined field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-input-outlined-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of an outlined text field.",
         "replacement": null,
         "required": false,
         "type": null
@@ -843,10 +1035,26 @@
         "required": false,
         "type": null
       },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-typography-weight-body-normal": {
         "default": null,
         "deprecatedSince": null,
         "description": "semantic font weight for typography weight body normal.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
         "replacement": null,
         "required": false,
         "type": null
@@ -865,6 +1073,14 @@
     },
     "methods": {},
     "parts": {
+      "count": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current character count and maximum at the end of the field message row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "error": {
         "default": null,
         "deprecatedSince": null,
@@ -915,6 +1131,14 @@
       }
     },
     "properties": {
+      "appearance": {
+        "default": "'default'",
+        "deprecatedSince": null,
+        "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+        "replacement": null,
+        "required": false,
+        "type": "\"default\" | \"filled\" | \"outlined\" | undefined"
+      },
       "autocomplete": {
         "default": null,
         "deprecatedSince": null,
@@ -934,7 +1158,7 @@
       "errorText": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -962,6 +1186,30 @@
         "replacement": null,
         "required": false,
         "type": "string | undefined"
+      },
+      "maxlength": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "maxlengthErrorText": {
+        "default": "'Shorten the text to fit the character limit.'",
+        "deprecatedSince": null,
+        "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "minlength": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
       },
       "name": {
         "default": null,
@@ -1002,6 +1250,14 @@
         "replacement": null,
         "required": false,
         "type": "number"
+      },
+      "showCount": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
       },
       "size": {
         "default": "'md'",

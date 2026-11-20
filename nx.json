@@ -44,16 +44,31 @@
   },
   "release": {
     "projects": [
-      "@kimen/tokens",
       "@kimen/elements",
-      "@kimen/catalog"
+      "@kimen/tokens"
     ],
     "projectsRelationship": "fixed",
+    "releaseTag": {
+      "pattern": "v{version}",
+      "checkAllBranchesWhen": false
+    },
     "version": {
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "adjustSemverBumpsForZeroMajorVersion": false,
+      "updateDependents": "never",
+      "preserveLocalDependencyProtocols": true,
+      "versionActionsOptions": {
+        "skipLockFileUpdate": true
+      }
     },
     "changelog": {
-      "workspaceChangelog": true
+      "workspaceChangelog": {
+        "file": "CHANGELOG.md",
+        "createRelease": false,
+        "renderOptions": {
+          "authors": false
+        }
+      }
     }
   },
   "namedInputs": {

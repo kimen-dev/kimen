@@ -33,7 +33,7 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  *
  * @slot - Exactly one decorative icon. The slot is presentational: its
  * content is hidden from assistive technology and never contributes to the
- * accessible name — that comes from `label` alone.
+ * accessible name. Supply `label` or use a named trailing list control.
  * @slot selected - Optional decorative icon shown when the toggle is selected.
  * If omitted, the default icon stays visible and an inline SVG takes a current-colour fill.
  * @slot counter - Decorative ki-counter in the block-start inline-end corner.
@@ -92,11 +92,9 @@ export class KiIconButton {
 
   /**
    * Accessible name of the internal focusable button ("Close", "Play").
-   * Required in the catalog contract: the icon is presentational, so without
-   * a label the control exposes no name and fails the accessibility audit.
-   * The component never invents a fallback name.
-   * When NOT to use: never omit it; never duplicate it as visible text (a
-   * visible label means ki-button).
+   * Required in the catalog. When slotted as a trailing list control, the
+   * row text supplies a fallback through the host aria-label.
+   * Use ki-button when the action has a visible label.
    */
   @Prop({ reflect: true }) label!: string;
 
@@ -215,8 +213,13 @@ export class KiIconButton {
 
   @Watch('aria-description')
   @Watch('aria-haspopup')
+  @Watch('aria-label')
+  @Watch('label')
   protected forwardButtonAria(): void {
-    syncButtonAria(this.host, this.host.shadowRoot?.querySelector('button'));
+    const button = this.host.shadowRoot?.querySelector('button');
+    if (!button) return;
+    syncButtonAria(this.host, button);
+    button.ariaLabel = this.label || this.host.ariaLabel;
   }
 
   // A real browser never dispatches click on a disabled native button, but
@@ -263,7 +266,6 @@ export class KiIconButton {
           tabIndex={this.disabled ? -1 : 0}
           disabled={this.disabled}
           aria-disabled={loading ? 'true' : undefined}
-          aria-label={this.label}
           aria-pressed={pressed == null ? undefined : pressed ? 'true' : 'false'}
           aria-expanded={expanded == null ? undefined : expanded ? 'true' : 'false'}
           onClick={onClick}

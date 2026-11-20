@@ -72,6 +72,7 @@ const surfaces = Object.freeze([
   ...wrapperTags.map((tag) => `${publicApiDirectory}/components/${tag}.json`),
   'packages/elements/llms.txt',
   ...wrapperTags.map((tag) => `packages/elements/llms/${tag}.md`),
+  'packages/elements/llms/agent-setup.md',
   'packages/elements/llms/theming.md',
   'packages/elements/src/components.d.ts',
 ]);

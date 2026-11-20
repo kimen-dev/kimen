@@ -1,0 +1,16 @@
+---
+title: ki-citation
+description: Mark a claim with a numbered reference to its source.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+
+Use `ki-citation` inside a sentence. Set `ref` to the identifier of a
+`ki-source` in a [Sources disclosure](../ki-sources/) in the same document
+or shadow root. Use `citationRef` in JSX. First mention determines the
+number, even when a later citation refers to the same source.
+
+Tab to the citation to access its preview, Escape to dismiss it, and Enter
+to reach the named source link.
+
+<CemApi tag="ki-citation" />

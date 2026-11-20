@@ -78,6 +78,76 @@
         "secondary-fg": {
           "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the list component for item secondary foreground."
+        },
+        "hover-bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s2}",
+          "$description": "Background of an unselected hovered interactive list row."
+        },
+        "hover-fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text and indicator on an unselected hovered interactive list row."
+        },
+        "selected-bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-low-em}",
+          "$description": "Background of a selected list option."
+        },
+        "selected-fg": {
+          "$type": "color",
+          "$value": "{ki.text.primary-on-primary-light}",
+          "$description": "Text and indicator on a selected list option."
+        },
+        "interactive-bg": {
+          "$type": "color",
+          "$value": "{ki.surface.transparent}",
+          "$description": "Resting fill of an unselected interactive list row."
+        },
+        "interactive-bg-image": {
+          "$type": "other",
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image layered over interactive list row fills."
+        },
+        "interactive-backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.no-backdrop-filter}",
+          "$description": "Complete backdrop filter for an interactive list row."
+        },
+        "interactive-radius": {
+          "$type": "dimension",
+          "$value": "{ki.radius.component.md}",
+          "$description": "Corner radius of link and option rows."
+        },
+        "indicator-size": {
+          "$type": "dimension",
+          "$value": "{ki.typography.inline-icon.size}",
+          "$description": "Edge of the trailing selection or navigation mark."
+        },
+        "indicator-border-width": {
+          "$type": "dimension",
+          "$value": "{ki.layout.spacing.xxs}",
+          "$description": "Stroke around a visual option indicator."
+        },
+        "checkbox-selected-bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "Fill of the selected multiple-choice indicator."
+        },
+        "checkbox-selected-fg": {
+          "$type": "color",
+          "$value": "{ki.text.primary-on-primary}",
+          "$description": "Check mark ink on the selected indicator."
+        },
+        "checkbox-radius": {
+          "$type": "dimension",
+          "$value": "{ki.corner.inline}",
+          "$description": "Corner radius of a multiple-selection indicator."
+        },
+        "radio-radius": {
+          "$type": "dimension",
+          "$value": "{ki.corner.activity-mark}",
+          "$description": "Corner radius of a single-selection indicator."
         }
       }
     }

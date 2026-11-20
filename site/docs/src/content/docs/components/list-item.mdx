@@ -1,15 +1,12 @@
 ---
 title: ki-list-item
-description: A non-interactive item inside ki-list — leading media, primary text, secondary text and trailing meta.
+description: A configurable row in a static or interactive list.
 ---
 
 import CemApi from '../../../components/CemApi.astro';
 import Demo from '../../../components/Demo.astro';
 
-A non-interactive item inside [ki-list](/docs/components/list/),
-composed from leading media (`start`), primary text (default slot), optional
-secondary text (`secondary`) and trailing media or meta (`end`). Use it only
-as a child of `ki-list`.
+A row in `ki-list` with primary text and optional leading media, supporting text, and trailing content. See [ki-list](/docs/components/list/) for selection and forms.
 
 <Demo
   layout="block"
@@ -23,16 +20,31 @@ as a child of `ki-list`.
 </ki-list>`}
 />
 
+```html
+<ki-list label="Settings">
+  <ki-list-item href="/settings/account">
+    Account
+    <span slot="secondary">Name, email, password</span>
+  </ki-list-item>
+</ki-list>
+```
+
 ## API reference
 
 <CemApi tag="ki-list-item" />
 
 ## Accessibility
 
-The default slot is the primary text of the entry. Decorative slotted icons
-carry `aria-hidden="true"`. The item is never a menu item, option, row or
-link — those are different patterns; a control slotted in `end` remains an
-ordinary focusable control.
+Keep the primary text in the default slot. Mark decorative media as hidden
+from assistive technology or give decorative images empty alternative text.
+Use `href` for a native link or place the row in a selection list to create an
+option. To show a control, put one control in `end` on a default-mode row.
+The primary text names the control when it has no authored name.
+
+Use `--ki-list-item-hover-bg` and `--ki-list-item-hover-fg` for hover,
+`--ki-list-item-selected-bg` and `--ki-list-item-selected-fg` for selection,
+and `--ki-list-item-interactive-radius` for interactive corners.
+`::part(indicator)` exposes the decorative chevron, checkbox or radio.
 
 ## Workshop
 

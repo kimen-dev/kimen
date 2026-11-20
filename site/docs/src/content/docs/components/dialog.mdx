@@ -1,13 +1,13 @@
 ---
 title: ki-dialog
-description: A modal dialog for one interrupting decision or short focused task.
+description: A centered or fullscreen modal dialog for a decision or focused task.
 ---
 
 import CemApi from '../../../components/CemApi.astro';
 import Demo from '../../../components/Demo.astro';
 
-A modal dialog for one interrupting decision or short focused task:
-destructive confirmations, blocking choices, brief critical input.
+Use a modal dialog for destructive confirmations, blocking choices or focused input.
+Choose the fullscreen layout when people need room to complete a longer task.
 
 <Demo
   layout="block"
@@ -33,11 +33,11 @@ your application logic to the confirmation button to perform the deletion.
 ### The close contract
 
 Use a footer command or call `close()` to dismiss programmatically.
-Every close path reports why in the `ki-close` event's `detail.reason`:
-`command` for `close` or an accepted `request-close`, `method` for `close()`
-calls, `escape` for the Escape key, and `backdrop` for opt-in backdrop
-dismissal (`close-on-backdrop`). Update application state from `ki-close`
-after focus has returned to the opener.
+The `ki-close` event reports the reason in `detail.reason`. The
+`close` command and an accepted `request-close` report `command`. A call
+to `close()` reports `method`, Escape reports `escape`, and opt-in
+backdrop dismissal (`close-on-backdrop`) reports `backdrop`.
+Centered dismissals and programmatic closes report after focus returns.
 
 ```ts
 dialog.addEventListener('ki-close', (event) => {
@@ -45,7 +45,42 @@ dialog.addEventListener('ki-close', (event) => {
 });
 ```
 
-`ki-close` is a non-cancelable notification after dismissal.
+### Fullscreen
+
+Use `fullscreen="compact"` to fill windows narrower than 600 CSS pixels.
+Choose `always` to fill the window at any width. The default, `never`,
+uses the centered layout. The header stays visible while the body scrolls.
+
+<Demo
+  layout="block"
+  code={`<ki-button commandfor="event-dialog" command="show-modal">Add event</ki-button>
+<ki-dialog id="event-dialog" heading="New event" fullscreen="compact"
+    confirm-label="Save" close-label="Discard and close">
+  <ki-input label="Title" value="Design review"></ki-input>
+  <ki-input label="Date" value="24 Nov 2026"></ki-input>
+</ki-dialog>`}
+/>
+
+`confirm-label` puts a ghost button in the fullscreen header and a primary
+button in the centered footer. Handle `ki-confirm` to validate and save,
+then call `close()` when the task is complete. The footer slot remains
+available for additional actions.
+
+In fullscreen, Escape and the header close button emit a cancelable
+`ki-close` before dismissal. Call `preventDefault()` to keep the dialog
+open, for example when the draft has unsaved changes. The button reports
+`method`. Bind `open` when you need to track whether dismissal took effect.
+
+```ts
+const dialog = document.querySelector('ki-dialog#event-dialog');
+
+dialog?.addEventListener('ki-close', (event) => {
+  if (event.cancelable && hasUnsavedChanges()) event.preventDefault();
+});
+dialog?.addEventListener('ki-confirm', async () => {
+  if (await saveEvent()) await dialog.close();
+});
+```
 
 ## API reference
 
@@ -64,3 +99,9 @@ it from the control that should receive focus again. Non-blocking feedback belon
 ## Workshop
 
 [Open ki-dialog in Storybook](/storybook/?path=/docs/docs-components-ki-dialog--docs)
+
+
+<script>
+  const dialog = document.querySelector('ki-dialog#event-dialog');
+  dialog?.addEventListener('ki-confirm', () => void dialog.close());
+</script>

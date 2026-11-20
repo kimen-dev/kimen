@@ -2,8 +2,8 @@
 
 Kimen publishes exactly `@kimen/elements` and `@kimen/tokens` from one
 immutable `release-candidate-v1` archive. Validation builds the bytes once;
-browser jobs and the publisher only consume that artifact. No release job
-versions packages or writes to the repository.
+browser jobs and the publisher only consume that artifact. Versioning and
+GitHub writes happen in separate jobs before the publisher starts.
 
 ## v1 publication scope
 
@@ -38,65 +38,88 @@ package still carries a `workspace:` runtime range.
 | Mode | Entry point | Package state | Authority | Result |
 |---|---|---|---|---|
 | Dry run | Manual `release` workflow dispatch at the revision to validate | Current exact versions; `private: true` is accepted | Read-only repository token; no OIDC publisher runs | Core, candidate, independent verification and Chromium/Firefox/WebKit all execute; nothing is published |
-| Release | Push an exact `vX.Y.Z` tag after the release PR is merged | Both packages are version `X.Y.Z`, `private: false`, and carry exact repository metadata | Only `publish`, after every validation job, receives `id-token: write` in the protected `npm` environment | Missing versions publish; byte-identical existing versions are skipped |
+| Release | The release App pushes an annotated `vX.Y.Z` tag after the release PR is merged | Both packages are version `X.Y.Z`, `private: false`, and carry exact repository metadata | Only `publish`, after every validation job, receives `id-token: write` in the protected `npm` environment | Missing versions publish; byte-identical existing versions are skipped |
 
 Dry run never creates tags, changes versions or carries dormant publication
 authority. A non-tag dispatch always emits a manifest whose `mode` is
 `dry-run` and whose `tag` is `null`.
 
-## Prepare the release PR
+## Automated release flow
 
-1. Choose one SemVer for the fixed release line and set that exact version in
-   `packages/elements/package.json` and `packages/tokens/package.json`.
-2. Set `private: false` in both package manifests.
-3. Preserve the exact repository metadata required by the candidate gate:
-   `type: git`, `url: git+https://github.com/kimen-dev/kimen.git`, and the
-   corresponding `packages/elements` or `packages/tokens` directory.
-4. Do not add `prepack`, `postpack`, `prepare`, `prepublish`,
-   `prepublishOnly`, `publish` or `postpublish` scripts. Publication always
-   uses `--ignore-scripts`.
-5. Keep each package's `LICENSE` and `NOTICE`. They are derived from the
-   repository's own: the licence is a byte copy, and the notice is the header
-   plus the third-party sections that pertain to what that tarball contains
-   (`scripts/lib/package-notices.mjs` names them). After editing the root
-   `LICENSE` or `NOTICE`, run
-   `node scripts/release/write-package-legal-files.mjs` and commit the result.
-   The candidate gate rejects a tarball that lacks either file.
-6. Let the ordinary protected-main PR run all required checks and merge it by
-   squash. The release workflow never pushes a version or changelog commit.
-7. Run a manual dry run against the merged revision. It must validate the
-   exact two-package candidate and all three browser engines.
-8. Create and push `vX.Y.Z` at that protected-main commit. Candidate validation
-   rejects a tag/version mismatch, a tag pointing elsewhere, or a source SHA
-   not reachable from `refs/heads/main`.
+1. On a push to `main`, `release-pr.yml` uses Nx Release to inspect
+   conventional commits since the latest reachable `vX.Y.Z` tag. The first
+   run uses the versions on disk and the package history. A `feat` raises
+   the minor version and a `fix` raises the patch version. A breaking change
+   raises the minor version before `1.0.0` and the major version thereafter.
+2. For a release-worthy change, the dedicated App opens or refreshes one
+   pull request on `release/next`, titled `chore(release): vX.Y.Z`. The PR
+   sets both package versions, sets `private: false` if needed, and preserves
+   the required `repository` metadata. It adds a dated workspace changelog
+   entry that includes the existing `[Unreleased]` notes on the first
+   automated release. The normal generators refresh the API index and the
+   catalog's embedded elements version. Private package manifests keep their
+   existing versions and visibility. A push with nothing to release or the
+   release commit itself needs no new PR.
+3. Once required checks pass, the founder squash-merges the release PR,
+   keeping its title as the commit title: `release-tag.yml` only runs for a
+   push whose commit title starts with `chore(release): v`.
+   `release-tag.yml` verifies that the PR merged at the exact pushed commit
+   and that both package versions match its title. It pushes an annotated
+   `vX.Y.Z` tag on that commit and creates the GitHub Release from that
+   version's changelog entry. A retry can complete missing GitHub Release
+   metadata for a matching tag. A conflicting tag fails the run and keeps
+   its original target.
+4. The tag push starts `release.yml`, the sole npm publisher. It validates
+   the immutable candidate across all three browser engines, then publishes
+   through npm trusted publishing under the `npm` environment policy.
 
-## One-time external publication prerequisites
+Both automation workflows require `RELEASE_APP_ID` and
+`RELEASE_APP_PRIVATE_KEY`. Their repository tokens have only `contents: read`.
+The App writes to `release/next`, the release pull request, the annotated tag
+and GitHub Release. Release jobs never push to `main`. GitHub emits the PR
+and tag events under the App's identity so the existing checks and publisher
+run.
 
-These settings are deliberately outside the repository and are not automated
-with a durable token:
+Run `release-pr` manually from `main` to refresh a proposal. If a new push
+arrives before the previous release is tagged, retry preparation after
+`release-tag` succeeds. Rerun a failed tagging job from its original event
+so it still refers to the exact merge commit. For validation without npm
+publication, dispatch `release` directly on the revision to test.
 
-- Both scoped package names must already exist on npm. npm requires an
-  existing package before a trusted publisher can be configured, so the CI
-  workflow fails closed on a first publication. The founder must bootstrap
-  each name through a separately controlled npm procedure; no `NPM_TOKEN` or
-  `NODE_AUTH_TOKEN` exception may be added to GitHub Actions.
-- Each package's npm settings must register the GitHub Actions trusted
-  publisher for repository `kimen-dev/kimen`, workflow
-  `.github/workflows/release.yml`, and environment `npm`.
-- The repository must have a protected GitHub environment named `npm`. Its
-  deployment policy is the release boundary and should require the founder's
-  approval.
-- The publisher runner must already provide npm `>=11.5.1`. The publisher
-  checks this before registry access and does not upgrade npm or install any
-  tool after receiving OIDC authority.
+Each tarball must include the generated `LICENSE` and `NOTICE`. After editing
+root `LICENSE` or `NOTICE`, run
+`node scripts/release/write-package-legal-files.mjs` and commit the result.
+The publisher runs with `--ignore-scripts` and rejects publication lifecycle
+scripts. The publisher runner must provide npm `>=11.5.1`.
 
-Until every prerequisite is conformant, tag releases are expected to fail
-red while dry-run validation remains usable. Do not weaken that failure into
-a token-based bootstrap path.
+## One-time founder setup
 
-See the official [npm trusted publishing
-documentation](https://docs.npmjs.com/trusted-publishers/) for the external
-package configuration.
+Complete these steps before merging the first release PR.
+
+1. Bootstrap both npm package names. Trusted publishing cannot create a
+   package. In a local checkout, keep `0.0.0`, set `private: false` on
+   `@kimen/elements` and `@kimen/tokens`, and build and validate their
+   tarballs. Manually publish each tarball using your npm account with
+   `npm publish <tarball> --access public --tag bootstrap --ignore-scripts`.
+   The placeholder only reserves the names; the first automated release
+   publishes under `latest` and replaces it there. Keep these local manifest
+   edits out of `main`.
+2. Create and install a dedicated GitHub App on `kimen-dev/kimen` with
+   repository permissions **Contents: Read and write** and **Pull requests:
+   Read and write**. Store its client ID as the `RELEASE_APP_ID` repository
+   secret and its private key as `RELEASE_APP_PRIVATE_KEY`.
+3. Create the GitHub environment `npm` and choose its deployment policy.
+   Require founder approval to review each publication, or leave approval
+   disabled for fully automatic publication after the release PR merges.
+4. Configure the npm trusted publisher on each package for repository
+   `kimen-dev/kimen`, workflow `release.yml`, and environment `npm`. Do this
+   last, when the first release PR is green and ready to merge: npm expires a
+   new trusted publisher configuration that has not completed a successful
+   publication within two days, and it must then be deleted and recreated.
+
+GitHub Actions uses OIDC for npm. Keep `NPM_TOKEN` and `NODE_AUTH_TOKEN` out
+of Actions. For the external steps, see the
+[official npm trusted publishing documentation](https://docs.npmjs.com/trusted-publishers/).
 
 ## Immutable handoff and authority boundaries
 

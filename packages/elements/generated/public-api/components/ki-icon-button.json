@@ -36,7 +36,7 @@
       "label": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+        "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog. When slotted as a trailing list control, the\nrow text supplies a fallback through the host aria-label.\nUse ki-button when the action has a visible label.",
         "replacement": null,
         "required": true,
         "type": "string"
@@ -1662,7 +1662,7 @@
       "label": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+        "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog. When slotted as a trailing list control, the\nrow text supplies a fallback through the host aria-label.\nUse ki-button when the action has a visible label.",
         "replacement": null,
         "required": true,
         "type": "string"
@@ -1736,7 +1736,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.",
         "replacement": null,
         "required": false,
         "type": null

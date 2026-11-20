@@ -497,6 +497,7 @@
   --ki-indicator-dot-current-block-size:var(--ki-space-md);
   --ki-indicator-dot-current-color:var(--ki-surface-inverse-white);
   --ki-indicator-dot-current-hole-block-size:var(--ki-space-zero);
+  --ki-input-filled-radius:var(--ki-radius-component-xs);
   --ki-input-height:var(--ki-space-14xl);
   --ki-input-padding-inline:var(--ki-space-3xl);
   --ki-input-gap:var(--ki-space-sm);
@@ -607,6 +608,7 @@
   --ki-select-sm-radius:var(--ki-radius-component-xs);
   --ki-select-lg-radius:var(--ki-radius-component-xs);
   --ki-select-xl-radius:var(--ki-radius-component-xs);
+  --ki-citation-preview-shadow:var(--ki-elevation-e1);
   --ki-spinner-indicator:var(--ki-surface-inverse-white);
   --ki-stat-radius:var(--ki-radius-component-md);
   --ki-status-size:var(--ki-space-sm);

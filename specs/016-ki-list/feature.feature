@@ -1,5 +1,5 @@
 Feature: List
-  A list presents a read-only collection of similar items — leading media,
+  Default-mode lists present similar items — leading media,
   primary and secondary text, trailing meta — in one consistent vertical
   structure that any brand restyles through tokens alone.
 
@@ -55,10 +55,8 @@ Feature: List
     Then it exposes a list of exactly three items
     And each item exposes its text content and no interactive role
 
-  # Family: form participation — N/A for ki-list: a non-interactive data
-  # display container is not a form control, holds no value and contributes
-  # no entry to submitted form data (justified in spec.md's Scenario Family
-  # Coverage table).
+  # Family: form participation — selection-mode scenarios are in
+  # 107-interactive-list. Default-mode lists contribute no form data.
 
   # Family: theming
   # S7

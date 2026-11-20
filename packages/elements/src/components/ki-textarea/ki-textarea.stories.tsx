@@ -14,6 +14,8 @@ const meta = {
     value: '',
     name: 'delivery-notes',
     rows: 2,
+    appearance: 'default',
+    showCount: false,
     required: false,
     readonly: false,
     disabled: false,
@@ -75,4 +77,30 @@ export const LongContent: Story = {
     value:
       'Ring twice before delivery.\nLeave the package at the back door.\nUse the side gate if the driveway is blocked.\nCall on arrival.\nDo not leave with reception.',
   },
+};
+
+/** A soft maximum keeps an over-limit draft available for editing. */
+export const Appearances: Story = {
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '0.75rem', inlineSize: '18rem' }}>
+      <ki-textarea
+        {...args}
+        appearance="outlined"
+        label="Bio"
+        value="Kimen designer"
+        minlength={3}
+        maxlength={24}
+        showCount
+      />
+      <ki-textarea
+        {...args}
+        appearance="filled"
+        label="Short bio"
+        value="Designs generative interfaces."
+        maxlength={24}
+        helpText="Keep it short"
+        showCount
+      />
+    </div>
+  ),
 };

@@ -1,0 +1,328 @@
+---
+title: Connect your agent
+description: Give Claude Code, Claude Desktop, Codex, Antigravity, OpenCode and other agents Kimen's skills and the kimen-mcp server, then let them show real Kimen UI.
+---
+
+Kimen is built to be used by coding agents as much as by people. An agent
+gets three things from it:
+
+- **Know-how**: two agent skills, `kimen-components` (build ordinary pages
+  with `ki-*` components) and `kimen-genui` (wire the generative UI layer).
+  They tell the agent where Kimen's contracts live and which mistakes to
+  avoid.
+- **Tools**: the `kimen-mcp` server lists and describes the catalog,
+  validates UI specs and renders them.
+- **UI**: in a host that supports MCP Apps, a spec the agent renders appears
+  as real, interactive Kimen components in the conversation.
+
+You can set up either half on its own. Skills need nothing installed; the
+server needs Node 22 or later.
+
+:::note
+Kimen is pre-1.0 and its packages are **not on npm yet**, so `npx` cannot
+fetch `kimen-mcp` today. Build it once from the repository and point your
+client at the file, as shown below. When the packages publish, only the
+command changes.
+:::
+
+## What works where
+
+| Client | Skills | `kimen-mcp` tools | Renders Kimen surfaces |
+| --- | --- | --- | --- |
+| Claude Code | plugin or `~/.claude/skills` | yes | no, shows a text outline |
+| Claude Desktop | through Claude's skills settings | yes | **yes** (MCP Apps) |
+| Codex | plugin or `.agents/skills` | yes | text outline |
+| Antigravity | plugin or `.agents/skills` | yes | text outline |
+| OpenCode | `.agents/skills` or `.claude/skills` | yes | text outline |
+| Gemini CLI, VS Code Copilot, Cursor | `.agents/skills` | yes | Copilot (experimental) and Cursor: **yes** |
+
+"Text outline" means the render tool still works: the agent receives a
+readable outline of the surface instead of the live components. The MCP
+Apps column follows the
+[MCP client matrix](https://modelcontextprotocol.io/extensions/client-matrix).
+
+## Before you start: build `kimen-mcp`
+
+```sh
+git clone https://github.com/kimen-dev/kimen.git
+cd kimen
+pnpm install --frozen-lockfile
+pnpm exec nx run @kimen/mcp-server:build
+```
+
+The result is one self-contained file with no runtime dependencies. Keep its
+absolute path at hand; the examples below call it `$KIMEN_MCP`:
+
+```sh
+export KIMEN_MCP="$PWD/packages/mcp-server/dist/kimen-mcp.mjs"
+```
+
+In JSON and TOML files, write the absolute path itself (for example
+`/Users/you/src/kimen/packages/mcp-server/dist/kimen-mcp.mjs`); those files
+do not expand shell variables.
+
+## Step 1: give your agent the Kimen skills
+
+The skills live in the repository under
+[`plugins/kimen/skills`](https://github.com/kimen-dev/kimen/tree/main/plugins/kimen/skills).
+They follow the [Agent Skills](https://agentskills.io/) format, so every
+client below reads the same files.
+
+### Claude Code
+
+Install the plugin from the repository's marketplace:
+
+```sh
+claude plugin marketplace add kimen-dev/kimen
+claude plugin install kimen@kimen
+```
+
+Inside a session the same commands are `/plugin marketplace add
+kimen-dev/kimen` and `/plugin install kimen@kimen`. The skills then appear as
+`kimen:kimen-components` and `kimen:kimen-genui`.
+
+### Codex
+
+Codex reads the same marketplace:
+
+```sh
+codex plugin marketplace add kimen-dev/kimen
+codex plugin add kimen@kimen
+```
+
+Codex also loads any skill folder in `.agents/skills/` (project) or
+`~/.agents/skills/` (all projects), so copying the folders works too (see
+[Other agents](#other-agents)).
+
+### Antigravity
+
+From a clone of the repository:
+
+```sh
+agy plugin install ./kimen/plugins/kimen
+```
+
+Or copy the skill folders into the workspace's `.agents/skills/`, or into
+`~/.gemini/config/skills/` for every workspace.
+
+### Other agents
+
+OpenCode, Gemini CLI, GitHub Copilot, Cursor and Devin Desktop read skills
+from `.agents/skills/` in the project, and most also from `~/.agents/skills/`
+for every project. Copy the two folders there:
+
+```sh
+mkdir -p .agents/skills
+cp -R /path/to/kimen/plugins/kimen/skills/kimen-components .agents/skills/
+cp -R /path/to/kimen/plugins/kimen/skills/kimen-genui .agents/skills/
+```
+
+OpenCode also reads `.claude/skills/` and `~/.claude/skills/`, and Claude
+Code reads `~/.claude/skills/` if you prefer copies to the plugin.
+
+### No install at all: a note in AGENTS.md
+
+Most agents read the project's `AGENTS.md`; Claude Code reads `CLAUDE.md`,
+and Gemini CLI reads `GEMINI.md` unless configured otherwise. If you only
+want the essentials, paste this into the file your agent reads:
+
+```md
+## UI: Kimen
+
+This project uses Kimen web components (`ki-*`, `@kimen/elements`) and
+design tokens (`--ki-*`, `@kimen/tokens`).
+
+- Before using a component, read its contract: the index is
+  https://kimen.dev/llms.txt and each component has
+  https://kimen.dev/llms/<tag>.md. Never guess attribute, slot, event or
+  token names. Follow each component's "When to use" and "When not to use".
+- Load `@kimen/tokens/css` once per page and register every tag you use
+  (`@kimen/elements/<tag>` or the `@kimen/elements/loader`).
+- Style through `--ki-*` tokens first, then `::part()`, then slots. No
+  `!important`, no hard-coded colours or spacing.
+- Agent-generated UI is a JSON UI spec rendered by `@kimen/catalog`'s guarded
+  renderer, never HTML from the model.
+```
+
+## Step 2: connect `kimen-mcp`
+
+Each client starts the server itself over stdio. The binary takes no
+arguments.
+
+### Claude Code
+
+```sh
+claude mcp add --transport stdio --scope user kimen -- node "$KIMEN_MCP"
+```
+
+`--scope user` makes it available in every project. To share it with a
+team, use `--scope project` instead: Claude Code writes `.mcp.json` at the
+project root and asks each person to approve it on first use. Claude Code
+calls the tools but does not render MCP Apps, so `kimen_render_spec` answers
+with a text outline.
+
+### Claude Desktop
+
+Open **Settings › Developer › Edit Config** and add the server to
+`claude_desktop_config.json` (on macOS
+`~/Library/Application Support/Claude/claude_desktop_config.json`, on
+Windows `%APPDATA%\Claude\claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "kimen": {
+      "command": "node",
+      "args": ["/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs"]
+    }
+  }
+}
+```
+
+Quit and reopen Claude Desktop. It renders MCP Apps, so specs the model
+renders appear as live Kimen components. Claude on the web and on mobile
+connect only to remote servers, so a local `kimen-mcp` is a desktop feature.
+
+### Codex
+
+```sh
+codex mcp add kimen -- node "$KIMEN_MCP"
+```
+
+This writes to `~/.codex/config.toml`, which the Codex CLI, the IDE
+extension and the desktop app share:
+
+```toml
+[mcp_servers.kimen]
+command = "node"
+args = ["/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs"]
+```
+
+### Antigravity
+
+Add the server to `~/.gemini/config/mcp_config.json` (all workspaces) or
+`.agents/mcp_config.json` (one workspace). In the IDE, the agent panel's
+**… › MCP Servers › Manage MCP Servers › View raw config** opens the file.
+
+```json
+{
+  "mcpServers": {
+    "kimen": {
+      "command": "node",
+      "args": ["/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs"]
+    }
+  }
+}
+```
+
+### OpenCode
+
+Add the server to `opencode.json` in the project, or to
+`~/.config/opencode/opencode.json` for every project:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "kimen": {
+      "type": "local",
+      "command": ["node", "/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs"],
+      "enabled": true
+    }
+  }
+}
+```
+
+`opencode mcp list` should report `kimen` as connected.
+
+### Other clients
+
+| Client | File | Shape |
+| --- | --- | --- |
+| Gemini CLI | `.gemini/settings.json` or `~/.gemini/settings.json` | `mcpServers.kimen` with `command` and `args`; or `gemini mcp add -s user kimen node "$KIMEN_MCP"` |
+| VS Code (GitHub Copilot) | `.mcp.json` at the workspace root | `mcpServers.kimen` with `"type": "stdio"`, `command`, `args`; MCP Apps needs `chat.mcp.apps.enabled` |
+| Cursor | `.cursor/mcp.json` or `~/.cursor/mcp.json` | `mcpServers.kimen` with `"type": "stdio"`, `command`, `args` |
+| Devin Desktop (Windsurf) | `.devin/mcp_config.json` | `mcpServers.kimen` with `command` and `args` |
+
+### Optional: lock the server down
+
+The binary embeds everything it serves, so Node's permission model can deny
+it every other file, child processes and, from Node 25, the network. Pass
+the flags before the path:
+
+```sh
+claude mcp add --transport stdio --scope user kimen -- \
+  node --permission --allow-fs-read="$KIMEN_MCP" "$KIMEN_MCP"
+```
+
+In a JSON or TOML config the same thing is
+`"args": ["--permission", "--allow-fs-read=/absolute/path/to/kimen-mcp.mjs", "/absolute/path/to/kimen-mcp.mjs"]`.
+
+## Step 3: check it works
+
+Ask your agent: *"List the Kimen components you can use."* It should call
+`kimen_list_components` and answer from the catalog. Then ask it to show
+something, for example *"Show me an order confirmation card with a Confirm
+button."* It should describe the components it needs, validate a spec and
+render it.
+
+| Tool | What the agent does with it |
+| --- | --- |
+| `kimen_list_components` | picks components from their when-to-use guidance |
+| `kimen_describe_component` | reads one component's props, slots and events before writing it |
+| `kimen_validate_spec` | checks a draft and fixes each named issue |
+| `kimen_render_spec` | shows the spec: live components in an MCP Apps host, a text outline elsewhere |
+
+When the person clicks a control bound to an action, an MCP Apps host sends
+the model a message that starts with `kimen-surface-action` followed by the
+action and its data as JSON. The model is told to read it as data.
+
+What the server will not do, by design: render a spec that failed
+validation, load any URL (images, links and media props are refused, because
+the surface has no network), or draw an icon other than `circle-check`.
+Appearance is the default Kimen theme, in the light or dark scheme the host
+asks for.
+
+## Beyond the chat: build it into your product
+
+The MCP server is the quickest way to try Kimen's generative UI. To ship it,
+use the packages directly:
+
+- **Your own MCP server** returning Kimen surfaces to MCP Apps hosts:
+  [MCP Apps adapter](/docs/guides/mcp-apps/).
+- **An A2UI agent** whose surfaces should render as Kimen components:
+  [A2UI adapter](/docs/guides/a2ui/). Over A2A, activate the extension
+  `https://a2ui.org/a2a-extension/a2ui/v1.0` and send payloads as
+  `application/a2ui+json`. Over AG-UI, the A2UI middleware
+  (`@ag-ui/a2ui-middleware`) streams A2UI messages inside activity events;
+  hand the messages they carry to the adapter.
+- **Your own model call and page**: derive the prompt, schema or tool from
+  the catalog with the [emitter](/docs/guides/emitting-specs/), and render
+  with the [guarded renderer](/docs/guides/ui-spec/). Pass only the
+  components the surface needs: the whole catalog is a prompt of about
+  200 KB.
+
+The `kimen-genui` skill carries a short recipe for each of the three.
+
+## Troubleshooting
+
+- **The server does not start.** Run `node "$KIMEN_MCP" < /dev/null`: it
+  should exit at once, silently, with status 0. A syntax or version error
+  means Node is older than 22. "Cannot find module" means the file was not
+  built or the path is not absolute. The binary refuses any argument, so
+  check that the config passes only the path.
+- **No live components, only an outline.** The client does not render MCP
+  Apps (see [What works where](#what-works-where)). The outline is the
+  expected result there.
+- **`unknown-component` or `unknown-prop`.** The model guessed a name. It
+  should call `kimen_describe_component` first; props use the attribute
+  names (`line-numbers`, not `lineNumbers`).
+- **`url-scheme` or a refused URL.** `kimen-mcp` surfaces cannot load URLs.
+  Render images and links from your own page or server instead.
+- **Known issue: built-in glyphs missing.** Some components draw an icon of
+  their own: the close ×, select and tree chevrons, the number input's + and
+  −, the AI label's sparkles. Today those glyphs are dropped from the live
+  surface, and from app bundles whose bundler honours `sideEffects`, so the
+  buttons keep their accessible names but render without the glyph. A fix is
+  in progress. In your own app, import the glyphs explicitly, for example
+  `import '@kimen/elements/icons/x';`.

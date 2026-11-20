@@ -1,0 +1,401 @@
+{
+  "component": {
+    "attributes": {
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the disclosure is expanded. Set to show the list initially.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "source-count-label": {
+        "default": "'{count} source'",
+        "deprecatedSince": null,
+        "description": "Localized summary when there is one source. Use `{count}` for its number.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "sources-count-label": {
+        "default": "'{count} sources'",
+        "deprecatedSince": null,
+        "description": "Localized summary for multiple sources. Use `{count}` for their number.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting background of a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative image over a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border color of a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border width of a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on a resting source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a hovered source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on a hovered source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset around source card content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-card-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-number-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the number in a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-number-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text color of the number in a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-number-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the number in a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-source-number-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum size of the number in a source card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sources-list-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between source cards.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sources-max-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum line length of the source disclosure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sources-summary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the source-count control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sources-summary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on the source-count control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A disclosure with the ordered sources behind an answer.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "disclosure": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native expandable section.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "domain": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hostname derived from the link destination.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "list": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ordered list of sources.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "number": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source order marker inside the card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "snippet": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional excerpt.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "source": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source card link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "summary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Disclosure control with the localized source count.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "title": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible title of the link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the disclosure is expanded. Set to show the list initially.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "sourceCountLabel": {
+        "default": "'{count} source'",
+        "deprecatedSince": null,
+        "description": "Localized summary when there is one source. Use `{count}` for its number.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "sourcesCountLabel": {
+        "default": "'{count} sources'",
+        "deprecatedSince": null,
+        "description": "Localized summary for multiple sources. Use `{count}` for their number.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct `ki-source` definitions for this answer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-sources.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-sources.d.ts",
+    "symbols": {
+      "KiSources": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSources extends Components.KiSources, HTMLElement {\n}\nexport const KiSources: {\n    prototype: KiSources;\n    new (): KiSources;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-sources.js"
+  }
+}
