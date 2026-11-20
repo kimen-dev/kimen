@@ -9,6 +9,7 @@ export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';
 export { KiBadge } from './ki-badge.js';
 export { KiButton } from './ki-button.js';
+export { KiButtonGroup } from './ki-button-group.js';
 export { KiCard } from './ki-card.js';
 export { KiCheckbox } from './ki-checkbox.js';
 export { KiCheckboxGroup } from './ki-checkbox-group.js';
