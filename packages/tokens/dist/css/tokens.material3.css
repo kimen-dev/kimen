@@ -345,6 +345,7 @@
   --ki-alert-shell-radius:var(--ki-radius-component-lg);
   --ki-alert-shell-bg:var(--ki-color-transparent-black);
   --ki-alert-card-shadow:0 0 0 0 var(--ki-color-transparent-black);
+  --ki-audio-speed-radius:var(--ki-control-compact-pill-radius);
   --ki-avatar-group-counter-border-color:var(--ki-outline-none);
   --ki-avatar-group-counter-shadow:0 0 0 0 var(--ki-color-transparent-black);
   --ki-avatar-bg:var(--ki-surface-primary-med-em);
@@ -363,6 +364,8 @@
   --ki-badge-info-bg:var(--ki-surface-info-base-em);
   --ki-badge-warning-bg:var(--ki-surface-warning-base-em);
   --ki-badge-xs-radius:var(--ki-radius-round);
+  --ki-breadcrumb-hover-bg:var(--ki-surface-s3);
+  --ki-breadcrumb-menu-bg:var(--ki-surface-s2);
   --ki-button-xs-radius:var(--ki-radius-round);
   --ki-button-sm-radius:var(--ki-radius-round);
   --ki-button-md-radius:var(--ki-radius-round);
@@ -437,6 +440,7 @@
   --ki-button-quaternary-danger-hover-border:var(--ki-outline-danger-high-em);
   --ki-button-quaternary-danger-active-border:var(--ki-outline-danger-high-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-danger-rest-border */
   --ki-button-quaternary-danger-disabled-border:var(--ki-outline-low-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-neutral-disabled-border */
+  --ki-button-ghost-selected-bg:var(--ki-surface-primary-high-em);
   --ki-button-border-width:0.0625rem;
   --ki-card-bg:var(--ki-surface-s1);
   --ki-card-border-color:var(--ki-outline-none);
@@ -461,6 +465,8 @@
   --ki-checkbox-indeterminate-active-border:var(--ki-outline-none);
   --ki-checkbox-indeterminate-disabled-bg:var(--ki-surface-disabled-low-em);
   --ki-checkbox-indeterminate-disabled-fg:var(--ki-text-muted);
+  --ki-combobox-listbox-shadow:var(--ki-elevation-e2);
+  --ki-date-picker-radius:var(--ki-menu-layout-surface-radius);
   --ki-dialog-radius:var(--ki-radius-big-component-lg);
   --ki-dialog-gap:var(--ki-space-5xl);
   --ki-dialog-bg:var(--ki-surface-s3);
@@ -483,6 +489,8 @@
   --ki-divider-color:var(--ki-outline-med-em);
   --ki-divider-radius:var(--ki-radius-0);
   --ki-divider-spacing:var(--ki-space-zero);
+  --ki-empty-state-heading-weight:var(--ki-typography-weight-body-medium);
+  --ki-icon-button-ghost-selected-bg:var(--ki-surface-primary-high-em);
   --ki-indicator-gap:var(--ki-space-md);
   --ki-indicator-dot-color:var(--ki-outline-control);
   --ki-indicator-dot-current-inline-size:var(--ki-space-md);
@@ -528,6 +536,19 @@
   --ki-list-item-primary-font-weight:var(--ki-typography-weight-body-normal);
   --ki-list-item-secondary-font-size:var(--ki-typography-size-caption-1);
   --ki-list-item-secondary-line-height:var(--ki-typography-line-height-caption-1);
+  --ki-number-input-field-bg:var(--ki-surface-s1);
+  --ki-number-input-field-focus-bg:var(--ki-surface-s1);
+  --ki-number-input-field-disabled-fg:var(--ki-text-low-em);
+  --ki-number-input-border-block-start-width:var(--ki-space-zero);
+  --ki-number-input-border-block-end-width:var(--ki-space-xxs);
+  --ki-number-input-border-inline-width:var(--ki-space-zero);
+  --ki-number-input-radius:var(--ki-radius-component-xs);
+  --ki-number-input-height:var(--ki-space-14xl);
+  --ki-number-input-padding-inline:var(--ki-space-3xl);
+  --ki-number-input-font-size-touch:var(--ki-typography-size-body-2);
+  --ki-number-input-label-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-number-input-label-font-size:var(--ki-typography-size-caption-2);
+  --ki-number-input-label-font-weight:var(--ki-typography-weight-body-normal);
   --ki-option-min-target:var(--ki-space-7xl);
   --ki-option-radius:var(--ki-radius-component-xs);
   --ki-option-rest-bg:var(--ki-surface-s2);
@@ -587,6 +608,7 @@
   --ki-select-lg-radius:var(--ki-radius-component-xs);
   --ki-select-xl-radius:var(--ki-radius-component-xs);
   --ki-spinner-indicator:var(--ki-surface-inverse-white);
+  --ki-stat-radius:var(--ki-radius-component-md);
   --ki-status-size:var(--ki-space-sm);
   --ki-status-shadow:0 0 0 0 var(--ki-color-transparent-black);
   --ki-switch-track-width:var(--ki-space-15xl);
@@ -696,6 +718,13 @@
   --ki-textarea-sm-radius:var(--ki-radius-component-xs);
   --ki-textarea-lg-radius:var(--ki-radius-component-xs);
   --ki-textarea-xl-radius:var(--ki-radius-component-xs);
+  --ki-time-input-list-bg:var(--ki-surface-s2);
+  --ki-time-input-list-border-color:var(--ki-outline-none);
+  --ki-time-input-list-radius:var(--ki-corner-popup-tight);
+  --ki-time-input-list-shadow:var(--ki-elevation-e2);
+  --ki-timeline-dot-success-bg:var(--ki-surface-success-base-em);
+  --ki-timeline-dot-warning-bg:var(--ki-surface-warning-base-em);
+  --ki-timeline-dot-danger-bg:var(--ki-surface-danger-base-em);
   --ki-toast-bg:var(--ki-surface-s2);
   --ki-toast-border:var(--ki-outline-none);
   --ki-toast-shadow:var(--ki-elevation-e3);
@@ -714,6 +743,8 @@
   --ki-tooltip-font-size:var(--ki-font-size-caption-2);
   --ki-tooltip-line-height:var(--ki-font-line-height-caption-2);
   --ki-tooltip-shadow:0 0 0 0 var(--ki-color-transparent-black);
+  --ki-top-nav-menu-radius:var(--ki-layout-menu-radius-sm);
+  --ki-tree-radius:var(--ki-corner-action-frame);
   --ki-video-frame-radius:var(--ki-radius-component-lg);
   --ki-video-scrim-color:var(--ki-transparent-inverse);
   --ki-video-scrim-padding:var(--ki-space-zero);
