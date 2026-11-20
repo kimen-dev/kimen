@@ -1,4 +1,5 @@
 // @spec:028-guarded-renderer
+// @spec:094-toggle-icon-button
 // Activation events of bound actions (FR-003, S4, S17-S19): a bound action
 // fires on the activation event its catalog entry declares — never by
 // cancelling the control's own change — and carries the control's live,
@@ -225,11 +226,43 @@ describe('renderUiSpec — bound actions fire on the declared activation event',
     );
     const button = rendered('ki-button');
     change(button);
+    change(button, 'ki-change');
     expect(onAction).not.toHaveBeenCalled();
     expect(click(button).defaultPrevented).toBe(true);
     expect(onAction).toHaveBeenCalledTimes(1);
     expect(onAction.mock.calls[0]?.[0]?.data).toEqual({ variant: 'primary' });
   });
+
+  it.each(['ki-button', 'ki-icon-button'])(
+    'S1 %s relays one declared toggle action with live selection',
+    (tag) => {
+      const onAction = vi.fn<(event: ActionEvent) => void>();
+      const props =
+        tag === 'ki-icon-button' ? { toggle: true, label: 'Bookmark' } : { toggle: true };
+      expect(
+        renderUiSpec(
+          {
+            version: 1,
+            actions: ['bookmark'],
+            root: { component: tag, action: 'bookmark', props },
+          },
+          { surface, onAction },
+        ).ok,
+      ).toBe(true);
+      const button = rendered(tag);
+
+      expect(Object.keys(builtIn.components[tag]?.events ?? {})).toEqual(['ki-change']);
+      expect(click(button).defaultPrevented).toBe(false);
+      expect(onAction).not.toHaveBeenCalled();
+      button['selected'] = true;
+      change(button, 'ki-change');
+      expect(onAction).toHaveBeenCalledExactlyOnceWith({
+        action: 'bookmark',
+        data: { ...props, selected: true },
+        path: 'root',
+      });
+    },
+  );
 
   it('S4 a change-bound control inside a click-bound card dispatches exactly one action', () => {
     const onAction = vi.fn<(event: ActionEvent) => void>();

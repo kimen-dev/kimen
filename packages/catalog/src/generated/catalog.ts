@@ -146,6 +146,23 @@ export const catalogData = {
       "whenNotToUse": "Do not use it for avatars (ki-avatar), for icons inside controls, for text set as an image, or as a button. Never bind an action.",
       "whenToUse": "Show a chart, a photo or an illustration that carries content (describe it in alt) or decoration (alt \"\")."
     },
+    "ki-accordion": {
+      "description": "A set of native disclosure panels with a shared frame.",
+      "events": {},
+      "props": {
+        "exclusive": {
+          "type": "boolean",
+          "description": "Whether the accordion allows at most one direct member to be open.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Direct ki-details members in reading order."
+      },
+      "tag": "ki-accordion",
+      "whenNotToUse": "switch between views or make the panels advance a workflow.",
+      "whenToUse": "group related FAQ answers, settings or expandable sections.\nEnable exclusive when readers benefit from one open section at a time."
+    },
     "ki-ai-label": {
       "description": "A compact provenance mark for AI-generated content, with optional details\nand a user-initiated request to restore their original text.",
       "events": {
@@ -412,7 +429,9 @@ export const catalogData = {
     },
     "ki-button": {
       "description": "A token-styled action button with native button semantics.",
-      "events": {},
+      "events": {
+        "ki-change": "Emitted after toggle activation with the new selected state."
+      },
       "props": {
         "command": {
           "type": "enum",
@@ -446,6 +465,11 @@ export const catalogData = {
           "type": "string",
           "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent."
         },
+        "selected": {
+          "type": "boolean",
+          "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+          "default": false
+        },
         "size": {
           "type": "enum",
           "values": [
@@ -458,6 +482,11 @@ export const catalogData = {
           "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls.",
           "default": "md"
         },
+        "toggle": {
+          "type": "boolean",
+          "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
+          "default": false
+        },
         "tone": {
           "type": "enum",
           "values": [
@@ -465,7 +494,7 @@ export const catalogData = {
             "neutral",
             "success"
           ],
-          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "default": "neutral"
         },
         "type": {
@@ -475,7 +504,7 @@ export const catalogData = {
             "reset",
             "submit"
           ],
-          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "default": "submit"
         },
         "value": {
@@ -486,11 +515,12 @@ export const catalogData = {
           "type": "enum",
           "values": [
             "ghost",
+            "outline",
             "primary",
             "quaternary",
             "secondary"
           ],
-          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "default": "secondary",
           "deprecatedValues": [
             "tertiary"
@@ -503,8 +533,8 @@ export const catalogData = {
         "start": "Leading icon or media. Follows writing direction."
       },
       "tag": "ki-button",
-      "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
-      "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+      "whenNotToUse": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress).",
+      "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
     "ki-button-group": {
       "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
@@ -1146,6 +1176,7 @@ export const catalogData = {
           "type": "enum",
           "values": [
             "ghost",
+            "outline",
             "primary",
             "quaternary",
             "secondary"
@@ -1199,6 +1230,39 @@ export const catalogData = {
       "tag": "ki-counter",
       "whenNotToUse": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics.",
       "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
+    },
+    "ki-details": {
+      "description": "A native disclosure for supporting information that can stay collapsed.",
+      "events": {
+        "ki-toggle": "Emitted when the native disclosure toggles or an exclusive peer closes it."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Disables summary activation. The page can still set open.",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Nonempty name for exclusive disclosures in the same document or shadow root."
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the panel is open. Native changes reflect back to this property.",
+          "default": false
+        },
+        "summary": {
+          "type": "string",
+          "description": "Plain label for the control. Supply the summary slot for a rich label."
+        }
+      },
+      "slots": {
+        "": "Content shown when the disclosure is open.",
+        "summary": "Rich summary text or an authored heading, replacing the summary prop."
+      },
+      "tag": "ki-details",
+      "whenNotToUse": "hide the primary action or information needed to complete a task.\nFor script-free HTML, author native details and summary directly.",
+      "whenToUse": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
     },
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
@@ -1604,7 +1668,9 @@ export const catalogData = {
     },
     "ki-icon-button": {
       "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
-      "events": {},
+      "events": {
+        "ki-change": "Emitted after toggle activation with the new selected state."
+      },
       "props": {
         "command": {
           "type": "enum",
@@ -1645,7 +1711,12 @@ export const catalogData = {
         },
         "pressed": {
           "type": "boolean",
-          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
+          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action."
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
+          "default": false
         },
         "size": {
           "type": "enum",
@@ -1659,6 +1730,11 @@ export const catalogData = {
           "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor.",
           "default": "md"
         },
+        "toggle": {
+          "type": "boolean",
+          "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
+          "default": false
+        },
         "tone": {
           "type": "enum",
           "values": [
@@ -1666,18 +1742,19 @@ export const catalogData = {
             "neutral",
             "success"
           ],
-          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "default": "neutral"
         },
         "variant": {
           "type": "enum",
           "values": [
             "ghost",
+            "outline",
             "primary",
             "quaternary",
             "secondary"
           ],
-          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "default": "secondary",
           "deprecatedValues": [
             "tertiary"
@@ -1686,11 +1763,12 @@ export const catalogData = {
       },
       "slots": {
         "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
-        "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
+        "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
+        "selected": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
       },
       "tag": "ki-icon-button",
-      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
-      "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
+      "whenNotToUse": "whenever a visible label fits (use ki-button),\nnavigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+      "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. Enable `toggle` for persistent actions such as\nBookmark. While the action it started is in progress, set `loading`."
     },
     "ki-image": {
       "description": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",

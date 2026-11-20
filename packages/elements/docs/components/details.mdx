@@ -1,0 +1,72 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DetailsStories from '../../src/components/ki-details/ki-details.stories';
+import * as AccordionStories from '../../src/components/ki-accordion/ki-accordion.stories';
+
+<Meta title="Docs/Components/ki-details" />
+
+# Details and accordion
+
+Use `ki-details` to reveal a short explanation, an FAQ answer, a settings
+section or tool output. Use `ki-accordion` to frame related disclosures.
+
+<Canvas of={DetailsStories.Playground} />
+<Canvas of={DetailsStories.RichSummary} />
+<Canvas of={DetailsStories.Disabled} />
+<Canvas of={AccordionStories.Playground} />
+
+## Usage
+
+```html
+<ki-accordion exclusive>
+  <ki-details open summary="Who can see my workspace?">
+    Only people you invite can see it.
+  </ki-details>
+  <ki-details summary="Can I export my data?">
+    Open Settings, then select Data and Export.
+  </ki-details>
+</ki-accordion>
+```
+
+- Provide a nonempty `summary` label or use the `summary` slot for a heading.
+- A shared nonempty `name` makes disclosures exclusive within one document
+  or shadow root, including when they sit outside an accordion.
+- Set `open` for the initial or page-controlled state. Set `disabled` to
+  remove the summary from the tab order and prevent activation.
+- Set `exclusive` on the accordion to allow at most one direct member open.
+  Omit it to let each panel open independently.
+- Listen to `ki-toggle` on a disclosure for native changes, including when
+  another member opens. Read the resulting state from `event.detail.open`.
+
+The buttons in the tab sequence are native summaries. Enter and Space toggle
+them. The browser exposes expanded state and can reveal closed content when
+it finds a match. The chevron is decorative and respects reduced motion.
+
+## Script-free HTML
+
+Serve native markup when the page must work without JavaScript. Give related
+disclosures the same nonempty `name` to enable native exclusivity.
+
+```html
+<details name="workspace-faq" open>
+  <summary>Who can see my workspace?</summary>
+  <p>Only people you invite can see it.</p>
+</details>
+<details name="workspace-faq">
+  <summary>Can I export my data?</summary>
+  <p>Open Settings, then select Data and Export.</p>
+</details>
+```
+
+## Customization
+
+| Tokens | Controls |
+| --- | --- |
+| `--ki-details-bg`, `--ki-details-fg` | Surface and text |
+| `--ki-details-bg-image`, `--ki-details-backdrop-filter` | Optional surface image and backdrop filter |
+| `--ki-details-body-bg`, `--ki-details-body-fg` | Panel body color pair |
+| `--ki-details-summary-hover-bg`, `--ki-details-summary-hover-fg` | Hover color pair |
+| `--ki-details-border`, `--ki-details-border-width`, `--ki-details-radius` | Standalone and accordion frames |
+| `--ki-details-padding`, `--ki-details-summary-padding-block` | Body and summary spacing |
+| `--ki-accordion-divider-width` | Width of the separators between panels |
+
+Use `ki-accordion::part(group)` to target the shared frame.

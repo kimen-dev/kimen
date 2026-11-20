@@ -49,7 +49,7 @@ write. Use a button or link for those actions.
 - `label` (string, default 'Copy'): Accessible name for the icon-only control. Visible slot text supplies the name when present.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Match the size of adjacent controls.
 - `value` (string | undefined): Exact clipboard text, including whitespace. Supply it when the text is known directly.
-- `variant` ("ghost" | "primary" | "quaternary" | "secondary", default 'ghost'): Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.
+- `variant` ("ghost" | "outline" | "primary" | "quaternary" | "secondary", default 'ghost'): Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.
 
 ## Slots
 
@@ -98,6 +98,8 @@ None.
 - `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border.
 - `--ki-button-ghost-neutral-rest-fg`: color used by the button component for ghost neutral rest foreground.
 - `--ki-button-ghost-rest-shadow`: value used by the button component for ghost rest shadow.
+- `--ki-button-ghost-selected-bg`: Background of the selected ghost button toggle.
+- `--ki-button-ghost-selected-fg`: Foreground of the selected ghost button toggle.
 - `--ki-button-ghost-success-hover-bg`: color used by the button component for ghost success hover background.
 - `--ki-button-ghost-success-hover-border`: color used by the button component for ghost success hover border.
 - `--ki-button-ghost-success-hover-fg`: color used by the button component for ghost success hover foreground.
@@ -123,6 +125,11 @@ None.
 - `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
 - `--ki-button-md-radius`: dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).
 - `--ki-button-md-spinner-size`: dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
+- `--ki-button-outline-rest-bg`: Background of the outline variant at rest.
+- `--ki-button-outline-rest-border`: Visible outline of the outline variant at rest.
+- `--ki-button-outline-rest-fg`: Foreground of the outline variant at rest.
+- `--ki-button-outline-selected-bg`: Background of the selected outline button toggle.
+- `--ki-button-outline-selected-fg`: Foreground of the selected outline button toggle.
 - `--ki-button-padding-block`: dimension used by the button component for padding block (MarsUI: 4px in every size).
 - `--ki-button-primary-active-overlay`: Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
@@ -145,6 +152,8 @@ None.
 - `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
 - `--ki-button-primary-rest-border-bottom`: color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom).
 - `--ki-button-primary-rest-shadow`: shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default).
+- `--ki-button-primary-selected-bg`: Background of the selected primary button toggle.
+- `--ki-button-primary-selected-fg`: Foreground of the selected primary button toggle.
 - `--ki-button-primary-success-hover-bg`: color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
 - `--ki-button-primary-success-hover-border`: color used by the button component for primary success hover border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-success-hover-fg`: color used by the button component for primary success hover foreground.
@@ -169,6 +178,8 @@ None.
 - `--ki-button-quaternary-neutral-rest-border`: color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
 - `--ki-button-quaternary-rest-shadow`: value used by the button component for quaternary rest shadow.
+- `--ki-button-quaternary-selected-bg`: Background of the selected quaternary button toggle.
+- `--ki-button-quaternary-selected-fg`: Foreground of the selected quaternary button toggle.
 - `--ki-button-quaternary-success-hover-bg`: color used by the button component for quaternary success hover background.
 - `--ki-button-quaternary-success-hover-border`: color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-success-hover-fg`: color used by the button component for quaternary success hover foreground.
@@ -196,6 +207,8 @@ None.
 - `--ki-button-secondary-neutral-rest-fg`: color used by the button component for secondary neutral rest foreground (MarsUI text/high_em).
 - `--ki-button-secondary-rest-border-bottom`: color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom).
 - `--ki-button-secondary-rest-shadow`: shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default).
+- `--ki-button-secondary-selected-bg`: Background of the selected secondary button toggle.
+- `--ki-button-secondary-selected-fg`: Foreground of the selected secondary button toggle.
 - `--ki-button-secondary-success-hover-bg`: color used by the button component for secondary success hover background.
 - `--ki-button-secondary-success-hover-border`: color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-hover-fg`: color used by the button component for secondary success hover foreground.
@@ -239,6 +252,8 @@ None.
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
+- `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).
 - `--ki-button-xl-height`: dimension used by the button component for xl height.

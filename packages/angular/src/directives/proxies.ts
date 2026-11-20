@@ -6,6 +6,7 @@ import { ProxyCmp } from './angular-component-lib/utils';
 
 import type { Components } from '@kimen/elements/components';
 
+import { defineCustomElement as defineKiAccordion } from '@kimen/elements/components/ki-accordion.js';
 import { defineCustomElement as defineKiAiLabel } from '@kimen/elements/components/ki-ai-label.js';
 import { defineCustomElement as defineKiAlert } from '@kimen/elements/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '@kimen/elements/components/ki-avatar.js';
@@ -26,6 +27,7 @@ import { defineCustomElement as defineKiConfirmation } from '@kimen/elements/com
 import { defineCustomElement as defineKiConversation } from '@kimen/elements/components/ki-conversation.js';
 import { defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
+import { defineCustomElement as defineKiDetails } from '@kimen/elements/components/ki-details.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
@@ -78,6 +80,29 @@ import { defineCustomElement as defineKiToast } from '@kimen/elements/components
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
+@ProxyCmp({
+  defineCustomElementFn: defineKiAccordion,
+  inputs: ['exclusive']
+})
+@Component({
+  selector: 'ki-accordion',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['exclusive'],
+})
+export class KiAccordion {
+  protected el: HTMLKiAccordionElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiAccordion extends Components.KiAccordion {}
+
+
 @ProxyCmp({
   defineCustomElementFn: defineKiAiLabel,
   inputs: ['explanation', 'generatedAt', 'generatedAtLabel', 'label', 'model', 'modelLabel', 'popoverLabel', 'revertLabel', 'revertible', 'size', 'triggerLabel']
@@ -258,14 +283,14 @@ export declare interface KiBreadcrumbItem extends Components.KiBreadcrumbItem {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiButton,
-  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant']
+  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'selected', 'size', 'toggle', 'tone', 'type', 'value', 'variant']
 })
 @Component({
   selector: 'ki-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant'],
+  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'selected', 'size', 'toggle', 'tone', 'type', 'value', 'variant'],
 })
 export class KiButton {
   protected el: HTMLKiButtonElement;
@@ -276,7 +301,12 @@ export class KiButton {
 }
 
 
-export declare interface KiButton extends Components.KiButton {}
+
+export declare interface KiButton extends Components.KiButton {
+  /**
+   * Emitted after toggle activation with the new selected state.
+   */
+}
 
 
 @ProxyCmp({
@@ -612,6 +642,34 @@ export declare interface KiCounter extends Components.KiCounter {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiDetails,
+  inputs: ['disabled', 'name', 'open', 'summary']
+})
+@Component({
+  selector: 'ki-details',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'name', 'open', 'summary'],
+})
+export class KiDetails {
+  protected el: HTMLKiDetailsElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiDetails extends Components.KiDetails {
+  /**
+   * Emitted when the native disclosure toggles or an exclusive peer closes it.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiDialog,
   inputs: ['closeOnBackdrop', 'heading', 'open'],
   methods: ['show', 'close']
@@ -832,14 +890,14 @@ export declare interface KiIcon extends Components.KiIcon {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiIconButton,
-  inputs: ['command', 'commandfor', 'disabled', 'expanded', 'label', 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant']
+  inputs: ['command', 'commandfor', 'disabled', 'expanded', 'label', 'loading', 'loadingLabel', 'pressed', 'selected', 'size', 'toggle', 'tone', 'variant']
 })
 @Component({
   selector: 'ki-icon-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['command', 'commandfor', 'disabled', 'expanded', { name: 'label', required: true }, 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant'],
+  inputs: ['command', 'commandfor', 'disabled', 'expanded', { name: 'label', required: true }, 'loading', 'loadingLabel', 'pressed', 'selected', 'size', 'toggle', 'tone', 'variant'],
 })
 export class KiIconButton {
   protected el: HTMLKiIconButtonElement;
@@ -850,7 +908,12 @@ export class KiIconButton {
 }
 
 
-export declare interface KiIconButton extends Components.KiIconButton {}
+
+export declare interface KiIconButton extends Components.KiIconButton {
+  /**
+   * Emitted after toggle activation with the new selected state.
+   */
+}
 
 
 @ProxyCmp({

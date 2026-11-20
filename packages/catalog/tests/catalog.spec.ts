@@ -104,10 +104,16 @@ describe('catalog derivation', () => {
   it.each([
     ['ki-button', 'S18'],
     ['ki-icon-button', 'S17'],
-  ] as const)('S23 %s %s offers four variants and preserves specs using tertiary', (component) => {
+  ] as const)('S23 %s %s offers outline and preserves specs using tertiary', (component) => {
     const variant = catalogData.components[component].props.variant;
     expect(variant.type).toBe('enum');
-    expect([...variant.values].sort()).toEqual(['ghost', 'primary', 'quaternary', 'secondary']);
+    expect([...variant.values].sort()).toEqual([
+      'ghost',
+      'outline',
+      'primary',
+      'quaternary',
+      'secondary',
+    ]);
 
     const props =
       component === 'ki-icon-button'

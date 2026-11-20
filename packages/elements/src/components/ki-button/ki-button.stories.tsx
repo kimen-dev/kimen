@@ -2,7 +2,7 @@ import { h } from '@stencil/core';
 import type { Meta, StoryObj } from '@stencil/storybook-plugin';
 import type { JSX } from '../../components';
 
-const variants = ['primary', 'secondary', 'quaternary', 'ghost'] as const;
+const variants = ['primary', 'secondary', 'quaternary', 'ghost', 'outline'] as const;
 
 const meta = {
   title: 'Elements/ki-button',
@@ -21,6 +21,8 @@ const meta = {
     size: 'md',
     type: 'submit',
     disabled: false,
+    toggle: false,
+    selected: false,
   },
   argTypes: { variant: { control: 'select', options: [...variants] } },
 } satisfies Meta<JSX.KiButton>;
@@ -37,7 +39,7 @@ export const Primary: Story = {
   parameters: { slots: { default: 'Save changes' } },
 };
 
-/** The four recommended roles, with the same tone and size. */
+/** The five current variants, with the same tone and size. */
 export const Variants: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -80,6 +82,12 @@ export const Sizes: Story = {
 export const Disabled: Story = {
   args: { disabled: true },
   parameters: { slots: { default: 'Unavailable' } },
+};
+
+/** Activate repeatedly to switch the pressed state while keeping the same label. */
+export const Toggle: Story = {
+  args: { toggle: true, selected: true, variant: 'outline' },
+  parameters: { slots: { default: 'Pin' } },
 };
 
 /** The invoker and footer action control a modal by ID. */

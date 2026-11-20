@@ -723,13 +723,15 @@ export class KiSelect {
       error: this.userInvalid ? this.message : '',
     };
 
+    // Fixed nodes use stable keys to avoid shipping Stencil's generated hashes.
     return (
-      <Host>
-        <label id={this.labelId} part="label" htmlFor={this.triggerId}>
+      <Host key="select">
+        <label key="label" id={this.labelId} part="label" htmlFor={this.triggerId}>
           {this.label}
-          <LabelHint hint={fieldText(this.labelHint)} />
+          {h(LabelHint, { hint: fieldText(this.labelHint) })}
         </label>
         <button
+          key="trigger"
           ref={this.setTriggerRef}
           id={this.triggerId}
           part="trigger"
@@ -746,13 +748,14 @@ export class KiSelect {
           onClick={this.handleTriggerClick}
           onKeyDown={this.handleKeyDown}
         >
-          <span part="value" data-placeholder={selected ? null : 'true'}>
+          <span key="value" part="value" data-placeholder={selected ? null : 'true'}>
             {displayValue}
           </span>
-          <span part="indicator" aria-hidden="true" />
+          <span key="indicator" part="indicator" aria-hidden="true" />
         </button>
-        <FieldMessage {...messages} />
+        {h(FieldMessage, messages)}
         <div
+          key="listbox"
           ref={this.setListboxRef}
           id={this.listboxId}
           part="listbox"
@@ -763,10 +766,11 @@ export class KiSelect {
         >
           {this.roster.map((option, index) => this.renderOption(option, index))}
         </div>
-        <div class="data-slot" hidden>
-          <slot onSlotchange={this.handleSlotChange} />
+        <div key="data-slot" class="data-slot" hidden>
+          <slot key="options" onSlotchange={this.handleSlotChange} />
         </div>
         <select
+          key="donor"
           ref={this.setDonorRef}
           class="validity-donor"
           tabindex="-1"

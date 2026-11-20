@@ -935,6 +935,44 @@ function sweepControlBoundaries(theme, scheme, declarations, minRatio = NON_TEXT
   return failures;
 }
 
+const TOGGLE_BUTTON_SELECTED_FILL = /^(--ki-(?:icon-)?button-([a-z]+))-selected-bg$/u;
+const QUIET_TOGGLE_BUTTON_VARIANTS = new Set(['ghost', 'quaternary']);
+
+function sweepToggleButtonFills(theme, scheme, declarations) {
+  const failures = [];
+  const resolveColor = (name) => parseColor(resolveCustomProperty(name, declarations));
+  const pages = CONTROL_PAGE_SURFACES.map((surface) => [surface, resolveColor(surface)]);
+
+  // Spec 094 S9 requires 3:1 between states in addition to the shape cue.
+  // Paint each fill over the page first so a transparent state shows that page.
+  for (const selected of declarations.keys()) {
+    const match = TOGGLE_BUTTON_SELECTED_FILL.exec(selected);
+    if (match === null) continue;
+
+    const [, stem, variant] = match;
+    const sharedFill = QUIET_TOGGLE_BUTTON_VARIANTS.has(variant)
+      ? '--ki-button-toggle-quiet-bg'
+      : '--ki-button-toggle-unselected-bg';
+    const unselected = variant === 'outline' ? `${stem}-rest-bg` : sharedFill;
+    const selectedFill = resolveColor(selected);
+    const unselectedFill = resolveColor(unselected);
+
+    for (const [surface, page] of pages) {
+      const ratio = contrastRatio(
+        compositeOver(selectedFill, page),
+        compositeOver(unselectedFill, page),
+      );
+      if (ratio < NON_TEXT_MIN_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${selected} against ${unselected} over ${surface}: ${ratio} (min ${NON_TEXT_MIN_RATIO})`,
+        );
+      }
+    }
+  }
+
+  return failures;
+}
+
 function sweepSwitchGlyphs(theme, scheme, declarations) {
   const failures = [];
   const resolveColor = (name) => parseColor(resolveCustomProperty(name, declarations));
@@ -1162,6 +1200,7 @@ function evaluateContext(theme, scheme, declarations) {
   const failures = [];
   const swept = componentPairs(declarations);
   failures.push(...sweepControlBoundaries(theme, scheme, declarations));
+  failures.push(...sweepToggleButtonFills(theme, scheme, declarations));
   failures.push(...sweepSwitchGlyphs(theme, scheme, declarations));
   failures.push(...sweepRatioReadouts(theme, scheme, declarations));
   failures.push(...sweepOverlayRamps(theme, scheme, declarations));

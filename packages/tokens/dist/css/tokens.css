@@ -960,6 +960,8 @@
   --ki-spacing-action-joined-gap:var(--ki-space-zero);
   --ki-spacing-action-hairline:var(--ki-size-border-hairline);
   --ki-spacing-floating-surface-max-block:var(--ki-size-surface-xs);
+  --ki-spacing-standard-inset:var(--ki-space-xl);
+  --ki-spacing-compact-inset:var(--ki-space-lg);
   --ki-notification-marker-count-size:var(--ki-space-4xl);
   --ki-notification-marker-dot-size:var(--ki-space-lg);
   --ki-notification-marker-ring-width:var(--ki-space-xxs);
@@ -980,6 +982,7 @@
   --ki-corner-anchored-panel:var(--ki-radius-component-lg);
   --ki-corner-field-surface:var(--ki-radius-component-md);
   --ki-corner-field-item:var(--ki-radius-component-sm);
+  --ki-corner-panel:var(--ki-radius-component-lg);
   --ki-corner-search-bar:var(--ki-radius-round);
   --ki-corner-search-view:var(--ki-radius-big-component-sm);
   --ki-motion-duration-fast:var(--ki-duration-fast);
@@ -1123,6 +1126,7 @@
   --ki-anchored-surface-border-width:var(--ki-size-border-hairline);
   --ki-anchored-surface-max-width:var(--ki-size-surface-xs);
   --ki-surface-size-compact:var(--ki-size-surface-xxs);
+  --ki-accordion-divider-width:var(--ki-outline-hairline-width);
   --ki-ai-label-bg:var(--ki-surface-primary-low-em);
   --ki-ai-label-fg:var(--ki-text-primary-on-primary-light);
   --ki-ai-label-bg-image:var(--ki-surface-image-none);
@@ -1429,6 +1433,8 @@
   --ki-button-primary-active-shadow:var(--ki-effect-component-primary-default-shadow); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-primary-rest-shadow */
   --ki-button-primary-active-overlay:var(--ki-state-layer-pressed);
   --ki-button-primary-disabled-shadow:none;
+  --ki-button-primary-selected-bg:var(--ki-surface-primary-med-em);
+  --ki-button-primary-selected-fg:var(--ki-text-primary-on-primary);
   --ki-button-secondary-neutral-rest-bg:var(--ki-surface-special-secondary-alpha-base);
   --ki-button-secondary-neutral-rest-fg:var(--ki-text-high-em);
   --ki-button-secondary-neutral-rest-border:var(--ki-outline-secondary-button-top);
@@ -1472,6 +1478,8 @@
   --ki-button-secondary-active-shadow:var(--ki-effect-component-secondary-default-shadow); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-secondary-rest-shadow */
   --ki-button-secondary-active-overlay:var(--ki-surface-pressed-overlay-inverse);
   --ki-button-secondary-disabled-shadow:none;
+  --ki-button-secondary-selected-bg:var(--ki-surface-secondary-med-em);
+  --ki-button-secondary-selected-fg:var(--ki-text-primary-on-secondary);
   --ki-button-tertiary-neutral-rest-bg:var(--ki-surface-special-secondary-alpha-base);
   --ki-button-tertiary-neutral-rest-fg:var(--ki-text-high-em);
   --ki-button-tertiary-neutral-rest-border:var(--ki-outline-secondary-button-top);
@@ -1554,6 +1562,8 @@
   --ki-button-quaternary-hover-shadow:none;
   --ki-button-quaternary-active-shadow:none; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-rest-shadow */
   --ki-button-quaternary-disabled-shadow:none;
+  --ki-button-quaternary-selected-bg:var(--ki-surface-primary-high-em);
+  --ki-button-quaternary-selected-fg:var(--ki-text-primary-on-primary);
   --ki-button-ghost-neutral-rest-bg:var(--ki-transparent-inverse);
   --ki-button-ghost-neutral-rest-fg:var(--ki-text-primary-high-em);
   --ki-button-ghost-neutral-rest-border:var(--ki-outline-none);
@@ -1594,7 +1604,20 @@
   --ki-button-ghost-hover-shadow:none;
   --ki-button-ghost-active-shadow:none; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-ghost-rest-shadow */
   --ki-button-ghost-disabled-shadow:none;
+  --ki-button-ghost-selected-bg:var(--ki-text-primary-high-em);
+  --ki-button-ghost-selected-fg:var(--ki-text-primary-on-primary);
   --ki-button-border-width:var(--ki-size-border-hairline);
+  --ki-button-outline-rest-bg:var(--ki-surface-transparent);
+  --ki-button-outline-rest-fg:var(--ki-text-high-em);
+  --ki-button-outline-rest-border:var(--ki-outline-control);
+  --ki-button-outline-selected-bg:var(--ki-surface-inverse-white);
+  --ki-button-outline-selected-fg:var(--ki-text-inverse-black);
+  --ki-button-toggle-radius:var(--ki-radius-component-md);
+  --ki-button-toggle-selected-radius:var(--ki-radius-round);
+  --ki-button-toggle-unselected-bg:var(--ki-surface-s2);
+  --ki-button-toggle-unselected-fg:var(--ki-text-high-em);
+  --ki-button-toggle-quiet-bg:var(--ki-surface-transparent);
+  --ki-button-toggle-quiet-fg:var(--ki-text-high-em);
   --ki-card-bg:var(--ki-surface-special-light-s0-dark-s1);
   --ki-card-fg:var(--ki-text-high-em);
   --ki-card-border-color:var(--ki-outline-low-em);
@@ -1812,6 +1835,22 @@
   --ki-counter-success-fg:var(--ki-surface-s0);
   --ki-counter-neutral-bg:var(--ki-surface-inverse-white);
   --ki-counter-neutral-fg:var(--ki-text-inverse-black);
+  --ki-details-bg:var(--ki-surface-s0);
+  --ki-details-fg:var(--ki-text-high-em);
+  --ki-details-bg-image:var(--ki-surface-image-none);
+  --ki-details-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-details-border:var(--ki-outline-low-em);
+  --ki-details-border-width:var(--ki-outline-hairline-width);
+  --ki-details-radius:var(--ki-corner-panel);
+  --ki-details-padding:var(--ki-spacing-standard-inset);
+  --ki-details-summary-padding-block:var(--ki-spacing-compact-inset);
+  --ki-details-summary-hover-bg:var(--ki-surface-s1);
+  --ki-details-summary-hover-fg:var(--ki-text-high-em);
+  --ki-details-body-bg:var(--ki-surface-s0);
+  --ki-details-body-fg:var(--ki-text-supporting);
+  --ki-details-disabled-fg:var(--ki-text-med-em);
+  --ki-details-motion-duration:var(--ki-motion-duration-fast);
+  --ki-details-motion-easing:var(--ki-motion-easing-standard);
   --ki-dialog-radius:var(--ki-radius-component-3xl);
   --ki-dialog-padding:var(--ki-space-7xl);
   --ki-dialog-gap:var(--ki-space-xl);
@@ -1963,6 +2002,21 @@
   --ki-icon-button-xl-size:var(--ki-space-16xl);
   --ki-icon-button-xl-icon-size:var(--ki-space-9xl);
   --ki-icon-button-xl-spinner-size:var(--ki-space-9xl);
+  --ki-icon-button-outline-rest-bg:var(--ki-surface-transparent);
+  --ki-icon-button-outline-rest-fg:var(--ki-text-high-em);
+  --ki-icon-button-outline-rest-border:var(--ki-outline-control);
+  --ki-icon-button-outline-selected-bg:var(--ki-surface-inverse-white);
+  --ki-icon-button-outline-selected-fg:var(--ki-text-inverse-black);
+  --ki-icon-button-toggle-radius:var(--ki-radius-round);
+  --ki-icon-button-toggle-selected-radius:var(--ki-radius-component-md);
+  --ki-icon-button-primary-selected-bg:var(--ki-surface-primary-med-em);
+  --ki-icon-button-primary-selected-fg:var(--ki-text-primary-on-primary);
+  --ki-icon-button-secondary-selected-bg:var(--ki-surface-secondary-med-em);
+  --ki-icon-button-secondary-selected-fg:var(--ki-text-primary-on-secondary);
+  --ki-icon-button-quaternary-selected-bg:var(--ki-surface-primary-high-em);
+  --ki-icon-button-quaternary-selected-fg:var(--ki-text-primary-on-primary);
+  --ki-icon-button-ghost-selected-bg:var(--ki-text-primary-high-em);
+  --ki-icon-button-ghost-selected-fg:var(--ki-text-primary-on-primary);
   --ki-icon-size-sm:var(--ki-glyph-size-sm);
   --ki-icon-size-md:var(--ki-glyph-size-md);
   --ki-icon-size-lg:var(--ki-glyph-size-lg);
@@ -2977,6 +3031,7 @@
     --ki-alert-info-border:var(--ki-outline-strong);
     --ki-alert-warning-border:var(--ki-outline-strong);
     --ki-card-border-color:var(--ki-outline-strong);
+    --ki-details-border:var(--ki-outline-strong);
     --ki-dialog-border:var(--ki-size-border-hairline) solid var(--ki-outline-strong);
     --ki-dialog-divider-color:var(--ki-outline-strong);
     --ki-divider-color:var(--ki-outline-strong);
@@ -3003,6 +3058,7 @@
   --ki-alert-info-border:var(--ki-outline-strong);
   --ki-alert-warning-border:var(--ki-outline-strong);
   --ki-card-border-color:var(--ki-outline-strong);
+  --ki-details-border:var(--ki-outline-strong);
   --ki-dialog-border:var(--ki-size-border-hairline) solid var(--ki-outline-strong);
   --ki-dialog-divider-color:var(--ki-outline-strong);
   --ki-divider-color:var(--ki-outline-strong);
