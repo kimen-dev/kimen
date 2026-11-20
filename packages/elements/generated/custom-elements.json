@@ -5116,6 +5116,414 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-code-block.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCodeBlock",
+          "customElement": true,
+          "tagName": "ki-code-block",
+          "description": "Presents source code with a named header, syntax colors, line controls and\nclipboard feedback.",
+          "whenToUse": "display a multiline example, generated code or a tool result that\nreaders should be able to inspect and copy.",
+          "whenNotToUse": "when the reader should edit the source or when the code belongs\ninline in a sentence. Use an editor or a native inline code element.",
+          "attributes": [
+            {
+              "name": "copied-label",
+              "fieldName": "copiedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Polite announcement after a successful clipboard write."
+            },
+            {
+              "name": "copy-error-label",
+              "fieldName": "copyErrorLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Polite announcement after a failed clipboard write."
+            },
+            {
+              "name": "copy-label",
+              "fieldName": "copyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copy code'",
+              "description": "Accessible name of the copy button."
+            },
+            {
+              "name": "copyable",
+              "fieldName": "copyable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it."
+            },
+            {
+              "name": "filename",
+              "fieldName": "filename",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "File name shown in the header beside the language."
+            },
+            {
+              "name": "highlight",
+              "fieldName": "highlight",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`."
+            },
+            {
+              "name": "highlight-label",
+              "fieldName": "highlightLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Highlighted lines'",
+              "description": "Localizable prefix for the accessible description of highlighted lines."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Code'",
+              "description": "Figure and scroll area label when there is no language or filename."
+            },
+            {
+              "name": "language",
+              "fieldName": "language",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON."
+            },
+            {
+              "name": "line-numbers",
+              "fieldName": "lineNumbers",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show decorative one-based line numbers."
+            },
+            {
+              "name": "wrap",
+              "fieldName": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Soft-wrap long lines within the available width."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "copiedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Polite announcement after a successful clipboard write.",
+              "attribute": "copied-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "copyErrorLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Polite announcement after a failed clipboard write.",
+              "attribute": "copy-error-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "copyLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copy code'",
+              "description": "Accessible name of the copy button.",
+              "attribute": "copy-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "copyable",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it.",
+              "attribute": "copyable",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "filename",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "File name shown in the header beside the language.",
+              "attribute": "filename",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "highlight",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`.",
+              "attribute": "highlight",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "highlightLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Highlighted lines'",
+              "description": "Localizable prefix for the accessible description of highlighted lines.",
+              "attribute": "highlight-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Code'",
+              "description": "Figure and scroll area label when there is no language or filename.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "language",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
+              "attribute": "language",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "lineNumbers",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show decorative one-based line numbers.",
+              "attribute": "line-numbers",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Soft-wrap long lines within the available width.",
+              "attribute": "wrap",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-copy",
+              "type": {
+                "text": "CustomEvent<{ value: string }>"
+              },
+              "description": "CopyButton reports a successful write with the original source text."
+            },
+            {
+              "name": "ki-copy-error",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "CopyButton reports an unsuccessful clipboard write."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Literal source text. Escape markup in HTML or supply a text node."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "code",
+              "description": "The monospaced source and its optional gutter."
+            },
+            {
+              "name": "figure",
+              "description": "Framed surface around the snippet."
+            },
+            {
+              "name": "header",
+              "description": "Caption containing the language, filename and copy control."
+            },
+            {
+              "name": "scroll",
+              "description": "Focusable native code scroll area."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-code-backdrop-filter",
+              "description": "Whole backdrop filter for the figure."
+            },
+            {
+              "name": "--ki-code-bg",
+              "description": "Solid backing for the header and source."
+            },
+            {
+              "name": "--ki-code-bg-image",
+              "description": "Optional image layer above the solid backing."
+            },
+            {
+              "name": "--ki-code-border",
+              "description": "Frame and header divider."
+            },
+            {
+              "name": "--ki-code-border-width",
+              "description": "Width of the frame and header divider."
+            },
+            {
+              "name": "--ki-code-comment",
+              "description": "Supporting syntax ink for comments."
+            },
+            {
+              "name": "--ki-code-fg",
+              "description": "Default source ink."
+            },
+            {
+              "name": "--ki-code-focus-color",
+              "description": "Keyboard focus ring of the scroll area."
+            },
+            {
+              "name": "--ki-code-focus-width",
+              "description": "Width of the scroll area's focus ring."
+            },
+            {
+              "name": "--ki-code-font-family",
+              "description": "Typeface for source and line numbers."
+            },
+            {
+              "name": "--ki-code-font-size",
+              "description": "Compact text size for caption and source."
+            },
+            {
+              "name": "--ki-code-function",
+              "description": "Syntax ink for function names."
+            },
+            {
+              "name": "--ki-code-header-fg",
+              "description": "Supporting language and filename ink."
+            },
+            {
+              "name": "--ki-code-header-padding",
+              "description": "Compact header inset and gap."
+            },
+            {
+              "name": "--ki-code-highlight-bg",
+              "description": "Fill of a highlighted line."
+            },
+            {
+              "name": "--ki-code-highlight-marker",
+              "description": "Inline rule identifying a highlighted line."
+            },
+            {
+              "name": "--ki-code-highlight-marker-width",
+              "description": "Width of the highlighted line rule."
+            },
+            {
+              "name": "--ki-code-keyword",
+              "description": "Syntax ink for keywords."
+            },
+            {
+              "name": "--ki-code-line-height",
+              "description": "Line box height for caption and source."
+            },
+            {
+              "name": "--ki-code-line-number",
+              "description": "Ink for the decorative line numbers."
+            },
+            {
+              "name": "--ki-code-number",
+              "description": "Syntax ink for numbers."
+            },
+            {
+              "name": "--ki-code-padding",
+              "description": "Inset of the source and leading caption edge."
+            },
+            {
+              "name": "--ki-code-radius",
+              "description": "Corner radius of the figure."
+            },
+            {
+              "name": "--ki-code-string",
+              "description": "Syntax ink for strings."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCodeBlock",
+          "declaration": {
+            "name": "KiCodeBlock",
+            "module": "dist/components/ki-code-block.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-code-block",
+          "declaration": {
+            "name": "KiCodeBlock",
+            "module": "dist/components/ki-code-block.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-confirmation.js",
       "declarations": [
         {
@@ -5586,6 +5994,153 @@
           "declaration": {
             "name": "KiConfirmation",
             "module": "dist/components/ki-confirmation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-conversation.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiConversation",
+          "customElement": true,
+          "tagName": "ki-conversation",
+          "description": "An accessible chat transcript with optional following as messages arrive.",
+          "whenToUse": "Display chronological user, assistant and event messages. Give\nthe host a block-size constraint to keep scrolling within the transcript.",
+          "whenNotToUse": "Collect input, send messages or present a static sequence of\ncards. Place the composer outside the transcript.",
+          "attributes": [
+            {
+              "name": "jump-label",
+              "fieldName": "jumpLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Jump to latest'",
+              "description": "Visible and accessible label for the control that resumes following."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Conversation'",
+              "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page."
+            },
+            {
+              "name": "stick-to-bottom",
+              "fieldName": "stickToBottom",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Follow new or growing messages until the reader scrolls away from the end."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "jumpLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Jump to latest'",
+              "description": "Visible and accessible label for the control that resumes following.",
+              "attribute": "jump-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Conversation'",
+              "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "stickToBottom",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Follow new or growing messages until the reader scrolls away from the end.",
+              "attribute": "stick-to-bottom",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The chronological transcript, normally ki-message elements."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "jump",
+              "description": "The Jump to latest button shown while following is paused."
+            },
+            {
+              "name": "log",
+              "description": "The named polite live region and keyboard-focusable scrollport."
+            },
+            {
+              "name": "messages",
+              "description": "The stack of slotted messages inside the scrollport."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-conversation-gap",
+              "description": "Space between messages in the transcript."
+            },
+            {
+              "name": "--ki-conversation-max-width",
+              "description": "Maximum inline size of the transcript."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiConversation",
+          "declaration": {
+            "name": "KiConversation",
+            "module": "dist/components/ki-conversation.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-conversation",
+          "declaration": {
+            "name": "KiConversation",
+            "module": "dist/components/ki-conversation.js"
           }
         }
       ]
@@ -12327,6 +12882,288 @@
           "declaration": {
             "name": "KiMenuItem",
             "module": "dist/components/ki-menu-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-message.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMessage",
+          "customElement": true,
+          "tagName": "ki-message",
+          "description": "A named chat article styled as a person’s message, assistant reply or event.",
+          "whenToUse": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply.",
+          "whenNotToUse": "Collect a prompt, announce a page alert, or execute a tool.",
+          "attributes": [
+            {
+              "name": "author",
+              "fieldName": "author",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names."
+            },
+            {
+              "name": "message-role",
+              "fieldName": "messageRole",
+              "type": {
+                "text": "\"assistant\" | \"event\" | \"user\" | undefined"
+              },
+              "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
+            },
+            {
+              "name": "streaming",
+              "fieldName": "streaming",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the caret and mark the article busy until this message is complete."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "author",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+              "attribute": "author",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "messageRole",
+              "privacy": "public",
+              "type": {
+                "text": "\"assistant\" | \"event\" | \"user\" | undefined"
+              },
+              "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+              "attribute": "message-role",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "streaming",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the caret and mark the article busy until this message is complete.",
+              "attribute": "streaming",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Message content, including text or formatted elements."
+            },
+            {
+              "name": "actions",
+              "description": "Follow-up controls supplied by the consumer after the content."
+            },
+            {
+              "name": "avatar",
+              "description": "Optional avatar replacing the assistant’s decorative default."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "actions",
+              "description": "The group containing slotted follow-up controls."
+            },
+            {
+              "name": "avatar",
+              "description": "The leading assistant avatar container."
+            },
+            {
+              "name": "caret",
+              "description": "The decorative marker displayed while a message is streaming."
+            },
+            {
+              "name": "content",
+              "description": "The body of the article, including any event icon."
+            },
+            {
+              "name": "message",
+              "description": "The named article and role-specific layout."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-control-border-width",
+              "description": "Stroke width of the boundary of a compact control."
+            },
+            {
+              "name": "--ki-layout-conversation-avatar-radius",
+              "description": "Round corner radius of the fallback assistant avatar."
+            },
+            {
+              "name": "--ki-layout-conversation-bubble-end-radius",
+              "description": "Smaller radius of the end corner of a user bubble."
+            },
+            {
+              "name": "--ki-layout-conversation-caret-block-size",
+              "description": "Block size of a streaming caret."
+            },
+            {
+              "name": "--ki-layout-conversation-caret-inline-size",
+              "description": "Inline size of a streaming caret."
+            },
+            {
+              "name": "--ki-layout-conversation-user-max-width",
+              "description": "Maximum width of a user bubble relative to the transcript."
+            },
+            {
+              "name": "--ki-layout-spacing-2xl",
+              "description": "The 2xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-3xl",
+              "description": "The 3xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-9xl",
+              "description": "The 9xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xxs",
+              "description": "The xxs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-message-assistant-fg",
+              "description": "Text ink of an assistant reply on the page surface."
+            },
+            {
+              "name": "--ki-message-avatar-backdrop-filter",
+              "description": "Complete filter behind the default assistant avatar."
+            },
+            {
+              "name": "--ki-message-avatar-bg",
+              "description": "Solid primary container of the default assistant avatar."
+            },
+            {
+              "name": "--ki-message-avatar-bg-image",
+              "description": "Optional image over the default assistant avatar background."
+            },
+            {
+              "name": "--ki-message-avatar-fg",
+              "description": "Glyph ink inside the default assistant avatar."
+            },
+            {
+              "name": "--ki-message-event-fg",
+              "description": "Text and icon ink of a system event on the page surface."
+            },
+            {
+              "name": "--ki-message-padding",
+              "description": "Block and inline padding inside a user bubble, in that order."
+            },
+            {
+              "name": "--ki-message-radius",
+              "description": "Radius of the user bubble corners."
+            },
+            {
+              "name": "--ki-message-user-backdrop-filter",
+              "description": "Complete filter behind the user bubble."
+            },
+            {
+              "name": "--ki-message-user-bg",
+              "description": "Solid background of a user bubble."
+            },
+            {
+              "name": "--ki-message-user-bg-image",
+              "description": "Optional image over the user bubble background."
+            },
+            {
+              "name": "--ki-message-user-fg",
+              "description": "Text ink in a user bubble."
+            },
+            {
+              "name": "--ki-motion-duration-activity-pulse",
+              "description": "Period of an indeterminate typing pulse."
+            },
+            {
+              "name": "--ki-motion-easing-activity-pulse",
+              "description": "Symmetric easing for fluctuations in a typing pulse."
+            },
+            {
+              "name": "--ki-outline-low-em",
+              "description": "semantic color for outline low em."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-2",
+              "description": "semantic dimension for typography line height body 2."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-2",
+              "description": "semantic dimension for typography size body 2."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMessage",
+          "declaration": {
+            "name": "KiMessage",
+            "module": "dist/components/ki-message.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-message",
+          "declaration": {
+            "name": "KiMessage",
+            "module": "dist/components/ki-message.js"
           }
         }
       ]

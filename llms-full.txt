@@ -1755,6 +1755,104 @@ CSS custom properties:
 - `--ki-chip-height-sm`: Small height of a compact pill.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 
+### ki-code-block
+
+Presents source code with a named header, syntax colors, line controls and clipboard feedback.
+
+When to use: display a multiline example, generated code or a tool result that
+readers should be able to inspect and copy.
+When NOT to use: when the reader should edit the source or when the code belongs
+inline in a sentence. Use an editor or a native inline code element.
+
+Examples:
+
+# ki-code-block examples
+
+Display a TypeScript snippet with line numbers and a highlighted line.
+
+```html
+<ki-code-block language="ts" filename="main.ts" line-numbers highlight="2">// Load the current sample.
+const sample = load(3);</ki-code-block>
+```
+
+Use plain text for unsupported syntax. In HTML, escape literal angle
+brackets so they remain part of the source.
+
+```html
+<ki-code-block language="html" filename="example.html" wrap copyable="false">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>
+```
+
+The guarded catalog accepts source strings in the default slot.
+
+```json
+{
+  "version": 1,
+  "actions": ["sampleCopied"],
+  "root": {
+    "component": "ki-code-block",
+    "props": { "language": "js", "filename": "index.js", "lineNumbers": true },
+    "slots": { "": ["const sample = load(3);"] },
+    "action": "sampleCopied"
+  }
+}
+```
+
+Attributes:
+- `copied-label` (string, default 'Copied'): Polite announcement after a successful clipboard write.
+- `copy-error-label` (string, default "Couldn't copy"): Polite announcement after a failed clipboard write.
+- `copy-label` (string, default 'Copy code'): Accessible name of the copy button.
+- `copyable` (boolean, default true): Show the copy control. Set `copyable="false"` in HTML to hide it.
+- `filename` (string | undefined): File name shown in the header beside the language.
+- `highlight` (string | undefined): Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
+- `highlight-label` (string, default 'Highlighted lines'): Localizable prefix for the accessible description of highlighted lines.
+- `label` (string | undefined, default 'Code'): Figure and scroll area label when there is no language or filename.
+- `language` (string | undefined): Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
+- `line-numbers` (boolean, default false): Show decorative one-based line numbers.
+- `wrap` (boolean, default false): Soft-wrap long lines within the available width.
+
+Slots:
+- (default): Literal source text. Escape markup in HTML or supply a text node.
+
+Parts:
+- `code`: The monospaced source and its optional gutter.
+- `figure`: Framed surface around the snippet.
+- `header`: Caption containing the language, filename and copy control.
+- `scroll`: Focusable native code scroll area.
+
+Events:
+- `ki-copy` (CustomEvent<{ value: string }>): CopyButton reports a successful write with the original source text.
+- `ki-copy-error` (CustomEvent<void>): CopyButton reports an unsuccessful clipboard write.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-code-backdrop-filter`: Whole backdrop filter for the figure.
+- `--ki-code-bg`: Solid backing for the header and source.
+- `--ki-code-bg-image`: Optional image layer above the solid backing.
+- `--ki-code-border`: Frame and header divider.
+- `--ki-code-border-width`: Width of the frame and header divider.
+- `--ki-code-comment`: Supporting syntax ink for comments.
+- `--ki-code-fg`: Default source ink.
+- `--ki-code-focus-color`: Keyboard focus ring of the scroll area.
+- `--ki-code-focus-width`: Width of the scroll area's focus ring.
+- `--ki-code-font-family`: Typeface for source and line numbers.
+- `--ki-code-font-size`: Compact text size for caption and source.
+- `--ki-code-function`: Syntax ink for function names.
+- `--ki-code-header-fg`: Supporting language and filename ink.
+- `--ki-code-header-padding`: Compact header inset and gap.
+- `--ki-code-highlight-bg`: Fill of a highlighted line.
+- `--ki-code-highlight-marker`: Inline rule identifying a highlighted line.
+- `--ki-code-highlight-marker-width`: Width of the highlighted line rule.
+- `--ki-code-keyword`: Syntax ink for keywords.
+- `--ki-code-line-height`: Line box height for caption and source.
+- `--ki-code-line-number`: Ink for the decorative line numbers.
+- `--ki-code-number`: Syntax ink for numbers.
+- `--ki-code-padding`: Inset of the source and leading caption edge.
+- `--ki-code-radius`: Corner radius of the figure.
+- `--ki-code-string`: Syntax ink for strings.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-confirmation
 
 An inline prompt for a decision about a proposed assistant action.
@@ -1883,6 +1981,89 @@ CSS custom properties:
 - `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
 - `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+
+### ki-conversation
+
+An accessible chat transcript with optional following as messages arrive.
+
+When to use: Display chronological user, assistant and event messages. Give
+the host a block-size constraint to keep scrolling within the transcript.
+When NOT to use: Collect input, send messages or present a static sequence of
+cards. Place the composer outside the transcript.
+
+Examples:
+
+# ki-conversation examples
+
+## Bounded transcript
+
+Set a block size to make the transcript scroll. Enable `stick-to-bottom` to
+follow new messages and keep incoming replies in view.
+
+```html
+<ki-conversation id="help-chat" label="Component help" stick-to-bottom style="block-size: 20rem">
+  <ki-message message-role="user">Which inputs handle form errors?</ki-message>
+  <ki-message message-role="event" icon-name="search">Searched the component docs</ki-message>
+  <ki-message message-role="assistant">Input, textarea and select show field errors.</ki-message>
+</ki-conversation>
+<label for="prompt">Message</label>
+<textarea id="prompt"></textarea>
+```
+
+## Pass application chunks to a message
+
+Call this function with the async iterable supplied by your application.
+Keep the composer and any waiting indicator outside the live log.
+
+```js
+async function appendReply(conversation, chunks) {
+  const reply = document.createElement('ki-message');
+  reply.setAttribute('streaming', '');
+  conversation.append(reply);
+  try {
+    for await (const chunk of chunks) {
+      reply.append(chunk);
+    }
+  } finally {
+    reply.removeAttribute('streaming');
+  }
+}
+```
+
+## Custom-elements entry points
+
+```ts
+import { defineCustomElement as defineConversation } from '@kimen/elements/ki-conversation';
+import { defineCustomElement as defineMessage } from '@kimen/elements/ki-message';
+
+defineConversation();
+defineMessage();
+```
+
+Attributes:
+- `jump-label` (string, default 'Jump to latest'): Visible and accessible label for the control that resumes following.
+- `label` (string, default 'Conversation'): Accessible name of the transcript. Supply a distinct label when several logs share a page.
+- `stick-to-bottom` (boolean, default false): Follow new or growing messages until the reader scrolls away from the end.
+
+Slots:
+- (default): The chronological transcript, normally ki-message elements.
+
+Parts:
+- `jump`: The Jump to latest button shown while following is paused.
+- `log`: The named polite live region and keyboard-focusable scrollport.
+- `messages`: The stack of slotted messages inside the scrollport.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-conversation-gap`: Space between messages in the transcript.
+- `--ki-conversation-max-width`: Maximum inline size of the transcript.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
+- `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-copy-button
 
@@ -4035,6 +4216,107 @@ CSS custom properties:
 - `--ki-menu-meta-font-size`: Size of metadata and group labels.
 - `--ki-menu-meta-hover-fg`: Foreground for shortcut hints on a hovered or focused action.
 - `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
+
+### ki-message
+
+A named chat article styled as a person’s message, assistant reply or event.
+
+When to use: Display a transcript entry inside ki-conversation. Pass
+formatted content through the default slot and set streaming during a reply.
+When NOT to use: Collect a prompt, announce a page alert, or execute a tool.
+
+Examples:
+
+# ki-message examples
+
+## User and event messages
+
+```html
+<ki-message message-role="user">Can I export my settings?</ki-message>
+<ki-message message-role="event" icon-name="search">Found the export guide</ki-message>
+```
+
+## Assistant reply with an avatar and action
+
+The `author` prop names the article. Put formatted content in the default
+slot and application controls in `actions`.
+
+```html
+<ki-message message-role="assistant" author="Ava said">
+  <ki-avatar slot="avatar" size="xs" initials="AV"></ki-avatar>
+  <strong>Yes.</strong> Choose <code>JSON</code> from the export menu.
+  <details slot="actions">
+    <summary>View source</summary>
+    Settings export guide
+  </details>
+</ki-message>
+```
+
+## Streaming reply
+
+Add `streaming` while the content is arriving, then remove it when the
+complete reply is available. Use a registered Markdown component in the
+default slot when your application displays formatted Markdown.
+
+```html
+<ki-message message-role="assistant" streaming>Choose the export format</ki-message>
+```
+
+Attributes:
+- `author` (string | undefined): Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
+- `icon-name` (string | undefined): Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
+- `message-role` ("assistant" | "event" | "user" | undefined): The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
+- `streaming` (boolean, default false): Show the caret and mark the article busy until this message is complete.
+
+Slots:
+- (default): Message content, including text or formatted elements.
+- `actions`: Follow-up controls supplied by the consumer after the content.
+- `avatar`: Optional avatar replacing the assistant’s decorative default.
+
+Parts:
+- `actions`: The group containing slotted follow-up controls.
+- `avatar`: The leading assistant avatar container.
+- `caret`: The decorative marker displayed while a message is streaming.
+- `content`: The body of the article, including any event icon.
+- `message`: The named article and role-specific layout.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
+- `--ki-layout-conversation-avatar-radius`: Round corner radius of the fallback assistant avatar.
+- `--ki-layout-conversation-bubble-end-radius`: Smaller radius of the end corner of a user bubble.
+- `--ki-layout-conversation-caret-block-size`: Block size of a streaming caret.
+- `--ki-layout-conversation-caret-inline-size`: Inline size of a streaming caret.
+- `--ki-layout-conversation-user-max-width`: Maximum width of a user bubble relative to the transcript.
+- `--ki-layout-spacing-2xl`: The 2xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-3xl`: The 3xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-9xl`: The 9xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
+- `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap.
+- `--ki-message-assistant-fg`: Text ink of an assistant reply on the page surface.
+- `--ki-message-avatar-backdrop-filter`: Complete filter behind the default assistant avatar.
+- `--ki-message-avatar-bg`: Solid primary container of the default assistant avatar.
+- `--ki-message-avatar-bg-image`: Optional image over the default assistant avatar background.
+- `--ki-message-avatar-fg`: Glyph ink inside the default assistant avatar.
+- `--ki-message-event-fg`: Text and icon ink of a system event on the page surface.
+- `--ki-message-padding`: Block and inline padding inside a user bubble, in that order.
+- `--ki-message-radius`: Radius of the user bubble corners.
+- `--ki-message-user-backdrop-filter`: Complete filter behind the user bubble.
+- `--ki-message-user-bg`: Solid background of a user bubble.
+- `--ki-message-user-bg-image`: Optional image over the user bubble background.
+- `--ki-message-user-fg`: Text ink in a user bubble.
+- `--ki-motion-duration-activity-pulse`: Period of an indeterminate typing pulse.
+- `--ki-motion-easing-activity-pulse`: Symmetric easing for fluctuations in a typing pulse.
+- `--ki-outline-low-em`: semantic color for outline low em.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 
 ### ki-note
 

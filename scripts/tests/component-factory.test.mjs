@@ -25,7 +25,11 @@ const fixtureMetadata = {
   pointer: { hoverWitness: false },
 };
 
-async function writeFixtureComponent(root, tag, { material3 = false, budgetGroup } = {}) {
+async function writeFixtureComponent(
+  root,
+  tag,
+  { material3 = false, budgetGroup, tokenNamespace } = {},
+) {
   const className = tag
     .split('-')
     .map((segment) => `${segment[0].toUpperCase()}${segment.slice(1)}`)
@@ -46,10 +50,10 @@ async function writeFixtureComponent(root, tag, { material3 = false, budgetGroup
   await writeFile(join(dirname(source), 'gallery.ts'), 'export default {};\n', 'utf8');
   await writeFile(
     join(dirname(source), 'component.json'),
-    JSON.stringify({ ...fixtureMetadata, budgetGroup }),
+    JSON.stringify({ ...fixtureMetadata, budgetGroup, tokenNamespace }),
     'utf8',
   );
-  const tokenDocument = `${JSON.stringify({ ki: { [slug]: { color: { $value: '{ki.text.base}' } } } })}\n`;
+  const tokenDocument = `${JSON.stringify({ ki: { [tokenNamespace ?? slug]: { color: { $value: '{ki.text.base}' } } } })}\n`;
   await writeFile(token, tokenDocument, 'utf8');
   if (material3) {
     await writeFile(
@@ -97,6 +101,26 @@ test('derives direct module exports, tests, token sources, and budget membership
       budgetGroup: 'ki-alpha',
     },
   ]);
+});
+
+test('checks the declared token namespace with the same source uniqueness rule', async (t) => {
+  const root = await createWorkspace(t);
+  await writeFixtureComponent(root, 'ki-sample-block', {
+    material3: true,
+    tokenNamespace: 'sample',
+  });
+  const [component] = await discoverComponentInventory({ workspaceRoot: root });
+
+  assert.deepEqual(component.tokenSources, [
+    'packages/tokens/tokens/component/sample-block.tokens.json',
+    'packages/tokens/tokens/component/sample-block.material3.tokens.json',
+  ]);
+
+  await writeFixtureComponent(root, 'ki-sample');
+  await assert.rejects(
+    discoverComponentInventory({ workspaceRoot: root }),
+    /ambiguous token source/iu,
+  );
 });
 
 test('complete inventory fails on missing token source, unknown group member, or duplicate membership', async (t) => {
