@@ -2592,6 +2592,930 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-file-upload/ki-file-upload.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-file-upload",
+      "docs": "A form-associated picker and drop zone with local selection validation and a\nlist of file upload outcomes.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "collect local attachments, media or imports, and optionally show\napplication-managed upload progress and results."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "transfer files without an application handler, collect a URL,\nor use client-side type and size checks as upload authorization."
+        },
+        {
+          "name": "slot",
+          "text": "help - Plain-language guidance for the picker, in place of help-text."
+        },
+        {
+          "name": "part",
+          "text": "label - Field label and optional required annotation."
+        },
+        {
+          "name": "part",
+          "text": "drop-zone - Surface that receives files dragged from the operating system."
+        },
+        {
+          "name": "part",
+          "text": "browse - Native button that opens the file picker."
+        },
+        {
+          "name": "part",
+          "text": "input - Hidden native file picker."
+        },
+        {
+          "name": "part",
+          "text": "help - Guidance associated with the field."
+        },
+        {
+          "name": "part",
+          "text": "error - Field-level form validation error."
+        },
+        {
+          "name": "part",
+          "text": "list - List of selected files and rejections."
+        },
+        {
+          "name": "part",
+          "text": "row - A file row, with data-status matching its lifecycle state."
+        },
+        {
+          "name": "part",
+          "text": "file-name - Name displayed for the file."
+        },
+        {
+          "name": "part",
+          "text": "file-meta - Size, outcome or error text for the file."
+        },
+        {
+          "name": "part",
+          "text": "action - Native button for removal or cancellation."
+        },
+        {
+          "name": "part",
+          "text": "progress - Progress indicator for an uploading file."
+        }
+      ],
+      "usage": {
+        "examples": "# File upload examples\n\n## Submit attachments with a form\n\n```html\n<form action=\"/attachments\" method=\"post\" enctype=\"multipart/form-data\">\n  <ki-file-upload\n    label=\"Incident attachments\"\n    name=\"attachments\"\n    accept=\".csv,.pdf\"\n    max-size=\"10MB\"\n    max-files=\"3\"\n    multiple\n    required\n  >\n    <span slot=\"help\">Choose up to three CSV or PDF files, up to 10 MB each.</span>\n  </ki-file-upload>\n  <button type=\"submit\">Send attachments</button>\n  <button type=\"reset\">Clear attachments</button>\n</form>\n```\n\nRegister the element once with the direct package entry point.\n\n```js\nimport { defineCustomElement } from '@kimen/elements/ki-file-upload';\n\ndefineCustomElement();\n```\n\nThe form submits each accepted original `File` under `attachments`. A reset\nclears the list. Use `error-text` for a form error, such as one returned by\nyour application, and clear it when the error is resolved.\n\n## Report progress from an application-managed transfer\n\nUse a standalone picker when your application sends files as soon as people\nchoose them.\n\n```html\n<ki-file-upload id=\"transfer-picker\" label=\"Import CSV files\" accept=\".csv\" multiple>\n</ki-file-upload>\n```\n\nHere `sendFile` is your application's transfer function. It accepts a\n`File`, an abort signal and a progress callback receiving a percentage.\n\n```js\nconst upload = document.querySelector('#transfer-picker');\nconst transfers = new Map();\n\nfunction update(file, changes) {\n  upload.files = upload.files.map((entry) =>\n    entry.file === file ? { ...entry, ...changes } : entry,\n  );\n}\n\nasync function startUpload(file) {\n  const controller = new AbortController();\n  transfers.set(file, controller);\n  update(file, { status: 'uploading', progress: 0 });\n\n  try {\n    await sendFile(file, {\n      signal: controller.signal,\n      onProgress: (progress) => update(file, { progress }),\n    });\n    update(file, { status: 'done' });\n  } catch {\n    const error = controller.signal.aborted ? 'Upload canceled.' : 'Upload failed.';\n    update(file, { status: 'error', error });\n  } finally {\n    transfers.delete(file);\n  }\n}\n\nupload.addEventListener('ki-files-add', ({ detail }) => {\n  for (const { file } of detail.files) {\n    void startUpload(file);\n  }\n});\n\nupload.addEventListener('ki-file-cancel', ({ detail }) => {\n  transfers.get(detail.file.file)?.abort();\n});\n```\n\nUse `ki-file-remove` to update application state when a row is removed.\nFor previously uploaded attachments, set `files` to rows with metadata and\n`status: 'done'`. Only rows carrying an original `File` contribute form\nentries.\n"
+      },
+      "props": [
+        {
+          "name": "accept",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "accept",
+          "reflectToAttr": false,
+          "docs": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "browseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "browse-label",
+          "reflectToAttr": false,
+          "docs": "Visible text of the native file picker button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Browse files'"
+            }
+          ],
+          "default": "'Browse files'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "cancel-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name template for cancellation. Use {file} for the displayed filename.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Cancel upload of {file}'"
+            }
+          ],
+          "default": "'Cancel upload of {file}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "countError",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count-error",
+          "reflectToAttr": false,
+          "docs": "Rejection text for a file beyond selection capacity.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Too many files.'"
+            }
+          ],
+          "default": "'Too many files.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disables the picker and file actions and excludes the field from submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "doneLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "done-label",
+          "reflectToAttr": false,
+          "docs": "Status text for a completed upload.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Uploaded'"
+            }
+          ],
+          "default": "'Uploaded'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "dropLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "drop-label",
+          "reflectToAttr": false,
+          "docs": "Drop instruction shown just before the Browse button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Drop files here or'"
+            }
+          ],
+          "default": "'Drop files here or'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": false,
+          "docs": "Application validation error. Clear it to allow form submission again.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "failedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "failed-label",
+          "reflectToAttr": false,
+          "docs": "Fallback status text for a failed upload without a supplied error.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Upload failed.'"
+            }
+          ],
+          "default": "'Upload failed.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "files",
+          "type": "KiFile[]",
+          "complexType": {
+            "original": "KiFile[]",
+            "resolved": "KiFile[]",
+            "references": {
+              "KiFile": {
+                "location": "local",
+                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
+                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFile"
+              }
+            }
+          },
+          "mutable": true,
+          "reflectToAttr": false,
+          "docs": "Displayed file records, including rejections. Assign a new array to update\nprogress or outcomes. Keep each original File on its record for form\nsubmission. Set this as a JavaScript property when supplying file records.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "[]"
+            }
+          ],
+          "default": "[]",
+          "values": [
+            {
+              "type": "KiFile[]"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": false,
+          "docs": "Guidance for file formats, limits or the purpose of this field.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible label and accessible name of the upload group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Upload files'"
+            }
+          ],
+          "default": "'Upload files'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "listLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "list-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the list of files.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Files'"
+            }
+          ],
+          "default": "'Files'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxFiles",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max-files",
+          "reflectToAttr": false,
+          "docs": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max-size",
+          "reflectToAttr": false,
+          "docs": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "multiple",
+          "reflectToAttr": true,
+          "docs": "Allows a selection of more than one file.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key repeated for each accepted original file.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "queuedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "queued-label",
+          "reflectToAttr": false,
+          "docs": "Status text for an accepted file waiting to upload.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Queued'"
+            }
+          ],
+          "default": "'Queued'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remove-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name template for removal. Use {file} for the displayed filename.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Remove {file}'"
+            }
+          ],
+          "default": "'Remove {file}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires at least one original accepted file to submit the form.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "requiredLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required-label",
+          "reflectToAttr": false,
+          "docs": "Visible annotation for a required file field.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Required'"
+            }
+          ],
+          "default": "'Required'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "requiredMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required-message",
+          "reflectToAttr": false,
+          "docs": "Validation message when the form requires a file and none is selected.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Select a file.'"
+            }
+          ],
+          "default": "'Select a file.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sizeError",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size-error",
+          "reflectToAttr": false,
+          "docs": "Rejection text for a file larger than max-size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'This file is too large.'"
+            }
+          ],
+          "default": "'This file is too large.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "typeError",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "type-error",
+          "reflectToAttr": false,
+          "docs": "Rejection text for a file that does not match accept.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'This file type is not allowed.'"
+            }
+          ],
+          "default": "'This file type is not allowed.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "uploadingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "uploading-label",
+          "reflectToAttr": false,
+          "docs": "Progress indicator name template. Use {file} for the displayed filename.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Uploading {file}'"
+            }
+          ],
+          "default": "'Uploading {file}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-file-cancel",
+          "detail": "KiFileActionDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiFileActionDetail",
+            "resolved": "KiFileActionDetail",
+            "references": {
+              "KiFileActionDetail": {
+                "location": "local",
+                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
+                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Requests that the application cancel the identified upload.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-file-remove",
+          "detail": "KiFileActionDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiFileActionDetail",
+            "resolved": "KiFileActionDetail",
+            "references": {
+              "KiFileActionDetail": {
+                "location": "local",
+                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
+                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports a row removed by the user, after updating the file list.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-files-add",
+          "detail": "KiFilesAddDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiFilesAddDetail",
+            "resolved": "KiFilesAddDetail",
+            "references": {
+              "KiFilesAddDetail": {
+                "location": "local",
+                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
+                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFilesAddDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports the accepted rows in one picker or drop batch, each with its original File.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "help",
+          "docs": "Plain-language guidance for the picker, in place of help-text."
+        }
+      ],
+      "parts": [
+        {
+          "name": "action",
+          "docs": "Native button for removal or cancellation."
+        },
+        {
+          "name": "browse",
+          "docs": "Native button that opens the file picker."
+        },
+        {
+          "name": "drop-zone",
+          "docs": "Surface that receives files dragged from the operating system."
+        },
+        {
+          "name": "error",
+          "docs": "Field-level form validation error."
+        },
+        {
+          "name": "file-meta",
+          "docs": "Size, outcome or error text for the file."
+        },
+        {
+          "name": "file-name",
+          "docs": "Name displayed for the file."
+        },
+        {
+          "name": "help",
+          "docs": "Guidance associated with the field."
+        },
+        {
+          "name": "input",
+          "docs": "Hidden native file picker."
+        },
+        {
+          "name": "label",
+          "docs": "Field label and optional required annotation."
+        },
+        {
+          "name": "list",
+          "docs": "List of selected files and rejections."
+        },
+        {
+          "name": "progress",
+          "docs": "Progress indicator for an uploading file."
+        },
+        {
+          "name": "row",
+          "docs": "A file row, with data-status matching its lifecycle state."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-progress"
+      ],
+      "dependencyGraph": {
+        "ki-file-upload": [
+          "ki-icon",
+          "ki-progress"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-grid/ki-grid.tsx",
       "encapsulation": "shadow",
       "tag": "ki-grid",
@@ -2993,9 +3917,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-file-upload"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-file-upload": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -5368,9 +6298,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-file-upload"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-file-upload": [
+          "ki-progress"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-qr/ki-qr.tsx",
@@ -9169,6 +10105,21 @@
       "declaration": "export type KiDividerOrientation = 'horizontal' | 'vertical';",
       "docstring": "",
       "path": "src/components/ki-divider/ki-divider.tsx"
+    },
+    "src/components/ki-file-upload/ki-file-upload.tsx::KiFile": {
+      "declaration": "export interface KiFile {\n  name: string;\n  /** Size in bytes. */\n  size: number;\n  status: 'queued' | 'uploading' | 'done' | 'error';\n  /** Percentage for an upload with known progress. */\n  progress?: number;\n  /** Visible error reason for a row in the error state. */\n  error?: string;\n  /** Original accepted local file, retained for submission. */\n  file?: File;\n}",
+      "docstring": "",
+      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
+    },
+    "src/components/ki-file-upload/ki-file-upload.tsx::KiFilesAddDetail": {
+      "declaration": "export interface KiFilesAddDetail {\n  files: KiFile[];\n}",
+      "docstring": "",
+      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
+    },
+    "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail": {
+      "declaration": "export interface KiFileActionDetail {\n  file: KiFile;\n}",
+      "docstring": "",
+      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
     },
     "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
       "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",

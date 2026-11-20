@@ -15,6 +15,7 @@ import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+import { KiFile, KiFileActionDetail, KiFilesAddDetail } from "./components/ki-file-upload/ki-file-upload";
 import { KiLayoutGap } from "./utils/layout-gap";
 import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -47,6 +48,7 @@ export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+export { KiFile, KiFileActionDetail, KiFilesAddDetail } from "./components/ki-file-upload/ki-file-upload";
 export { KiLayoutGap } from "./utils/layout-gap";
 export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -466,6 +468,135 @@ export namespace Components {
           * @default 'horizontal'
          */
         "orientation": KiDividerOrientation;
+    }
+    /**
+     * A form-associated picker and drop zone with local selection validation and a
+     * list of file upload outcomes.
+     * @whenToUse collect local attachments, media or imports, and optionally show
+     * application-managed upload progress and results.
+     * @whenNotToUse transfer files without an application handler, collect a URL,
+     * or use client-side type and size checks as upload authorization.
+     */
+    interface KiFileUpload {
+        /**
+          * Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.
+         */
+        "accept"?: string;
+        /**
+          * Visible text of the native file picker button.
+          * @default 'Browse files'
+         */
+        "browseLabel": string;
+        /**
+          * Accessible name template for cancellation. Use {file} for the displayed filename.
+          * @default 'Cancel upload of {file}'
+         */
+        "cancelLabel": string;
+        /**
+          * Rejection text for a file beyond selection capacity.
+          * @default 'Too many files.'
+         */
+        "countError": string;
+        /**
+          * Disables the picker and file actions and excludes the field from submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Status text for a completed upload.
+          * @default 'Uploaded'
+         */
+        "doneLabel": string;
+        /**
+          * Drop instruction shown just before the Browse button.
+          * @default 'Drop files here or'
+         */
+        "dropLabel": string;
+        /**
+          * Application validation error. Clear it to allow form submission again.
+         */
+        "errorText"?: string;
+        /**
+          * Fallback status text for a failed upload without a supplied error.
+          * @default 'Upload failed.'
+         */
+        "failedLabel": string;
+        /**
+          * Displayed file records, including rejections. Assign a new array to update progress or outcomes. Keep each original File on its record for form submission. Set this as a JavaScript property when supplying file records.
+          * @default []
+         */
+        "files": KiFile[];
+        /**
+          * Guidance for file formats, limits or the purpose of this field.
+         */
+        "helpText"?: string;
+        /**
+          * Visible label and accessible name of the upload group.
+          * @default 'Upload files'
+         */
+        "label": string;
+        /**
+          * Accessible name of the list of files.
+          * @default 'Files'
+         */
+        "listLabel": string;
+        /**
+          * Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.
+         */
+        "maxFiles"?: number;
+        /**
+          * Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as "10MB".
+         */
+        "maxSize"?: string;
+        /**
+          * Allows a selection of more than one file.
+          * @default false
+         */
+        "multiple": boolean;
+        /**
+          * Form-data key repeated for each accepted original file.
+         */
+        "name"?: string;
+        /**
+          * Status text for an accepted file waiting to upload.
+          * @default 'Queued'
+         */
+        "queuedLabel": string;
+        /**
+          * Accessible name template for removal. Use {file} for the displayed filename.
+          * @default 'Remove {file}'
+         */
+        "removeLabel": string;
+        /**
+          * Requires at least one original accepted file to submit the form.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Visible annotation for a required file field.
+          * @default 'Required'
+         */
+        "requiredLabel": string;
+        /**
+          * Validation message when the form requires a file and none is selected.
+          * @default 'Select a file.'
+         */
+        "requiredMessage": string;
+        /**
+          * Rejection text for a file larger than max-size.
+          * @default 'This file is too large.'
+         */
+        "sizeError": string;
+        /**
+          * Rejection text for a file that does not match accept.
+          * @default 'This file type is not allowed.'
+         */
+        "typeError": string;
+        /**
+          * Progress indicator name template. Use {file} for the displayed filename.
+          * @default 'Uploading {file}'
+         */
+        "uploadingLabel": string;
     }
     /**
      * A passive responsive grid for content items.
@@ -1523,6 +1654,10 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
 }
+export interface KiFileUploadCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiFileUploadElement;
+}
 export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
@@ -1764,6 +1899,33 @@ declare global {
     var HTMLKiDividerElement: {
         prototype: HTMLKiDividerElement;
         new (): HTMLKiDividerElement;
+    };
+    interface HTMLKiFileUploadElementEventMap {
+        "ki-files-add": KiFilesAddDetail;
+        "ki-file-remove": KiFileActionDetail;
+        "ki-file-cancel": KiFileActionDetail;
+    }
+    /**
+     * A form-associated picker and drop zone with local selection validation and a
+     * list of file upload outcomes.
+     * @whenToUse collect local attachments, media or imports, and optionally show
+     * application-managed upload progress and results.
+     * @whenNotToUse transfer files without an application handler, collect a URL,
+     * or use client-side type and size checks as upload authorization.
+     */
+    interface HTMLKiFileUploadElement extends Components.KiFileUpload, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiFileUploadElementEventMap>(type: K, listener: (this: HTMLKiFileUploadElement, ev: KiFileUploadCustomEvent<HTMLKiFileUploadElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiFileUploadElementEventMap>(type: K, listener: (this: HTMLKiFileUploadElement, ev: KiFileUploadCustomEvent<HTMLKiFileUploadElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiFileUploadElement: {
+        prototype: HTMLKiFileUploadElement;
+        new (): HTMLKiFileUploadElement;
     };
     /**
      * A passive responsive grid for content items.
@@ -2337,6 +2499,7 @@ declare global {
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
+        "ki-file-upload": HTMLKiFileUploadElement;
         "ki-grid": HTMLKiGridElement;
         "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
@@ -2783,6 +2946,151 @@ declare namespace LocalJSX {
           * @default 'horizontal'
          */
         "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * A form-associated picker and drop zone with local selection validation and a
+     * list of file upload outcomes.
+     * @whenToUse collect local attachments, media or imports, and optionally show
+     * application-managed upload progress and results.
+     * @whenNotToUse transfer files without an application handler, collect a URL,
+     * or use client-side type and size checks as upload authorization.
+     */
+    interface KiFileUpload {
+        /**
+          * Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.
+         */
+        "accept"?: string;
+        /**
+          * Visible text of the native file picker button.
+          * @default 'Browse files'
+         */
+        "browseLabel"?: string;
+        /**
+          * Accessible name template for cancellation. Use {file} for the displayed filename.
+          * @default 'Cancel upload of {file}'
+         */
+        "cancelLabel"?: string;
+        /**
+          * Rejection text for a file beyond selection capacity.
+          * @default 'Too many files.'
+         */
+        "countError"?: string;
+        /**
+          * Disables the picker and file actions and excludes the field from submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Status text for a completed upload.
+          * @default 'Uploaded'
+         */
+        "doneLabel"?: string;
+        /**
+          * Drop instruction shown just before the Browse button.
+          * @default 'Drop files here or'
+         */
+        "dropLabel"?: string;
+        /**
+          * Application validation error. Clear it to allow form submission again.
+         */
+        "errorText"?: string;
+        /**
+          * Fallback status text for a failed upload without a supplied error.
+          * @default 'Upload failed.'
+         */
+        "failedLabel"?: string;
+        /**
+          * Displayed file records, including rejections. Assign a new array to update progress or outcomes. Keep each original File on its record for form submission. Set this as a JavaScript property when supplying file records.
+          * @default []
+         */
+        "files"?: KiFile[];
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Guidance for file formats, limits or the purpose of this field.
+         */
+        "helpText"?: string;
+        /**
+          * Visible label and accessible name of the upload group.
+          * @default 'Upload files'
+         */
+        "label"?: string;
+        /**
+          * Accessible name of the list of files.
+          * @default 'Files'
+         */
+        "listLabel"?: string;
+        /**
+          * Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.
+         */
+        "maxFiles"?: number;
+        /**
+          * Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as "10MB".
+         */
+        "maxSize"?: string;
+        /**
+          * Allows a selection of more than one file.
+          * @default false
+         */
+        "multiple"?: boolean;
+        /**
+          * Form-data key repeated for each accepted original file.
+         */
+        "name"?: string;
+        /**
+          * Requests that the application cancel the identified upload.
+         */
+        "onKi-file-cancel"?: (event: KiFileUploadCustomEvent<KiFileActionDetail>) => void;
+        /**
+          * Reports a row removed by the user, after updating the file list.
+         */
+        "onKi-file-remove"?: (event: KiFileUploadCustomEvent<KiFileActionDetail>) => void;
+        /**
+          * Reports the accepted rows in one picker or drop batch, each with its original File.
+         */
+        "onKi-files-add"?: (event: KiFileUploadCustomEvent<KiFilesAddDetail>) => void;
+        /**
+          * Status text for an accepted file waiting to upload.
+          * @default 'Queued'
+         */
+        "queuedLabel"?: string;
+        /**
+          * Accessible name template for removal. Use {file} for the displayed filename.
+          * @default 'Remove {file}'
+         */
+        "removeLabel"?: string;
+        /**
+          * Requires at least one original accepted file to submit the form.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Visible annotation for a required file field.
+          * @default 'Required'
+         */
+        "requiredLabel"?: string;
+        /**
+          * Validation message when the form requires a file and none is selected.
+          * @default 'Select a file.'
+         */
+        "requiredMessage"?: string;
+        /**
+          * Rejection text for a file larger than max-size.
+          * @default 'This file is too large.'
+         */
+        "sizeError"?: string;
+        /**
+          * Rejection text for a file that does not match accept.
+          * @default 'This file type is not allowed.'
+         */
+        "typeError"?: string;
+        /**
+          * Progress indicator name template. Use {file} for the displayed filename.
+          * @default 'Uploading {file}'
+         */
+        "uploadingLabel"?: string;
     }
     /**
      * A passive responsive grid for content items.
@@ -3925,6 +4233,32 @@ declare namespace LocalJSX {
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
     }
+    interface KiFileUploadAttributes {
+        "label": string;
+        "helpText": string;
+        "errorText": string;
+        "name": string;
+        "required": boolean;
+        "disabled": boolean;
+        "multiple": boolean;
+        "accept": string;
+        "maxSize": string;
+        "maxFiles": number;
+        "browseLabel": string;
+        "dropLabel": string;
+        "listLabel": string;
+        "removeLabel": string;
+        "cancelLabel": string;
+        "uploadingLabel": string;
+        "queuedLabel": string;
+        "doneLabel": string;
+        "failedLabel": string;
+        "typeError": string;
+        "sizeError": string;
+        "countError": string;
+        "requiredLabel": string;
+        "requiredMessage": string;
+    }
     interface KiGridAttributes {
         "columns": number;
         "minColumn": string;
@@ -4126,6 +4460,7 @@ declare namespace LocalJSX {
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-file-upload": Omit<KiFileUpload, keyof KiFileUploadAttributes> & { [K in keyof KiFileUpload & keyof KiFileUploadAttributes]?: KiFileUpload[K] } & { [K in keyof KiFileUpload & keyof KiFileUploadAttributes as `attr:${K}`]?: KiFileUploadAttributes[K] } & { [K in keyof KiFileUpload & keyof KiFileUploadAttributes as `prop:${K}`]?: KiFileUpload[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
         "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
@@ -4302,6 +4637,15 @@ declare module "@stencil/core" {
              * (prefer white space).
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
+            /**
+             * A form-associated picker and drop zone with local selection validation and a
+             * list of file upload outcomes.
+             * @whenToUse collect local attachments, media or imports, and optionally show
+             * application-managed upload progress and results.
+             * @whenNotToUse transfer files without an application handler, collect a URL,
+             * or use client-side type and size checks as upload authorization.
+             */
+            "ki-file-upload": LocalJSX.IntrinsicElements["ki-file-upload"] & JSXBase.HTMLAttributes<HTMLKiFileUploadElement>;
             /**
              * A passive responsive grid for content items.
              * @whenToUse lay out items on responsive tracks with consistent token spacing.

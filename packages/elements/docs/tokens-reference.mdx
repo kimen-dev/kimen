@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 400 semantic
-and 1274 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 401 semantic
+and 1293 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -248,6 +248,7 @@ every component at once.
 | `--ki-outline-danger-low-em` | `#ffcccf` | semantic color for outline danger low em. |
 | `--ki-outline-danger-low-em-alpha` | `rgba(239, 78, 105, 0.4)` | semantic color for outline danger low em alpha. |
 | `--ki-outline-danger-med-em` | `#f1989f` | semantic color for outline danger med em. |
+| `--ki-outline-hairline-width` | `1px` | Thin stroke for a surface or control boundary. |
 | `--ki-outline-high-em` | `rgba(0, 0, 0, 0.12)` | semantic color for outline high em. |
 | `--ki-outline-info-base-em` | `#dff3ff` | semantic color for outline info base em. |
 | `--ki-outline-info-base-em-alpha` | `rgba(19, 185, 236, 0.2)` | semantic color for outline info base em alpha. |
@@ -1138,6 +1139,30 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-divider-radius` | `1000px` | dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps). |
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
 | `--ki-divider-thickness` | `1px` | dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). |
+
+### `ki-file-upload`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-file-upload-active-bg` | `#ffebe5` | Drop zone background while files are dragged over it. |
+| `--ki-file-upload-active-border` | `#bb4e2a` | Drop zone boundary while files are dragged over it. |
+| `--ki-file-upload-active-fg` | `#181613` | Main drop zone text while files are dragged over it. |
+| `--ki-file-upload-backdrop-filter` | `none` | Complete backdrop filter applied behind the drop zone. |
+| `--ki-file-upload-bg` | `#f9f7f4` | Drop zone background at rest. |
+| `--ki-file-upload-bg-image` | `none` | Optional image over the drop zone background. |
+| `--ki-file-upload-border` | `#86827b` | Dashed boundary of the drop zone. |
+| `--ki-file-upload-border-width` | `1px` | Outline stroke width for the drop zone and file rows. |
+| `--ki-file-upload-error-bg` | `#ffffff` | Background of a file row with an error. |
+| `--ki-file-upload-error-border` | `#f1989f` | Boundary of a file row with an error. |
+| `--ki-file-upload-error-fg` | `#c21a45` | Text of a file error or field error. |
+| `--ki-file-upload-fg` | `#181613` | Main drop zone text at rest. |
+| `--ki-file-upload-radius` | `12px` | Drop zone corner radius. |
+| `--ki-file-upload-row-backdrop-filter` | `none` | Complete backdrop filter applied behind a file row. |
+| `--ki-file-upload-row-bg` | `#ffffff` | Background of a file row and the field label. |
+| `--ki-file-upload-row-bg-image` | `none` | Optional image over the file row background. |
+| `--ki-file-upload-row-border` | `rgba(24, 22, 19, 0.1)` | Boundary of a file row without an error. |
+| `--ki-file-upload-row-fg` | `#181613` | File names, row action icons and the field label. |
+| `--ki-file-upload-row-radius` | `10px` | File row corner radius. |
 
 ### `ki-icon`
 

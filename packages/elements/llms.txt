@@ -45,6 +45,7 @@ methods, CSS custom properties and examples.
 - [ki-counter](llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
+- [ki-file-upload](llms/ki-file-upload.md): collect local attachments, media or imports, and optionally show application-managed upload progress and results.
 - [ki-grid](llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.
 - [ki-icon](llms/ki-icon.md): show a named glyph next to text, or give a standalone meaningful glyph an accessible label.
 - [ki-icon-button](llms/ki-icon-button.md): a compact, widely understood action where space precludes a visible label: toolbars, card and dialog corners (close), media transport, data-row actions.

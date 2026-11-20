@@ -3984,6 +3984,787 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-file-upload.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFileUpload",
+          "customElement": true,
+          "tagName": "ki-file-upload",
+          "description": "A form-associated picker and drop zone with local selection validation and a\nlist of file upload outcomes.",
+          "whenToUse": "collect local attachments, media or imports, and optionally show\napplication-managed upload progress and results.",
+          "whenNotToUse": "transfer files without an application handler, collect a URL,\nor use client-side type and size checks as upload authorization.",
+          "attributes": [
+            {
+              "name": "accept",
+              "fieldName": "accept",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections."
+            },
+            {
+              "name": "browse-label",
+              "fieldName": "browseLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Browse files'",
+              "description": "Visible text of the native file picker button."
+            },
+            {
+              "name": "cancel-label",
+              "fieldName": "cancelLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel upload of {file}'",
+              "description": "Accessible name template for cancellation. Use {file} for the displayed filename."
+            },
+            {
+              "name": "count-error",
+              "fieldName": "countError",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Too many files.'",
+              "description": "Rejection text for a file beyond selection capacity."
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the picker and file actions and excludes the field from submission."
+            },
+            {
+              "name": "done-label",
+              "fieldName": "doneLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Uploaded'",
+              "description": "Status text for a completed upload."
+            },
+            {
+              "name": "drop-label",
+              "fieldName": "dropLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Drop files here or'",
+              "description": "Drop instruction shown just before the Browse button."
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Application validation error. Clear it to allow form submission again."
+            },
+            {
+              "name": "failed-label",
+              "fieldName": "failedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Upload failed.'",
+              "description": "Fallback status text for a failed upload without a supplied error."
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Guidance for file formats, limits or the purpose of this field."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Upload files'",
+              "description": "Visible label and accessible name of the upload group."
+            },
+            {
+              "name": "list-label",
+              "fieldName": "listLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Files'",
+              "description": "Accessible name of the list of files."
+            },
+            {
+              "name": "max-files",
+              "fieldName": "maxFiles",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one."
+            },
+            {
+              "name": "max-size",
+              "fieldName": "maxSize",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\"."
+            },
+            {
+              "name": "multiple",
+              "fieldName": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allows a selection of more than one file."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key repeated for each accepted original file."
+            },
+            {
+              "name": "queued-label",
+              "fieldName": "queuedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Queued'",
+              "description": "Status text for an accepted file waiting to upload."
+            },
+            {
+              "name": "remove-label",
+              "fieldName": "removeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Remove {file}'",
+              "description": "Accessible name template for removal. Use {file} for the displayed filename."
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires at least one original accepted file to submit the form."
+            },
+            {
+              "name": "required-label",
+              "fieldName": "requiredLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Required'",
+              "description": "Visible annotation for a required file field."
+            },
+            {
+              "name": "required-message",
+              "fieldName": "requiredMessage",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Select a file.'",
+              "description": "Validation message when the form requires a file and none is selected."
+            },
+            {
+              "name": "size-error",
+              "fieldName": "sizeError",
+              "type": {
+                "text": "string"
+              },
+              "default": "'This file is too large.'",
+              "description": "Rejection text for a file larger than max-size."
+            },
+            {
+              "name": "type-error",
+              "fieldName": "typeError",
+              "type": {
+                "text": "string"
+              },
+              "default": "'This file type is not allowed.'",
+              "description": "Rejection text for a file that does not match accept."
+            },
+            {
+              "name": "uploading-label",
+              "fieldName": "uploadingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Uploading {file}'",
+              "description": "Progress indicator name template. Use {file} for the displayed filename."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "accept",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.",
+              "attribute": "accept",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "browseLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Browse files'",
+              "description": "Visible text of the native file picker button.",
+              "attribute": "browse-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "cancelLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel upload of {file}'",
+              "description": "Accessible name template for cancellation. Use {file} for the displayed filename.",
+              "attribute": "cancel-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "countError",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Too many files.'",
+              "description": "Rejection text for a file beyond selection capacity.",
+              "attribute": "count-error",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the picker and file actions and excludes the field from submission.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "doneLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Uploaded'",
+              "description": "Status text for a completed upload.",
+              "attribute": "done-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "dropLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Drop files here or'",
+              "description": "Drop instruction shown just before the Browse button.",
+              "attribute": "drop-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Application validation error. Clear it to allow form submission again.",
+              "attribute": "error-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "failedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Upload failed.'",
+              "description": "Fallback status text for a failed upload without a supplied error.",
+              "attribute": "failed-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "files",
+              "privacy": "public",
+              "type": {
+                "text": "KiFile[]"
+              },
+              "default": "[]",
+              "description": "Displayed file records, including rejections. Assign a new array to update\nprogress or outcomes. Keep each original File on its record for form\nsubmission. Set this as a JavaScript property when supplying file records.",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Guidance for file formats, limits or the purpose of this field.",
+              "attribute": "help-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Upload files'",
+              "description": "Visible label and accessible name of the upload group.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "listLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Files'",
+              "description": "Accessible name of the list of files.",
+              "attribute": "list-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "maxFiles",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.",
+              "attribute": "max-files",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "maxSize",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\".",
+              "attribute": "max-size",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allows a selection of more than one file.",
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key repeated for each accepted original file.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "queuedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Queued'",
+              "description": "Status text for an accepted file waiting to upload.",
+              "attribute": "queued-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "removeLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Remove {file}'",
+              "description": "Accessible name template for removal. Use {file} for the displayed filename.",
+              "attribute": "remove-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires at least one original accepted file to submit the form.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "requiredLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Required'",
+              "description": "Visible annotation for a required file field.",
+              "attribute": "required-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "requiredMessage",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Select a file.'",
+              "description": "Validation message when the form requires a file and none is selected.",
+              "attribute": "required-message",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "sizeError",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'This file is too large.'",
+              "description": "Rejection text for a file larger than max-size.",
+              "attribute": "size-error",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "typeError",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'This file type is not allowed.'",
+              "description": "Rejection text for a file that does not match accept.",
+              "attribute": "type-error",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "uploadingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Uploading {file}'",
+              "description": "Progress indicator name template. Use {file} for the displayed filename.",
+              "attribute": "uploading-label",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-file-cancel",
+              "type": {
+                "text": "CustomEvent<KiFileActionDetail>"
+              },
+              "description": "Requests that the application cancel the identified upload."
+            },
+            {
+              "name": "ki-file-remove",
+              "type": {
+                "text": "CustomEvent<KiFileActionDetail>"
+              },
+              "description": "Reports a row removed by the user, after updating the file list."
+            },
+            {
+              "name": "ki-files-add",
+              "type": {
+                "text": "CustomEvent<KiFilesAddDetail>"
+              },
+              "description": "Reports the accepted rows in one picker or drop batch, each with its original File."
+            }
+          ],
+          "slots": [
+            {
+              "name": "help",
+              "description": "Plain-language guidance for the picker, in place of help-text."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "action",
+              "description": "Native button for removal or cancellation."
+            },
+            {
+              "name": "browse",
+              "description": "Native button that opens the file picker."
+            },
+            {
+              "name": "drop-zone",
+              "description": "Surface that receives files dragged from the operating system."
+            },
+            {
+              "name": "error",
+              "description": "Field-level form validation error."
+            },
+            {
+              "name": "file-meta",
+              "description": "Size, outcome or error text for the file."
+            },
+            {
+              "name": "file-name",
+              "description": "Name displayed for the file."
+            },
+            {
+              "name": "help",
+              "description": "Guidance associated with the field."
+            },
+            {
+              "name": "input",
+              "description": "Hidden native file picker."
+            },
+            {
+              "name": "label",
+              "description": "Field label and optional required annotation."
+            },
+            {
+              "name": "list",
+              "description": "List of selected files and rejections."
+            },
+            {
+              "name": "progress",
+              "description": "Progress indicator for an uploading file."
+            },
+            {
+              "name": "row",
+              "description": "A file row, with data-status matching its lifecycle state."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-corner-inline",
+              "description": "Small radius for an outline around inline content."
+            },
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-file-upload-active-bg",
+              "description": "Drop zone background while files are dragged over it."
+            },
+            {
+              "name": "--ki-file-upload-active-border",
+              "description": "Drop zone boundary while files are dragged over it."
+            },
+            {
+              "name": "--ki-file-upload-active-fg",
+              "description": "Main drop zone text while files are dragged over it."
+            },
+            {
+              "name": "--ki-file-upload-backdrop-filter",
+              "description": "Complete backdrop filter applied behind the drop zone."
+            },
+            {
+              "name": "--ki-file-upload-bg",
+              "description": "Drop zone background at rest."
+            },
+            {
+              "name": "--ki-file-upload-bg-image",
+              "description": "Optional image over the drop zone background."
+            },
+            {
+              "name": "--ki-file-upload-border",
+              "description": "Dashed boundary of the drop zone."
+            },
+            {
+              "name": "--ki-file-upload-border-width",
+              "description": "Outline stroke width for the drop zone and file rows."
+            },
+            {
+              "name": "--ki-file-upload-error-bg",
+              "description": "Background of a file row with an error."
+            },
+            {
+              "name": "--ki-file-upload-error-border",
+              "description": "Boundary of a file row with an error."
+            },
+            {
+              "name": "--ki-file-upload-error-fg",
+              "description": "Text of a file error or field error."
+            },
+            {
+              "name": "--ki-file-upload-fg",
+              "description": "Main drop zone text at rest."
+            },
+            {
+              "name": "--ki-file-upload-radius",
+              "description": "Drop zone corner radius."
+            },
+            {
+              "name": "--ki-file-upload-row-backdrop-filter",
+              "description": "Complete backdrop filter applied behind a file row."
+            },
+            {
+              "name": "--ki-file-upload-row-bg",
+              "description": "Background of a file row and the field label."
+            },
+            {
+              "name": "--ki-file-upload-row-bg-image",
+              "description": "Optional image over the file row background."
+            },
+            {
+              "name": "--ki-file-upload-row-border",
+              "description": "Boundary of a file row without an error."
+            },
+            {
+              "name": "--ki-file-upload-row-fg",
+              "description": "File names, row action icons and the field label."
+            },
+            {
+              "name": "--ki-file-upload-row-radius",
+              "description": "File row corner radius."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-layout-spacing-3xl",
+              "description": "The 3xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-text-primary-high-em",
+              "description": "semantic color for text primary high em."
+            },
+            {
+              "name": "--ki-text-supporting",
+              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-underline-offset",
+              "description": "Gap between text and its underline."
+            },
+            {
+              "name": "--ki-typography-underline-thickness",
+              "description": "Stroke width of a resting text underline."
+            },
+            {
+              "name": "--ki-typography-underline-thickness-hover",
+              "description": "Stroke width of an emphasized underline on hover."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            },
+            {
+              "name": "--ki-typography-weight-body-normal",
+              "description": "semantic font weight for typography weight body normal."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFileUpload",
+          "declaration": {
+            "name": "KiFileUpload",
+            "module": "dist/components/ki-file-upload.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-file-upload",
+          "declaration": {
+            "name": "KiFileUpload",
+            "module": "dist/components/ki-file-upload.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-grid.js",
       "declarations": [
         {

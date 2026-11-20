@@ -596,6 +596,136 @@ export const catalogData = {
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
     },
+    "ki-file-upload": {
+      "description": "A form-associated picker and drop zone with local selection validation and a\nlist of file upload outcomes.",
+      "events": {
+        "ki-file-cancel": "Requests that the application cancel the identified upload.",
+        "ki-file-remove": "Reports a row removed by the user, after updating the file list.",
+        "ki-files-add": "Reports the accepted rows in one picker or drop batch, each with its original File."
+      },
+      "props": {
+        "accept": {
+          "type": "string",
+          "description": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections."
+        },
+        "browse-label": {
+          "type": "string",
+          "description": "Visible text of the native file picker button.",
+          "default": "Browse files"
+        },
+        "cancel-label": {
+          "type": "string",
+          "description": "Accessible name template for cancellation. Use {file} for the displayed filename.",
+          "default": "Cancel upload of {file}"
+        },
+        "count-error": {
+          "type": "string",
+          "description": "Rejection text for a file beyond selection capacity.",
+          "default": "Too many files."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disables the picker and file actions and excludes the field from submission.",
+          "default": false
+        },
+        "done-label": {
+          "type": "string",
+          "description": "Status text for a completed upload.",
+          "default": "Uploaded"
+        },
+        "drop-label": {
+          "type": "string",
+          "description": "Drop instruction shown just before the Browse button.",
+          "default": "Drop files here or"
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Application validation error. Clear it to allow form submission again."
+        },
+        "failed-label": {
+          "type": "string",
+          "description": "Fallback status text for a failed upload without a supplied error.",
+          "default": "Upload failed."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Guidance for file formats, limits or the purpose of this field."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible label and accessible name of the upload group.",
+          "default": "Upload files"
+        },
+        "list-label": {
+          "type": "string",
+          "description": "Accessible name of the list of files.",
+          "default": "Files"
+        },
+        "max-files": {
+          "type": "number",
+          "description": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one."
+        },
+        "max-size": {
+          "type": "string",
+          "description": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\"."
+        },
+        "multiple": {
+          "type": "boolean",
+          "description": "Allows a selection of more than one file.",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key repeated for each accepted original file."
+        },
+        "queued-label": {
+          "type": "string",
+          "description": "Status text for an accepted file waiting to upload.",
+          "default": "Queued"
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Accessible name template for removal. Use {file} for the displayed filename.",
+          "default": "Remove {file}"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Requires at least one original accepted file to submit the form.",
+          "default": false
+        },
+        "required-label": {
+          "type": "string",
+          "description": "Visible annotation for a required file field.",
+          "default": "Required"
+        },
+        "required-message": {
+          "type": "string",
+          "description": "Validation message when the form requires a file and none is selected.",
+          "default": "Select a file."
+        },
+        "size-error": {
+          "type": "string",
+          "description": "Rejection text for a file larger than max-size.",
+          "default": "This file is too large."
+        },
+        "type-error": {
+          "type": "string",
+          "description": "Rejection text for a file that does not match accept.",
+          "default": "This file type is not allowed."
+        },
+        "uploading-label": {
+          "type": "string",
+          "description": "Progress indicator name template. Use {file} for the displayed filename.",
+          "default": "Uploading {file}"
+        }
+      },
+      "slots": {
+        "help": "Plain-language guidance for the picker, in place of help-text."
+      },
+      "tag": "ki-file-upload",
+      "whenNotToUse": "transfer files without an application handler, collect a URL,\nor use client-side type and size checks as upload authorization.",
+      "whenToUse": "collect local attachments, media or imports, and optionally show\napplication-managed upload progress and results."
+    },
     "ki-grid": {
       "description": "A passive responsive grid for content items.",
       "events": {},

@@ -302,12 +302,13 @@ it.each(['onmars', 'material3'])(
     ];
 
     const announcement = page.getByRole('status');
+    await expect.element(announcement).toBeInTheDocument();
     await expect
-      .element(announcement)
-      .toHaveTextContent(/incidents\.csv.*Uploaded|Uploaded.*incidents\.csv/i);
+      .poll(() => announcement.element().textContent)
+      .toMatch(/incidents\.csv.*Uploaded|Uploaded.*incidents\.csv/iu);
     await expect
-      .element(announcement)
-      .toHaveTextContent(/runbook\.pdf.*Upload failed|Upload failed.*runbook\.pdf/i);
+      .poll(() => announcement.element().textContent)
+      .toMatch(/runbook\.pdf.*Upload failed|Upload failed.*runbook\.pdf/iu);
     await expect.element(remove(uploading.name)).toBeVisible();
     await expect
       .element(page.getByText('Upload failed. Try again.', { exact: true }))

@@ -17,6 +17,7 @@ import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/co
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
+import { defineCustomElement as defineKiFileUpload } from '@kimen/elements/components/ki-file-upload.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
 import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
@@ -324,6 +325,40 @@ export class KiDivider {
 
 
 export declare interface KiDivider extends Components.KiDivider {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFileUpload,
+  inputs: ['accept', 'browseLabel', 'cancelLabel', 'countError', 'disabled', 'doneLabel', 'dropLabel', 'errorText', 'failedLabel', 'files', 'helpText', 'label', 'listLabel', 'maxFiles', 'maxSize', 'multiple', 'name', 'queuedLabel', 'removeLabel', 'required', 'requiredLabel', 'requiredMessage', 'sizeError', 'typeError', 'uploadingLabel']
+})
+@Component({
+  selector: 'ki-file-upload',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['accept', 'browseLabel', 'cancelLabel', 'countError', 'disabled', 'doneLabel', 'dropLabel', 'errorText', 'failedLabel', 'files', 'helpText', 'label', 'listLabel', 'maxFiles', 'maxSize', 'multiple', 'name', 'queuedLabel', 'removeLabel', 'required', 'requiredLabel', 'requiredMessage', 'sizeError', 'typeError', 'uploadingLabel'],
+})
+export class KiFileUpload {
+  protected el: HTMLKiFileUploadElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiFileUpload extends Components.KiFileUpload {
+  /**
+   * Reports the accepted rows in one picker or drop batch, each with its original File.
+   */
+  /**
+   * Reports a row removed by the user, after updating the file list.
+   */
+  /**
+   * Requests that the application cancel the identified upload.
+   */
+}
 
 
 @ProxyCmp({
