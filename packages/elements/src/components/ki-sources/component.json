@@ -11,5 +11,21 @@
   },
   "visual": {
     "material3Dark": true
+  },
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 19290,
+      "gzip": 5241,
+      "brotli": 3984
+    },
+    "mcpServer": {
+      "raw": 32914,
+      "gzip": 7537,
+      "brotli": 4818
+    },
+    "tokenStylesheets": {
+      "onmars": 259,
+      "material3": 19
+    }
   }
 }

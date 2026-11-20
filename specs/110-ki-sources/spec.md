@@ -1,6 +1,7 @@
 # Feature specification: Sources
 
-**Issue** #396  
+**Issue** #396
+
 **Branch** `feat/396-ki-sources`
 
 ## User outcome
@@ -43,6 +44,27 @@ title, domain, and optional snippet.
   visible citation pill and scales with list controls under touch density.
 - **Agent's choice, pending founder confirmation.** Provide configurable count
   and citation label templates. The components declare no catalog actions.
+
+## Bundle measurements
+
+The comparison uses the branch fork point (`6e0d8ea`) and the candidate with
+Node 26.5.0 and the same installed dependencies. The baseline is a Git
+archive built inside this worktree with the package layout preserved.
+
+| Artifact | Metric | Baseline (bytes) | Candidate (bytes) | Increase (bytes) |
+| --- | --- | ---: | ---: | ---: |
+| MCP Apps document | Raw | 729159 | 748449 | 19290 |
+| MCP Apps document | Gzip level 9 | 170411 | 175652 | 5241 |
+| MCP Apps document | Brotli | 136858 | 140842 | 3984 |
+| MCP server binary | Raw | 2646711 | 2679625 | 32914 |
+| MCP server binary | Gzip level 9 | 502006 | 509543 | 7537 |
+| MCP server binary | Brotli | 370573 | 375391 | 4818 |
+| Onmars token stylesheet | Size Limit | 13330 | 13589 | 259 |
+| Material 3 token stylesheet | Size Limit | 5331 | 5350 | 19 |
+
+The Sources composite measures 5.68 kB marginal and 24.48 kB including the
+Stencil runtime. The aggregate allowance in `ki-sources/component.json`
+records the measured increases and is pending founder confirmation.
 
 ## Gherkin
 
