@@ -1,8 +1,10 @@
 // @spec:018-project-integrity-hardening
 // @spec:151-release-automation
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 const releaseWorkflow = await readFile(
   new URL('../../.github/workflows/release.yml', import.meta.url),
@@ -93,24 +95,101 @@ test('@spec:018-project-integrity-hardening S6 prerelease keeps every engine out
   );
 });
 
+// The browser shards of the release, read the way governance-80-20 reads the
+// PR CI shards: the matrix lists 1..n and the gate receives <index>/<n>.
+function releaseBrowserShards() {
+  const browserJob = readJob(releaseWorkflow, 'browser');
+  const shards = /^ {8}shard: \[([^\]]+)\]$/mu.exec(browserJob)?.[1].split(',').map(Number);
+  const count = Number(
+    /^ {10}KIMEN_BROWSER_SHARD: \$\{\{ matrix\.shard \}\}\/(\d+)$/mu.exec(browserJob)?.[1],
+  );
+  return { count, shards };
+}
+
+test('@spec:018-project-integrity-hardening S6 prerelease shards the browser gate as 1..n, each passing <index>/<n>', () => {
+  const { count, shards } = releaseBrowserShards();
+
+  assert.ok(count > 1, 'the browser job must pass its shard as <index>/<count>');
+  assert.deepEqual(
+    shards,
+    Array.from({ length: count }, (_, index) => index + 1),
+  );
+  assert.ok(
+    readJob(releaseWorkflow, 'browser').includes(
+      `    name: browser (\${{ matrix.engine }} \${{ matrix.shard }}/${String(count)})\n`,
+    ),
+    'each browser job names its engine and shard',
+  );
+});
+
 test('@spec:018-project-integrity-hardening S6 prerelease runs the full browser gate for every matrix engine', () => {
   const browserJob = readJob(releaseWorkflow, 'browser');
   const installEngine =
     'pnpm --filter @kimen/elements exec playwright install --with-deps "${{ matrix.engine }}"';
-  const fullBrowserGate = 'bash scripts/gates/gates-browser.sh "${{ matrix.engine }}"';
+  const browserGate = 'bash scripts/gates/gates-browser.sh "${{ matrix.engine }}"';
   const candidateConsumer = 'node scripts/consumer-contract.mjs';
+  const gateStep =
+    /^ {6}- name: [^\n]+\n {8}env:\n {10}KIMEN_BROWSER_SHARD: [^\n]+\n {8}run: ([^\n]+)$/mu;
 
-  assert.equal(occurrenceCount(browserJob, fullBrowserGate), 1);
-  assert.ok(browserJob.indexOf(fullBrowserGate) > browserJob.indexOf(installEngine));
-  assert.ok(browserJob.indexOf(fullBrowserGate) < browserJob.indexOf(candidateConsumer));
+  // One invocation per job, of the complete gate's own command, given its
+  // shard: no narrower scope and no other gate.
+  assert.equal(occurrenceCount(browserJob, browserGate), 1);
+  assert.equal(gateStep.exec(browserJob)?.[1], browserGate);
+  assert.doesNotMatch(browserJob, /KIMEN_GATE_SCOPE|KIMEN_AFFECTED|--plan/u);
+  assert.ok(browserJob.indexOf(browserGate) > browserJob.indexOf(installEngine));
+  assert.ok(browserJob.indexOf(browserGate) < browserJob.indexOf(candidateConsumer));
 });
 
-test('@spec:018-project-integrity-hardening S6 prerelease permits the runner apt sources required by Playwright', () => {
-  for (const jobName of ['validate-core', 'browser']) {
+// The shards of one engine together are its complete gate: every shard runs
+// its own share of the elements files (Vitest --shard=<index>/<n> runs each
+// file in exactly one), and each Chromium-only suite runs in exactly one
+// shard. The gate itself says which suites a shard runs.
+test('@spec:018-project-integrity-hardening S6 the shards of every engine together run its complete browser gate', () => {
+  const { count, shards } = releaseBrowserShards();
+  const engines = readYamlList(readJob(releaseWorkflow, 'browser'), 'engine');
+  const gate = fileURLToPath(new URL('../gates/gates-browser.sh', import.meta.url));
+  const environment = { ...process.env };
+  delete environment.KIMEN_GATE_SCOPE;
+  delete environment.KIMEN_AFFECTED_PROJECTS;
+
+  const plan = (engine, shard) => {
+    const result = spawnSync('bash', [gate, engine, '--plan'], {
+      encoding: 'utf8',
+      env: { ...environment, KIMEN_BROWSER_SHARD: `${String(shard)}/${String(count)}` },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    return /^suites=(.*)$/mu.exec(result.stdout)[1].split(',').filter(Boolean);
+  };
+  const chromiumOnly = plan('chromium', count).filter((suite) => suite !== 'elements');
+  assert.ok(chromiumOnly.length > 0, 'the last Chromium shard carries the Chromium-only suites');
+
+  for (const engine of engines) {
+    const plans = shards.map((shard) => plan(engine, shard));
+    for (const suites of plans) {
+      assert.ok(suites.includes('elements'), `a ${engine} shard skips the elements suite`);
+    }
+    assert.deepEqual(
+      plans.flatMap((suites) => suites.filter((suite) => suite !== 'elements')).toSorted(),
+      engine === 'chromium' ? chromiumOnly.toSorted() : [],
+      `${engine} shards must run each Chromium-only suite exactly once`,
+    );
+  }
+});
+
+// Only the browser jobs install a browser, so only they reach the hosts it
+// comes from.
+test('@spec:018-project-integrity-hardening S6 prerelease permits the runner apt sources required by Playwright where it installs a browser', () => {
+  for (const jobName of ['validate-core', 'browser', 'verify-candidate', 'capability-claims']) {
     const job = readJob(releaseWorkflow, jobName);
-    assert.match(job, /^ {12}azure\.archive\.ubuntu\.com:80$/m);
-    assert.match(job, /^ {12}dl\.google\.com:443$/m);
-    assert.match(job, /^ {12}storage\.googleapis\.com:443$/m);
+    const installsBrowser = job.includes('playwright install');
+    assert.equal(installsBrowser, jobName === 'browser', `${jobName} browser install`);
+    for (const endpoint of [
+      /^ {12}azure\.archive\.ubuntu\.com:80$/m,
+      /^ {12}dl\.google\.com:443$/m,
+      /^ {12}storage\.googleapis\.com:443$/m,
+    ]) {
+      assert.equal(endpoint.test(job), installsBrowser, `${jobName} ${String(endpoint)}`);
+    }
   }
 });
 
@@ -182,10 +261,10 @@ test('@spec:018-project-integrity-hardening S6 every workflow installs Semgrep f
 
   const job = readJob(releaseWorkflow, 'validate-core');
   const installIndex = job.indexOf(install);
-  const suiteIndex = job.indexOf('run: bash scripts/gates/gates-suite.sh');
-  assert.notEqual(suiteIndex, -1, 'validate-core must run the gate suite');
+  const coreIndex = job.indexOf('run: bash scripts/gates/gates-core.sh');
+  assert.notEqual(coreIndex, -1, 'validate-core must run the core gate');
   assert.notEqual(installIndex, -1, 'validate-core must install Semgrep');
-  assert.ok(installIndex < suiteIndex, 'Semgrep must be installed before the gate suite runs');
+  assert.ok(installIndex < coreIndex, 'Semgrep must be installed before the core gate runs');
   // pip downloads the locked files from PyPI, and this job blocks every
   // undeclared host.
   assert.match(job, /^ {12}pypi\.org:443$/m);
@@ -194,7 +273,7 @@ test('@spec:018-project-integrity-hardening S6 every workflow installs Semgrep f
 
 test('@spec:018-project-integrity-hardening S8 release validation proves the packaging contract before the candidate is built', () => {
   const validateCore = readJob(releaseWorkflow, 'validate-core');
-  const coreGate = 'bash scripts/gates/gates-suite.sh';
+  const coreGate = 'run: bash scripts/gates/gates-core.sh';
   const packagingGate = 'pnpm run packaging';
   const candidateBuild = 'node scripts/release/candidate-cli.mjs build';
 
@@ -203,21 +282,59 @@ test('@spec:018-project-integrity-hardening S8 release validation proves the pac
   assert.ok(validateCore.indexOf(packagingGate) < validateCore.indexOf(candidateBuild));
 });
 
-test('@spec:018-project-integrity-hardening S13 release binds available capability claims to green gate evidence', () => {
-  const validateCore = readJob(releaseWorkflow, 'validate-core');
-  const suiteGate = 'bash scripts/gates/gates-suite.sh';
-  const evidenceBinding = 'scripts/gates/check-capabilities.mjs';
-  const candidateBuild = 'node scripts/release/candidate-cli.mjs build';
+// validate-core runs the core gates and each browser job one shard of the
+// browser gate. Each keeps the current-run evidence its gate wrote, and only
+// when that gate exited 0: the upload is a later step with no condition.
+test('@spec:018-project-integrity-hardening S13 every release gate keeps its own current-run evidence', () => {
+  const evidence = 'path: ${{ env.KIMEN_CACHE_ROOT }}/gate-evidence/current-run.tsv';
+  const kept = [
+    ['validate-core', 'run: bash scripts/gates/gates-core.sh', 'name: gate-evidence-core'],
+    [
+      'browser',
+      'run: bash scripts/gates/gates-browser.sh "${{ matrix.engine }}"',
+      'name: gate-evidence-browser-${{ matrix.engine }}-${{ matrix.shard }}',
+    ],
+  ];
+  for (const [jobName, gate, artifact] of kept) {
+    const steps = readJob(releaseWorkflow, jobName).split(/^ {6}- /mu);
+    const gateStep = steps.findIndex((step) => step.includes(gate));
+    const keepStep = steps.findIndex((step) => step.includes(artifact));
+    assert.notEqual(gateStep, -1, `${jobName} must run ${gate}`);
+    assert.ok(keepStep > gateStep, `${jobName} must keep its evidence after its gate`);
+    assert.ok(steps[keepStep].includes(evidence), `${jobName} must keep ${evidence}`);
+    assert.match(steps[keepStep], /^ {8}uses: actions\/upload-artifact@[a-f0-9]{40} /mu);
+    assert.match(steps[keepStep], /^ {10}overwrite: false$/mu);
+    assert.doesNotMatch(steps[keepStep], /^ {8}if:/mu, 'evidence is kept only after a green gate');
+  }
+  // The core job runs the core gates only; the browser gate runs in shards.
+  const coreCommands = readJob(releaseWorkflow, 'validate-core')
+    .split('\n')
+    .filter((line) => !line.trimStart().startsWith('#'))
+    .join('\n');
+  assert.doesNotMatch(coreCommands, /gates-suite\.sh|gates-browser\.sh|playwright install/u);
+});
 
-  // The binding consumes the full-suite current-run evidence at the release SHA.
-  assert.equal(occurrenceCount(validateCore, '--write-evidence'), 1);
-  assert.match(
-    validateCore,
-    /--gate-evidence "\$KIMEN_CACHE_ROOT\/gate-evidence\/current-run\.tsv"/u,
-  );
-  // It runs on the suite evidence and gates the candidate build.
-  assert.ok(validateCore.indexOf(evidenceBinding) > validateCore.indexOf(suiteGate));
-  assert.ok(validateCore.indexOf(evidenceBinding) < validateCore.indexOf(candidateBuild));
+test('@spec:018-project-integrity-hardening S13 release binds available capability claims to green gate evidence', () => {
+  const claims = readJob(releaseWorkflow, 'capability-claims');
+  const compose = 'node scripts/release/compose-gate-evidence.mjs';
+  const binding = 'node scripts/gates/check-capabilities.mjs';
+
+  // It runs once every core and browser gate has run at the candidate SHA...
+  assert.deepEqual(readYamlList(claims, 'needs'), ['validate-core', 'browser']);
+  assert.match(claims, /ref: \$\{\{ needs\.validate-core\.outputs\.source-sha \}\}/u);
+  assert.match(claims, /^ {10}pattern: gate-evidence-\*$/mu);
+  assert.match(claims, /^ {4}permissions:\n {6}contents: read$/mu);
+  // ...composes the core job's evidence and every browser shard's...
+  assert.equal(occurrenceCount(claims, compose), 1);
+  assert.match(claims, /--core "\$evidence\/gate-evidence-core\/current-run\.tsv"/u);
+  assert.match(claims, /--output "\$RUNNER_TEMP\/release-gate-evidence\.tsv"/u);
+  assert.match(claims, /^ {12}"\$evidence"\/gate-evidence-browser-\*\/current-run\.tsv$/mu);
+  // ...and binds the claims to that composed record, failing on any error.
+  assert.equal(occurrenceCount(claims, binding), 1);
+  assert.equal(occurrenceCount(claims, '--write-evidence'), 1);
+  assert.match(claims, /--gate-evidence "\$RUNNER_TEMP\/release-gate-evidence\.tsv"$/mu);
+  assert.ok(claims.indexOf(compose) < claims.indexOf(binding));
+  assert.match(claims, /^ {10}set -euo pipefail$/mu);
 });
 
 test('@spec:018-project-integrity-hardening S6 browsers and independent verification consume validate-core output', () => {
@@ -227,10 +344,19 @@ test('@spec:018-project-integrity-hardening S6 browsers and independent verifica
   ]);
 });
 
+// Every engine and every shard is a `browser` job: needing `browser` waits for
+// all of them, and any one that fails or is cancelled keeps publish from
+// starting.
 test('@spec:018-project-integrity-hardening S6 publication needs the complete prerelease evidence set', () => {
-  const publishNeeds = readYamlList(readJob(releaseWorkflow, 'publish'), 'needs');
+  const publish = readJob(releaseWorkflow, 'publish');
 
-  assert.deepEqual(publishNeeds, ['validate-core', 'verify-candidate', 'browser']);
+  assert.deepEqual(readYamlList(publish, 'needs'), [
+    'validate-core',
+    'verify-candidate',
+    'browser',
+    'capability-claims',
+  ]);
+  assert.doesNotMatch(publish, /always\(\)|failure\(\)|cancelled\(\)|continue-on-error/u);
 });
 
 // `npm publish --provenance` signs the statement before it uploads anything:
