@@ -1,0 +1,249 @@
+{
+  "component": {
+    "attributes": {
+      "attached": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined"
+      },
+      "toolbar": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-button-group-attached-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between joined actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-attached-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Radius of the logical corners along a shared button edge.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete optional backdrop filter for the toolbar surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Toolbar surface colour.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative image over the toolbar surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-border-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thin toolbar frame colour.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the toolbar frame and divider.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-divider": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative toolbar separator ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-divider-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block size of a vertical toolbar separator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default toolbar foreground on its raised surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between actions in a spaced group.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Toolbar frame inset and divider margin.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Logical outside radius of the toolbar frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-seam-overlap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Shared-edge overlap between adjacent attached actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-group-toolbar-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between toolbar actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "group": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named group or toolbar surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "attached": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined"
+      },
+      "toolbar": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-button-group.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-button-group.d.ts",
+    "symbols": {
+      "KiButtonGroup": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiButtonGroup extends Components.KiButtonGroup, HTMLElement {\n}\nexport const KiButtonGroup: {\n    prototype: KiButtonGroup;\n    new (): KiButtonGroup;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-button-group.js"
+  }
+}
