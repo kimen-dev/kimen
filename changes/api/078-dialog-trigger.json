@@ -20,12 +20,12 @@
     "/packages/@kimen~1elements/modules/./symbols/KiButton": "1302d5f618b29b78c1cdf413fd254fea395b38c91261f7ba170f5b8f437a5749",
     "/packages/@kimen~1elements/modules/./symbols/KiDialog": "e998248340d996e8d70d7c14ce0081176b3f23adcf58c56c88147e28d073161e",
     "/packages/@kimen~1elements/modules/./symbols/KiDialogCloseReason": "af0d8888808d17030237ee4cefaf9931318f8f0a9f75357f9f3913dc3616a692",
-    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "ebff654b2c77c4195b96f952d363a2b5431acd8d6e5e04df6b1ba7073959683f",
-    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "2edf12455c7a3e04e60feb731d1220f492382b0ac26a112486ccada62854ead2",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "3618fe54c67c011f6a40d317105e1219ef24db495cae6c5873382acea800c5ba",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "8c77e530bdf6f2c57c3b04fb4535589e6ca4353564698ca123a99f8c14edfd73",
     "/packages/@kimen~1elements/modules/.~1components/symbols/KiDialogCommand": "bc3df99a2f9e86f144a76dd71a5e60a3f5421f335ea9ffa916f9ce03004f5ae2",
     "/packages/@kimen~1elements/modules/.~1ki-dialog/symbols/KiDialogCloseReason": "4949312674dc6f9fdaeaec9e50fdf626da86ce4f8cc91d841c4043d27066cd38",
-    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "e40c52a3b081a93ba20dd026561275e817eb3de1836002c661a7cce55ddb0755",
-    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "cac9e3e558cea7d727c097327b805697354fd227ccb0f7ef27949cfc580f5db6",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "6dbd1da533b5f5a097bd88e4d9a2a6211f23ecd1aee42a57ab125e96848f267a",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "2e2efe3ab190ca8249605a314b85648b1e173d63c1f5a669aa6fa7a970fd9000",
     "/packages/@kimen~1elements/modules/.~1loader/symbols/KiDialogCommand": "bc3df99a2f9e86f144a76dd71a5e60a3f5421f335ea9ffa916f9ce03004f5ae2"
   },
   "packages": [

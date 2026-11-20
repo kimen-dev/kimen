@@ -1,0 +1,39 @@
+---
+title: ki-segmented-control
+description: Apply one of two to five options in place.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a segmented control for a small set of choices that take effect
+immediately, such as a chart range or view mode. Use `ki-tabs` for content
+panels, `ki-radio-group` for form submission and `ki-select` for longer lists.
+
+<Demo code={`<ki-segmented-control label="Chart range" value="week">
+  <ki-segment value="day">Day</ki-segment>
+  <ki-segment value="week">Week</ki-segment>
+  <ki-segment value="month">Month</ki-segment>
+</ki-segmented-control>`} />
+
+Supply a group label and a distinct value for each direct `ki-segment` child.
+Set the group's `value` to select an option, or omit it to start on the first
+enabled choice. Listen to `ki-change` for user changes. The new selection is
+in `event.detail.value`.
+
+Tab enters on the selected option. Arrow keys move focus and selection,
+wrapping around and skipping unavailable options. Give an icon-only option
+an `aria-label` for its name and tooltip.
+
+The `xs`, `sm` and `md` tracks default to 28, 32 and 40 CSS px. Add
+`full-width` to distribute the row evenly. Inside a region with
+`data-ki-density="touch"`, each option grows to the touch-target minimum.
+
+The all-elements loader registers `ki-tooltip`. When using direct imports or
+framework wrappers, register it separately for icon-only options.
+
+## API reference
+
+<CemApi tag="ki-segmented-control" />
+
+[Open ki-segmented-control in Storybook](/storybook/?path=/docs/docs-components-ki-segmented-control--docs)
