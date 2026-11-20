@@ -461,6 +461,7 @@
   --ki-checkbox-indeterminate-active-border:var(--ki-outline-none);
   --ki-checkbox-indeterminate-disabled-bg:var(--ki-surface-disabled-low-em);
   --ki-checkbox-indeterminate-disabled-fg:var(--ki-text-muted);
+  --ki-date-picker-radius:var(--ki-menu-layout-surface-radius);
   --ki-dialog-radius:var(--ki-radius-big-component-lg);
   --ki-dialog-gap:var(--ki-space-5xl);
   --ki-dialog-bg:var(--ki-surface-s3);
@@ -587,6 +588,7 @@
   --ki-select-lg-radius:var(--ki-radius-component-xs);
   --ki-select-xl-radius:var(--ki-radius-component-xs);
   --ki-spinner-indicator:var(--ki-surface-inverse-white);
+  --ki-stat-radius:var(--ki-radius-component-md);
   --ki-status-size:var(--ki-space-sm);
   --ki-status-shadow:0 0 0 0 var(--ki-color-transparent-black);
   --ki-switch-track-width:var(--ki-space-15xl);
@@ -712,7 +714,6 @@
   --ki-tooltip-font-size:var(--ki-font-size-caption-2);
   --ki-tooltip-line-height:var(--ki-font-line-height-caption-2);
   --ki-tooltip-shadow:0 0 0 0 var(--ki-color-transparent-black);
-  --ki-top-nav-menu-radius:var(--ki-layout-menu-radius-sm);
   --ki-video-frame-radius:var(--ki-radius-component-lg);
   --ki-video-scrim-color:var(--ki-transparent-inverse);
   --ki-video-scrim-padding:var(--ki-space-zero);

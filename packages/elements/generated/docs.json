@@ -858,87 +858,9 @@
         }
       ],
       "usage": {
-        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
       },
       "props": [
-        {
-          "name": "command",
-          "type": "\"close\" | \"request-close\" | \"show-modal\" | undefined",
-          "complexType": {
-            "original": "KiDialogCommand",
-            "resolved": "\"close\" | \"request-close\" | \"show-modal\" | undefined",
-            "references": {
-              "KiDialogCommand": {
-                "location": "import",
-                "path": "../../utils/dialog-invoker",
-                "id": "src/utils/dialog-invoker.ts::KiDialogCommand",
-                "referenceLocation": "KiDialogCommand"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "command",
-          "reflectToAttr": true,
-          "docs": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
-          "values": [
-            {
-              "value": "close",
-              "type": "string"
-            },
-            {
-              "value": "request-close",
-              "type": "string"
-            },
-            {
-              "value": "show-modal",
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "commandfor",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "commandfor",
-          "reflectToAttr": true,
-          "docs": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
         {
           "name": "disabled",
           "type": "boolean",
@@ -1165,7 +1087,7 @@
           "mutable": false,
           "attr": "type",
           "reflectToAttr": true,
-          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "docsTags": [
             {
               "name": "default",
@@ -3092,379 +3014,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-copy-button/ki-copy-button.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-copy-button",
-      "docs": "Copies text to the clipboard and confirms the result in the same button.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions."
-        },
-        {
-          "name": "slot",
-          "text": "- Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
-        },
-        {
-          "name": "part",
-          "text": "button - Native copy control with keyboard and pointer activation."
-        },
-        {
-          "name": "part",
-          "text": "icon - Fixed-size decorative feedback glyph box inside the button."
-        },
-        {
-          "name": "part",
-          "text": "label - Wrapper around the visible slotted label."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-copy-button examples\n\n## Copy an invite link\n\n```html\n<ki-copy-button value=\"https://kimen.dev/i/4f9a\" label=\"Copy invite link\"></ki-copy-button>\n```\n\n## Copy what a field currently contains\n\n```html\n<ki-input id=\"token-field\" label=\"Token\" value=\"token-4f9a\"></ki-input>\n<ki-copy-button from=\"token-field\" variant=\"secondary\">Copy token</ki-copy-button>\n```\n\n## Copy a code sample with localized feedback\n\n```html\n<pre id=\"install-command\"><code>pnpm add @kimen/elements</code></pre>\n<ki-copy-button\n  from=\"install-command\"\n  copied-label=\"Copiado\"\n  copy-error-label=\"No se pudo copiar\"\n>Copiar comando</ki-copy-button>\n```\n"
-      },
-      "props": [
-        {
-          "name": "copiedLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "copied-label",
-          "reflectToAttr": false,
-          "docs": "Polite announcement after a successful write. Override for localized interfaces.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Copied'"
-            }
-          ],
-          "default": "'Copied'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "copyErrorLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "copy-error-label",
-          "reflectToAttr": false,
-          "docs": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "\"Couldn't copy\""
-            }
-          ],
-          "default": "\"Couldn't copy\"",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "feedbackDuration",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "feedback-duration",
-          "reflectToAttr": false,
-          "docs": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "0"
-            },
-            {
-              "name": "default",
-              "text": "1500"
-            }
-          ],
-          "default": "1500",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "from",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "from",
-          "reflectToAttr": false,
-          "docs": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Copy'"
-            }
-          ],
-          "default": "'Copy'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "size",
-          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
-          "complexType": {
-            "original": "KiButtonSize",
-            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
-            "references": {
-              "KiButtonSize": {
-                "location": "import",
-                "path": "../ki-button/ki-button",
-                "id": "src/components/ki-button/ki-button.tsx::KiButtonSize",
-                "referenceLocation": "KiButtonSize"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "size",
-          "reflectToAttr": true,
-          "docs": "Token-backed button size. Match the size of adjacent controls.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'md'"
-            }
-          ],
-          "default": "'md'",
-          "values": [
-            {
-              "value": "lg",
-              "type": "string"
-            },
-            {
-              "value": "md",
-              "type": "string"
-            },
-            {
-              "value": "sm",
-              "type": "string"
-            },
-            {
-              "value": "xl",
-              "type": "string"
-            },
-            {
-              "value": "xs",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Exact clipboard text, including whitespace. Supply it when the text is known directly.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "variant",
-          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
-          "complexType": {
-            "original": "KiCopyButtonVariant",
-            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
-            "references": {
-              "KiCopyButtonVariant": {
-                "location": "local",
-                "path": "src/components/ki-copy-button/ki-copy-button.tsx",
-                "id": "src/components/ki-copy-button/ki-copy-button.tsx::KiCopyButtonVariant"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "variant",
-          "reflectToAttr": true,
-          "docs": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'ghost'"
-            }
-          ],
-          "default": "'ghost'",
-          "values": [
-            {
-              "value": "ghost",
-              "type": "string"
-            },
-            {
-              "value": "primary",
-              "type": "string"
-            },
-            {
-              "value": "quaternary",
-              "type": "string"
-            },
-            {
-              "value": "secondary",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-copy",
-          "detail": "{ value: string; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ value: string }",
-            "resolved": "{ value: string; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Fired after a successful clipboard write. The detail carries the exact text copied.",
-          "docsTags": []
-        },
-        {
-          "event": "ki-copy-error",
-          "detail": "void",
-          "bubbles": true,
-          "complexType": {
-            "original": "void",
-            "resolved": "void",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Fired when the source cannot be read or clipboard writing is unavailable or fails.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
-        }
-      ],
-      "parts": [
-        {
-          "name": "button",
-          "docs": "Native copy control with keyboard and pointer activation."
-        },
-        {
-          "name": "icon",
-          "docs": "Fixed-size decorative feedback glyph box inside the button."
-        },
-        {
-          "name": "label",
-          "docs": "Wrapper around the visible slotted label."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-copy-button": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-counter/ki-counter.tsx",
       "encapsulation": "shadow",
       "tag": "ki-counter",
@@ -3673,6 +3222,730 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-date-picker/ki-date-picker.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-date-picker",
+      "docs": "A locale-aware date field with an anchored keyboard-operable calendar.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Choose a nearby date or date range when the weekday matters, such as\na booking, a deadline or a schedule."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Enter a known distant date, such as a birth date, or choose a time."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible label and accessible name of the text field."
+        },
+        {
+          "name": "part",
+          "text": "field - Enclosure of the text field and calendar button."
+        },
+        {
+          "name": "part",
+          "text": "input - Native text entry for a localized date or range."
+        },
+        {
+          "name": "part",
+          "text": "trigger - Button that opens and closes the calendar."
+        },
+        {
+          "name": "part",
+          "text": "help - Help text associated with the input."
+        },
+        {
+          "name": "part",
+          "text": "error - Live constraint message replacing help when the field is invalid."
+        },
+        {
+          "name": "part",
+          "text": "popup - Anchored non-modal calendar dialog."
+        },
+        {
+          "name": "part",
+          "text": "month - Live month and year heading."
+        },
+        {
+          "name": "part",
+          "text": "grid - Calendar grid with localized weekdays and date buttons."
+        },
+        {
+          "name": "part",
+          "text": "day - Date button in the calendar grid."
+        }
+      ],
+      "usage": {
+        "examples": "# DatePicker examples\n\n## Choose a departure date\n\n```html\n<ki-date-picker label=\"Departure\" name=\"departure\" locale=\"en-GB\" required\n  help-text=\"Enter a date in DD/MM/YYYY format.\" min=\"2026-11-10\">\n</ki-date-picker>\n```\n\nTyping `20/11/2026` and pressing Enter emits\n`ki-change` with `{ \"value\": \"2026-11-20\" }`.\n\n## Apply a stay range\n\n```html\n<ki-date-picker label=\"Stay\" name=\"stay\" mode=\"range\" confirm\n  value=\"2026-11-12/2026-11-16\" locale=\"en-GB\"\n  min=\"2026-11-10\" max=\"2026-11-30\">\n</ki-date-picker>\n```\n\nPick two endpoints and activate Apply to save the range. The form receives\none `stay` entry with the date pair.\n"
+      },
+      "props": [
+        {
+          "name": "applyLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "apply-label",
+          "reflectToAttr": false,
+          "docs": "Localized label of the confirmation button that saves a complete draft.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Apply'"
+            }
+          ],
+          "default": "'Apply'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "cancel-label",
+          "reflectToAttr": false,
+          "docs": "Localized label of the confirmation button that discards a draft.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Cancel'"
+            }
+          ],
+          "default": "'Cancel'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "changeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "change-label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the trigger when a date is saved. Use {date} for the current selection.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Change date, {date}'"
+            }
+          ],
+          "default": "'Change date, {date}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "chooseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "choose-label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the calendar dialog and of the trigger when no date is saved.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Choose date'"
+            }
+          ],
+          "default": "'Choose date'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "confirm",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "confirm",
+          "reflectToAttr": true,
+          "docs": "Require Apply before saving picks made in the calendar.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disables the text entry and calendar button and excludes the field from form data.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Overrides the message shown when a date is missing, invalid or outside the bounds.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "firstDayOfWeek",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "first-day-of-week",
+          "reflectToAttr": true,
+          "docs": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "6"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "A format hint or explanation read with the field. It is replaced by a visible error.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "invalidDateLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "invalid-date-label",
+          "reflectToAttr": false,
+          "docs": "Localized fallback message for an impossible, incomplete or out-of-bounds date.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Enter a valid date within the allowed range.'"
+            }
+          ],
+          "default": "'Enter a valid date within the allowed range.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Visible text and accessible name of the date field. Provide a label for every field.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "locale",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "locale",
+          "reflectToAttr": true,
+          "docs": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": true,
+          "docs": "Latest selectable date, inclusive. Use YYYY-MM-DD.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "min",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min",
+          "reflectToAttr": true,
+          "docs": "Earliest selectable date, inclusive. Use YYYY-MM-DD.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "mode",
+          "type": "\"range\" | \"single\"",
+          "complexType": {
+            "original": "DatePickerMode",
+            "resolved": "\"range\" | \"single\"",
+            "references": {
+              "DatePickerMode": {
+                "location": "import",
+                "path": "./ki-date-picker.dates",
+                "id": "src/components/ki-date-picker/ki-date-picker.dates.ts::DatePickerMode",
+                "referenceLocation": "DatePickerMode"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "mode",
+          "reflectToAttr": true,
+          "docs": "Select one date or a range with a start and an end date.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'single'"
+            }
+          ],
+          "default": "'single'",
+          "values": [
+            {
+              "value": "range",
+              "type": "string"
+            },
+            {
+              "value": "single",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key. A range is submitted as a single value.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "nextMonthLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "next-month-label",
+          "reflectToAttr": false,
+          "docs": "Localized accessible name of the next-month button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Next month'"
+            }
+          ],
+          "default": "'Next month'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "previousMonthLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "previous-month-label",
+          "reflectToAttr": false,
+          "docs": "Localized accessible name of the previous-month button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Previous month'"
+            }
+          ],
+          "default": "'Previous month'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires a complete date or pair of dates for native form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "DatePickerChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "DatePickerChangeDetail",
+            "resolved": "DatePickerChangeDetail",
+            "references": {
+              "DatePickerChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-date-picker/ki-date-picker.tsx",
+                "id": "src/components/ki-date-picker/ki-date-picker.tsx::DatePickerChangeDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "day",
+          "docs": "Date button in the calendar grid."
+        },
+        {
+          "name": "error",
+          "docs": "Live constraint message replacing help when the field is invalid."
+        },
+        {
+          "name": "field",
+          "docs": "Enclosure of the text field and calendar button."
+        },
+        {
+          "name": "grid",
+          "docs": "Calendar grid with localized weekdays and date buttons."
+        },
+        {
+          "name": "help",
+          "docs": "Help text associated with the input."
+        },
+        {
+          "name": "input",
+          "docs": "Native text entry for a localized date or range."
+        },
+        {
+          "name": "label",
+          "docs": "Visible label and accessible name of the text field."
+        },
+        {
+          "name": "month",
+          "docs": "Live month and year heading."
+        },
+        {
+          "name": "popup",
+          "docs": "Anchored non-modal calendar dialog."
+        },
+        {
+          "name": "trigger",
+          "docs": "Button that opens and closes the calendar."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-date-picker": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
       "encapsulation": "shadow",
       "tag": "ki-dialog",
@@ -3680,7 +3953,7 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action."
         },
         {
           "name": "whenNotToUse",
@@ -3692,7 +3965,7 @@
         },
         {
           "name": "slot",
-          "text": "footer - Dialog actions. Dismiss using an invoker command or `close()`."
+          "text": "footer - Dialog actions; applications wire every action to `close()`."
         },
         {
           "name": "part",
@@ -3712,7 +3985,7 @@
         }
       ],
       "usage": {
-        "examples": "A modal confirmation. `heading` names the dialog and actions go in the `footer`\nslot. Each invoker uses the dialog's ID within the same document or shadow root.\n\n```html\n<ki-button commandfor=\"confirm-dialog\" command=\"show-modal\" tone=\"danger\">Delete draft</ki-button>\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"request-close\" autofocus>Cancel</ki-button>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"close\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\n`close` dismisses the dialog. `request-close` first gives the dialog a chance\nto cancel the request. After an accepted close command, the opening button\nregains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and\n`close()` remain available for programmatic control.\n"
+        "examples": "A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:\n\n```html\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" type=\"button\">Cancel</ki-button>\n  <ki-button slot=\"footer\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\nOpen it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):\n\n```html\n<ki-button type=\"button\" onclick=\"document.getElementById('confirm-dialog').show()\">\n  Delete draft\n</ki-button>\n```\n"
       },
       "props": [
         {
@@ -3817,7 +4090,7 @@
           },
           "signature": "close() => Promise<void>",
           "parameters": [],
-          "docs": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method or an invoker command.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
+          "docs": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
           "docsTags": []
         },
         {
@@ -3861,17 +4134,11 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
+          "docs": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
           "docsTags": []
         }
       ],
-      "listeners": [
-        {
-          "event": "command",
-          "capture": false,
-          "passive": false
-        }
-      ],
+      "listeners": [],
       "styles": [],
       "slots": [
         {
@@ -3880,7 +4147,7 @@
         },
         {
           "name": "footer",
-          "docs": "Dialog actions. Dismiss using an invoker command or `close()`."
+          "docs": "Dialog actions; applications wire every action to `close()`."
         }
       ],
       "parts": [
@@ -3981,1594 +4248,6 @@
           "docs": "The rule itself: thickness, color and end-cap radius."
         }
       ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-empty-state/ki-empty-state.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-empty-state",
-      "docs": "A short explanation and next step for an empty view.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states."
-        },
-        {
-          "name": "slot",
-          "text": "- Localized supporting text with a reason or recovery advice."
-        },
-        {
-          "name": "slot",
-          "text": "media - Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
-        },
-        {
-          "name": "slot",
-          "text": "actions - Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls."
-        },
-        {
-          "name": "part",
-          "text": "container - Centered layout for the illustration, message and actions."
-        },
-        {
-          "name": "part",
-          "text": "media - Decorative illustration or FeatureIcon tile."
-        },
-        {
-          "name": "part",
-          "text": "heading - Native heading at the selected document level."
-        },
-        {
-          "name": "part",
-          "text": "description - Wrapper for the default slot."
-        },
-        {
-          "name": "part",
-          "text": "actions - Wrapping row of consumer-supplied controls."
-        }
-      ],
-      "usage": {
-        "examples": "Use EmptyState when a list, table or first-run screen is empty. Name what is\nempty, explain why or what to do next, and offer at most one primary action.\n\n```ts\nimport '@kimen/elements/icons/folder-plus';\n```\n\n```html\n<ki-empty-state heading=\"No projects yet\" icon-name=\"folder-plus\" tone=\"primary-light\">\n  Projects hold your surfaces, catalogs and themes.\n  <ki-button slot=\"actions\" variant=\"primary\">New project</ki-button>\n</ki-empty-state>\n```\n\nUse `announce` for search or filter results. Insert the message when results\nbecome empty. If it remains visible for a subsequent search, update its heading\nand description.\n\n```html\n<ki-empty-state heading=\"No results for webhok\" heading-level=\"2\" size=\"sm\" announce>\n  Check the spelling or remove a filter.\n  <ki-button slot=\"actions\" variant=\"secondary\">Clear filters</ki-button>\n</ki-empty-state>\n```\n\nPut a decorative illustration in `media` to replace the icon.\n\n```html\n<ki-empty-state heading=\"Your inbox is clear\">\n  <img slot=\"media\" src=\"/images/empty-inbox.svg\" alt=\"\" width=\"120\" height=\"80\">\n  New messages will appear here.\n</ki-empty-state>\n```\n"
-      },
-      "props": [
-        {
-          "name": "announce",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "announce",
-          "reflectToAttr": false,
-          "docs": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "heading",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "heading",
-          "reflectToAttr": false,
-          "docs": "Localized heading that identifies the empty view. Blank text omits the heading.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "headingLevel",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "heading-level",
-          "reflectToAttr": false,
-          "docs": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "2"
-            },
-            {
-              "name": "maximum",
-              "text": "6"
-            },
-            {
-              "name": "default",
-              "text": "3"
-            }
-          ],
-          "default": "3",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "size",
-          "type": "\"md\" | \"sm\"",
-          "complexType": {
-            "original": "'sm' | 'md'",
-            "resolved": "\"md\" | \"sm\"",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "size",
-          "reflectToAttr": true,
-          "docs": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'md'"
-            }
-          ],
-          "default": "'md'",
-          "values": [
-            {
-              "value": "md",
-              "type": "string"
-            },
-            {
-              "value": "sm",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "tone",
-          "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\"",
-          "complexType": {
-            "original": "| 'neutral'\n    | 'primary'\n    | 'primary-light'\n    | 'info'\n    | 'success'\n    | 'warning'\n    | 'danger'",
-            "resolved": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\"",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "tone",
-          "reflectToAttr": false,
-          "docs": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'neutral'"
-            }
-          ],
-          "default": "'neutral'",
-          "values": [
-            {
-              "value": "danger",
-              "type": "string"
-            },
-            {
-              "value": "info",
-              "type": "string"
-            },
-            {
-              "value": "neutral",
-              "type": "string"
-            },
-            {
-              "value": "primary",
-              "type": "string"
-            },
-            {
-              "value": "primary-light",
-              "type": "string"
-            },
-            {
-              "value": "success",
-              "type": "string"
-            },
-            {
-              "value": "warning",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Localized supporting text with a reason or recovery advice."
-        },
-        {
-          "name": "actions",
-          "docs": "Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls."
-        },
-        {
-          "name": "media",
-          "docs": "Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
-        }
-      ],
-      "parts": [
-        {
-          "name": "actions",
-          "docs": "Wrapping row of consumer-supplied controls."
-        },
-        {
-          "name": "container",
-          "docs": "Centered layout for the illustration, message and actions."
-        },
-        {
-          "name": "description",
-          "docs": "Wrapper for the default slot."
-        },
-        {
-          "name": "heading",
-          "docs": "Native heading at the selected document level."
-        },
-        {
-          "name": "media",
-          "docs": "Decorative illustration or FeatureIcon tile."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-empty-state": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-fab/ki-fab.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-fab",
-      "docs": "The primary action of a screen, as an icon or an extended control with a visible label.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button."
-        },
-        {
-          "name": "slot",
-          "text": "icon - Decorative, noninteractive icon replacing the named glyph."
-        },
-        {
-          "name": "part",
-          "text": "control - The native button or link, including its surface and focus ring."
-        },
-        {
-          "name": "part",
-          "text": "icon - Wrapper for the decorative named or slotted glyph."
-        },
-        {
-          "name": "part",
-          "text": "label - Visible label of an extended FAB."
-        },
-        {
-          "name": "event",
-          "text": "click - Native activation click. The page or guarded renderer handles the declared action."
-        }
-      ],
-      "usage": {
-        "examples": "# Using ki-fab\n\nUse one FAB for the primary action of a screen. Give it a localized `label`\nin every layout. Import each Lucide glyph before mounting a FAB that names it.\nUse the native `click` event to call your application's action handler.\n\n```js\nimport '@kimen/elements/icons/pencil';\nimport { defineCustomElement } from '@kimen/elements/ki-fab';\n\ndefineCustomElement();\n\ndocument.querySelector('#compose')?.addEventListener('click', openComposer);\n```\n\n```html\n<ki-fab id=\"compose\" label=\"Compose\" icon-name=\"pencil\"></ki-fab>\n```\n\nUse `href` when activation takes the user to a destination. To supply a custom\nglyph, use the `icon` slot with decorative, noninteractive content.\n\n```html\n<ki-fab label=\"New project\" href=\"/projects/new\" variant=\"primary\" extended>\n  <svg slot=\"icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\" focusable=\"false\">\n    <path d=\"M5 12h14M12 5v14\"></path>\n  </svg>\n</ki-fab>\n```\n\nPlace a fixed FAB after the main content so its tab stop follows the page's\ncontrols. Reserve bottom space so the last item can scroll above it. Set\n`--ki-fab-mobile-nav-block-size` to the height of the fixed navigation when\npresent, excluding the safe area.\n\n```html\n<main class=\"compose-page\">\n  <!-- Page content -->\n</main>\n<ki-fab label=\"Compose\" icon-name=\"pencil\" position=\"fixed\" extended collapse-on-scroll></ki-fab>\n```\n\n```css\n:root {\n  --ki-fab-mobile-nav-block-size: var(--app-mobile-nav-height, 0px);\n  --compose-clearance: calc(\n    var(--ki-fab-size) + 2 * var(--ki-fab-offset) +\n      var(--ki-fab-mobile-nav-block-size) + env(safe-area-inset-bottom, 0px)\n  );\n  scroll-padding-block-end: var(--compose-clearance);\n}\n\n.compose-page {\n  padding-block-end: var(--compose-clearance);\n}\n```\n\nThe clearance above uses the default `md` size. Adjust it for a larger FAB\nand use the actual expanded height if the label wraps. The label hides as the\nuser scrolls down the document and reappears on upward scroll. The native\ncontrol retains its accessible name and focus.\n"
-      },
-      "props": [
-        {
-          "name": "collapseOnScroll",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "collapse-on-scroll",
-          "reflectToAttr": false,
-          "docs": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "extended",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "extended",
-          "reflectToAttr": false,
-          "docs": "Show the action label next to its icon.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "href",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "href",
-          "reflectToAttr": false,
-          "docs": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
-          "docsTags": [
-            {
-              "name": "format",
-              "text": "url"
-            }
-          ],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the action. Also the visible text in the extended state.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "position",
-          "type": "\"fixed\" | \"static\"",
-          "complexType": {
-            "original": "KiFabPosition",
-            "resolved": "\"fixed\" | \"static\"",
-            "references": {
-              "KiFabPosition": {
-                "location": "local",
-                "path": "src/components/ki-fab/ki-fab.tsx",
-                "id": "src/components/ki-fab/ki-fab.tsx::KiFabPosition"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "position",
-          "reflectToAttr": true,
-          "docs": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'static'"
-            }
-          ],
-          "default": "'static'",
-          "values": [
-            {
-              "value": "fixed",
-              "type": "string"
-            },
-            {
-              "value": "static",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "size",
-          "type": "\"lg\" | \"md\" | \"xl\"",
-          "complexType": {
-            "original": "KiFabSize",
-            "resolved": "\"lg\" | \"md\" | \"xl\"",
-            "references": {
-              "KiFabSize": {
-                "location": "local",
-                "path": "src/components/ki-fab/ki-fab.tsx",
-                "id": "src/components/ki-fab/ki-fab.tsx::KiFabSize"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "size",
-          "reflectToAttr": true,
-          "docs": "Square footprint when icon-only, and minimum size when extended.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'md'"
-            }
-          ],
-          "default": "'md'",
-          "values": [
-            {
-              "value": "lg",
-              "type": "string"
-            },
-            {
-              "value": "md",
-              "type": "string"
-            },
-            {
-              "value": "xl",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "variant",
-          "type": "\"primary\" | \"secondary\" | \"surface\"",
-          "complexType": {
-            "original": "KiFabVariant",
-            "resolved": "\"primary\" | \"secondary\" | \"surface\"",
-            "references": {
-              "KiFabVariant": {
-                "location": "local",
-                "path": "src/components/ki-fab/ki-fab.tsx",
-                "id": "src/components/ki-fab/ki-fab.tsx::KiFabVariant"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "variant",
-          "reflectToAttr": true,
-          "docs": "Surface and ink: strong primary, tinted secondary or raised surface.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'secondary'"
-            }
-          ],
-          "default": "'secondary'",
-          "values": [
-            {
-              "value": "primary",
-              "type": "string"
-            },
-            {
-              "value": "secondary",
-              "type": "string"
-            },
-            {
-              "value": "surface",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "icon",
-          "docs": "Decorative, noninteractive icon replacing the named glyph."
-        }
-      ],
-      "parts": [
-        {
-          "name": "control",
-          "docs": "The native button or link, including its surface and focus ring."
-        },
-        {
-          "name": "icon",
-          "docs": "Wrapper for the decorative named or slotted glyph."
-        },
-        {
-          "name": "label",
-          "docs": "Visible label of an extended FAB."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-fab": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-fab-menu/ki-fab-menu.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-fab-menu",
-      "docs": "An icon FAB that opens two to six related actions above its trigger.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "group related creation or screen actions behind one floating button."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "for a single primary action, long lists, or site navigation."
-        },
-        {
-          "name": "slot",
-          "text": "- Two to six direct ki-fab-menu-item children, in top-to-bottom order."
-        },
-        {
-          "name": "part",
-          "text": "trigger - The native floating button that opens and closes the menu."
-        },
-        {
-          "name": "part",
-          "text": "menu - The named action list above the trigger."
-        },
-        {
-          "name": "part",
-          "text": "scrim - The optional pointer-dismissible overlay behind the menu."
-        }
-      ],
-      "usage": {
-        "examples": "# Floating action menu examples\n\nRegister optional Lucide glyphs, then register the menu and its item together.\n\n```ts\nimport '@kimen/elements/icons/calendar';\nimport '@kimen/elements/icons/pencil';\nimport { defineCustomElement as defineItem } from '@kimen/elements/ki-fab-menu-item';\nimport { defineCustomElement as defineMenu } from '@kimen/elements/ki-fab-menu';\n\ndefineItem();\ndefineMenu();\n```\n\n```html\n<ki-fab-menu label=\"Create\" icon-name=\"plus\" position=\"fixed\">\n  <ki-fab-menu-item icon-name=\"pencil\" value=\"message\">New message</ki-fab-menu-item>\n  <ki-fab-menu-item icon-name=\"calendar\" href=\"/events/new\">New event</ki-fab-menu-item>\n</ki-fab-menu>\n```\n\nListen to `ki-select` on the menu to handle commands. Use the stable `value`\nin the event detail. Leave link navigation to the native anchor. In a catalog\nspec, bind separate action IDs to command items and supply a stable `value`\nfor each item. Keep link items unbound.\n\nUse two to six direct items. Fixed placement shares the FAB's safe-area\nand navigation clearance tokens. In static placement, leave space above\nthe trigger for the stack.\n"
-      },
-      "props": [
-        {
-          "name": "closeLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "close-label",
-          "reflectToAttr": false,
-          "docs": "Localized accessible name of the trigger when it becomes the close control.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Close menu'"
-            }
-          ],
-          "default": "'Close menu'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'plus'"
-            }
-          ],
-          "default": "'plus'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the closed trigger and of the menu.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "open",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "open",
-          "reflectToAttr": true,
-          "docs": "Whether the action stack is open. Reflected when the user opens or dismisses it.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "position",
-          "type": "\"fixed\" | \"static\"",
-          "complexType": {
-            "original": "KiFabPosition",
-            "resolved": "\"fixed\" | \"static\"",
-            "references": {
-              "KiFabPosition": {
-                "location": "import",
-                "path": "../ki-fab/ki-fab",
-                "id": "src/components/ki-fab/ki-fab.tsx::KiFabPosition",
-                "referenceLocation": "KiFabPosition"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "position",
-          "reflectToAttr": true,
-          "docs": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'static'"
-            }
-          ],
-          "default": "'static'",
-          "values": [
-            {
-              "value": "fixed",
-              "type": "string"
-            },
-            {
-              "value": "static",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "scrim",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "scrim",
-          "reflectToAttr": false,
-          "docs": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "true"
-            }
-          ],
-          "default": "true",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "variant",
-          "type": "\"primary\" | \"secondary\" | \"surface\"",
-          "complexType": {
-            "original": "KiFabVariant",
-            "resolved": "\"primary\" | \"secondary\" | \"surface\"",
-            "references": {
-              "KiFabVariant": {
-                "location": "import",
-                "path": "../ki-fab/ki-fab",
-                "id": "src/components/ki-fab/ki-fab.tsx::KiFabVariant",
-                "referenceLocation": "KiFabVariant"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "variant",
-          "reflectToAttr": true,
-          "docs": "Closed FAB surface. The open trigger always uses primary.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'secondary'"
-            }
-          ],
-          "default": "'secondary'",
-          "values": [
-            {
-              "value": "primary",
-              "type": "string"
-            },
-            {
-              "value": "secondary",
-              "type": "string"
-            },
-            {
-              "value": "surface",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-close",
-          "detail": "void",
-          "bubbles": true,
-          "complexType": {
-            "original": "void",
-            "resolved": "void",
-            "references": {}
-          },
-          "cancelable": true,
-          "composed": true,
-          "docs": "Emitted when the action stack closes.",
-          "docsTags": []
-        },
-        {
-          "event": "ki-open",
-          "detail": "void",
-          "bubbles": true,
-          "complexType": {
-            "original": "void",
-            "resolved": "void",
-            "references": {}
-          },
-          "cancelable": true,
-          "composed": true,
-          "docs": "Emitted when the action stack opens.",
-          "docsTags": []
-        },
-        {
-          "event": "ki-select",
-          "detail": "KiFabMenuSelectDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiFabMenuSelectDetail",
-            "resolved": "KiFabMenuSelectDetail",
-            "references": {
-              "KiFabMenuSelectDetail": {
-                "location": "local",
-                "path": "src/components/ki-fab-menu/ki-fab-menu.tsx",
-                "id": "src/components/ki-fab-menu/ki-fab-menu.tsx::KiFabMenuSelectDetail"
-              }
-            }
-          },
-          "cancelable": true,
-          "composed": true,
-          "docs": "Emits the selected item's value or its trimmed label. Native links retain their destination.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Two to six direct ki-fab-menu-item children, in top-to-bottom order."
-        }
-      ],
-      "parts": [
-        {
-          "name": "menu",
-          "docs": "The named action list above the trigger."
-        },
-        {
-          "name": "scrim",
-          "docs": "The optional pointer-dismissible overlay behind the menu."
-        },
-        {
-          "name": "trigger",
-          "docs": "The native floating button that opens and closes the menu."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-fab-menu": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-fab-menu-item/ki-fab-menu-item.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-fab-menu-item",
-      "docs": "A labeled command or native link within a floating action menu.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "as a direct child of ki-fab-menu, with a short, visible action label."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "for a standalone action, a form control, or a container of interactive content."
-        },
-        {
-          "name": "slot",
-          "text": "- The visible action label."
-        },
-        {
-          "name": "part",
-          "text": "control - The native action button or link."
-        },
-        {
-          "name": "part",
-          "text": "icon - The decorative glyph next to the label."
-        }
-      ],
-      "usage": {
-        "examples": "# Floating action menu item examples\n\nPlace commands and links directly inside a menu and supply visible labels.\n\n```html\n<ki-fab-menu label=\"Create\">\n  <ki-fab-menu-item value=\"message\">New message</ki-fab-menu-item>\n  <ki-fab-menu-item href=\"/events/new\">New event</ki-fab-menu-item>\n</ki-fab-menu>\n```\n\nThe command reports `message` through the parent menu's `ki-select` event.\nThe link reports `New event` and follows its native destination.\n"
-      },
-      "props": [
-        {
-          "name": "href",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "href",
-          "reflectToAttr": false,
-          "docs": "A nonempty destination renders a native link and preserves relative URL resolution.",
-          "docsTags": [
-            {
-              "name": "format",
-              "text": "url"
-            }
-          ],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Registered Lucide glyph. Import the desired icon before rendering.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Stable selection identifier. When omitted, the menu reports the trimmed visible label.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-select",
-          "detail": "KiFabMenuSelectDetail",
-          "bubbles": false,
-          "complexType": {
-            "original": "KiFabMenuSelectDetail",
-            "resolved": "KiFabMenuSelectDetail",
-            "references": {
-              "KiFabMenuSelectDetail": {
-                "location": "import",
-                "path": "../ki-fab-menu/ki-fab-menu",
-                "id": "src/components/ki-fab-menu/ki-fab-menu.tsx::KiFabMenuSelectDetail",
-                "referenceLocation": "KiFabMenuSelectDetail"
-              }
-            }
-          },
-          "cancelable": true,
-          "composed": false,
-          "docs": "Local command selection for a direct action binding. Links use native navigation.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "The visible action label."
-        }
-      ],
-      "parts": [
-        {
-          "name": "control",
-          "docs": "The native action button or link."
-        },
-        {
-          "name": "icon",
-          "docs": "The decorative glyph next to the label."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-fab-menu-item": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-format-date/ki-format-date.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-format-date",
-      "docs": "Displays an ISO date or timestamp in the reader's language.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "For raw date and timestamp values in tables, records and prose."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "For an editable date or an elapsed time that should change as the clock advances."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-format-date-font-family - Font family for the formatted text. Defaults to the body family."
-        }
-      ],
-      "usage": {
-        "examples": "# Format a date\n\nUse a calendar date when the day is the value, and send an offset or `Z` when\nthe value is a timestamp. Set `lang` on the surrounding document or section.\n\n```html\n<section lang=\"es-ES\">\n  <ki-format-date date=\"2026-11-19\" date-style=\"long\"></ki-format-date>\n  <ki-format-date\n    date=\"2026-11-19T23:41:00Z\"\n    date-style=\"long\"\n    time-style=\"short\"\n    time-zone=\"Europe/Madrid\"\n  ></ki-format-date>\n</section>\n```\n"
-      },
-      "props": [
-        {
-          "name": "date",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "date",
-          "reflectToAttr": false,
-          "docs": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "dateStyle",
-          "type": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined",
-          "complexType": {
-            "original": "'full' | 'long' | 'medium' | 'short'",
-            "resolved": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "date-style",
-          "reflectToAttr": false,
-          "docs": "Date detail. Defaults to medium when neither date style nor time style is supplied.",
-          "docsTags": [],
-          "values": [
-            {
-              "value": "full",
-              "type": "string"
-            },
-            {
-              "value": "long",
-              "type": "string"
-            },
-            {
-              "value": "medium",
-              "type": "string"
-            },
-            {
-              "value": "short",
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "locale",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "lang",
-          "reflectToAttr": true,
-          "docs": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "timeStyle",
-          "type": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined",
-          "complexType": {
-            "original": "'full' | 'long' | 'medium' | 'short'",
-            "resolved": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "time-style",
-          "reflectToAttr": false,
-          "docs": "Time detail. Omit to show the date alone.",
-          "docsTags": [],
-          "values": [
-            {
-              "value": "full",
-              "type": "string"
-            },
-            {
-              "value": "long",
-              "type": "string"
-            },
-            {
-              "value": "medium",
-              "type": "string"
-            },
-            {
-              "value": "short",
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "timeZone",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "time-zone",
-          "reflectToAttr": false,
-          "docs": "IANA time zone for a timestamp. A calendar date keeps its day in every zone.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [],
-      "parts": [],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-format-number/ki-format-number.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-format-number",
-      "docs": "Displays a raw number using local number conventions and tabular figures.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "For numeric data, currency amounts, ratios and measurements in content."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "For numeric input or values that already include localized formatting."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-format-number-font-family - Font family for the formatted text. Defaults to the body family."
-        }
-      ],
-      "usage": {
-        "examples": "# Format a number\n\nPass raw numbers and let the nearest `lang` declaration select the separators,\nspacing and symbols. A percent takes a ratio.\n\n```html\n<section lang=\"es-ES\">\n  <ki-format-number value=\"1284.5\"></ki-format-number>\n  <ki-format-number value=\"49\" currency=\"EUR\"></ki-format-number>\n  <ki-format-number value=\"0.496\" format-style=\"percent\" maximum-fraction-digits=\"1\"></ki-format-number>\n  <ki-format-number value=\"23\" format-style=\"unit\" unit=\"celsius\"></ki-format-number>\n  <ki-format-number value=\"59320\" notation=\"compact\"></ki-format-number>\n</section>\n```\n"
-      },
-      "props": [
-        {
-          "name": "currency",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "currency",
-          "reflectToAttr": false,
-          "docs": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "formatStyle",
-          "type": "\"decimal\" | \"percent\" | \"unit\" | undefined",
-          "complexType": {
-            "original": "'decimal' | 'percent' | 'unit'",
-            "resolved": "\"decimal\" | \"percent\" | \"unit\" | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "format-style",
-          "reflectToAttr": false,
-          "docs": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.",
-          "docsTags": [],
-          "values": [
-            {
-              "value": "decimal",
-              "type": "string"
-            },
-            {
-              "value": "percent",
-              "type": "string"
-            },
-            {
-              "value": "unit",
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "maximumFractionDigits",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "maximum-fraction-digits",
-          "reflectToAttr": false,
-          "docs": "Maximum number of fraction digits.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "0"
-            }
-          ],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "minimumFractionDigits",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "minimum-fraction-digits",
-          "reflectToAttr": false,
-          "docs": "Minimum number of fraction digits.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "0"
-            }
-          ],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "notation",
-          "type": "\"compact\" | undefined",
-          "complexType": {
-            "original": "'compact'",
-            "resolved": "\"compact\" | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "notation",
-          "reflectToAttr": false,
-          "docs": "Use compact notation for abbreviated large numbers. Omit for standard notation.",
-          "docsTags": [],
-          "values": [
-            {
-              "value": "compact",
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "unit",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "unit",
-          "reflectToAttr": false,
-          "docs": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\".",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [],
-      "parts": [],
       "states": [],
       "dependents": [],
       "dependencies": [],
@@ -5977,28 +4656,12 @@
       "parts": [],
       "states": [],
       "dependents": [
-        "ki-copy-button",
-        "ki-empty-state",
-        "ki-fab",
-        "ki-fab-menu",
-        "ki-fab-menu-item",
+        "ki-date-picker",
         "ki-stat"
       ],
       "dependencies": [],
       "dependencyGraph": {
-        "ki-copy-button": [
-          "ki-icon"
-        ],
-        "ki-empty-state": [
-          "ki-icon"
-        ],
-        "ki-fab": [
-          "ki-icon"
-        ],
-        "ki-fab-menu": [
-          "ki-icon"
-        ],
-        "ki-fab-menu-item": [
+        "ki-date-picker": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -6042,87 +4705,9 @@
         }
       ],
       "usage": {
-        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
+        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
       },
       "props": [
-        {
-          "name": "command",
-          "type": "\"close\" | \"request-close\" | \"show-modal\" | undefined",
-          "complexType": {
-            "original": "KiDialogCommand",
-            "resolved": "\"close\" | \"request-close\" | \"show-modal\" | undefined",
-            "references": {
-              "KiDialogCommand": {
-                "location": "import",
-                "path": "../../utils/dialog-invoker",
-                "id": "src/utils/dialog-invoker.ts::KiDialogCommand",
-                "referenceLocation": "KiDialogCommand"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "command",
-          "reflectToAttr": true,
-          "docs": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
-          "values": [
-            {
-              "value": "close",
-              "type": "string"
-            },
-            {
-              "value": "request-close",
-              "type": "string"
-            },
-            {
-              "value": "show-modal",
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "commandfor",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "commandfor",
-          "reflectToAttr": true,
-          "docs": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
         {
           "name": "disabled",
           "type": "boolean",
@@ -9689,161 +8274,6 @@
           "docs": "The `label-hint` text after the group label text, inside the label\nand part of the radiogroup's accessible name; rendered only while a hint is set."
         }
       ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-relative-time/ki-relative-time.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-relative-time",
-      "docs": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "For timestamps whose distance from the present matters, such as timeline entries or recent changes."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "For an interactive countdown or a date that should always show an absolute value."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-relative-time-font-family - Font family for the formatted text. Defaults to the body family."
-        }
-      ],
-      "usage": {
-        "examples": "# Format a relative timestamp\n\nUse `sync` to update the visible wording as time passes. A threshold of\n86,400 seconds switches to the formatted timestamp at one day's distance.\nAssistive technology and the tooltip expose the absolute timestamp throughout.\n\n```html\n<ki-relative-time date=\"2026-11-19T08:41:00Z\" sync threshold=\"86400\"></ki-relative-time>\n```\n"
-      },
-      "props": [
-        {
-          "name": "date",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "date",
-          "reflectToAttr": false,
-          "docs": "ISO calendar date or date-time. A timestamp without an offset uses local time.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "numeric",
-          "type": "\"always\" | \"auto\"",
-          "complexType": {
-            "original": "'auto' | 'always'",
-            "resolved": "\"always\" | \"auto\"",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "numeric",
-          "reflectToAttr": false,
-          "docs": "Auto can show words such as yesterday. Always uses a number.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'auto'"
-            }
-          ],
-          "default": "'auto'",
-          "values": [
-            {
-              "value": "always",
-              "type": "string"
-            },
-            {
-              "value": "auto",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "sync",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "sync",
-          "reflectToAttr": false,
-          "docs": "Refresh the visible wording as the clock crosses a formatting boundary.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "threshold",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "threshold",
-          "reflectToAttr": false,
-          "docs": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "0"
-            }
-          ],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [],
-      "parts": [],
       "states": [],
       "dependents": [],
       "dependencies": [],
@@ -13998,11 +12428,6 @@
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
     },
-    "src/utils/dialog-invoker.ts::KiDialogCommand": {
-      "declaration": "export type KiDialogCommand = 'show-modal' | 'close' | 'request-close';",
-      "docstring": "",
-      "path": "src/utils/dialog-invoker.ts"
-    },
     "src/components/ki-checkbox/ki-checkbox.tsx::KiCheckboxSize": {
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
       "docstring": "",
@@ -14033,18 +12458,23 @@
       "docstring": "",
       "path": "src/components/ki-chip-group/ki-chip-group.tsx"
     },
-    "src/components/ki-copy-button/ki-copy-button.tsx::KiCopyButtonVariant": {
-      "declaration": "export type KiCopyButtonVariant = Exclude<KiButtonVariant, 'tertiary'>;",
-      "docstring": "",
-      "path": "src/components/ki-copy-button/ki-copy-button.tsx"
-    },
     "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
       "docstring": "",
       "path": "src/components/ki-counter/ki-counter.tsx"
     },
+    "src/components/ki-date-picker/ki-date-picker.dates.ts::DatePickerMode": {
+      "declaration": "export type DatePickerMode = 'single' | 'range';",
+      "docstring": "",
+      "path": "src/components/ki-date-picker/ki-date-picker.dates.ts"
+    },
+    "src/components/ki-date-picker/ki-date-picker.tsx::DatePickerChangeDetail": {
+      "declaration": "export interface DatePickerChangeDetail {\n  value: string;\n}",
+      "docstring": "ISO date or date range committed by the user.",
+      "path": "src/components/ki-date-picker/ki-date-picker.tsx"
+    },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
-      "declaration": "export interface KiDialogCloseDetail {\n  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. */\n  reason: KiDialogCloseReason;\n}",
+      "declaration": "export interface KiDialogCloseDetail {\n  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */\n  reason: KiDialogCloseReason;\n}",
       "docstring": "Event payload for the post-close `ki-close` notification.",
       "path": "src/components/ki-dialog/ki-dialog.tsx"
     },
@@ -14052,36 +12482,6 @@
       "declaration": "export type KiDividerOrientation = 'horizontal' | 'vertical';",
       "docstring": "",
       "path": "src/components/ki-divider/ki-divider.tsx"
-    },
-    "src/components/ki-fab/ki-fab.tsx::KiFabSize": {
-      "declaration": "export type KiFabSize = 'md' | 'lg' | 'xl';",
-      "docstring": "",
-      "path": "src/components/ki-fab/ki-fab.tsx"
-    },
-    "src/components/ki-fab/ki-fab.tsx::KiFabVariant": {
-      "declaration": "export type KiFabVariant = 'primary' | 'secondary' | 'surface';",
-      "docstring": "",
-      "path": "src/components/ki-fab/ki-fab.tsx"
-    },
-    "src/components/ki-fab/ki-fab.tsx::KiFabPosition": {
-      "declaration": "export type KiFabPosition = 'static' | 'fixed';",
-      "docstring": "",
-      "path": "src/components/ki-fab/ki-fab.tsx"
-    },
-    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemType": {
-      "declaration": "export type KiMenuItemType = 'item' | 'checkbox' | 'radio';",
-      "docstring": "",
-      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
-    },
-    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemTone": {
-      "declaration": "export type KiMenuItemTone = 'neutral' | 'danger';",
-      "docstring": "",
-      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
-    },
-    "src/components/ki-fab-menu/ki-fab-menu.tsx::KiFabMenuSelectDetail": {
-      "declaration": "export interface KiFabMenuSelectDetail {\n  value: string;\n}",
-      "docstring": "",
-      "path": "src/components/ki-fab-menu/ki-fab-menu.tsx"
     },
     "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
       "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",
@@ -14147,6 +12547,16 @@
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
+    },
+    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemType": {
+      "declaration": "export type KiMenuItemType = 'item' | 'checkbox' | 'radio';",
+      "docstring": "",
+      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
+    },
+    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemTone": {
+      "declaration": "export type KiMenuItemTone = 'neutral' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
     },
     "src/components/ki-menu/ki-menu.tsx::KiMenuPlacement": {
       "declaration": "export type KiMenuPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';",

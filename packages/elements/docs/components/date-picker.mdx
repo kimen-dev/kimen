@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Forms/DatePicker" />
+
+# DatePicker
+
+`<ki-date-picker>` selects a date or range through a localized text field and
+an anchored calendar. Use it for bookings and deadlines where weekdays matter.
+
+```html
+<ki-date-picker label="Stay" name="stay" mode="range" confirm locale="en-GB"
+  value="2026-11-12/2026-11-16">
+</ki-date-picker>
+```
+
+Listen for `ki-change` and read `event.detail.value` for the committed ISO
+date or range. The named field also submits that value with its form.
+
+[Component workshop and customization](?path=/docs/docs-components-ki-date-picker--docs)

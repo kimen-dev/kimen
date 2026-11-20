@@ -1301,22 +1301,6 @@
           "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
           "attributes": [
             {
-              "name": "command",
-              "fieldName": "command",
-              "type": {
-                "text": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
-              },
-              "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
-            },
-            {
-              "name": "commandfor",
-              "fieldName": "commandfor",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
-            },
-            {
               "name": "disabled",
               "fieldName": "disabled",
               "type": {
@@ -1376,7 +1360,7 @@
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
               "default": "'submit'",
-              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
             },
             {
               "name": "value",
@@ -1400,28 +1384,6 @@
             }
           ],
           "members": [
-            {
-              "kind": "field",
-              "name": "command",
-              "privacy": "public",
-              "type": {
-                "text": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
-              },
-              "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
-              "attribute": "command",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "commandfor",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
-              "attribute": "commandfor",
-              "reflects": true
-            },
             {
               "kind": "field",
               "name": "disabled",
@@ -1501,7 +1463,7 @@
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
               "default": "'submit'",
-              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
               "attribute": "type",
               "reflects": true
             },
@@ -4314,1023 +4276,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-copy-button.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiCopyButton",
-          "customElement": true,
-          "tagName": "ki-copy-button",
-          "description": "Copies text to the clipboard and confirms the result in the same button.",
-          "whenToUse": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root.",
-          "whenNotToUse": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions.",
-          "attributes": [
-            {
-              "name": "copied-label",
-              "fieldName": "copiedLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Copied'",
-              "description": "Polite announcement after a successful write. Override for localized interfaces."
-            },
-            {
-              "name": "copy-error-label",
-              "fieldName": "copyErrorLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"Couldn't copy\"",
-              "description": "Polite announcement after a failed write or missing source. Override for localized interfaces."
-            },
-            {
-              "name": "feedback-duration",
-              "fieldName": "feedbackDuration",
-              "type": {
-                "text": "number"
-              },
-              "default": "1500",
-              "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
-              "minimum": 0
-            },
-            {
-              "name": "from",
-              "fieldName": "from",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Copy'",
-              "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present."
-            },
-            {
-              "name": "size",
-              "fieldName": "size",
-              "type": {
-                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
-              },
-              "default": "'md'",
-              "description": "Token-backed button size. Match the size of adjacent controls."
-            },
-            {
-              "name": "value",
-              "fieldName": "value",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly."
-            },
-            {
-              "name": "variant",
-              "fieldName": "variant",
-              "type": {
-                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\""
-              },
-              "default": "'ghost'",
-              "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "copiedLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Copied'",
-              "description": "Polite announcement after a successful write. Override for localized interfaces.",
-              "attribute": "copied-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "copyErrorLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"Couldn't copy\"",
-              "description": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
-              "attribute": "copy-error-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "feedbackDuration",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "1500",
-              "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
-              "attribute": "feedback-duration",
-              "reflects": false,
-              "minimum": 0
-            },
-            {
-              "kind": "field",
-              "name": "from",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
-              "attribute": "from",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Copy'",
-              "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
-              "attribute": "label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "privacy": "public",
-              "type": {
-                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
-              },
-              "default": "'md'",
-              "description": "Token-backed button size. Match the size of adjacent controls.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly.",
-              "attribute": "value",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "privacy": "public",
-              "type": {
-                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\""
-              },
-              "default": "'ghost'",
-              "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
-              "attribute": "variant",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-copy",
-              "type": {
-                "text": "CustomEvent<{ value: string }>"
-              },
-              "description": "Fired after a successful clipboard write. The detail carries the exact text copied."
-            },
-            {
-              "name": "ki-copy-error",
-              "type": {
-                "text": "CustomEvent<void>"
-              },
-              "description": "Fired when the source cannot be read or clipboard writing is unavailable or fails."
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "button",
-              "description": "Native copy control with keyboard and pointer activation."
-            },
-            {
-              "name": "icon",
-              "description": "Fixed-size decorative feedback glyph box inside the button."
-            },
-            {
-              "name": "label",
-              "description": "Wrapper around the visible slotted label."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-button-backdrop-filter",
-              "description": "Complete backdrop filter for glass button and icon-button variants."
-            },
-            {
-              "name": "--ki-button-border-width",
-              "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
-            },
-            {
-              "name": "--ki-button-focus-ring-color",
-              "description": "color used by the button component for focus ring color."
-            },
-            {
-              "name": "--ki-button-focus-ring-offset",
-              "description": "dimension used by the button component for focus ring offset."
-            },
-            {
-              "name": "--ki-button-focus-ring-shadow",
-              "description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring)."
-            },
-            {
-              "name": "--ki-button-focus-ring-width",
-              "description": "dimension used by the button component for focus ring width."
-            },
-            {
-              "name": "--ki-button-font-family",
-              "description": "font family used by the button component for font family."
-            },
-            {
-              "name": "--ki-button-font-weight",
-              "description": "font weight used by the button component for font weight."
-            },
-            {
-              "name": "--ki-button-ghost-danger-hover-bg",
-              "description": "color used by the button component for ghost danger hover background."
-            },
-            {
-              "name": "--ki-button-ghost-danger-hover-border",
-              "description": "color used by the button component for ghost danger hover border."
-            },
-            {
-              "name": "--ki-button-ghost-danger-hover-fg",
-              "description": "color used by the button component for ghost danger hover foreground."
-            },
-            {
-              "name": "--ki-button-ghost-danger-rest-bg",
-              "description": "color used by the button component for ghost danger rest background."
-            },
-            {
-              "name": "--ki-button-ghost-danger-rest-border",
-              "description": "color used by the button component for ghost danger rest border."
-            },
-            {
-              "name": "--ki-button-ghost-danger-rest-fg",
-              "description": "color used by the button component for ghost danger rest foreground."
-            },
-            {
-              "name": "--ki-button-ghost-disabled-shadow",
-              "description": "value used by the button component for ghost disabled shadow."
-            },
-            {
-              "name": "--ki-button-ghost-hover-shadow",
-              "description": "value used by the button component for ghost hover shadow."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-disabled-bg",
-              "description": "color used by the button component for ghost neutral disabled background."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-disabled-border",
-              "description": "color used by the button component for ghost neutral disabled border."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-disabled-fg",
-              "description": "color used by the button component for ghost neutral disabled foreground."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-hover-bg",
-              "description": "color used by the button component for ghost neutral hover background."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-hover-border",
-              "description": "color used by the button component for ghost neutral hover border."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-hover-fg",
-              "description": "color used by the button component for ghost neutral hover foreground."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-rest-bg",
-              "description": "color used by the button component for ghost neutral rest background."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-rest-border",
-              "description": "color used by the button component for ghost neutral rest border."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-rest-fg",
-              "description": "color used by the button component for ghost neutral rest foreground."
-            },
-            {
-              "name": "--ki-button-ghost-rest-shadow",
-              "description": "value used by the button component for ghost rest shadow."
-            },
-            {
-              "name": "--ki-button-ghost-success-hover-bg",
-              "description": "color used by the button component for ghost success hover background."
-            },
-            {
-              "name": "--ki-button-ghost-success-hover-border",
-              "description": "color used by the button component for ghost success hover border."
-            },
-            {
-              "name": "--ki-button-ghost-success-hover-fg",
-              "description": "color used by the button component for ghost success hover foreground."
-            },
-            {
-              "name": "--ki-button-ghost-success-rest-bg",
-              "description": "color used by the button component for ghost success rest background."
-            },
-            {
-              "name": "--ki-button-ghost-success-rest-border",
-              "description": "color used by the button component for ghost success rest border."
-            },
-            {
-              "name": "--ki-button-ghost-success-rest-fg",
-              "description": "color used by the button component for ghost success rest foreground."
-            },
-            {
-              "name": "--ki-button-label-padding-inline",
-              "description": "dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance)."
-            },
-            {
-              "name": "--ki-button-lg-font-size",
-              "description": "dimension used by the button component for lg font size."
-            },
-            {
-              "name": "--ki-button-lg-gap",
-              "description": "dimension used by the button component for lg gap."
-            },
-            {
-              "name": "--ki-button-lg-height",
-              "description": "dimension used by the button component for lg height."
-            },
-            {
-              "name": "--ki-button-lg-icon-size",
-              "description": "dimension used by the button component for lg icon size."
-            },
-            {
-              "name": "--ki-button-lg-line-height",
-              "description": "dimension used by the button component for lg line height."
-            },
-            {
-              "name": "--ki-button-lg-min-target",
-              "description": "dimension used by the button component for lg min target."
-            },
-            {
-              "name": "--ki-button-lg-padding-inline",
-              "description": "dimension used by the button component for lg padding inline."
-            },
-            {
-              "name": "--ki-button-lg-radius",
-              "description": "dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns)."
-            },
-            {
-              "name": "--ki-button-lg-spinner-size",
-              "description": "dimension used by the button component for the lg loading spinner box (20px, the lg icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
-            },
-            {
-              "name": "--ki-button-md-font-size",
-              "description": "dimension used by the button component for md font size."
-            },
-            {
-              "name": "--ki-button-md-gap",
-              "description": "dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px)."
-            },
-            {
-              "name": "--ki-button-md-height",
-              "description": "dimension used by the button component for md height."
-            },
-            {
-              "name": "--ki-button-md-icon-size",
-              "description": "dimension used by the button component for md icon size."
-            },
-            {
-              "name": "--ki-button-md-line-height",
-              "description": "dimension used by the button component for md line height."
-            },
-            {
-              "name": "--ki-button-md-min-target",
-              "description": "dimension used by the button component for md min target."
-            },
-            {
-              "name": "--ki-button-md-padding-inline",
-              "description": "dimension used by the button component for md padding inline."
-            },
-            {
-              "name": "--ki-button-md-radius",
-              "description": "dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns)."
-            },
-            {
-              "name": "--ki-button-md-spinner-size",
-              "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
-            },
-            {
-              "name": "--ki-button-padding-block",
-              "description": "dimension used by the button component for padding block (MarsUI: 4px in every size)."
-            },
-            {
-              "name": "--ki-button-primary-active-overlay",
-              "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
-            },
-            {
-              "name": "--ki-button-primary-danger-hover-bg",
-              "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
-            },
-            {
-              "name": "--ki-button-primary-danger-hover-border",
-              "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-button-primary-danger-hover-fg",
-              "description": "color used by the button component for primary danger hover foreground."
-            },
-            {
-              "name": "--ki-button-primary-danger-rest-bg",
-              "description": "color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
-            },
-            {
-              "name": "--ki-button-primary-danger-rest-border",
-              "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-button-primary-danger-rest-fg",
-              "description": "color used by the button component for primary danger rest foreground."
-            },
-            {
-              "name": "--ki-button-primary-disabled-shadow",
-              "description": "value used by the button component for primary disabled shadow."
-            },
-            {
-              "name": "--ki-button-primary-hover-overlay",
-              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
-            },
-            {
-              "name": "--ki-button-primary-hover-shadow",
-              "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover)."
-            },
-            {
-              "name": "--ki-button-primary-neutral-disabled-bg",
-              "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification)."
-            },
-            {
-              "name": "--ki-button-primary-neutral-disabled-border",
-              "description": "color used by the button component for primary neutral disabled border."
-            },
-            {
-              "name": "--ki-button-primary-neutral-disabled-fg",
-              "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification)."
-            },
-            {
-              "name": "--ki-button-primary-neutral-hover-bg",
-              "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
-            },
-            {
-              "name": "--ki-button-primary-neutral-hover-border",
-              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-button-primary-neutral-hover-fg",
-              "description": "color used by the button component for primary neutral hover foreground."
-            },
-            {
-              "name": "--ki-button-primary-neutral-rest-bg",
-              "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500)."
-            },
-            {
-              "name": "--ki-button-primary-neutral-rest-border",
-              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-button-primary-neutral-rest-fg",
-              "description": "color used by the button component for primary neutral rest foreground."
-            },
-            {
-              "name": "--ki-button-primary-rest-border-bottom",
-              "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
-            },
-            {
-              "name": "--ki-button-primary-rest-shadow",
-              "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
-            },
-            {
-              "name": "--ki-button-primary-success-hover-bg",
-              "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
-            },
-            {
-              "name": "--ki-button-primary-success-hover-border",
-              "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-button-primary-success-hover-fg",
-              "description": "color used by the button component for primary success hover foreground."
-            },
-            {
-              "name": "--ki-button-primary-success-rest-bg",
-              "description": "color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
-            },
-            {
-              "name": "--ki-button-primary-success-rest-border",
-              "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-button-primary-success-rest-fg",
-              "description": "color used by the button component for primary success rest foreground."
-            },
-            {
-              "name": "--ki-button-quaternary-danger-hover-bg",
-              "description": "color used by the button component for quaternary danger hover background."
-            },
-            {
-              "name": "--ki-button-quaternary-danger-hover-border",
-              "description": "color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-button-quaternary-danger-hover-fg",
-              "description": "color used by the button component for quaternary danger hover foreground."
-            },
-            {
-              "name": "--ki-button-quaternary-danger-rest-bg",
-              "description": "color used by the button component for quaternary danger rest background."
-            },
-            {
-              "name": "--ki-button-quaternary-danger-rest-border",
-              "description": "color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-button-quaternary-danger-rest-fg",
-              "description": "color used by the button component for quaternary danger rest foreground."
-            },
-            {
-              "name": "--ki-button-quaternary-disabled-shadow",
-              "description": "value used by the button component for quaternary disabled shadow."
-            },
-            {
-              "name": "--ki-button-quaternary-hover-shadow",
-              "description": "value used by the button component for quaternary hover shadow."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-disabled-bg",
-              "description": "color used by the button component for quaternary neutral disabled background."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-disabled-border",
-              "description": "color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-disabled-fg",
-              "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-hover-bg",
-              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-hover-border",
-              "description": "color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-hover-fg",
-              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-rest-bg",
-              "description": "color used by the button component for quaternary neutral rest background."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-rest-border",
-              "description": "color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-button-quaternary-neutral-rest-fg",
-              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
-            },
-            {
-              "name": "--ki-button-quaternary-rest-shadow",
-              "description": "value used by the button component for quaternary rest shadow."
-            },
-            {
-              "name": "--ki-button-quaternary-success-hover-bg",
-              "description": "color used by the button component for quaternary success hover background."
-            },
-            {
-              "name": "--ki-button-quaternary-success-hover-border",
-              "description": "color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-button-quaternary-success-hover-fg",
-              "description": "color used by the button component for quaternary success hover foreground."
-            },
-            {
-              "name": "--ki-button-quaternary-success-rest-bg",
-              "description": "color used by the button component for quaternary success rest background."
-            },
-            {
-              "name": "--ki-button-quaternary-success-rest-border",
-              "description": "color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-button-quaternary-success-rest-fg",
-              "description": "color used by the button component for quaternary success rest foreground."
-            },
-            {
-              "name": "--ki-button-secondary-active-overlay",
-              "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
-            },
-            {
-              "name": "--ki-button-secondary-danger-hover-bg",
-              "description": "color used by the button component for secondary danger hover background."
-            },
-            {
-              "name": "--ki-button-secondary-danger-hover-border",
-              "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
-            },
-            {
-              "name": "--ki-button-secondary-danger-hover-fg",
-              "description": "color used by the button component for secondary danger hover foreground."
-            },
-            {
-              "name": "--ki-button-secondary-danger-rest-bg",
-              "description": "color used by the button component for secondary danger rest background."
-            },
-            {
-              "name": "--ki-button-secondary-danger-rest-border",
-              "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
-            },
-            {
-              "name": "--ki-button-secondary-danger-rest-fg",
-              "description": "color used by the button component for secondary danger rest foreground."
-            },
-            {
-              "name": "--ki-button-secondary-disabled-shadow",
-              "description": "value used by the button component for secondary disabled shadow."
-            },
-            {
-              "name": "--ki-button-secondary-hover-overlay",
-              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
-            },
-            {
-              "name": "--ki-button-secondary-hover-shadow",
-              "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-disabled-bg",
-              "description": "color used by the button component for secondary neutral disabled background."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-disabled-border",
-              "description": "color used by the button component for secondary neutral disabled border."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-disabled-fg",
-              "description": "color used by the button component for secondary neutral disabled foreground."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-hover-bg",
-              "description": "color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay)."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-hover-border",
-              "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-hover-fg",
-              "description": "color used by the button component for secondary neutral hover foreground (MarsUI text/high_em)."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-rest-bg",
-              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-rest-border",
-              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-button-secondary-neutral-rest-fg",
-              "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em)."
-            },
-            {
-              "name": "--ki-button-secondary-rest-border-bottom",
-              "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
-            },
-            {
-              "name": "--ki-button-secondary-rest-shadow",
-              "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
-            },
-            {
-              "name": "--ki-button-secondary-success-hover-bg",
-              "description": "color used by the button component for secondary success hover background."
-            },
-            {
-              "name": "--ki-button-secondary-success-hover-border",
-              "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
-            },
-            {
-              "name": "--ki-button-secondary-success-hover-fg",
-              "description": "color used by the button component for secondary success hover foreground."
-            },
-            {
-              "name": "--ki-button-secondary-success-rest-bg",
-              "description": "color used by the button component for secondary success rest background."
-            },
-            {
-              "name": "--ki-button-secondary-success-rest-border",
-              "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
-            },
-            {
-              "name": "--ki-button-secondary-success-rest-fg",
-              "description": "color used by the button component for secondary success rest foreground."
-            },
-            {
-              "name": "--ki-button-sm-font-size",
-              "description": "dimension used by the button component for sm font size."
-            },
-            {
-              "name": "--ki-button-sm-gap",
-              "description": "dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text)."
-            },
-            {
-              "name": "--ki-button-sm-height",
-              "description": "dimension used by the button component for sm height."
-            },
-            {
-              "name": "--ki-button-sm-icon-size",
-              "description": "dimension used by the button component for sm icon size."
-            },
-            {
-              "name": "--ki-button-sm-line-height",
-              "description": "dimension used by the button component for sm line height."
-            },
-            {
-              "name": "--ki-button-sm-min-target",
-              "description": "dimension used by the button component for sm min target."
-            },
-            {
-              "name": "--ki-button-sm-padding-inline",
-              "description": "dimension used by the button component for sm padding inline."
-            },
-            {
-              "name": "--ki-button-sm-radius",
-              "description": "dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns)."
-            },
-            {
-              "name": "--ki-button-sm-spinner-size",
-              "description": "dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
-            },
-            {
-              "name": "--ki-button-spinner-duration",
-              "description": "duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference."
-            },
-            {
-              "name": "--ki-button-spinner-stroke-width",
-              "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
-            },
-            {
-              "name": "--ki-button-tertiary-danger-hover-bg",
-              "description": "Tertiary alias of the secondary danger hover background."
-            },
-            {
-              "name": "--ki-button-tertiary-danger-hover-border",
-              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-button-tertiary-danger-hover-fg",
-              "description": "color used by the button component for tertiary danger hover foreground."
-            },
-            {
-              "name": "--ki-button-tertiary-danger-rest-bg",
-              "description": "Tertiary alias of the secondary danger rest background."
-            },
-            {
-              "name": "--ki-button-tertiary-danger-rest-border",
-              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-button-tertiary-danger-rest-fg",
-              "description": "color used by the button component for tertiary danger rest foreground."
-            },
-            {
-              "name": "--ki-button-tertiary-disabled-shadow",
-              "description": "value used by the button component for tertiary disabled shadow."
-            },
-            {
-              "name": "--ki-button-tertiary-hover-overlay",
-              "description": "Hover overlay for neutral tertiary buttons, shared with secondary by default."
-            },
-            {
-              "name": "--ki-button-tertiary-hover-shadow",
-              "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-disabled-bg",
-              "description": "color used by the button component for tertiary neutral disabled background."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-disabled-border",
-              "description": "color used by the button component for tertiary neutral disabled border."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-disabled-fg",
-              "description": "color used by the button component for tertiary neutral disabled foreground."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-hover-bg",
-              "description": "Tertiary alias of the secondary neutral hover background."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-hover-border",
-              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-hover-fg",
-              "description": "Tertiary alias of the secondary neutral hover foreground."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-rest-bg",
-              "description": "Tertiary alias of the secondary neutral rest background."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-rest-border",
-              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-button-tertiary-neutral-rest-fg",
-              "description": "Tertiary alias of the secondary neutral rest foreground."
-            },
-            {
-              "name": "--ki-button-tertiary-rest-border-bottom",
-              "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
-            },
-            {
-              "name": "--ki-button-tertiary-rest-shadow",
-              "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
-            },
-            {
-              "name": "--ki-button-tertiary-success-hover-bg",
-              "description": "Tertiary alias of the secondary success hover background."
-            },
-            {
-              "name": "--ki-button-tertiary-success-hover-border",
-              "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-button-tertiary-success-hover-fg",
-              "description": "color used by the button component for tertiary success hover foreground."
-            },
-            {
-              "name": "--ki-button-tertiary-success-rest-bg",
-              "description": "Tertiary alias of the secondary success rest background."
-            },
-            {
-              "name": "--ki-button-tertiary-success-rest-border",
-              "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-button-tertiary-success-rest-fg",
-              "description": "color used by the button component for tertiary success rest foreground."
-            },
-            {
-              "name": "--ki-button-xl-font-size",
-              "description": "dimension used by the button component for xl font size."
-            },
-            {
-              "name": "--ki-button-xl-gap",
-              "description": "dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px)."
-            },
-            {
-              "name": "--ki-button-xl-height",
-              "description": "dimension used by the button component for xl height."
-            },
-            {
-              "name": "--ki-button-xl-icon-size",
-              "description": "dimension used by the button component for xl icon size."
-            },
-            {
-              "name": "--ki-button-xl-line-height",
-              "description": "dimension used by the button component for xl line height."
-            },
-            {
-              "name": "--ki-button-xl-min-target",
-              "description": "dimension used by the button component for xl min target."
-            },
-            {
-              "name": "--ki-button-xl-padding-inline",
-              "description": "dimension used by the button component for xl padding inline (MarsUI 14px)."
-            },
-            {
-              "name": "--ki-button-xl-radius",
-              "description": "dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns)."
-            },
-            {
-              "name": "--ki-button-xl-spinner-size",
-              "description": "dimension used by the button component for the xl loading spinner box (24px, the xl icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
-            },
-            {
-              "name": "--ki-button-xs-font-size",
-              "description": "dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px."
-            },
-            {
-              "name": "--ki-button-xs-gap",
-              "description": "dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px)."
-            },
-            {
-              "name": "--ki-button-xs-height",
-              "description": "dimension used by the button component for xs height."
-            },
-            {
-              "name": "--ki-button-xs-icon-size",
-              "description": "dimension used by the button component for xs icon size (MarsUI 14px)."
-            },
-            {
-              "name": "--ki-button-xs-line-height",
-              "description": "dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1)."
-            },
-            {
-              "name": "--ki-button-xs-min-target",
-              "description": "dimension used by the button component for xs min target."
-            },
-            {
-              "name": "--ki-button-xs-padding-inline",
-              "description": "dimension used by the button component for xs padding inline."
-            },
-            {
-              "name": "--ki-button-xs-radius",
-              "description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
-            },
-            {
-              "name": "--ki-button-xs-spinner-size",
-              "description": "dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
-            },
-            {
-              "name": "--ki-copy-button-error-bg",
-              "description": "Contrast ground for the error glyph on filled primary copy buttons."
-            },
-            {
-              "name": "--ki-copy-button-error-fg",
-              "description": "Copy failure glyph ink."
-            },
-            {
-              "name": "--ki-copy-button-success-bg",
-              "description": "Contrast ground for the success glyph on filled primary copy buttons."
-            },
-            {
-              "name": "--ki-copy-button-success-fg",
-              "description": "Confirmation check ink."
-            },
-            {
-              "name": "--ki-density-control-offset",
-              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-motion-duration-fast",
-              "description": "Fast interaction transition duration."
-            },
-            {
-              "name": "--ki-motion-easing-out",
-              "description": "Decelerating interaction transition easing curve."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiCopyButton",
-          "declaration": {
-            "name": "KiCopyButton",
-            "module": "dist/components/ki-copy-button.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-copy-button",
-          "declaration": {
-            "name": "KiCopyButton",
-            "module": "dist/components/ki-copy-button.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-counter.js",
       "declarations": [
         {
@@ -5555,6 +4500,707 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-date-picker.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiDatePicker",
+          "customElement": true,
+          "tagName": "ki-date-picker",
+          "description": "A locale-aware date field with an anchored keyboard-operable calendar.",
+          "whenToUse": "Choose a nearby date or date range when the weekday matters, such as\na booking, a deadline or a schedule.",
+          "whenNotToUse": "Enter a known distant date, such as a birth date, or choose a time.",
+          "attributes": [
+            {
+              "name": "apply-label",
+              "fieldName": "applyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Apply'",
+              "description": "Localized label of the confirmation button that saves a complete draft."
+            },
+            {
+              "name": "cancel-label",
+              "fieldName": "cancelLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "Localized label of the confirmation button that discards a draft."
+            },
+            {
+              "name": "change-label",
+              "fieldName": "changeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Change date, {date}'",
+              "description": "Localized name of the trigger when a date is saved. Use {date} for the current selection."
+            },
+            {
+              "name": "choose-label",
+              "fieldName": "chooseLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Choose date'",
+              "description": "Localized name of the calendar dialog and of the trigger when no date is saved."
+            },
+            {
+              "name": "confirm",
+              "fieldName": "confirm",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Require Apply before saving picks made in the calendar."
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the text entry and calendar button and excludes the field from form data."
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Overrides the message shown when a date is missing, invalid or outside the bounds."
+            },
+            {
+              "name": "first-day-of-week",
+              "fieldName": "firstDayOfWeek",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+              "minimum": 0,
+              "maximum": 6
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A format hint or explanation read with the field. It is replaced by a visible error."
+            },
+            {
+              "name": "invalid-date-label",
+              "fieldName": "invalidDateLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Enter a valid date within the allowed range.'",
+              "description": "Localized fallback message for an impossible, incomplete or out-of-bounds date."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible text and accessible name of the date field. Provide a label for every field.",
+              "required": true
+            },
+            {
+              "name": "locale",
+              "fieldName": "locale",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language."
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Latest selectable date, inclusive. Use YYYY-MM-DD."
+            },
+            {
+              "name": "min",
+              "fieldName": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Earliest selectable date, inclusive. Use YYYY-MM-DD."
+            },
+            {
+              "name": "mode",
+              "fieldName": "mode",
+              "type": {
+                "text": "\"range\" | \"single\""
+              },
+              "default": "'single'",
+              "description": "Select one date or a range with a start and an end date."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key. A range is submitted as a single value."
+            },
+            {
+              "name": "next-month-label",
+              "fieldName": "nextMonthLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Next month'",
+              "description": "Localized accessible name of the next-month button."
+            },
+            {
+              "name": "previous-month-label",
+              "fieldName": "previousMonthLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Previous month'",
+              "description": "Localized accessible name of the previous-month button."
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires a complete date or pair of dates for native form submission."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "applyLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Apply'",
+              "description": "Localized label of the confirmation button that saves a complete draft.",
+              "attribute": "apply-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "cancelLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "Localized label of the confirmation button that discards a draft.",
+              "attribute": "cancel-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "changeLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Change date, {date}'",
+              "description": "Localized name of the trigger when a date is saved. Use {date} for the current selection.",
+              "attribute": "change-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "chooseLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Choose date'",
+              "description": "Localized name of the calendar dialog and of the trigger when no date is saved.",
+              "attribute": "choose-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "confirm",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Require Apply before saving picks made in the calendar.",
+              "attribute": "confirm",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the text entry and calendar button and excludes the field from form data.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Overrides the message shown when a date is missing, invalid or outside the bounds.",
+              "attribute": "error-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "firstDayOfWeek",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+              "attribute": "first-day-of-week",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 6
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A format hint or explanation read with the field. It is replaced by a visible error.",
+              "attribute": "help-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "invalidDateLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Enter a valid date within the allowed range.'",
+              "description": "Localized fallback message for an impossible, incomplete or out-of-bounds date.",
+              "attribute": "invalid-date-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible text and accessible name of the date field. Provide a label for every field.",
+              "attribute": "label",
+              "reflects": true,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language.",
+              "attribute": "locale",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Latest selectable date, inclusive. Use YYYY-MM-DD.",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Earliest selectable date, inclusive. Use YYYY-MM-DD.",
+              "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "privacy": "public",
+              "type": {
+                "text": "\"range\" | \"single\""
+              },
+              "default": "'single'",
+              "description": "Select one date or a range with a start and an end date.",
+              "attribute": "mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key. A range is submitted as a single value.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "nextMonthLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Next month'",
+              "description": "Localized accessible name of the next-month button.",
+              "attribute": "next-month-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "previousMonthLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Previous month'",
+              "description": "Localized accessible name of the previous-month button.",
+              "attribute": "previous-month-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires a complete date or pair of dates for native form submission.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<DatePickerChangeDetail>"
+              },
+              "description": "Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "day",
+              "description": "Date button in the calendar grid."
+            },
+            {
+              "name": "error",
+              "description": "Live constraint message replacing help when the field is invalid."
+            },
+            {
+              "name": "field",
+              "description": "Enclosure of the text field and calendar button."
+            },
+            {
+              "name": "grid",
+              "description": "Calendar grid with localized weekdays and date buttons."
+            },
+            {
+              "name": "help",
+              "description": "Help text associated with the input."
+            },
+            {
+              "name": "input",
+              "description": "Native text entry for a localized date or range."
+            },
+            {
+              "name": "label",
+              "description": "Visible label and accessible name of the text field."
+            },
+            {
+              "name": "month",
+              "description": "Live month and year heading."
+            },
+            {
+              "name": "popup",
+              "description": "Anchored non-modal calendar dialog."
+            },
+            {
+              "name": "trigger",
+              "description": "Button that opens and closes the calendar."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-control-border-width",
+              "description": "Stroke width of the boundary of a compact control."
+            },
+            {
+              "name": "--ki-control-radius-track",
+              "description": "Corner radius of a track containing adjacent controls."
+            },
+            {
+              "name": "--ki-control-size-sm",
+              "description": "Small control track height, 32 CSS px at the default root size."
+            },
+            {
+              "name": "--ki-control-size-touch",
+              "description": "Touch target size for controls on a coarse pointer."
+            },
+            {
+              "name": "--ki-date-picker-backdrop-filter",
+              "description": "Complete filter behind the calendar."
+            },
+            {
+              "name": "--ki-date-picker-bg",
+              "description": "Fill of the calendar dialog."
+            },
+            {
+              "name": "--ki-date-picker-bg-image",
+              "description": "Optional image layered over the calendar fill."
+            },
+            {
+              "name": "--ki-date-picker-border",
+              "description": "Calendar surface edge."
+            },
+            {
+              "name": "--ki-date-picker-day-hover-bg",
+              "description": "Hover fill of an available unselected day."
+            },
+            {
+              "name": "--ki-date-picker-day-hover-fg",
+              "description": "Ink on the hover fill."
+            },
+            {
+              "name": "--ki-date-picker-day-radius",
+              "description": "Radius of a day and the ends of a range."
+            },
+            {
+              "name": "--ki-date-picker-day-size",
+              "description": "Default size of a day target."
+            },
+            {
+              "name": "--ki-date-picker-fg",
+              "description": "Default calendar text."
+            },
+            {
+              "name": "--ki-date-picker-field-bg",
+              "description": "Fill of the text field."
+            },
+            {
+              "name": "--ki-date-picker-field-fg",
+              "description": "Text, icon and caret of the field."
+            },
+            {
+              "name": "--ki-date-picker-heading-family",
+              "description": "Family of the calendar month heading."
+            },
+            {
+              "name": "--ki-date-picker-outside-bg",
+              "description": "Fill behind dates in neighboring months."
+            },
+            {
+              "name": "--ki-date-picker-outside-fg",
+              "description": "Ink of dates in neighboring months."
+            },
+            {
+              "name": "--ki-date-picker-radius",
+              "description": "Calendar popup corner radius."
+            },
+            {
+              "name": "--ki-date-picker-range-bg",
+              "description": "Fill of the span between selected endpoints."
+            },
+            {
+              "name": "--ki-date-picker-range-fg",
+              "description": "Text of dates within the span."
+            },
+            {
+              "name": "--ki-date-picker-selected-bg",
+              "description": "Fill of a chosen day or range endpoint."
+            },
+            {
+              "name": "--ki-date-picker-selected-fg",
+              "description": "Text of a chosen day or range endpoint."
+            },
+            {
+              "name": "--ki-date-picker-shadow",
+              "description": "Calendar popup elevation."
+            },
+            {
+              "name": "--ki-date-picker-today-border",
+              "description": "Outline of the current date."
+            },
+            {
+              "name": "--ki-date-picker-weekday-bg",
+              "description": "Fill behind weekday names."
+            },
+            {
+              "name": "--ki-date-picker-weekday-fg",
+              "description": "Ink of weekday names."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-glyph-size-md",
+              "description": "Medium glyph for body content (20px at the default root size)."
+            },
+            {
+              "name": "--ki-layout-spacing-3xl",
+              "description": "The 3xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-lg",
+              "description": "The lg spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-outline-control",
+              "description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
+            },
+            {
+              "name": "--ki-outline-danger-high-em",
+              "description": "semantic color for outline danger high em."
+            },
+            {
+              "name": "--ki-surface-transparent",
+              "description": "Transparent surface backing for a background image that carries its own opacity."
+            },
+            {
+              "name": "--ki-text-danger-high-em",
+              "description": "semantic color for text danger high em."
+            },
+            {
+              "name": "--ki-text-high-em",
+              "description": "semantic color for text high em."
+            },
+            {
+              "name": "--ki-text-supporting",
+              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiDatePicker",
+          "declaration": {
+            "name": "KiDatePicker",
+            "module": "dist/components/ki-date-picker.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-date-picker",
+          "declaration": {
+            "name": "KiDatePicker",
+            "module": "dist/components/ki-date-picker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-dialog.js",
       "declarations": [
         {
@@ -5563,7 +5209,7 @@
           "customElement": true,
           "tagName": "ki-dialog",
           "description": "A modal dialog for one interrupting decision or short focused task.",
-          "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action.",
+          "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action.",
           "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
           "attributes": [
             {
@@ -5635,7 +5281,7 @@
               "kind": "method",
               "name": "close",
               "privacy": "public",
-              "description": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method or an invoker command.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
+              "description": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
               "return": {
                 "type": {
                   "text": "Promise<void>"
@@ -5664,7 +5310,7 @@
               "type": {
                 "text": "CustomEvent<KiDialogCloseDetail>"
               },
-              "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+              "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
             }
           ],
           "slots": [
@@ -5674,7 +5320,7 @@
             },
             {
               "name": "footer",
-              "description": "Dialog actions. Dismiss using an invoker command or `close()`."
+              "description": "Dialog actions; applications wire every action to `close()`."
             }
           ],
           "cssParts": [
@@ -5988,1596 +5634,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-empty-state.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiEmptyState",
-          "customElement": true,
-          "tagName": "ki-empty-state",
-          "description": "A short explanation and next step for an empty view.",
-          "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction.",
-          "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
-          "attributes": [
-            {
-              "name": "announce",
-              "fieldName": "announce",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results."
-            },
-            {
-              "name": "heading",
-              "fieldName": "heading",
-              "type": {
-                "text": "string"
-              },
-              "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
-              "required": true
-            },
-            {
-              "name": "heading-level",
-              "fieldName": "headingLevel",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
-              "minimum": 2,
-              "maximum": 6
-            },
-            {
-              "name": "icon-name",
-              "fieldName": "iconName",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence."
-            },
-            {
-              "name": "size",
-              "fieldName": "size",
-              "type": {
-                "text": "\"md\" | \"sm\""
-              },
-              "default": "'md'",
-              "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout."
-            },
-            {
-              "name": "tone",
-              "fieldName": "tone",
-              "type": {
-                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
-              },
-              "default": "'neutral'",
-              "description": "FeatureIcon tone. Unrecognized tones use the neutral tile."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "announce",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
-              "attribute": "announce",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "heading",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
-              "attribute": "heading",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "headingLevel",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
-              "attribute": "heading-level",
-              "reflects": false,
-              "minimum": 2,
-              "maximum": 6
-            },
-            {
-              "kind": "field",
-              "name": "iconName",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence.",
-              "attribute": "icon-name",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "privacy": "public",
-              "type": {
-                "text": "\"md\" | \"sm\""
-              },
-              "default": "'md'",
-              "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "tone",
-              "privacy": "public",
-              "type": {
-                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
-              },
-              "default": "'neutral'",
-              "description": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
-              "attribute": "tone",
-              "reflects": false
-            }
-          ],
-          "events": [],
-          "slots": [
-            {
-              "name": "",
-              "description": "Localized supporting text with a reason or recovery advice."
-            },
-            {
-              "name": "actions",
-              "description": "Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls."
-            },
-            {
-              "name": "media",
-              "description": "Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "actions",
-              "description": "Wrapping row of consumer-supplied controls."
-            },
-            {
-              "name": "container",
-              "description": "Centered layout for the illustration, message and actions."
-            },
-            {
-              "name": "description",
-              "description": "Wrapper for the default slot."
-            },
-            {
-              "name": "heading",
-              "description": "Native heading at the selected document level."
-            },
-            {
-              "name": "media",
-              "description": "Decorative illustration or FeatureIcon tile."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-empty-state-backdrop-filter",
-              "description": "Complete filter applied behind the empty view."
-            },
-            {
-              "name": "--ki-empty-state-bg",
-              "description": "Background behind the empty view."
-            },
-            {
-              "name": "--ki-empty-state-bg-image",
-              "description": "Optional image above the background color."
-            },
-            {
-              "name": "--ki-empty-state-description-bg",
-              "description": "Background layer behind the supporting copy."
-            },
-            {
-              "name": "--ki-empty-state-description-fg",
-              "description": "Supporting text ink, strengthened in contrast-more mode."
-            },
-            {
-              "name": "--ki-empty-state-description-line-height",
-              "description": "Line height of the supporting copy."
-            },
-            {
-              "name": "--ki-empty-state-description-size",
-              "description": "Font size of the supporting copy."
-            },
-            {
-              "name": "--ki-empty-state-fg",
-              "description": "Foreground ink for the heading."
-            },
-            {
-              "name": "--ki-empty-state-gap",
-              "description": "Gap between the decorative media, message and action row."
-            },
-            {
-              "name": "--ki-empty-state-gap-sm",
-              "description": "Gap between regions in a compact empty view."
-            },
-            {
-              "name": "--ki-empty-state-heading-font-family",
-              "description": "Typeface for the native heading."
-            },
-            {
-              "name": "--ki-empty-state-heading-line-height",
-              "description": "Heading line height in a regular empty view."
-            },
-            {
-              "name": "--ki-empty-state-heading-line-height-sm",
-              "description": "Heading line height in a compact empty view."
-            },
-            {
-              "name": "--ki-empty-state-heading-size",
-              "description": "Heading font size in a regular empty view."
-            },
-            {
-              "name": "--ki-empty-state-heading-size-sm",
-              "description": "Heading font size in a compact empty view."
-            },
-            {
-              "name": "--ki-empty-state-heading-weight",
-              "description": "Weight of the heading."
-            },
-            {
-              "name": "--ki-empty-state-max-width",
-              "description": "Maximum inline size of the centered content."
-            },
-            {
-              "name": "--ki-empty-state-tile-danger-bg",
-              "description": "Background of the danger decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-danger-fg",
-              "description": "Glyph ink on the danger decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-info-bg",
-              "description": "Background of the info decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-info-fg",
-              "description": "Glyph ink on the info decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-neutral-bg",
-              "description": "Background of the neutral decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-neutral-fg",
-              "description": "Glyph ink on the neutral decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-primary-bg",
-              "description": "Background of the primary decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-primary-fg",
-              "description": "Glyph ink on the primary decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-primary-light-bg",
-              "description": "Background of the primary-light decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-primary-light-fg",
-              "description": "Glyph ink on the primary-light decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-radius",
-              "description": "Corner radius of the regular fallback tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-radius-sm",
-              "description": "Corner radius of the compact fallback tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-size",
-              "description": "Regular FeatureIcon fallback tile size."
-            },
-            {
-              "name": "--ki-empty-state-tile-size-sm",
-              "description": "Compact FeatureIcon fallback tile size."
-            },
-            {
-              "name": "--ki-empty-state-tile-success-bg",
-              "description": "Background of the success decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-success-fg",
-              "description": "Glyph ink on the success decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-warning-bg",
-              "description": "Background of the warning decorative tile."
-            },
-            {
-              "name": "--ki-empty-state-tile-warning-fg",
-              "description": "Glyph ink on the warning decorative tile."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiEmptyState",
-          "declaration": {
-            "name": "KiEmptyState",
-            "module": "dist/components/ki-empty-state.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-empty-state",
-          "declaration": {
-            "name": "KiEmptyState",
-            "module": "dist/components/ki-empty-state.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-fab.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiFab",
-          "customElement": true,
-          "tagName": "ki-fab",
-          "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
-          "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation.",
-          "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
-          "attributes": [
-            {
-              "name": "collapse-on-scroll",
-              "fieldName": "collapseOnScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Compact an extended FAB on viewport scroll down and restore on scroll up."
-            },
-            {
-              "name": "extended",
-              "fieldName": "extended",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Show the action label next to its icon."
-            },
-            {
-              "name": "href",
-              "fieldName": "href",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
-              "format": "url"
-            },
-            {
-              "name": "icon-name",
-              "fieldName": "iconName",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence."
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Accessible name of the action. Also the visible text in the extended state.",
-              "required": true
-            },
-            {
-              "name": "position",
-              "fieldName": "position",
-              "type": {
-                "text": "\"fixed\" | \"static\""
-              },
-              "default": "'static'",
-              "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there."
-            },
-            {
-              "name": "size",
-              "fieldName": "size",
-              "type": {
-                "text": "\"lg\" | \"md\" | \"xl\""
-              },
-              "default": "'md'",
-              "description": "Square footprint when icon-only, and minimum size when extended."
-            },
-            {
-              "name": "variant",
-              "fieldName": "variant",
-              "type": {
-                "text": "\"primary\" | \"secondary\" | \"surface\""
-              },
-              "default": "'secondary'",
-              "description": "Surface and ink: strong primary, tinted secondary or raised surface."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "collapseOnScroll",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
-              "attribute": "collapse-on-scroll",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "extended",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Show the action label next to its icon.",
-              "attribute": "extended",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
-              "attribute": "href",
-              "reflects": false,
-              "format": "url"
-            },
-            {
-              "kind": "field",
-              "name": "iconName",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.",
-              "attribute": "icon-name",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Accessible name of the action. Also the visible text in the extended state.",
-              "attribute": "label",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "privacy": "public",
-              "type": {
-                "text": "\"fixed\" | \"static\""
-              },
-              "default": "'static'",
-              "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
-              "attribute": "position",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "privacy": "public",
-              "type": {
-                "text": "\"lg\" | \"md\" | \"xl\""
-              },
-              "default": "'md'",
-              "description": "Square footprint when icon-only, and minimum size when extended.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "privacy": "public",
-              "type": {
-                "text": "\"primary\" | \"secondary\" | \"surface\""
-              },
-              "default": "'secondary'",
-              "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
-              "attribute": "variant",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "name": "click",
-              "type": {
-                "text": "Event"
-              },
-              "description": "Native activation click. The page or guarded renderer handles the declared action."
-            }
-          ],
-          "slots": [
-            {
-              "name": "icon",
-              "description": "Decorative, noninteractive icon replacing the named glyph."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "control",
-              "description": "The native button or link, including its surface and focus ring."
-            },
-            {
-              "name": "icon",
-              "description": "Wrapper for the decorative named or slotted glyph."
-            },
-            {
-              "name": "label",
-              "description": "Visible label of an extended FAB."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-fab-backdrop-filter",
-              "description": "Complete optional filter behind the FAB."
-            },
-            {
-              "name": "--ki-fab-bg",
-              "description": "Tinted secondary FAB fill."
-            },
-            {
-              "name": "--ki-fab-bg-image",
-              "description": "Optional layer painted over the FAB fill."
-            },
-            {
-              "name": "--ki-fab-collapse-duration",
-              "description": "Duration of the extended FAB footprint change."
-            },
-            {
-              "name": "--ki-fab-collapse-easing",
-              "description": "Easing of the extended FAB footprint change."
-            },
-            {
-              "name": "--ki-fab-fg",
-              "description": "Ink on the tinted secondary FAB."
-            },
-            {
-              "name": "--ki-fab-font-family",
-              "description": "Typeface for FAB labels."
-            },
-            {
-              "name": "--ki-fab-font-size",
-              "description": "Text size for extended FAB labels."
-            },
-            {
-              "name": "--ki-fab-font-weight",
-              "description": "Text weight for extended FAB labels."
-            },
-            {
-              "name": "--ki-fab-forced-colors-border-width",
-              "description": "Boundary width for the FAB in forced colors."
-            },
-            {
-              "name": "--ki-fab-gap",
-              "description": "Space between icon and label in an extended FAB."
-            },
-            {
-              "name": "--ki-fab-hover-shadow",
-              "description": "FAB elevation for a pointer that can hover."
-            },
-            {
-              "name": "--ki-fab-icon-size",
-              "description": "Glyph size of the default FAB."
-            },
-            {
-              "name": "--ki-fab-lg-icon-size",
-              "description": "Glyph size of the medium FAB."
-            },
-            {
-              "name": "--ki-fab-lg-radius",
-              "description": "Corner radius of the medium FAB."
-            },
-            {
-              "name": "--ki-fab-lg-size",
-              "description": "Minimum footprint of the medium FAB."
-            },
-            {
-              "name": "--ki-fab-line-height",
-              "description": "Line height for extended FAB labels."
-            },
-            {
-              "name": "--ki-fab-mobile-nav-block-size",
-              "description": "Height to reserve for mobile navigation, excluding the safe-area inset."
-            },
-            {
-              "name": "--ki-fab-offset",
-              "description": "Fixed FAB gap to the viewport edge or mobile navigation."
-            },
-            {
-              "name": "--ki-fab-padding-inline-end",
-              "description": "Inline end padding of an extended FAB."
-            },
-            {
-              "name": "--ki-fab-padding-inline-start",
-              "description": "Inline start padding of an extended FAB."
-            },
-            {
-              "name": "--ki-fab-primary-bg",
-              "description": "Strong primary FAB fill."
-            },
-            {
-              "name": "--ki-fab-primary-fg",
-              "description": "Ink on the strong primary FAB."
-            },
-            {
-              "name": "--ki-fab-radius",
-              "description": "Corner radius of the default FAB size."
-            },
-            {
-              "name": "--ki-fab-shadow",
-              "description": "Resting FAB elevation."
-            },
-            {
-              "name": "--ki-fab-size",
-              "description": "Minimum FAB footprint in the default size."
-            },
-            {
-              "name": "--ki-fab-surface-bg",
-              "description": "Raised surface FAB fill."
-            },
-            {
-              "name": "--ki-fab-surface-fg",
-              "description": "Ink on the raised surface FAB."
-            },
-            {
-              "name": "--ki-fab-xl-icon-size",
-              "description": "Glyph size of the large FAB."
-            },
-            {
-              "name": "--ki-fab-xl-radius",
-              "description": "Corner radius of the large FAB."
-            },
-            {
-              "name": "--ki-fab-xl-size",
-              "description": "Minimum footprint of the large FAB."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiFab",
-          "declaration": {
-            "name": "KiFab",
-            "module": "dist/components/ki-fab.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-fab",
-          "declaration": {
-            "name": "KiFab",
-            "module": "dist/components/ki-fab.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-fab-menu.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiFabMenu",
-          "customElement": true,
-          "tagName": "ki-fab-menu",
-          "description": "An icon FAB that opens two to six related actions above its trigger.",
-          "whenToUse": "group related creation or screen actions behind one floating button.",
-          "whenNotToUse": "for a single primary action, long lists, or site navigation.",
-          "attributes": [
-            {
-              "name": "close-label",
-              "fieldName": "closeLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Close menu'",
-              "description": "Localized accessible name of the trigger when it becomes the close control."
-            },
-            {
-              "name": "icon-name",
-              "fieldName": "iconName",
-              "type": {
-                "text": "string"
-              },
-              "default": "'plus'",
-              "description": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component."
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Accessible name of the closed trigger and of the menu.",
-              "required": true
-            },
-            {
-              "name": "open",
-              "fieldName": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the action stack is open. Reflected when the user opens or dismisses it."
-            },
-            {
-              "name": "position",
-              "fieldName": "position",
-              "type": {
-                "text": "\"fixed\" | \"static\""
-              },
-              "default": "'static'",
-              "description": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner."
-            },
-            {
-              "name": "scrim",
-              "fieldName": "scrim",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out."
-            },
-            {
-              "name": "variant",
-              "fieldName": "variant",
-              "type": {
-                "text": "\"primary\" | \"secondary\" | \"surface\""
-              },
-              "default": "'secondary'",
-              "description": "Closed FAB surface. The open trigger always uses primary."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "closeLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Close menu'",
-              "description": "Localized accessible name of the trigger when it becomes the close control.",
-              "attribute": "close-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "iconName",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'plus'",
-              "description": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.",
-              "attribute": "icon-name",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Accessible name of the closed trigger and of the menu.",
-              "attribute": "label",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the action stack is open. Reflected when the user opens or dismisses it.",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "privacy": "public",
-              "type": {
-                "text": "\"fixed\" | \"static\""
-              },
-              "default": "'static'",
-              "description": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.",
-              "attribute": "position",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "scrim",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out.",
-              "attribute": "scrim",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "privacy": "public",
-              "type": {
-                "text": "\"primary\" | \"secondary\" | \"surface\""
-              },
-              "default": "'secondary'",
-              "description": "Closed FAB surface. The open trigger always uses primary.",
-              "attribute": "variant",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-close",
-              "type": {
-                "text": "CustomEvent<void>"
-              },
-              "description": "Emitted when the action stack closes."
-            },
-            {
-              "name": "ki-open",
-              "type": {
-                "text": "CustomEvent<void>"
-              },
-              "description": "Emitted when the action stack opens."
-            },
-            {
-              "name": "ki-select",
-              "type": {
-                "text": "CustomEvent<KiFabMenuSelectDetail>"
-              },
-              "description": "Emits the selected item's value or its trimmed label. Native links retain their destination."
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Two to six direct ki-fab-menu-item children, in top-to-bottom order."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "menu",
-              "description": "The named action list above the trigger."
-            },
-            {
-              "name": "scrim",
-              "description": "The optional pointer-dismissible overlay behind the menu."
-            },
-            {
-              "name": "trigger",
-              "description": "The native floating button that opens and closes the menu."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-fab-backdrop-filter",
-              "description": "Complete optional filter behind the FAB."
-            },
-            {
-              "name": "--ki-fab-bg",
-              "description": "Tinted secondary FAB fill."
-            },
-            {
-              "name": "--ki-fab-bg-image",
-              "description": "Optional layer painted over the FAB fill."
-            },
-            {
-              "name": "--ki-fab-fg",
-              "description": "Ink on the tinted secondary FAB."
-            },
-            {
-              "name": "--ki-fab-font-family",
-              "description": "Typeface for FAB labels."
-            },
-            {
-              "name": "--ki-fab-forced-colors-border-width",
-              "description": "Boundary width for the FAB in forced colors."
-            },
-            {
-              "name": "--ki-fab-hover-shadow",
-              "description": "FAB elevation for a pointer that can hover."
-            },
-            {
-              "name": "--ki-fab-icon-size",
-              "description": "Glyph size of the default FAB."
-            },
-            {
-              "name": "--ki-fab-menu-gap",
-              "description": "Gap between two stacked actions."
-            },
-            {
-              "name": "--ki-fab-menu-scrim-backdrop-filter",
-              "description": "Complete optional filter behind the scrim."
-            },
-            {
-              "name": "--ki-fab-menu-scrim-bg",
-              "description": "Dimming fill behind the open menu and its trigger."
-            },
-            {
-              "name": "--ki-fab-menu-scrim-bg-image",
-              "description": "Optional image painted above the scrim fill."
-            },
-            {
-              "name": "--ki-fab-menu-trigger-gap",
-              "description": "Gap between the last action and the FAB."
-            },
-            {
-              "name": "--ki-fab-mobile-nav-block-size",
-              "description": "Height to reserve for mobile navigation, excluding the safe-area inset."
-            },
-            {
-              "name": "--ki-fab-offset",
-              "description": "Fixed FAB gap to the viewport edge or mobile navigation."
-            },
-            {
-              "name": "--ki-fab-primary-bg",
-              "description": "Strong primary FAB fill."
-            },
-            {
-              "name": "--ki-fab-primary-fg",
-              "description": "Ink on the strong primary FAB."
-            },
-            {
-              "name": "--ki-fab-radius",
-              "description": "Corner radius of the default FAB size."
-            },
-            {
-              "name": "--ki-fab-shadow",
-              "description": "Resting FAB elevation."
-            },
-            {
-              "name": "--ki-fab-size",
-              "description": "Minimum FAB footprint in the default size."
-            },
-            {
-              "name": "--ki-fab-surface-bg",
-              "description": "Raised surface FAB fill."
-            },
-            {
-              "name": "--ki-fab-surface-fg",
-              "description": "Ink on the raised surface FAB."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiFabMenu",
-          "declaration": {
-            "name": "KiFabMenu",
-            "module": "dist/components/ki-fab-menu.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-fab-menu",
-          "declaration": {
-            "name": "KiFabMenu",
-            "module": "dist/components/ki-fab-menu.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-fab-menu-item.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiFabMenuItem",
-          "customElement": true,
-          "tagName": "ki-fab-menu-item",
-          "description": "A labeled command or native link within a floating action menu.",
-          "whenToUse": "as a direct child of ki-fab-menu, with a short, visible action label.",
-          "whenNotToUse": "for a standalone action, a form control, or a container of interactive content.",
-          "attributes": [
-            {
-              "name": "href",
-              "fieldName": "href",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "A nonempty destination renders a native link and preserves relative URL resolution.",
-              "format": "url"
-            },
-            {
-              "name": "icon-name",
-              "fieldName": "iconName",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Registered Lucide glyph. Import the desired icon before rendering."
-            },
-            {
-              "name": "value",
-              "fieldName": "value",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Stable selection identifier. When omitted, the menu reports the trimmed visible label."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "href",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "A nonempty destination renders a native link and preserves relative URL resolution.",
-              "attribute": "href",
-              "reflects": false,
-              "format": "url"
-            },
-            {
-              "kind": "field",
-              "name": "iconName",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Registered Lucide glyph. Import the desired icon before rendering.",
-              "attribute": "icon-name",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Stable selection identifier. When omitted, the menu reports the trimmed visible label.",
-              "attribute": "value",
-              "reflects": false
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-select",
-              "type": {
-                "text": "CustomEvent<KiFabMenuSelectDetail>"
-              },
-              "description": "Local command selection for a direct action binding. Links use native navigation."
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "The visible action label."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "control",
-              "description": "The native action button or link."
-            },
-            {
-              "name": "icon",
-              "description": "The decorative glyph next to the label."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-fab-forced-colors-border-width",
-              "description": "Boundary width for the FAB in forced colors."
-            },
-            {
-              "name": "--ki-fab-menu-item-backdrop-filter",
-              "description": "Complete optional filter behind the action."
-            },
-            {
-              "name": "--ki-fab-menu-item-bg",
-              "description": "Tinted surface of a floating action."
-            },
-            {
-              "name": "--ki-fab-menu-item-bg-image",
-              "description": "Optional image painted above the action fill."
-            },
-            {
-              "name": "--ki-fab-menu-item-content-gap",
-              "description": "Space between the action glyph and label."
-            },
-            {
-              "name": "--ki-fab-menu-item-fg",
-              "description": "Label and icon ink on the tinted action surface."
-            },
-            {
-              "name": "--ki-fab-menu-item-font-family",
-              "description": "Typeface for action labels."
-            },
-            {
-              "name": "--ki-fab-menu-item-font-size",
-              "description": "Text size for action labels."
-            },
-            {
-              "name": "--ki-fab-menu-item-font-weight",
-              "description": "Text weight of an action label."
-            },
-            {
-              "name": "--ki-fab-menu-item-height",
-              "description": "Minimum block size and inline target of an action."
-            },
-            {
-              "name": "--ki-fab-menu-item-hover-shadow",
-              "description": "Elevation of a hovered action."
-            },
-            {
-              "name": "--ki-fab-menu-item-icon-size",
-              "description": "Size of the glyph preceding an action label."
-            },
-            {
-              "name": "--ki-fab-menu-item-line-height",
-              "description": "Line height of an action label."
-            },
-            {
-              "name": "--ki-fab-menu-item-padding-block",
-              "description": "Block padding for a wrapping action label."
-            },
-            {
-              "name": "--ki-fab-menu-item-padding-end",
-              "description": "Inline-end padding of an action."
-            },
-            {
-              "name": "--ki-fab-menu-item-padding-start",
-              "description": "Inline-start padding of an action."
-            },
-            {
-              "name": "--ki-fab-menu-item-radius",
-              "description": "Pill radius of an action."
-            },
-            {
-              "name": "--ki-fab-menu-item-shadow",
-              "description": "Elevation of a resting action."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiFabMenuItem",
-          "declaration": {
-            "name": "KiFabMenuItem",
-            "module": "dist/components/ki-fab-menu-item.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-fab-menu-item",
-          "declaration": {
-            "name": "KiFabMenuItem",
-            "module": "dist/components/ki-fab-menu-item.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-format-date.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiFormatDate",
-          "customElement": true,
-          "tagName": "ki-format-date",
-          "description": "Displays an ISO date or timestamp in the reader's language.",
-          "whenToUse": "For raw date and timestamp values in tables, records and prose.",
-          "whenNotToUse": "For an editable date or an elapsed time that should change as the clock advances.",
-          "attributes": [
-            {
-              "name": "date",
-              "fieldName": "date",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time."
-            },
-            {
-              "name": "date-style",
-              "fieldName": "dateStyle",
-              "type": {
-                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
-              },
-              "description": "Date detail. Defaults to medium when neither date style nor time style is supplied."
-            },
-            {
-              "name": "lang",
-              "fieldName": "locale",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted."
-            },
-            {
-              "name": "time-style",
-              "fieldName": "timeStyle",
-              "type": {
-                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
-              },
-              "description": "Time detail. Omit to show the date alone."
-            },
-            {
-              "name": "time-zone",
-              "fieldName": "timeZone",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "date",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.",
-              "attribute": "date",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "dateStyle",
-              "privacy": "public",
-              "type": {
-                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
-              },
-              "description": "Date detail. Defaults to medium when neither date style nor time style is supplied.",
-              "attribute": "date-style",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "locale",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.",
-              "attribute": "lang",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "timeStyle",
-              "privacy": "public",
-              "type": {
-                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
-              },
-              "description": "Time detail. Omit to show the date alone.",
-              "attribute": "time-style",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "timeZone",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone.",
-              "attribute": "time-zone",
-              "reflects": false
-            }
-          ],
-          "events": [],
-          "slots": [],
-          "cssParts": [],
-          "cssProperties": [
-            {
-              "name": "--ki-format-date-font-family",
-              "description": "Default body font family for ki-format-date on a bare page."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiFormatDate",
-          "declaration": {
-            "name": "KiFormatDate",
-            "module": "dist/components/ki-format-date.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-format-date",
-          "declaration": {
-            "name": "KiFormatDate",
-            "module": "dist/components/ki-format-date.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-format-number.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiFormatNumber",
-          "customElement": true,
-          "tagName": "ki-format-number",
-          "description": "Displays a raw number using local number conventions and tabular figures.",
-          "whenToUse": "For numeric data, currency amounts, ratios and measurements in content.",
-          "whenNotToUse": "For numeric input or values that already include localized formatting.",
-          "attributes": [
-            {
-              "name": "currency",
-              "fieldName": "currency",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted."
-            },
-            {
-              "name": "format-style",
-              "fieldName": "formatStyle",
-              "type": {
-                "text": "\"decimal\" | \"percent\" | \"unit\" | undefined"
-              },
-              "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal."
-            },
-            {
-              "name": "maximum-fraction-digits",
-              "fieldName": "maximumFractionDigits",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum number of fraction digits.",
-              "minimum": 0
-            },
-            {
-              "name": "minimum-fraction-digits",
-              "fieldName": "minimumFractionDigits",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Minimum number of fraction digits.",
-              "minimum": 0
-            },
-            {
-              "name": "notation",
-              "fieldName": "notation",
-              "type": {
-                "text": "\"compact\" | undefined"
-              },
-              "description": "Use compact notation for abbreviated large numbers. Omit for standard notation."
-            },
-            {
-              "name": "unit",
-              "fieldName": "unit",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\"."
-            },
-            {
-              "name": "value",
-              "fieldName": "value",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "currency",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.",
-              "attribute": "currency",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "formatStyle",
-              "privacy": "public",
-              "type": {
-                "text": "\"decimal\" | \"percent\" | \"unit\" | undefined"
-              },
-              "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.",
-              "attribute": "format-style",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "maximumFractionDigits",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum number of fraction digits.",
-              "attribute": "maximum-fraction-digits",
-              "reflects": false,
-              "minimum": 0
-            },
-            {
-              "kind": "field",
-              "name": "minimumFractionDigits",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Minimum number of fraction digits.",
-              "attribute": "minimum-fraction-digits",
-              "reflects": false,
-              "minimum": 0
-            },
-            {
-              "kind": "field",
-              "name": "notation",
-              "privacy": "public",
-              "type": {
-                "text": "\"compact\" | undefined"
-              },
-              "description": "Use compact notation for abbreviated large numbers. Omit for standard notation.",
-              "attribute": "notation",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "unit",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\".",
-              "attribute": "unit",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.",
-              "attribute": "value",
-              "reflects": false
-            }
-          ],
-          "events": [],
-          "slots": [],
-          "cssParts": [],
-          "cssProperties": [
-            {
-              "name": "--ki-format-number-font-family",
-              "description": "Default body font family for ki-format-number on a bare page."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiFormatNumber",
-          "declaration": {
-            "name": "KiFormatNumber",
-            "module": "dist/components/ki-format-number.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-format-number",
-          "declaration": {
-            "name": "KiFormatNumber",
-            "module": "dist/components/ki-format-number.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-grid.js",
       "declarations": [
         {
@@ -7852,22 +5908,6 @@
           "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
           "attributes": [
             {
-              "name": "command",
-              "fieldName": "command",
-              "type": {
-                "text": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
-              },
-              "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
-            },
-            {
-              "name": "commandfor",
-              "fieldName": "commandfor",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
-            },
-            {
               "name": "disabled",
               "fieldName": "disabled",
               "type": {
@@ -7951,28 +5991,6 @@
             }
           ],
           "members": [
-            {
-              "kind": "field",
-              "name": "command",
-              "privacy": "public",
-              "type": {
-                "text": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
-              },
-              "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
-              "attribute": "command",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "commandfor",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
-              "attribute": "commandfor",
-              "reflects": true
-            },
             {
               "kind": "field",
               "name": "disabled",
@@ -12666,134 +10684,6 @@
           "declaration": {
             "name": "KiRadioGroup",
             "module": "dist/components/ki-radio-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-relative-time.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiRelativeTime",
-          "customElement": true,
-          "tagName": "ki-relative-time",
-          "description": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
-          "whenToUse": "For timestamps whose distance from the present matters, such as timeline entries or recent changes.",
-          "whenNotToUse": "For an interactive countdown or a date that should always show an absolute value.",
-          "attributes": [
-            {
-              "name": "date",
-              "fieldName": "date",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ISO calendar date or date-time. A timestamp without an offset uses local time."
-            },
-            {
-              "name": "numeric",
-              "fieldName": "numeric",
-              "type": {
-                "text": "\"always\" | \"auto\""
-              },
-              "default": "'auto'",
-              "description": "Auto can show words such as yesterday. Always uses a number."
-            },
-            {
-              "name": "sync",
-              "fieldName": "sync",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Refresh the visible wording as the clock crosses a formatting boundary."
-            },
-            {
-              "name": "threshold",
-              "fieldName": "threshold",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
-              "minimum": 0
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "date",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "ISO calendar date or date-time. A timestamp without an offset uses local time.",
-              "attribute": "date",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "numeric",
-              "privacy": "public",
-              "type": {
-                "text": "\"always\" | \"auto\""
-              },
-              "default": "'auto'",
-              "description": "Auto can show words such as yesterday. Always uses a number.",
-              "attribute": "numeric",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "sync",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Refresh the visible wording as the clock crosses a formatting boundary.",
-              "attribute": "sync",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "threshold",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
-              "attribute": "threshold",
-              "reflects": false,
-              "minimum": 0
-            }
-          ],
-          "events": [],
-          "slots": [],
-          "cssParts": [],
-          "cssProperties": [
-            {
-              "name": "--ki-relative-time-font-family",
-              "description": "Default body font family for ki-relative-time on a bare page."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiRelativeTime",
-          "declaration": {
-            "name": "KiRelativeTime",
-            "module": "dist/components/ki-relative-time.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-relative-time",
-          "declaration": {
-            "name": "KiRelativeTime",
-            "module": "dist/components/ki-relative-time.js"
           }
         }
       ]
