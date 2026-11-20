@@ -289,7 +289,8 @@ it('S7 focuses a slotted field, wraps Tab and restores the trigger on Escape', a
   await userEvent.keyboard('{Tab}');
   await expect.element(page.getByRole('button', { name: 'Save' })).toHaveFocus();
   await userEvent.keyboard('{Tab}');
-  await expect.element(closeButton()).toHaveFocus();
+  // At document level, focus on a shadow button is reported as focus on its host.
+  await expect.poll(() => drawer.shadowRoot?.activeElement).toBe(closeButton().element());
   await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
   await expect.element(page.getByRole('button', { name: 'Save' })).toHaveFocus();
   await userEvent.keyboard('{Escape}');
@@ -308,7 +309,8 @@ it('S7 honors an autofocus footer action on an initially open drawer', async () 
 it('S8 closes a bottom sheet via its localized Close button', async () => {
   const drawer = mount({ placement: 'bottom', 'close-label': 'Dismiss sheet' });
   await open(drawer);
-  await expect.element(page.getByRole('button', { name: 'Dismiss sheet' })).toHaveFocus();
+  const close = page.getByRole('button', { name: 'Dismiss sheet', exact: true });
+  await expect.poll(() => drawer.shadowRoot?.activeElement).toBe(close.element());
 
   await userEvent.keyboard('{Enter}');
 
