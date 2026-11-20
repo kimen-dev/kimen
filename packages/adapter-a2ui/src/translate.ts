@@ -406,6 +406,9 @@ const LAYOUT_JUSTIFY: ReadonlyMap<string, string> = new Map([
   ['spaceBetween', 'between'],
 ]);
 
+/** A local clock time, capturing the minute precision of ki-time-input. */
+const LOCAL_TIME = /^((?:[01]\d|2[0-3]):[0-5]\d)(?::[0-5]\d)?$/u;
+
 function layout(it: Instance, direction?: 'row'): UiSpecNode {
   const align = it.literal('align');
   const justify = LAYOUT_JUSTIFY.get(it.literal('justify') ?? '');
@@ -560,6 +563,31 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     ];
   },
   Column: (it) => [layout(it)],
+  DateTimeInput: (it) => {
+    for (const property of ['enableDate', 'enableTime']) {
+      const flag = it.body[property];
+      if (flag !== undefined && typeof flag !== 'boolean') {
+        throw it.malformed(property, `DateTimeInput ${property} must be a boolean`);
+      }
+    }
+    if (it.body['enableDate'] === true) {
+      throw new Degrade('unsupported-variant', 'DatePicker is unavailable');
+    }
+    if (it.body['enableTime'] !== true) {
+      throw new Degrade('unsupported-variant', 'enableTime must be true');
+    }
+
+    const label = it.text('label');
+    const rawValue = it.value('value');
+    if (label.trim() === '') {
+      throw new Degrade('unsupported-variant', 'time-only input requires a label');
+    }
+    const time = typeof rawValue === 'string' ? LOCAL_TIME.exec(rawValue)?.[1] : undefined;
+    if (rawValue !== undefined && rawValue !== '' && time === undefined) {
+      throw it.malformed('value', 'DateTimeInput time must be HH:mm or HH:mm:ss');
+    }
+    return [node('ki-time-input', { label, ...(time === undefined ? {} : { value: time }) }, [])];
+  },
   Divider: (it) => {
     const axis = it.literal('axis');
     return [

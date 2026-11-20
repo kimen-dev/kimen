@@ -1,0 +1,111 @@
+{
+  "ki": {
+    "time-input": {
+      "field": {
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$description": "Image painted over the surface background.",
+          "$type": "other"
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.no-backdrop-filter}",
+          "$description": "Complete filter applied behind the surface.",
+          "$type": "other"
+        }
+      },
+      "list": {
+        "bg": {
+          "$value": "{ki.surface.s1}",
+          "$description": "Background of the suggested times list.",
+          "$type": "color"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Text colour of the suggested times list.",
+          "$type": "color"
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$description": "Image painted over the surface background.",
+          "$type": "other"
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.no-backdrop-filter}",
+          "$description": "Complete filter applied behind the surface.",
+          "$type": "other"
+        },
+        "border-color": {
+          "$value": "{ki.outline.low-em}",
+          "$description": "Border colour of the suggested times list.",
+          "$type": "color"
+        },
+        "border-width": {
+          "$value": "{ki.glyph.stroke-width}",
+          "$description": "Border width of the suggested times list.",
+          "$type": "dimension"
+        },
+        "radius": {
+          "$value": "{ki.corner.popup}",
+          "$description": "Corner radius of the suggested times list.",
+          "$type": "dimension"
+        },
+        "shadow": {
+          "$value": "{ki.elevation.e3}",
+          "$description": "Elevation of the suggested times list.",
+          "$type": "shadow"
+        },
+        "padding": {
+          "$value": "{ki.layout.spacing.xs}",
+          "$description": "Padding on the inside edge of the suggested times list.",
+          "$type": "dimension"
+        },
+        "max-height": {
+          "$value": "{ki.floating-list.compact-max-block-size}",
+          "$description": "Maximum block size of the scrolling suggestions.",
+          "$type": "dimension"
+        }
+      },
+      "option": {
+        "height": {
+          "$value": "{ki.floating-list.option-min-block-size}",
+          "$description": "Minimum block size of a suggestion at standard density.",
+          "$type": "dimension"
+        },
+        "radius": {
+          "$value": "{ki.corner.popup-option}",
+          "$description": "Corner radius of a suggestion.",
+          "$type": "dimension"
+        },
+        "padding-inline": {
+          "$value": "{ki.layout.spacing.md}",
+          "$description": "Inline padding of a suggestion.",
+          "$type": "dimension"
+        },
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.s3}",
+            "$description": "Background of a hovered suggestion.",
+            "$type": "color"
+          },
+          "fg": {
+            "$value": "{ki.text.high-em}",
+            "$description": "Text colour of a hovered suggestion.",
+            "$type": "color"
+          }
+        }
+      },
+      "selected": {
+        "bg": {
+          "$value": "{ki.surface.primary-low-em}",
+          "$description": "Background of the committed suggestion.",
+          "$type": "color"
+        },
+        "fg": {
+          "$value": "{ki.text.primary-on-primary-light}",
+          "$description": "Text and check mark of the committed suggestion.",
+          "$type": "color"
+        }
+      }
+    }
+  }
+}

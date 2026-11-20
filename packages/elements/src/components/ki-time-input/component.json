@@ -1,0 +1,11 @@
+{
+  "barePage": { "keyboardPressed": false },
+  "pointer": { "hoverWitness": true },
+  "visual": { "material3Dark": true },
+  "catalog": true,
+  "formBinding": "select",
+  "sizeBudget": {
+    "mcpApps": { "raw": 21530, "gzip": 5568, "brotli": 4201 },
+    "mcpServer": { "raw": 39364, "gzip": 7695, "brotli": 4686 }
+  }
+}

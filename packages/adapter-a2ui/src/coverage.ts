@@ -227,8 +227,9 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     properties: ['label', 'min', 'max', 'value', CHECKS],
   },
   DateTimeInput: {
-    kind: 'unmapped',
-    reason: 'no date or time input in the catalog',
+    catalog: ['ki-time-input'],
+    kind: 'mapped',
+    properties: ['label', 'value', 'enableDate', 'enableTime', CHECKS],
   },
   // Security-forbidden types: raw-markup and code carriers reject the message.
   html: { kind: 'forbidden', reason: 'raw HTML is a markup-injection vector' },
@@ -394,8 +395,9 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     properties: ['label', 'min', 'max', 'steps', 'value', V1_CHECKS],
   },
   DateTimeInput: {
-    kind: 'unmapped',
-    reason: 'no date or time input in the catalog',
+    catalog: ['ki-time-input'],
+    kind: 'mapped',
+    properties: ['label', 'value', 'enableDate', 'enableTime', V1_CHECKS],
   },
   html: { kind: 'forbidden', reason: 'raw HTML is a markup-injection vector' },
   RawHtml: {
