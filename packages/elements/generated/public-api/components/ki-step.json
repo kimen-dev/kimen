@@ -1,0 +1,110 @@
+{
+  "component": {
+    "attributes": {
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional supporting text displayed below the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination for a completed step. Omit for a passive step.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "state": {
+        "default": "'upcoming'",
+        "deprecatedSince": null,
+        "description": "The step's progress state. Mark the active step as current.",
+        "replacement": null,
+        "required": false,
+        "type": "\"current\" | \"done\" | \"error\" | \"upcoming\""
+      }
+    },
+    "cssProperties": {
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "One authored step in a Stepper.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional supporting text displayed below the label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination for a completed step. Omit for a passive step.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "state": {
+        "default": "'upcoming'",
+        "deprecatedSince": null,
+        "description": "The step's progress state. Mark the active step as current.",
+        "replacement": null,
+        "required": false,
+        "type": "\"current\" | \"done\" | \"error\" | \"upcoming\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The visible label. Use text or passive inline markup.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-step.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-step.d.ts",
+    "symbols": {
+      "KiStep": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiStep extends Components.KiStep, HTMLElement {\n}\nexport const KiStep: {\n    prototype: KiStep;\n    new (): KiStep;\n};"
+      },
+      "KiStepState": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiStepState = 'done' | 'current' | 'upcoming' | 'error';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-step.js"
+  }
+}

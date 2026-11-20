@@ -1,0 +1,505 @@
+{
+  "component": {
+    "attributes": {
+      "density": {
+        "default": "'default'",
+        "deprecatedSince": null,
+        "description": "Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.",
+        "replacement": null,
+        "required": false,
+        "type": "\"compact\" | \"default\""
+      },
+      "loading": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the native table busy and adds a decorative loading row after the current records.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "row-selection-label": {
+        "default": "'Select {row}'",
+        "deprecatedSince": null,
+        "description": "Accessible name template for each row checkbox. Include {row} for the row header or key.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "select-all-label": {
+        "default": "'Select all rows'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the bulk selection checkbox. Translate for the page language.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "selectable": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Adds a leading selection column with a checked, mixed or unchecked bulk control.\nGive each selectable body row a distinct, nonempty data-key. Register\nki-checkbox alongside ki-table when using individual component imports.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "sticky-header": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Keeps the native column header in view inside a vertically constrained frame.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter applied behind the frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Table frame and caption surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over the table frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Frame and row dividers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Frame and row divider stroke.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-caption-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the native table caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-cell-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Horizontal space inside cells.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Primary record and caption ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-focus-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the sort button focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Keyboard focus outline ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between a focus outline and its control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Keyboard focus outline stroke.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-header-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Column header surface, including when sticky.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-header-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over the column header.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-header-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Column header ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-header-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Column header row height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-meta-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Secondary and numeric value ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outer frame corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-row-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default data row height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-row-height-compact": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Compact data row height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-row-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface under a record on hover.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-row-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Record ink on hover.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-row-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface under a selected record.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-row-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Record ink when selected.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-skeleton": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative loading bar fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-skeleton-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Loading bar height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-skeleton-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Loading bar corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-sort-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between a column label and sort indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-sort-glyph-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative sort indicator edge.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-touch-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum width and height of controls with a coarse pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A scrollable frame for a native data table with optional sorting and selection.",
+    "events": {
+      "ki-selection-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A person changes selection with a checkbox. The event supplies the selected\ndata-key values in displayed order.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiTableSelectionDetail>"
+      },
+      "ki-sort": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A person activates a sortable column. Use the key and direction to sort records\nand move aria-sort to the active header. The event is a request.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiTableSortDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "density": {
+        "default": "'default'",
+        "deprecatedSince": null,
+        "description": "Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.",
+        "replacement": null,
+        "required": false,
+        "type": "\"compact\" | \"default\""
+      },
+      "loading": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes the native table busy and adds a decorative loading row after the current records.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "rowSelectionLabel": {
+        "default": "'Select {row}'",
+        "deprecatedSince": null,
+        "description": "Accessible name template for each row checkbox. Include {row} for the row header or key.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "selectAllLabel": {
+        "default": "'Select all rows'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the bulk selection checkbox. Translate for the page language.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "selectable": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Adds a leading selection column with a checked, mixed or unchecked bulk control.\nGive each selectable body row a distinct, nonempty data-key. Register\nki-checkbox alongside ki-table when using individual component imports.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "stickyHeader": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Keeps the native column header in view inside a vertically constrained frame.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One native light-DOM table with a caption, head and body. Use data-sort\non sortable headers and data-key on each record available for selection.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-table.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-table.d.ts",
+    "symbols": {
+      "KiTable": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiTable extends Components.KiTable, HTMLElement {\n}\nexport const KiTable: {\n    prototype: KiTable;\n    new (): KiTable;\n};"
+      },
+      "KiTableDensity": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiTableDensity = 'default' | 'compact';"
+      },
+      "KiTableSelectionDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiTableSelectionDetail {\n    keys: string[];\n}"
+      },
+      "KiTableSortDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiTableSortDetail {\n    key: string;\n    direction: KiTableSortDirection;\n}"
+      },
+      "KiTableSortDirection": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiTableSortDirection = 'ascending' | 'descending';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-table.js"
+  }
+}

@@ -3,7 +3,7 @@
 // Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.4.0",
+  "catalogSchemaVersion": "1.5.0",
   "components": {
     "div": {
       "description": "A native layout container (`<div>`) that lays its children out as a flex column or row, separated by a spacing token. It has no visual identity of its own: no background, border or padding.",
@@ -361,6 +361,54 @@ export const catalogData = {
       "tag": "ki-badge",
       "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (use ki-counter).",
       "whenToUse": "annotate an entity with short status text (a state, a\ncategory) whose meaning is carried by the label itself; the tone color\nonly reinforces the text, it never replaces it."
+    },
+    "ki-breadcrumb": {
+      "description": "A path of ancestor links ending at the current page, with optional overflow.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the navigation landmark.",
+          "default": "Breadcrumb"
+        },
+        "max-items": {
+          "type": "number",
+          "description": "Optional overflow threshold. Above it, keep the first and last two levels\nvisible. Positive values are rounded down and clamped to four. Omit this\nprop, or pass a non-positive or non-finite value, to show the full trail."
+        },
+        "more-label": {
+          "type": "string",
+          "description": "Localizable name of the overflow control. Use {n} for the hidden level count.",
+          "default": "Show {n} more levels"
+        }
+      },
+      "slots": {
+        "": "Direct ki-breadcrumb-item children in hierarchy order."
+      },
+      "tag": "ki-breadcrumb",
+      "whenNotToUse": "switch between peer routes, toggle peer panels, or display progress through a form.",
+      "whenToUse": "show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current."
+    },
+    "ki-breadcrumb-item": {
+      "description": "One declarative level in a breadcrumb path.",
+      "events": {},
+      "props": {
+        "current": {
+          "type": "boolean",
+          "description": "Explicitly marks the final level as current. The owning breadcrumb treats\nits final level as current by position, including when this marker is omitted.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Native destination for an ancestor level. Leaves the label as text when omitted.\nThe final level never links away from the current page.",
+          "format": "url"
+        }
+      },
+      "slots": {
+        "": "Plain-text label mirrored by the owning breadcrumb."
+      },
+      "tag": "ki-breadcrumb-item",
+      "whenNotToUse": "render a standalone link or display an interactive control inside the label.",
+      "whenToUse": "declare a direct child of ki-breadcrumb in hierarchy order. Give ancestors an href and use short text labels. The last level is the current page."
     },
     "ki-button": {
       "description": "A token-styled action button with native button semantics.",
@@ -965,6 +1013,120 @@ export const catalogData = {
       "tag": "ki-empty-state",
       "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
       "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction."
+    },
+    "ki-fab": {
+      "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
+      "events": {
+        "click": "Native activation click. The page or guarded renderer handles the declared action."
+      },
+      "props": {
+        "collapse-on-scroll": {
+          "type": "boolean",
+          "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+          "default": false
+        },
+        "extended": {
+          "type": "boolean",
+          "description": "Show the action label next to its icon.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the action. Also the visible text in the extended state.",
+          "required": true
+        },
+        "position": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "static"
+          ],
+          "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+          "default": "static"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "xl"
+          ],
+          "description": "Square footprint when icon-only, and minimum size when extended.",
+          "default": "md"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "primary",
+            "secondary",
+            "surface"
+          ],
+          "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+          "default": "secondary"
+        }
+      },
+      "slots": {
+        "icon": "Decorative, noninteractive icon replacing the named glyph."
+      },
+      "tag": "ki-fab",
+      "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
+      "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
+    },
+    "ki-feature-icon": {
+      "description": "A decorative glyph centered on a tinted tile.",
+      "events": {},
+      "props": {
+        "shape": {
+          "type": "enum",
+          "values": [
+            "circle",
+            "square"
+          ],
+          "description": "Rounded square or circle. Unknown values use square.",
+          "default": "square"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.",
+          "default": "md"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "info",
+            "neutral",
+            "primary",
+            "primary-light",
+            "success",
+            "warning"
+          ],
+          "description": "Colour pair for the tile and its glyph. Unknown values use neutral.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "One Lucide glyph. Supply an inline SVG using currentColor or a ki-icon with inherited size. Guarded surfaces use a registered ki-icon."
+      },
+      "tag": "ki-feature-icon",
+      "whenNotToUse": "For an action (use ki-icon-button), a status (use ki-badge),\nor the sole label of a section.",
+      "whenToUse": "Place a decorative icon beside the visible heading of a feature,\nempty state or settings section. The heading carries the meaning."
     },
     "ki-format-date": {
       "description": "Displays an ISO date or timestamp in the reader's language.",
@@ -1703,6 +1865,68 @@ export const catalogData = {
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
       "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
+    "ki-popover": {
+      "description": "A non-modal popover anchored to a button.",
+      "events": {
+        "ki-close": "Emitted when the popover closes.",
+        "ki-open": "Emitted when the popover opens."
+      },
+      "props": {
+        "arrow": {
+          "type": "boolean",
+          "description": "Shows the arrow toward the trigger.",
+          "default": true
+        },
+        "for": {
+          "type": "string",
+          "description": "ID of the button in the same document or shadow tree."
+        },
+        "kind": {
+          "type": "enum",
+          "values": [
+            "dialog",
+            "toggletip"
+          ],
+          "description": "Use dialog for controls or toggletip for supplemental text.",
+          "default": "dialog"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of a dialog popover.",
+          "default": "Popover"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Visibility. Reflects activation and native dismissal.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom",
+            "bottom-end",
+            "bottom-start",
+            "end",
+            "end-end",
+            "end-start",
+            "start",
+            "start-end",
+            "start-start",
+            "top",
+            "top-end",
+            "top-start"
+          ],
+          "description": "Preferred side and logical alignment. Flips when room is limited.",
+          "default": "bottom-start"
+        }
+      },
+      "slots": {
+        "": "Dialog content or toggletip text."
+      },
+      "tag": "ki-popover",
+      "whenNotToUse": "Use ki-dialog for required decisions and ki-tooltip for hover or focus hints.",
+      "whenToUse": "Show filters, details, a small form, or a text toggletip."
+    },
     "ki-progress": {
       "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",
       "events": {},
@@ -2077,6 +2301,106 @@ export const catalogData = {
       "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
       "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
     },
+    "ki-slider": {
+      "description": "Adjusts a value or an interval on a bounded scale.",
+      "events": {
+        "change": "Bubbles once when a pointer operation commits a different\nselection or a keyboard action changes it. Read the current host value.\nFor updates during a drag, listen for the standard bubbling `input` event.\nProgrammatic updates and form resets are silent."
+      },
+      "props": {
+        "centered": {
+          "type": "boolean",
+          "description": "Shows a midpoint tick and fills from that point to a single thumb.",
+          "default": false
+        },
+        "currency": {
+          "type": "string",
+          "description": "ISO 4217 code used with currency format.",
+          "default": "EUR"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Makes the slider unavailable for pointer, keyboard and form submission.",
+          "default": false
+        },
+        "format": {
+          "type": "enum",
+          "values": [
+            "currency",
+            "number",
+            "percent"
+          ],
+          "description": "Display format for the readout and accessible values.",
+          "default": "number"
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Optional supporting text, read as the description of each thumb."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible base name. Use a task-specific, localized label.",
+          "default": "Slider"
+        },
+        "marks": {
+          "type": "number",
+          "description": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 100
+        },
+        "max": {
+          "type": "number",
+          "description": "Inclusive upper bound. A maximum below min collapses the scale.",
+          "default": 100
+        },
+        "maximum-label": {
+          "type": "string",
+          "description": "Localized suffix for the upper thumb's accessible name.",
+          "default": "maximum"
+        },
+        "min": {
+          "type": "number",
+          "description": "Inclusive lower bound and step origin.",
+          "default": 0
+        },
+        "minimum-label": {
+          "type": "string",
+          "description": "Localized suffix for the lower thumb's accessible name.",
+          "default": "minimum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Native form key. Omit when the value should remain local to the control."
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Axis of the scale. A vertical scale increases towards the top.",
+          "default": "horizontal"
+        },
+        "range": {
+          "type": "boolean",
+          "description": "Enables two non-crossing thumbs in minimum then maximum tab order.",
+          "default": false
+        },
+        "step": {
+          "type": "number",
+          "description": "Positive increment. Values snap from min and max is always reachable.",
+          "default": 1
+        },
+        "value": {
+          "type": "number-or-string",
+          "description": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized."
+        }
+      },
+      "slots": {},
+      "tag": "ki-slider",
+      "whenNotToUse": "when people need to enter exact numbers or choose among a\nfew named options. Use a number input or radio group for those tasks.",
+      "whenToUse": "coarse adjustments such as volume, balance or a price filter,\nwith a descriptive label."
+    },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",
       "events": {},
@@ -2289,6 +2613,94 @@ export const catalogData = {
       "whenNotToUse": "short labeled status text (that pill is ki-badge — this dot\nnever renders text), notification counters or the overlay attachment\nmechanism (a future, separate nav-badge concern), messages that need\nattention or announcement (ki-alert — the dot has no live region),\nprogress or loading (ki-progress). An unlabeled dot without adjacent\nvisible text is an authoring mistake (WCAG 1.4.1).",
       "whenToUse": "mark a state with minimal footprint adjacent to (or overlaid\non) the item it describes: presence on an avatar, health of a service\nlist entry, connection state in a toolbar. Label it (`label`) or pair it\nwith adjacent visible text — color is never the only carrier of the\nmeaning (WCAG 1.4.1)."
     },
+    "ki-step": {
+      "description": "One authored step in a Stepper.",
+      "events": {},
+      "props": {
+        "description": {
+          "type": "string",
+          "description": "Optional supporting text displayed below the label."
+        },
+        "href": {
+          "type": "string",
+          "description": "Destination for a completed step. Omit for a passive step.",
+          "format": "url"
+        },
+        "state": {
+          "type": "enum",
+          "values": [
+            "current",
+            "done",
+            "error",
+            "upcoming"
+          ],
+          "description": "The step's progress state. Mark the active step as current.",
+          "default": "upcoming"
+        }
+      },
+      "slots": {
+        "": "The visible label. Use text or passive inline markup."
+      },
+      "tag": "ki-step",
+      "whenNotToUse": "Standalone or with interactive content in the label.\nA completed step can make the label itself a link.",
+      "whenToUse": "Place directly inside ki-stepper in task order. Its default slot\nis the step label and its properties describe the step to the owning list."
+    },
+    "ki-stepper": {
+      "description": "An ordered, responsive view of progress through named steps.",
+      "events": {},
+      "props": {
+        "count-label": {
+          "type": "string",
+          "description": "Compact disclosure text without a current step. Include {total}.",
+          "default": "Steps ({total})"
+        },
+        "current-label": {
+          "type": "string",
+          "description": "Localized text for the current step.",
+          "default": "Current"
+        },
+        "done-label": {
+          "type": "string",
+          "description": "Localized text for a completed step.",
+          "default": "Completed"
+        },
+        "error-label": {
+          "type": "string",
+          "description": "Localized text for a step that has an error.",
+          "default": "Error"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the list. Use a localized description of the task.",
+          "required": true
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Use vertical for a stacked list. Horizontal layout compacts below 22rem.",
+          "default": "horizontal"
+        },
+        "summary-label": {
+          "type": "string",
+          "description": "Compact disclosure text. Place {current} and {total} in the local order.",
+          "default": "Step {current} of {total}"
+        },
+        "upcoming-label": {
+          "type": "string",
+          "description": "Localized text for an upcoming step.",
+          "default": "Not started"
+        }
+      },
+      "slots": {
+        "": "Direct ki-step children in task order. The stepper assigns each\nchild to its row automatically."
+      },
+      "tag": "ki-stepper",
+      "whenNotToUse": "A percentage or indeterminate task, a carousel position,\nor navigation among peer views. The task owner updates step states.",
+      "whenToUse": "Show the current place in onboarding, checkout or a wizard.\nProvide a label and direct ki-step children in task order."
+    },
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
@@ -2381,6 +2793,55 @@ export const catalogData = {
       "tag": "ki-tab-panel",
       "whenNotToUse": "standalone, as lazy mounting, or for page\nnavigation; orphan and duplicate panels are hidden by the parent group.",
       "whenToUse": "hold the content for one peer tab view, sharing `value` with\nits `ki-tab`."
+    },
+    "ki-table": {
+      "description": "A scrollable frame for a native data table with optional sorting and selection.",
+      "events": {
+        "ki-selection-change": "A person changes selection with a checkbox. The event supplies the selected\ndata-key values in displayed order.",
+        "ki-sort": "A person activates a sortable column. Use the key and direction to sort records\nand move aria-sort to the active header. The event is a request."
+      },
+      "props": {
+        "density": {
+          "type": "enum",
+          "values": [
+            "compact",
+            "default"
+          ],
+          "description": "Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.",
+          "default": "default"
+        },
+        "loading": {
+          "type": "boolean",
+          "description": "Makes the native table busy and adds a decorative loading row after the current records.",
+          "default": false
+        },
+        "row-selection-label": {
+          "type": "string",
+          "description": "Accessible name template for each row checkbox. Include {row} for the row header or key.",
+          "default": "Select {row}"
+        },
+        "select-all-label": {
+          "type": "string",
+          "description": "Accessible name for the bulk selection checkbox. Translate for the page language.",
+          "default": "Select all rows"
+        },
+        "selectable": {
+          "type": "boolean",
+          "description": "Adds a leading selection column with a checked, mixed or unchecked bulk control.\nGive each selectable body row a distinct, nonempty data-key. Register\nki-checkbox alongside ki-table when using individual component imports.",
+          "default": false
+        },
+        "sticky-header": {
+          "type": "boolean",
+          "description": "Keeps the native column header in view inside a vertically constrained frame.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "One native light-DOM table with a caption, head and body. Use data-sort\non sortable headers and data-key on each record available for selection."
+      },
+      "tag": "ki-table",
+      "whenNotToUse": "Lay out a screen, show a short one-line list, or present the\nname-value details of one record. Use CSS grid, ki-list or a description list.",
+      "whenToUse": "Show records with shared fields that people compare, scan or sort.\nSupply a native caption, column headers with scope=\"col\" and record headers\nwith scope=\"row\". Mark numeric cells with data-numeric and secondary cells\nwith data-meta. The host application supplies the native table markup."
     },
     "ki-tabs": {
       "description": "A tab group for switching between peer content views.",

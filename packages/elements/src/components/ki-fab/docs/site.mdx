@@ -1,0 +1,93 @@
+---
+title: ki-fab
+description: A floating action button for the primary action of a screen.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use one FAB per screen for a primary action such as Compose or New project.
+Keep secondary and destructive actions with the content they affect. In a
+desktop layout with a visible primary action, use `ki-button`.
+
+<Demo code={`<ki-fab label="New project" variant="primary" extended>
+  <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+    <path d="M5 12h14M12 5v14"></path>
+  </svg>
+</ki-fab>`} />
+
+Supply a localized `label` for the native control. The icon-only layout uses
+it as its accessible name, and `extended` shows the same text next to the icon.
+The `icon` slot takes decorative, noninteractive content and replaces the
+glyph selected by `icon-name`. Import a named glyph before mounting the FAB.
+
+```js
+import '@kimen/elements/icons/pencil';
+import { defineCustomElement } from '@kimen/elements/ki-fab';
+
+defineCustomElement();
+```
+
+```html
+<ki-fab label="Compose" icon-name="pencil"></ki-fab>
+```
+
+The default size is `md` (56 px). Use `lg` (80 px) or `xl` (96 px) for greater
+prominence. These dimensions assume a 16 px root font size. `secondary` is
+the default tinted fill. `primary` uses the strongest fill and `surface`
+uses a raised surface.
+
+Without `href`, the FAB is a native button and Enter or Space activates it.
+Set `href` for a native link that follows its destination on Enter.
+Listen for the native `click` event to handle activation in your application.
+
+## Fixed placement
+
+Keep the fixed FAB after the main content in the DOM. It sits at the viewport's
+bottom inline-end corner, accounting for the bottom safe area. On a screen with
+fixed mobile navigation, set `--ki-fab-mobile-nav-block-size` on a shared
+ancestor to the navigation's block size excluding the safe area.
+
+Reserve block-end space equal to the FAB size, the navigation's block size,
+the bottom safe area, and two placement offsets. Use the same clearance as
+scroll padding so keyboard focus can move into the unobscured area.
+
+```html
+<main class="compose-page">
+  <!-- Page content -->
+</main>
+<ki-fab label="Compose" icon-name="pencil" position="fixed" extended collapse-on-scroll></ki-fab>
+```
+
+```css
+:root {
+  --ki-fab-mobile-nav-block-size: var(--app-mobile-nav-height, 0px);
+  --compose-clearance: calc(
+    var(--ki-fab-size) + 2 * var(--ki-fab-offset) +
+      var(--ki-fab-mobile-nav-block-size) + env(safe-area-inset-bottom, 0px)
+  );
+  scroll-padding-block-end: var(--compose-clearance);
+}
+
+.compose-page {
+  padding-block-end: var(--compose-clearance);
+}
+```
+
+This example uses the default size. For `lg` or `xl`, use the corresponding
+FAB size when calculating the clearance. If the label wraps, reserve the
+actual expanded height. Set `--app-mobile-nav-height` only while the fixed
+navigation is visible.
+
+With `collapse-on-scroll`, an extended FAB shows just its icon during downward
+document scrolling and restores the label on upward scrolling. The same
+control keeps focus and its name throughout. Reduced motion makes the change
+immediate.
+
+## API reference
+
+<CemApi tag="ki-fab" />
+
+## Workshop
+
+[Open ki-fab in Storybook](/storybook/?path=/docs/docs-components-ki-fab--docs)
