@@ -1,6 +1,27 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
-  "budgetGroup": { "members": ["ki-segmented-control", "ki-segment"] }
+  "budgetGroup": {
+    "members": ["ki-segmented-control", "ki-segment"]
+  },
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 13434,
+      "gzip": 3619,
+      "brotli": 2567
+    },
+    "mcpServer": {
+      "raw": 22737,
+      "gzip": 5255,
+      "brotli": 3167
+    },
+    "tokenStylesheets": {
+      "onmars": 187
+    }
+  }
 }

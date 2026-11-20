@@ -95,8 +95,7 @@ describe('A2UI v0.9.1 messages become catalog specs rendered through the guardra
     const results = interactiveButton.map((message) => adapter.apply(message));
 
     expect(results.every((r) => r.ok)).toBe(true);
-    // A Column root with two children renders inside the declared root container.
-    expect(surface.firstElementChild?.localName).toBe('ki-card');
+    expect(surface.firstElementChild?.localName).toBe('ki-stack');
     expect(surface.textContent).toContain('Click the button below');
     expect(surface.querySelector('ki-button')?.textContent).toBe('Click Me');
     expect(isCatalogTree(surface)).toBe(true);

@@ -1,0 +1,333 @@
+{
+  "component": {
+    "attributes": {
+      "download": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "external": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "external-label": {
+        "default": "'(opens in a new tab)'",
+        "deprecatedSince": null,
+        "description": "Localizable text appended to the accessible name in external mode.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "rel": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space-separated native link relationships. External links always include noopener.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native browsing-context name. External links use _blank.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "underline": {
+        "default": "'always'",
+        "deprecatedSince": null,
+        "description": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it.",
+        "replacement": null,
+        "required": false,
+        "type": "\"always\" | \"hover\""
+      },
+      "variant": {
+        "default": "'primary'",
+        "deprecatedSince": null,
+        "description": "Ink role. Primary uses accent ink and neutral uses body ink.",
+        "replacement": null,
+        "required": false,
+        "type": "\"neutral\" | \"primary\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Transparent backing for primary link text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image overlay for link backing.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accent ink for primary links.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body typeface used by link text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-icon-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the label and the external link icon.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "External link icon edge relative to the inherited text size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-neutral-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Transparent backing for neutral link text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-neutral-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body ink for neutral links.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius used by the link focus outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-underline-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between link text and its underline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-underline-thickness": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting underline thickness.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-underline-thickness-hover": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Underline thickness under a hover-capable pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A native navigation link with Kimen ink, underline, and focus styles.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "link": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native anchor that renders the link and receives focus.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "download": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "external": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "externalLabel": {
+        "default": "'(opens in a new tab)'",
+        "deprecatedSince": null,
+        "description": "Localizable text appended to the accessible name in external mode.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "rel": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space-separated native link relationships. External links always include noopener.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native browsing-context name. External links use _blank.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "underline": {
+        "default": "'always'",
+        "deprecatedSince": null,
+        "description": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it.",
+        "replacement": null,
+        "required": false,
+        "type": "\"always\" | \"hover\""
+      },
+      "variant": {
+        "default": "'primary'",
+        "deprecatedSince": null,
+        "description": "Ink role. Primary uses accent ink and neutral uses body ink.",
+        "replacement": null,
+        "required": false,
+        "type": "\"neutral\" | \"primary\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Descriptive link text. Use phrasing content without nested interactive controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-link.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-link.d.ts",
+    "symbols": {
+      "KiLink": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiLink extends Components.KiLink, HTMLElement {\n}\nexport const KiLink: {\n    prototype: KiLink;\n    new (): KiLink;\n};"
+      },
+      "KiLinkUnderline": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiLinkUnderline = 'always' | 'hover';"
+      },
+      "KiLinkVariant": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiLinkVariant = 'primary' | 'neutral';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-link.js"
+  }
+}

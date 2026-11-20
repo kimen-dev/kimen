@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-note" />
+
+# ki-note
+
+A note explains a nearby control or section in one or two lines. Put the
+consequence first in a warning. The note remains readable without the icon.
+
+```html
+<ki-note>Only workspace owners can change billing details.</ki-note>
+<ki-note tone="warning" size="sm">Changing the slug breaks existing links.</ki-note>
+<ki-note icon="false">Billing statements remain available for one year.</ki-note>
+```
+
+Use the `icon` slot for a decorative replacement. The note has no live region,
+so use `ki-alert` for updates that need announcing. Use the field's `help-text`
+for guidance tied to a field.
+
+## Customization
+
+The neutral colors use `--ki-note-bg`, `--ki-note-fg` and `--ki-note-icon`.
+Tinted notes use the corresponding tone tokens, such as
+`--ki-note-warning-bg`. All tones default to high-emphasis text. Use
+`--ki-note-bg-image` to layer an image over the fill and
+`--ki-note-backdrop-filter` for the full filter value. Both default to `none`.
+The `note`, `icon` and `message` parts let consumers style each region.

@@ -4,17 +4,9 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # ki-card
 
-A non-interactive card surface for grouping related content.
-
-**When to use** — group related media, heading, supporting text and actions
-into one scannable surface visually distinct from the page; fill any subset
-of regions. Supply the heading element yourself in the `header` slot — plain
-text slotted there carries no heading semantics for assistive technology.
-
-**When NOT to use** — as a button or link target, form control, fieldset,
-page landmark, section replacement or nested card. For an interactive card,
-slot the button or link INSIDE a region (whole-card interactivity is a
-future feature, not this component).
+Group related media, a heading, supporting text and actions on one surface.
+Fill any subset of the regions. Use a native text heading in the `header`
+slot to name a clickable card.
 
 ## Examples
 
@@ -38,9 +30,7 @@ Any subset of regions works — a text-only card is valid:
 </ki-card>
 ```
 
-Actions belong in the `footer` slot (there is no dedicated actions slot in
-v1), and interactive elements always go inside a region — never make the
-card itself the click target:
+Place separate actions in the `footer` slot.
 
 ```html
 <ki-card>
@@ -50,6 +40,28 @@ card itself the click target:
   <ki-button slot="footer" variant="ghost">Later</ki-button>
 </ki-card>
 ```
+
+## Variants and primary activation
+
+`default` uses the theme's card. The `elevated`, `filled` and `outlined`
+variants select a raised, tinted or bordered treatment.
+
+```html
+<ki-card variant="outlined" href="/incidents/42">
+  <h3 slot="header">Search index rebuild</h3>
+  <p>Scheduled for midnight.</p>
+  <ki-button slot="footer" variant="secondary" type="button">Bookmark</ki-button>
+</ki-card>
+
+<ki-card variant="filled" interactive>
+  <h3 slot="header">Preview monthly report</h3>
+  <p>Review the new report before publishing it.</p>
+</ki-card>
+```
+
+The first card follows its title link. Listen for `ki-activate` on the second
+to handle the primary action. A nonblank `href` takes precedence when both
+options are present.
 
 ## Customization
 
@@ -64,14 +76,15 @@ card itself the click target:
 Per-region padding is available through
 `--ki-card-{media|header|body|footer}-padding`. Shadow parts:
 `::part(card)` (surface), `::part(media)`, `::part(header)`,
-`::part(body)` and `::part(footer)` (region wrappers).
+`::part(body)` and `::part(footer)` (region wrappers). Customize the primary
+control with `::part(trigger)`. The variant colour pairs use
+`--ki-card-{elevated|filled|outlined}-{bg|fg}`.
 
 ## Accessibility
 
-- The card is non-interactive and adds no landmark or heading semantics of
-  its own — supply a real heading element (for example `h3`) in the
-  `header` slot at the level the surrounding document needs.
-- Give slotted media a meaningful `alt`, or an empty `alt=""` when
-  decorative.
-- Keep interactive elements inside regions so their own semantics and focus
-  behavior stay intact.
+- The author supplies the heading level. A clickable card exposes one
+  primary link or button named by that heading, with a focus ring around
+  the whole surface.
+- Supporting text remains selectable. Secondary controls get their own
+  focus stops and keep their own behavior.
+- Give slotted media a meaningful `alt`, or an empty `alt=""` when decorative.

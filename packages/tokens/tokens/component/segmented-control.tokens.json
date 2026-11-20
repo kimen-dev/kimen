@@ -10,7 +10,7 @@
         "$description": "Optional image layered over the track surface."
       },
       "track-backdrop-filter": {
-        "$value": "{ki.effect.backdrop-filter-none}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete CSS backdrop filter behind the track."
       },
       "track-padding": {
@@ -38,7 +38,7 @@
         "$description": "Optional image layered over an unselected segment surface."
       },
       "item-backdrop-filter": {
-        "$value": "{ki.effect.backdrop-filter-none}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete CSS backdrop filter behind an unselected segment."
       },
       "item-fg": {
@@ -58,7 +58,7 @@
         "$description": "Optional image layered over the selected segment."
       },
       "selected-backdrop-filter": {
-        "$value": "{ki.effect.backdrop-filter-none}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete CSS backdrop filter behind the selected segment."
       },
       "selected-fg": {

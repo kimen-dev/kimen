@@ -338,14 +338,26 @@ export function attachText(
   return parent.insertBefore(holder, before);
 }
 
-/** Writes one validated prop as an attribute: booleans by presence. */
-export function writeProp(element: Element, name: string, value: Scalar | undefined): void {
-  if (value === undefined || value === false) {
+/** Writes one validated prop as an attribute. */
+export function writeProp(
+  element: Element,
+  component: string,
+  name: string,
+  value: Scalar | undefined,
+): void {
+  if (value === undefined) {
     element.removeAttribute(name);
-  } else if (value === true) {
-    element.setAttribute(name, '');
+  } else if (value === false) {
+    // Built-in Stencil props that default to true require an explicit false.
+    // Registered components continue to use boolean attribute presence.
+    const entry = ownEntry(builtInCatalog.components, component);
+    if (ownEntry(entry?.props, name)?.default === true) {
+      element.setAttribute(name, 'false');
+    } else {
+      element.removeAttribute(name);
+    }
   } else {
-    element.setAttribute(name, String(value));
+    element.setAttribute(name, value === true ? '' : String(value));
   }
 }
 
@@ -374,7 +386,7 @@ export function writeProps(
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, name, value);
+    writeProp(element, component, name, value);
   }
 }
 
@@ -412,41 +424,44 @@ export function wireActivation(
 ): void {
   // The guard admitted at most one declared event (S19).
   const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
-  if (activation === DEFAULT_ACTIVATION_EVENT) {
-    // A click-activated node (S4) dispatches the spec's data payload and
-    // suppresses the native default (a submit button's form submission)
-    // and the bubbling, so no other callback or code path runs.
-    element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-      if (!claim(event)) {
-        return;
-      }
+  const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
+  const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
+    const href = props['href'];
+    return typeof href === 'string' && href.trim() !== '';
+  };
+
+  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+    if (!claim(event) || (!hasOptInCardAction && activation !== DEFAULT_ACTIVATION_EVENT)) return;
+    const props = currentProps();
+    // Existing card specs could bind click before the card gained an event.
+    // Only those passive cards keep click dispatch. New card modes claim
+    // the click without cancelling native navigation or handling it twice.
+    const legacyCard = hasOptInCardAction && props['interactive'] !== true && !cardHasLink(props);
+    if (activation === DEFAULT_ACTIVATION_EVENT || legacyCard) {
       event.preventDefault();
       event.stopPropagation();
-      dispatch({ ...currentProps() });
-    });
+      dispatch({ ...props });
+    }
+  });
+
+  if (activation === DEFAULT_ACTIVATION_EVENT) {
     pinButtonType(element, entry, currentProps());
     return;
   }
-  // A declared-event node (S17) dispatches on the event its catalog entry
-  // declares, emitted by the component itself — a same-named event bubbling
-  // up from a descendant is not this control's activation (S18). Nothing is
-  // cancelled: the control must be able to change, and the payload carries
-  // its live state. The click that operates the control is claimed, never
-  // cancelled, so an enclosing click-bound node does not dispatch for it (S4).
-  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-    claim(event);
-  });
+
+  // A declared event must come from the bound component itself (S17–S18).
+  // Leave the native interaction intact and carry the control's live state.
   element.addEventListener(activation, (event: Event) => {
-    if (event.target !== element || !claim(event)) {
-      return;
-    }
-    dispatch(liveData(element, currentProps(), entry));
+    if (event.target !== element || !claim(event)) return;
+    const props = currentProps();
+    if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
+    dispatch(liveData(element, props, entry));
   });
 }
 
 /**
  * Builds one validated node into a detached element (FR-004): props become
- * attributes (booleans as presence), text children become inert text nodes
+ * attributes, text children become inert text nodes
  * (never `innerHTML`), and a bound action wires exactly one activation
  * listener — derived from the catalog entry (FR-003) — onto the renderer's
  * single channel. No spec string is ever evaluated.

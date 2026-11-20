@@ -69,7 +69,9 @@ export { KiSelect } from './components/ki-select/ki-select.js';
 export { KiOption } from './components/ki-option/ki-option.js';
 
 // Wrapper-contract event types (spec 034): the generated framework wrappers
-// import these `Ki*CustomEvent` generics from the package root. Type-only
+// imported these `Ki*CustomEvent` generics from the package root; since spec
+// 049 they read every event type from `@kimen/elements/components`, so these
+// stay only for consumers that already import them here. Type-only
 // re-exports of the Stencil-generated interfaces — current API, not part of
 // the deprecated facade above, and never a component-registry path (the
 // component-inventory gate enumerates exactly this set).

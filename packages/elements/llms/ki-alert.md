@@ -12,9 +12,9 @@ severity with `tone`, never custom styling.
 ## When not to use
 
 transient confirmations that expire on their own belong to
-the future `ki-toast`; tiny status descriptors attached to another element
-belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
-field-level validation belongs to the form control.
+`ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to
+another element belong to `ki-badge`; blocking decisions belong to
+`ki-dialog`; inline field-level validation belongs to the form control.
 
 Assistive technology note: alerts that must be announced should be inserted
 dynamically, or re-shown by clearing `dismissed`; alerts present at initial
@@ -74,7 +74,7 @@ The `icon` slot takes a decorative glyph, drawn in the tone's colors in a round 
 
 - `dismiss-label` (string, default 'Dismiss'): Accessible name for the dismiss button. Override for localization; the default English string is the component's only built-in user-visible text. When to use: provide a localized action name whenever the document language is not English. When NOT to use: do not put the alert message here; use the default slot.
 - `dismissed` (boolean, default false): Reflected dismissed state. User dismissal sets it; applications may also set or clear it. While true, the host remains in the document but renders no alert subtree and leaves the accessibility tree. Clearing it re-shows the alert and creates a dynamic live-region appearance. When to use: persist or restore acknowledgement state from application data. When NOT to use: do not listen for programmatic changes as dismissal events; `ki-dismiss` is only for user activation.
-- `dismissible` (boolean, default false): Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop. When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; that is future `ki-toast` behavior.
+- `dismissible` (boolean, default false): Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop. When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; those belong to `ki-toast`.
 - `heading` (string | undefined): Optional emphasized text rendered before the message inside the live region. Empty strings render no heading. The heading is a `strong` element, not a document heading, so it never changes page outline. When to use: add a short label when it helps identify the status message. When NOT to use: do not use heading for page structure; use a real heading outside the alert when the document needs one.
 - `tone` ("danger" | "info" | "neutral" | "success" | "warning" | string & {}, default 'neutral'): Semantic intent for visual styling and live-region urgency. `danger` and `warning` expose `role="alert"`; `neutral`, `success`, `info`, absent, and unrecognized values expose `role="status"`. Unknown values keep rendering and fall back to the neutral token matrix by CSS construction. When to use: choose the tone that describes the page or section state. When NOT to use: do not use tone for layout, density, or filled-vs-outlined styling; those are token/theme decisions.
 

@@ -107,7 +107,7 @@
         },
         {
           "name": "A2UI_COVERAGE",
-          "summary": "Machine-readable coverage table declaring how each A2UI 0.9.1 basic-catalog component type is handled: mapped to catalog components, rendered inline, flattened as layout, degraded as unmapped, or forbidden. A2UI_V1_COVERAGE is the A2UI 1.0 counterpart."
+          "summary": "Machine-readable coverage table declaring how each A2UI 0.9.1 basic-catalog component type is handled: mapped to catalog components, rendered inline, degraded as unmapped, or forbidden. A2UI_V1_COVERAGE is the A2UI 1.0 counterpart."
         },
         {
           "name": "A2UI_RENDERER_CAPABILITIES",
