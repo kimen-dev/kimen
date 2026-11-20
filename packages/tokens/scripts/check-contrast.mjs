@@ -1152,19 +1152,32 @@ function evaluateContext(theme, scheme, declarations) {
     );
   }
 
-  // Component cells may be translucent (ghost/quaternary): composite the
-  // cell background over the page surface before measuring.
-  const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
-
-  for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+  // A translucent component cell composites over the page. Inline links
+  // can also sit directly on higher surface levels, including inside cards.
+  // A component's -icon ink sits on its -bg at the non-text minimum.
+  const icons = swept.flatMap(({ surface }) => {
+    const ink = surface.replace(/-bg$/u, '-icon');
+    return declarations.has(ink) ? [{ text: ink, surface, minRatio: NON_TEXT_MIN_RATIO }] : [];
+  });
+  for (const pair of [...CONTRAST_PAIRS, ...swept, ...icons]) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
-    const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
-    const ratio = contrastRatio(text, surface);
+    const backdrops =
+      pair.component === 'link' && rawSurface.a < 1 ? CONTROL_PAGE_SURFACES : ['--ki-surface-s0'];
     const min = pair.minRatio ?? MIN_RATIO;
 
-    if (ratio < min) {
-      failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (min ${min})`);
+    for (const backdrop of backdrops) {
+      const surface =
+        rawSurface.a < 1
+          ? compositeOver(rawSurface, parseColor(resolveCustomProperty(backdrop, declarations)))
+          : rawSurface;
+      const ratio = contrastRatio(text, surface);
+      if (ratio < min) {
+        const suffix = backdrops.length > 1 ? ` over ${backdrop}` : '';
+        failures.push(
+          `${theme}/${scheme} ${pair.text} on ${pair.surface}${suffix}: ${ratio} (min ${min})`,
+        );
+      }
     }
   }
 

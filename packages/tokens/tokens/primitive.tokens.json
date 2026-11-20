@@ -826,6 +826,26 @@
           "$description": "Medium stroke for large activity rings."
         }
       },
+      "text-decoration": {
+        "thickness-hover": {
+          "$value": "2px",
+          "$description": "Emphasized underline stroke on hover."
+        },
+        "offset": {
+          "$value": "0.2em",
+          "$description": "Underline gap relative to the surrounding text size."
+        }
+      },
+      "inline-icon": {
+        "size": {
+          "$value": "0.9em",
+          "$description": "Inline glyph edge relative to text size."
+        },
+        "gap": {
+          "$value": "0.25em",
+          "$description": "Space between inline text and a trailing glyph."
+        }
+      },
       "target-min": {
         "$value": "24px",
         "$description": "The smallest pointer target any density may produce: WCAG 2.5.8 (AA) asks for 24 x 24 CSS px. In px on purpose: WCAG measures CSS px, and a page that shrinks its root font size must not shrink the floor."
@@ -833,6 +853,10 @@
       "target-touch": {
         "$value": "44px",
         "$description": "The pointer target of the touch density (spec 045 Amendment A1): WCAG 2.5.5 Target Size (Enhanced, AAA) and Apple's Human Interface Guidelines ask for 44 x 44 CSS px. In px for the same reason as target-min."
+      },
+      "menu-inline-min": {
+        "$value": "14rem",
+        "$description": "Default minimum inline size from the menu reference, bounded by the viewport."
       },
       "qr": {
         "$value": "8rem",
@@ -867,6 +891,16 @@
           "$value": "48rem",
           "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
         }
+      },
+      "layout": {
+        "grid-min": {
+          "$value": "15rem",
+          "$description": "Default minimum size of an automatic grid track."
+        },
+        "grid-fixed-breakpoint": {
+          "$value": "30rem",
+          "$description": "Inline size at which a fixed grid can distribute multiple tracks."
+        }
       }
     },
     "border": {
@@ -881,6 +915,36 @@
       }
     },
     "foundation": {
+      "placeholder": {
+        "line-size": {
+          "$type": "dimension",
+          "$value": "0.75rem"
+        },
+        "circle-size": {
+          "$type": "dimension",
+          "$value": "2.5rem"
+        },
+        "rect-size": {
+          "$type": "dimension",
+          "$value": "6rem"
+        },
+        "circle-radius": {
+          "$type": "other",
+          "$value": "50%"
+        },
+        "last-line-scale": {
+          "$type": "number",
+          "$value": 0.7
+        },
+        "shimmer-image": {
+          "$type": "other",
+          "$value": "linear-gradient(90deg, transparent, currentColor, transparent)"
+        },
+        "shimmer-duration": {
+          "$type": "duration",
+          "$value": "1400ms"
+        }
+      },
       "onmars-v1": {
         "$description": "Temporary onmars v1 glass images. Read the legacy stop properties on the theme scope during their deprecation window.",
         "dialog-bg-image": {

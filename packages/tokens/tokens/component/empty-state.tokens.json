@@ -22,7 +22,7 @@
         "$description": "Optional image above the background color."
       },
       "backdrop-filter": {
-        "$value": "{ki.effect.component.backdrop-filter-none}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete filter applied behind the empty view."
       },
       "fg": {

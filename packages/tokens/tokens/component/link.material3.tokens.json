@@ -1,0 +1,22 @@
+{
+  "ki": {
+    "link": {
+      "bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Transparent backing for primary link text."
+      },
+      "fg": {
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Accent ink for primary links."
+      },
+      "neutral-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Transparent backing for neutral link text."
+      },
+      "neutral-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Body ink for neutral links."
+      }
+    }
+  }
+}

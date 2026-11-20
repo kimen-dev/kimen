@@ -1,5 +1,25 @@
 // Components whose contract also captures Material 3 in the dark scheme.
-const MATERIAL3_DARK: ReadonlySet<string> = new Set(['ki-empty-state', 'ki-icon', 'ki-spinner']);
+const MATERIAL3_DARK: ReadonlySet<string> = new Set([
+  'ki-card',
+  'ki-checkbox-group',
+  'ki-chip',
+  'ki-chip-group',
+  'ki-counter',
+  'ki-empty-state',
+  'ki-grid',
+  'ki-icon',
+  'ki-image',
+  'ki-link',
+  'ki-menu',
+  'ki-menu-group',
+  'ki-menu-item',
+  'ki-note',
+  'ki-segment',
+  'ki-segmented-control',
+  'ki-skeleton',
+  'ki-spinner',
+  'ki-stack',
+]);
 
 /** Both schemes are alternately themed when the component contract requires it. */
 export function visualGalleryThemes(
