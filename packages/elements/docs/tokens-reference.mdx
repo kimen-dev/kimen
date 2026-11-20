@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 478 semantic
-and 1588 component tokens. Values are the resolved **onmars light**
+and 1610 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -817,6 +817,33 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-badge-xs-line-height` | `1rem` | dimension used by the badge component for xs line height (caption_2 16px, the same height as caption_1). |
 | `--ki-badge-xs-padding-inline` | `0.375rem` | dimension used by the badge component for xs padding inline (Tag 10106:4651 xs: Space/xs plus the Text_wrap Space/xxs, 6px). |
 | `--ki-badge-xs-radius` | `6px` | dimension used by the badge component for xs radius (Tag 10106:4651 xs binds Radius/small-component/xs). |
+
+### `ki-breadcrumb`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-breadcrumb-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for ancestor text and the overflow trigger. |
+| `--ki-breadcrumb-current-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for the current level. |
+| `--ki-breadcrumb-current-fg` | `#181613` | Emphasized foreground of the current level. |
+| `--ki-breadcrumb-fg` | `#5e5953` | Medium-emphasis ink for ancestors and the overflow trigger, strengthened in more-contrast mode. |
+| `--ki-breadcrumb-gap` | `0.25rem` | Gap between breadcrumb rows, levels and their chevrons. |
+| `--ki-breadcrumb-glyph-size` | `1rem` | Size of the ellipsis glyph. |
+| `--ki-breadcrumb-hover-bg` | `#f3f0eb` | Backing for the active overflow trigger and highlighted overflow links. |
+| `--ki-breadcrumb-hover-fg` | `#181613` | Foreground for the active overflow trigger and highlighted overflow links. |
+| `--ki-breadcrumb-menu-backdrop-filter` | `none` | Complete backdrop filter of the overflow menu, none by default. |
+| `--ki-breadcrumb-menu-bg` | `#f9f7f4` | Surface behind the overflow menu entries. |
+| `--ki-breadcrumb-menu-bg-image` | `none` | Optional image layered over the overflow menu surface. |
+| `--ki-breadcrumb-menu-fg` | `#181613` | Text of overflow menu entries. |
+| `--ki-breadcrumb-menu-max-block-size` | `9rem` | Maximum block size of the scrollable overflow menu. |
+| `--ki-breadcrumb-menu-padding` | `0.25rem` | Inset around the overflow menu entries. |
+| `--ki-breadcrumb-menu-radius` | `2px` | Outer radius of the overflow menu. |
+| `--ki-breadcrumb-menu-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Elevation of the overflow menu above the page. |
+| `--ki-breadcrumb-padding-block` | `0.125rem` | Block inset of a level label. |
+| `--ki-breadcrumb-padding-inline` | `0.25rem` | Inline inset of a level label. |
+| `--ki-breadcrumb-radius` | `2px` | Radius of the overflow trigger and level focus outlines. |
+| `--ki-breadcrumb-separator` | `#6b665f` | Foreground of the decorative breadcrumb chevron. |
+| `--ki-breadcrumb-separator-size` | `0.375rem` | Edge length of the decorative chevron before rotation. |
+| `--ki-breadcrumb-separator-stroke` | `2px` | Stroke width of the decorative chevron. |
 
 ### `ki-button`
 

@@ -222,6 +222,44 @@ export namespace Components {
         "tone": KiBadgeTone;
     }
     /**
+     * A path of ancestor links ending at the current page, with optional overflow.
+     * @whenToUse show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
+     * @whenNotToUse switch between peer routes, toggle peer panels, or display progress through a form.
+     */
+    interface KiBreadcrumb {
+        /**
+          * Accessible name of the navigation landmark.
+          * @default 'Breadcrumb'
+         */
+        "label": string;
+        /**
+          * Optional overflow threshold. Above it, keep the first and last two levels visible. Positive values are rounded down and clamped to four. Omit this prop, or pass a non-positive or non-finite value, to show the full trail.
+         */
+        "maxItems"?: number;
+        /**
+          * Localizable name of the overflow control. Use {n} for the hidden level count.
+          * @default 'Show {n} more levels'
+         */
+        "moreLabel": string;
+    }
+    /**
+     * One declarative level in a breadcrumb path.
+     * @whenToUse declare a direct child of ki-breadcrumb in hierarchy order. Give ancestors an href and use short text labels. The last level is the current page.
+     * @whenNotToUse render a standalone link or display an interactive control inside the label.
+     */
+    interface KiBreadcrumbItem {
+        /**
+          * Explicitly marks the final level as current. The owning breadcrumb treats its final level as current by position, including when this marker is omitted.
+          * @default false
+         */
+        "current": boolean;
+        /**
+          * Native destination for an ancestor level. Leaves the label as text when omitted. The final level never links away from the current page.
+          * @format url
+         */
+        "href"?: string;
+    }
+    /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
@@ -2432,6 +2470,28 @@ declare global {
         new (): HTMLKiBadgeElement;
     };
     /**
+     * A path of ancestor links ending at the current page, with optional overflow.
+     * @whenToUse show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
+     * @whenNotToUse switch between peer routes, toggle peer panels, or display progress through a form.
+     */
+    interface HTMLKiBreadcrumbElement extends Components.KiBreadcrumb, HTMLStencilElement {
+    }
+    var HTMLKiBreadcrumbElement: {
+        prototype: HTMLKiBreadcrumbElement;
+        new (): HTMLKiBreadcrumbElement;
+    };
+    /**
+     * One declarative level in a breadcrumb path.
+     * @whenToUse declare a direct child of ki-breadcrumb in hierarchy order. Give ancestors an href and use short text labels. The last level is the current page.
+     * @whenNotToUse render a standalone link or display an interactive control inside the label.
+     */
+    interface HTMLKiBreadcrumbItemElement extends Components.KiBreadcrumbItem, HTMLStencilElement {
+    }
+    var HTMLKiBreadcrumbItemElement: {
+        prototype: HTMLKiBreadcrumbItemElement;
+        new (): HTMLKiBreadcrumbItemElement;
+    };
+    /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
@@ -3465,6 +3525,8 @@ declare global {
         "ki-avatar": HTMLKiAvatarElement;
         "ki-avatar-group": HTMLKiAvatarGroupElement;
         "ki-badge": HTMLKiBadgeElement;
+        "ki-breadcrumb": HTMLKiBreadcrumbElement;
+        "ki-breadcrumb-item": HTMLKiBreadcrumbItemElement;
         "ki-button": HTMLKiButtonElement;
         "ki-button-group": HTMLKiButtonGroupElement;
         "ki-card": HTMLKiCardElement;
@@ -3653,6 +3715,44 @@ declare namespace LocalJSX {
           * @default 'neutral'
          */
         "tone"?: KiBadgeTone;
+    }
+    /**
+     * A path of ancestor links ending at the current page, with optional overflow.
+     * @whenToUse show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
+     * @whenNotToUse switch between peer routes, toggle peer panels, or display progress through a form.
+     */
+    interface KiBreadcrumb {
+        /**
+          * Accessible name of the navigation landmark.
+          * @default 'Breadcrumb'
+         */
+        "label"?: string;
+        /**
+          * Optional overflow threshold. Above it, keep the first and last two levels visible. Positive values are rounded down and clamped to four. Omit this prop, or pass a non-positive or non-finite value, to show the full trail.
+         */
+        "maxItems"?: number;
+        /**
+          * Localizable name of the overflow control. Use {n} for the hidden level count.
+          * @default 'Show {n} more levels'
+         */
+        "moreLabel"?: string;
+    }
+    /**
+     * One declarative level in a breadcrumb path.
+     * @whenToUse declare a direct child of ki-breadcrumb in hierarchy order. Give ancestors an href and use short text labels. The last level is the current page.
+     * @whenNotToUse render a standalone link or display an interactive control inside the label.
+     */
+    interface KiBreadcrumbItem {
+        /**
+          * Explicitly marks the final level as current. The owning breadcrumb treats its final level as current by position, including when this marker is omitted.
+          * @default false
+         */
+        "current"?: boolean;
+        /**
+          * Native destination for an ancestor level. Leaves the label as text when omitted. The final level never links away from the current page.
+          * @format url
+         */
+        "href"?: string;
     }
     /**
      * A token-styled action button with native button semantics.
@@ -5837,6 +5937,15 @@ declare namespace LocalJSX {
         "tone": KiBadgeTone;
         "size": KiBadgeSize;
     }
+    interface KiBreadcrumbAttributes {
+        "label": string;
+        "maxItems": number;
+        "moreLabel": string;
+    }
+    interface KiBreadcrumbItemAttributes {
+        "href": string;
+        "current": boolean;
+    }
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
         "tone": KiButtonTone;
@@ -6246,6 +6355,8 @@ declare namespace LocalJSX {
         "ki-avatar": Omit<KiAvatar, keyof KiAvatarAttributes> & { [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K] };
         "ki-avatar-group": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K] };
         "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
+        "ki-breadcrumb": Omit<KiBreadcrumb, keyof KiBreadcrumbAttributes> & { [K in keyof KiBreadcrumb & keyof KiBreadcrumbAttributes]?: KiBreadcrumb[K] } & { [K in keyof KiBreadcrumb & keyof KiBreadcrumbAttributes as `attr:${K}`]?: KiBreadcrumbAttributes[K] } & { [K in keyof KiBreadcrumb & keyof KiBreadcrumbAttributes as `prop:${K}`]?: KiBreadcrumb[K] };
+        "ki-breadcrumb-item": Omit<KiBreadcrumbItem, keyof KiBreadcrumbItemAttributes> & { [K in keyof KiBreadcrumbItem & keyof KiBreadcrumbItemAttributes]?: KiBreadcrumbItem[K] } & { [K in keyof KiBreadcrumbItem & keyof KiBreadcrumbItemAttributes as `attr:${K}`]?: KiBreadcrumbItemAttributes[K] } & { [K in keyof KiBreadcrumbItem & keyof KiBreadcrumbItemAttributes as `prop:${K}`]?: KiBreadcrumbItem[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-button-group": Omit<KiButtonGroup, keyof KiButtonGroupAttributes> & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes]?: KiButtonGroup[K] } & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes as `attr:${K}`]?: KiButtonGroupAttributes[K] } & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes as `prop:${K}`]?: KiButtonGroup[K] } & OneOf<"label", KiButtonGroup["label"], KiButtonGroupAttributes["label"]>;
         "ki-card": Omit<KiCard, keyof KiCardAttributes> & { [K in keyof KiCard & keyof KiCardAttributes]?: KiCard[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `attr:${K}`]?: KiCardAttributes[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `prop:${K}`]?: KiCard[K] };
@@ -6363,6 +6474,18 @@ declare module "@stencil/core" {
              * notification-counter overlay (use ki-counter).
              */
             "ki-badge": LocalJSX.IntrinsicElements["ki-badge"] & JSXBase.HTMLAttributes<HTMLKiBadgeElement>;
+            /**
+             * A path of ancestor links ending at the current page, with optional overflow.
+             * @whenToUse show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
+             * @whenNotToUse switch between peer routes, toggle peer panels, or display progress through a form.
+             */
+            "ki-breadcrumb": LocalJSX.IntrinsicElements["ki-breadcrumb"] & JSXBase.HTMLAttributes<HTMLKiBreadcrumbElement>;
+            /**
+             * One declarative level in a breadcrumb path.
+             * @whenToUse declare a direct child of ki-breadcrumb in hierarchy order. Give ancestors an href and use short text labels. The last level is the current page.
+             * @whenNotToUse render a standalone link or display an interactive control inside the label.
+             */
+            "ki-breadcrumb-item": LocalJSX.IntrinsicElements["ki-breadcrumb-item"] & JSXBase.HTMLAttributes<HTMLKiBreadcrumbItemElement>;
             /**
              * A token-styled action button with native button semantics.
              * @whenToUse trigger the single main action of a view, supporting actions

@@ -819,6 +819,309 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-breadcrumb/ki-breadcrumb.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-breadcrumb",
+      "docs": "A path of ancestor links ending at the current page, with optional overflow.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "switch between peer routes, toggle peer panels, or display progress through a form."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-breadcrumb-item children in hierarchy order."
+        },
+        {
+          "name": "part",
+          "text": "navigation - The named navigation landmark."
+        },
+        {
+          "name": "part",
+          "text": "list - The ordered list of visible levels."
+        },
+        {
+          "name": "part",
+          "text": "list-item - A list entry for a level or the overflow control."
+        },
+        {
+          "name": "part",
+          "text": "link - A visible native ancestor link."
+        },
+        {
+          "name": "part",
+          "text": "current - The current page label."
+        },
+        {
+          "name": "part",
+          "text": "label - The label of an ancestor with no destination."
+        },
+        {
+          "name": "part",
+          "text": "more-button - The overflow menu button."
+        },
+        {
+          "name": "part",
+          "text": "menu - The anchored menu of collapsed levels."
+        },
+        {
+          "name": "part",
+          "text": "menu-item - A destination or unavailable level in the overflow menu."
+        }
+      ],
+      "usage": {
+        "examples": "## Show the path to the current page\n\n```html\n<ki-breadcrumb label=\"Project path\">\n  <ki-breadcrumb-item href=\"/workspace\">Workspace</ki-breadcrumb-item>\n  <ki-breadcrumb-item href=\"/workspace/projects\">Projects</ki-breadcrumb-item>\n  <ki-breadcrumb-item current>Settings</ki-breadcrumb-item>\n</ki-breadcrumb>\n```\n\n## Collapse middle levels\n\n```html\n<ki-breadcrumb label=\"Release path\" max-items=\"4\">\n  <ki-breadcrumb-item href=\"/workspace\">Workspace</ki-breadcrumb-item>\n  <ki-breadcrumb-item href=\"/projects\">Projects</ki-breadcrumb-item>\n  <ki-breadcrumb-item href=\"/projects/kimen\">Kimen</ki-breadcrumb-item>\n  <ki-breadcrumb-item href=\"/projects/kimen/packages\">Packages</ki-breadcrumb-item>\n  <ki-breadcrumb-item href=\"/projects/kimen/releases\">Releases</ki-breadcrumb-item>\n  <ki-breadcrumb-item current>v2.4.0</ki-breadcrumb-item>\n</ki-breadcrumb>\n```\n\nIn this example the overflow has three levels. The trail shows Workspace,\nthe overflow button, Releases, and v2.4.0.\n\n## Render a guarded breadcrumb\n\nPut breadcrumb items in the default slot and supply plain-text item labels.\nThe surface's URL policy applies to each destination. Native links have no\ncustom action binding.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-breadcrumb\",\n    \"props\": { \"label\": \"Project path\" },\n    \"slots\": {\n      \"\": [\n        {\n          \"component\": \"ki-breadcrumb-item\",\n          \"props\": { \"href\": \"/workspace\" },\n          \"slots\": { \"\": [\"Workspace\"] }\n        },\n        {\n          \"component\": \"ki-breadcrumb-item\",\n          \"props\": { \"current\": true },\n          \"slots\": { \"\": [\"Settings\"] }\n        }\n      ]\n    }\n  }\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the navigation landmark.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Breadcrumb'"
+            }
+          ],
+          "default": "'Breadcrumb'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxItems",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max-items",
+          "reflectToAttr": false,
+          "docs": "Optional overflow threshold. Above it, keep the first and last two levels\nvisible. Positive values are rounded down and clamped to four. Omit this\nprop, or pass a non-positive or non-finite value, to show the full trail.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "moreLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "more-label",
+          "reflectToAttr": false,
+          "docs": "Localizable name of the overflow control. Use {n} for the hidden level count.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Show {n} more levels'"
+            }
+          ],
+          "default": "'Show {n} more levels'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-breadcrumb-item children in hierarchy order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "current",
+          "docs": "The current page label."
+        },
+        {
+          "name": "label",
+          "docs": "The label of an ancestor with no destination."
+        },
+        {
+          "name": "link",
+          "docs": "A visible native ancestor link."
+        },
+        {
+          "name": "list",
+          "docs": "The ordered list of visible levels."
+        },
+        {
+          "name": "list-item",
+          "docs": "A list entry for a level or the overflow control."
+        },
+        {
+          "name": "menu",
+          "docs": "The anchored menu of collapsed levels."
+        },
+        {
+          "name": "menu-item",
+          "docs": "A destination or unavailable level in the overflow menu."
+        },
+        {
+          "name": "more-button",
+          "docs": "The overflow menu button."
+        },
+        {
+          "name": "navigation",
+          "docs": "The named navigation landmark."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-breadcrumb": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-breadcrumb-item/ki-breadcrumb-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-breadcrumb-item",
+      "docs": "One declarative level in a breadcrumb path.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "declare a direct child of ki-breadcrumb in hierarchy order. Give ancestors an href and use short text labels. The last level is the current page."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "render a standalone link or display an interactive control inside the label."
+        },
+        {
+          "name": "slot",
+          "text": "- Plain-text label mirrored by the owning breadcrumb."
+        }
+      ],
+      "usage": {
+        "examples": "Place each item directly inside a breadcrumb. Use the item's text for its\nlabel and add `href` to link to an ancestor page. A level without\n`href` provides context as text. Put the current page last.\n\n```html\n<ki-breadcrumb label=\"Settings path\">\n  <ki-breadcrumb-item href=\"/workspace\">Workspace</ki-breadcrumb-item>\n  <ki-breadcrumb-item>Administration</ki-breadcrumb-item>\n  <ki-breadcrumb-item current>Settings</ki-breadcrumb-item>\n</ki-breadcrumb>\n```\n"
+      },
+      "props": [
+        {
+          "name": "current",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "current",
+          "reflectToAttr": true,
+          "docs": "Explicitly marks the final level as current. The owning breadcrumb treats\nits final level as current by position, including when this marker is omitted.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": true,
+          "docs": "Native destination for an ancestor level. Leaves the label as text when omitted.\nThe final level never links away from the current page.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Plain-text label mirrored by the owning breadcrumb."
+        }
+      ],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-button/ki-button.tsx",
       "encapsulation": "shadow",
       "tag": "ki-button",
@@ -5697,6 +6000,7 @@
       "parts": [],
       "states": [],
       "dependents": [
+        "ki-breadcrumb",
         "ki-copy-button",
         "ki-empty-state",
         "ki-fab",
@@ -5704,6 +6008,9 @@
       ],
       "dependencies": [],
       "dependencyGraph": {
+        "ki-breadcrumb": [
+          "ki-icon"
+        ],
         "ki-copy-button": [
           "ki-icon"
         ],

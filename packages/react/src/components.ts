@@ -8,6 +8,8 @@ export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';
 export { KiBadge } from './ki-badge.js';
+export { KiBreadcrumb } from './ki-breadcrumb.js';
+export { KiBreadcrumbItem } from './ki-breadcrumb-item.js';
 export { KiButton } from './ki-button.js';
 export { KiButtonGroup } from './ki-button-group.js';
 export { KiCard } from './ki-card.js';
