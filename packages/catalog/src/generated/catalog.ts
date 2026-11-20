@@ -1214,6 +1214,121 @@ export const catalogData = {
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
     },
+    "ki-menu": {
+      "description": "A popup of actions opened by a button in the same document or shadow root.",
+      "events": {
+        "ki-select": "Reports the selected action and, for a checkbox or radio, its new checked state."
+      },
+      "props": {
+        "anchor": {
+          "type": "string",
+          "description": "Literal ID of the menu button in the same document or containing shadow root.",
+          "default": ""
+        },
+        "filter-label": {
+          "type": "string",
+          "description": "Accessible name and placeholder of the filter. Omit to hide the field.",
+          "default": ""
+        },
+        "filter-results-label": {
+          "type": "string",
+          "description": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+          "default": "Matching actions: {count}"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom-end",
+            "bottom-start",
+            "top-end",
+            "top-start"
+          ],
+          "description": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+          "default": "bottom-start"
+        }
+      },
+      "slots": {
+        "": "Place ki-menu-item, ki-menu-group, and ki-divider here.",
+        "header": "Informational content above the actions, such as account details."
+      },
+      "tag": "ki-menu",
+      "whenNotToUse": "form values, navigation destinations, or long action lists.",
+      "whenToUse": "row actions, account commands, split buttons, and overflow actions."
+    },
+    "ki-menu-group": {
+      "description": "A named group of related actions in a ki-menu.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Visible and accessible group name.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The ki-menu-item and ki-divider children of the group."
+      },
+      "tag": "ki-menu-group",
+      "whenNotToUse": "standalone sections or nested menus.",
+      "whenToUse": "name a set of related actions or scope exclusive radio items in a menu."
+    },
+    "ki-menu-item": {
+      "description": "A pointer and keyboard action within a ki-menu.",
+      "events": {},
+      "props": {
+        "checked": {
+          "type": "boolean",
+          "description": "Checked state for checkbox and radio actions.",
+          "default": false
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disabled actions remain discoverable via menu navigation.",
+          "default": false
+        },
+        "shortcut": {
+          "type": "string",
+          "description": "Display-only keyboard shortcut. Applications own shortcut registration.",
+          "default": ""
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral"
+          ],
+          "description": "Apply the danger tone to a destructive action.",
+          "default": "neutral"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "checkbox",
+            "item",
+            "radio"
+          ],
+          "description": "Action role. A checkbox stays open. A radio selects one action within its group.",
+          "default": "item"
+        },
+        "value": {
+          "type": "string",
+          "description": "Action identifier reported by the parent menu.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The action's visible label.",
+        "start": "One decorative icon or avatar before the label."
+      },
+      "tag": "ki-menu-item",
+      "whenNotToUse": "standalone controls, navigational links, or form options.",
+      "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu."
+    },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",
       "events": {},
