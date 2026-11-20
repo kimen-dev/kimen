@@ -42,7 +42,7 @@ function mount(attributes = savedDate, label = 'Departure') {
   fixture.lang = 'en-GB';
   fixture.innerHTML = `
     <form>
-      <ki-date-picker name="departure" label="${label}" ${attributes}></ki-date-picker>
+      <ki-date-picker name="${label.toLowerCase()}" label="${label}" ${attributes}></ki-date-picker>
       <button type="submit" tabindex="0">Book</button>
     </form>`;
   const picker = fixture.querySelector<HTMLElement & { value: string }>('ki-date-picker');
@@ -180,7 +180,7 @@ it('S10 names the controls, announces the month and exposes one tab stop', async
     .element(page.getByRole('heading', { name: 'November 2026' }))
     .toHaveAttribute('aria-live', 'polite');
   const chosen = day('12 November 2026').element();
-  expect(chosen.closest('[role="gridcell"]')?.getAttribute('aria-selected')).toBe('true');
+  expect(page.getByRole('gridcell', { selected: true }).element()).toBe(chosen.closest('td'));
   expect([...grid.element().querySelectorAll('button[tabindex="0"]')]).toEqual([chosen]);
   await expectAccessible(picker);
 });
@@ -192,14 +192,14 @@ it('S11 uses full weekday names in the requested weekday order', async () => {
 });
 
 it('S12 contributes a single named ISO range to submitted form data', async () => {
-  const { form } = mount('mode="range" value="2026-11-12/2026-11-16"');
+  const { form } = mount('mode="range" value="2026-11-12/2026-11-16"', 'Stay');
   const submissions: FormData[] = [];
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     submissions.push(new FormData(form));
   });
   await page.getByRole('button', { name: 'Book' }).click();
-  expect(submissions.map((data) => data.getAll('departure'))).toEqual([['2026-11-12/2026-11-16']]);
+  expect(submissions.map((data) => data.getAll('stay'))).toEqual([['2026-11-12/2026-11-16']]);
 });
 
 it('S13 blocks a submission with impossible input and exposes its error', async () => {
@@ -251,6 +251,9 @@ it('S17 preserves a visible today outline in forced colors', async (context) => 
     if (!today) throw new Error('Missing today indicator');
     expect(getComputedStyle(today).borderBlockStartStyle).toBe('solid');
     expect(parseFloat(getComputedStyle(today).borderBlockStartWidth)).toBeGreaterThan(0);
+    const ordinary = picker.shadowRoot?.querySelector('[part="day"]:not([aria-current])');
+    if (!ordinary) throw new Error('Missing comparison day');
+    expect(parseFloat(getComputedStyle(ordinary).borderBlockStartWidth)).toBe(0);
   } finally {
     await browser.emulateForcedColors(null);
   }
@@ -269,7 +272,7 @@ it('S18 opens and focuses without animation under reduced motion', async () => {
   }
 });
 
-it('dismisses outside and keeps focus on the outside control', async () => {
+it('dismisses when the user clicks outside', async () => {
   const { form } = mount();
   await openCalendar();
   const book = page.getByRole('button', { name: 'Book' });
@@ -278,6 +281,4 @@ it('dismisses outside and keeps focus on the outside control', async () => {
   });
   await book.click();
   await expectClosed();
-  // Safari may intentionally leave a pointer-clicked button unfocused.
-  expect(dialog().query()).toBeNull();
 });

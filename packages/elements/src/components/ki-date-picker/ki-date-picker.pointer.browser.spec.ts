@@ -10,7 +10,9 @@ const browser = commands as unknown as {
   emulateHoverCapability: (value: 'none' | null) => Promise<boolean>;
 };
 
-beforeAll(() => { defineCustomElement(); });
+beforeAll(() => {
+  defineCustomElement();
+});
 
 afterEach(async () => {
   await browser.emulateHoverCapability(null);

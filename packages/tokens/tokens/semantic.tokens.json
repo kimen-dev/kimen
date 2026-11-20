@@ -1715,6 +1715,10 @@
         "$value": "{ki.radius.round}",
         "$description": "Round corners for rings and typing dots."
       },
+      "calendar-surface": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Outer corner radius of a raised calendar surface."
+      },
       "action-frame": {
         "$value": "{ki.radius.component.md}",
         "$description": "Outside corner of an action surface."
@@ -2060,6 +2064,10 @@
         "md": {
           "$value": "{ki.space.12xl}",
           "$description": "Medium control track height, 40 CSS px at the default root size."
+        },
+        "touch": {
+          "$value": "{ki.size.target-touch}",
+          "$description": "Touch target size for controls on a coarse pointer."
         }
       },
       "radius": {

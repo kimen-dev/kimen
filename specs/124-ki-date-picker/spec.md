@@ -44,17 +44,26 @@ known distant dates. Use a time field for times.
   as overridable labels. The change-date label accepts a `{date}` placeholder.
 - **Agent's choice, pending founder confirmation.** Use one catalog action,
   `ki-change`, with its `value` detail. The field has no slots. Use the shared
-  anchored overlay controller and the repository's existing icon set.
+  top-layer popover approach and existing icon set. CSS positions the surface
+  against the field as in Select, and the browser handles outside clicks.
+
+- **Agent's choice, pending founder confirmation.** Weekdays and neighboring
+  dates use the supporting ink to pass contrast-more in both themes. The today
+  outline uses the selected foreground when it crosses a selected fill.
+  Material 3 uses its anchored surface radius.
+- **Agent's choice, pending founder confirmation.** Declare the new public
+  surface as a major delta because the API gate classifies Stencil's changes
+  to the existing Components and JSX namespace signatures as major.
 
 ## Scenario family coverage
 
 | Family | Scenarios |
 | --- | --- |
-| Core behavior | S1–S5 |
-| Keyboard path | S6–S9, S16 |
-| Assistive technology | S10, S11, S17 |
-| Form participation | S12–S14 |
-| Theming | S15, S17–S19 |
+| Core behavior | S1, S2, S3, S4, S5 |
+| Keyboard path | S6, S7, S8, S9, S16 |
+| Assistive-tech outcome | S10, S11, S17 |
+| Form participation | S12, S13, S14 |
+| Theming | S15, S17, S18, S19 |
 
 ## Gherkin scenarios
 
