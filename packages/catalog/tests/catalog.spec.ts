@@ -37,15 +37,20 @@ const manifest = JSON.parse(
 ) as { modules: { declarations?: ManifestDeclaration[] }[] };
 
 const componentsRoot = join(packageRoot, '..', 'elements', 'src', 'components');
-const optedInTags = readdirSync(componentsRoot, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory())
-  .map(({ name }) => name)
-  .filter((tag) => {
-    const metadata = JSON.parse(
-      readFileSync(join(componentsRoot, tag, 'component.json'), 'utf8'),
-    ) as { catalog?: boolean };
-    return metadata.catalog === true;
-  })
+const componentMetadata = new Map(
+  readdirSync(componentsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map(({ name }) => [
+      name,
+      JSON.parse(readFileSync(join(componentsRoot, name, 'component.json'), 'utf8')) as {
+        catalog?: boolean;
+        catalogAction?: string;
+      },
+    ]),
+);
+const optedInTags = [...componentMetadata]
+  .filter(([, metadata]) => metadata.catalog === true)
+  .map(([tag]) => tag)
   .sort();
 
 const manifestElements = manifest.modules
@@ -76,8 +81,11 @@ describe('catalog derivation', () => {
       expect(Object.keys(entry.slots).sort()).toEqual(
         (declaration.slots ?? []).map((slot) => slot.name ?? '').sort(),
       );
+      const publicEvents = (declaration.events ?? []).map((event) => event.name).sort();
+      const catalogAction = componentMetadata.get(declaration.tagName)?.catalogAction;
+      if (catalogAction !== undefined) expect(publicEvents).toContain(catalogAction);
       expect(Object.keys(entry.events).sort()).toEqual(
-        (declaration.events ?? []).map((event) => event.name).sort(),
+        catalogAction === undefined ? publicEvents : [catalogAction],
       );
       for (const constraint of Object.values<{ type: string }>(entry.props)) {
         expect(['boolean', 'number', 'string', 'enum']).toContain(constraint.type);

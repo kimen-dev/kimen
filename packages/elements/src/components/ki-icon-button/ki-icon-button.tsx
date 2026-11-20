@@ -47,6 +47,7 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   tag: 'ki-icon-button',
   styleUrls: [
     '../ki-button/ki-button.surface.css',
+    '../ki-button/ki-button.surface.legacy.css',
     '../ki-button/ki-button.toggle.css',
     'ki-icon-button.css',
   ],
