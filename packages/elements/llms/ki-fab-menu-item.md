@@ -54,10 +54,12 @@ None.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-fab-forced-colors-border-width`: Boundary width for the FAB in forced colors.
 - `--ki-fab-menu-item-backdrop-filter`: Complete optional filter behind the action.
-- `--ki-fab-menu-item-bg`: Tinted surface of a floating action.
+- `--ki-fab-menu-item-bg`: Surface of a floating action: a tonal fill, or in onmars v2 the raised surface with a hairline, so the accent stays on selection.
 - `--ki-fab-menu-item-bg-image`: Optional image painted above the action fill.
+- `--ki-fab-menu-item-border-color`: Color of the action edge, drawn at border-width.
+- `--ki-fab-menu-item-border-width`: Width of the action edge. A tonal action draws none; onmars v2 edges its surface actions with a hairline.
 - `--ki-fab-menu-item-content-gap`: Space between the action glyph and label.
-- `--ki-fab-menu-item-fg`: Label and icon ink on the tinted action surface.
+- `--ki-fab-menu-item-fg`: Label and icon ink on the action surface.
 - `--ki-fab-menu-item-font-family`: Typeface for action labels.
 - `--ki-fab-menu-item-font-size`: Text size for action labels.
 - `--ki-fab-menu-item-font-weight`: Text weight of an action label.

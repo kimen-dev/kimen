@@ -55,6 +55,30 @@ const pauseButton = () => page.getByRole('button', { name: 'Pause', exact: true 
 const seek = () => page.getByRole('slider', { name: 'Seek' });
 const speedControl = () => page.getByRole('combobox', { name: 'Playback speed' });
 
+// Design-system review 2026-11-20, item 4: the secondary controls are neutral
+// (quaternary) buttons beside the primary play button; the accent stays on
+// selection, links and focus.
+it('draws the speed and mute controls in the quaternary neutral ink', async () => {
+  const { host } = await mountRecording();
+  const probe = document.createElement('span');
+  fixture.append(probe);
+  probe.style.color = 'var(--ki-button-quaternary-neutral-rest-fg)';
+  const neutral = getComputedStyle(probe).color;
+  probe.style.color = 'var(--ki-button-ghost-neutral-rest-fg)';
+  const accent = getComputedStyle(probe).color;
+  probe.remove();
+
+  for (const name of ['speed', 'mute']) {
+    const control = part(host, name) as HTMLButtonElement | HTMLSelectElement;
+    expect(control.disabled, name).toBe(false);
+    expect(getComputedStyle(control).color, name).toBe(neutral);
+    expect(getComputedStyle(control).color, name).not.toBe(accent);
+  }
+  expect(getComputedStyle(part(host, 'speed')).backgroundColor).not.toBe(
+    getComputedStyle(part(host, 'play')).backgroundColor,
+  );
+});
+
 function seekInput(host: HTMLElement): HTMLInputElement {
   return required(host.shadowRoot?.querySelector<HTMLInputElement>('input[part~="seek"]'));
 }

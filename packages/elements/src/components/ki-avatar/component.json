@@ -5,5 +5,18 @@
   "pointer": {
     "hoverWitness": false
   },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpApps": {
+      "gzip": 5
+    },
+    "mcpServer": {
+      "raw": 193,
+      "gzip": 89,
+      "brotli": 100
+    },
+    "tokenStylesheets": {
+      "onmars": 22
+    }
+  }
 }

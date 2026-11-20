@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 550 semantic
-and 2412 component tokens. Values are the resolved **onmars light**
+and 2416 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -877,10 +877,10 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-avatar-bg` | `#ffebe5` | color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification). |
+| `--ki-avatar-bg` | `#ebe7e1` | color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification). onmars v2 fills it with the neutral surface.s3, since a list of people is not a list of selected items. |
 | `--ki-avatar-border-color` | `rgba(24, 22, 19, 0.1)` | color used by the avatar component for the surface border: Outline/base_em (Black/3 light, White/3 dark), the exact variable on Type=text variants. |
 | `--ki-avatar-border-width` | `1px` | dimension used by the avatar component for the surface border (MarsUI 1px hairline on Type=text; applied to the token surface behind initials and figure, dropped under a loaded portrait — design-extraction decision 4). |
-| `--ki-avatar-fg` | `#9a3715` | color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant. |
+| `--ki-avatar-fg` | `#5e5953` | color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant. onmars v2 sets the initials in the text.supporting ink (med-em, stronger under more contrast) on its neutral fill. |
 | `--ki-avatar-font-family` | `'Instrument Sans', system-ui, sans-serif` | font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter). |
 | `--ki-avatar-font-weight` | `600` | font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600). |
 | `--ki-avatar-lg-font-size` | `0.9375rem` | dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px). |
@@ -1841,6 +1841,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-fab-menu-scrim-backdrop-filter` | `none` | Complete optional filter behind the scrim. |
 | `--ki-fab-menu-scrim-bg` | `rgba(24, 22, 19, 0.38)` | Dimming fill behind the open menu and its trigger. |
 | `--ki-fab-menu-scrim-bg-image` | `none` | Optional image painted above the scrim fill. |
+| `--ki-fab-menu-trigger-bg` | `#1d1a16` | Fill of the closed trigger in the default secondary variant: the secondary FAB's tonal fill, or in onmars v2 the primary FAB ink, so the accent stays on selection, links and focus. |
+| `--ki-fab-menu-trigger-fg` | `#ffffff` | Glyph ink on the closed secondary trigger. |
 | `--ki-fab-menu-trigger-gap` | `0.5rem` | Gap between the last action and the FAB. |
 
 ### `ki-fab-menu-item`
@@ -1848,10 +1850,12 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-fab-menu-item-backdrop-filter` | `none` | Complete optional filter behind the action. |
-| `--ki-fab-menu-item-bg` | `#ffebe5` | Tinted surface of a floating action. |
+| `--ki-fab-menu-item-bg` | `#ffffff` | Surface of a floating action: a tonal fill, or in onmars v2 the raised surface with a hairline, so the accent stays on selection. |
 | `--ki-fab-menu-item-bg-image` | `none` | Optional image painted above the action fill. |
+| `--ki-fab-menu-item-border-color` | `rgba(24, 22, 19, 0.1)` | Color of the action edge, drawn at border-width. |
+| `--ki-fab-menu-item-border-width` | `1px` | Width of the action edge. A tonal action draws none; onmars v2 edges its surface actions with a hairline. |
 | `--ki-fab-menu-item-content-gap` | `0.5rem` | Space between the action glyph and label. |
-| `--ki-fab-menu-item-fg` | `#9a3715` | Label and icon ink on the tinted action surface. |
+| `--ki-fab-menu-item-fg` | `#181613` | Label and icon ink on the action surface. |
 | `--ki-fab-menu-item-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface for action labels. |
 | `--ki-fab-menu-item-font-size` | `0.9375rem` | Text size for action labels. |
 | `--ki-fab-menu-item-font-weight` | `600` | Text weight of an action label. |

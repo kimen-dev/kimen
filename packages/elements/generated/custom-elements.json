@@ -1420,40 +1420,16 @@
               "description": "Colour of the inactive timeline."
             },
             {
-              "name": "--ki-button-ghost-neutral-disabled-bg",
-              "description": "color used by the button component for ghost neutral disabled background."
-            },
-            {
               "name": "--ki-button-ghost-neutral-disabled-border",
               "description": "color used by the button component for ghost neutral disabled border."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-disabled-fg",
-              "description": "color used by the button component for ghost neutral disabled foreground."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-hover-bg",
-              "description": "color used by the button component for ghost neutral hover background."
             },
             {
               "name": "--ki-button-ghost-neutral-hover-border",
               "description": "color used by the button component for ghost neutral hover border."
             },
             {
-              "name": "--ki-button-ghost-neutral-hover-fg",
-              "description": "color used by the button component for ghost neutral hover foreground."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-rest-bg",
-              "description": "color used by the button component for ghost neutral rest background."
-            },
-            {
               "name": "--ki-button-ghost-neutral-rest-border",
               "description": "color used by the button component for ghost neutral rest border."
-            },
-            {
-              "name": "--ki-button-ghost-neutral-rest-fg",
-              "description": "color used by the button component for ghost neutral rest foreground."
             },
             {
               "name": "--ki-button-primary-neutral-disabled-bg",
@@ -1490,6 +1466,30 @@
             {
               "name": "--ki-button-primary-neutral-rest-fg",
               "description": "color used by the button component for primary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-bg",
+              "description": "color used by the button component for quaternary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-fg",
+              "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-bg",
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-fg",
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-bg",
+              "description": "color used by the button component for quaternary neutral rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-fg",
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             {
               "name": "--ki-control-border-width",
@@ -1741,7 +1741,7 @@
           "cssProperties": [
             {
               "name": "--ki-avatar-bg",
-              "description": "color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification)."
+              "description": "color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification). onmars v2 fills it with the neutral surface.s3, since a list of people is not a list of selected items."
             },
             {
               "name": "--ki-avatar-border-color",
@@ -1753,7 +1753,7 @@
             },
             {
               "name": "--ki-avatar-fg",
-              "description": "color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant."
+              "description": "color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant. onmars v2 sets the initials in the text.supporting ink (med-em, stronger under more contrast) on its neutral fill."
             },
             {
               "name": "--ki-avatar-font-family",
@@ -13138,6 +13138,14 @@
               "description": "Optional image painted above the scrim fill."
             },
             {
+              "name": "--ki-fab-menu-trigger-bg",
+              "description": "Fill of the closed trigger in the default secondary variant: the secondary FAB's tonal fill, or in onmars v2 the primary FAB ink, so the accent stays on selection, links and focus."
+            },
+            {
+              "name": "--ki-fab-menu-trigger-fg",
+              "description": "Glyph ink on the closed secondary trigger."
+            },
+            {
               "name": "--ki-fab-menu-trigger-gap",
               "description": "Gap between the last action and the FAB."
             },
@@ -13326,11 +13334,19 @@
             },
             {
               "name": "--ki-fab-menu-item-bg",
-              "description": "Tinted surface of a floating action."
+              "description": "Surface of a floating action: a tonal fill, or in onmars v2 the raised surface with a hairline, so the accent stays on selection."
             },
             {
               "name": "--ki-fab-menu-item-bg-image",
               "description": "Optional image painted above the action fill."
+            },
+            {
+              "name": "--ki-fab-menu-item-border-color",
+              "description": "Color of the action edge, drawn at border-width."
+            },
+            {
+              "name": "--ki-fab-menu-item-border-width",
+              "description": "Width of the action edge. A tonal action draws none; onmars v2 edges its surface actions with a hairline."
             },
             {
               "name": "--ki-fab-menu-item-content-gap",
@@ -13338,7 +13354,7 @@
             },
             {
               "name": "--ki-fab-menu-item-fg",
-              "description": "Label and icon ink on the tinted action surface."
+              "description": "Label and icon ink on the action surface."
             },
             {
               "name": "--ki-fab-menu-item-font-family",

@@ -495,15 +495,9 @@ CSS custom properties:
 - `--ki-audio-speed-radius`: Corner radius of the playback speed button.
 - `--ki-audio-title-family`: Font family of the recording title.
 - `--ki-audio-track-bg`: Colour of the inactive timeline.
-- `--ki-button-ghost-neutral-disabled-bg`: color used by the button component for ghost neutral disabled background.
 - `--ki-button-ghost-neutral-disabled-border`: color used by the button component for ghost neutral disabled border.
-- `--ki-button-ghost-neutral-disabled-fg`: color used by the button component for ghost neutral disabled foreground.
-- `--ki-button-ghost-neutral-hover-bg`: color used by the button component for ghost neutral hover background.
 - `--ki-button-ghost-neutral-hover-border`: color used by the button component for ghost neutral hover border.
-- `--ki-button-ghost-neutral-hover-fg`: color used by the button component for ghost neutral hover foreground.
-- `--ki-button-ghost-neutral-rest-bg`: color used by the button component for ghost neutral rest background.
 - `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border.
-- `--ki-button-ghost-neutral-rest-fg`: color used by the button component for ghost neutral rest foreground.
 - `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).
 - `--ki-button-primary-neutral-disabled-border`: color used by the button component for primary neutral disabled border.
 - `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).
@@ -513,6 +507,12 @@ CSS custom properties:
 - `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).
 - `--ki-button-primary-neutral-rest-border`: color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
+- `--ki-button-quaternary-neutral-disabled-bg`: color used by the button component for quaternary neutral disabled background.
+- `--ki-button-quaternary-neutral-disabled-fg`: color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars.
+- `--ki-button-quaternary-neutral-hover-bg`: color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill).
+- `--ki-button-quaternary-neutral-hover-fg`: color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
+- `--ki-button-quaternary-neutral-rest-bg`: color used by the button component for quaternary neutral rest background.
+- `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
 - `--ki-control-border-width`: Stroke width of the boundary of a compact control.
 - `--ki-control-radius-track`: Corner radius of a track containing adjacent controls.
 - `--ki-control-size-md`: Medium control track height, 40 CSS px at the default root size.
@@ -598,10 +598,10 @@ Events: none
 Methods: none
 
 CSS custom properties:
-- `--ki-avatar-bg`: color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification).
+- `--ki-avatar-bg`: color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification). onmars v2 fills it with the neutral surface.s3, since a list of people is not a list of selected items.
 - `--ki-avatar-border-color`: color used by the avatar component for the surface border: Outline/base_em (Black/3 light, White/3 dark), the exact variable on Type=text variants.
 - `--ki-avatar-border-width`: dimension used by the avatar component for the surface border (MarsUI 1px hairline on Type=text; applied to the token surface behind initials and figure, dropped under a loaded portrait — design-extraction decision 4).
-- `--ki-avatar-fg`: color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant.
+- `--ki-avatar-fg`: color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant. onmars v2 sets the initials in the text.supporting ink (med-em, stronger under more contrast) on its neutral fill.
 - `--ki-avatar-font-family`: font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter).
 - `--ki-avatar-font-weight`: font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600).
 - `--ki-avatar-lg-font-size`: dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px).
@@ -3967,6 +3967,8 @@ CSS custom properties:
 - `--ki-fab-menu-scrim-backdrop-filter`: Complete optional filter behind the scrim.
 - `--ki-fab-menu-scrim-bg`: Dimming fill behind the open menu and its trigger.
 - `--ki-fab-menu-scrim-bg-image`: Optional image painted above the scrim fill.
+- `--ki-fab-menu-trigger-bg`: Fill of the closed trigger in the default secondary variant: the secondary FAB's tonal fill, or in onmars v2 the primary FAB ink, so the accent stays on selection, links and focus.
+- `--ki-fab-menu-trigger-fg`: Glyph ink on the closed secondary trigger.
 - `--ki-fab-menu-trigger-gap`: Gap between the last action and the FAB.
 - `--ki-fab-mobile-nav-block-size`: Height to reserve for mobile navigation, excluding the safe-area inset.
 - `--ki-fab-offset`: Fixed FAB gap to the viewport edge or mobile navigation.
@@ -4025,10 +4027,12 @@ CSS custom properties:
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-fab-forced-colors-border-width`: Boundary width for the FAB in forced colors.
 - `--ki-fab-menu-item-backdrop-filter`: Complete optional filter behind the action.
-- `--ki-fab-menu-item-bg`: Tinted surface of a floating action.
+- `--ki-fab-menu-item-bg`: Surface of a floating action: a tonal fill, or in onmars v2 the raised surface with a hairline, so the accent stays on selection.
 - `--ki-fab-menu-item-bg-image`: Optional image painted above the action fill.
+- `--ki-fab-menu-item-border-color`: Color of the action edge, drawn at border-width.
+- `--ki-fab-menu-item-border-width`: Width of the action edge. A tonal action draws none; onmars v2 edges its surface actions with a hairline.
 - `--ki-fab-menu-item-content-gap`: Space between the action glyph and label.
-- `--ki-fab-menu-item-fg`: Label and icon ink on the tinted action surface.
+- `--ki-fab-menu-item-fg`: Label and icon ink on the action surface.
 - `--ki-fab-menu-item-font-family`: Typeface for action labels.
 - `--ki-fab-menu-item-font-size`: Text size for action labels.
 - `--ki-fab-menu-item-font-weight`: Text weight of an action label.

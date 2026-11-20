@@ -511,10 +511,10 @@
     },
     "avatar": {
       "bg": {
-        "$value": "{ki.surface.primary-low-em}"
+        "$value": "{ki.surface.s3}"
       },
       "fg": {
-        "$value": "{ki.text.primary-on-primary-light}"
+        "$value": "{ki.text.supporting}"
       }
     },
     "badge": {
@@ -592,6 +592,30 @@
         "font-weight": {
           "$value": "{ki.typography.weight.display.semibold}"
         }
+      }
+    },
+    "fab-menu": {
+      "trigger": {
+        "bg": {
+          "$value": "{ki.fab.primary.bg}"
+        },
+        "fg": {
+          "$value": "{ki.fab.primary.fg}"
+        }
+      }
+    },
+    "fab-menu-item": {
+      "bg": {
+        "$value": "{ki.surface.special.light-s0-dark-s2}"
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}"
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}"
+      },
+      "border-color": {
+        "$value": "{ki.outline.low-em}"
       }
     },
     "input": {

@@ -187,34 +187,10 @@
         "required": false,
         "type": null
       },
-      "--ki-button-ghost-neutral-disabled-bg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "color used by the button component for ghost neutral disabled background.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-button-ghost-neutral-disabled-border": {
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for ghost neutral disabled border.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-button-ghost-neutral-disabled-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "color used by the button component for ghost neutral disabled foreground.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-button-ghost-neutral-hover-bg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "color used by the button component for ghost neutral hover background.",
         "replacement": null,
         "required": false,
         "type": null
@@ -227,34 +203,10 @@
         "required": false,
         "type": null
       },
-      "--ki-button-ghost-neutral-hover-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "color used by the button component for ghost neutral hover foreground.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-button-ghost-neutral-rest-bg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "color used by the button component for ghost neutral rest background.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-button-ghost-neutral-rest-border": {
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for ghost neutral rest border.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-button-ghost-neutral-rest-fg": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "color used by the button component for ghost neutral rest foreground.",
         "replacement": null,
         "required": false,
         "type": null
@@ -327,6 +279,54 @@
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for primary neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
         "replacement": null,
         "required": false,
         "type": null

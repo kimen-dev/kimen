@@ -304,6 +304,33 @@ it('S12: the close button uses the primary FAB colors and the item uses its own 
   expect(getComputedStyle(control(0)).color).toBe('rgb(52, 33, 0)');
 });
 
+/** A token's computed fill, read from a probe under the fixture. */
+function resolvedFill(token: string): string {
+  const probe = document.createElement('span');
+  probe.style.backgroundColor = `var(${token})`;
+  fixture.append(probe);
+  const value = getComputedStyle(probe).backgroundColor;
+  probe.remove();
+  return value;
+}
+
+// Design-system review 2026-11-20, item 4: in onmars the accent is spent on
+// selection, links and focus, so the menu's FAB is the primary ink and its
+// actions a raised surface with a hairline, never the selection tint.
+it('S12: the closed default trigger reads its own pair, the primary FAB ink in onmars', async () => {
+  const host = mount();
+  await expect.element(create).toBeVisible();
+  const trigger = part(host, 'trigger');
+  const selection = resolvedFill('--ki-surface-primary-low-em');
+
+  expect(getComputedStyle(trigger).backgroundColor).toBe(resolvedFill('--ki-fab-primary-bg'));
+  expect(getComputedStyle(trigger).backgroundColor).not.toBe(selection);
+  await create.click();
+  await expect.element(message).toBeVisible();
+  expect(getComputedStyle(control(0)).backgroundColor).not.toBe(selection);
+  expect(getComputedStyle(control(0)).borderTopWidth).toBe('1px');
+});
+
 it('S13: fixed placement aligns the actions and trigger at the left in RTL', async () => {
   fixture.dir = 'rtl';
   const host = mount();

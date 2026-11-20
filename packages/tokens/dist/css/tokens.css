@@ -1325,8 +1325,8 @@
   --ki-avatar-xl-font-size:var(--ki-typography-size-title-2);
   --ki-avatar-xl-icon-size:var(--ki-space-9xl);
   --ki-avatar-radius:var(--ki-radius-round);
-  --ki-avatar-bg:var(--ki-surface-primary-low-em);
-  --ki-avatar-fg:var(--ki-text-primary-on-primary-light);
+  --ki-avatar-bg:var(--ki-surface-s3);
+  --ki-avatar-fg:var(--ki-text-supporting);
   --ki-avatar-border-width:var(--ki-size-border-hairline);
   --ki-avatar-border-color:var(--ki-outline-base-em);
   --ki-avatar-font-family:var(--ki-typography-family-body);
@@ -2076,10 +2076,12 @@
   --ki-empty-state-tile-danger-fg:var(--ki-text-danger-high-em);
   --ki-fab-menu-item-height:var(--ki-layout-floating-action-md);
   --ki-fab-menu-item-radius:var(--ki-control-compact-pill-radius);
-  --ki-fab-menu-item-bg:var(--ki-surface-primary-low-em);
-  --ki-fab-menu-item-fg:var(--ki-text-primary-on-primary-light);
+  --ki-fab-menu-item-bg:var(--ki-surface-special-light-s0-dark-s2);
+  --ki-fab-menu-item-fg:var(--ki-text-high-em);
   --ki-fab-menu-item-bg-image:var(--ki-surface-image-none);
   --ki-fab-menu-item-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-fab-menu-item-border-width:var(--ki-size-border-hairline);
+  --ki-fab-menu-item-border-color:var(--ki-outline-low-em);
   --ki-fab-menu-item-shadow:var(--ki-elevation-e2);
   --ki-fab-menu-item-hover-shadow:var(--ki-elevation-e3);
   --ki-fab-menu-item-font-family:var(--ki-typography-family-body);
@@ -2093,6 +2095,8 @@
   --ki-fab-menu-item-padding-end:var(--ki-layout-spacing-3xl);
   --ki-fab-menu-gap:var(--ki-layout-spacing-xs);
   --ki-fab-menu-trigger-gap:var(--ki-layout-spacing-md);
+  --ki-fab-menu-trigger-bg:var(--ki-fab-primary-bg);
+  --ki-fab-menu-trigger-fg:var(--ki-fab-primary-fg);
   --ki-fab-menu-scrim-bg:var(--ki-overlay-high-em);
   --ki-fab-menu-scrim-bg-image:var(--ki-surface-image-none);
   --ki-fab-menu-scrim-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);

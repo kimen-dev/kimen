@@ -69,10 +69,10 @@ None.
 
 ## CSS custom properties
 
-- `--ki-avatar-bg`: color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification).
+- `--ki-avatar-bg`: color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification). onmars v2 fills it with the neutral surface.s3, since a list of people is not a list of selected items.
 - `--ki-avatar-border-color`: color used by the avatar component for the surface border: Outline/base_em (Black/3 light, White/3 dark), the exact variable on Type=text variants.
 - `--ki-avatar-border-width`: dimension used by the avatar component for the surface border (MarsUI 1px hairline on Type=text; applied to the token surface behind initials and figure, dropped under a loaded portrait — design-extraction decision 4).
-- `--ki-avatar-fg`: color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant.
+- `--ki-avatar-fg`: color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant. onmars v2 sets the initials in the text.supporting ink (med-em, stronger under more contrast) on its neutral fill.
 - `--ki-avatar-font-family`: font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter).
 - `--ki-avatar-font-weight`: font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600).
 - `--ki-avatar-lg-font-size`: dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px).

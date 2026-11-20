@@ -11,12 +11,18 @@
     "members": ["ki-fab-menu", "ki-fab-menu-item"]
   },
   "sizeBudget": {
+    "mcpApps": {
+      "raw": 418,
+      "gzip": 62,
+      "brotli": 72
+    },
     "mcpServer": {
-      "raw": 26162,
-      "gzip": 4396
+      "raw": 27403,
+      "gzip": 4608,
+      "brotli": 266
     },
     "tokenStylesheets": {
-      "onmars": 81
+      "onmars": 99
     }
   }
 }

@@ -490,6 +490,12 @@
   --ki-divider-radius:var(--ki-radius-0);
   --ki-divider-spacing:var(--ki-space-zero);
   --ki-empty-state-heading-weight:var(--ki-typography-weight-body-medium);
+  --ki-fab-menu-item-bg:var(--ki-surface-primary-low-em);
+  --ki-fab-menu-item-fg:var(--ki-text-primary-on-primary-light);
+  --ki-fab-menu-item-border-width:var(--ki-space-zero);
+  --ki-fab-menu-item-border-color:var(--ki-outline-none);
+  --ki-fab-menu-trigger-bg:var(--ki-surface-primary-low-em);
+  --ki-fab-menu-trigger-fg:var(--ki-text-primary-on-primary-light);
   --ki-icon-button-ghost-selected-bg:var(--ki-surface-primary-high-em);
   --ki-indicator-gap:var(--ki-space-md);
   --ki-indicator-dot-color:var(--ki-outline-control);
