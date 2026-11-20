@@ -107,9 +107,11 @@ export class KiConversation {
   render() {
     // The named scrollport is a keyboard stop so its native scrolling keys work.
     const scrollFocus = { tabindex: '0' };
+    // Explicit keys keep Stencil's automatic key sequence stable for other tags.
     return (
-      <div class="transcript">
+      <div key="transcript" class="transcript">
         <div
+          key="log"
           part="log"
           role="log"
           aria-label={this.label}
@@ -121,17 +123,19 @@ export class KiConversation {
           }}
         >
           <div
+            key="messages"
             part="messages"
             ref={(element) => {
               this.messages = element;
             }}
           >
-            <slot />
+            <slot key="transcript-slot" />
           </div>
         </div>
         {this.stickToBottom && this.awayFromEnd && (
-          <div class="jump-container">
+          <div key="jump-container" class="jump-container">
             <ki-button
+              key="jump"
               part="jump"
               type="button"
               variant="secondary"

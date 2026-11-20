@@ -15,11 +15,11 @@
 
   box-sizing: border-box;
   inline-size: fit-content;
-  max-inline-size: var(--ki-message-user-max-width);
+  max-inline-size: var(--ki-layout-conversation-user-max-width);
   margin-inline-start: auto;
   padding: var(--ki-message-padding);
   border-radius: var(--ki-message-radius);
-  border-end-end-radius: var(--ki-message-user-end-radius);
+  border-end-end-radius: var(--ki-layout-conversation-bubble-end-radius);
   background-color: var(--ki-message-user-bg);
   background-image: var(--ki-message-user-bg-image);
   /* stylelint-disable-next-line property-no-vendor-prefix */
@@ -52,7 +52,7 @@ slot[name="avatar"]::slotted(*) {
   place-items: center;
   inline-size: 100%;
   aspect-ratio: 1;
-  border-radius: var(--ki-message-avatar-radius);
+  border-radius: var(--ki-layout-conversation-avatar-radius);
   background-color: var(--ki-message-avatar-bg);
   background-image: var(--ki-message-avatar-bg-image);
   /* stylelint-disable-next-line property-no-vendor-prefix */
@@ -106,8 +106,8 @@ slot[name="avatar"]::slotted(*) {
 
 [part="caret"] {
   display: inline-block;
-  inline-size: var(--ki-message-caret-inline-size);
-  block-size: var(--ki-message-caret-block-size);
+  inline-size: var(--ki-layout-conversation-caret-inline-size);
+  block-size: var(--ki-layout-conversation-caret-block-size);
   margin-inline-start: var(--ki-layout-spacing-xxs);
   background-color: var(--_ki-message-fg);
   vertical-align: text-bottom;
@@ -115,7 +115,7 @@ slot[name="avatar"]::slotted(*) {
 
 @media (prefers-reduced-motion: no-preference) {
   [part="caret"] {
-    animation: blink var(--ki-message-caret-duration) var(--ki-motion-easing-activity-pulse)
+    animation: blink var(--ki-motion-duration-activity-pulse) var(--ki-motion-easing-activity-pulse)
       infinite;
   }
 }

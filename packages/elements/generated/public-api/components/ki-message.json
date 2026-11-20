@@ -43,6 +43,46 @@
         "required": false,
         "type": null
       },
+      "--ki-layout-conversation-avatar-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Round corner radius of the fallback assistant avatar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-conversation-bubble-end-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Smaller radius of the end corner of a user bubble.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-conversation-caret-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block size of a streaming caret.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-conversation-caret-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline size of a streaming caret.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-conversation-user-max-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum width of a user bubble relative to the transcript.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-layout-spacing-2xl": {
         "default": null,
         "deprecatedSince": null,
@@ -131,38 +171,6 @@
         "required": false,
         "type": null
       },
-      "--ki-message-avatar-radius": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Corner radius of the default assistant avatar.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-message-caret-block-size": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Streaming caret height relative to its message text.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-message-caret-duration": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Period of the streaming caret blink when motion is allowed.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-message-caret-inline-size": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Streaming caret width relative to its message text.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-message-event-fg": {
         "default": null,
         "deprecatedSince": null,
@@ -211,14 +219,6 @@
         "required": false,
         "type": null
       },
-      "--ki-message-user-end-radius": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Radius of the user bubble at the block-end inline-end corner.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-message-user-fg": {
         "default": null,
         "deprecatedSince": null,
@@ -227,10 +227,10 @@
         "required": false,
         "type": null
       },
-      "--ki-message-user-max-width": {
+      "--ki-motion-duration-activity-pulse": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Maximum share of the transcript width a user bubble occupies.",
+        "description": "Period of an indeterminate typing pulse.",
         "replacement": null,
         "required": false,
         "type": null

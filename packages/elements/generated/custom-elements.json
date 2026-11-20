@@ -8054,6 +8054,26 @@
               "description": "Stroke width of the boundary of a compact control."
             },
             {
+              "name": "--ki-layout-conversation-avatar-radius",
+              "description": "Round corner radius of the fallback assistant avatar."
+            },
+            {
+              "name": "--ki-layout-conversation-bubble-end-radius",
+              "description": "Smaller radius of the end corner of a user bubble."
+            },
+            {
+              "name": "--ki-layout-conversation-caret-block-size",
+              "description": "Block size of a streaming caret."
+            },
+            {
+              "name": "--ki-layout-conversation-caret-inline-size",
+              "description": "Inline size of a streaming caret."
+            },
+            {
+              "name": "--ki-layout-conversation-user-max-width",
+              "description": "Maximum width of a user bubble relative to the transcript."
+            },
+            {
               "name": "--ki-layout-spacing-2xl",
               "description": "The 2xl spacing step for a stack or grid gap."
             },
@@ -8098,22 +8118,6 @@
               "description": "Glyph ink inside the default assistant avatar."
             },
             {
-              "name": "--ki-message-avatar-radius",
-              "description": "Corner radius of the default assistant avatar."
-            },
-            {
-              "name": "--ki-message-caret-block-size",
-              "description": "Streaming caret height relative to its message text."
-            },
-            {
-              "name": "--ki-message-caret-duration",
-              "description": "Period of the streaming caret blink when motion is allowed."
-            },
-            {
-              "name": "--ki-message-caret-inline-size",
-              "description": "Streaming caret width relative to its message text."
-            },
-            {
               "name": "--ki-message-event-fg",
               "description": "Text and icon ink of a system event on the page surface."
             },
@@ -8138,16 +8142,12 @@
               "description": "Optional image over the user bubble background."
             },
             {
-              "name": "--ki-message-user-end-radius",
-              "description": "Radius of the user bubble at the block-end inline-end corner."
-            },
-            {
               "name": "--ki-message-user-fg",
               "description": "Text ink in a user bubble."
             },
             {
-              "name": "--ki-message-user-max-width",
-              "description": "Maximum share of the transcript width a user bubble occupies."
+              "name": "--ki-motion-duration-activity-pulse",
+              "description": "Period of an indeterminate typing pulse."
             },
             {
               "name": "--ki-motion-easing-activity-pulse",

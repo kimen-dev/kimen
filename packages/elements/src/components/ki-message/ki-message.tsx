@@ -81,6 +81,7 @@ export class KiMessage {
 
     return (
       <article
+        key="message"
         part="message"
         class={role}
         aria-label={author.length > 0 ? author : authorLabels[role]}
@@ -88,24 +89,24 @@ export class KiMessage {
         aria-atomic="true"
       >
         {role === 'assistant' && (
-          <div part="avatar">
-            <slot name="avatar">
-              <span class="default-avatar" aria-hidden="true">
-                <ki-icon name="bot" />
+          <div key="avatar" part="avatar">
+            <slot key="avatar-slot" name="avatar">
+              <span key="default-avatar" class="default-avatar" aria-hidden="true">
+                <ki-icon key="default-avatar-icon" name="bot" />
               </span>
             </slot>
           </div>
         )}
-        <div class="body">
-          <div part="content">
-            {role === 'event' && this.iconName && <ki-icon name={this.iconName} />}
-            <div class="text">
-              <slot />
-              {this.streaming && <span part="caret" aria-hidden="true" />}
+        <div key="body" class="body">
+          <div key="content" part="content">
+            {role === 'event' && this.iconName && <ki-icon key="event-icon" name={this.iconName} />}
+            <div key="text" class="text">
+              <slot key="content-slot" />
+              {this.streaming && <span key="caret" part="caret" aria-hidden="true" />}
             </div>
           </div>
-          <div part="actions">
-            <slot name="actions" />
+          <div key="actions" part="actions">
+            <slot key="actions-slot" name="actions" />
           </div>
         </div>
       </article>

@@ -1590,8 +1590,6 @@
   --ki-message-user-fg:var(--ki-text-high-em);
   --ki-message-user-bg-image:var(--ki-surface-image-none);
   --ki-message-user-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
-  --ki-message-user-max-width:var(--ki-layout-conversation-user-max-width);
-  --ki-message-user-end-radius:var(--ki-layout-conversation-bubble-end-radius);
   --ki-message-radius:var(--ki-layout-conversation-bubble-radius);
   --ki-message-padding:var(--ki-layout-conversation-bubble-padding);
   --ki-message-assistant-fg:var(--ki-text-high-em);
@@ -1600,10 +1598,6 @@
   --ki-message-avatar-fg:var(--ki-text-primary-on-primary-light);
   --ki-message-avatar-bg-image:var(--ki-surface-image-none);
   --ki-message-avatar-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
-  --ki-message-avatar-radius:var(--ki-layout-conversation-avatar-radius);
-  --ki-message-caret-inline-size:var(--ki-layout-conversation-caret-inline-size);
-  --ki-message-caret-block-size:var(--ki-layout-conversation-caret-block-size);
-  --ki-message-caret-duration:var(--ki-motion-duration-activity-pulse);
   --ki-counter-size:var(--ki-notification-marker-count-size);
   --ki-counter-dot-size:var(--ki-notification-marker-dot-size);
   --ki-counter-bg:var(--ki-surface-danger-high-em);

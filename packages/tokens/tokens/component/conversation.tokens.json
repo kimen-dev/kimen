@@ -33,16 +33,6 @@
           "$type": "other",
           "$value": "{ki.effect.component.no-backdrop-filter}",
           "$description": "Complete filter behind the user bubble."
-        },
-        "max-width": {
-          "$type": "other",
-          "$value": "{ki.layout.conversation.user-max-width}",
-          "$description": "Maximum share of the transcript width a user bubble occupies."
-        },
-        "end-radius": {
-          "$type": "dimension",
-          "$value": "{ki.layout.conversation.bubble-end-radius}",
-          "$description": "Radius of the user bubble at the block-end inline-end corner."
         }
       },
       "radius": {
@@ -89,28 +79,6 @@
           "$type": "other",
           "$value": "{ki.effect.component.no-backdrop-filter}",
           "$description": "Complete filter behind the default assistant avatar."
-        },
-        "radius": {
-          "$type": "dimension",
-          "$value": "{ki.layout.conversation.avatar-radius}",
-          "$description": "Corner radius of the default assistant avatar."
-        }
-      },
-      "caret": {
-        "inline-size": {
-          "$type": "dimension",
-          "$value": "{ki.layout.conversation.caret-inline-size}",
-          "$description": "Streaming caret width relative to its message text."
-        },
-        "block-size": {
-          "$type": "dimension",
-          "$value": "{ki.layout.conversation.caret-block-size}",
-          "$description": "Streaming caret height relative to its message text."
-        },
-        "duration": {
-          "$type": "duration",
-          "$value": "{ki.motion.duration.activity-pulse}",
-          "$description": "Period of the streaming caret blink when motion is allowed."
         }
       }
     }

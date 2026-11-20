@@ -80,6 +80,11 @@ None.
 ## CSS custom properties
 
 - `--ki-control-border-width`: Stroke width of the boundary of a compact control.
+- `--ki-layout-conversation-avatar-radius`: Round corner radius of the fallback assistant avatar.
+- `--ki-layout-conversation-bubble-end-radius`: Smaller radius of the end corner of a user bubble.
+- `--ki-layout-conversation-caret-block-size`: Block size of a streaming caret.
+- `--ki-layout-conversation-caret-inline-size`: Inline size of a streaming caret.
+- `--ki-layout-conversation-user-max-width`: Maximum width of a user bubble relative to the transcript.
 - `--ki-layout-spacing-2xl`: The 2xl spacing step for a stack or grid gap.
 - `--ki-layout-spacing-3xl`: The 3xl spacing step for a stack or grid gap.
 - `--ki-layout-spacing-9xl`: The 9xl spacing step for a stack or grid gap.
@@ -91,19 +96,14 @@ None.
 - `--ki-message-avatar-bg`: Solid primary container of the default assistant avatar.
 - `--ki-message-avatar-bg-image`: Optional image over the default assistant avatar background.
 - `--ki-message-avatar-fg`: Glyph ink inside the default assistant avatar.
-- `--ki-message-avatar-radius`: Corner radius of the default assistant avatar.
-- `--ki-message-caret-block-size`: Streaming caret height relative to its message text.
-- `--ki-message-caret-duration`: Period of the streaming caret blink when motion is allowed.
-- `--ki-message-caret-inline-size`: Streaming caret width relative to its message text.
 - `--ki-message-event-fg`: Text and icon ink of a system event on the page surface.
 - `--ki-message-padding`: Block and inline padding inside a user bubble, in that order.
 - `--ki-message-radius`: Radius of the user bubble corners.
 - `--ki-message-user-backdrop-filter`: Complete filter behind the user bubble.
 - `--ki-message-user-bg`: Solid background of a user bubble.
 - `--ki-message-user-bg-image`: Optional image over the user bubble background.
-- `--ki-message-user-end-radius`: Radius of the user bubble at the block-end inline-end corner.
 - `--ki-message-user-fg`: Text ink in a user bubble.
-- `--ki-message-user-max-width`: Maximum share of the transcript width a user bubble occupies.
+- `--ki-motion-duration-activity-pulse`: Period of an indeterminate typing pulse.
 - `--ki-motion-easing-activity-pulse`: Symmetric easing for fluctuations in a typing pulse.
 - `--ki-outline-low-em`: semantic color for outline low em.
 - `--ki-typography-family-body`: semantic font family for typography family body.
