@@ -118,7 +118,7 @@ export class KiToolCall {
   kiToolRetry!: EventEmitter<{ name: string }>;
 
   @State() private populatedSlots = new Set<string>();
-  private renderedOpen = false;
+  private details: HTMLDetailsElement | undefined;
 
   componentWillLoad(): void {
     // The external custom-elements runtime reads removal of a Boolean attribute
@@ -133,10 +133,20 @@ export class KiToolCall {
     return value === null ? undefined : value !== 'false';
   }
 
+  @Watch('open')
+  protected syncExpansion(): void {
+    const expanded = this.expanded;
+    if (this.details && this.details.open !== expanded) this.details.open = expanded;
+  }
+
   @Watch('status')
   protected statusChanged(value: KiToolCallStatus, previous: KiToolCallStatus): void {
     const status = visibleStatus(value);
-    if (status !== visibleStatus(previous)) {
+    const previousStatus = visibleStatus(previous);
+    if (this.open === undefined && (status === 'failed') !== (previousStatus === 'failed')) {
+      this.syncExpansion();
+    }
+    if (status !== previousStatus) {
       this.kiToolStatusChange.emit({ name: this.name, status, label: this.labelFor(status) });
     }
   }
@@ -156,9 +166,15 @@ export class KiToolCall {
     return labels[status];
   }
 
-  private readonly captureToggle = (event: Event): void => {
-    const details = event.currentTarget as HTMLDetailsElement;
-    if (details.open !== this.renderedOpen) this.open = details.open;
+  private readonly connectDetails = (element?: HTMLElement): void => {
+    const details = element instanceof HTMLDetailsElement ? element : undefined;
+    if (details === this.details) return;
+    this.details = details;
+    this.syncExpansion();
+  };
+
+  private readonly captureToggle = (): void => {
+    if (this.details && this.details.open !== this.expanded) this.open = this.details.open;
   };
 
   private readonly syncSlot = (event: Event): void => {
@@ -195,24 +211,25 @@ export class KiToolCall {
     const showError = status === 'failed' && this.populatedSlots.has('error');
     const showRetry = status === 'failed' && this.retryable;
     const hasPayload = this.populatedSlots.has('input') || this.populatedSlots.has('output');
-    this.renderedOpen = this.expanded;
+    // Native toggles and synchronous property updates share the same element state.
     return (
       <details
         key="disclosure"
         part="disclosure"
-        open={this.renderedOpen}
+        ref={this.connectDetails}
         onToggle={this.captureToggle}
       >
         <summary key="summary" part="summary" tabindex="0">
           <ki-icon key="wrench" class="glyph" name="wrench" />
           <span key="identity" class="identity">
             {this.toolTitle && <bdi>{this.toolTitle}</bdi>}
+            {this.toolTitle && ' '}
             <code part="name">
               <bdi>{this.name}</bdi>
             </code>
-          </span>
+          </span>{' '}
           <span key="state" class="state">
-            {status === 'running' && <ki-spinner size="sm" label={label} aria-hidden="true" />}
+            {status === 'running' && <ki-spinner size="sm" label="" aria-hidden="true" />}
             <ki-badge part="status" size="sm" tone={tones[status]}>
               {elapsed ? [label, elapsed].join(' · ') : label}
             </ki-badge>

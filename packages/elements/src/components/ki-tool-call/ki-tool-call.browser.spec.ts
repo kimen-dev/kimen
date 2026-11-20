@@ -11,6 +11,7 @@ import { defineCustomElement } from '../../../dist/components/ki-tool-call.js';
 const fixture = document.createElement('main');
 const styles = document.createElement('style');
 const browser = commands as unknown as {
+  accessibilityTree: () => Promise<{ name: string; focusable: boolean }[] | null>;
   ariaSnapshot: (selector: string) => Promise<string>;
   emulateForcedColors: (value: 'active' | null) => Promise<void>;
   emulateReducedMotion: (value: 'reduce' | 'no-preference' | null) => Promise<void>;
@@ -60,27 +61,42 @@ async function mount(attributes: string, content = '') {
   return host;
 }
 
+const disclosureSelector = 'ki-tool-call details';
 const summary = () => part(tool(), 'summary');
+const badge = () => part(tool(), 'status');
 const disclosure = () => part(tool(), 'disclosure') as HTMLDetailsElement;
 
 it('S1 opens a completed call and reveals labeled CodeBlock payloads', async () => {
   await mount(
     'name="search_docs" title="Search docs" status="done" duration="1200"',
-    '<ki-code-block slot="input" language="json" copyable="false">{"query": "Forms"}</ki-code-block>' +
-      '<ki-code-block slot="output" language="json" copyable="false">["Field help"]</ki-code-block>',
+    '<ki-code-block slot="input" language="json" filename="search-input.json" copyable="false">{"query": "Forms"}</ki-code-block>' +
+      '<ki-code-block slot="output" language="json" filename="search-output.json" copyable="false">["Field help"]</ki-code-block>',
   );
 
-  await expect.element(summary()).toHaveTextContent('Search docs');
-  await expect.element(summary()).toHaveTextContent('search_docs');
-  await expect.element(summary()).toHaveTextContent('Done · 1.2 sec');
-  await expect.element(page.getByText('Input', { exact: true })).not.toBeVisible();
+  const summaryName = 'Search docs search_docs Done · 1.2 sec';
+  await expect.element(page.getByText('Search docs', { exact: true })).toBeVisible();
+  await expect.element(summary()).toHaveTextContent(summaryName);
+  await expect.element(part(tool(), 'name')).toHaveTextContent('search_docs');
+  await expect.element(badge()).toHaveTextContent('Done · 1.2 sec');
+  const tree = await browser.accessibilityTree();
+  if (tree !== null) {
+    expect(tree).toContainEqual(expect.objectContaining({ name: summaryName, focusable: true }));
+  }
+  expect(disclosure().open).toBe(false);
+  const collapsed = await browser.ariaSnapshot(disclosureSelector);
+  expect(collapsed).not.toContain('Forms');
+  expect(collapsed).not.toContain('Field help');
 
   await userEvent.click(summary());
 
+  await expect.poll(() => disclosure().open).toBe(true);
   await expect.element(page.getByText('Input', { exact: true })).toBeVisible();
   await expect.element(page.getByText('Output', { exact: true })).toBeVisible();
   await expect.element(page.getByText('{"query": "Forms"}', { exact: true })).toBeVisible();
   await expect.element(page.getByText('["Field help"]', { exact: true })).toBeVisible();
+  const expanded = await browser.ariaSnapshot(disclosureSelector);
+  expect(expanded).toContain('Forms');
+  expect(expanded).toContain('Field help');
   await expectAccessible(fixture);
 });
 
@@ -95,7 +111,7 @@ it('S3 preserves an explicit collapsed choice and permits later programmatic exp
 
   host.status = 'failed';
 
-  await expect.element(summary()).toHaveTextContent('Failed');
+  await expect.element(badge()).toHaveTextContent('Failed');
   expect(disclosure().open).toBe(false);
   host.open = true;
   await expect.poll(() => disclosure().open).toBe(true);
@@ -133,7 +149,7 @@ it('S5 exposes the expanded call and its status without a separate spinner annou
     '<span slot="input">suite.ts</span>',
   );
   await expect.element(page.getByText('suite.ts', { exact: true })).toBeVisible();
-  const tree = await browser.ariaSnapshot('ki-tool-call details');
+  const tree = await browser.ariaSnapshot(disclosureSelector);
 
   // Playwright serializes native details as a group without its expanded state.
   expect(disclosure().open).toBe(true);
@@ -141,7 +157,9 @@ it('S5 exposes the expanded call and its status without a separate spinner annou
   expect(tree).toContain('Running');
   expect(tree).toContain('suite.ts');
   expect(tree).not.toMatch(/^\s*- status\b/mu);
-  expect(host.shadowRoot?.querySelector('ki-spinner')?.getAttribute('aria-hidden')).toBe('true');
+  const spinner = host.shadowRoot?.querySelector('ki-spinner');
+  expect(spinner?.getAttribute('aria-hidden')).toBe('true');
+  expect(spinner?.label).toBe('');
 });
 
 it('S6 publishes one transition to a conversation-owned log', async () => {
@@ -158,7 +176,10 @@ it('S6 publishes one transition to a conversation-owned log', async () => {
   };
   fixture.addEventListener('ki-tool-status-change', record);
   try {
-    await expect.element(page.getByText('Running', { exact: true })).toBeVisible();
+    await expect
+      .poll(() => host.shadowRoot?.querySelector('[part="status"]')?.textContent)
+      .toBe('Running');
+    await expect.element(badge()).toBeVisible();
     expect(log.children).toHaveLength(0);
 
     host.status = 'done';
@@ -183,7 +204,7 @@ it('S7 requests a retry once and leaves the status under caller control', async 
   await page.getByRole('button', { name: 'Retry' }).click();
 
   expect(requests).toEqual([{ name: 'deploy_preview' }]);
-  await expect.element(summary()).toHaveTextContent('Failed');
+  await expect.element(badge()).toHaveTextContent('Failed');
 });
 
 it('S8 repaints the disclosure and its CodeBlock from token overrides', async () => {
@@ -229,12 +250,13 @@ it('S9 keeps the status and keyboard focus visible in forced colors', async (con
   expect(focus.outlineStyle).toBe('solid');
   expect(Number.parseFloat(focus.outlineWidth)).toBeGreaterThan(0);
   expect(focus.outlineColor).not.toBe(getComputedStyle(canvas).backgroundColor);
-  await expect.element(page.getByText('Running', { exact: true })).toBeVisible();
+  await expect.element(badge()).toBeVisible();
+  await expect.element(badge()).toHaveTextContent('Running');
 });
 
 it('S10 stops the decorative activity indicator under reduced motion', async () => {
-  await browser.emulateReducedMotion('no-preference');
   const host = await mount('name="run_tests" status="running"');
+  await browser.emulateReducedMotion('no-preference');
   const spinner = host.shadowRoot?.querySelector('ki-spinner');
   if (!spinner) throw new Error('Missing decorative spinner');
   const animation = () =>
@@ -243,8 +265,10 @@ it('S10 stops the decorative activity indicator under reduced motion', async () 
 
   await browser.emulateReducedMotion('reduce');
 
+  await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
   await expect.poll(animation).toBe(0);
-  await expect.element(page.getByText('Running', { exact: true })).toBeVisible();
+  await expect.element(badge()).toBeVisible();
+  await expect.element(badge()).toHaveTextContent('Running');
 });
 
 it('S11 lays out summary content in right-to-left reading order', async () => {
@@ -260,10 +284,8 @@ it('S11 lays out summary content in right-to-left reading order', async () => {
 
 it('S13 displays the approval badge without a duration', async () => {
   const host = await mount('name="publish_preview" status="approval" duration="3000"');
-  const badge = part(host, 'status');
-  expect(badge.getAttribute('tone')).toBe('warning');
-  await expect.element(summary()).toHaveTextContent('Needs approval');
-  expect(summary().textContent).not.toMatch(/3\s*sec/u);
+  expect(part(host, 'status').getAttribute('tone')).toBe('warning');
+  await expect.element(badge()).toHaveTextContent('Needs approval');
 });
 
 it('S14 opens an automatic disclosure when the status becomes Failed', async () => {

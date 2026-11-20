@@ -20,8 +20,8 @@ separate confirmation control for an approval decision.
 
 ```html
 <ki-tool-call name="search_docs" title="Search docs" status="done" duration="1200">
-  <ki-code-block slot="input" language="json" wrap>{"query": "Forms"}</ki-code-block>
-  <ki-code-block slot="output" language="json" wrap>["Field help"]</ki-code-block>
+  <ki-code-block slot="input" language="json" filename="search-input.json" wrap>{"query": "Forms"}</ki-code-block>
+  <ki-code-block slot="output" language="json" filename="search-output.json" wrap>["Field help"]</ki-code-block>
 </ki-tool-call>
 ```
 

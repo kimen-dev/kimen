@@ -78,6 +78,10 @@ details[open] .chevron {
   padding-inline: var(--ki-tool-call-padding);
 }
 
+details:not([open]) > [part="body"] {
+  display: none;
+}
+
 [part="name"] {
   font-family: var(--ki-tool-call-mono-family);
   font-size: var(--ki-tool-call-caption-size);

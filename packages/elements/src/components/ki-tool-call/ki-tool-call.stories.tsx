@@ -20,10 +20,10 @@ export const Completed: Story = {
   args: { status: 'done', duration: 1200, open: true },
   render: (args) => (
     <ki-tool-call {...args}>
-      <ki-code-block slot="input" language="json" wrap>
+      <ki-code-block slot="input" language="json" filename="search-input.json" wrap>
         {'{"query": "Form validation"}'}
       </ki-code-block>
-      <ki-code-block slot="output" language="json" wrap>
+      <ki-code-block slot="output" language="json" filename="search-output.json" wrap>
         {'["Field help and errors"]'}
       </ki-code-block>
     </ki-tool-call>

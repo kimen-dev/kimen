@@ -8,8 +8,8 @@ export default {
   html: [
     row(
       `<ki-tool-call ${fullWidth} name="search_docs" title="Search docs" status="done" duration="1200" open>` +
-        '<ki-code-block slot="input" language="json" wrap copyable="false">{"query": "Validation"}</ki-code-block>' +
-        '<ki-code-block slot="output" language="json" wrap copyable="false">["Fields"]</ki-code-block>' +
+        '<ki-code-block slot="input" language="json" filename="search-input.json" wrap copyable="false">{"query": "Validation"}</ki-code-block>' +
+        '<ki-code-block slot="output" language="json" filename="search-output.json" wrap copyable="false">["Fields"]</ki-code-block>' +
         '</ki-tool-call>',
     ),
     row(`<ki-tool-call ${fullWidth} name="read_file"></ki-tool-call>`),
