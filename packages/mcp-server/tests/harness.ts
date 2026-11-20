@@ -109,7 +109,9 @@ export function spawnRaw(args: readonly string[] = []): RawServer {
     });
   });
   const find = (id: number): Record<string, unknown> | undefined => {
-    for (const line of stdout.split('\n')) {
+    // A stdout chunk can end in the middle of a JSON-RPC message.
+    const complete = stdout.slice(0, stdout.lastIndexOf('\n') + 1);
+    for (const line of complete.split('\n')) {
       if (line.trim() === '') {
         continue;
       }
