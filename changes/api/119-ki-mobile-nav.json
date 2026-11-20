@@ -14,6 +14,7 @@
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/attributes/icon-name": "1d7d412abeccf4e5da1feac4caf0151b2ee4665622dad7490f59e0bb43634a1c",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-focus-ring-color": "c33fe12665679cb7e86fdd87aaa3f2f788c1ae7cf58777e256b1531cec3b9475",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-focus-ring-width": "16cd8e6364bb82ddf68a04d82b13e5984955e07bbebbb2fc26d172cf04e1847f",
+    "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-mobile-nav-border-width": "8fa4c747c14de9034006518ec0eda84ff34c7b3fea7c74f5275674a087f486a7",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-mobile-nav-font-family": "4d21dc09f9867de05eeceff5d3fa686a5349173f44ac437a26c21c527717b939",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-mobile-nav-indicator-bg": "fbe64b3c92d1821e9bbd453eaab981d426d59df553daf839d53510d22c6f5218",
     "/packages/@kimen~1elements/components/ki-mobile-nav-item/cssProperties/--ki-mobile-nav-indicator-block-size": "ae1208fd262141bc1190c902a5566774e542d3c48e16ccf4a005a4dd11775b58",
